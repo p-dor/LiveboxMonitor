@@ -44,6 +44,17 @@ class DSelCol(IntEnum):
 	MAC = 2
 	Count = 3
 
+# Sorting of stats columns
+class NumericItem(QtWidgets.QTableWidgetItem):
+	def __lt__(self, iOther):
+		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
+		if x is None:
+			x = 0
+		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
+		if y is None:
+			y = 0
+		return x < y
+
 
 # ################################ LmDeviceList class ################################
 class LmDeviceList:
@@ -543,20 +554,23 @@ class LmDeviceList:
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
-			aDown = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownBytes))
+			aDown = NumericItem(LmTools.FmtBytes(aDownBytes))
+			aDown.setData(QtCore.Qt.ItemDataRole.UserRole, aDownBytes)
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Down, aDown)
 
-			aUp = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpBytes))
+			aUp = NumericItem(LmTools.FmtBytes(aUpBytes))
+			aUp.setData(QtCore.Qt.ItemDataRole.UserRole, aUpBytes)
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
 				aUp.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
 				aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
@@ -565,7 +579,8 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
 				aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
@@ -747,7 +762,8 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
 				else:
@@ -758,7 +774,8 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
 				else:
