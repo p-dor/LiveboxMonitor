@@ -44,11 +44,16 @@ class DSelCol(IntEnum):
 	MAC = 2
 	Count = 3
 
-
+# Sorting of stats columns
 class NumericItem(QtWidgets.QTableWidgetItem):
-    def __lt__(self, other):
-        return (self.data(QtCore.Qt.ItemDataRole.UserRole) <
-                other.data(QtCore.Qt.ItemDataRole.UserRole))
+	def __lt__(self, iOther):
+		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
+		if x is None:
+			x = 0
+		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
+		if y is None:
+			y = 0
+		return x < y
 
 
 # ################################ LmDeviceList class ################################
@@ -757,7 +762,8 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
 				else:
@@ -768,7 +774,8 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
 				else:
