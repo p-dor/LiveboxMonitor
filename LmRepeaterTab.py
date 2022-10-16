@@ -724,7 +724,7 @@ class LmRepHandler:
 				LmTools.DisplayError('NMC.Reboot.Reboot:get service error')
 				return
 
-			aHistoryDialog = RebootHistoryDialog(self._app)
+			aHistoryDialog = RebootHistoryDialog('Repeater', self._app)
 			aHistoryDialog.loadHistory(d)
 			aHistoryDialog.exec()
 		else:

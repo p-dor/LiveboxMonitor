@@ -253,27 +253,43 @@ class LmEvents:
 			if len(aDeviceKey):
 				self.updateEventIndicator(aDeviceKey)
 				if r == 'Statistics':
-					self.processStatisticsEvent(aDeviceKey, a[aDeviceKey])
-					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					e = a.get(aDeviceKey)
+					if e is not None:
+						self.processStatisticsEvent(aDeviceKey, e)
+						self.bufferizeEvent(aDeviceKey, h, r, e)
+					else:
+						self.bufferizeEvent(aDeviceKey, h, r, a)
 				elif r == 'changed':
 					self.processChangedEvent(aDeviceKey, h, a)
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 				elif r == 'device_name_changed':
-					self.processDeviceNameChangedEvent(aDeviceKey, a[aDeviceKey])
-					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					e = a.get(aDeviceKey)
+					if e is not None:
+						self.processDeviceNameChangedEvent(aDeviceKey, e)
+						self.bufferizeEvent(aDeviceKey, h, r, e)
+					else:
+						self.bufferizeEvent(aDeviceKey, h, r, a)
 				elif (r == 'device_updated') or (r == 'eth_device_updated') or (r == 'wifi_device_updated'):
-					aData = a.get(aDeviceKey)
-					if aData is not None:
-						self.processDeviceUpdatedEvent(aDeviceKey, aData)
-						self.bufferizeEvent(aDeviceKey, h, r, aData)
+					e = a.get(aDeviceKey)
+					if e is not None:
+						self.processDeviceUpdatedEvent(aDeviceKey, e)
+						self.bufferizeEvent(aDeviceKey, h, r, e)
 					else:
 						self.bufferizeEvent(aDeviceKey, h, r, a)
 				elif r == 'ip_address_added':
-					self.processIPAddressAddedEvent(aDeviceKey, a[aDeviceKey])
-					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					e = a.get(aDeviceKey)
+					if e is not None:
+						self.processIPAddressAddedEvent(aDeviceKey, a[aDeviceKey])
+						self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					else:
+						self.bufferizeEvent(aDeviceKey, h, r, a)
 				elif (r == 'device_added') or (r == 'eth_device_added') or (r == 'wifi_device_added'):
-					self.processDeviceAddedEvent(aDeviceKey, a[aDeviceKey])
-					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					e = a.get(aDeviceKey)
+					if e is not None:
+						self.processDeviceAddedEvent(aDeviceKey, a[aDeviceKey])
+						self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+					else:
+						self.bufferizeEvent(aDeviceKey, h, r, a)
 				else:
 					# Check if device is in the list, otherwise put the event in the None list
 					if (self.findDeviceLine(self._eventDList, aDeviceKey) >= 0):
