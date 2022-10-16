@@ -11,7 +11,7 @@
 
 **AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour controler une Livebox 5 avec une connection Fibre / ONT**, des tests avec une Livebox 5 ADSL voire des Livebox 6 seraient bienvenus.
 
-Le programme est dynamique car il réagit aux événements envoyés par la Livebox et les interprètes.
+Le programme est dynamique car il réagit aux événements envoyés par la Livebox et les interprète.
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceList.png)
 
@@ -33,11 +33,11 @@ Le programme créé automatiquement dans son répertoire deux fichiers de config
 
 ### Le fichier Config.txt
 
-Le programme supporte ces clefs de configuration.
-`Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
-`Livebox User` : login pour l'ouverture de session. Par défaut `admin`.
-`Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce le mot de passe est demandé automatiquement au lancement du programme si le mot de passe n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe est située dans le module `LmConfig.py`, variable `SECRET`.
-`MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.
+Le programme supporte ces clefs de configuration :  
+`Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.  
+`Livebox User` : login pour l'ouverture de session. Par défaut `admin`.  
+`Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce le mot de passe est demandé automatiquement au lancement du programme si le mot de passe n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe est située dans le module `LmConfig.py`, variable `SECRET`.  
+`MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.  
 `MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionalité.
 
 
