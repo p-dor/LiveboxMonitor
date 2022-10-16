@@ -309,7 +309,7 @@ class LmActions:
 			LmTools.DisplayError('NMC.Reboot.Reboot:get service error')
 			return
 
-		aHistoryDialog = RebootHistoryDialog(self)
+		aHistoryDialog = RebootHistoryDialog('Livebox', self)
 		aHistoryDialog.loadHistory(d)
 		aHistoryDialog.exec()
 
@@ -370,7 +370,7 @@ class LmActions:
 
 # ############# Display reboot history dialog #############
 class RebootHistoryDialog(QtWidgets.QDialog):
-	def __init__(self, iParent = None):
+	def __init__(self, iName, iParent = None):
 		super(RebootHistoryDialog, self).__init__(iParent)
 		self.resize(700, 385)
 
@@ -403,7 +403,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._historyTable, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('Livebox Reboot History')
+		self.setWindowTitle(iName + ' Reboot History')
 		self.setModal(True)
 		self.show()
 
