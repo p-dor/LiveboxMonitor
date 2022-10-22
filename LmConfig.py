@@ -33,7 +33,6 @@ LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 LIST_HEADER_STYLESHEET = '''
 	QHeaderView::section {
 		border-width: 0px 0px 1px 0px;
-		border-style: solid;
 		border-color: grey;
 	}
 	'''
@@ -237,4 +236,3 @@ class LmConf:
 				d['PixMap'] = aIconPixMap
 
 			LmConf.DeviceIconsLoaded = True
-	
