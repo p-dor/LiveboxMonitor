@@ -327,7 +327,7 @@ class LmDeviceInfo:
 		if len(aIPv4List):
 			for aIPV4 in aIPv4List:
 				s = aIPV4.get('Address', '') + ' (' + aIPV4.get('Status', '') + ')'
-				if aIPV4.get('Reserved', ''):
+				if aIPV4.get('Reserved', False):
 					s += ' - Reserved'
 				i = self.addInfoLine(self._infoAList, i, 'IPv4 Address', s)
 
