@@ -56,13 +56,13 @@ Un fichier de noms local offre la garanti de savoir si un appareil est vraiment 
 
 ## Device List - Liste des appareils connectés
 
-## Liste
+### Liste
 La liste des appareils affiche les colonnes suivantes :
-- **Name** : Nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
-- **Livebox Name*** : Nom de l'appareil tel que paramétré dans la Livebox et visible dans l'interface Web de la Livebox. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
+- **Livebox Name** : nom de l'appareil tel que paramétré dans la Livebox et visible dans l'interface Web de la Livebox. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 - **IP** : adresse IP v4 de l'appareil sur le LAN. Cette adresse s'affiche en caractères gras si cette adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox. Et elle s'affiche en rouge si l'adresse n'est pas atteignable sur le réseau (unreacheable), typiquement lorsque l'appareil n'est pas actif.
-- **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth`  signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par le standard de connexion, soit 2.4GHz soit 5GHz.
+- **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth`  signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion, soit 2.4GHz soit 5GHz.
 - **A** : indique si l'appareil est actif ou nom par un A sur fond vert. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
 - **Wifi** : qualité de la connexion Wifi.
 - **E** : indique par une icône avec un point d'exclamation lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consulter via l'onglet `Events`.
@@ -72,10 +72,11 @@ La liste des appareils affiche les colonnes suivantes :
 - **URate** : taux d'octets envoyés par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans la dernière seconde si affiché en bleu.
 
 Les statistiques d'octets envoyés ou reçus par seconde sont calculés grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les secondes. Ces dernières sont affichées en bleues.
+Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
 Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
 
-## Boutons
-L'onglet `Device List` propose les boutons suivants:
+### Boutons
+L'onglet `Device List` propose les boutons suivants :
 - **`Refresh`** : permet de forcer le rafraichissement de la liste des appareils, non seulement dans cet onglet mais aussi dans les onglets `Device Infos` et `Events`.
 - **`Device Infos`** : permet de basculer dans l'onglet `Device Infos` pour l'appareil sélectionné et de voir directement ses informations.
 - **`Device Events`** : permet de basculer dans l'onglet `Events` pour l'appareil sélectionné et de voir directement les événements reçus le concernant.
@@ -83,10 +84,42 @@ L'onglet `Device List` propose les boutons suivants:
 - **`Raw Topology`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 
 
+## Livebox Stats/Infos - Statistiques de trafic et informations avancées de la Livebox
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos.png)
+
+Les statistiques de trafic par interface sont affichées sous forme de liste en haut à gauche.
+Et toutes les informations sont accessibles par les boutons, chaque bouton remplissant la liste d'attributs sur la droite. Il est aussi possible d'exporter l'ensemble des informations dans un fichier.
+
+### Statistiques
+
+Liste permettant de surveiller l'état du trafic :
+- **Name** : nom de l'interface réseau. `Fiber` concerne tout le trafic WAN, c'est à dire externe entre la Livebox et internet. `LAN` tout le trafic interne transitant à travers la Livebox. Ensuite on dispose des statistiques par interface précise. Les interfaces `Guest` concernent le trafic du réseau Wifi invité, s'il est activé.
+- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **DRate** : taux d'octets reçus par seconde par l'interface dans la dernière seconde.
+- **URate** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde.
+
+Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
+Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
+
+### Boutons
+L'onglet `Livebox Stats/Infos` propose les boutons suivants :
+- **`Livebox Infos`** : affiche les informations principales concernant la Livebox, telles que les versions de logiciels, l'adresse IP WAN, les services actifs, l'état de la mémoire, etc.
+- **`Internet Infos`** : affiche le type d'accès internet, les identifiants de connexion, les adresses IPs v4 & v6, la date et heure de la dernière connexion, la bande passante de la connexion, la MTU, etc
+- - **`Wifi Infos`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès y compris pour les accès invités. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
+- **`LAN Infos`** : affiche les informations générales sur la connectivité LAN. Il s'agit des informations DHCP de base et pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
+- **`ONT Infos`** : affiche les informations importantes concernant la connexion et le module Fibre (ONT), telles que la bande passante, la qualité du signal, le numéro de série et les versions logicielles, etc. Les champs `Signal RxPower`, `Signal TxPower`, `Temperature`, `Voltage` et `BIAS` affichent des valeurs vertes si elles correspondent aux normes de qualités acceptables pour la connexion, en rouge si elles représentent un problème.
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos_ONT.png)
+- **`VoIP Infos`** : affiche les informations générales concernant la téléphonie, telles que le protocole, le numéro de téléphone, la version logicielle de l'interface DECT, etc.
+- **`IPTV Infos`** : affiche les informations générales relative aux services de télévision.
+- **`USB Infos`** : affiche les informations concernant le ou les ports USBs. Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox, ses informations sont affichées.
+- **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
+
 
 ## Prochaines fonctionnalités prévues
 
-Prochaines fonctionalités en cours de développement:
+Prochaines fonctionnalités en cours de développement :
 - Support de la liste des contacts téléphoniques.
 - Support des appels téléphoniques.
 - Paramétrage du style graphique de l'application.
