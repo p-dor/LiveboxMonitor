@@ -39,7 +39,7 @@ LIST_HEADER_STYLESHEET = '''
 	'''
 
 NET_INTF = [
-	{ 'Key': 'veip0',    'Name': 'Fibre',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'veip0',    'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
 	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'eth1',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
