@@ -301,10 +301,12 @@ class LmDeviceList:
 		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
 			aIPv4 = ''
 			aIPv4Reacheable = ''
+			aIPv4Reserved = False
 		else:
 			aIPv4 = aIPv4Struct[0].get('Address', '')
 			aIPv4Reacheable = aIPv4Struct[0].get('Status', '')
-		aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable)
+			aIPv4Reserved = aIPv4Struct[0].get('Reserved', False)
+		aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
 
 		aLink = QtWidgets.QTableWidgetItem(self.findDeviceLink(iDevice.get('Key', '')))
 
@@ -387,10 +389,12 @@ class LmDeviceList:
 
 	### Format IPv4 cell
 	@staticmethod
-	def formatIPv4TableWidget(iIPv4, iReacheableStatus):
+	def formatIPv4TableWidget(iIPv4, iReacheableStatus, iReserved):
 		aIP = QtWidgets.QTableWidgetItem(iIPv4)
 		if iReacheableStatus != 'reachable':
 			aIP.setForeground(QtCore.Qt.GlobalColor.red)
+		if iReserved:
+			aIP.setFont(LmTools.BOLD_FONT)
 		return aIP
 
 
@@ -612,7 +616,8 @@ class LmDeviceList:
 			aIPv4Reacheable = iEvent.get('Status')
 			if (aIPv4Reacheable is not None) and ('IPv4Address' in iHandler):
 				aCurrIP = self._deviceList.item(aListLine, DevCol.IP)
-				aIP = self.formatIPv4TableWidget(aCurrIP.text(), aIPv4Reacheable)
+				aReserved = aCurrIP.font().bold()
+				aIP = self.formatIPv4TableWidget(aCurrIP.text(), aIPv4Reacheable, aReserved)
 				self._deviceList.setItem(aListLine, DevCol.IP, aIP)
 
 			# Check if IP changed
@@ -684,7 +689,8 @@ class LmDeviceList:
 			if iEvent.get('Family', '') == 'ipv4':
 				aIPv4 = iEvent.get('Address', '')
 				aIPv4Reacheable = iEvent.get('Status', '')
-				aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable)
+				aIPv4Reserved = iEvent.get('Reserved', False)
+				aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
 				self._deviceList.setItem(aListLine, DevCol.IP, aIP)
 				self.repeaterIPAddressEvent(iDeviceKey, aIPv4)
 
