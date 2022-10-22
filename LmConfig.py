@@ -32,7 +32,6 @@ ICON_URL = 'http://livebox/assets/common/images/app_conf/'
 LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 LIST_HEADER_STYLESHEET = '''
 	QHeaderView::section {
-		color: black;
 		border-width: 0px 0px 1px 0px;
 		border-style: solid;
 		border-color: grey;
