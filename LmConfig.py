@@ -237,4 +237,3 @@ class LmConf:
 				d['PixMap'] = aIconPixMap
 
 			LmConf.DeviceIconsLoaded = True
-	
