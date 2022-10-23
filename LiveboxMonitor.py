@@ -15,8 +15,10 @@ from PyQt6 import QtWidgets
 import LmTools
 from LmIcons import LmIcon
 from LmConfig import LmConf
+from LmConfig import SetApplicationStyle
 from LmConfig import MonitorTab
 from LmSession import LmSession
+import LmConfig
 import LmDeviceListTab
 import LmInfoTab
 import LmDeviceInfoTab
@@ -86,8 +88,8 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		aGrid.addWidget(self._tabWidget)
 
 		self.setLayout(aGrid)
-		self.setGeometry(200, 200, 1300, 761)
-
+		self.setGeometry(200, 200, 1300,
+						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
 		self.show()
 
 
@@ -222,7 +224,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 if __name__ == '__main__':
 	LmConf.load()
-	LmTools.SetApplicationStyle()
+	SetApplicationStyle()
 	aApp = QtWidgets.QApplication(sys.argv)
 	LmIcon.load()
 	aUI = LiveboxMonitorUI()

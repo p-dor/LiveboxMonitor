@@ -372,7 +372,7 @@ class LmActions:
 class RebootHistoryDialog(QtWidgets.QDialog):
 	def __init__(self, iName, iParent = None):
 		super(RebootHistoryDialog, self).__init__(iParent)
-		self.resize(700, 385)
+		self.resize(550, 56 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 10) + LmConfig.DIAG_HEIGHT_ADJUST)
 
 		self._historyTable = QtWidgets.QTableWidget()
 		self._historyTable.setColumnCount(4)
@@ -427,7 +427,6 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 class WifiGlobalStatusDialog(QtWidgets.QDialog):
 	def __init__(self, iParent, iStatus):
 		super(WifiGlobalStatusDialog, self).__init__(iParent)
-		self.resize(550, 415)
 
 		self._status = iStatus
 		self._statusTable = QtWidgets.QTableWidget()
@@ -462,7 +461,8 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._statusTable, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.loadStatus()
+		i = self.loadStatus()
+		self.resize(550, 56 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * i) + LmConfig.DIAG_HEIGHT_ADJUST)
 
 		self.setWindowTitle('Wifi Global Status')
 		self.setModal(True)
@@ -482,6 +482,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		i = self.addStatusLine('Wifi 5GHz VAP', WifiKey.Wifi5VAP, i)
 		i = self.addStatusLine('Guest 2.4GHz VAP', WifiKey.Guest2VAP, i)
 		i = self.addStatusLine('Guest 5GHz VAP', WifiKey.Guest5VAP, i)
+		return i
 
 
 	def addStatusLine(self, iTitle, iKey, iIndex):
