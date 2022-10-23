@@ -3,10 +3,12 @@
 import requests
 import json
 import base64
+import platform
 
 from enum import IntEnum
 
 from PyQt6 import QtGui
+from PyQt6 import QtWidgets
 from cryptography.fernet import Fernet
 
 import LmTools
@@ -24,19 +26,17 @@ LIVEBOX_PASSWORD = ''
 MACADDR_TABLE_FILE = 'MacAddrTable.txt'
 MACADDR_API_KEY = ''
 
-# Static Config
-SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
-LIST_HEADER_HEIGHT = 29
-LIST_LINE_HEIGHT = 30
+# Static config
 ICON_URL = 'http://livebox/assets/common/images/app_conf/'
-LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
-LIST_HEADER_STYLESHEET = '''
-	QHeaderView::section {
-		border-width: 0px 0px 1px 0px;
-		border-style: solid;
-		border-color: grey;
-	}
-	'''
+SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
+
+# Graphical config
+WIND_HEIGHT_ADJUST = 0
+DIAG_HEIGHT_ADJUST = 0
+LIST_HEADER_HEIGHT = 30
+LIST_LINE_HEIGHT = 30
+LIST_STYLESHEET = ''
+LIST_HEADER_STYLESHEET = ''
 
 NET_INTF = [
 	{ 'Key': 'veip0',    'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
@@ -137,6 +137,57 @@ class MonitorTab(IntEnum):
 	DeviceEvents = 3
 	Actions = 4
 	Repeaters = 5  # Index of first, and others incrementally
+
+
+
+# ################################ Tools ################################
+
+
+# Setting up application style depending on platform
+def SetApplicationStyle():
+	global WIND_HEIGHT_ADJUST
+	global DIAG_HEIGHT_ADJUST
+	global LIST_HEADER_HEIGHT
+	global LIST_LINE_HEIGHT
+	global LIST_STYLESHEET
+	global LIST_HEADER_STYLESHEET
+
+	aKeys = QtWidgets.QStyleFactory.keys()
+	aPlatform =  platform.system()
+	aStyle = 'Fusion'
+	if aPlatform == 'Windows':
+		aStyle = 'Windows'
+	elif aPlatform == 'Darwin':
+		aStyle = 'macintosh'
+
+	if aStyle == 'Fusion':
+		WIND_HEIGHT_ADJUST = 2
+		DIAG_HEIGHT_ADJUST = -4
+		LIST_HEADER_HEIGHT = 22
+		LIST_LINE_HEIGHT = 30
+		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
+		LIST_HEADER_STYLESHEET = '''
+			QHeaderView::section {
+				border-width: 0px 0px 1px 0px;
+				border-color: grey;
+			}
+			'''
+	elif aStyle == 'Windows':
+		WIND_HEIGHT_ADJUST = 0
+		DIAG_HEIGHT_ADJUST = 0
+		LIST_HEADER_HEIGHT = 29
+		LIST_LINE_HEIGHT = 30
+		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
+		LIST_HEADER_STYLESHEET = '''
+			QHeaderView::section {
+				border-width: 0px 0px 1px 0px;
+				border-style: solid;
+				border-color: grey;
+			}
+			'''
+
+	if aStyle in aKeys:
+		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
 
 
 

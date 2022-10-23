@@ -1,7 +1,6 @@
 ### Livebox Monitor tools module ###
 
 import sys
-import platform
 import functools
 import re
 import datetime
@@ -45,19 +44,6 @@ Error = functools.partial(print, file = sys.stderr)
 def LogDebug(iLevel, *iArgs):
 	if gVerbosity >= iLevel:
 		sys.stderr.write('###DEBUG-L' + str(iLevel) + ': ' + ' '.join(iArgs) + '\n')
-
-
-# Setting up application style depending on platform
-def SetApplicationStyle():
-	aKeys = QtWidgets.QStyleFactory.keys()
-	aPlatform =  platform.system()
-	aStyle = 'Fusion'
-	if aPlatform == 'Windows':
-		aStyle = 'Windows'
-	elif aPlatform == 'Darwin':
-		aStyle = 'macintosh'
-	if aStyle in aKeys:
-		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
 
 
 # Display an error popup
