@@ -48,11 +48,11 @@ class LmRepeater:
 		aStatsList.setColumnCount(StatsCol.Count)
 		aStatsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
 		aStatsList.setColumnHidden(StatsCol.Key, True)
-		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aStatsList.horizontalHeader().setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aStatsList.setColumnWidth(StatsCol.Name, 90)
 		aStatsList.setColumnWidth(StatsCol.Down, 65)
 		aStatsList.setColumnWidth(StatsCol.Up, 65)
@@ -65,7 +65,7 @@ class LmRepeater:
 		aStatsList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
 		aStatsList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		aStatsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		aStatsList.setMinimumWidth(350)
+		aStatsList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
 
 		i = 0
 		for s in NET_INTF:
