@@ -44,7 +44,7 @@ class LmEvents:
 		self._eventDList.horizontalHeader().setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._eventDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._eventDList.setColumnWidth(DSelCol.Name, 200)
-		self._eventDList.setColumnWidth(DSelCol.MAC, 120)
+		self._eventDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.DUAL_PANE_ADJUST)
 		self._eventDList.verticalHeader().hide()
 		self._eventDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
 		self._eventDList.setSortingEnabled(True)
@@ -53,7 +53,7 @@ class LmEvents:
 		self._eventDList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
 		self._eventDList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._eventDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._eventDList.setMinimumWidth(350)
+		self._eventDList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
 		self._eventDList.clicked.connect(self.eventDeviceListClick)
 
 		# Event list
