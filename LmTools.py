@@ -200,7 +200,7 @@ class TextDialog(QtWidgets.QDialog):
 		self.setWindowTitle(iTitle)
 		if iDoc is None:
 			aTextDoc = QtGui.QTextDocument(iText)
-			aFont = QtGui.QFont('Courier', 9)
+			aFont = QtGui.QFont('Courier New', 9)
 			aTextDoc.setDefaultFont(aFont)
 			self._textBox.setDocument(aTextDoc)
 		else:
