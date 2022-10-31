@@ -188,7 +188,7 @@ class LmEvents:
 
 		# Display event entry
 		aTextDoc = QtGui.QTextDocument()
-		aStandardFont = QtGui.QFont('Courier', 9)
+		aStandardFont = QtGui.QFont('Courier New', 9)
 		aBoldFont = QtGui.QFont('Tahoma', 9, QtGui.QFont.Weight.Bold)
 		aTextDoc.setDefaultFont(aStandardFont)
 		aStandardFormat = QtGui.QTextCharFormat()
