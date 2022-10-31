@@ -516,14 +516,16 @@ class LmRepHandler:
 				self._active = True
 				self.signin()
 			else:
-				self._session = None
 				self._active = False
+				self._signed = False
+				self._session = None
 				self.setTabIcon()
 
 
 	### Process a IP Address change event
 	def processIPAddressEvent(self, iIPv4):
-		self.signout()
+		self._signed = False
+		self._session = None
 		self._ipAddr = iIPv4
 		self.signin()
 
@@ -692,6 +694,7 @@ class LmRepHandler:
 					d = self._session.request('NMC:reboot', { 'reason': 'WebUI reboot' })
 					LmTools.MouseCursor_Normal()
 					if d.get('status', False):
+						self._signed = False
 						self._session = None
 						self.setTabIcon()
 						LmTools.DisplayStatus('Repeater is now restarting.')
