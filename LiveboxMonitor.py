@@ -224,8 +224,8 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 if __name__ == '__main__':
 	LmConf.load()
-	SetApplicationStyle()
 	aApp = QtWidgets.QApplication(sys.argv)
+	SetApplicationStyle()
 	LmIcon.load()
 	aUI = LiveboxMonitorUI()
 	if aUI.isSigned():
