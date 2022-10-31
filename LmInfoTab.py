@@ -43,11 +43,11 @@ class LmInfo:
 		self._statsList.setColumnCount(StatsCol.Count)
 		self._statsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
 		self._statsList.setColumnHidden(StatsCol.Key, True)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._statsList.setColumnWidth(StatsCol.Name, 90)
 		self._statsList.setColumnWidth(StatsCol.Down, 65)
 		self._statsList.setColumnWidth(StatsCol.Up, 65)
@@ -60,7 +60,7 @@ class LmInfo:
 		self._statsList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
 		self._statsList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._statsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._statsList.setMinimumWidth(350)
+		self._statsList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
 
 		i = 0
 		for s in LmConfig.NET_INTF:
