@@ -33,6 +33,7 @@ SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 # Graphical config
 WIND_HEIGHT_ADJUST = 0
 DIAG_HEIGHT_ADJUST = 0
+DUAL_PANE_ADJUST = 0
 LIST_HEADER_HEIGHT = 30
 LIST_LINE_HEIGHT = 30
 LIST_STYLESHEET = ''
@@ -147,6 +148,7 @@ class MonitorTab(IntEnum):
 def SetApplicationStyle():
 	global WIND_HEIGHT_ADJUST
 	global DIAG_HEIGHT_ADJUST
+	global DUAL_PANE_ADJUST
 	global LIST_HEADER_HEIGHT
 	global LIST_LINE_HEIGHT
 	global LIST_STYLESHEET
@@ -158,11 +160,12 @@ def SetApplicationStyle():
 	if aPlatform == 'Windows':
 		aStyle = 'Windows'
 	elif aPlatform == 'Darwin':
-		aStyle = 'macintosh'
+		aStyle = 'macOS'
 
 	if aStyle == 'Fusion':
 		WIND_HEIGHT_ADJUST = 2
 		DIAG_HEIGHT_ADJUST = -4
+		DUAL_PANE_ADJUST = 0
 		LIST_HEADER_HEIGHT = 22
 		LIST_LINE_HEIGHT = 30
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
@@ -175,6 +178,7 @@ def SetApplicationStyle():
 	elif aStyle == 'Windows':
 		WIND_HEIGHT_ADJUST = 0
 		DIAG_HEIGHT_ADJUST = 0
+		DUAL_PANE_ADJUST = 0
 		LIST_HEADER_HEIGHT = 29
 		LIST_LINE_HEIGHT = 30
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
@@ -183,6 +187,20 @@ def SetApplicationStyle():
 				border-width: 0px 0px 1px 0px;
 				border-style: solid;
 				border-color: grey;
+			}
+			'''
+	elif aStyle == 'macOS':
+		WIND_HEIGHT_ADJUST = 4
+		DIAG_HEIGHT_ADJUST = 30
+		DUAL_PANE_ADJUST = 20
+		LIST_HEADER_HEIGHT = 25
+		LIST_LINE_HEIGHT = 30
+		LIST_STYLESHEET = 'color:black; background-color:#DFDFDF; font-size: 10px; gridline-color:#EFEFEF'
+		LIST_HEADER_STYLESHEET = '''
+			QHeaderView::section {
+				border-width: 0px 0px 1px 0px;
+				border-color: grey;
+				font-size: 11px
 			}
 			'''
 
