@@ -88,7 +88,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		aGrid.addWidget(self._tabWidget)
 
 		self.setLayout(aGrid)
-		self.setGeometry(200, 200, 1300,
+		self.setGeometry(100, 100, 1300,
 						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
 		self.show()
 
