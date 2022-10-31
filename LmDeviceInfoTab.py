@@ -40,7 +40,7 @@ class LmDeviceInfo:
 		self._infoDList.horizontalHeader().setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoDList.setColumnWidth(DSelCol.Name, 200)
-		self._infoDList.setColumnWidth(DSelCol.MAC, 120)
+		self._infoDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.DUAL_PANE_ADJUST)
 		self._infoDList.verticalHeader().hide()
 		self._infoDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
 		self._infoDList.setSortingEnabled(True)
@@ -49,7 +49,7 @@ class LmDeviceInfo:
 		self._infoDList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
 		self._infoDList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._infoDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._infoDList.setMinimumWidth(350)
+		self._infoDList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
 		self._infoDList.clicked.connect(self.infoDeviceListClick)
 
 		# Attribute list
