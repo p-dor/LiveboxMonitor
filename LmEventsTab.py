@@ -54,7 +54,7 @@ class LmEvents:
 		self._eventDList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._eventDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._eventDList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
-		self._eventDList.clicked.connect(self.eventDeviceListClick)
+		self._eventDList.itemSelectionChanged.connect(self.eventDeviceListClick)
 
 		# Event list
 		self._eventList = QtWidgets.QTableWidget()
