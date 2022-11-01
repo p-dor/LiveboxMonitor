@@ -835,16 +835,17 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 			if s['Type'] != 'wif':
 				continue
 			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats' , {})
-			aStats = aResult.get('status')
-			if aStats is not None:
-				for aStat in aStats:
-					e = {}
-					e['DeviceKey'] = aStat.get('MACAddress', '')
-					e['Key'] = e['DeviceKey'] + '_' + s['Key']
-					e['Timestamp'] = datetime.datetime.now()
-					e['RxBytes'] = aStat.get('TxBytes', 0)
-					e['TxBytes'] = aStat.get('RxBytes', 0)
-					e['RxErrors'] = aStat.get('TxErrors', 0)
-					e['TxErrors'] = aStat.get('RxErrors', 0)
-					self._wifiStatsReceived.emit(e)
+			if aResult is not None:
+				aStats = aResult.get('status')
+				if aStats is not None:
+					for aStat in aStats:
+						e = {}
+						e['DeviceKey'] = aStat.get('MACAddress', '')
+						e['Key'] = e['DeviceKey'] + '_' + s['Key']
+						e['Timestamp'] = datetime.datetime.now()
+						e['RxBytes'] = aStat.get('TxBytes', 0)
+						e['TxBytes'] = aStat.get('RxBytes', 0)
+						e['RxErrors'] = aStat.get('TxErrors', 0)
+						e['TxErrors'] = aStat.get('RxErrors', 0)
+						self._wifiStatsReceived.emit(e)
 

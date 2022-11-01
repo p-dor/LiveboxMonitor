@@ -142,11 +142,14 @@ class LmSession:
 
 			LmTools.LogDebug(1, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
-			t = self._session.get(self._url + c, headers = self._sahServiceHeaders)
-			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
-			t = t.content
-			#t = b'[' + t.replace(b'}{', b'},{')+b']'
-
+			try:
+				t = self._session.get(self._url + c, headers = self._sahServiceHeaders)
+				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
+				t = t.content
+				#t = b'[' + t.replace(b'}{', b'},{')+b']'
+			except BaseException as e:
+				LmTools.Error('Request error: {}'.format(e))
+				return None
 		else:
 			# Setup request parameters
 			aParameters = { }
@@ -165,14 +168,18 @@ class LmSession:
 			# Send request & headers
 			LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 			aTimeStamp = datetime.datetime.now()
-			t = self._session.post(self._url + c, headers = self._sahServiceHeaders, data = json.dumps(aData))
-			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
-			t = t.content
+			try:
+				t = self._session.post(self._url + c, headers = self._sahServiceHeaders, data = json.dumps(aData))
+				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
+				t = t.content
+			except BaseException as e:
+				LmTools.Error('Request error: {}'.format(e))
+				return None
 
 		if iRaw:
 			return t
 
-		t = t.decode('utf-8', errors='replace')
+		t = t.decode('utf-8', errors = 'replace')
 		if iGet and t.find('}{'):
 			LmTools.LogDebug(2, 'Multiple json lists')
 			t = '[' + t.replace('}{', '},{') + ']'
@@ -218,9 +225,13 @@ class LmSession:
 		# Send request & headers
 		LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 		aTimeStamp = datetime.datetime.now()
-		t = self._session.post(self._url + c, headers = self._sahEventHeaders, data = json.dumps(aData))
-		LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
-		t = t.content
+		try:
+			t = self._session.post(self._url + c, headers = self._sahEventHeaders, data = json.dumps(aData))
+			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
+			t = t.content
+		except BaseException as e:
+			LmTools.Error('Event request error: {}'.format(e))
+			return None
 
 		if iRaw:
 			return t
