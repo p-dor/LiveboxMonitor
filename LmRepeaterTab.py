@@ -276,6 +276,7 @@ class LmRepeater:
 
 	### React to active status change event
 	def repeaterActiveEvent(self, iDeviceKey, iIsActive):
+		print('### repeaterActiveEvent ' + iDeviceKey + ' ' + str(iIsActive)) # ###TODO### DEBUG
 		for r in self._repeaters:
 			if r._key == iDeviceKey:
 				r.processActiveEvent(iIsActive)
@@ -498,6 +499,7 @@ class LmRepHandler:
 
 	### Process a device updated event
 	def processDeviceUpdatedEvent(self, iEvent):
+		print('### processDeviceUpdatedEvent') # ###TODO### DEBUG
 		aIPv4Struct = iEvent.get('IPv4Address')
 		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
 			aIPv4 = None
@@ -511,6 +513,8 @@ class LmRepHandler:
 
 	### Process an active status change event
 	def processActiveEvent(self, iIsActive):
+		print('### processActiveEvent ' + str(iIsActive) + ' ' + str(self.isActive())) # ###TODO### DEBUG
+
 		if self.isActive() != iIsActive:
 			if iIsActive:
 				self._active = True
@@ -524,6 +528,7 @@ class LmRepHandler:
 
 	### Process a IP Address change event
 	def processIPAddressEvent(self, iIPv4):
+		print('### processIPAddressEvent ' + str(iIPv4)) # ###TODO### DEBUG
 		self._signed = False
 		self._session = None
 		self._ipAddr = iIPv4
@@ -1193,22 +1198,23 @@ class RepeaterStatsThread(QtCore.QObject):
 		for r in self._repeaters:
 			if r.isSigned():
 				for s in NET_INTF:
-					aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
-					if aResult is not None:
-						aStats = aResult.get('status')
-						if aStats is not None:
-							e = {}
-							e['Repeater'] = r
-							e['Key'] = s['Key']
-							e['Timestamp'] = datetime.datetime.now()
-							if s['SwapStats']:
-								e['RxBytes'] = aStats.get('TxBytes', 0)
-								e['TxBytes'] = aStats.get('RxBytes', 0)
-								e['RxErrors'] = aStats.get('TxErrors', 0)
-								e['TxErrors'] = aStats.get('RxErrors', 0)
-							else:
-								e['RxBytes'] = aStats.get('RxBytes', 0)
-								e['TxBytes'] = aStats.get('TxBytes', 0)
-								e['RxErrors'] = aStats.get('RxErrors', 0)
-								e['TxErrors'] = aStats.get('TxErrors', 0)
-							self._statsReceived.emit(e)
+					if r._session is not None:
+						aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
+						if aResult is not None:
+							aStats = aResult.get('status')
+							if aStats is not None:
+								e = {}
+								e['Repeater'] = r
+								e['Key'] = s['Key']
+								e['Timestamp'] = datetime.datetime.now()
+								if s['SwapStats']:
+									e['RxBytes'] = aStats.get('TxBytes', 0)
+									e['TxBytes'] = aStats.get('RxBytes', 0)
+									e['RxErrors'] = aStats.get('TxErrors', 0)
+									e['TxErrors'] = aStats.get('RxErrors', 0)
+								else:
+									e['RxBytes'] = aStats.get('RxBytes', 0)
+									e['TxBytes'] = aStats.get('TxBytes', 0)
+									e['RxErrors'] = aStats.get('RxErrors', 0)
+									e['TxErrors'] = aStats.get('TxErrors', 0)
+								self._statsReceived.emit(e)
