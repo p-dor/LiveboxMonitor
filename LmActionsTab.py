@@ -281,10 +281,13 @@ class LmActions:
 		if LmTools.AskQuestion('Are you sure you want to reboot the Livebox?'):
 			try:
 				LmTools.MouseCursor_Busy()
-				self._session.request('NMC:reboot', { 'reason': 'GUI_Reboot' })
+				r = self._session.request('NMC:reboot', { 'reason': 'GUI_Reboot' })
 				LmTools.MouseCursor_Normal()
-				LmTools.DisplayStatus('Application will now quit.')
-				self.close()
+				if r is None:
+					LmTools.DisplayError('NMC:reboot service error')
+				else:
+					LmTools.DisplayStatus('Application will now quit.')
+					self.close()
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.MouseCursor_Normal()

@@ -693,7 +693,7 @@ class LmRepHandler:
 					LmTools.MouseCursor_Busy()
 					d = self._session.request('NMC:reboot', { 'reason': 'WebUI reboot' })
 					LmTools.MouseCursor_Normal()
-					if d.get('status', False):
+					if (d is not None) and (d.get('status', False)):
 						self._signed = False
 						self._session = None
 						self.setTabIcon()
@@ -1194,20 +1194,21 @@ class RepeaterStatsThread(QtCore.QObject):
 			if r.isSigned():
 				for s in NET_INTF:
 					aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
-					aStats = aResult.get('status')
-					if aStats is not None:
-						e = {}
-						e['Repeater'] = r
-						e['Key'] = s['Key']
-						e['Timestamp'] = datetime.datetime.now()
-						if s['SwapStats']:
-							e['RxBytes'] = aStats.get('TxBytes', 0)
-							e['TxBytes'] = aStats.get('RxBytes', 0)
-							e['RxErrors'] = aStats.get('TxErrors', 0)
-							e['TxErrors'] = aStats.get('RxErrors', 0)
-						else:
-							e['RxBytes'] = aStats.get('RxBytes', 0)
-							e['TxBytes'] = aStats.get('TxBytes', 0)
-							e['RxErrors'] = aStats.get('RxErrors', 0)
-							e['TxErrors'] = aStats.get('TxErrors', 0)
-						self._statsReceived.emit(e)
+					if aResult is not None:
+						aStats = aResult.get('status')
+						if aStats is not None:
+							e = {}
+							e['Repeater'] = r
+							e['Key'] = s['Key']
+							e['Timestamp'] = datetime.datetime.now()
+							if s['SwapStats']:
+								e['RxBytes'] = aStats.get('TxBytes', 0)
+								e['TxBytes'] = aStats.get('RxBytes', 0)
+								e['RxErrors'] = aStats.get('TxErrors', 0)
+								e['TxErrors'] = aStats.get('RxErrors', 0)
+							else:
+								e['RxBytes'] = aStats.get('RxBytes', 0)
+								e['TxBytes'] = aStats.get('TxBytes', 0)
+								e['RxErrors'] = aStats.get('RxErrors', 0)
+								e['TxErrors'] = aStats.get('TxErrors', 0)
+							self._statsReceived.emit(e)

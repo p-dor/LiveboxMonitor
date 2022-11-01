@@ -353,11 +353,12 @@ class LiveboxEventThread(QtCore.QObject):
 		self._isRunning = True
 		while (self._isRunning):
 			aResult = self._session.eventRequest(['Devices.Device'], self._channelID)
-			self._channelID = aResult.get('channelid', 0)
-			aEvents = aResult.get('events')
-			if aEvents is not None:
-				for e in aEvents:
-					self._eventReceived.emit(e)
+			if aResult is not None:
+				self._channelID = aResult.get('channelid', 0)
+				aEvents = aResult.get('events')
+				if aEvents is not None:
+					for e in aEvents:
+						self._eventReceived.emit(e)
 
 
 	def stop(self):
