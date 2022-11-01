@@ -50,7 +50,7 @@ class LmDeviceInfo:
 		self._infoDList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._infoDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._infoDList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
-		self._infoDList.clicked.connect(self.infoDeviceListClick)
+		self._infoDList.itemSelectionChanged.connect(self.infoDeviceListClick)
 
 		# Attribute list
 		self._infoAList = QtWidgets.QTableWidget()
