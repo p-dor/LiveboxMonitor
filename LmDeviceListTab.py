@@ -267,6 +267,12 @@ class LmDeviceList:
 		self._eventDList.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
 		self._eventDList.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem('<None>'))
 
+		self._deviceList.setCurrentCell(-1, -1)
+		self._infoDList.setCurrentCell(-1, -1)
+		self._eventDList.setCurrentCell(-1, -1)
+
+		self.initDeviceContext()
+
 		self.endTask()
 
 

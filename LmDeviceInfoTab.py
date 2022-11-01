@@ -103,7 +103,12 @@ class LmDeviceInfo:
 
 		self._tabWidget.addTab(self._deviceInfoTab, 'Device Infos')
 
-		# Context
+		# Init context
+		self.initDeviceContext()
+
+
+	### Init selected device context
+	def initDeviceContext(self):
 		self._currentDeviceMacAddr = ''
 		self._currentDeviceLiveboxName = None
 		self._currentDeviceType = ''
