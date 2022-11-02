@@ -125,28 +125,56 @@ La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
 - **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 
-Lorsqu'un appareil est sélectionné dans la liste ses informations détaillées s'affichent dans la liste de droite. Attributs notables :
-- **Active** : indique sur l'appareil est actif (True) ou non (False).
+Lorsqu'un appareil est sélectionné dans cette liste ses informations détaillées s'affichent dans la liste de droite. Attributs notables :
+- **Active** : indique si l'appareil est actif (True) ou non (False).
+- **Authenticated** : indique si la connexion Wifi de l'appareil a bien été authentifiée.
 - **Blocked** : indique si vous avez bloqué la connexion de l'appareil à la Livebox (True) ou non (False). Le blocage peut être contrôlé avec les boutons `Block` et `Unblock`. Il peut être utile de bloquer un appareil inconnu si vous avez des suspicions.
 - **First connection** : date et heure de la première connexion. Attention cette valeur peut aussi correspondre à la date/heure d'un précédant redémarrage de la Livebox.
 - **Last connection** : date et heure de la dernière connexion.
 - **Last changed** : date et heure du dernier changement détecté pour cet appareil.
 - **Name** : nom connu par la Livebox pour cet appareil, avec la source de ce nom entre parenthèses. Ainsi plusieurs noms peuvent s'afficher pour des sources différentes.
 - **Type** : type connu par la Livebox pour cet appareil, avec la source de ce type entre parenthèses. Ainsi plusieurs types peuvent s'afficher pour des sources différentes.
-- **IPvX Address** : adresse IP (v4 ou v6) de l'appareil. Entre parenthèse s'affiche si l'adresse est atteignable sur le réseau (reacheable) ou non (not reacheable). Si l'adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox une mention s'affiche (Reserved).
+- **IPvX Address** : adresse IP (v4 ou v6) de l'appareil. Entre parenthèses s'affiche si l'adresse est atteignable sur le réseau (reacheable) ou non (not reacheable). Si l'adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox une mention s'affiche (Reserved).
 - **Manufacturer** : le fabriquant de cet appareil, déduit à partir de son adresse MAC. Le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant. C'est un service gratuit, mais il faut créer un compte et indiquer l'API Key correspondante dans le fichier de configuration (entrée `MacAddr API Key`) pour bénéficier de cette fonctionnalité.
+- **Wifi Signal Strength** et **Wifi Signal Noise Ratio** : donne des indications sur la qualité de la connexion pour les appareils Wifi.
 
 ### Boutons
 L'onglet `Device Infos` propose les boutons suivants :
 - **`Refresh`** : rafraichi les informations affichées pour l'appareil sélectionné.
 - **`Assign Name...`** : permet d'attribuer ou d'effacer le nom local (Monitor) et/ou le nom Livebox de l'appareil sélectionné.
+
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
+
 Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
 - **`Assign Type...`** : permet d'attribuer ou d'effacer le type de l'appareil sélectionné.
+
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
+
 Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icone Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
 - **`Block`** : permet de bloquer la connexion de l'appareil sélectionné.
-- **`Unblock`** : permet de débloquer la connexion de l'appareil sélectionné. Le status bloqué ou non s'affiche dans les informations de l'appareil, champs "Blocked".
+- **`Unblock`** : permet de débloquer la connexion de l'appareil sélectionné. L'état bloqué ou non s'affiche dans les informations de l'appareil, champs "Blocked".
+
+
+## Events - Liste des événements reçus pour chaque appareil connu
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events.png)
+
+La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
+- **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
+
+Lorsqu'un appareil est sélectionné dans cette liste tous les événements reçus depuis le lancement du programme pour cet appareil s'affichent dans la liste de droite. La plupart de ces événements ont été interprétés par le programme pour mettre à jour l'interface dynamiquement, et cette liste permet d'avoir un historique. La taille de cet historique par appareil est limitée aux 100 dernières entrées (cette limite peut être ajustée facilement en modifiant la variable `MAX_EVENT_BUFFER_PER_DEVICE` du module `LmEventsTab.py`).
+
+La liste des événements est composée des colonnes :
+- **Time** : heure de réception de l'événement.
+- **Reason** : le type d'événement généré par la Livebox.
+- **Attributes** : aperçu des données brutes de l'événement lui-même, au format.
+
+Un double clic sur un événement ou un clic sur le bouton **`Display Event`** permet d'afficher un dialogue contenant les informations complètes :
+- **Raised** : date et heure précise de réception de l'événement.
+- **Handler** : gestionnaire de l'événement, contenant la plupart du temps la clef de l'appareil qui n'est autre que son adresse MAC.
+- **Reason** : le type d'événement.
+- **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
 
 
 ## Prochaines fonctionnalités prévues
@@ -154,4 +182,3 @@ Il est possible de sélectionner un des types standards connus par la Livebox da
 Prochaines fonctionnalités en cours de développement :
 - Support de la liste des contacts téléphoniques.
 - Support des appels téléphoniques.
-- Paramétrage du style graphique de l'application.
