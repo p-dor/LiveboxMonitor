@@ -177,7 +177,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Display Event`** p
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
 
 
-## Actions - Boutons d'actions et de controle
+## Actions - Boutons d'actions et de contrôle
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions.png)
 
@@ -188,7 +188,7 @@ Les actions concernant le **Wifi** :
 - **`Wifi OFF`** : permet de désactiver l'interface Wifi de la Livebox.
 - **`Guest Wifi ON`** : permet d'activer l'interface Wifi invité de la Livebox.
 - **`Guest Wifi OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
-- **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce plannificateur doit être configuré depuis l'interface Web de la Livebox.
+- **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce planificateur doit être configuré depuis l'interface Web de la Livebox.
 - **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
 - **`Show global status...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
 
@@ -202,10 +202,26 @@ Les actions concernant les **Reboots** (redémarrages de la Livebox) :
 
     Cet historique est particulièrement utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.
     La liste affiche les colonnes suivantes :
-    - **Boot date** : date et heure du démarrage.
-    - **Boot reason** : la raison de ce démarrage. Typiquement "NMC" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur de la Livebox.
-    
+    - **Boot Date** : date et heure du démarrage.
+    - **Boot Reason** : la raison de ce démarrage. Typiquement "NMC" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur de la Livebox.
+    - **Shutdown Date** : la date et heure de l'extinction.
+    - **Shutdown Reason** : la raison de cette extinction. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
 
+Les actions diverses, **Misc** :
+- **Phone Ring** : pour forcer la sonnerie du téléphone afin de la tester.
+- **Show LED Status...* : écran expérimental supposé afficher l'état des LEDs de la Livebox, mais les APIs correspondantes ne semblent plus supportées par la Livebox 5 et les valeurs retournées ne sont pas correctes.
+
+
+## Onglets répéteurs Wifi
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater.png)
+
+Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon un le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
+
+Une icône dans le nom de l'onglet permet de connaitre l'état de la connexion avec le répéteur :
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Cross.png) : le répéteur est inactif ou n'a pas d'adresse IP attribuée.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Prohibition.png) : le répéteur est actif mais aucune session n'est ouverte. Si cet état subsiste vous pouvez essayer de forcer la création d'une session en cliquant sur le bouton `Resign...`.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Tick.png) : le répéteur est actif et une session a été créée pour communiquer avec lui.
 
 
 ## Prochaines fonctionnalités prévues
