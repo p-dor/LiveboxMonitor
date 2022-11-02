@@ -276,7 +276,6 @@ class LmRepeater:
 
 	### React to active status change event
 	def repeaterActiveEvent(self, iDeviceKey, iIsActive):
-		print('### repeaterActiveEvent ' + iDeviceKey + ' ' + str(iIsActive)) # ###TODO### DEBUG
 		for r in self._repeaters:
 			if r._key == iDeviceKey:
 				r.processActiveEvent(iIsActive)
@@ -499,7 +498,6 @@ class LmRepHandler:
 
 	### Process a device updated event
 	def processDeviceUpdatedEvent(self, iEvent):
-		print('### processDeviceUpdatedEvent') # ###TODO### DEBUG
 		aIPv4Struct = iEvent.get('IPv4Address')
 		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
 			aIPv4 = None
@@ -513,9 +511,7 @@ class LmRepHandler:
 
 	### Process an active status change event
 	def processActiveEvent(self, iIsActive):
-		print('### processActiveEvent ' + str(iIsActive) + ' ' + str(self.isActive())) # ###TODO### DEBUG
-
-		if self.isActive() != iIsActive:
+		if self._active != iIsActive:
 			if iIsActive:
 				self._active = True
 				self.signin()
@@ -528,10 +524,10 @@ class LmRepHandler:
 
 	### Process a IP Address change event
 	def processIPAddressEvent(self, iIPv4):
-		print('### processIPAddressEvent ' + str(iIPv4)) # ###TODO### DEBUG
 		self._signed = False
 		self._session = None
 		self._ipAddr = iIPv4
+		self.setTabIcon()
 		self.signin()
 
 
@@ -699,9 +695,6 @@ class LmRepHandler:
 					d = self._session.request('NMC:reboot', { 'reason': 'WebUI reboot' })
 					LmTools.MouseCursor_Normal()
 					if (d is not None) and (d.get('status', False)):
-						self._signed = False
-						self._session = None
-						self.setTabIcon()
 						LmTools.DisplayStatus('Repeater is now restarting.')
 					else:
 						LmTools.DisplayError('NMC:reboot service failed')
