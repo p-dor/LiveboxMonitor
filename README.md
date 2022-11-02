@@ -65,7 +65,7 @@ La liste des appareils affiche les colonnes suivantes :
 - **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth`  signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion, soit 2.4GHz soit 5GHz.
 - **A** : indique si l'appareil est actif ou nom par un A sur fond vert. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
 - **Wifi** : qualité de la connexion Wifi.
-- **E** : indique par une icône avec un point d'exclamation lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consulter via l'onglet `Events`.
+- **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consulter via l'onglet `Events`.
 - **Down** : nombre d'octets reçus par l'appareil depuis le dernier démarrage de la Livebox.
 - **Up** : nombre d'octets envoyés par l'appareil depuis le dernier démarrage de la Livebox.
 - **DRate** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans la dernière seconde si affiché en bleu.
@@ -84,7 +84,7 @@ L'onglet `Device List` propose les boutons suivants :
 - **`Raw Topology`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 
 
-## Livebox Stats/Infos - Statistiques de trafic et informations avancées de la Livebox
+## Livebox Stats/Infos - Statistiques de trafic et infos avancées de la Livebox
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos.png)
 
@@ -107,7 +107,7 @@ Les statistiques semblent parfois surprenantes, mais il s'agit d'une interpréta
 L'onglet `Livebox Stats/Infos` propose les boutons suivants :
 - **`Livebox Infos`** : affiche les informations principales concernant la Livebox, telles que les versions de logiciels, l'adresse IP WAN, les services actifs, l'état de la mémoire, etc.
 - **`Internet Infos`** : affiche le type d'accès internet, les identifiants de connexion, les adresses IPs v4 & v6, la date et heure de la dernière connexion, la bande passante de la connexion, la MTU, etc
-- - **`Wifi Infos`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès y compris pour les accès invités. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
+- **`Wifi Infos`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès y compris pour les accès invités. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
 - **`LAN Infos`** : affiche les informations générales sur la connectivité LAN. Il s'agit des informations DHCP de base et pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
 - **`ONT Infos`** : affiche les informations importantes concernant la connexion et le module Fibre (ONT), telles que la bande passante, la qualité du signal, le numéro de série et les versions logicielles, etc. Les champs `Signal RxPower`, `Signal TxPower`, `Temperature`, `Voltage` et `BIAS` affichent des valeurs vertes si elles correspondent aux normes de qualités acceptables pour la connexion, en rouge si elles représentent un problème.
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos_ONT.png)
@@ -115,6 +115,38 @@ L'onglet `Livebox Stats/Infos` propose les boutons suivants :
 - **`IPTV Infos`** : affiche les informations générales relative aux services de télévision.
 - **`USB Infos`** : affiche les informations concernant le ou les ports USBs. Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox, ses informations sont affichées.
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
+
+
+## Device Infos - Informations détaillées pour chaque appareil connu
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos.png)
+
+La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...`.
+- **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
+
+Lorsqu'un appareil est sélectionné dans la liste ses informations détaillées s'affichent dans la liste de droite. Attributs notables :
+- **Active** : indique sur l'appareil est actif (True) ou non (False).
+- **Blocked** : indique si vous avez bloqué la connexion de l'appareil à la Livebox (True) ou non (False). Le blocage peut être contrôlé avec les boutons `Block` et `Unblock`. Il peut être utile de bloquer un appareil inconnu si vous avez des suspicions.
+- **First connection** : date et heure de la première connexion. Attention cette valeur peut aussi correspondre à la date/heure d'un précédant redémarrage de la Livebox.
+- **Last connection** : date et heure de la dernière connexion.
+- **Last changed** : date et heure du dernier changement détecté pour cet appareil.
+- **Name** : nom connu par la Livebox pour cet appareil, avec la source de ce nom entre parenthèses. Ainsi plusieurs noms peuvent s'afficher pour des sources différentes.
+- **Type** : type connu par la Livebox pour cet appareil, avec la source de ce type entre parenthèses. Ainsi plusieurs types peuvent s'afficher pour des sources différentes.
+- **IPvX Address** : adresse IP (v4 ou v6) de l'appareil. Entre parenthèse s'affiche si l'adresse est atteignable sur le réseau (reacheable) ou non (not reacheable). Si l'adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox une mention s'affiche (Reserved).
+- **Manufacturer** : le fabriquant de cet appareil, déduit à partir de son adresse MAC. Le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant. C'est un service gratuit, mais il faut créer un compte et indiquer l'API Key correspondante dans le fichier de configuration (entrée `MacAddr API Key`) pour bénéficier de cette fonctionnalité.
+
+### Boutons
+L'onglet `Device Infos` propose les boutons suivants :
+- **`Refresh`** : rafraichi les informations affichées pour l'appareil sélectionné.
+- **`Assign Name...`** : permet d'attribuer ou d'effacer le nom local (Monitor) et/ou le nom Livebox de l'appareil sélectionné.
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
+Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
+- **`Assign Type...`** : permet d'attribuer ou d'effacer le type de l'appareil sélectionné.
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
+Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icone Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
+- **`Block`** : permet de bloquer la connexion de l'appareil sélectionné.
+- **`Unblock`** : permet de débloquer la connexion de l'appareil sélectionné. Le status bloqué ou non s'affiche dans les informations de l'appareil, champs "Blocked".
 
 
 ## Prochaines fonctionnalités prévues
