@@ -143,14 +143,14 @@ L'onglet `Device Infos` propose les boutons suivants :
 - **`Refresh`** : rafraichi les informations affichées pour l'appareil sélectionné.
 - **`Assign Name...`** : permet d'attribuer ou d'effacer le nom local (Monitor) et/ou le nom Livebox de l'appareil sélectionné.
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
 
-Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
+    Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
 - **`Assign Type...`** : permet d'attribuer ou d'effacer le type de l'appareil sélectionné.
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
 
-Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icone Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
+    Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icone Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
 - **`Block`** : permet de bloquer la connexion de l'appareil sélectionné.
 - **`Unblock`** : permet de débloquer la connexion de l'appareil sélectionné. L'état bloqué ou non s'affiche dans les informations de l'appareil, champs "Blocked".
 
@@ -175,6 +175,37 @@ Un double clic sur un événement ou un clic sur le bouton **`Display Event`** p
 - **Handler** : gestionnaire de l'événement, contenant la plupart du temps la clef de l'appareil qui n'est autre que son adresse MAC.
 - **Reason** : le type d'événement.
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
+
+
+## Actions - Boutons d'actions et de controle
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions.png)
+
+Cet onglet permet une liste d'actions par catégorie.
+
+Les actions concernant le **Wifi** :
+- **`Wifi ON`** : permet d'activer l'interface Wifi de la Livebox.
+- **`Wifi OFF`** : permet de désactiver l'interface Wifi de la Livebox.
+- **`Guest Wifi ON`** : permet d'activer l'interface Wifi invité de la Livebox.
+- **`Guest Wifi OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
+- **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce plannificateur doit être configuré depuis l'interface Web de la Livebox.
+- **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
+- **`Show global status...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_WifiGlobalStatus.png)
+
+Les actions concernant les **Reboots** (redémarrages de la Livebox) :
+- **`Reboot Livebox...`** : permet de forcer un redémarrage de la Livebox.
+- **`Reboot History...`** : permet d'afficher l'historique des derniers redémarrages.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_RebootHistory.png)
+
+    Cet historique est particulièrement utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.
+    La liste affiche les colonnes suivantes :
+    - **Boot date** : date et heure du démarrage.
+    - **Boot reason** : la raison de ce démarrage. Typiquement "NMC" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur de la Livebox.
+    
+
 
 
 ## Prochaines fonctionnalités prévues
