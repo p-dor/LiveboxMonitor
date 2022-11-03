@@ -209,19 +209,67 @@ Les actions concernant les **Reboots** (redémarrages de la Livebox) :
 
 Les actions diverses, **Misc** :
 - **Phone Ring** : pour forcer la sonnerie du téléphone afin de la tester.
-- **Show LED Status...* : écran expérimental supposé afficher l'état des LEDs de la Livebox, mais les APIs correspondantes ne semblent plus supportées par la Livebox 5 et les valeurs retournées ne sont pas correctes.
+- **Show LED Status...** : écran expérimental supposé afficher l'état des LEDs de la Livebox, mais les APIs correspondantes ne semblent plus supportées par la Livebox 5 et les valeurs retournées ne sont pas correctes.
 
 
 ## Onglets répéteurs Wifi
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater.png)
 
-Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon un le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
+Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
+Les répéteurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Device List` et leur nom peut être changé via le bouton `Assign name...` de l'onglet `Device Infos`.
 
 Une icône dans le nom de l'onglet permet de connaitre l'état de la connexion avec le répéteur :
 - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Cross.png) : le répéteur est inactif ou n'a pas d'adresse IP attribuée.
 - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Prohibition.png) : le répéteur est actif mais aucune session n'est ouverte. Si cet état subsiste vous pouvez essayer de forcer la création d'une session en cliquant sur le bouton `Resign...`.
 - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Tick.png) : le répéteur est actif et une session a été créée pour communiquer avec lui.
+
+Les statistiques de trafic par interface sont affichées sous forme de liste en haut à gauche.
+Et toutes les informations détaillées sont accessibles via la barre de boutons en bas, chaque bouton remplissant la liste d'attributs sur la droite. Il est aussi possible d'exporter l'ensemble des informations dans un fichier. Enfin, une série d'actions est possible via les boutons sur la gauche.
+
+### Statistiques
+
+Liste permettant de surveiller l'état du trafic géré par le répéteur :
+- **Name** : nom de l'interface réseau. `LAN` concerne tout le trafic entre le répéteur et la Livebox. Ensuite on dispose des statistiques par interface précise (les deux prises Ethernet ainsi que les deux bandes Wifi).
+- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **DRate** : taux d'octets reçus par seconde par l'interface dans la dernière seconde.
+- **URate** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde.
+
+Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par le répéteur.
+Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie le répéteur (il ne s'agit pas d'un défaut du programme).
+
+### Actions - Boutons d'actions et de contrôle
+
+Les actions concernant le **Wifi** :
+- **`Wifi ON`** : permet d'activer l'interface Wifi du répéteur.
+- **`Wifi OFF`** : permet de désactiver l'interface Wifi du répéteur.
+- **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi du répéteur. Ce planificateur doit être configuré depuis l'interface Web du répéteur.
+- **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi du répéteur.
+L'état global du Wifi peut être consulté via le bouton `Show global status...` de l'onglet `Actions`.
+
+Les actions concernant les **Reboots** (redémarrages du répéteur) :
+- **`Reboot Repeater...`** : permet de forcer un redémarrage du répéteur.
+- **`Reboot History...`** : permet d'afficher l'historique des derniers redémarrages.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater_RebootHistory.png)
+
+    Cet historique est particulièrement utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel du répéteur.
+    La liste affiche les colonnes suivantes :
+    - **Boot Date** : date et heure du démarrage.
+    - **Boot Reason** : la raison de ce démarrage. Typiquement "NMC" ou "POR" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur du répéteur.
+    - **Shutdown Date** : la date et heure de l'extinction.
+    - **Shutdown Reason** : la raison de cette extinction. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "WebUI reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
+
+Les actions diverses :
+- **Resign...** : pour forcer la création d'une nouvelle session avec le répéteur. Si vous laissez trop longtemps le programme tourner sans visualiser les statistiques du répéteur ni effectuer la moindre action, la session sera automatiquement libérée par le répéteur. Dans ce cas des erreurs vont se produire en effectuant des actions : ce bouton permettra de recréer la session, permettant de reprendre les actions sans erreur.
+
+### Boutons
+Les onglets de répéteur Wifi proposent les boutons suivants :
+- **`Repeater Infos`** : affiche les informations principales concernant le répéteur, telles que les versions de logiciels, le nom du modèle, l'heure de l'horloge internet, etc.
+- **`Wifi Infos`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
+- **`LAN Infos`** : affiche les informations générales sur la connectivité LAN. Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
+- **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
 
 
 ## Prochaines fonctionnalités prévues
