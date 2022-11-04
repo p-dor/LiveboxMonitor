@@ -20,7 +20,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 
 L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique.
 
-Les autres dépendances sont `requests` et `cryptography`.
+Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
 Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour la Livebox 5. Le support des événements a aussi été rajouté.
 
@@ -246,6 +246,7 @@ Les actions concernant le **Wifi** :
 - **`Wifi OFF`** : permet de désactiver l'interface Wifi du répéteur.
 - **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi du répéteur. Ce planificateur doit être configuré depuis l'interface Web du répéteur.
 - **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi du répéteur.
+
 L'état global du Wifi peut être consulté via le bouton `Show global status...` de l'onglet `Actions`.
 
 Les actions concernant les **Reboots** (redémarrages du répéteur) :
