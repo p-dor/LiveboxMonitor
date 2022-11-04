@@ -10,6 +10,7 @@ import sys
 from enum import IntEnum
 
 from PyQt6 import QtCore
+from PyQt6 import QtGui
 from PyQt6 import QtWidgets
 
 import LmTools
@@ -72,6 +73,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Create main window
 	def initUI(self):
 		self.setWindowTitle(WINDOW_TITLE)
+		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
 
 		# Tab Widgets
 		self._tabWidget = QtWidgets.QTabWidget(self)
