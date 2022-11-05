@@ -325,9 +325,9 @@ class LmConf:
 			if aPlatform == 'Windows':
 				return os.path.join(os.environ['APPDATA'], 'LiveboxMonitor')
 			elif aPlatform == 'Darwin':
-				return os.path.join('~', 'Library', 'Application Support', 'LiveboxMonitor')
+				return os.path.join(os.path.expanduser('~'), 'Library', 'Application Support', 'LiveboxMonitor')
 			else:
-				return os.path.join('~', '.config', 'LiveboxMonitor')
+				return os.path.join(os.path.expanduser('~'), '.config', 'LiveboxMonitor')
 		else:
 			# If program is Python script mode, use local dir
 			return ''
