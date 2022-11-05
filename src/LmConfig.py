@@ -11,7 +11,7 @@ from PyQt6 import QtGui
 from PyQt6 import QtWidgets
 from cryptography.fernet import Fernet
 
-import LmTools
+from src import LmTools
 
 
 # ################################ VARS & DEFS ################################
