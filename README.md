@@ -1,4 +1,4 @@
-# LiveboxMonitor
+# ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor
 
 L'application `LiveboxMonitor` est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox,
@@ -30,6 +30,10 @@ Le module `LmSession` est une adaptation du package [sysbus](https://github.com/
 Le programme créé automatiquement dans son répertoire deux fichiers de configuration au format JSON :
 - `Config.txt` : contient tous les paramètres de l'application.
 - `MacAddrTable.txt` : contient la correspondance entre les adresses MAC et les noms d'appareil.
+
+**Note** : lorsque les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, les fichiers de configurations se trouvent dans les répertoires standards du système :
+- Windows : `%APPDATA%\LiveboxMonitor`
+- MacOS : `~/Library/Application Support/LiveboxMonitor`
 
 
 ### Le fichier Config.txt
