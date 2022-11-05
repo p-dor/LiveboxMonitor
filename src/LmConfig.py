@@ -1,9 +1,11 @@
 ### Livebox Monitor Configuration module ###
 
+import sys
+import os
+import platform
 import requests
 import json
 import base64
-import platform
 
 from enum import IntEnum
 
@@ -220,11 +222,13 @@ class LmConf:
 	MacAddrApiKey = MACADDR_API_KEY
 	DeviceIconsLoaded = False
 
+
 	### Load configuration
 	@staticmethod
 	def load():
+		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
 		try:
-			with open(CONFIG_FILE) as aConfigFile:
+			with open(aConfigFilePath) as aConfigFile:
 				aConfig = json.load(aConfigFile)
 				p = aConfig.get('Livebox URL')
 				if p is not None:
@@ -249,8 +253,19 @@ class LmConf:
 	### Save configuration file
 	@staticmethod
 	def save():
+		aConfigPath = LmConf.getConfigDirectory()
+
+		# Create config directory if doesn't exist
+		if not os.path.exists(aConfigPath):
+			try:
+				os.makedirs(aConfigPath)
+			except BaseException as e:
+				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				return
+
+		aConfigFilePath = os.path.join(aConfigPath, CONFIG_FILE)
 		try:
-			with open(CONFIG_FILE, 'w') as aConfigFile:
+			with open(aConfigFilePath, 'w') as aConfigFile:
 				aConfig = {}
 				aConfig['Livebox URL'] = LmConf.LiveboxURL
 				aConfig['Livebox User'] = LmConf.LiveboxUser
@@ -272,8 +287,9 @@ class LmConf:
 	### Load MAC address table
 	@staticmethod
 	def loadMacAddrTable():
+		aMacAddrTableFilePath = os.path.join(LmConf.getConfigDirectory(), LmConf.MacAddrTableFile)
 		try:
-			with open(LmConf.MacAddrTableFile) as aMacTableFile:
+			with open(aMacAddrTableFilePath) as aMacTableFile:
 				LmConf.MacAddrTable = json.load(aMacTableFile)
 		except:
 			LmConf.MacAddrTable = {}
@@ -282,11 +298,39 @@ class LmConf:
 	### Save MAC address table
 	@staticmethod
 	def saveMacAddrTable():
+		aConfigPath = LmConf.getConfigDirectory()
+
+		# Create config directory if doesn't exist
+		if not os.path.exists(aConfigPath):
+			try:
+				os.makedirs(aConfigPath)
+			except BaseException as e:
+				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				return
+
+		aMacAddrTableFilePath = os.path.join(aConfigPath, LmConf.MacAddrTableFile)
 		try:
-			with open(LmConf.MacAddrTableFile, 'w') as aMacTableFile:
+			with open(aMacAddrTableFilePath, 'w') as aMacTableFile:
 				json.dump(LmConf.MacAddrTable, aMacTableFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save MacAddress file. Error: {}'.format(e))
+
+
+	### Determine config files directory
+	@staticmethod
+	def getConfigDirectory():
+		if hasattr(sys, 'frozen'):
+			# If program is built with PyInstaller, use standard OS dirs
+			aPlatform =  platform.system()
+			if aPlatform == 'Windows':
+				return os.path.join(os.environ['APPDATA'], 'LiveboxMonitor')
+			elif aPlatform == 'Darwin':
+				return os.path.join('~', 'Library', 'Application Support', 'LiveboxMonitor')
+			else:
+				return os.path.join('~', '.config', 'LiveboxMonitor')
+		else:
+			# If program is Python script mode, use local dir
+			return ''
 
 
 	### Load device icons
