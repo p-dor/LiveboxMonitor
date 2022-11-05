@@ -4,9 +4,9 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
-import LmTools
-from LmIcons import LmIcon
-import LmConfig
+from src import LmTools
+from src.LmIcons import LmIcon
+from src import LmConfig
 
 
 # ################################ VARS & DEFS ################################

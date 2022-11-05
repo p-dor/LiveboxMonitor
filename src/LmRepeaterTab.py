@@ -8,15 +8,15 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
-import LmTools
-import LmConfig
-from LmConfig import LmConf
-from LmConfig import MonitorTab
-from LmIcons import LmIcon
-from LmSession import LmSession
-from LmInfoTab import InfoCol
-from LmInfoTab import StatsCol
-from LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
+from src import LmTools
+from src import LmConfig
+from src.LmConfig import LmConf
+from src.LmConfig import MonitorTab
+from src.LmIcons import LmIcon
+from src.LmSession import LmSession
+from src.LmInfoTab import InfoCol
+from src.LmInfoTab import StatsCol
+from src.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
 
 
 # ################################ VARS & DEFS ################################

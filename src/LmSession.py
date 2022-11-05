@@ -9,8 +9,8 @@ import datetime
 import requests
 import requests.utils
 
-import LmTools
-from LmConfig import LmConf
+from src import LmTools
+from src.LmConfig import LmConf
 
 
 # ################################ VARS & DEFS ################################

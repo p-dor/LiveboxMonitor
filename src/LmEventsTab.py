@@ -9,9 +9,9 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
-import LmTools
-import LmConfig
-from LmDeviceListTab import DSelCol
+from src import LmTools
+from src import LmConfig
+from src.LmDeviceListTab import DSelCol
 
 
 # ################################ VARS & DEFS ################################

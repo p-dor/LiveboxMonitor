@@ -9,11 +9,11 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
-import LmTools
-import LmConfig
-from LmConfig import LmConf
-from LmDeviceListTab import DSelCol
-from LmInfoTab import InfoCol
+from src import LmTools
+from src import LmConfig
+from src.LmConfig import LmConf
+from src.LmDeviceListTab import DSelCol
+from src.LmInfoTab import InfoCol
 
 
 

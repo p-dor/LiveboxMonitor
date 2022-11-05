@@ -8,9 +8,9 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
-import LmTools
-import LmConfig
-from LmActionsTab import WifiKey, WifiStatus
+from src import LmTools
+from src import LmConfig
+from src.LmActionsTab import WifiKey, WifiStatus
 
 
 # ################################ VARS & DEFS ################################

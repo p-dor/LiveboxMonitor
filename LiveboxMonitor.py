@@ -13,19 +13,19 @@ from PyQt6 import QtCore
 from PyQt6 import QtGui
 from PyQt6 import QtWidgets
 
-import LmTools
-from LmIcons import LmIcon
-from LmConfig import LmConf
-from LmConfig import SetApplicationStyle
-from LmConfig import MonitorTab
-from LmSession import LmSession
-import LmConfig
-import LmDeviceListTab
-import LmInfoTab
-import LmDeviceInfoTab
-import LmEventsTab
-import LmActionsTab
-import LmRepeaterTab
+from src import LmTools
+from src.LmIcons import LmIcon
+from src.LmConfig import LmConf
+from src.LmConfig import SetApplicationStyle
+from src.LmConfig import MonitorTab
+from src.LmSession import LmSession
+from src import LmConfig
+from src import LmDeviceListTab
+from src import LmInfoTab
+from src import LmDeviceInfoTab
+from src import LmEventsTab
+from src import LmActionsTab
+from src import LmRepeaterTab
 
 
 
