@@ -22,7 +22,15 @@ L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et 
 
 Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
-Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour la Livebox 5. Le support des événements a aussi été rajouté.
+**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour la Livebox 5. Le support des événements a aussi été rajouté.
+
+### Téléchargement
+
+Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/raw/main/dist/Win32/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/raw/main/dist/Win32/LiveboxMonitor_Console.exe)
+- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/raw/main/dist/MacOS/LiveboxMonitor.dmg)
+- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/raw/main/dist/MacOS/LiveboxMonitor_Console.dmg)
 
 
 ## Configuration
