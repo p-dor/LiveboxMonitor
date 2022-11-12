@@ -330,7 +330,7 @@ class LmConf:
 				return os.path.join(os.path.expanduser('~'), '.config', 'LiveboxMonitor')
 		else:
 			# If program is Python script mode, use local dir
-			return ''
+			return '.'
 
 
 	### Load device icons
