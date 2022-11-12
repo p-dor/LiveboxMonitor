@@ -435,8 +435,12 @@ class LmRepHandler:
 			self.signout()
 			self._session = LmSession('http://' + self._ipAddr + '/', self._name)
 			r = self._session.signin(True)	# Need to ignore cookie as sessions opened with >1h cookie generate errors
-			if r:
+			if r > 0:
 				self._signed = True
+			elif r < 0:
+				LmTools.MouseCursor_Normal()
+				LmTools.DisplayError('Cannot connect to repeater ' + self._name + '.')
+				self._session = None
 			else:
 				LmTools.MouseCursor_Normal()
 				LmTools.DisplayError('Repeater ' + self._name + ' authentication failed.')

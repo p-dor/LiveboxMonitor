@@ -147,12 +147,16 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		while True:
 			self.startTask('Signing in...')
 			self._session = LmSession()
-			r = self._session.signin(True)
+			r = self._session.signin()
 			self.endTask()
-			if r:
+			if r > 0:
 				return True
 			self._session = None
 			self.close()
+
+			if r < 0:
+				LmTools.DisplayError('Cannot connect to the Livebox.')
+				return False
 
 			aPassword, aOK = QtWidgets.QInputDialog.getText(self, 'Wrong password',
 															'Please enter Livebox password:',

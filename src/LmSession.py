@@ -33,7 +33,7 @@ class LmSession:
 		self._sahEventHeaders = None
 
 
-	### Sign in
+	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iNewSession = False):
 		# Set cookie & contextID file path
 		aStateFilePath = tempfile.gettempdir() + '\\' + self._name + '_state'
@@ -67,10 +67,10 @@ class LmSession:
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
 					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders)
-				except:
-					LmTools.Error('Authentification query failed.')
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
 					self._session = None
-					return False
+					return -1
 				LmTools.LogDebug(2, 'Auth return', r.text)
 
 				if not 'contextID' in r.json()['data']:
@@ -100,19 +100,20 @@ class LmSession:
 			# Check authentication
 			try:
 				r = self._session.post(self._url + 'ws', headers = self._sahServiceHeaders, data = '{"service":"Time", "method":"getTime", "parameters":{}}')
-			except:
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
 				LmTools.Error('Authentification check query failed.')
 				os.remove(aStateFilePath)
 				self.close()
-				return False
+				return -1
 
 			if r.json()['status'] == True:
-				return True
+				return 1
 			else:
 				os.remove(aStateFilePath)
 
 		LmTools.Error('Authentification failed.')
-		return False
+		return 0
 
 
 	### Close session
