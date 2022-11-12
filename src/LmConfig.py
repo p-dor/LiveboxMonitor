@@ -238,7 +238,10 @@ class LmConf:
 					LmConf.LiveboxUser = p
 				p = aConfig.get('Livebox Password')
 				if p is not None:
-					LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+					try:
+						LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+					except:
+						LmConf.LiveboxPassword = LIVEBOX_PASSWORD
 				p = aConfig.get('MacAddr Table File')
 				if p is not None:
 					LmConf.MacAddrTableFile = p
