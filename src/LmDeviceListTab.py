@@ -24,19 +24,21 @@ SOURCES_DEVICE = ['import', 'bridge', 'ip_neigh', 'assoc_dev']
 # List columns
 class DevCol(IntEnum):
 	Key = 0
-	Name = 1
-	LBName = 2
-	MAC = 3
-	IP = 4
-	Link = 5
-	Active = 6
-	Wifi = 7
-	Event = 8
-	Down = 9
-	Up = 10
-	DownRate = 11
-	UpRate = 12
-	Count = 13
+	Type = 1
+	Name = 2
+	LBName = 3
+	MAC = 4
+	IP = 5
+	Link = 6
+	Active = 7
+	Wifi = 8
+	Event = 9
+	Down = 10
+	Up = 11
+	DownRate = 12
+	UpRate = 13
+	Count = 14
+ICON_COLUMNS = [DevCol.Type, DevCol.Active, DevCol.Wifi, DevCol.Event]
 
 class DSelCol(IntEnum):
 	Key = 0		# Must be the same as DevCol.Key
@@ -44,8 +46,8 @@ class DSelCol(IntEnum):
 	MAC = 2
 	Count = 3
 
-# Sorting of stats columns
-class NumericItem(QtWidgets.QTableWidgetItem):
+# Sorting columns by numeric
+class NumericSortItem(QtWidgets.QTableWidgetItem):
 	def __lt__(self, iOther):
 		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
 		if x is None:
@@ -54,6 +56,17 @@ class NumericItem(QtWidgets.QTableWidgetItem):
 		if y is None:
 			y = 0
 		return x < y
+
+# Drawing centered icons
+class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
+	def paint(self, iPainter, iOption, iIndex):
+		if iIndex.column() in ICON_COLUMNS:
+			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
+			if aIcon is not None:
+				aIcon.paint(iPainter, iOption.rect)
+		else:
+			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
+
 
 
 # ################################ LmDeviceList class ################################
@@ -66,8 +79,9 @@ class LmDeviceList:
 		# Device list columns
 		self._deviceList = QtWidgets.QTableWidget()
 		self._deviceList.setColumnCount(DevCol.Count)
-		self._deviceList.setHorizontalHeaderLabels(('Key', 'Name', 'Livebox Name', 'MAC', 'IP', 'Link', 'A', 'Wifi', 'E', 'Down', 'Up', 'DRate', 'URate'))
+		self._deviceList.setHorizontalHeaderLabels(('Key', 'T', 'Name', 'Livebox Name', 'MAC', 'IP', 'Link', 'A', 'Wifi', 'E', 'Down', 'Up', 'DRate', 'URate'))
 		self._deviceList.setColumnHidden(DevCol.Key, True)
+		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
@@ -81,6 +95,7 @@ class LmDeviceList:
 		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self._deviceList.setColumnWidth(DevCol.Type, 48)
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
 		self._deviceList.setColumnWidth(DevCol.LBName, 400)
 		self._deviceList.setColumnWidth(DevCol.MAC, 120)
@@ -101,6 +116,7 @@ class LmDeviceList:
 		self._deviceList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
 		self._deviceList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._deviceList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._deviceList.setItemDelegate(CenteredIconsDelegate(self))
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
@@ -301,7 +317,12 @@ class LmDeviceList:
 
 	### Update device line
 	def updateDeviceLine(self, iLine, iDevice):
+		aDeviceType = iDevice.get('DeviceType', '')
+		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType)
+		self._deviceList.setItem(iLine, DevCol.Type, aDeviceTypeIcon)
+
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))
+		self._deviceList.setItem(iLine, DevCol.LBName, aLBName)
 
 		aIPv4Struct = iDevice.get('IPv4Address')
 		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
@@ -313,34 +334,32 @@ class LmDeviceList:
 			aIPv4Reacheable = aIPv4Struct[0].get('Status', '')
 			aIPv4Reserved = aIPv4Struct[0].get('Reserved', False)
 		aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
+		self._deviceList.setItem(iLine, DevCol.IP, aIP)
 
 		aLink = QtWidgets.QTableWidgetItem(self.findDeviceLink(iDevice.get('Key', '')))
+		self._deviceList.setItem(iLine, DevCol.Link, aLink)
 
 		aActiveStatus = iDevice.get('Active', False)
-		aActive = self.formatActiveTableWidget(aActiveStatus)
+		aActiveIcon = self.formatActiveTableWidget(aActiveStatus)
+		self._deviceList.setItem(iLine, DevCol.Active, aActiveIcon)
 
 		aWifiSignal = iDevice.get('SignalNoiseRatio')
 		if aWifiSignal is not None:
-			aWifiIcon = QtWidgets.QLabel()
+			aWifiIcon = NumericSortItem()
 			if (aWifiSignal >= 40):
-				aWifiIcon.setPixmap(LmIcon.WifiSignal5Pixmap)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
 			elif (aWifiSignal >= 32):
-				aWifiIcon.setPixmap(LmIcon.WifiSignal4Pixmap)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal4Pixmap))
 			elif (aWifiSignal >= 25):
-				aWifiIcon.setPixmap(LmIcon.WifiSignal3Pixmap)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal3Pixmap))
 			elif (aWifiSignal >= 15):
-				aWifiIcon.setPixmap(LmIcon.WifiSignal2Pixmap)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
 			elif (aWifiSignal >= 10):
-				aWifiIcon.setPixmap(LmIcon.WifiSignal1Pixmap)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
 			else:
-				aWifiIcon.setPixmap(LmIcon.WifiSignal0Pixmap)
-			aWifiIcon.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-			self._deviceList.setCellWidget(iLine, DevCol.Wifi, aWifiIcon)
-
-		self._deviceList.setItem(iLine, DevCol.LBName, aLBName)
-		self._deviceList.setItem(iLine, DevCol.IP, aIP)
-		self._deviceList.setItem(iLine, DevCol.Link, aLink)
-		self._deviceList.setItem(iLine, DevCol.Active, aActive)
+				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
+			aWifiIcon.setData(QtCore.Qt.ItemDataRole.UserRole, aWifiSignal)
+			self._deviceList.setItem(iLine, DevCol.Wifi, aWifiIcon)
 
 
 	### Update device name in all lists & tabs
@@ -358,6 +377,23 @@ class LmDeviceList:
 			self.formatNameWidget(self._eventDList, aLine, iDeviceKey, DSelCol.Name)
 
 		self.repeaterUpdateDeviceName(iDeviceKey)
+
+
+	### Format device type cell
+	@staticmethod
+	def formatDeviceTypeTableWidget(iDeviceType):
+		aDeviceTypeIcon = NumericSortItem()
+
+		i = 0
+		for d in LmConfig.DEVICE_TYPES:
+			if iDeviceType == d['Key']:
+				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.getDeviceIcon(d)))
+				break
+			i += 1
+
+		aDeviceTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, i)
+
+		return aDeviceTypeIcon
 
 
 	### Format Name cell
@@ -382,15 +418,14 @@ class LmDeviceList:
 	### Format Active status cell
 	@staticmethod
 	def formatActiveTableWidget(iActiveStatus):
+		aActiveIconItem = NumericSortItem()
 		if iActiveStatus:
-			# Use text and background color instead of icon to enable sorting
-			aActive = QtWidgets.QTableWidgetItem('A')
-			aActive.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-			aActive.setFont(LmTools.BOLD_FONT)
-			aActive.setBackground(QtCore.Qt.GlobalColor.green)
+			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.TickPixmap))
+			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 		else:
-			aActive = QtWidgets.QTableWidgetItem('')
-		return aActive
+			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.CrossPixmap))
+			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
+		return aActiveIconItem
 
 
 	### Format IPv4 cell
@@ -514,16 +549,16 @@ class LmDeviceList:
 		# First remove last event indicator
 		aListLine = self.findDeviceLine(self._deviceList, self._lastEventDeviceKey)
 		if aListLine >= 0:
-			self._deviceList.setCellWidget(aListLine, DevCol.Event, QtWidgets.QLabel())
+			self._deviceList.setItem(aListLine, DevCol.Event, None)
 
 		# Set indicator on new device
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
-			aEventIndicator = QtWidgets.QLabel()
-			aEventIndicator.setPixmap(LmIcon.NotifPixmap)
-			aEventIndicator.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-			self._deviceList.setCellWidget(aListLine, DevCol.Event, aEventIndicator)
-	
+			aEventIndicator = NumericSortItem()
+			aEventIndicator.setIcon(QtGui.QIcon(LmIcon.NotifPixmap))
+			aEventIndicator.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
+			self._deviceList.setItem(aListLine, DevCol.Event, aEventIndicator)
+
 		self._lastEventDeviceKey = iDeviceKey
 
 
@@ -564,14 +599,14 @@ class LmDeviceList:
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
-			aDown = NumericItem(LmTools.FmtBytes(aDownBytes))
+			aDown = NumericSortItem(LmTools.FmtBytes(aDownBytes))
 			aDown.setData(QtCore.Qt.ItemDataRole.UserRole, aDownBytes)
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Down, aDown)
 
-			aUp = NumericItem(LmTools.FmtBytes(aUpBytes))
+			aUp = NumericSortItem(LmTools.FmtBytes(aUpBytes))
 			aUp.setData(QtCore.Qt.ItemDataRole.UserRole, aUpBytes)
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
@@ -579,7 +614,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = NumericItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -589,7 +624,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -614,8 +649,8 @@ class LmDeviceList:
 			aActiveStatus = iEvent.get('Active')
 			if aActiveStatus is not None:
 				aIsActive = aActiveStatus != '0'
-				aActive = self.formatActiveTableWidget(aIsActive)
-				self._deviceList.setItem(aListLine, DevCol.Active, aActive)
+				aActiveIcon = self.formatActiveTableWidget(aIsActive)
+				self._deviceList.setItem(aListLine, DevCol.Active, aActiveIcon)
 				self.repeaterActiveEvent(iDeviceKey, aIsActive)
 
 			# Check if IP reachable status changed
@@ -774,7 +809,7 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = NumericItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -786,7 +821,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)

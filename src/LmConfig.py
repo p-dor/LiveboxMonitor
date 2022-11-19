@@ -220,7 +220,7 @@ class LmConf:
 	MacAddrTableFile = MACADDR_TABLE_FILE
 	MacAddrTable = {}
 	MacAddrApiKey = MACADDR_API_KEY
-	DeviceIconsLoaded = False
+	AllDeviceIconsLoaded = False
 
 
 	### Load configuration
@@ -336,20 +336,33 @@ class LmConf:
 			return '.'
 
 
-	### Load device icons
+	### Get a device icon
 	@staticmethod
-	def loadDeviceIcons():
-		if not LmConf.DeviceIconsLoaded:
-			for d in DEVICE_TYPES:
+	def getDeviceIcon(iDevice):
+		if LmConf.AllDeviceIconsLoaded:
+			return iDevice['PixMap']
+		else:
+			aIconPixMap = iDevice.get('PixMap', None)
+			if aIconPixMap is None:
 				aIconPixMap = QtGui.QPixmap()
 
 				try:
-					aIconData = requests.get(ICON_URL + d['Icon'])
+					aIconData = requests.get(ICON_URL + iDevice['Icon'])
 					if not aIconPixMap.loadFromData(aIconData.content):
-						LmTools.Error('Cannot load device icon ' + d['Icon'] + '.')
+						LmTools.Error('Cannot load device icon ' + iDevice['Icon'] + '.')
 				except:
-					LmTools.Error('Cannot request device icon ' + d['Icon'] + '.')
+					LmTools.Error('Cannot request device icon ' + iDevice['Icon'] + '.')
 
-				d['PixMap'] = aIconPixMap
+				iDevice['PixMap'] = aIconPixMap
 
-			LmConf.DeviceIconsLoaded = True
+			return aIconPixMap
+
+
+	### Load all device icons
+	@staticmethod
+	def loadDeviceIcons():
+		if not LmConf.AllDeviceIconsLoaded:
+			for d in DEVICE_TYPES:
+				LmConf.getDeviceIcon(d)
+
+			LmConf.AllDeviceIconsLoaded = True
