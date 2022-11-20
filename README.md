@@ -70,12 +70,13 @@ Un fichier de noms local offre la garanti de savoir si un appareil est vraiment 
 
 ### Liste
 La liste des appareils affiche les colonnes suivantes :
-- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
-- **Livebox Name** : nom de l'appareil tel que paramétré dans la Livebox et visible dans l'interface Web de la Livebox. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
+- **T** : icône correspondant au type de l'appareil. Ce type peut être attribué ou changé via le bouton `Assign Type...` de l'onglet `Device Infos`.
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...` de l'onglet `Device Infos`.
+- **Livebox Name** : nom de l'appareil tel que paramétré dans la Livebox et visible dans l'interface Web de la Livebox. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...` de l'onglet `Device Infos`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 - **IP** : adresse IP v4 de l'appareil sur le LAN. Cette adresse s'affiche en caractères gras si cette adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox. Et elle s'affiche en rouge si l'adresse n'est pas atteignable sur le réseau (unreacheable), typiquement lorsque l'appareil n'est pas actif.
 - **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth`  signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion, soit 2.4GHz soit 5GHz.
-- **A** : indique si l'appareil est actif ou nom par un A sur fond vert. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
+- **A** : indique par une icône si l'appareil est actif ou non. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
 - **Wifi** : qualité de la connexion Wifi.
 - **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consulter via l'onglet `Events`.
 - **Down** : nombre d'octets reçus par l'appareil depuis le dernier démarrage de la Livebox.
@@ -134,7 +135,7 @@ L'onglet `Livebox Stats/Infos` propose les boutons suivants :
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos.png)
 
 La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
-- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...`.
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 
 Lorsqu'un appareil est sélectionné dans cette liste ses informations détaillées s'affichent dans la liste de droite. Attributs notables :
@@ -172,7 +173,7 @@ L'onglet `Device Infos` propose les boutons suivants :
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events.png)
 
 La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
-- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign name...` de l'onglet `Device Infos`.
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...` de l'onglet `Device Infos`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 
 Lorsqu'un appareil est sélectionné dans cette liste tous les événements reçus depuis le lancement du programme pour cet appareil s'affichent dans la liste de droite. La plupart de ces événements ont été interprétés par le programme pour mettre à jour l'interface dynamiquement, et cette liste permet d'avoir un historique. La taille de cet historique par appareil est limitée aux 100 dernières entrées (cette limite peut être ajustée facilement en modifiant la variable `MAX_EVENT_BUFFER_PER_DEVICE` du module `LmEventsTab.py`).
@@ -229,7 +230,7 @@ Les actions diverses, **Misc** :
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater.png)
 
 Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
-Les répéteurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Device List` et leur nom peut être changé via le bouton `Assign name...` de l'onglet `Device Infos`.
+Les répéteurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Device List` et leur nom peut être changé via le bouton `Assign Name...` de l'onglet `Device Infos`.
 
 Une icône dans le nom de l'onglet permet de connaitre l'état de la connexion avec le répéteur :
 - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Cross.png) : le répéteur est inactif ou n'a pas d'adresse IP attribuée.
