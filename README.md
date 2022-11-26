@@ -1,6 +1,6 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor
 
-L'application `LiveboxMonitor` est une interface graphique dynamique pour :
+L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox,
 - Obtenir des statistiques détaillées de trafic,
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
@@ -49,7 +49,7 @@ Le programme créé automatiquement dans son répertoire deux fichiers de config
 Le programme supporte ces clefs de configuration :  
 `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.  
 `Livebox User` : login pour l'ouverture de session. Par défaut `admin`.  
-`Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce le mot de passe est demandé automatiquement au lancement du programme si le mot de passe n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.  
+`Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce mot de passe est demandé automatiquement au lancement du programme s'il n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.  
 `MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.  
 `MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
 
