@@ -9,7 +9,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler l'état du Wifi,
 - Contrôler un ou plusieurs répéteur Wifi Orange connecté.
 
-**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 avec une connexion Fibre / ONT**, des tests avec une Livebox 6 seraient bienvenus.
+**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté sans beaucoup de tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus.
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 

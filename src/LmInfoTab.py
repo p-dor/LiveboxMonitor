@@ -1373,6 +1373,10 @@ class LmInfo:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Error
 			u[WifiKey.Wifi5Status] = WifiStatus.Error
 			u[WifiKey.Wifi5VAP] = WifiStatus.Error
+			if self._liveboxModel == 'LB6':
+				u[WifiKey.Wifi6Enable] = WifiStatus.Error
+				u[WifiKey.Wifi6Status] = WifiStatus.Error
+				u[WifiKey.Wifi6VAP] = WifiStatus.Error
 		else:
 			for s in LmConfig.NET_INTF:
 				if s['Type'] != 'wif':
@@ -1382,10 +1386,14 @@ class LmInfo:
 					aEnableKey = WifiKey.Wifi2Enable
 					aStatusKey = WifiKey.Wifi2Status
 					aVAPKey = WifiKey.Wifi2VAP
-				else:
+				elif s['Name'] == 'Wifi 5GHz':
 					aEnableKey = WifiKey.Wifi5Enable
 					aStatusKey = WifiKey.Wifi5Status
 					aVAPKey = WifiKey.Wifi5VAP
+				else:
+					aEnableKey = WifiKey.Wifi6Enable
+					aStatusKey = WifiKey.Wifi6Status
+					aVAPKey = WifiKey.Wifi6VAP
 
 				# Get Wifi interface key in wlanradio list
 				aIntfKey = None

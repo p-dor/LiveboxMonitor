@@ -41,7 +41,11 @@ LIST_LINE_HEIGHT = 30
 LIST_STYLESHEET = ''
 LIST_HEADER_STYLESHEET = ''
 
-NET_INTF = [
+# Interfaces
+NET_INTF = []
+
+# LB5 Interfaces
+NET_INTF_LB5 = [
 	{ 'Key': 'veip0',    'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
 	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
@@ -52,6 +56,22 @@ NET_INTF = [
 	{ 'Key': 'eth4',     'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
 	{ 'Key': 'wlguest2', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
 	{ 'Key': 'wlguest5', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+]
+
+# LB6
+NET_INTF_LB6 = [
+	{ 'Key': 'veip0',        'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'bridge',       'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'ETH1',         'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH2',         'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH3',         'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH4',         'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH0',         'Name': 'Ether WAN',    'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv0',  'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv0',  'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap6g0priv0',  'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap2g0guest0', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
 DEVICE_TYPES = [
@@ -128,7 +148,8 @@ DEVICE_TYPES = [
 	{ 'Key': 'Domestic Robot',              'Name': 'Domestic Robot',             'Icon': 'e_Homelive.png' },
 	{ 'Key': 'ExtenderWiFiPlus',            'Name': 'Extender Wi-Fi Plus',        'Icon': 'e_pointacceswifi.png' },
 	{ 'Key': 'Computer',                    'Name': 'Windows Computer',           'Icon': 'e_ordibureau_windows.png' },
-	{ 'Key': 'SAH AP',                      'Name': 'Wi-Fi Repeater',             'Icon': 'e_pointacceswifi.png' }
+	{ 'Key': 'SAH AP',                      'Name': 'Wi-Fi Repeater',             'Icon': 'e_pointacceswifi.png' },
+	{ 'Key': 'repeteurwifi6',               'Name': 'Wi-Fi Repeater',             'Icon': 'e_pointacceswifi.png' }
 ]
 
 
@@ -144,7 +165,6 @@ class MonitorTab(IntEnum):
 
 
 # ################################ Tools ################################
-
 
 # Setting up application style depending on platform
 def SetApplicationStyle():
@@ -208,6 +228,18 @@ def SetApplicationStyle():
 
 	if aStyle in aKeys:
 		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
+
+
+# Setup configuration according to Livebox model
+def SetLiveboxModel(iModel):
+	global NET_INTF
+	global NET_INTF_LB5
+	global NET_INTF_LB6
+
+	if iModel == 'LB6':
+		NET_INTF = NET_INTF_LB6
+	else:
+		NET_INTF = NET_INTF_LB5
 
 
 

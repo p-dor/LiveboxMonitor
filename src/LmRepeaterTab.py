@@ -22,16 +22,45 @@ from src.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
 # ################################ VARS & DEFS ################################
 
 # Static Config
-WIFI_REPEATER_TYPE = 'SAH AP'
+WIFI_REPEATER_TYPES = ['SAH AP', 'repeteurwifi6']
 DEFAULT_REPEATER_NAME = 'RW #'
 
-NET_INTF = [
+# Interfaces
+NET_INTF = []
+
+# LB5 Interfaces
+NET_INTF_LB5 = [
 	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
 	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
 ]
+
+# LB6 Interfaces
+NET_INTF_LB6 = [
+	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap6g0priv', 'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  }
+]
+
+
+
+# ################################ Tools ################################
+
+# Setup configuration according to Livebox model
+def SetRepeaterLiveboxModel(iModel):
+	global NET_INTF
+	global NET_INTF_LB5
+	global NET_INTF_LB6
+
+	if iModel == 'LB6':
+		NET_INTF = NET_INTF_LB6
+	else:
+		NET_INTF = NET_INTF_LB5
 
 
 
@@ -203,7 +232,7 @@ class LmRepeater:
 
 	### Itentify potential Wifi Repeater device & add it to the list
 	def identifyRepeater(self, iDevice):
-		if iDevice.get('DeviceType', '') == WIFI_REPEATER_TYPE:
+		if iDevice.get('DeviceType', '') in WIFI_REPEATER_TYPES:
 			aIndex = len(self._repeaters)
 			aKey = iDevice.get('Key', '')
 
@@ -295,7 +324,7 @@ class LmRepeater:
 		aGlobalStatus = []
 
 		for r in self._repeaters:
-			u = r.getWifiStatus()
+			u = r.getWifiStatus(self._liveboxModel)
 			aGlobalStatus.append(u)
 
 		return aGlobalStatus
@@ -1026,7 +1055,7 @@ class LmRepHandler:
 
 
 	### Get Wifi statuses (used by ActionsTab)
-	def getWifiStatus(self):
+	def getWifiStatus(self, iLiveboxModel):
 		u = {}
 		u[WifiKey.AccessPoint] = self._name
 
@@ -1040,6 +1069,10 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Inactive
 			u[WifiKey.Wifi5Status] = WifiStatus.Inactive
 			u[WifiKey.Wifi5VAP] = WifiStatus.Inactive
+			if iLiveboxModel == 'LB6':
+				u[WifiKey.Wifi6Enable] = WifiStatus.Inactive
+				u[WifiKey.Wifi6Status] = WifiStatus.Inactive
+				u[WifiKey.Wifi6VAP] = WifiStatus.Inactive
 			return u
 
 		if not self.isSigned():
@@ -1052,6 +1085,10 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5Status] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5VAP] = WifiStatus.Unsigned
+			if iLiveboxModel == 'LB6':
+				u[WifiKey.Wifi6Enable] = WifiStatus.Unsigned
+				u[WifiKey.Wifi6Status] = WifiStatus.Unsigned
+				u[WifiKey.Wifi6VAP] = WifiStatus.Unsigned
 			return u
 
 		try:
@@ -1116,6 +1153,10 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Error
 			u[WifiKey.Wifi5Status] = WifiStatus.Error
 			u[WifiKey.Wifi5VAP] = WifiStatus.Error
+			if iLiveboxModel == 'LB6':
+				u[WifiKey.Wifi6Enable] = WifiStatus.Error
+				u[WifiKey.Wifi6Status] = WifiStatus.Error
+				u[WifiKey.Wifi6VAP] = WifiStatus.Error
 		else:
 			for s in NET_INTF:
 				if s['Type'] != 'wif':
@@ -1125,10 +1166,14 @@ class LmRepHandler:
 					aEnableKey = WifiKey.Wifi2Enable
 					aStatusKey = WifiKey.Wifi2Status
 					aVAPKey = WifiKey.Wifi2VAP
-				else:
+				elif s['Name'] == 'Wifi 5GHz':
 					aEnableKey = WifiKey.Wifi5Enable
 					aStatusKey = WifiKey.Wifi5Status
 					aVAPKey = WifiKey.Wifi5VAP
+				else:
+					aEnableKey = WifiKey.Wifi6Enable
+					aStatusKey = WifiKey.Wifi6Status
+					aVAPKey = WifiKey.Wifi6VAP
 
 				# Get Wifi interface key in wlanradio list
 				aIntfKey = None

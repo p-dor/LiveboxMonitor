@@ -17,6 +17,7 @@ from src import LmTools
 from src.LmIcons import LmIcon
 from src.LmConfig import LmConf
 from src.LmConfig import SetApplicationStyle
+from src.LmConfig import SetLiveboxModel
 from src.LmConfig import MonitorTab
 from src.LmSession import LmSession
 from src import LmConfig
@@ -59,8 +60,14 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.initWifiStatsLoop()
 			self.initStatsLoop()
 			self.initRepeaterStatsLoop()
-		self.initUI()
+		self.setWindowTitle(WINDOW_TITLE)
+		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
+		self.setGeometry(100, 100, 1300,
+						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
+		self.show()	
 		if self.signin():
+			self.adjustToLiveboxModel()
+			self.initUI()
 			LmConf.loadMacAddrTable()
 			self.loadDeviceList()
 			self.initRepeaters()
@@ -72,9 +79,6 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 	### Create main window
 	def initUI(self):
-		self.setWindowTitle(WINDOW_TITLE)
-		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
-
 		# Tab Widgets
 		self._tabWidget = QtWidgets.QTabWidget(self)
 		self._tabWidget.currentChanged.connect(self.tabChangedEvent)
@@ -90,9 +94,6 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		aGrid.addWidget(self._tabWidget)
 
 		self.setLayout(aGrid)
-		self.setGeometry(100, 100, 1300,
-						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
-		self.show()
 
 
 	### Handle change of tab event
@@ -180,6 +181,31 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		if self.isSigned():
 			self._session.close()
 			self._session = None
+
+
+	### Adjust configuration to Livebox model
+	def adjustToLiveboxModel(self):
+		try:
+			d = self._session.request('DeviceInfo:get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			LmTools.Error('Error: cannot determine Livebox model')
+			self._liveboxModel = 'LBx'
+		else:
+			aModel = d.get('ProductClass', '')
+			if aModel == 'Livebox 6':
+				self._liveboxModel = 'LB6'
+			elif aModel == 'Livebox Fibre':
+				self._liveboxModel = 'LB5'
+			else:
+				self._liveboxModel = 'LBx'
+
+		SetLiveboxModel(self._liveboxModel)
+		LmRepeaterTab.SetRepeaterLiveboxModel(self._liveboxModel)
 
 
 	### Exit with escape

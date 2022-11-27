@@ -26,6 +26,9 @@ class WifiKey:
 	Wifi5Enable = 'W5E'
 	Wifi5Status = 'W5S'
 	Wifi5VAP = 'W5V'
+	Wifi6Enable = 'W6E'
+	Wifi6Status = 'W6S'
+	Wifi6VAP = 'W6V'
 	Guest2VAP = 'G2V'
 	Guest5VAP = 'G5V'
 
@@ -272,7 +275,7 @@ class LmActions:
 
 		self.endTask()
 
-		aStatusDialog = WifiGlobalStatusDialog(self, aGlobalStatus)
+		aStatusDialog = WifiGlobalStatusDialog(self, aGlobalStatus, self._liveboxModel)
 		aStatusDialog.exec()
 
 
@@ -428,7 +431,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 
 # ############# Display Wifi global status dialog #############
 class WifiGlobalStatusDialog(QtWidgets.QDialog):
-	def __init__(self, iParent, iStatus):
+	def __init__(self, iParent, iStatus, iLiveboxModel):
 		super(WifiGlobalStatusDialog, self).__init__(iParent)
 
 		self._status = iStatus
@@ -464,7 +467,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._statusTable, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		i = self.loadStatus()
+		i = self.loadStatus(iLiveboxModel)
 		self.resize(550, 56 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * i) + LmConfig.DIAG_HEIGHT_ADJUST)
 
 		self.setWindowTitle('Wifi Global Status')
@@ -472,7 +475,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		self.show()
 
 
-	def loadStatus(self):
+	def loadStatus(self, iLiveboxModel):
 		i = 0
 		i = self.addStatusLine('Wifi Enabled', WifiKey.Enable, i)
 		i = self.addStatusLine('Wifi Active', WifiKey.Status, i)
@@ -483,6 +486,10 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		i = self.addStatusLine('Wifi 5GHz Enabled', WifiKey.Wifi5Enable, i)
 		i = self.addStatusLine('Wifi 5GHz Active', WifiKey.Wifi5Status, i)
 		i = self.addStatusLine('Wifi 5GHz VAP', WifiKey.Wifi5VAP, i)
+		if iLiveboxModel == 'LB6':
+			i = self.addStatusLine('Wifi 6GHz Enabled', WifiKey.Wifi6Enable, i)
+			i = self.addStatusLine('Wifi 6GHz Active', WifiKey.Wifi6Status, i)
+			i = self.addStatusLine('Wifi 6GHz VAP', WifiKey.Wifi6VAP, i)
 		i = self.addStatusLine('Guest 2.4GHz VAP', WifiKey.Guest2VAP, i)
 		i = self.addStatusLine('Guest 5GHz VAP', WifiKey.Guest5VAP, i)
 		return i
