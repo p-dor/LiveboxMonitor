@@ -99,7 +99,7 @@ class LmDeviceList:
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
 		self._deviceList.setColumnWidth(DevCol.LBName, 400)
 		self._deviceList.setColumnWidth(DevCol.MAC, 120)
-		self._deviceList.setColumnWidth(DevCol.IP, 90)
+		self._deviceList.setColumnWidth(DevCol.IP, 105)
 		self._deviceList.setColumnWidth(DevCol.Link, 150)
 		self._deviceList.setColumnWidth(DevCol.Active, 10)
 		self._deviceList.setColumnWidth(DevCol.Wifi, 70)
