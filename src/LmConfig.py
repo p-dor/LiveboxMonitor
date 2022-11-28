@@ -29,7 +29,7 @@ MACADDR_TABLE_FILE = 'MacAddrTable.txt'
 MACADDR_API_KEY = ''
 
 # Static config
-ICON_URL = 'http://livebox/assets/common/images/app_conf/'
+ICON_URL = 'assets/common/images/app_conf/'
 SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 
 # Graphical config
@@ -379,7 +379,7 @@ class LmConf:
 				aIconPixMap = QtGui.QPixmap()
 
 				try:
-					aIconData = requests.get(ICON_URL + iDevice['Icon'])
+					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'])
 					if not aIconPixMap.loadFromData(aIconData.content):
 						LmTools.Error('Cannot load device icon ' + iDevice['Icon'] + '.')
 				except:
