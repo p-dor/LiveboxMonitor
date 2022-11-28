@@ -22,7 +22,7 @@ from src.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
 # ################################ VARS & DEFS ################################
 
 # Static Config
-WIFI_REPEATER_TYPES = ['SAH AP', 'repeteurwifi6']
+WIFI_REPEATER_PRODUCT_CLASSES = ['WIFI6REPSERCOMM']
 DEFAULT_REPEATER_NAME = 'RW #'
 
 # Interfaces
@@ -232,7 +232,7 @@ class LmRepeater:
 
 	### Itentify potential Wifi Repeater device & add it to the list
 	def identifyRepeater(self, iDevice):
-		if iDevice.get('DeviceType', '') in WIFI_REPEATER_TYPES:
+		if iDevice.get('ProductClass', '' ) in WIFI_REPEATER_PRODUCT_CLASSES:
 			aIndex = len(self._repeaters)
 			aKey = iDevice.get('Key', '')
 
@@ -463,7 +463,11 @@ class LmRepHandler:
 		if self.isActive():
 			self.signout()
 			self._session = LmSession('http://' + self._ipAddr + '/', self._name)
-			r = self._session.signin(True)	# Need to ignore cookie as sessions opened with >1h cookie generate errors
+			try:
+				r = self._session.signin(True)	# Need to ignore cookie as sessions opened with >1h cookie generate errors
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				r = -1
 			if r > 0:
 				self._signed = True
 			elif r < 0:
