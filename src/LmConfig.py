@@ -58,7 +58,7 @@ NET_INTF_LB5 = [
 	{ 'Key': 'wlguest5', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
-# LB6
+# LB6 Interfaces
 NET_INTF_LB6 = [
 	{ 'Key': 'veip0',        'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
 	{ 'Key': 'bridge',       'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
@@ -66,7 +66,7 @@ NET_INTF_LB6 = [
 	{ 'Key': 'ETH2',         'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'ETH3',         'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'ETH4',         'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'ETH0',         'Name': 'Ether WAN',    'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH0',         'Name': 'Ether 2.5G',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'vap2g0priv0',  'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
 	{ 'Key': 'vap5g0priv0',  'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
 	{ 'Key': 'vap6g0priv0',  'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  },
@@ -74,6 +74,22 @@ NET_INTF_LB6 = [
 	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
+# Interface name mapping
+INTF_NAME_MAP = []
+
+# LB5 Interface name mapping
+INTF_NAME_MAP_LB5 = {
+	"Livebox":  {"eth0":"Eth1", "eth1":"Eth2", "eth2":"Eth3", "eth3":"Eth4"},
+	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
+}
+
+# LB6 Interface name mapping
+INTF_NAME_MAP_LB6 = {
+	"Livebox":  {"eth0":"Eth4", "eth1":"Eth3", "eth2":"Eth2", "eth3":"Eth1", "eth4":"Eth2.5G"},
+	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
+}
+
+# Device types & icons
 DEVICE_TYPES = [
 	{ 'Key': 'Unknown',                     'Name': 'Unknown',                    'Icon': 'e_default_device.png' },
 	{ 'Key': 'AC Outlet',                   'Name': 'AC Outlet',                  'Icon': 'e_smart_plug.png' },
@@ -235,11 +251,16 @@ def SetLiveboxModel(iModel):
 	global NET_INTF
 	global NET_INTF_LB5
 	global NET_INTF_LB6
+	global INTF_NAME_MAP
+	global INTF_NAME_MAP_LB5
+	global INTF_NAME_MAP_LB6
 
 	if iModel == 'LB6':
 		NET_INTF = NET_INTF_LB6
+		INTF_NAME_MAP = INTF_NAME_MAP_LB6
 	else:
 		NET_INTF = NET_INTF_LB5
+		INTF_NAME_MAP = INTF_NAME_MAP_LB5
 
 
 
