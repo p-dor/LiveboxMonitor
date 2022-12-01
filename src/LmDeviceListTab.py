@@ -336,30 +336,38 @@ class LmDeviceList:
 		aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
 		self._deviceList.setItem(iLine, DevCol.IP, aIP)
 
-		aLink = QtWidgets.QTableWidgetItem(self.findDeviceLink(iDevice.get('Key', '')))
+		aLinkIntf = self.findDeviceLink(iDevice.get('Key', ''))
+		if aLinkIntf is None:
+			aLinkName = 'Unknown'
+			aLinkType = ''
+		else:
+			aLinkName = aLinkIntf['Name']
+			aLinkType = aLinkIntf['Type']
+		aLink = QtWidgets.QTableWidgetItem(aLinkName)
 		self._deviceList.setItem(iLine, DevCol.Link, aLink)
 
 		aActiveStatus = iDevice.get('Active', False)
 		aActiveIcon = self.formatActiveTableWidget(aActiveStatus)
 		self._deviceList.setItem(iLine, DevCol.Active, aActiveIcon)
 
-		aWifiSignal = iDevice.get('SignalNoiseRatio')
-		if aWifiSignal is not None:
-			aWifiIcon = NumericSortItem()
-			if (aWifiSignal >= 40):
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
-			elif (aWifiSignal >= 32):
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal4Pixmap))
-			elif (aWifiSignal >= 25):
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal3Pixmap))
-			elif (aWifiSignal >= 15):
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
-			elif (aWifiSignal >= 10):
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
-			else:
-				aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
-			aWifiIcon.setData(QtCore.Qt.ItemDataRole.UserRole, aWifiSignal)
-			self._deviceList.setItem(iLine, DevCol.Wifi, aWifiIcon)
+		if aLinkType == 'wif':
+			aWifiSignal = iDevice.get('SignalNoiseRatio')
+			if aWifiSignal is not None:
+				aWifiIcon = NumericSortItem()
+				if aWifiSignal >= 40:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
+				elif aWifiSignal >= 32:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal4Pixmap))
+				elif aWifiSignal >= 25:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal3Pixmap))
+				elif aWifiSignal >= 15:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
+				elif aWifiSignal >= 10:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
+				else:
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
+				aWifiIcon.setData(QtCore.Qt.ItemDataRole.UserRole, aWifiSignal)
+				self._deviceList.setItem(iLine, DevCol.Wifi, aWifiIcon)
 
 
 	### Update device name in all lists & tabs
@@ -472,10 +480,19 @@ class LmDeviceList:
 				iInterfaceKey = d.get('Key', '')
 				aInterfaceType = d.get('InterfaceType', '')
 				if aInterfaceType == 'Ethernet':
+					aInterfaceType = 'eth'
 					iInterfaceName = d.get('NetDevName', '')
 					if len(iInterfaceName) == 0:
 						iInterfaceName = d.get('Name', '')
+					if iDeviceName == 'Livebox':
+						aNameMap = LmConfig.INTF_NAME_MAP['Livebox']
+					else:
+						aNameMap = LmConfig.INTF_NAME_MAP['Repeater']
+					aMappedName = aNameMap.get(iInterfaceName)
+					if aMappedName is not None:
+						iInterfaceName = aMappedName
 				else:
+					aInterfaceType = 'wif'
 					aWifiBand = d.get('OperatingFrequencyBand', '')
 					if len(aWifiBand):
 						iInterfaceName = 'Wifi ' + aWifiBand
@@ -483,6 +500,7 @@ class LmDeviceList:
 						iInterfaceName = d.get('Name', '')
 				aMapEntry = {}
 				aMapEntry['Key'] = iInterfaceKey
+				aMapEntry['Type'] = aInterfaceType
 				aMapEntry['DevKey'] = iDeviceKey
 				aMapEntry['DevName'] = iDeviceName
 				aMapEntry['IntName'] = iInterfaceName
@@ -513,9 +531,9 @@ class LmDeviceList:
 				# Then find interface name
 				for i in self._interfaceMap:
 					if i['Key'] == aInterfaceKey:
-						return i['Name']
+						return i
 
-		return 'Unknown'
+		return None
 
 
 	### Update device link interface key
