@@ -1003,6 +1003,8 @@ class LmInfo:
 
 			v = d.get('Bias')
 			if v is not None:
+				if self._liveboxModel == 'LB6':
+					v /= 1000
 				if (v < 0) or (v > 150):
 					aQual = LmTools.ValQual.Error
 				elif v > 75:
@@ -1068,6 +1070,9 @@ class LmInfo:
 						i = self.addInfoLine(self._liveboxAList, i, aName + ' Status Info', l.get('statusInfo'))
 						i = self.addInfoLine(self._liveboxAList, i, aName + ' Number', l.get('directoryNumber'))
 
+		# No DECT on Livebox 6
+		if self._liveboxModel == 'LB6':
+			return i
 
 		i = self.addTitleLine(self._liveboxAList, i, 'DECT Information')
 
