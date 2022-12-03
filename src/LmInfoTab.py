@@ -956,7 +956,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, 'OMCI Is Tm Owner', LmTools.FmtBool(d.get('OmciIsTmOwner')))
 			v = d.get('MaxBitRateSupported')
 			if v is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Max Bit Rate Supported', str(v / 1000) + 'mW')
+				i = self.addInfoLine(self._liveboxAList, i, 'Max Bit Rate Supported', str(v / 1000) + ' mW')
 
 			v = d.get('SignalRxPower')
 			if v is not None:
@@ -967,7 +967,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Signal RxPower', str(v) + 'dBm', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, 'Signal RxPower', str(v) + ' dBm', aQual)
 
 			v = d.get('SignalTxPower')
 			if v is not None:
@@ -978,7 +978,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Signal TxPower', str(v) + 'dBm', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, 'Signal TxPower', str(v) + ' dBm', aQual)
 
 			v = d.get('Temperature')
 			if v is not None:
@@ -999,7 +999,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Voltage', str(v) + 'V', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, 'Voltage', str(v) + ' V', aQual)
 
 			v = d.get('Bias')
 			if v is not None:
@@ -1011,7 +1011,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'BIAS', str(v) + 'mA', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, 'BIAS', str(v) + ' mA', aQual)
 
 			i = self.addInfoLine(self._liveboxAList, i, 'Serial Number', d.get('SerialNumber'))
 			i = self.addInfoLine(self._liveboxAList, i, 'Hardware Version', d.get('HardwareVersion'))
