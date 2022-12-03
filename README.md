@@ -9,7 +9,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler l'état du Wifi,
 - Contrôler un ou plusieurs répéteur Wifi Orange connecté.
 
-**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté sans beaucoup de tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus.
+**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus.
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -22,15 +22,15 @@ L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et 
 
 Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
-**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour la Livebox 5. Le support des événements a aussi été rajouté.
+**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5 & 6. Le support des événements a aussi été rajouté.
 
 ### Téléchargement
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.3/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.3/LiveboxMonitor_Console.exe)
-- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.3/LiveboxMonitor.dmg)
-- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.3/LiveboxMonitor_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor_Console.exe)
+- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor.dmg)
+- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor_Console.dmg)
 
 
 ## Configuration
