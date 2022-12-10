@@ -87,6 +87,9 @@ class LmDeviceInfo:
 		aAssignTypeButton = QtWidgets.QPushButton('Assign Type...')
 		aAssignTypeButton.clicked.connect(self.assignTypeButtonClick)
 		aButtonsBox.addWidget(aAssignTypeButton)
+		aForgetButton = QtWidgets.QPushButton('Forget...')
+		aForgetButton.clicked.connect(self.forgetButtonClick)
+		aButtonsBox.addWidget(aForgetButton)
 		aBlockDeviceButton = QtWidgets.QPushButton('Block')
 		aBlockDeviceButton.clicked.connect(self.blockDeviceButtonClick)
 		aButtonsBox.addWidget(aBlockDeviceButton)
@@ -229,6 +232,26 @@ class LmDeviceInfo:
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					LmTools.DisplayError('Set type query error.')
+		else:
+			LmTools.DisplayError('Please select a device.')
+
+
+	### Click on forget device button
+	def forgetButtonClick(self):
+		aCurrentSelection = self._infoDList.currentRow()
+		if aCurrentSelection >= 0:
+			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+			if LmTools.AskQuestion('Are you sure you want to forget device [' + aKey + ']?'):
+				try:
+					aReply = self._session.request('Devices:destroyDevice', { 'key': aKey })
+					if (aReply is not None) and (aReply.get('status', False)):
+						self._infoDList.setCurrentCell(-1, -1)
+						LmTools.DisplayStatus('Device ' + aKey + ' successfully removed.')
+					else:
+						LmTools.DisplayError('Destroy device query failed.')
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					LmTools.DisplayError('Destroy device query error.')
 		else:
 			LmTools.DisplayError('Please select a device.')
 
@@ -385,7 +408,7 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		super(SetDeviceNameDialog, self).__init__(iParent)
 		self.resize(350, 150)
 
-		aLabel = QtWidgets.QLabel('Names for ' + iDeviceKey + ' device:', self)
+		aLabel = QtWidgets.QLabel('Names for [' + iDeviceKey + '] device:', self)
 
 		self._nameCheckBox = QtWidgets.QCheckBox('Monitor Name')
 		self._nameCheckBox.clicked.connect(self.nameClick)
@@ -478,7 +501,7 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 
 		self._ignoreSignal = False
 
-		aLabel = QtWidgets.QLabel('Type for ' + iDeviceKey + ' device:', self)
+		aLabel = QtWidgets.QLabel('Type for [' + iDeviceKey + '] device:', self)
 
 		self._typeNameCombo = QtWidgets.QComboBox(self)
 		self._typeNameCombo.setIconSize(QtCore.QSize(45, 45))

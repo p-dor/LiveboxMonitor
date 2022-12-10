@@ -290,6 +290,8 @@ class LmEvents:
 						self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
 					else:
 						self.bufferizeEvent(aDeviceKey, h, r, a)
+				elif (r == 'device_deleted') or (r == 'eth_device_deleted') or (r == 'wifi_device_deleted'):
+					self.processDeviceDeletedEvent(aDeviceKey)
 				else:
 					# Check if device is in the list, otherwise put the event in the None list
 					if (self.findDeviceLine(self._eventDList, aDeviceKey) >= 0):

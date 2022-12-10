@@ -233,8 +233,14 @@ class LmRepeater:
 	### Itentify potential Wifi Repeater device & add it to the list
 	def identifyRepeater(self, iDevice):
 		if iDevice.get('ProductClass', '' ) in WIFI_REPEATER_PRODUCT_CLASSES:
-			aIndex = len(self._repeaters)
 			aKey = iDevice.get('Key', '')
+
+			# Check if not already there
+			for r in self._repeaters:
+				if r._key == aKey:
+					return None
+
+			aIndex = len(self._repeaters)
 
 			aMacAddr = iDevice.get('PhysAddress', '')
 			try:
@@ -264,6 +270,14 @@ class LmRepeater:
 		if aRepeater is not None:
 			self.createRepeaterTab(aRepeater)
 			aRepeater.signin()
+
+
+	### Remove a potential Wifi Repeater device - no really remove, rather desactivate
+	def removePotentialRepeater(self, iDeviceKey):
+		for r in self._repeaters:
+			if r._key == iDeviceKey:
+				r.processActiveEvent(False)
+				break
 
 
 	### Init repeater tabs & sessions

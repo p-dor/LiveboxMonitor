@@ -215,7 +215,6 @@ class LmDeviceList:
 			aKey = self._deviceList.item(aCurrentSelection, DevCol.Key).text()
 			aLine = self.findDeviceLine(self._infoDList, aKey)
 			self._infoDList.selectRow(aLine)
-			self.infoDeviceListClick()
 		self.switchToDeviceInfosTab()
 	
 
@@ -226,7 +225,6 @@ class LmDeviceList:
 			aKey = self._deviceList.item(aCurrentSelection, DevCol.Key).text()
 			aLine = self.findDeviceLine(self._eventDList, aKey)
 			self._eventDList.selectRow(aLine)
-			self.eventDeviceListClick()
 		self.switchToDeviceEventsTab()
 
 
@@ -689,13 +687,18 @@ class LmDeviceList:
 			# Check if MAC address assigned
 			aMacAddr = iEvent.get('PhysAddress')
 			if aMacAddr is not None:
-				self._deviceList.setItem(aListLine, DevCol.MAC, QtWidgets.QTableWidgetItem(aMacAddr))
+				self.formatNameWidget(self._deviceList, aListLine, aMacAddr, DevCol.Name)
+				self.formatMacWidget(self._deviceList, aListLine, aMacAddr, DevCol.MAC)
+
 				aLine = self.findDeviceLine(self._infoDList, iDeviceKey)
 				if aLine >= 0:
-					self._infoDList.setItem(aLine, DSelCol.MAC, QtWidgets.QTableWidgetItem(aMacAddr))
+					self.formatNameWidget(self._infoDList, aLine, aMacAddr, DSelCol.Name)
+					self.formatMacWidget(self._infoDList, aLine, aMacAddr, DSelCol.MAC)
+
 				aLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 				if aLine >= 0:
-					self._eventDList.setItem(aLine, DSelCol.MAC, QtWidgets.QTableWidgetItem(aMacAddr))
+					self.formatNameWidget(self._eventDList, iLine, aMacAddr, DSelCol.Name)
+					self.formatMacWidget(self._eventDList, iLine, aMacAddr, DSelCol.MAC)
 
 			# Restore sorting
 			self._deviceList.setSortingEnabled(True)
@@ -780,6 +783,34 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(True)
 			self._infoDList.setSortingEnabled(True)
 			self._eventDList.setSortingEnabled(True)
+
+
+	### Process a new device_deleted, eth_device_deleted or wifi_device_deleted event
+	def processDeviceDeletedEvent(self, iDeviceKey):
+		# Remove from all UI lists
+		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
+		if aListLine >= 0:
+			self._deviceList.removeRow(aListLine)
+		aListLine = self.findDeviceLine(self._infoDList, iDeviceKey)
+		if aListLine >= 0:
+			self._infoDList.removeRow(aListLine)
+		aListLine = self.findDeviceLine(self._eventDList, iDeviceKey)
+		if aListLine >= 0:
+			self._eventDList.removeRow(aListLine)
+
+		# Remove repeater if it is one
+		self.removePotentialRepeater(iDeviceKey)
+
+		# Cleanup device map
+		for d in self._deviceMap:
+			if d['Key'] == iDeviceKey:
+				self._deviceMap.remove(d)
+
+		# Cleanup event buffer
+		try:
+			del self._eventBuffer[iDeviceKey]
+		except:
+			pass
 
 
 	### Process a new Livebox Wifi stats
