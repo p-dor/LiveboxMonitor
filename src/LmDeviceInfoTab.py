@@ -286,6 +286,7 @@ class LmDeviceInfo:
 			return
 
 		i = 0
+		i = self.addInfoLine(self._infoAList, i, 'Key', iDeviceKey)
 		i = self.addInfoLine(self._infoAList, i, 'Active', LmTools.FmtBool(d.get('Active')))
 		i = self.addInfoLine(self._infoAList, i, 'Authenticated', LmTools.FmtBool(d.get('AuthenticationState')))
 
