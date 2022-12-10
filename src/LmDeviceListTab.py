@@ -17,10 +17,6 @@ from src.LmIcons import LmIcon
 
 # ################################ VARS & DEFS ################################
 
-# Static Config
-SOURCES_INTERFACE = ['selflan', 'ssw']
-SOURCES_DEVICE = ['import', 'bridge', 'ip_neigh', 'assoc_dev']
-
 # List columns
 class DevCol(IntEnum):
 	Key = 0
@@ -127,9 +123,9 @@ class LmDeviceList:
 		aDeviceInfoButton.clicked.connect(self.deviceInfoButtonClick)
 		aDeviceEventsButton = QtWidgets.QPushButton('Device Events')
 		aDeviceEventsButton.clicked.connect(self.deviceEventsButtonClick)
-		aShowRawDeviceListButton = QtWidgets.QPushButton('Raw Device List')
+		aShowRawDeviceListButton = QtWidgets.QPushButton('Raw Device List...')
 		aShowRawDeviceListButton.clicked.connect(self.showRawDeviceListButtonClick)
-		aShowRawTopologyButton = QtWidgets.QPushButton('Raw Topology')
+		aShowRawTopologyButton = QtWidgets.QPushButton('Raw Topology...')
 		aShowRawTopologyButton.clicked.connect(self.showRawTopologyButtonClick)
 		aHBox.addWidget(aRefreshDeviceListButton)
 		aHBox.addWidget(aDeviceInfoButton)
@@ -248,7 +244,7 @@ class LmDeviceList:
 	def loadDeviceList(self):
 		self.startTask('Loading device list...')
 
-		self._liveboxDevices = self._session.request('Devices:get')
+		self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' })
 		if (self._liveboxDevices is not None):
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if (self._liveboxDevices is None):
@@ -271,11 +267,10 @@ class LmDeviceList:
 		if (self._liveboxDevices is not None):
 			for d in self._liveboxDevices:
 				aSource = d.get('DiscoverySource', '')
-				if aSource in SOURCES_DEVICE:
-					self.identifyRepeater(d)
-					self.addDeviceLine(i, d)
-					self.updateDeviceLine(i, d)
-					i += 1
+				self.identifyRepeater(d)
+				self.addDeviceLine(i, d)
+				self.updateDeviceLine(i, d)
+				i += 1
 
 		self._deviceList.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 
@@ -473,10 +468,10 @@ class LmDeviceList:
 	### Handle a topology node to build links map
 	def buildLinksMapNode(self, iNode, iDeviceKey, iDeviceName, iInterfaceKey, iInterfaceName):
 		for d in iNode:
-			aSource = d.get('DiscoverySource', '')
+			aTags = d.get('Tags', '').split()
 
 			# Handle interface end points
-			if aSource in SOURCES_INTERFACE:
+			if 'interface' in aTags:
 				iInterfaceKey = d.get('Key', '')
 				aInterfaceType = d.get('InterfaceType', '')
 				if aInterfaceType == 'Ethernet':
@@ -508,7 +503,7 @@ class LmDeviceList:
 				self._interfaceMap.append(aMapEntry)
 
 			# Handle devices
-			elif aSource in SOURCES_DEVICE:
+			if 'physical' in aTags:
 				iDeviceKey = d.get('Key', '')
 				iDeviceName = d.get('Name', '')
 				aMapEntry = {}
@@ -761,8 +756,8 @@ class LmDeviceList:
 		if aListLine >= 0:
 			return
 
-		aSource = iEvent.get('DiscoverySource', '')
-		if aSource in SOURCES_DEVICE:
+		aTags = iEvent.get('Tags', '').split()
+		if ('physical' in aTags) and (not 'self' in aTags) and (not 'voice' in aTags):
 			# Prevent device lines to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 			self._infoDList.setSortingEnabled(False)
