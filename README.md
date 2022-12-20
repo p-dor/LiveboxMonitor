@@ -90,11 +90,11 @@ Les statistiques semblent parfois surprenantes, mais il s'agit d'une interpréta
 
 ### Boutons
 L'onglet `Device List` propose les boutons suivants :
-- **`Refresh`** : permet de forcer le rafraichissement de la liste des appareils, non seulement dans cet onglet mais aussi dans les onglets `Device Infos` et `Events`.
+- **`Refresh`** : permet de forcer le rafraichissement de la liste des appareils, non seulement dans cet onglet mais aussi dans les onglets `Device Infos` et `Events`. Utile par exemple si le programme est lancé alors que l'ordinateur sort de veille : des événements ayant probablement été raté par le programme, un rafraichissement permettra de retrouver une vue à jour.
 - **`Device Infos`** : permet de basculer dans l'onglet `Device Infos` pour l'appareil sélectionné et de voir directement ses informations.
 - **`Device Events`** : permet de basculer dans l'onglet `Events` pour l'appareil sélectionné et de voir directement les événements reçus le concernant.
-- **`Raw Device List`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
-- **`Raw Topology`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
+- **`Raw Device List...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
+- **`Raw Topology...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 
 
 ## Livebox Stats/Infos - Statistiques de trafic et infos avancées de la Livebox
@@ -164,6 +164,7 @@ L'onglet `Device Infos` propose les boutons suivants :
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
 
     Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icone Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
+- **`Forget...`** : permet de demander à la Livebox d'oublier définitivement cet appareil. Il disparaitra donc immédiatement de toutes les listes. Attention si l'appareil en question est actif, sa connexion ne sera nullement suspendue, cependant toute son activité restera invisible et ce jusqu'à sa prochaine tentative de connexion.
 - **`Block`** : permet de bloquer la connexion de l'appareil sélectionné.
 - **`Unblock`** : permet de débloquer la connexion de l'appareil sélectionné. L'état bloqué ou non s'affiche dans les informations de l'appareil, champs "Blocked".
 
