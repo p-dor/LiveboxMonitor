@@ -1261,6 +1261,9 @@ class RepeaterStatsThread(QtCore.QObject):
 					if r._session is not None:
 						aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
 						if aResult is not None:
+							if aResult.get('errors') is not None:
+								# Session has timed out on Repeater side, resign
+								r.signin()
 							aStats = aResult.get('status')
 							if aStats is not None:
 								e = {}
@@ -1278,3 +1281,7 @@ class RepeaterStatsThread(QtCore.QObject):
 									e['RxErrors'] = aStats.get('RxErrors', 0)
 									e['TxErrors'] = aStats.get('TxErrors', 0)
 								self._statsReceived.emit(e)
+						else:
+							# Session has timed out on Repeater side, resign
+							r.signin()
+
