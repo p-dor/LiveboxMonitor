@@ -2,6 +2,7 @@
 
 import json
 import datetime
+import time
 
 from enum import IntEnum
 
@@ -354,13 +355,19 @@ class LiveboxEventThread(QtCore.QObject):
 	def run(self):
 		self._isRunning = True
 		while (self._isRunning):
-			aResult = self._session.eventRequest(['Devices.Device'], self._channelID)
+			aResult = self._session.eventRequest(['Devices.Device'], self._channelID, iTimeout = 2)
 			if aResult is not None:
-				self._channelID = aResult.get('channelid', 0)
-				aEvents = aResult.get('events')
-				if aEvents is not None:
-					for e in aEvents:
-						self._eventReceived.emit(e)
+				if aResult.get('errors') is not None:
+					# Session has probably timed out on Livebox side, resign
+					LmTools.LogDebug(1, 'Errors in event request, resign')
+					if self._session.signin() <= 0:
+						time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
+				else:
+					self._channelID = aResult.get('channelid', 0)
+					aEvents = aResult.get('events')
+					if aEvents is not None:
+						for e in aEvents:
+							self._eventReceived.emit(e)
 
 
 	def stop(self):
