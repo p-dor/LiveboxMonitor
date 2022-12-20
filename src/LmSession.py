@@ -15,6 +15,7 @@ from src.LmConfig import LmConf
 
 # ################################ VARS & DEFS ################################
 APP_NAME = 'so_sdkut'
+DEFAULT_TIMEOUT = 5
 
 
 # ################################ LmSession class ################################
@@ -66,7 +67,7 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
-					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders)
+					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self._session = None
@@ -99,7 +100,7 @@ class LmSession:
 
 			# Check authentication
 			try:
-				r = self._session.post(self._url + 'ws', headers = self._sahServiceHeaders, data = '{"service":"Time", "method":"getTime", "parameters":{}}')
+				r = self._session.post(self._url + 'ws', data = '{"service":"Time", "method":"getTime", "parameters":{}}', headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.Error('Authentification check query failed.')
@@ -126,7 +127,7 @@ class LmSession:
 
 
 	### Send service request
-	def request(self, iPath, iArgs = None, iGet = False, iRaw = False, iSilent = False):
+	def request(self, iPath, iArgs = None, iGet = False, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Cleanup request path
 		c = str.replace(iPath or 'sysbus', '.', '/')
 		if c[0] == '/':
@@ -144,13 +145,18 @@ class LmSession:
 			LmTools.LogDebug(1, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.get(self._url + c, headers = self._sahServiceHeaders)
+				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
 				#t = b'[' + t.replace(b'}{', b'},{')+b']'
-			except BaseException as e:
-				LmTools.Error('Request error: {}'.format(e))
+			except requests.exceptions.Timeout as e:
+				if not iSilent:
+					LmTools.Error('Request timeout error: {}'.format(e))
 				return None
+			except BaseException as e:
+				if not iSilent:
+					LmTools.Error('Request error: {}'.format(e))
+				return { 'errors' : 'Request exception' }
 		else:
 			# Setup request parameters
 			aParameters = { }
@@ -170,12 +176,17 @@ class LmSession:
 			LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.post(self._url + c, headers = self._sahServiceHeaders, data = json.dumps(aData))
+				t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahServiceHeaders, timeout = iTimeout)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
-			except BaseException as e:
-				LmTools.Error('Request error: {}'.format(e))
+			except requests.exceptions.Timeout as e:
+				if not iSilent:
+					LmTools.LogDebug(1, 'Request timeout error: {}'.format(e))
 				return None
+			except BaseException as e:
+				if not iSilent:
+					LmTools.Error('Request error: {}'.format(e))
+				return { 'errors' : 'Request exception' }
 
 		if iRaw:
 			return t
@@ -213,7 +224,7 @@ class LmSession:
 
 
 	### Send event request
-	def eventRequest(self, iEvents, iChannelID, iRaw = False, iSilent = False):
+	def eventRequest(self, iEvents, iChannelID, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		aData = { }
 
 		aData['events'] = iEvents
@@ -227,12 +238,17 @@ class LmSession:
 		LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 		aTimeStamp = datetime.datetime.now()
 		try:
-			t = self._session.post(self._url + c, headers = self._sahEventHeaders, data = json.dumps(aData))
+			t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahEventHeaders, timeout = iTimeout)
 			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 			t = t.content
-		except BaseException as e:
-			LmTools.Error('Event request error: {}'.format(e))
+		except requests.exceptions.Timeout as e:
+			if not iSilent:
+				LmTools.LogDebug(1, 'Event request timeout error: {}'.format(e))
 			return None
+		except BaseException as e:
+			if not iSilent:
+				LmTools.Error('Event request error: {}'.format(e))
+			return { 'errors' : 'Event request exception' }
 
 		if iRaw:
 			return t
