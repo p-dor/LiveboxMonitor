@@ -246,6 +246,8 @@ class LmDeviceInfo:
 					aReply = self._session.request('Devices:destroyDevice', { 'key': aKey })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self._infoDList.setCurrentCell(-1, -1)
+						# Call event handler directly - in some (unknown) cases, the event is not raised
+						self.processDeviceDeletedEvent(aKey)
 						LmTools.DisplayStatus('Device ' + aKey + ' successfully removed.')
 					else:
 						LmTools.DisplayError('Destroy device query failed.')
