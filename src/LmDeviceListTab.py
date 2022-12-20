@@ -230,26 +230,26 @@ class LmDeviceList:
 
 	### Click on show raw device list button
 	def showRawDeviceListButtonClick(self):
-		LmTools.DisplayInfos('Raw Device List', json.dumps(self._liveboxDevices, indent=2))
+		LmTools.DisplayInfos('Raw Device List', json.dumps(self._liveboxDevices, indent = 2))
 
 
 	### Click on show raw topology button
 	def showRawTopologyButtonClick(self):
-		LmTools.DisplayInfos('Raw Topology', json.dumps(self._liveboxTopology, indent=2))
+		LmTools.DisplayInfos('Raw Topology', json.dumps(self._liveboxTopology, indent = 2))
 
 
 	### Load device list
 	def loadDeviceList(self):
 		self.startTask('Loading device list...')
 
-		self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' })
+		self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 		if (self._liveboxDevices is not None):
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if (self._liveboxDevices is None):
 			LmTools.MouseCursor_Normal()
 			LmTools.DisplayError('Error getting device list.')
 			LmTools.MouseCursor_Busy()
-		self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' })
+		self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 15)
 		if (self._liveboxTopology is not None):
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		self._interfaceMap = []
@@ -697,8 +697,8 @@ class LmDeviceList:
 
 				aLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 				if aLine >= 0:
-					self.formatNameWidget(self._eventDList, iLine, aMacAddr, DSelCol.Name)
-					self.formatMacWidget(self._eventDList, iLine, aMacAddr, DSelCol.MAC)
+					self.formatNameWidget(self._eventDList, aLine, aMacAddr, DSelCol.Name)
+					self.formatMacWidget(self._eventDList, aLine, aMacAddr, DSelCol.MAC)
 
 			# Restore sorting
 			self._deviceList.setSortingEnabled(True)
@@ -919,10 +919,14 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 		for s in LmConfig.NET_INTF:
 			if s['Type'] != 'wif':
 				continue
-			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats' , {})
+			try:
+				aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats' , {})
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				aResult = None
 			if aResult is not None:
 				aStats = aResult.get('status')
-				if aStats is not None:
+				if type(aStats).__name__ == 'list':
 					for aStat in aStats:
 						e = {}
 						e['DeviceKey'] = aStat.get('MACAddress', '')
