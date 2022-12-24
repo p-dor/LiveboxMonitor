@@ -112,7 +112,6 @@ class LmDeviceInfo:
 
 	### Init selected device context
 	def initDeviceContext(self):
-		self._currentDeviceMacAddr = ''
 		self._currentDeviceLiveboxName = None
 		self._currentDeviceType = ''
 
@@ -138,7 +137,7 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
-			aName = LmConf.MacAddrTable.get(self._currentDeviceMacAddr, None)
+			aName = LmConf.MacAddrTable.get(aKey, None)
 
 			aSetDeviceNameDialog = SetDeviceNameDialog(aKey, aName, self._currentDeviceLiveboxName, self)
 			if (aSetDeviceNameDialog.exec()):
@@ -367,11 +366,13 @@ class LmDeviceInfo:
 			for aIPV6 in aIPv6List:
 				i = self.addInfoLine(self._infoAList, i, 'IPv6 Address', aIPV6.get('Address', '') + ' (' + aIPV6.get('Status', '') + ')')
 
-		self._currentDeviceMacAddr = d.get('PhysAddress', '')
+		aMacAddr = d.get('PhysAddress', '')
+		if len(aMacAddr) == 0:
+			aMacAddr = iDeviceKey
 		aManufacturer = ''
-		if (len(LmConf.MacAddrApiKey)) and (len(self._currentDeviceMacAddr)):
+		if (len(LmConf.MacAddrApiKey)) and (len(aMacAddr)):
 			try:
-				aData = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, self._currentDeviceMacAddr))
+				aData = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, aMacAddr))
 				aData = json.loads(aData.content)
 				aCompDetails = aData.get('vendorDetails')
 				if aCompDetails is not None:
