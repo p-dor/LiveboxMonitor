@@ -348,14 +348,13 @@ class LiveboxEventThread(QtCore.QObject):
 	def __init__(self, iSession):
 		super(LiveboxEventThread, self).__init__()
 		self._isRunning = False
-		self._channelID = 0
 		self._session = iSession
 
 
 	def run(self):
 		self._isRunning = True
 		while (self._isRunning):
-			aResult = self._session.eventRequest(['Devices.Device'], self._channelID, iTimeout = 2)
+			aResult = self._session.eventRequest(['Devices.Device'], iTimeout = 2)
 			if aResult is not None:
 				if aResult.get('errors') is not None:
 					# Session has probably timed out on Livebox side, resign
@@ -363,7 +362,6 @@ class LiveboxEventThread(QtCore.QObject):
 					if self._session.signin() <= 0:
 						time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
 				else:
-					self._channelID = aResult.get('channelid', 0)
 					aEvents = aResult.get('events')
 					if aEvents is not None:
 						for e in aEvents:

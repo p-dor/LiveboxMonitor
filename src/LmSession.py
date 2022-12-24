@@ -30,6 +30,7 @@ class LmSession:
 			self._url = iUrl
 		self._name = iSessionName
 		self._session = None
+		self._channelID = 0
 		self._sahServiceHeaders = None
 		self._sahEventHeaders = None
 
@@ -51,11 +52,13 @@ class LmSession:
 				with open(aStateFilePath, 'rb') as f:
 					aCookies = requests.utils.cookiejar_from_dict(pickle.load(f))
 					self._session = requests.Session()
+					self._channelID = 0
 					self._session.cookies = aCookies
 					aContextID = pickle.load(f)
 			else:
 				LmTools.LogDebug(1, 'New session')
 				self._session = requests.Session()
+				self._channelID = 0
 
 				LmTools.LogDebug(2, 'Authentication')
 	 
@@ -122,12 +125,13 @@ class LmSession:
 		if self._session is not None:
 			self.request('sah.Device.Information:releaseContext', { 'applicationName': APP_NAME })
 			self._session = None
+			self._channelID = 0
 			self._sahServiceHeaders = None
 			self._sahEventHeaders = None
 
 
 	### Send service request
-	def request(self, iPath, iArgs = None, iGet = False, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
+	def request(self, iPath, iArgs = None, iGet = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Check session is established
 		if self._session is None:
 			if self.signin() <= 0:
@@ -193,9 +197,6 @@ class LmSession:
 					LmTools.Error('Request error: {}'.format(e))
 				return { 'errors' : 'Request exception' }
 
-		if iRaw:
-			return t
-
 		t = t.decode('utf-8', errors = 'replace')
 		if iGet and t.find('}{'):
 			LmTools.LogDebug(2, 'Multiple json lists')
@@ -215,21 +216,18 @@ class LmSession:
 		LmTools.LogDebug(1, 'Reply:', aOverview)
 
 		if not iGet and 'result' in r:
-			if not 'errors' in r['result']:
-				LmTools.LogDebug(1, '-------------------------')
-				return r['result']
-			else:
+			r = r['result']
+			if 'errors' in r:
 				if not iSilent:
 					LmTools.Error('Error:', t)
 				return None
 
-		else:
-			LmTools.LogDebug(1, '-------------------------')
-			return r
+		LmTools.LogDebug(1, '-------------------------')
+		return r
 
 
 	### Send event request
-	def eventRequest(self, iEvents, iChannelID, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
+	def eventRequest(self, iEvents, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Check session is established
 		if self._session is None:
 			if self.signin() <= 0:
@@ -238,8 +236,8 @@ class LmSession:
 		aData = { }
 
 		aData['events'] = iEvents
-		if iChannelID:
-			aData['channelid'] = str(iChannelID)
+		if self._channelID:
+			aData['channelid'] = str(self._channelID)
 		c = 'ws'
 
 		LmTools.LogDebug(1, 'JSON DUMP: %s' % (str(json.dumps(aData))))
@@ -260,10 +258,7 @@ class LmSession:
 				LmTools.Error('Event request error: {}'.format(e))
 			return { 'errors' : 'Event request exception' }
 
-		if iRaw:
-			return t
-
-		t = t.decode('utf-8', errors='replace')
+		t = t.decode('utf-8', errors = 'replace')
 
 		# Remove tailing null if present
 		if t.endswith('null'):
@@ -283,14 +278,12 @@ class LmSession:
 		LmTools.LogDebug(1, 'Reply:', aOverview)
 
 		if 'result' in r:
-			if not 'errors' in r['result']:
-				LmTools.LogDebug(1, '-------------------------')
-				return r['result']
-			else:
+			r = r['result']
+			if 'errors' in r:
 				if not iSilent:
 					LmTools.Error('Error:', t)
 				return None
 
-		else:
-			LmTools.LogDebug(1, '-------------------------')
-			return r
+		LmTools.LogDebug(1, '-------------------------')
+		self._channelID = r.get('channelid', 0)
+		return r
