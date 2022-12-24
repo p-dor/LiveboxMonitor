@@ -128,6 +128,11 @@ class LmSession:
 
 	### Send service request
 	def request(self, iPath, iArgs = None, iGet = False, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
+		# Check session is established
+		if self._session is None:
+			if self.signin() <= 0:
+				return { 'errors' : 'No session' }
+
 		# Cleanup request path
 		c = str.replace(iPath or 'sysbus', '.', '/')
 		if c[0] == '/':
@@ -225,6 +230,11 @@ class LmSession:
 
 	### Send event request
 	def eventRequest(self, iEvents, iChannelID, iRaw = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
+		# Check session is established
+		if self._session is None:
+			if self.signin() <= 0:
+				return { 'errors' : 'No session' }
+
 		aData = { }
 
 		aData['events'] = iEvents
