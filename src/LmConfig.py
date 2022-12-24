@@ -25,6 +25,7 @@ CONFIG_FILE = 'Config.txt'
 LIVEBOX_URL = 'http://livebox.home/'
 LIVEBOX_USER = 'admin'
 LIVEBOX_PASSWORD = ''
+FILTER_DEVICES = True
 MACADDR_TABLE_FILE = 'MacAddrTable.txt'
 MACADDR_API_KEY = ''
 
@@ -93,6 +94,7 @@ INTF_NAME_MAP_LB6 = {
 DEVICE_TYPES = [
 	{ 'Key': 'Unknown',                     'Name': 'Unknown',                    'Icon': 'e_default_device.png' },
 	{ 'Key': 'AC Outlet',                   'Name': 'AC Outlet',                  'Icon': 'e_smart_plug.png' },
+	{ 'Key': 'Acces Point',                 'Name': 'Acces Point',                'Icon': 'e_pointacceswifi.png' },
 	{ 'Key': 'Airbox',                      'Name': 'Airbox',                     'Icon': 'e_airbox_gen.png' },
 	{ 'Key': 'Apple AirPort',               'Name': 'Apple AirPort',              'Icon': 'e_apple_express.png' },
 	{ 'Key': 'Apple AirPort Time Capsule',  'Name': 'Apple AirPort Time Capsule', 'Icon': 'e_apple_extreme_capsule.png' },
@@ -106,9 +108,11 @@ DEVICE_TYPES = [
 	{ 'Key': 'Game Console',                'Name': 'Console',                    'Icon': 'e_consolejeux.png' },
 	{ 'Key': 'Dimmable Color Bulb',         'Name': 'Dimmer Light',               'Icon': 'e_smart_bulb.png' },
 	{ 'Key': 'Djingo Speaker',              'Name': 'Djingo Speaker',             'Icon': 'e_djingospeaker.png' },   # Not (yet?) supported by LB5
+	{ 'Key': 'Domestic Robot',              'Name': 'Domestic Robot',             'Icon': 'e_Homelive.png' },
 	{ 'Key': 'Domino',                      'Name': 'Domino',                     'Icon': 'e_domino.png' },
 	{ 'Key': 'Door Sensor',                 'Name': 'Door Sensor',                'Icon': 'e_door_sensor.png' },
 	{ 'Key': 'ExtenderTV',                  'Name': 'Extender TV',                'Icon': 'e_liveplugsolo.png' },
+	{ 'Key': 'ExtenderWiFiPlus',            'Name': 'Extender Wi-Fi Plus',        'Icon': 'e_pointacceswifi.png' },
 	{ 'Key': 'Femtocell',                   'Name': 'Femtocell',                  'Icon': 'e_femtocell.png' },
 	{ 'Key': 'Google OnHub',                'Name': 'Google OnHub',               'Icon': 'e_google_onhub.png' },
 	{ 'Key': 'HiFi',                        'Name': 'HiFi',                       'Icon': 'e_enceinte_hifi.png' },
@@ -160,12 +164,9 @@ DEVICE_TYPES = [
 	{ 'Key': 'USBKey',                      'Name': 'USB Key',                    'Icon': 'e_cleusb.png' },
 	{ 'Key': 'WiFi_Access_Point',           'Name': 'Wi-Fi Access Point',         'Icon': 'e_pointacceswifi.png' },
 	{ 'Key': 'Window Sensor',               'Name': 'Window Sensor',              'Icon': 'e_door_sensor.png' },
-	{ 'Key': 'Acces Point',                 'Name': 'Acces Point',                'Icon': 'e_pointacceswifi.png' },
-	{ 'Key': 'Domestic Robot',              'Name': 'Domestic Robot',             'Icon': 'e_Homelive.png' },
-	{ 'Key': 'ExtenderWiFiPlus',            'Name': 'Extender Wi-Fi Plus',        'Icon': 'e_pointacceswifi.png' },
 	{ 'Key': 'Computer',                    'Name': 'Windows Computer',           'Icon': 'e_ordibureau_windows.png' },
 	{ 'Key': 'SAH AP',                      'Name': 'Wi-Fi Repeater',             'Icon': 'e_pointacceswifi.png' },
-	{ 'Key': 'repeteurwifi6',               'Name': 'Wi-Fi Repeater',             'Icon': 'e_pointacceswifi.png' }
+	{ 'Key': 'repeteurwifi6',               'Name': 'Wi-Fi Repeater 6',           'Icon': 'e_pointacceswifi.png' }
 ]
 
 
@@ -270,6 +271,7 @@ class LmConf:
 	LiveboxURL = LIVEBOX_URL
 	LiveboxUser = LIVEBOX_USER
 	LiveboxPassword = LIVEBOX_PASSWORD
+	FilterDevices = FILTER_DEVICES
 	MacAddrTableFile = MACADDR_TABLE_FILE
 	MacAddrTable = {}
 	MacAddrApiKey = MACADDR_API_KEY
@@ -295,6 +297,9 @@ class LmConf:
 						LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 					except:
 						LmConf.LiveboxPassword = LIVEBOX_PASSWORD
+				p = aConfig.get('Filter Devices')
+				if p is not None:
+					LmConf.FilterDevices = p
 				p = aConfig.get('MacAddr Table File')
 				if p is not None:
 					LmConf.MacAddrTableFile = p
@@ -326,6 +331,7 @@ class LmConf:
 				aConfig['Livebox URL'] = LmConf.LiveboxURL
 				aConfig['Livebox User'] = LmConf.LiveboxUser
 				aConfig['Livebox Password'] = Fernet(SECRET.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
+				aConfig['Filter Devices'] = LmConf.FilterDevices
 				aConfig['MacAddr Table File'] = LmConf.MacAddrTableFile
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
 				json.dump(aConfig, aConfigFile, indent = 4)

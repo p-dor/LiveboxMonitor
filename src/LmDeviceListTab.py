@@ -264,11 +264,11 @@ class LmDeviceList:
 		i = 0
 		if (self._liveboxDevices is not None):
 			for d in self._liveboxDevices:
-				aSource = d.get('DiscoverySource', '')
-				self.identifyRepeater(d)
-				self.addDeviceLine(i, d)
-				self.updateDeviceLine(i, d)
-				i += 1
+				if self.displayableDevice(d):
+					self.identifyRepeater(d)
+					self.addDeviceLine(i, d)
+					self.updateDeviceLine(i, d)
+					i += 1
 
 		self._deviceList.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 
@@ -285,6 +285,19 @@ class LmDeviceList:
 		self.endTask()
 
 
+	### Check if device is displayable
+	def displayableDevice(self, iDevice):
+		# If Filter Devices option is on, do not display active devices without Layer2Intf
+		if LmConf.FilterDevices:
+			aActiveStatus = iDevice.get('Active', False)
+			if aActiveStatus:
+				aIntf = iDevice.get('Layer2Interface', '')
+				if len(aIntf) == 0:
+					return False
+
+		return True
+
+
 	### Add device line
 	def addDeviceLine(self, iLine, iDevice):
 		aKey = iDevice.get('Key', '')
@@ -293,11 +306,11 @@ class LmDeviceList:
 		self.addDeviceLineKey(self._eventDList, iLine, aKey)
 
 		aMacAddr = iDevice.get('PhysAddress', '')
-		self.formatNameWidget(self._deviceList, iLine, aMacAddr, DevCol.Name)
+		self.formatNameWidget(self._deviceList, iLine, aKey, DevCol.Name)
 		self.formatMacWidget(self._deviceList, iLine, aMacAddr, DevCol.MAC)
-		self.formatNameWidget(self._infoDList, iLine, aMacAddr, DSelCol.Name)
+		self.formatNameWidget(self._infoDList, iLine, aKey, DSelCol.Name)
 		self.formatMacWidget(self._infoDList, iLine, aMacAddr, DSelCol.MAC)
-		self.formatNameWidget(self._eventDList, iLine, aMacAddr, DSelCol.Name)
+		self.formatNameWidget(self._eventDList, iLine, aKey, DSelCol.Name)
 		self.formatMacWidget(self._eventDList, iLine, aMacAddr, DSelCol.MAC)
 
 
@@ -760,7 +773,7 @@ class LmDeviceList:
 			return
 
 		aTags = iEvent.get('Tags', '').split()
-		if ('physical' in aTags) and (not 'self' in aTags) and (not 'voice' in aTags):
+		if ('physical' in aTags) and (not 'self' in aTags) and (not 'voice' in aTags) and self.displayableDevice(iEvent):
 			# Prevent device lines to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 			self._infoDList.setSortingEnabled(False)
