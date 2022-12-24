@@ -234,7 +234,7 @@ def SetApplicationStyle():
 		DUAL_PANE_ADJUST = 20
 		LIST_HEADER_HEIGHT = 25
 		LIST_LINE_HEIGHT = 30
-		LIST_STYLESHEET = 'color:black; background-color:#DFDFDF; font-size: 10px; gridline-color:#EFEFEF'
+		LIST_STYLESHEET = 'color:black; background-color:#F0F0F0; font-size: 10px; gridline-color:#FFFFFF'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
