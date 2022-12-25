@@ -47,12 +47,12 @@ Le programme créé automatiquement dans son répertoire deux fichiers de config
 ### Le fichier Config.txt
 
 Le programme supporte ces clefs de configuration :  
-`Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.  
-`Livebox User` : login pour l'ouverture de session. Par défaut `admin`.  
-`Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce mot de passe est demandé automatiquement au lancement du programme s'il n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
-`Filter Devices` : Active (valeur `true`) ou pas (valeur `false`) le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
-`MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.
-`MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
+- `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
+- `Livebox User` : login pour l'ouverture de session. Par défaut `admin`.
+- `Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce mot de passe est demandé automatiquement au lancement du programme s'il n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
+- `Filter Devices` : Active (valeur `true`) ou pas (valeur `false`) le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
+- `MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.
+- `MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
 
 
 ### Le fichier MacAddrTable.txt
