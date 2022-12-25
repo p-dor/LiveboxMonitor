@@ -27,10 +27,10 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 ### Téléchargement
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor_Console.exe)
-- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor.dmg)
-- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.4/LiveboxMonitor_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor_Console.exe)
+- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor.dmg)
+- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor_Console.dmg)
 
 
 ## Configuration
