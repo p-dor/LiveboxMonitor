@@ -10,6 +10,7 @@ import base64
 from enum import IntEnum
 
 from PyQt6 import QtGui
+from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 from cryptography.fernet import Fernet
 
@@ -176,8 +177,9 @@ class MonitorTab(IntEnum):
 	LiveboxInfos = 1
 	DeviceInfos = 2
 	DeviceEvents = 3
-	Actions = 4
-	Repeaters = 5  # Index of first, and others incrementally
+	Phone = 4
+	Actions = 5
+	Repeaters = 6  # Index of first, and others incrementally
 
 
 
@@ -218,7 +220,7 @@ def SetApplicationStyle():
 		WIND_HEIGHT_ADJUST = 0
 		DIAG_HEIGHT_ADJUST = 0
 		DUAL_PANE_ADJUST = 0
-		LIST_HEADER_HEIGHT = 29
+		LIST_HEADER_HEIGHT = 29	 # Actually 25, but 4 pixels more are required for QTableViews
 		LIST_LINE_HEIGHT = 30
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 		LIST_HEADER_STYLESHEET = '''
@@ -245,6 +247,18 @@ def SetApplicationStyle():
 
 	if aStyle in aKeys:
 		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
+
+
+# Setting up table style depending on platform
+def SetTableStyle(iTable):
+	global LIST_STYLESHEET
+	global LIST_HEADER_STYLESHEET
+
+	iTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
+	iTable.setStyleSheet(LIST_STYLESHEET)
+	aHeader = iTable.horizontalHeader()
+	aHeader.setStyleSheet(LIST_HEADER_STYLESHEET)
+	aHeader.setFont(LmTools.BOLD_FONT)
 
 
 # Setup configuration according to Livebox model
