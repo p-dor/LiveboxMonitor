@@ -38,7 +38,7 @@ class LmSession:
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iNewSession = False):
 		# Set cookie & contextID file path
-		aStateFilePath = tempfile.gettempdir() + '\\' + self._name + '_state'
+		aStateFilePath = os.path.join(tempfile.gettempdir(), self._name + '_state')
 
 		LmTools.LogDebug(3, 'State file', aStateFilePath)
 
@@ -123,6 +123,7 @@ class LmSession:
 	### Close session
 	def close(self):
 		if self._session is not None:
+			# Fails with access denied error (but same behavior from the web interface...)
 			self.request('sah.Device.Information:releaseContext', { 'applicationName': APP_NAME })
 			self._session = None
 			self._channelID = 0
@@ -137,13 +138,8 @@ class LmSession:
 			if self.signin() <= 0:
 				return { 'errors' : 'No session' }
 
-		# Cleanup request path
-		c = str.replace(iPath or 'sysbus', '.', '/')
-		if c[0] == '/':
-			c = c[1:]
-
-		if c[0:7] != 'sysbus/':
-			c = 'sysbus/' + c
+		# Build request path
+		c = 'sysbus/' + iPath.replace('.', '/')
 
 		if iGet:
 			if iArgs is None:
@@ -168,13 +164,11 @@ class LmSession:
 				return { 'errors' : 'Request exception' }
 		else:
 			# Setup request parameters
-			aParameters = { }
-			if not iArgs is None:
-				for i in iArgs:
-					aParameters[i] = iArgs[i]
-
 			aData = { }
-			aData['parameters'] = aParameters
+			if iArgs is not None:
+				aData['parameters'] = iArgs
+			else:
+				aData['parameters'] = { }
 
 			aSep = c.rfind(':')
 			aData['service'] = c[0:aSep].replace('/', '.')
