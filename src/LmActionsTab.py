@@ -1,5 +1,7 @@
 ### Livebox Monitor actions tab module ###
 
+import webbrowser
+
 from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
@@ -12,6 +14,8 @@ from src import LmConfig
 # ################################ VARS & DEFS ################################
 
 # Static Config
+COPYRIGHT = 'Copyright 2022 Pierre Dor'
+PROJECT_URL = 'https://github.com/p-dor/LiveboxMonitor'
 BUTTON_WIDTH = 150
 
 # Wifi status keys
@@ -105,7 +109,6 @@ class LmActions:
 		aWifiButtons.addWidget(aWifiGlobalStatusButton)
 
 		aWifiGroupBox = QtWidgets.QGroupBox('Wifi')
-		aWifiGroupBox.setMaximumWidth((BUTTON_WIDTH * 2) + 100)
 		aWifiGroupBox.setLayout(aWifiButtons)
 
 		# Reboot buttons column
@@ -116,35 +119,53 @@ class LmActions:
 		aRebootLiveboxButton = QtWidgets.QPushButton('Reboot Livebox...')
 		aRebootLiveboxButton.clicked.connect(self.rebootLiveboxButtonClick)
 		aRebootLiveboxButton.setMinimumWidth(BUTTON_WIDTH)
-		aRebootButtons.addWidget(aRebootLiveboxButton, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aRebootButtons.addWidget(aRebootLiveboxButton)
 
 		aRebootHistoryButton = QtWidgets.QPushButton('Reboot History...')
 		aRebootHistoryButton.clicked.connect(self.rebootHistoryButtonClick)
 		aRebootHistoryButton.setMinimumWidth(BUTTON_WIDTH)
-		aRebootButtons.addWidget(aRebootHistoryButton, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aRebootButtons.addWidget(aRebootHistoryButton)
 
 		aRebootGroupBox = QtWidgets.QGroupBox('Reboots')
-		aRebootGroupBox.setMaximumWidth(BUTTON_WIDTH + 50)
 		aRebootGroupBox.setLayout(aRebootButtons)
 
-		# Misc buttons column
-		aMiscButtons = QtWidgets.QVBoxLayout()
-		aMiscButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-		aMiscButtons.setSpacing(20)
+		# About and quit column
+		aRightZone = QtWidgets.QVBoxLayout()
 
-		aPhoneRingButton = QtWidgets.QPushButton('Phone Ring')
-		aPhoneRingButton.clicked.connect(self.phoneRingButtonClick)
-		aPhoneRingButton.setMinimumWidth(BUTTON_WIDTH)
-		aMiscButtons.addWidget(aPhoneRingButton, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aAboutWidgets = QtWidgets.QVBoxLayout()
+		aAboutWidgets.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aAboutWidgets.setSpacing(15)
 
-		aLedButton = QtWidgets.QPushButton('Show LED Status...')
-		aLedButton.clicked.connect(self.ledButtonClick)
-		aLedButton.setMinimumWidth(BUTTON_WIDTH)
-		aMiscButtons.addWidget(aLedButton, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aAppIcon = QtWidgets.QLabel()
+		aAppIcon.setPixmap(LmIcon.AppIconPixmap)
+		aAppIcon.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+		aAppIcon.setMaximumWidth(64)
+		aAppIcon.setMinimumWidth(64)
+		aAboutWidgets.addWidget(aAppIcon, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aMiscGroupBox = QtWidgets.QGroupBox('Misc')
-		aMiscGroupBox.setMaximumWidth(BUTTON_WIDTH + 50)
-		aMiscGroupBox.setLayout(aMiscButtons)
+		aAppName = QtWidgets.QLabel(self._applicationName)
+		aAppName.setFont(LmTools.BOLD_FONT)
+		aAboutWidgets.addWidget(aAppName, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+		aAboutWidgets.addWidget(QtWidgets.QLabel('An Open Source project'), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+		aOpenSourceURL = QtWidgets.QLabel(PROJECT_URL)
+		aOpenSourceURL.setStyleSheet('QLabel { color : blue; }')
+		aOpenSourceURL.mousePressEvent = self.OpenSourceButtonClick
+		aAboutWidgets.addWidget(aOpenSourceURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+		aAboutWidgets.addWidget(QtWidgets.QLabel(COPYRIGHT), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+		aAboutGroupBox = QtWidgets.QGroupBox('About')
+		aAboutGroupBox.setLayout(aAboutWidgets)
+
+		aRightZone.addWidget(aAboutGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+
+		aQuitButton = QtWidgets.QPushButton('Quit application')
+		aQuitButton.clicked.connect(self.quitButtonClick)
+		aQuitButton.setMinimumWidth(BUTTON_WIDTH)
+		aRightZone.addWidget(aQuitButton, 1, QtCore.Qt.AlignmentFlag.AlignBottom)
+
 
 		# Layout
 		aHBox = QtWidgets.QHBoxLayout()
@@ -152,7 +173,7 @@ class LmActions:
 		aHBox.setSpacing(40)
 		aHBox.addWidget(aWifiGroupBox, 1, QtCore.Qt.AlignmentFlag.AlignTop)
 		aHBox.addWidget(aRebootGroupBox, 1, QtCore.Qt.AlignmentFlag.AlignTop)
-		aHBox.addWidget(aMiscGroupBox, 1, QtCore.Qt.AlignmentFlag.AlignTop)
+		aHBox.addLayout(aRightZone, 1)
 		self._actionsTab.setLayout(aHBox)
 
 		self._tabWidget.addTab(self._actionsTab, 'Actions')
@@ -320,57 +341,14 @@ class LmActions:
 		aHistoryDialog.exec()
 
 
-	### Click on Phone Ring button
-	def phoneRingButtonClick(self):
-		try:
-			LmTools.MouseCursor_Busy()
-			d = self._session.request('VoiceService.VoiceApplication:ring')
-			LmTools.MouseCursor_Normal()
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			d = None
-
-		if d is None:
-			LmTools.DisplayError('VoiceService.VoiceApplication:ring service error')
-		else:
-			LmTools.DisplayStatus('Phone should be ringing.')
-		
-
-	### Click on LED Status button
-	def ledButtonClick(self):
-		self.startTask('Getting LED Status...')
-
-		aLedStatusTxt = 'Internet = ' + self.getLedStatus('Internet Led') + '\n'
-		aLedStatusTxt += 'Wifi = ' + self.getLedStatus('Wifi Led') + '\n'
-		aLedStatusTxt += 'VoIP = ' + self.getLedStatus('Voip Led') + '\n'
-		aLedStatusTxt += 'LAN = ' + self.getLedStatus('LAN Led') + '\n'
-
-		self.endTask()
-
-		LmTools.DisplayStatus(aLedStatusTxt)
+	### Open Source project web button
+	def OpenSourceButtonClick(self, iEvent):
+		webbrowser.open_new_tab(PROJECT_URL)
 
 
-	### Get LED Status
-	def getLedStatus(self, iName):
-		try:
-			d = self._session.request('NMC.LED:getLedStatus', { 'name': iName })
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-		if d is None:
-			s = None
-		else:
-			s = d.get('status')
-
-		if (s is None) or (not s):
-			return ''
-
-		d = d.get('data')
-		if d is None:
-			return ''
-
-		return d.get('state', 'Unknown') + ' / ' + d.get('color', 'Unknown')
+	### Click on Quit Application button
+	def quitButtonClick(self):
+		self.close()
 
 
 
@@ -383,21 +361,19 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		self._historyTable = QtWidgets.QTableWidget()
 		self._historyTable.setColumnCount(4)
 		self._historyTable.setHorizontalHeaderLabels(('Boot Date', 'Boot Reason', 'Shutdown Date', 'Shutdown Reason'))
-		self._historyTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._historyTable.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._historyTable.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._historyTable.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader = self._historyTable.horizontalHeader()
+		aHeader.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._historyTable.setColumnWidth(0, 125)
 		self._historyTable.setColumnWidth(1, 225)
 		self._historyTable.setColumnWidth(2, 125)
 		self._historyTable.setColumnWidth(3, 225)
 		self._historyTable.verticalHeader().hide()
 		self._historyTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._historyTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._historyTable.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._historyTable.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._historyTable.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._historyTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		LmConfig.SetTableStyle(self._historyTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
 		aOKButton = QtWidgets.QPushButton('OK', self)
@@ -442,20 +418,18 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		for s in self._status:
 			aHeaders.append(s[WifiKey.AccessPoint])
 		self._statusTable.setHorizontalHeaderLabels((*aHeaders,))
-		self._statusTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aTableHeader = self._statusTable.horizontalHeader()
+		aTableHeader.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._statusTable.setColumnWidth(0, 200)
 		i = 1
 		while i <= len(self._status):
-			self._statusTable.horizontalHeader().setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Fixed)
+			aTableHeader.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Fixed)
 			self._statusTable.setColumnWidth(i, 125)
 			i += 1
 		self._statusTable.verticalHeader().hide()
 		self._statusTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._statusTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._statusTable.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._statusTable.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._statusTable.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._statusTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		LmConfig.SetTableStyle(self._statusTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
 		aOKButton = QtWidgets.QPushButton('OK', self)
