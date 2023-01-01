@@ -43,11 +43,12 @@ class LmInfo:
 		self._statsList.setColumnCount(StatsCol.Count)
 		self._statsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
 		self._statsList.setColumnHidden(StatsCol.Key, True)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._statsList.horizontalHeader().setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader = self._statsList.horizontalHeader()
+		aHeader.setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._statsList.setColumnWidth(StatsCol.Name, 90)
 		self._statsList.setColumnWidth(StatsCol.Down, 65)
 		self._statsList.setColumnWidth(StatsCol.Up, 65)
@@ -55,12 +56,9 @@ class LmInfo:
 		self._statsList.setColumnWidth(StatsCol.UpRate, 65)
 		self._statsList.verticalHeader().hide()
 		self._statsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._statsList.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._statsList.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._statsList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._statsList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._statsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._statsList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
+		LmConfig.SetTableStyle(self._statsList)
 
 		i = 0
 		for s in LmConfig.NET_INTF:
@@ -83,11 +81,8 @@ class LmInfo:
 		self._liveboxAList.setColumnWidth(InfoCol.Value, 600)
 		self._liveboxAList.verticalHeader().hide()
 		self._liveboxAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._liveboxAList.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._liveboxAList.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._liveboxAList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._liveboxAList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._liveboxAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		LmConfig.SetTableStyle(self._liveboxAList)
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()
@@ -1493,7 +1488,7 @@ class LiveboxStatsThread(QtCore.QObject):
 
 	def collectStats(self):
 		for s in LmConfig.NET_INTF:
-			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
+			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats')
 			if aResult is not None:
 				aStats = aResult.get('status')
 				if aStats is not None:
