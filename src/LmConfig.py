@@ -95,7 +95,7 @@ INTF_NAME_MAP_LB5 = {
 
 # LB6 Interface name mapping
 INTF_NAME_MAP_LB6 = {
-	"Livebox":  {"eth0":"Eth4", "eth1":"Eth3", "eth2":"Eth2", "eth3":"Eth1", "eth4":"Eth2.5G"},
+	"Livebox":  {"eth0":"Eth4", "eth1":"Eth3", "eth2":"Eth2", "eth3":"Eth1", "eth4":"Eth 2.5G"},
 	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
 }
 
@@ -240,13 +240,13 @@ def SetApplicationStyle():
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
 				border-style: solid;
-				border-color: grey;
+				border-color: grey
 			}
 			'''
 	elif aStyle == 'macOS':
 		WIND_HEIGHT_ADJUST = 4
 		DIAG_HEIGHT_ADJUST = 30
-		TABLE_ADJUST = 0
+		TABLE_ADJUST = 4
 		SCROLL_BAR_ADJUST = 20
 		LIST_HEADER_FONT_SIZE = 11
 		LIST_LINE_FONT_SIZE = 10
