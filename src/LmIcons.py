@@ -106,6 +106,63 @@ class LmIcon:
 		DieVRnHsrzlAji40lOLMOQfg6K7QOCSorhNCY3ZLEUBKZjQeGQLICA1rHqOmoWoWDm+pxYK28iQp
 		8F1zKpiuH0jR5Ef0Bky6E46+fts4AAAAAElFTkSuQmCC'''
 
+	CallOutPixmap = None
+	CallOutData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAABC1BMVEUAAAAnNldJlIBBhndBhHc9
+		fHY+eXQvS2orOWcoNWglMVo0NF81TXoeIFAnK2oTDzceI04kMWgjNmZAfHc+d3QvYnU3Y25KkoQ1
+		ZnM5a3I5bnM6YHk8a3w9bngyVWc7YXwmNlc0Vng3SGYnNlc1VXUzSmkuRW0pO14rPGAfJFEmM2Yi
+		MVUrOGUcGU0UDzsxNoIrNl0kNl02LnwtLm4RERFd2oll9I1g5Itd3Ylk8o1j7Y1i6Ith4otf4Ipn
+		+I9i64xWzYk/hnlr/5Jo/pBh5oxc4oxZ24pYxIpa2IlNt4RElnxl75BPmI1ayYtf3YlX0YdKt4ZN
+		mYZRv4RTsoRSsoRYxYNGnn1HjH1Eg30IdmMLAAAANHRSTlMAsP7++/Lqpp+Gg1pOPDsyLBsU+vn4
+		9/Lx6+bc2tDPyby4uLWuramgm3p2dGVlZU9COg8MiJ27qwAAANNJREFUGNNVztWSwjAYhuGfssAu
+		i68r7i6Reou72/1fCQ0Qhr5H3zyZTALg//sogq3gEbenQRtFdZ1IP2z5WixrPGCK8MB7Oc9dSFIp
+		6ggRJo5WltGXqiAivjbO4gBGmbWsyO7AVc5UN4m4K1gjxgR8YJVYSkoKrPMk8CJvC21TAVvPZl9b
+		Vdlqhrk9jXuaUAYIuAUvt8d9D289+RexM/j3cxv3RWUmE4QnhxK/axpE6s4pktvO2xufoyGiqqp3
+		f4EXTjtHxpAa76G7z9Q83y5XPAQnVOYeWm83sqgAAAAASUVORK5CYII='''
+
+	CallInPixmap = None
+	CallInData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAA/1BMVEUAAAAnNlcrO18qMlMpPFU9
+		gbQ6d604bp8tWpE0bqczYpYqOFwmM1M3OU41TXoiJT4WFCUgJkAzL2Q3da5Ag7YwXpI3b6E2bZ02
+		W4s4ZJU4ZpcuUHk4XI4mNlcyU4M3R2onNlczUn4ySG0uRHMvSW8uSXQiJ0MoN1kjM1EsOl4gHzkY
+		EyU1PGguOk0jM1URERFJvP9LyP9Kw/9Nzf9Lxv9Kv/9O0v9N0P9Mzv9Fvv9DuP9BsP1Q3/9P1/9N
+		yv9Kwf9Hwf9Fu/9Huv9HrO07nOZEnNU3g8Q/hbo0dbRLwPlDr/U/o+xHqeo5nOpHquI4ic1FicdC
+		icI1eLQ3d7M5dqnvlSN2AAAAL3RSTlMAsJ46Fv39+fjy6YaDWk48MiwN+/Lx6unc2tDPyby4uLWu
+		rampo3l2dGVlZU9CHXaW39gAAADVSURBVBjTVc3VjsMwEIXh0zTF7ZaWmRk8djgp8/IW3v9Z6lSd
+		SvkvRppPsgeoHO8+IlE16zX+qwk6lVK1Dnm7FHpkfer53yWgrJeUONNzRzpEzbEJEUsKumLQJmXl
+		6hAsuPmy2/Z+GhDGWpCedKz+AzQJg49c/MiPq5jiyisy85E7fEGi7UnXnb5CVzfZtkaBO37W3x5k
+		SmzGX+ANb+9zVvP3pMI2Cn2nbyvyrMwTv51FnZYiIrux2NzYG4Q9chypjsC9X88HUdj9zNdYdG93
+		xULhvIYlHygcH2ph8KcAAAAASUVORK5CYII='''
+
+	CallFailedPixmap = None
+	CallFailedData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAABDlBMVEUAAAAmL2ZBhHY/fXc9eHU2
+		ZHA+eXQnN1gnN1gnNlYwR2svS2orOWcoNWglMVoeIFATDzceI04yLnZJlIBCh3gvYnVKkoQ5a3I5
+		bnM6YHk8a3w9bngyVWc7YXw0Vng3SGY1VXUfJFEmM2YiMVUrOGUcGU0UDzszM182Nl8xNoIrNl0f
+		LmgrNWgdMGkpPGPZERFd2onomJFl9Y1e3Ylk841i64xh5Yxi54th4osRERFj7Y1d5Itg4IpWzYlM
+		t4T/19Zr/5Jo/pBn+I9c3opZ24pYxIpa2IlSsoRJlYFElnw/h3lAhXhl75Bl8I1PmI1k7oxc4Yxa
+		yYtW0IhNmYZRv4RYxYNGnn1HjH1Eg32hKSmGSrbTAAAAL3RSTlMAO/329vTq6bCwq6afhoM8MiwN
+		+/v48uvm3NrQz8m4uK56dnRlZWVdWE9CHRkVFDTFbboAAADdSURBVBjTVY7lkgIxEISD2x12grvr
+		ZpN1w90d3v9FCAupgv4x0/XVTM8AEEj8FwAV8yjBK9ddBz9QiucFJfYiLMOS+oswRCM/cR3mKWBV
+		NAx707Y5dDOnIgMJCpw9TKxHZs0s71GUeKeFOLfsecZbFurqlCfGJbtJnnklYyhSlnTZBahaf/v+
+		pAw+VJ0P0aH2cOEmZd8ztT8tkVjnj5+yr/MWTXw5G9cbJQOUzYactBMFiJaXIt2d6+pGxBiKXSvd
+		rTiMMcSaxgtxQNXwLgx9PNAdobdn6r6ozZ4OgTuahB98PQrBvgAAAABJRU5ErkJggg=='''
+
+	CallMissedPixmap = None
+	CallMissedData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAABF1BMVEUAAAA4dqwvR3AqMlM4bp/M
+		EBAtWpE2bp8sO18qOFwmM1M3OU4iJT4WFCUgJkAoNlYmPFMzL2Q+hLNAg7Y1cao0bKQwXpIzYZQz
+		ZJc2W4s4ZJU4ZpcuUHk4XI4yU4M3R2ozUn4uSXQiJ0MoN1kjM1EsOl4gHzkYEyU1PGguOk3RERFJ
+		vP/qw8LomJHjLx/NERFLyP9Kw/9KwP9Nzf9Lxv/m5ub/19Y1drTfdmrLGhrZERHIERFO0v9N0P9M
+		zv9DuP9BsP06nOhQ3/9Nyv9Hwf9Ev/9Fu/9Huv9EnNVDicX///9P1/9P1v9MxP9Hvf9LwPlDr/VI
+		re1Gqu0/o+xHqepHquI4ic04g8Q3gsQ/hbw/hbg9frQ8d6yxgOaEAAAAKnRSTlMA/as6+fn46p+G
+		g1o8MiwbFA378vLy8evm3NrQz8m4uK6jeXZ0ZWVlT0L5uI1FAAAA6UlEQVQY01WO1XLDQBRDZTvQ
+		psEyM+6adu3EjtnhlJn//zs6bmc7jp7unNGVBFS3lo7xK1VzNRVA7TvsTWsZ6eiGZ+gdYMc0WX8j
+		8+hdQkhXVyFFdBw9VwDNIG2/TQwNkskpvf5owvWIf+kTz8XaLaPMKrRyLvnJ5nZZyWcpzsB6PPpr
+		LHrFrBF7qXm3P7MLzVISTM4wowVnFEzPs6vVEGz+fRh8ngJKebEi2NzrMJzIhwXr6mW7KthbHPEH
+		m9HQ+joRv04y6N9QSu2e9N+xmsZjyrnJNiHUkJ00iUf3pXpuzMXB+vLKbh0/qYUmS4WmsSwAAAAA
+		SUVORK5CYII='''
+
 	WifiSignal0Pixmap = None
 	WifiSignal0Data = '''
 		iVBORw0KGgoAAAANSUhEUgAAACUAAAAPAgMAAAAex+7AAAAADFBMVEUAAADf39/ZERHa2tphOsv0
@@ -161,6 +218,18 @@ class LmIcon:
 
 		LmIcon.NotifPixmap = QtGui.QPixmap()
 		LmIcon.NotifPixmap.loadFromData(base64.b64decode(LmIcon.NotifData))
+
+		LmIcon.CallOutPixmap = QtGui.QPixmap()
+		LmIcon.CallOutPixmap.loadFromData(base64.b64decode(LmIcon.CallOutData))
+
+		LmIcon.CallInPixmap = QtGui.QPixmap()
+		LmIcon.CallInPixmap.loadFromData(base64.b64decode(LmIcon.CallInData))
+
+		LmIcon.CallFailedPixmap = QtGui.QPixmap()
+		LmIcon.CallFailedPixmap.loadFromData(base64.b64decode(LmIcon.CallFailedData))
+
+		LmIcon.CallMissedPixmap = QtGui.QPixmap()
+		LmIcon.CallMissedPixmap.loadFromData(base64.b64decode(LmIcon.CallMissedData))
 
 		LmIcon.WifiSignal0Pixmap = QtGui.QPixmap()
 		LmIcon.WifiSignal0Pixmap.loadFromData(base64.b64decode(LmIcon.WifiSignal0Data))
