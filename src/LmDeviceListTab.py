@@ -77,19 +77,20 @@ class LmDeviceList:
 		self._deviceList.setColumnCount(DevCol.Count)
 		self._deviceList.setHorizontalHeaderLabels(('Key', 'T', 'Name', 'Livebox Name', 'MAC', 'IP', 'Link', 'A', 'Wifi', 'E', 'Down', 'Up', 'DRate', 'URate'))
 		self._deviceList.setColumnHidden(DevCol.Key, True)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.IP, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Link, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Active, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Wifi, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Event, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Down, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.Up, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._deviceList.horizontalHeader().setSectionResizeMode(DevCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader = self._deviceList.horizontalHeader()
+		aHeader.setSectionResizeMode(DevCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DevCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.IP, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Link, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DevCol.Active, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Wifi, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Event, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Down, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.Up, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DevCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._deviceList.setColumnWidth(DevCol.Type, 48)
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
@@ -106,13 +107,11 @@ class LmDeviceList:
 		self._deviceList.setColumnWidth(DevCol.UpRate, 75)
 		self._deviceList.verticalHeader().hide()
 		self._deviceList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._deviceList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._deviceList.setSortingEnabled(True)
-		self._deviceList.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._deviceList.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._deviceList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._deviceList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._deviceList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._deviceList.setItemDelegate(CenteredIconsDelegate(self))
+		LmConfig.SetTableStyle(self._deviceList)
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
@@ -188,24 +187,16 @@ class LmDeviceList:
 	def refreshDeviceListButtonClick(self):
 		self._deviceList.clearContents()
 		self._deviceList.setRowCount(0)
-		self._deviceList.setSortingEnabled(False)
 		self._infoDList.clearContents()
 		self._infoDList.setRowCount(0)
-		self._infoDList.setSortingEnabled(False)
 		self._infoAList.clearContents()
 		self._infoAList.setRowCount(0)
 		self._eventDList.clearContents()
 		self._eventDList.setRowCount(0)
-		self._eventDList.setSortingEnabled(False)
 		self._eventList.clearContents()
 		self._eventList.setRowCount(0)
-		self._eventList.setSortingEnabled(False)
 		LmConf.loadMacAddrTable()
 		self.loadDeviceList()
-		self._deviceList.setSortingEnabled(True)
-		self._infoDList.setSortingEnabled(True)
-		self._eventDList.setSortingEnabled(True)
-		self._eventList.setSortingEnabled(True)
 
 
 	### Click on device infos button
@@ -242,6 +233,11 @@ class LmDeviceList:
 	def loadDeviceList(self):
 		self.startTask('Loading device list...')
 
+		self._deviceList.setSortingEnabled(False)
+		self._infoDList.setSortingEnabled(False)
+		self._eventDList.setSortingEnabled(False)
+		self._eventList.setSortingEnabled(False)
+
 		self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 		if (self._liveboxDevices is not None):
 			self._liveboxDevices = self._liveboxDevices.get('status')
@@ -249,7 +245,7 @@ class LmDeviceList:
 			LmTools.MouseCursor_Normal()
 			LmTools.DisplayError('Error getting device list.')
 			LmTools.MouseCursor_Busy()
-		self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 15)
+		self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
 		if (self._liveboxTopology is not None):
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		self._interfaceMap = []
@@ -281,6 +277,11 @@ class LmDeviceList:
 		self._eventDList.setCurrentCell(-1, -1)
 
 		self.initDeviceContext()
+
+		self._deviceList.setSortingEnabled(True)
+		self._infoDList.setSortingEnabled(True)
+		self._eventDList.setSortingEnabled(True)
+		self._eventList.setSortingEnabled(True)
 
 		self.endTask()
 
@@ -460,8 +461,7 @@ class LmDeviceList:
 			i = 0
 			n = iList.rowCount()
 			while (i < n):
-				aItem = iList.item(i, DevCol.Key)
-				if aItem.text() == iDeviceKey:
+				if iList.item(i, DevCol.Key).text() == iDeviceKey:
 					return i
 				i += 1
 		return -1
@@ -933,7 +933,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 			if s['Type'] != 'wif':
 				continue
 			try:
-				aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats' , {})
+				aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				aResult = None
