@@ -147,18 +147,30 @@ def FmtStrUpper(iString):
 
 
 # Format time
-def FmtTime(iSeconds):
+def FmtTime(iSeconds, iNoZero = False):
 	if iSeconds is None:
 		return ''
 
-	aDay = iSeconds // (24 * 3600)
+	aDays = iSeconds // (24 * 3600)
 	n = iSeconds % (24 * 3600)
-	aHour = n // 3600
+	aHours = n // 3600
 	n %= 3600
 	aMinutes = n // 60
 	aSeconds = n % 60
 
-	return '{:02d}d {:02d}h {:02d}m {:02d}s'.format(aDay, aHour, aMinutes, aSeconds)
+	if iNoZero:
+		if aDays:
+			return '{:02d}d {:02d}h {:02d}m {:02d}s'.format(aDays, aHours, aMinutes, aSeconds)
+		elif aHours:
+			return '{:02d}h {:02d}m {:02d}s'.format(aHours, aMinutes, aSeconds)
+		elif aMinutes:
+			return '{:02d}m {:02d}s'.format(aMinutes, aSeconds)
+		elif aSeconds:
+			return '{:02d}s'.format(aSeconds)
+		else:
+			return ''
+	else:
+		return '{:02d}d {:02d}h {:02d}m {:02d}s'.format(aDays, aHours, aMinutes, aSeconds)
 
 
 # Format Livebox timestamps
