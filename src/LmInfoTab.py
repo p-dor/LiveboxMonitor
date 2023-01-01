@@ -57,7 +57,7 @@ class LmInfo:
 		self._statsList.verticalHeader().hide()
 		self._statsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		self._statsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._statsList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
+		self._statsList.setMinimumWidth(350 + LmConfig.SCROLL_BAR_ADJUST)
 		LmConfig.SetTableStyle(self._statsList)
 
 		i = 0
@@ -66,7 +66,7 @@ class LmInfo:
 			self._statsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
 			self._statsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(s['Name']))
 			i += 1
-		aStatsListSize = LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * i)
+		aStatsListSize = LmConfig.TableHeight(i)
 		self._statsList.setMinimumHeight(aStatsListSize)
 		self._statsList.setMaximumHeight(aStatsListSize)
 

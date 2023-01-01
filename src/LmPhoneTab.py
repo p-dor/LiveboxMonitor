@@ -80,15 +80,15 @@ class LmPhone:
 		self._callList.setColumnWidth(CallCol.Time, 130)
 		self._callList.setColumnWidth(CallCol.Number, 110)
 		self._callList.setColumnWidth(CallCol.Contact, 250)
-		self._callList.setColumnWidth(CallCol.Duration, 80 + LmConfig.DUAL_PANE_ADJUST)
+		self._callList.setColumnWidth(CallCol.Duration, 80 + LmConfig.SCROLL_BAR_ADJUST)
 		self._callList.verticalHeader().hide()
 		self._callList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
 		self._callList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._callList.setSortingEnabled(True)
 		self._callList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
-		self._callList.setMinimumWidth(480 + LmConfig.DUAL_PANE_ADJUST)
-		self._callList.setMaximumWidth(540 + LmConfig.DUAL_PANE_ADJUST)
+		self._callList.setMinimumWidth(480 + LmConfig.SCROLL_BAR_ADJUST)
+		self._callList.setMaximumWidth(540 + LmConfig.SCROLL_BAR_ADJUST)
 		self._callList.setItemDelegate(CenteredIconsDelegate(self))
 		LmConfig.SetTableStyle(self._callList)
 
@@ -167,7 +167,7 @@ class LmPhone:
 		while i <= 7:
 			self._ringToneCombo.addItem(str(i))
 			i += 1
-		self._ringToneCombo.setMaximumWidth(40)
+		self._ringToneCombo.setMaximumWidth(55)
 		aPhoneRingSet.addWidget(self._ringToneCombo)
 		aPhoneRingButton = QtWidgets.QPushButton('Phone Ring')
 		aPhoneRingButton.clicked.connect(self.phoneRingButtonClick)

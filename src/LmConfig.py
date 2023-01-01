@@ -23,23 +23,31 @@ from src import LmTools
 CONFIG_FILE = 'Config.txt'
 
 # Config default
-LIVEBOX_URL = 'http://livebox.home/'
-LIVEBOX_USER = 'admin'
-LIVEBOX_PASSWORD = ''
-FILTER_DEVICES = True
-MACADDR_TABLE_FILE = 'MacAddrTable.txt'
-MACADDR_API_KEY = ''
+DCFG_LIVEBOX_URL = 'http://livebox.home/'
+DCFG_LIVEBOX_USER = 'admin'
+DCFG_LIVEBOX_PASSWORD = ''
+DCFG_FILTER_DEVICES = True
+DCFG_MACADDR_TABLE_FILE = 'MacAddrTable.txt'
+DCFG_MACADDR_API_KEY = ''
+DCFG_LIST_HEADER_HEIGHT = 25
+DCFG_LIST_HEADER_FONT_SIZE = 0
+DCFG_LIST_LINE_HEIGHT = 30
+DCFG_LIST_LINE_FONT_SIZE = 0
+
 
 # Static config
 ICON_URL = 'assets/common/images/app_conf/'
 SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 
 # Graphical config
-WIND_HEIGHT_ADJUST = 0
-DIAG_HEIGHT_ADJUST = 0
-DUAL_PANE_ADJUST = 0
-LIST_HEADER_HEIGHT = 30
-LIST_LINE_HEIGHT = 30
+WIND_HEIGHT_ADJUST = 0		# Space to add to a window height to respect a table wished height inside
+DIAG_HEIGHT_ADJUST = 0		# Space to add to a dialog height to respect a table wished height inside
+TABLE_ADJUST = 4			# Space to add to a table height to respect a table wished height
+SCROLL_BAR_ADJUST = 0		# Space to add to last table col to give room for the scroll bar
+LIST_HEADER_FONT_SIZE = 0	# 0 = default system font, value can be overriden by LmConf.ListHeaderFontSize
+LIST_HEADER_FONT = QtGui.QFont()
+LIST_LINE_FONT_SIZE = 0		# 0 = default system font, value can be overriden by LmConf.ListLineFontSize
+LIST_LINE_FONT = QtGui.QFont()
 LIST_STYLESHEET = ''
 LIST_HEADER_STYLESHEET = ''
 
@@ -189,9 +197,12 @@ class MonitorTab(IntEnum):
 def SetApplicationStyle():
 	global WIND_HEIGHT_ADJUST
 	global DIAG_HEIGHT_ADJUST
-	global DUAL_PANE_ADJUST
-	global LIST_HEADER_HEIGHT
-	global LIST_LINE_HEIGHT
+	global SCROLL_BAR_ADJUST
+	global TABLE_ADJUST
+	global LIST_HEADER_FONT_SIZE
+	global LIST_HEADER_FONT
+	global LIST_LINE_FONT_SIZE
+	global LIST_LINE_FONT
 	global LIST_STYLESHEET
 	global LIST_HEADER_STYLESHEET
 
@@ -206,22 +217,24 @@ def SetApplicationStyle():
 	if aStyle == 'Fusion':
 		WIND_HEIGHT_ADJUST = 2
 		DIAG_HEIGHT_ADJUST = -4
-		DUAL_PANE_ADJUST = 0
-		LIST_HEADER_HEIGHT = 22
-		LIST_LINE_HEIGHT = 30
+		TABLE_ADJUST = 0
+		SCROLL_BAR_ADJUST = 0
+		LIST_HEADER_FONT_SIZE = 13
+		LIST_LINE_FONT_SIZE = 11
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
-				border-color: grey;
+				border-color: grey
 			}
 			'''
 	elif aStyle == 'Windows':
 		WIND_HEIGHT_ADJUST = 0
 		DIAG_HEIGHT_ADJUST = 0
-		DUAL_PANE_ADJUST = 0
-		LIST_HEADER_HEIGHT = 29	 # Actually 25, but 4 pixels more are required for QTableViews
-		LIST_LINE_HEIGHT = 30
+		TABLE_ADJUST = 4
+		SCROLL_BAR_ADJUST = 0
+		LIST_HEADER_FONT_SIZE = 0	# Let system default
+		LIST_LINE_FONT_SIZE = 0		# Let system default
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
@@ -233,17 +246,28 @@ def SetApplicationStyle():
 	elif aStyle == 'macOS':
 		WIND_HEIGHT_ADJUST = 4
 		DIAG_HEIGHT_ADJUST = 30
-		DUAL_PANE_ADJUST = 20
-		LIST_HEADER_HEIGHT = 25
-		LIST_LINE_HEIGHT = 30
-		LIST_STYLESHEET = 'color:black; background-color:#F0F0F0; font-size: 10px; gridline-color:#FFFFFF'
+		TABLE_ADJUST = 0
+		SCROLL_BAR_ADJUST = 20
+		LIST_HEADER_FONT_SIZE = 11
+		LIST_LINE_FONT_SIZE = 10
+		LIST_STYLESHEET = 'color:black; background-color:#F0F0F0; gridline-color:#FFFFFF'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
-				border-color: grey;
-				font-size: 11px
+				border-color: grey
 			}
 			'''
+
+	# Setup table's fonts
+	LIST_HEADER_FONT.setBold(True)
+	if LmConf.ListHeaderFontSize:
+		LIST_HEADER_FONT.setPointSize(LmConf.ListHeaderFontSize)
+	elif LIST_HEADER_FONT_SIZE:
+		LIST_HEADER_FONT.setPointSize(LIST_HEADER_FONT_SIZE)
+	if LmConf.ListLineFontSize:
+		LIST_LINE_FONT.setPointSize(LmConf.ListLineFontSize)
+	elif LIST_LINE_FONT_SIZE:
+		LIST_LINE_FONT.setPointSize(LIST_LINE_FONT_SIZE)
 
 	if aStyle in aKeys:
 		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
@@ -251,24 +275,39 @@ def SetApplicationStyle():
 
 # Setting up table style depending on platform
 def SetTableStyle(iTable):
-	global LIST_STYLESHEET
-	global LIST_HEADER_STYLESHEET
-
 	iTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
 	iTable.setStyleSheet(LIST_STYLESHEET)
+	iTable.setFont(LIST_LINE_FONT)
+
 	aHeader = iTable.horizontalHeader()
 	aHeader.setStyleSheet(LIST_HEADER_STYLESHEET)
-	aHeader.setFont(LmTools.BOLD_FONT)
+	aHeader.setFont(LIST_HEADER_FONT)
+	aHeader.setFixedHeight(LmConf.ListHeaderHeight)
+
+	aHeader = iTable.verticalHeader()
+	aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
+	aHeader.setDefaultSectionSize(LmConf.ListLineHeight)
+
+
+# Compute table height based on nb of rows
+def TableHeight(iRowNb):
+	return LmConf.ListHeaderHeight + (LmConf.ListLineHeight * iRowNb) + TABLE_ADJUST
+
+
+# Compute base height of a window based on nb of rows of a single table
+def WindowHeight(iRowNb):
+	return TableHeight(iRowNb) + WIND_HEIGHT_ADJUST
+
+
+# Compute base height of a dialog based on nb of rows of a single table
+def DialogHeight(iRowNb):
+	return TableHeight(iRowNb) + DIAG_HEIGHT_ADJUST
 
 
 # Setup configuration according to Livebox model
 def SetLiveboxModel(iModel):
 	global NET_INTF
-	global NET_INTF_LB5
-	global NET_INTF_LB6
 	global INTF_NAME_MAP
-	global INTF_NAME_MAP_LB5
-	global INTF_NAME_MAP_LB6
 
 	if iModel == 'LB6':
 		NET_INTF = NET_INTF_LB6
@@ -282,13 +321,17 @@ def SetLiveboxModel(iModel):
 # ################################ Config Class ################################
 
 class LmConf:
-	LiveboxURL = LIVEBOX_URL
-	LiveboxUser = LIVEBOX_USER
-	LiveboxPassword = LIVEBOX_PASSWORD
-	FilterDevices = FILTER_DEVICES
-	MacAddrTableFile = MACADDR_TABLE_FILE
+	LiveboxURL = DCFG_LIVEBOX_URL
+	LiveboxUser = DCFG_LIVEBOX_USER
+	LiveboxPassword = DCFG_LIVEBOX_PASSWORD
+	FilterDevices = DCFG_FILTER_DEVICES
+	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
-	MacAddrApiKey = MACADDR_API_KEY
+	MacAddrApiKey = DCFG_MACADDR_API_KEY
+	ListHeaderHeight = DCFG_LIST_HEADER_HEIGHT
+	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
+	ListLineHeight = DCFG_LIST_LINE_HEIGHT
+	ListLineFontSize = DCFG_LIST_LINE_FONT_SIZE
 	AllDeviceIconsLoaded = False
 
 
@@ -310,7 +353,7 @@ class LmConf:
 					try:
 						LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 					except:
-						LmConf.LiveboxPassword = LIVEBOX_PASSWORD
+						LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
 				p = aConfig.get('Filter Devices')
 				if p is not None:
 					LmConf.FilterDevices = p
@@ -320,6 +363,18 @@ class LmConf:
 				p = aConfig.get('MacAddr API Key')
 				if p is not None:
 					LmConf.MacAddrApiKey = p
+				p = aConfig.get('List Header Height')
+				if p is not None:
+					LmConf.ListHeaderHeight = int(p)
+				p = aConfig.get('List Header Font Size')
+				if p is not None:
+					LmConf.ListHeaderFontSize = int(p)
+				p = aConfig.get('List Line Height')
+				if p is not None:
+					LmConf.ListLineHeight = int(p)
+				p = aConfig.get('List Line Font Size')
+				if p is not None:
+					LmConf.ListLineFontSize = int(p)
 		except:
 			LmTools.Error('No or wrong configuration file, creating one.')
 			LmConf.save()
@@ -348,6 +403,10 @@ class LmConf:
 				aConfig['Filter Devices'] = LmConf.FilterDevices
 				aConfig['MacAddr Table File'] = LmConf.MacAddrTableFile
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
+				aConfig['List Header Height'] = LmConf.ListHeaderHeight
+				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
+				aConfig['List Line Height'] = LmConf.ListLineHeight
+				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))

@@ -62,8 +62,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self._applicationName = 'Livebox Monitor v' + __version__
 		self.setWindowTitle(self._applicationName)
 		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
-		self.setGeometry(100, 100, 1300,
-						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
+		self.setGeometry(100, 100, 1300, 102 + LmConfig.WindowHeight(21))
 		self.show()
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():

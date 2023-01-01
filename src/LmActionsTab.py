@@ -104,7 +104,7 @@ class LmActions:
 		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 		aWifiButtons.addWidget(aSeparator)
 
-		aWifiGlobalStatusButton = QtWidgets.QPushButton('Show global status...')
+		aWifiGlobalStatusButton = QtWidgets.QPushButton('Show Global Status...')
 		aWifiGlobalStatusButton.clicked.connect(self.wifiGlobalStatusButtonClick)
 		aWifiButtons.addWidget(aWifiGlobalStatusButton)
 
@@ -161,11 +161,10 @@ class LmActions:
 
 		aRightZone.addWidget(aAboutGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
-		aQuitButton = QtWidgets.QPushButton('Quit application')
+		aQuitButton = QtWidgets.QPushButton('Quit Application')
 		aQuitButton.clicked.connect(self.quitButtonClick)
 		aQuitButton.setMinimumWidth(BUTTON_WIDTH)
 		aRightZone.addWidget(aQuitButton, 1, QtCore.Qt.AlignmentFlag.AlignBottom)
-
 
 		# Layout
 		aHBox = QtWidgets.QHBoxLayout()
@@ -356,7 +355,7 @@ class LmActions:
 class RebootHistoryDialog(QtWidgets.QDialog):
 	def __init__(self, iName, iParent = None):
 		super(RebootHistoryDialog, self).__init__(iParent)
-		self.resize(550, 56 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 10) + LmConfig.DIAG_HEIGHT_ADJUST)
+		self.resize(550, 56 + LmConfig.DialogHeight(10))
 
 		self._historyTable = QtWidgets.QTableWidget()
 		self._historyTable.setColumnCount(4)
@@ -442,7 +441,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aHBox, 1)
 
 		i = self.loadStatus(iLiveboxModel)
-		self.resize(550, 56 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * i) + LmConfig.DIAG_HEIGHT_ADJUST)
+		self.resize(550, 56 + LmConfig.DialogHeight(i))
 
 		self.setWindowTitle('Wifi Global Status')
 		self.setModal(True)
