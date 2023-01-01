@@ -2,3 +2,4 @@ PyQt6
 requests
 python-dateutil
 cryptography
+webbrowser
