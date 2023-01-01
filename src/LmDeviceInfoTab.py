@@ -36,38 +36,35 @@ class LmDeviceInfo:
 		self._infoDList.setColumnCount(DSelCol.Count)
 		self._infoDList.setHorizontalHeaderLabels(('Key', 'Name', 'MAC'))
 		self._infoDList.setColumnHidden(DSelCol.Key, True)
-		self._infoDList.horizontalHeader().setSectionResizeMode(DSelCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._infoDList.horizontalHeader().setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader = self._infoDList.horizontalHeader()
+		aHeader.setSectionResizeMode(DSelCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoDList.setColumnWidth(DSelCol.Name, 200)
 		self._infoDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.DUAL_PANE_ADJUST)
 		self._infoDList.verticalHeader().hide()
 		self._infoDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._infoDList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._infoDList.setSortingEnabled(True)
-		self._infoDList.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._infoDList.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._infoDList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._infoDList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._infoDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._infoDList.setMinimumWidth(350 + LmConfig.DUAL_PANE_ADJUST)
 		self._infoDList.itemSelectionChanged.connect(self.infoDeviceListClick)
+		LmConfig.SetTableStyle(self._infoDList)
 
 		# Attribute list
 		self._infoAList = QtWidgets.QTableWidget()
 		self._infoAList.setColumnCount(InfoCol.Count)
 		self._infoAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
-		self._infoAList.horizontalHeader().setSectionResizeMode(InfoCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		self._infoAList.horizontalHeader().setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader = self._infoAList.horizontalHeader()
+		aHeader.setSectionResizeMode(InfoCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._infoAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoAList.setColumnWidth(InfoCol.Attribute, 200)
 		self._infoAList.setColumnWidth(InfoCol.Value, 600)
 		self._infoAList.verticalHeader().hide()
 		self._infoAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._infoAList.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-		self._infoAList.setStyleSheet(LmConfig.LIST_STYLESHEET)
-		self._infoAList.horizontalHeader().setStyleSheet(LmConfig.LIST_HEADER_STYLESHEET)
-		self._infoAList.horizontalHeader().setFont(LmTools.BOLD_FONT)
 		self._infoAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		LmConfig.SetTableStyle(self._infoAList)
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()
@@ -551,7 +548,7 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 			self._ignoreSignal = True
 			self._typeKeyEdit.setText(LmConfig.DEVICE_TYPES[aIndex]['Key'])
 			self._ignoreSignal = False
-		
+
 
 	def typeKeyTyped(self, aTypeKey):
 		if not self._ignoreSignal:
