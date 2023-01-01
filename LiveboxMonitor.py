@@ -7,8 +7,6 @@
 
 import sys
 
-from enum import IntEnum
-
 from PyQt6 import QtCore
 from PyQt6 import QtGui
 from PyQt6 import QtWidgets
@@ -25,17 +23,17 @@ from src import LmDeviceListTab
 from src import LmInfoTab
 from src import LmDeviceInfoTab
 from src import LmEventsTab
+from src import LmPhoneTab
 from src import LmActionsTab
 from src import LmRepeaterTab
+
+from __init__ import __version__
 
 
 
 # ################################ VARS & DEFS ################################
 
 # Static Config
-from __init__ import __version__
-WINDOW_TITLE = 'Livebox Monitor v' + __version__
-
 NO_THREAD = False 	# Use only to speed up testing while developping
 
 
@@ -47,6 +45,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 										  LmInfoTab.LmInfo,
 										  LmDeviceInfoTab.LmDeviceInfo,
 										  LmEventsTab.LmEvents,
+										  LmPhoneTab.LmPhone,
 										  LmActionsTab.LmActions,
 										  LmRepeaterTab.LmRepeater):
 
@@ -60,15 +59,18 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.initWifiStatsLoop()
 			self.initStatsLoop()
 			self.initRepeaterStatsLoop()
-		self.setWindowTitle(WINDOW_TITLE)
+		self._applicationName = 'Livebox Monitor v' + __version__
+		self.setWindowTitle(self._applicationName)
 		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
 		self.setGeometry(100, 100, 1300,
 						 102 + LmConfig.LIST_HEADER_HEIGHT + (LmConfig.LIST_LINE_HEIGHT * 21) + LmConfig.WIND_HEIGHT_ADJUST)
-		self.show()	
+		self.show()
+		QtCore.QCoreApplication.processEvents()
 		if self.signin():
 			self.adjustToLiveboxModel()
 			self.initUI()
 			LmConf.loadMacAddrTable()
+			QtCore.QCoreApplication.processEvents()
 			self.loadDeviceList()
 			self.initRepeaters()
 			self._appReady = True
@@ -86,6 +88,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self.createLiveboxInfoTab()
 		self.createDeviceInfoTab()
 		self.createEventsTab()
+		self.createPhoneTab()
 		self.createActionsTab()
 
 		# Layout
@@ -98,49 +101,62 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 	### Handle change of tab event
 	def tabChangedEvent(self, iNewTabIndex):
-		if NO_THREAD:
-			return
-
 		if self._appReady:
 			if iNewTabIndex == MonitorTab.DeviceList:
-				self.resumeWifiStatsLoop()
-				self.suspendStatsLoop()
-				self.suspendRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.resumeWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
 			elif iNewTabIndex == MonitorTab.LiveboxInfos:
-				self.suspendWifiStatsLoop()
-				self.resumeStatsLoop()
-				self.suspendRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.resumeStatsLoop()
+					self.suspendRepeaterStatsLoop()
 			elif iNewTabIndex == MonitorTab.DeviceInfos:
-				self.suspendWifiStatsLoop()
-				self.suspendStatsLoop()
-				self.suspendRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
 			elif iNewTabIndex == MonitorTab.DeviceEvents:
-				self.suspendWifiStatsLoop()
-				self.suspendStatsLoop()
-				self.suspendRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
+			elif iNewTabIndex == MonitorTab.Phone:
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
+				self.phoneTabClick()
 			elif iNewTabIndex == MonitorTab.Actions:
-				self.suspendWifiStatsLoop()
-				self.suspendStatsLoop()
-				self.suspendRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
 			elif iNewTabIndex >= MonitorTab.Repeaters:
-				self.suspendWifiStatsLoop()
-				self.suspendStatsLoop()
-				self.resumeRepeaterStatsLoop()
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.resumeRepeaterStatsLoop()
 
 
 	### Window close event
 	def closeEvent(self, iEvent):
-		self.startTask('Terminating threads...')
 		if not NO_THREAD:
+			self.startTask('Terminating threads...')
 			self.stopEventLoop()
 			self.stopStatsLoop()
 			self.stopWifiStatsLoop()
 			self.stopRepeaterStatsLoop()
-		self.endTask()
+			self.endTask()
+		iEvent.accept()
+
+
+	### Last chance to release resources
+	def appTerminate(self):
 		self.signoutRepeaters()
 		self.signout()
 		self._appReady = False
-		iEvent.accept()
 
 
 	### Sign in to Livebox
@@ -216,14 +232,14 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 	### Show the start of a long task
 	def startTask(self, iTask):
-		self.setWindowTitle(WINDOW_TITLE + ' - ' + iTask)
+		self.setWindowTitle(self._applicationName + ' - ' + iTask)
 		LmTools.MouseCursor_Busy()
 
 
 	### End a long task
 	def endTask(self):
 		LmTools.MouseCursor_Normal()
-		self.setWindowTitle(WINDOW_TITLE)
+		self.setWindowTitle(self._applicationName)
 
 
 	### Switch to device list tab
@@ -246,6 +262,11 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self._tabWidget.setCurrentIndex(MonitorTab.DeviceEvents)
 
 
+	### Switch to phone tab
+	def switchToPhoneTab(self):
+		self._tabWidget.setCurrentIndex(MonitorTab.Phone)
+
+
 	### Switch to actions tab
 	def switchToActionsTab(self):
 		self._tabWidget.setCurrentIndex(MonitorTab.Actions)
@@ -260,5 +281,6 @@ if __name__ == '__main__':
 	SetApplicationStyle()
 	LmIcon.load()
 	aUI = LiveboxMonitorUI()
+	aApp.aboutToQuit.connect(aUI.appTerminate)
 	if aUI.isSigned():
 		aApp.exec()
