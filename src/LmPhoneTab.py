@@ -1,0 +1,1005 @@
+### Livebox Monitor phone tab module ###
+
+import os
+
+from enum import IntEnum
+
+from PyQt6 import QtGui
+from PyQt6 import QtCore
+from PyQt6 import QtWidgets
+
+from src import LmTools
+from src import LmConfig
+from src.LmIcons import LmIcon
+
+
+# ################################ VARS & DEFS ################################
+
+# List columns
+class CallCol(IntEnum):
+	Key = 0
+	Type = 1
+	Time = 2
+	Number = 3
+	Contact = 4
+	Duration = 5
+	Count = 6
+ICON_COLUMNS = [CallCol.Type]
+
+class ContactCol(IntEnum):
+	Key = 0
+	Name = 1
+	Cell = 2
+	Home = 3
+	Work = 4
+	Ring = 5
+	Count = 6
+
+# Sorting columns by numeric
+class NumericSortItem(QtWidgets.QTableWidgetItem):
+	def __lt__(self, iOther):
+		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
+		if x is None:
+			x = 0
+		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
+		if y is None:
+			y = 0
+		return x < y
+
+# Drawing centered icons
+class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
+	def paint(self, iPainter, iOption, iIndex):
+		if iIndex.column() in ICON_COLUMNS:
+			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
+			if aIcon is not None:
+				aIcon.paint(iPainter, iOption.rect)
+		else:
+			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
+
+
+# ################################ LmPhone class ################################
+class LmPhone:
+
+	### Create phone tab
+	def createPhoneTab(self):
+		self._phoneTab = QtWidgets.QWidget()
+
+		# Call list
+		self._callList = QtWidgets.QTableWidget()
+		self._callList.setColumnCount(CallCol.Count)
+		self._callList.setHorizontalHeaderLabels(('Key', 'T', 'Time', 'Number', 'Contact', 'Duration'))
+		self._callList.setColumnHidden(CallCol.Key, True)
+		aHeader = self._callList.horizontalHeader()
+		aHeader.setSectionResizeMode(CallCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(CallCol.Time, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(CallCol.Number, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(CallCol.Contact, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(CallCol.Duration, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		self._callList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self._callList.setColumnWidth(CallCol.Type, 30)
+		self._callList.setColumnWidth(CallCol.Time, 130)
+		self._callList.setColumnWidth(CallCol.Number, 110)
+		self._callList.setColumnWidth(CallCol.Contact, 250)
+		self._callList.setColumnWidth(CallCol.Duration, 80 + LmConfig.DUAL_PANE_ADJUST)
+		self._callList.verticalHeader().hide()
+		self._callList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._callList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+		self._callList.setSortingEnabled(True)
+		self._callList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
+		self._callList.setMinimumWidth(480 + LmConfig.DUAL_PANE_ADJUST)
+		self._callList.setMaximumWidth(540 + LmConfig.DUAL_PANE_ADJUST)
+		self._callList.setItemDelegate(CenteredIconsDelegate(self))
+		LmConfig.SetTableStyle(self._callList)
+
+		# Call button bar
+		aCallButtonsBox = QtWidgets.QHBoxLayout()
+		aCallButtonsBox.setSpacing(30)
+		aRefreshCallButton = QtWidgets.QPushButton('Refresh')
+		aRefreshCallButton.clicked.connect(self.refreshCallButtonClick)
+		aCallButtonsBox.addWidget(aRefreshCallButton)
+		aDeleteCallButton = QtWidgets.QPushButton('Delete')
+		aDeleteCallButton.clicked.connect(self.deleteCallButtonClick)
+		aCallButtonsBox.addWidget(aDeleteCallButton)
+		aDeleteAllCallsButton = QtWidgets.QPushButton('Delete All...')
+		aDeleteAllCallsButton.clicked.connect(self.deleteAllCallsButtonClick)
+		aCallButtonsBox.addWidget(aDeleteAllCallsButton)
+
+		# Call layout
+		aCallBox = QtWidgets.QVBoxLayout()
+		aCallBox.setSpacing(10)
+		aCallBox.addWidget(self._callList, 1)
+		aCallBox.addLayout(aCallButtonsBox, 0)
+
+		# Contact list
+		self._contactList = QtWidgets.QTableWidget()
+		self._contactList.setColumnCount(ContactCol.Count)
+		self._contactList.setHorizontalHeaderLabels(('Key', 'Name', 'Mobile', 'Home', 'Work', 'Ring'))
+		self._contactList.setColumnHidden(ContactCol.Key, True)
+		aHeader = self._contactList.horizontalHeader()
+		aHeader.setSectionResizeMode(ContactCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(ContactCol.Cell, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(ContactCol.Home, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(ContactCol.Work, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(ContactCol.Ring, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		self._contactList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self._contactList.setColumnWidth(ContactCol.Name, 250)
+		self._contactList.setColumnWidth(ContactCol.Cell, 110)
+		self._contactList.setColumnWidth(ContactCol.Home, 110)
+		self._contactList.setColumnWidth(ContactCol.Work, 110)
+		self._contactList.setColumnWidth(ContactCol.Ring, 60)
+		self._contactList.verticalHeader().hide()
+		self._contactList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._contactList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+		self._contactList.setSortingEnabled(True)
+		self._contactList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._contactList.doubleClicked.connect(self.editContactButtonClick)
+		LmConfig.SetTableStyle(self._contactList)
+
+		# Contact button bar
+		aContactButtonsBox = QtWidgets.QHBoxLayout()
+		aContactButtonsBox.setSpacing(10)
+		aRefreshContactButton = QtWidgets.QPushButton('Refresh')
+		aRefreshContactButton.clicked.connect(self.refreshContactButtonClick)
+		aContactButtonsBox.addWidget(aRefreshContactButton)
+		aAddContactButton = QtWidgets.QPushButton('Add...')
+		aAddContactButton.clicked.connect(self.addContactButtonClick)
+		aContactButtonsBox.addWidget(aAddContactButton)
+		aEditContactButton = QtWidgets.QPushButton('Edit...')
+		aEditContactButton.clicked.connect(self.editContactButtonClick)
+		aContactButtonsBox.addWidget(aEditContactButton)
+		aDeleteContactButton = QtWidgets.QPushButton('Delete')
+		aDeleteContactButton.clicked.connect(self.deleteContactButtonClick)
+		aContactButtonsBox.addWidget(aDeleteContactButton)
+		aDeleteAllContactsButton = QtWidgets.QPushButton('Delete All...')
+		aDeleteAllContactsButton.clicked.connect(self.deleteAllContactsButtonClick)
+		aContactButtonsBox.addWidget(aDeleteAllContactsButton)
+
+		# Tool button bar
+		aToolButtonsBox = QtWidgets.QHBoxLayout()
+		aToolButtonsBox.setSpacing(30)
+
+		aPhoneRingSet = QtWidgets.QHBoxLayout()
+		aPhoneRingSet.setSpacing(2)
+		self._ringToneCombo = QtWidgets.QComboBox(self)
+		self._ringToneCombo.addItem('-')
+		i = 1
+		while i <= 7:
+			self._ringToneCombo.addItem(str(i))
+			i += 1
+		self._ringToneCombo.setMaximumWidth(40)
+		aPhoneRingSet.addWidget(self._ringToneCombo)
+		aPhoneRingButton = QtWidgets.QPushButton('Phone Ring')
+		aPhoneRingButton.clicked.connect(self.phoneRingButtonClick)
+		aPhoneRingSet.addWidget(aPhoneRingButton)
+		aToolButtonsBox.addLayout(aPhoneRingSet, 0)
+
+		aExportContactsButton = QtWidgets.QPushButton('Export...')
+		aExportContactsButton.clicked.connect(self.exportContactsButtonClick)
+		aToolButtonsBox.addWidget(aExportContactsButton)
+		aImportContactsButton = QtWidgets.QPushButton('Import...')
+		aImportContactsButton.clicked.connect(self.importContactsButtonClick)
+		aToolButtonsBox.addWidget(aImportContactsButton)
+
+		# Contact layout
+		aSeparator = QtWidgets.QFrame()
+		aSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+
+		aContactBox = QtWidgets.QVBoxLayout()
+		aContactBox.setSpacing(10)
+		aContactBox.addWidget(self._contactList, 1)
+		aContactBox.addLayout(aContactButtonsBox, 0)
+		aContactBox.addWidget(aSeparator)
+		aContactBox.addLayout(aToolButtonsBox, 0)
+
+		# Layout
+		aSeparator = QtWidgets.QFrame()
+		aSeparator.setFrameShape(QtWidgets.QFrame.Shape.VLine)
+		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+
+		aHBox = QtWidgets.QHBoxLayout()
+		aHBox.setSpacing(10)
+		aHBox.addLayout(aCallBox, 1)
+		aHBox.addWidget(aSeparator)
+		aHBox.addLayout(aContactBox, 1)
+		self._phoneTab.setLayout(aHBox)
+
+		self._tabWidget.addTab(self._phoneTab, 'Phone')
+
+		# Init context
+		self._phoneDataLoaded = False
+
+
+	### Click on phone tab
+	def phoneTabClick(self):
+		if not self._phoneDataLoaded:
+			self.loadCallList()
+			self.loadContactList()
+			self._phoneDataLoaded = True
+
+
+	### Click on call list refresh button
+	def refreshCallButtonClick(self):
+		self._callList.clearContents()
+		self._callList.setRowCount(0)
+		self.loadCallList()
+
+
+	### Click on delete call button
+	def deleteCallButtonClick(self):
+		aCurrentSelection = self._callList.currentRow()
+		if aCurrentSelection >= 0:
+			aKey = self._callList.item(aCurrentSelection, CallCol.Key).text()
+			try:
+				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList', { 'callId': aKey })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Phone call delete query error.')
+				return
+
+			if (aReply is not None) and ('status' in aReply):
+				self._callList.removeRow(aCurrentSelection)
+			else:
+				LmTools.DisplayError('Phone call delete query failed.')
+		else:
+			LmTools.DisplayError('Please select a phone call.')
+
+
+	### Click on delete all calls button
+	def deleteAllCallsButtonClick(self):
+		if LmTools.AskQuestion('Are you sure you want to delete all phone calls?'):
+			LmTools.MouseCursor_Busy()
+			try:
+				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList')
+			except BaseException as e:
+				LmTools.MouseCursor_Normal()
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Delete all calls query error.')
+				return
+			LmTools.MouseCursor_Normal()
+
+			if (aReply is not None) and ('status' in aReply):
+				self.refreshCallButtonClick()
+			else:
+				LmTools.DisplayError('Delete all calls query failed.')
+
+
+	### Double click on a call to add/edit corresponding contact
+	def editContactFromCallListClick(self):
+		aCurrentSelection = self._callList.currentRow()
+		if aCurrentSelection >= 0:
+			aName = self._callList.item(aCurrentSelection, CallCol.Contact).text()
+			aPhoneNb  = self._callList.item(aCurrentSelection, CallCol.Number).text()
+			n = self._contactList.rowCount()
+
+			# Try first to find the contact by name
+			if len(aName):
+				i = 0
+				while (i < n):
+					if self._contactList.item(i, ContactCol.Name).text() == aName:
+						self.editContactDialog(i)
+						return
+					i += 1
+
+			# Then try to find the contact by phone number
+			if len(aPhoneNb):
+				i = 0
+				while (i < n):
+					if ((self._contactList.item(i, ContactCol.Cell).text() == aPhoneNb) or
+						(self._contactList.item(i, ContactCol.Home).text() == aPhoneNb) or
+						(self._contactList.item(i, ContactCol.Work).text() == aPhoneNb)):
+						self.editContactDialog(i)
+						return
+					i += 1
+
+			# If not found then propose to create a contact from phone call data
+			aContact = {}
+			aSep = aName.find(' ')
+			if aSep > 0:
+				aContact['name'] = aName[0:aSep]
+				aContact['firstname'] = aName[aSep + 1:]
+			else:
+				aContact['name'] = aName
+				aContact['firstname'] = ''
+			aContact['cell'] = aPhoneNb
+			aContact['home'] = ''
+			aContact['work'] = ''
+			aContact['ringtone'] = '1'
+			self.addContactDialog(aContact)
+
+
+	### Load phone call list
+	def loadCallList(self):
+		self.startTask('Loading phone call list...')
+
+		self._callList.setSortingEnabled(False)
+
+		aCallList = self._session.request('VoiceService.VoiceApplication:getCallList', [{ 'line': '1' }], iTimeout = 8)
+		if aCallList is not None:
+			aCallList = aCallList.get('status')
+		if aCallList is None:
+			LmTools.MouseCursor_Normal()
+			LmTools.DisplayError('Error getting phone call list.')
+			LmTools.MouseCursor_Busy()
+		else:
+			i = 0
+			for c in aCallList:
+				self._callList.insertRow(i)
+
+				aKey = QtWidgets.QTableWidgetItem(c.get('callId', ''))
+
+				aCallTypeIcon = NumericSortItem()
+				aStatus = c.get('callType', '')
+				aOrigin = c.get('callOrigin', '')
+				if aStatus == 'succeeded':
+					if aOrigin == 'local':
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallOutPixmap))
+						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 2)
+						aMissedCall = False
+					else:
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallInPixmap))
+						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 3)
+						aMissedCall = False
+				else:
+					if aOrigin == 'local':
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallFailedPixmap))
+						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 4)
+						aMissedCall = False
+					else:
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallMissedPixmap))
+						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
+						aMissedCall = True
+
+				aTime = QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(c.get('startTime')))
+				aTime.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+				aNumber = QtWidgets.QTableWidgetItem(c.get('remoteNumber'))
+				aNumber.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+				aContact = QtWidgets.QTableWidgetItem(c.get('remoteName'))
+
+				aSeconds = c.get('duration')
+				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
+				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
+				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+
+				if aMissedCall:
+					aTime.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+					aNumber.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+					aContact.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+					aDuration.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+
+				self._callList.setItem(i, CallCol.Key, aKey)
+				self._callList.setItem(i, CallCol.Type, aCallTypeIcon)
+				self._callList.setItem(i, CallCol.Time, aTime)
+				self._callList.setItem(i, CallCol.Number, aNumber)
+				self._callList.setItem(i, CallCol.Contact, aContact)
+				self._callList.setItem(i, CallCol.Duration, aDuration)
+
+				i += 1
+
+		self._callList.sortItems(CallCol.Time, QtCore.Qt.SortOrder.DescendingOrder)
+
+		self._callList.setSortingEnabled(True)
+
+		self.endTask()
+
+
+	### Click on contact list refresh button
+	def refreshContactButtonClick(self):
+		self._contactList.clearContents()
+		self._contactList.setRowCount(0)
+		self.loadContactList()
+
+
+	### Click on add contact button
+	def addContactButtonClick(self):
+		self.addContactDialog(None)
+
+
+	### Click on edit contact button
+	def editContactButtonClick(self):
+		aCurrentSelection = self._contactList.currentRow()
+		if aCurrentSelection >= 0:
+			self.editContactDialog(aCurrentSelection)
+		else:
+			LmTools.DisplayError('Please select a contact.')
+
+
+	### Click on delete contact button
+	def deleteContactButtonClick(self):
+		aCurrentSelection = self._contactList.currentRow()
+		if aCurrentSelection >= 0:
+			aKey = self._contactList.item(aCurrentSelection, ContactCol.Key).text()
+			try:
+				aReply = self._session.request('Phonebook:removeContactByUniqueID', { 'uniqueID': aKey })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Contact delete query error.')
+				return
+
+			if (aReply is not None) and (aReply.get('status', False)):
+				self._contactList.removeRow(aCurrentSelection)
+			else:
+				LmTools.DisplayError('Contact delete query failed.')
+		else:
+			LmTools.DisplayError('Please select a contact.')
+
+
+	### Click on delete all contacts button
+	def deleteAllContactsButtonClick(self):
+		if LmTools.AskQuestion('Are you sure you want to delete all contacts?'):
+			LmTools.MouseCursor_Busy()
+			try:
+				aReply = self._session.request('Phonebook:removeAllContacts')
+			except BaseException as e:
+				LmTools.MouseCursor_Normal()
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Delete all contacts query error.')
+				return
+			LmTools.MouseCursor_Normal()
+
+			if (aReply is not None) and (aReply.get('status', False)):
+				self.refreshContactButtonClick()
+			else:
+				LmTools.DisplayError('Delete all contacts query failed.')
+
+
+	### Click on Phone Ring button
+	def phoneRingButtonClick(self):
+		aRingTone = self._ringToneCombo.currentText()
+		if (aRingTone == '-'):
+			aParams = {}
+		else:
+			aParams = { "ringtone": aRingTone }
+
+		LmTools.MouseCursor_Busy()
+		try:
+			d = self._session.request('VoiceService.VoiceApplication:ring', aParams)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		LmTools.MouseCursor_Normal()
+
+		if d is None:
+			LmTools.DisplayError('Ring service error.')
+		else:
+			LmTools.DisplayStatus('Phone should be ringing.')
+
+
+	### Click on export contacts button
+	def exportContactsButtonClick(self):
+		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Export File', 'Livebox Contacts.vcf', '*.vcf')
+		aFileName = aFileName[0]
+		if aFileName == '':
+			return
+
+		try:
+			aExportFile = open(aFileName, 'w')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Cannot create the file.')
+			return
+
+		self.startTask('Exporting all contacts...')
+
+		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
+		if aContactList is not None:
+			aContactList = aContactList.get('status')
+		if aContactList is None:
+			LmTools.MouseCursor_Normal()
+			LmTools.DisplayError('Error getting contact list.')
+			LmTools.MouseCursor_Busy()
+		else:
+			for c in aContactList:
+				aContact = self.decodeLiveboxContact(c)
+				aExportFile.write('BEGIN:VCARD\n')
+				aExportFile.write('VERSION:3.0\n')
+				aExportFile.write('PRODID:' + self._applicationName + '\n')
+				aExportFile.write('FN:' + aContact['formattedName'] + '\n')
+				aExportFile.write('N:' + aContact['name'] + ';' + aContact['firstname'] + ';;;\n')
+				aExportFile.write('TEL;TYPE=CELL:' + aContact['cell'] + '\n')
+				aExportFile.write('TEL;TYPE=HOME:' + aContact['home'] + '\n')
+				aExportFile.write('TEL;TYPE=WORK:' + aContact['work'] + '\n')
+				aExportFile.write('RINGTONE:' + aContact['ringtone'] + '\n')
+				aExportFile.write('END:VCARD\n')
+
+		aExportFile.close()
+
+		self.endTask()
+
+
+	### Click on import contacts button
+	def importContactsButtonClick(self):
+		aFiles = QtWidgets.QFileDialog.getOpenFileNames(self, 'Select files to import', '', '*.vcf')
+		aFiles = aFiles[0]
+
+		self.startTask('Importing contacts...')
+		self._contactList.setSortingEnabled(False)
+
+		aFileError = []
+		for f in aFiles:
+			aResult = self.importVcfFile(f)
+			if aResult == 0:
+				aFileError.append(os.path.basename(f))
+			elif aResult < 0:
+				break
+
+		self._contactList.setSortingEnabled(True)
+		self.endTask()
+
+		if len(aFileError):
+			aErrorStr = 'Cannot import file(s): '
+			for f in aFileError:
+				aErrorStr += f + ', '
+			n = len(aErrorStr)
+			aErrorStr = aErrorStr[:n - 2] + '.'
+			LmTools.DisplayError(aErrorStr)
+
+
+	### VCF file import, returns: 1=Success, 0=File error, -1=Stop all error
+	def importVcfFile(self, iFile):
+		try:
+			f = open(iFile, 'r')
+		except:
+			return 0
+
+		c = None
+		for l in f:
+			# Get tag structure
+			i = l.find(':')
+			if i < 1:
+				continue
+			aTagStruct = l[:i].upper()
+			l = l[i + 1:].rstrip('\n')
+
+			# Some tags are build like "item1.TEL;...", remove to ease parsing
+			if aTagStruct.startswith('ITEM'):
+				i = aTagStruct.find('.')
+				if i >= 0:
+					aTagStruct = aTagStruct[i + 1:]
+
+			# Decode tag structure to get tag name and its parameters
+			aTagElems = aTagStruct.split(';')
+			aTag = None
+			aTagParams = {}
+			for e in aTagElems:
+				if aTag is None:
+					aTag = e
+				else:
+					i = e.find('=')
+					if i >= 0:
+						aTagParams[e[:i]] = e[i + 1:]
+					else:
+						aTagParams[e] = ''
+
+			if aTag == 'BEGIN':
+				# Create a blank contact
+				if l.upper() == 'VCARD':
+					c = {}
+					c['firstname'] = ''
+					c['name'] = ''
+					c['formattedName'] = ''
+					c['cell'] = ''
+					c['home'] = ''
+					c['work'] = ''
+					c['ringtone'] = '1'
+
+			elif aTag == 'END':
+				# Import the decoded contact
+				if (l.upper() == 'VCARD') and (c is not None):
+					if self.addLiveboxContact(c):
+						self._contactList.insertRow(0)
+						self.setContactRow(0, c)
+						QtCore.QCoreApplication.processEvents()
+					else:
+						f.close()
+						return -1
+					c = None
+			else:
+				LmPhone.importVcfTag(c, aTag, aTagParams, l)
+
+		f.close()
+		return 1
+
+
+	### VCF tag import
+	@staticmethod
+	def importVcfTag(iContact, iTag, iParams, iVal):
+		if iContact is  None:
+			return
+
+		# Name tag
+		if iTag == 'N':
+			# Replace semicolon escape sequences by spaces
+			iVal = iVal.replace(r'\;', ' ')
+
+			# Get name & firstname
+			s = iVal.split(';')
+			if len(s) > 1:
+				iContact['name']  = s[0].strip()
+				iContact['firstname'] = s[1].strip()
+			else:
+				iContact['name']  = s[0].strip()
+				iContact['firstname'] = ''
+			iContact['formattedName'] = LmPhone.computeFormattedName(iContact['name'], iContact['firstname'])
+
+		# Phone number tag
+		elif iTag == 'TEL':
+			# Get type, use cell if none specified
+			aType = iParams.get('TYPE', 'CELL')
+
+			# Assign the phone number according to its type
+			if aType == 'HOME':
+				iContact['home'] = LmPhone.vcfPhoneNumberCleanup(iVal)
+			elif aType == 'WORK':
+				iContact['work'] = LmPhone.vcfPhoneNumberCleanup(iVal)
+			else:
+				iContact['cell'] = LmPhone.vcfPhoneNumberCleanup(iVal)
+
+		# Ring tone tag (not standard)
+		elif iTag == 'RINGTONE':
+			if (len(iVal) == 1) and (iVal in '1234567'):
+				iContact['ringtone'] = iVal
+
+
+	### VCF phone number cleanup
+	@staticmethod
+	def vcfPhoneNumberCleanup(iPhoneNumber):
+		if (len(iPhoneNumber)) and (iPhoneNumber[0] == '+'):
+			n = '00'
+			iPhoneNumber = iPhoneNumber[1:]
+		else:
+			n = ''
+
+		for c in iPhoneNumber:
+			if c in r'0123456789*#':
+				n += c
+
+		return n
+
+
+	### Compute formatted name from name and firstname
+	@staticmethod
+	def computeFormattedName(iName, iFirstname):
+		if len(iName):
+			if len(iFirstname):
+				return iName + ' ' + iFirstname
+			return iName
+		return iFirstname
+
+
+	### Load contact list
+	def loadContactList(self):
+		self.startTask('Loading contact list...')
+
+		self._contactList.setSortingEnabled(False)
+
+		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
+		if aContactList is not None:
+			aContactList = aContactList.get('status')
+		if aContactList is None:
+			LmTools.MouseCursor_Normal()
+			LmTools.DisplayError('Error getting contact list.')
+			LmTools.MouseCursor_Busy()
+		else:
+			i = 0
+			for c in aContactList:
+				self._contactList.insertRow(i)
+				aContact = self.decodeLiveboxContact(c)
+				self.setContactRow(i, aContact)
+				i += 1
+
+		self._contactList.sortItems(ContactCol.Name, QtCore.Qt.SortOrder.AscendingOrder)
+		self._contactList.setSortingEnabled(True)
+
+		self.endTask()
+
+
+	### Get contact from Livebox contact structure
+	def decodeLiveboxContact(self, iLiveboxContact):
+		aContact = {}
+		aContact['key'] = iLiveboxContact.get('uniqueID', '')
+
+		aName = iLiveboxContact.get('name', '')
+		s = aName.split(';')
+		if len(s) > 1:
+			aContact['name'] = s[0][2:]
+			aContact['firstname'] = s[1]
+		else:
+			aContact['name']  = ''
+			aContact['firstname'] = ''
+
+		aContact['formattedName'] = iLiveboxContact.get('formattedName', '')
+
+		aContact['cell'] = ''
+		aContact['home'] = ''
+		aContact['work'] = ''
+		aNumbers = iLiveboxContact.get('telephoneNumbers')
+		if type(aNumbers).__name__ == 'list':
+			for n in aNumbers:
+				aType = n.get('type', '')
+				if aType == 'CELL':
+					aContact['cell'] = n.get('name', '')
+				elif aType == 'HOME':
+					aContact['home'] = n.get('name', '')
+				elif aType == 'WORK':
+					aContact['work'] = n.get('name', '')
+
+		aContact['ringtone'] = iLiveboxContact.get('ringtone', '1')
+
+		return aContact
+
+
+	### Set contact row
+	def setContactRow(self, iLine, iContact):
+		aKey = QtWidgets.QTableWidgetItem(iContact['key'])
+
+		aContactName = QtWidgets.QTableWidgetItem(iContact['formattedName'])
+
+		aCellNb = QtWidgets.QTableWidgetItem(iContact['cell'])
+		aCellNb.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+		aHomeNb = QtWidgets.QTableWidgetItem(iContact['home'])
+		aHomeNb.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+		aWorkNb = QtWidgets.QTableWidgetItem(iContact['work'])
+		aWorkNb.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+		aRingTone = QtWidgets.QTableWidgetItem(iContact['ringtone'])
+		aRingTone.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+		self._contactList.setItem(iLine, ContactCol.Key, aKey)
+		self._contactList.setItem(iLine, ContactCol.Name, aContactName)
+		self._contactList.setItem(iLine, ContactCol.Cell, aCellNb)
+		self._contactList.setItem(iLine, ContactCol.Home, aHomeNb)
+		self._contactList.setItem(iLine, ContactCol.Work, aWorkNb)
+		self._contactList.setItem(iLine, ContactCol.Ring, aRingTone)
+
+
+	### Add contact dialog
+	def addContactDialog(self, iDefaultContactData):
+		aAddContactDialog = EditContactDialog(False, iDefaultContactData, self)
+		if (aAddContactDialog.exec()):
+			aContact = aAddContactDialog.getContact()
+			if self.addLiveboxContact(aContact):
+				self._contactList.setSortingEnabled(False)
+				self._contactList.insertRow(0)
+				self.setContactRow(0, aContact)
+				self._contactList.setSortingEnabled(True)
+
+
+	### Add a contact in Livebox
+	def addLiveboxContact(self, iContact):
+		aData = {}
+		aData['name'] = 'N:' + iContact['name'] + ';' + iContact['firstname'] + ';'
+		aData['formattedName'] = iContact['formattedName']
+		aData['ringtone'] = iContact['ringtone']
+		aPhoneNumbers = []
+		aNumber = {}
+		aNumber['name'] = iContact['cell']
+		aNumber['type'] = 'CELL'
+		aNumber['preferred'] = False
+		aPhoneNumbers.append(aNumber)
+		aNumber = {}
+		aNumber['name'] = iContact['work']
+		aNumber['type'] = 'WORK'
+		aNumber['preferred'] = False
+		aPhoneNumbers.append(aNumber)
+		aNumber = {}
+		aNumber['name'] = iContact['home']
+		aNumber['type'] = 'HOME'
+		aNumber['preferred'] = False
+		aPhoneNumbers.append(aNumber)
+		aData['telephoneNumbers'] = aPhoneNumbers
+
+		try:
+			aReply = self._session.request('Phonebook:addContactAndGenUUID', { 'contact': aData })
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Contact creation query error.')
+			return False
+
+		if (aReply is not None) and ('status' in aReply):
+			aKey = aReply['status']
+			if aKey is None:
+				LmTools.DisplayError('Max number of contacts reached.')
+				return False
+			iContact['key'] = aReply['status']
+			return True
+
+		LmTools.DisplayError('Contact creation query failed.')
+		return False
+
+
+	### Edit contact dialog
+	def editContactDialog(self, iLine):
+		aKey = self._contactList.item(iLine, ContactCol.Key).text()
+
+		# First retrieve a fresh copy of the contact
+		try:
+			aReply = self._session.request('Phonebook:getContactByUniqueID', { 'uniqueID': aKey })
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Contact query error.')
+			return
+		if (aReply is None) or ('status' not in aReply):
+			LmTools.DisplayError('Cannot retrieve contact from Livebox.')
+			return
+		aLBContact = aReply['status']
+		aContact = self.decodeLiveboxContact(aLBContact)
+
+		# Edit dialog
+		aEditContactDialog = EditContactDialog(True, aContact, self)
+		if (aEditContactDialog.exec()):
+			aContact = aEditContactDialog.getContact()
+			aLBContact['name'] = 'N:' + aContact['name'] + ';' + aContact['firstname'] + ';'
+			aLBContact['n'] = 'N:' + aContact['name'] + ';' + aContact['firstname'] + ';;;;;;;'
+			aLBContact['formattedName'] = aContact['formattedName']
+			aLBContact['ringtone'] = aContact['ringtone']
+			aPhoneNumbers = []
+			aNumber = {}
+			aNumber['name'] = aContact['cell']
+			aNumber['type'] = 'CELL'
+			aNumber['preferred'] = False
+			aPhoneNumbers.append(aNumber)
+			aNumber = {}
+			aNumber['name'] = aContact['work']
+			aNumber['type'] = 'WORK'
+			aNumber['preferred'] = False
+			aPhoneNumbers.append(aNumber)
+			aNumber = {}
+			aNumber['name'] = aContact['home']
+			aNumber['type'] = 'HOME'
+			aNumber['preferred'] = False
+			aPhoneNumbers.append(aNumber)
+			aLBContact['telephoneNumbers'] = aPhoneNumbers
+
+			# Perform updates
+			try:
+				aReply = self._session.request('Phonebook:modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Contact update query error.')
+				return
+
+			if (aReply is not None) and (aReply.get('status', False)):
+				self._contactList.setSortingEnabled(False)
+				self.setContactRow(iLine, aContact)
+				self._contactList.setSortingEnabled(True)
+			else:
+				LmTools.DisplayError('Contact update query failed.')
+
+
+
+# ############# Edit contact dialog #############
+class EditContactDialog(QtWidgets.QDialog):
+	def __init__(self, iEditMode, iContact = None, iParent = None):
+		super(EditContactDialog, self).__init__(iParent)
+		self.resize(320, 170)
+
+		self._ready = False
+
+		aFirstNameEditLabel = QtWidgets.QLabel('First name', self)
+		self._firstNameEdit = QtWidgets.QLineEdit()
+		self._firstNameEdit.textChanged.connect(self.textChanged)
+
+		aNameEditLabel = QtWidgets.QLabel('Name', self)
+		self._nameEdit = QtWidgets.QLineEdit()
+		self._nameEdit.textChanged.connect(self.textChanged)
+
+		aPhoneNbRegExp = QtCore.QRegularExpression(r'^[0-9+*#]{1}[0-9*#]{19}$')
+		aPhoneNbValidator = QtGui.QRegularExpressionValidator(aPhoneNbRegExp, self)
+
+		aCellEditLabel = QtWidgets.QLabel('Mobile', self)
+		self._cellEdit = QtWidgets.QLineEdit()
+		self._cellEdit.setValidator(aPhoneNbValidator)
+		self._cellEdit.textChanged.connect(self.textChanged)
+
+		aHomeEditLabel = QtWidgets.QLabel('Home', self)
+		self._homeEdit = QtWidgets.QLineEdit()
+		self._homeEdit.setValidator(aPhoneNbValidator)
+		self._homeEdit.textChanged.connect(self.textChanged)
+
+		aWorkEditLabel = QtWidgets.QLabel('Work', self)
+		self._workEdit = QtWidgets.QLineEdit()
+		self._workEdit.setValidator(aPhoneNbValidator)
+		self._workEdit.textChanged.connect(self.textChanged)
+
+		aRingToneEditLabel = QtWidgets.QLabel('Ring tone', self)
+		self._ringToneCombo = QtWidgets.QComboBox(self)
+		i = 1
+		while i <= 7:
+			self._ringToneCombo.addItem(str(i))
+			i += 1
+
+		aEditGrid = QtWidgets.QGridLayout()
+		aEditGrid.setSpacing(10)
+		aEditGrid.addWidget(aFirstNameEditLabel, 1, 0)
+		aEditGrid.addWidget(self._firstNameEdit, 1, 1)
+		aEditGrid.addWidget(aNameEditLabel, 2, 0)
+		aEditGrid.addWidget(self._nameEdit, 2, 1)
+		aEditGrid.addWidget(aCellEditLabel, 3, 0)
+		aEditGrid.addWidget(self._cellEdit, 3, 1)
+		aEditGrid.addWidget(aHomeEditLabel, 4, 0)
+		aEditGrid.addWidget(self._homeEdit, 4, 1)
+		aEditGrid.addWidget(aWorkEditLabel, 5, 0)
+		aEditGrid.addWidget(self._workEdit, 5, 1)
+		aEditGrid.addWidget(aRingToneEditLabel, 6, 0)
+		aEditGrid.addWidget(self._ringToneCombo, 6, 1)
+
+		self._okButton = QtWidgets.QPushButton('OK', self)
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.addLayout(aEditGrid, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		self._firstNameEdit.setFocus()
+
+		if iEditMode:
+			self.setWindowTitle('Contact edition')
+		else:
+			self.setWindowTitle('Contact creation')
+
+		if iContact is None:
+			self._contact = {}
+		else:
+			self._contact = iContact
+			self._firstNameEdit.setText(iContact['firstname'])
+			self._nameEdit.setText(iContact['name'])
+			self._cellEdit.setText(iContact['cell'])
+			self._homeEdit.setText(iContact['home'])
+			self._workEdit.setText(iContact['work'])
+			self._ringToneCombo.setCurrentIndex(int(iContact['ringtone']) - 1)
+
+		self.setOkButtonState()
+		self.setModal(True)
+		self._ready = True
+		self.show()
+
+
+	def textChanged(self, aText):
+		if self._ready:
+			self.setOkButtonState()
+
+
+	def setOkButtonState(self):
+		c = self.getContact()
+		if ((len(c['name']) == 0) and (len(c['firstname']) == 0)):
+			self._okButton.setDisabled(True)
+			return
+
+		if ((len(c['cell']) == 0) and (len(c['home']) == 0) and (len(c['work']) == 0)):
+			self._okButton.setDisabled(True)
+			return
+
+		self._okButton.setDisabled(False)
+
+
+	def getContact(self):
+		self._contact['firstname'] = EditContactDialog.cleanupName(self._firstNameEdit.text())
+		self._contact['name'] = EditContactDialog.cleanupName(self._nameEdit.text())
+		self._contact['formattedName'] = LmPhone.computeFormattedName(self._contact['name'], self._contact['firstname'])
+		self._contact['cell'] = EditContactDialog.cleanupPhoneNumber(self._cellEdit.text())
+		self._contact['home'] = EditContactDialog.cleanupPhoneNumber(self._homeEdit.text())
+		self._contact['work'] = EditContactDialog.cleanupPhoneNumber(self._workEdit.text())
+		self._contact['ringtone'] = self._ringToneCombo.currentText()
+		return self._contact
+
+
+	@staticmethod
+	def cleanupName(iName):
+		return iName.replace(';', ' ')
+
+
+	@staticmethod
+	def cleanupPhoneNumber(iPhoneNb):
+		if len(iPhoneNb) and (iPhoneNb[0] == '+'):
+			return '00' + iPhoneNb[1:]
+		return iPhoneNb
