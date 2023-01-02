@@ -83,7 +83,7 @@ class LmRepeater:
 		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aStatsList.setColumnWidth(StatsCol.Name, 90)
+		aStatsList.setColumnWidth(StatsCol.Name, 100)
 		aStatsList.setColumnWidth(StatsCol.Down, 65)
 		aStatsList.setColumnWidth(StatsCol.Up, 65)
 		aStatsList.setColumnWidth(StatsCol.DownRate, 65)
@@ -91,7 +91,7 @@ class LmRepeater:
 		aStatsList.verticalHeader().hide()
 		aStatsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		aStatsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		aStatsList.setMinimumWidth(350 + LmConfig.SCROLL_BAR_ADJUST)
+		aStatsList.setMinimumWidth(450 + LmConfig.SCROLL_BAR_ADJUST)
 		LmConfig.SetTableStyle(aStatsList)
 
 		i = 0
