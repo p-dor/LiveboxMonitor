@@ -11,6 +11,7 @@ from PyQt6 import QtWidgets
 from src import LmTools
 from src import LmConfig
 from src.LmIcons import LmIcon
+from src.LmConfig import LmConf
 
 
 # ################################ VARS & DEFS ################################
@@ -270,7 +271,6 @@ class LmPhone:
 		aCurrentSelection = self._callList.currentRow()
 		if aCurrentSelection >= 0:
 			aName = self._callList.item(aCurrentSelection, CallCol.Contact).text()
-			aPhoneNb  = self._callList.item(aCurrentSelection, CallCol.Number).text()
 			n = self._contactList.rowCount()
 
 			# Try first to find the contact by name
@@ -283,12 +283,13 @@ class LmPhone:
 					i += 1
 
 			# Then try to find the contact by phone number
+			aPhoneNb  = LmPhone.intlPhoneNumber(self._callList.item(aCurrentSelection, CallCol.Number).text())
 			if len(aPhoneNb):
 				i = 0
 				while (i < n):
-					if ((self._contactList.item(i, ContactCol.Cell).text() == aPhoneNb) or
-						(self._contactList.item(i, ContactCol.Home).text() == aPhoneNb) or
-						(self._contactList.item(i, ContactCol.Work).text() == aPhoneNb)):
+					if ((LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Cell).text()) == aPhoneNb) or
+						(LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Home).text()) == aPhoneNb) or
+						(LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Work).text()) == aPhoneNb)):
 						self.editContactDialog(i)
 						return
 					i += 1
@@ -474,7 +475,7 @@ class LmPhone:
 			return
 
 		try:
-			aExportFile = open(aFileName, 'w')
+			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			LmTools.DisplayError('Cannot create the file.')
@@ -539,64 +540,69 @@ class LmPhone:
 	### VCF file import, returns: 1=Success, 0=File error, -1=Stop all error
 	def importVcfFile(self, iFile):
 		try:
-			f = open(iFile, 'r')
+			f = open(iFile, 'r', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except:
 			return 0
 
 		c = None
-		for l in f:
-			# Get tag structure
-			i = l.find(':')
-			if i < 1:
-				continue
-			aTagStruct = l[:i].upper()
-			l = l[i + 1:].rstrip('\n')
+		try:
+			for l in f:
+				# Get tag structure
+				i = l.find(':')
+				if i < 1:
+					continue
+				aTagStruct = l[:i].upper()
+				l = l[i + 1:].rstrip('\n')
 
-			# Some tags are build like "item1.TEL;...", remove to ease parsing
-			if aTagStruct.startswith('ITEM'):
-				i = aTagStruct.find('.')
-				if i >= 0:
-					aTagStruct = aTagStruct[i + 1:]
-
-			# Decode tag structure to get tag name and its parameters
-			aTagElems = aTagStruct.split(';')
-			aTag = None
-			aTagParams = {}
-			for e in aTagElems:
-				if aTag is None:
-					aTag = e
-				else:
-					i = e.find('=')
+				# Some tags are build like "item1.TEL;...", remove to ease parsing
+				if aTagStruct.startswith('ITEM'):
+					i = aTagStruct.find('.')
 					if i >= 0:
-						aTagParams[e[:i]] = e[i + 1:]
-					else:
-						aTagParams[e] = ''
+						aTagStruct = aTagStruct[i + 1:]
 
-			if aTag == 'BEGIN':
-				# Create a blank contact
-				if l.upper() == 'VCARD':
-					c = {}
-					c['firstname'] = ''
-					c['name'] = ''
-					c['formattedName'] = ''
-					c['cell'] = ''
-					c['home'] = ''
-					c['work'] = ''
-					c['ringtone'] = '1'
-
-			elif aTag == 'END':
-				# Import the decoded contact
-				if (l.upper() == 'VCARD') and (c is not None):
-					if self.addLiveboxContact(c):
-						self._contactList.insertRow(0)
-						self.setContactRow(0, c)
-						QtCore.QCoreApplication.processEvents()
+				# Decode tag structure to get tag name and its parameters
+				aTagElems = aTagStruct.split(';')
+				aTag = None
+				aTagParams = {}
+				for e in aTagElems:
+					if aTag is None:
+						aTag = e
 					else:
-						f.close()
-						return -1
-					c = None
-			else:
-				LmPhone.importVcfTag(c, aTag, aTagParams, l)
+						i = e.find('=')
+						if i >= 0:
+							aTagParams[e[:i]] = e[i + 1:]
+						else:
+							aTagParams[e] = ''
+
+				if aTag == 'BEGIN':
+					# Create a blank contact
+					if l.upper() == 'VCARD':
+						c = {}
+						c['firstname'] = ''
+						c['name'] = ''
+						c['formattedName'] = ''
+						c['cell'] = ''
+						c['home'] = ''
+						c['work'] = ''
+						c['ringtone'] = '1'
+
+				elif aTag == 'END':
+					# Import the decoded contact
+					if (l.upper() == 'VCARD') and (c is not None):
+						if self.addLiveboxContact(c):
+							self._contactList.insertRow(0)
+							self.setContactRow(0, c)
+							QtCore.QCoreApplication.processEvents()
+						else:
+							f.close()
+							return -1
+						c = None
+				else:
+					LmPhone.importVcfTag(c, aTag, aTagParams, l)
+		except BaseException as aExcept:
+			LmTools.Error('Error: {}'.format(aExcept))
+			f.close()
+			return 0
 
 		f.close()
 		return 1
@@ -656,6 +662,17 @@ class LmPhone:
 				n += c
 
 		return n
+
+
+	### Convert phone numbers to intl format if local
+	@staticmethod
+	def intlPhoneNumber(iPhoneNumber):
+		if ((len(iPhoneNumber) < 2) or
+			iPhoneNumber.startswith('00') or
+			(iPhoneNumber[0] != '0')):
+			return iPhoneNumber
+
+		return '00' + LmConf.PhoneCode + iPhoneNumber[1:]
 
 
 	### Compute formatted name from name and firstname
