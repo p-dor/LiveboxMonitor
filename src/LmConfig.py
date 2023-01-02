@@ -33,6 +33,7 @@ DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
 DCFG_LIST_LINE_HEIGHT = 30
 DCFG_LIST_LINE_FONT_SIZE = 0
+DCFG_REPEATERS = None
 
 
 # Static config
@@ -332,6 +333,7 @@ class LmConf:
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
 	ListLineHeight = DCFG_LIST_LINE_HEIGHT
 	ListLineFontSize = DCFG_LIST_LINE_FONT_SIZE
+	Repeaters = DCFG_REPEATERS
 	AllDeviceIconsLoaded = False
 
 
@@ -375,6 +377,9 @@ class LmConf:
 				p = aConfig.get('List Line Font Size')
 				if p is not None:
 					LmConf.ListLineFontSize = int(p)
+				p = aConfig.get('Repeaters')
+				if p is not None:
+					LmConf.Repeaters = p
 		except:
 			LmTools.Error('No or wrong configuration file, creating one.')
 			LmConf.save()
@@ -407,6 +412,7 @@ class LmConf:
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
 				aConfig['List Line Height'] = LmConf.ListLineHeight
 				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
+				aConfig['Repeaters'] = LmConf.Repeaters
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))
@@ -416,6 +422,53 @@ class LmConf:
 	@staticmethod
 	def setLiveboxPassword(iPassword):
 		LmConf.LiveboxPassword = iPassword
+		LmConf.save()
+
+
+	### Get password of a repeater given its MAC address
+	@staticmethod
+	def getRepeaterUserPassword(iMacAddr):
+		# First look up for a specific password
+		if LmConf.Repeaters is not None:
+			aRepeaterConf = LmConf.Repeaters.get(iMacAddr, None)
+			if aRepeaterConf is not None:
+				aUser = aRepeaterConf.get('User', '')
+				p = aRepeaterConf.get('Password')
+				if p is None:
+					aPassword = LmConf.LiveboxPassword
+				else:
+					try:
+						aPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+					except:
+						aPassword = LmConf.LiveboxPassword
+				return aUser, aPassword
+
+		# Defaut to Livebox user & password
+		return LmConf.LiveboxUser, LmConf.LiveboxPassword
+
+
+	### Set password of a repeater given its MAC address
+	@staticmethod
+	def setRepeaterPassword(iMacAddr, iPassword):
+		# Init repeater conf root if not present
+		if LmConf.Repeaters is None:
+			LmConf.Repeaters = {}
+
+		# Retrieve conf of given repeater, init it if not present
+		aRepeaterConf = LmConf.Repeaters.get(iMacAddr, None)
+		if aRepeaterConf is None:
+			aRepeaterConf = {}
+			LmConf.Repeaters[iMacAddr] = aRepeaterConf
+
+		# Init user name if not present
+		aUser = aRepeaterConf.get('User')
+		if aUser is None:
+			aRepeaterConf['User'] = LmConf.LiveboxUser
+
+		# Setup password
+		aRepeaterConf['Password'] = Fernet(SECRET.encode('utf-8')).encrypt(iPassword.encode('utf-8')).decode('utf-8')
+
+		# Save to config file
 		LmConf.save()
 
 

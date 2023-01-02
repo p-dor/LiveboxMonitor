@@ -1,6 +1,7 @@
 ### Livebox Monitor Wifi Repeater info tab module ###
 
 import datetime
+import re
 
 from enum import IntEnum
 
@@ -252,7 +253,7 @@ class LmRepeater:
 
 			aActive = iDevice.get('Active', False)
 
-			aRepeater = LmRepHandler(self, aIndex, aKey, aName, aIPAddress, aActive)
+			aRepeater = LmRepHandler(self, aIndex, aKey, aMacAddr, aName, aIPAddress, aActive)
 			self._repeaters.append(aRepeater)
 
 			return aRepeater
@@ -453,9 +454,10 @@ class LmRepeater:
 class LmRepHandler:
 
 	### Init handler
-	def __init__(self, iApp, iIndex, iKey, iName, iIPAddress, iActive):
+	def __init__(self, iApp, iIndex, iKey, iMacAddr, iName, iIPAddress, iActive):
 		self._app = iApp
 		self._key = iKey
+		self._macAddr = iMacAddr
 		self._name = iName
 		self._ipAddr = iIPAddress
 		self._active = iActive
@@ -470,25 +472,45 @@ class LmRepHandler:
 
 	### Sign in to repeater
 	def signin(self):
-		if self.isActive():
-			self.signout()
+		if not self.isActive():
+			return
+
+		self.signout()
+
+		aUser, aPassword = LmConf.getRepeaterUserPassword(self._macAddr)
+
+		while True:
 			self._session = LmSession('http://' + self._ipAddr + '/', self._name)
 			try:
-				r = self._session.signin(True)	# Need to ignore cookie as sessions opened with >1h cookie generate errors
+				# Need to ignore cookie as sessions opened with >1h cookie generate errors
+				r = self._session.signin(aUser, aPassword, True)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				r = -1
 			if r > 0:
 				self._signed = True
-			elif r < 0:
+				break
+
+			if r < 0:
 				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('Cannot connect to repeater ' + self._name + '.')
+				LmTools.DisplayError('Cannot connect to repeater ' + self._name + ' (' + self._ipAddr + ').')
 				self._session = None
+				break
+
+			LmTools.MouseCursor_Normal()
+			aPassword, aOK = QtWidgets.QInputDialog.getText(self._app, 'Wrong repeater password',
+															'Please enter password for repeater ' + self._name + ' (' + self._ipAddr + '):',
+															QtWidgets.QLineEdit.EchoMode.Password,
+															text = aPassword)
+			if aOK:
+				# Remove unwanted characters from password (can be set via Paste action)
+				aPassword = re.sub('[\n\t]', '', aPassword)
+				LmConf.setRepeaterPassword(self._macAddr, aPassword)
 			else:
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('Repeater ' + self._name + ' authentication failed.')
 				self._session = None
-			self.setTabIcon()
+				break
+
+		self.setTabIcon()
 
 
 	### Check if signed to repeater
@@ -1261,7 +1283,7 @@ class RepeaterStatsThread(QtCore.QObject):
 								# Session has timed out on Repeater side, resign
 								r.signin()
 							aStats = aResult.get('status')
-							if aStats is not None:
+							if type(aStats).__name__ == 'dict':
 								e = {}
 								e['Repeater'] = r
 								e['Key'] = s['Key']

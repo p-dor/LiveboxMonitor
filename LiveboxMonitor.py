@@ -6,6 +6,7 @@
 #			https://doc.qt.io/
 
 import sys
+import re
 
 from PyQt6 import QtCore
 from PyQt6 import QtGui
@@ -162,8 +163,12 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	def signin(self):
 		while True:
 			self.startTask('Signing in...')
-			self._session = LmSession()
-			r = self._session.signin()
+			self._session = LmSession(LmConf.LiveboxURL)
+			try:
+				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword)
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				r = -1
 			self.endTask()
 			if r > 0:
 				return True
@@ -179,6 +184,8 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 															QtWidgets.QLineEdit.EchoMode.Password,
 															text = LmConf.LiveboxPassword)
 			if aOK:
+				# Remove unwanted characters from password (can be set via Paste action)
+				aPassword = re.sub('[\n\t]', '', aPassword)
 				LmConf.setLiveboxPassword(aPassword)
 				self.show()
 			else:

@@ -10,7 +10,6 @@ import requests
 import requests.utils
 
 from src import LmTools
-from src.LmConfig import LmConf
 
 
 # ################################ VARS & DEFS ################################
@@ -23,11 +22,8 @@ DEFAULT_TIMEOUT = 5
 class LmSession:
 
 	### Constructor
-	def __init__(self, iUrl = None, iSessionName = 'LiveboxMonitor'):
-		if iUrl is None:
-			self._url = LmConf.LiveboxURL
-		else:
-			self._url = iUrl
+	def __init__(self, iUrl, iSessionName = 'LiveboxMonitor'):
+		self._url = iUrl
 		self._name = iSessionName
 		self._session = None
 		self._channelID = 0
@@ -36,7 +32,7 @@ class LmSession:
 
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
-	def signin(self, iNewSession = False):
+	def signin(self, iUser, iPassword, iNewSession = False):
 		# Set cookie & contextID file path
 		aStateFilePath = os.path.join(tempfile.gettempdir(), self._name + '_state')
 
@@ -62,7 +58,7 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Authentication')
 	 
-				aAuth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, LmConf.LiveboxUser, LmConf.LiveboxPassword)
+				aAuth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, iUser, iPassword)
 
 				self._sahServiceHeaders = { 'Accept':'*/*',
 											'Authorization':'X-Sah-Login',
