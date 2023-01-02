@@ -29,6 +29,7 @@ DCFG_LIVEBOX_PASSWORD = ''
 DCFG_FILTER_DEVICES = True
 DCFG_MACADDR_TABLE_FILE = 'MacAddrTable.txt'
 DCFG_MACADDR_API_KEY = ''
+DCFG_PHONE_CODE = '33'
 DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
 DCFG_LIST_LINE_HEIGHT = 30
@@ -221,7 +222,7 @@ def SetApplicationStyle():
 		TABLE_ADJUST = 4
 		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 12
-		LIST_LINE_FONT_SIZE = 9
+		LIST_LINE_FONT_SIZE = 10
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
@@ -329,6 +330,7 @@ class LmConf:
 	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
 	MacAddrApiKey = DCFG_MACADDR_API_KEY
+	PhoneCode = DCFG_PHONE_CODE
 	ListHeaderHeight = DCFG_LIST_HEADER_HEIGHT
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
 	ListLineHeight = DCFG_LIST_LINE_HEIGHT
@@ -365,6 +367,9 @@ class LmConf:
 				p = aConfig.get('MacAddr API Key')
 				if p is not None:
 					LmConf.MacAddrApiKey = p
+				p = aConfig.get('Phone Code')
+				if p is not None:
+					LmConf.PhoneCode = str(p)
 				p = aConfig.get('List Header Height')
 				if p is not None:
 					LmConf.ListHeaderHeight = int(p)
@@ -408,6 +413,7 @@ class LmConf:
 				aConfig['Filter Devices'] = LmConf.FilterDevices
 				aConfig['MacAddr Table File'] = LmConf.MacAddrTableFile
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
+				aConfig['Phone Code'] = LmConf.PhoneCode
 				aConfig['List Header Height'] = LmConf.ListHeaderHeight
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
 				aConfig['List Line Height'] = LmConf.ListLineHeight
