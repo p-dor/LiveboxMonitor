@@ -49,7 +49,7 @@ class LmInfo:
 		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._statsList.setColumnWidth(StatsCol.Name, 90)
+		self._statsList.setColumnWidth(StatsCol.Name, 100)
 		self._statsList.setColumnWidth(StatsCol.Down, 65)
 		self._statsList.setColumnWidth(StatsCol.Up, 65)
 		self._statsList.setColumnWidth(StatsCol.DownRate, 65)
@@ -1491,7 +1491,7 @@ class LiveboxStatsThread(QtCore.QObject):
 			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats')
 			if aResult is not None:
 				aStats = aResult.get('status')
-				if aStats is not None:
+				if type(aStats).__name__ == 'dict':
 					e = {}
 					e['Key'] = s['Key']
 					e['Timestamp'] = datetime.datetime.now()
