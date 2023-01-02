@@ -217,10 +217,10 @@ def SetApplicationStyle():
 	if aStyle == 'Fusion':
 		WIND_HEIGHT_ADJUST = 2
 		DIAG_HEIGHT_ADJUST = -4
-		TABLE_ADJUST = 0
+		TABLE_ADJUST = 4
 		SCROLL_BAR_ADJUST = 0
-		LIST_HEADER_FONT_SIZE = 13
-		LIST_LINE_FONT_SIZE = 11
+		LIST_HEADER_FONT_SIZE = 12
+		LIST_LINE_FONT_SIZE = 9
 		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
