@@ -14,7 +14,7 @@ from src import LmConfig
 # ################################ VARS & DEFS ################################
 
 # Static Config
-COPYRIGHT = 'Copyright 2022 Pierre Dor'
+COPYRIGHT = 'Copyright 2022-23 Pierre Dor'
 PROJECT_URL = 'https://github.com/p-dor/LiveboxMonitor'
 BUTTON_WIDTH = 150
 
