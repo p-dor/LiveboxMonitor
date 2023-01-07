@@ -1,12 +1,13 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor
 
 L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
-- Contrôler les appareils qui se connectent à la Livebox,
+- Contrôler les appareils qui se connectent à la Livebox et détecter rapidement les intrusions,
 - Obtenir des statistiques détaillées de trafic,
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
 - Avoir des détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
 - Contrôler l'état du Wifi,
+- Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteur Wifi Orange connecté.
 
 **AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus.
@@ -27,10 +28,10 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 ### Téléchargement
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor_Console.exe)
-- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor.dmg)
-- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.5/LiveboxMonitor_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor_Console.exe)
+- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor.dmg)
+- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor_Console.dmg)
 
 
 ## Configuration
@@ -41,8 +42,7 @@ Le programme créé automatiquement dans son répertoire deux fichiers de config
 
 **Note** : lorsque les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, les fichiers de configurations se trouvent dans les répertoires standards du système :
 - Windows : `%APPDATA%\LiveboxMonitor`
-- MacOS : `~/Library/Application Support/LiveboxMonitor`
-
+- MacOS (Intel) : `~/Library/Application Support/LiveboxMonitor`
 
 ### Le fichier Config.txt
 
@@ -50,10 +50,15 @@ Le programme supporte ces clefs de configuration :
 - `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
 - `Livebox User` : login pour l'ouverture de session. Par défaut `admin`.
 - `Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce mot de passe est demandé automatiquement au lancement du programme s'il n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
-- `Filter Devices` : Active (valeur `true`) ou pas (valeur `false`) le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
+- `Filter Devices` : active (valeur `true`) ou pas (valeur `false`) le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
 - `MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.
 - `MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
-
+- `Phone Code` : indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts. Par défaut le code de la France est utilisé, c'est à dire 33.
+- `List Header Height` : hauteur en pixels des entêtes de liste, par défaut 25.
+- `List Header Font Size` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
+- `List Line Height` : hauteur en pixels des lignes de liste, par défaut 30.
+- `List Line Font Size` :  taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
+- `Repeaters` : cette partie est générée automatiquement par le programme si des mots de passe différents sont utilisés pour le ou les répéteurs Wifi Orange connectés. La structure de ce paramètre est aussi au format JSON, utilise pour clef les adresses MAC des répéteurs, et référence pour chaque répéteur les valeurs 'User' & 'Password' (encrypté de la même manière que le mot de passe de la Livebox).
 
 ### Le fichier MacAddrTable.txt
 
@@ -192,6 +197,56 @@ Un double clic sur un événement ou un clic sur le bouton **`Display Event`** p
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
 
 
+## Phone - Liste des appels téléphoniques / liste des contacts
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone.png)
+
+### Appels téléphoniques
+La liste des appels téléphoniques, sur la gauche, affiche les colonnes suivantes :
+- **T** : icône correspondant au type de l'appel.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_In.png) : appel reçu.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_In_Missed.png) : appel manqué. Dans ce cas toute la ligne est indiquée en couleur rouge.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_Out.png) : appel émis.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_Out_Failed.png) : appel émis mais non abouti.
+- **Time** : date et heure de l'appel.
+- **Number** : numéro de téléphone concerné.
+- **Contact** : le nom du contact déterminé par la Livebox en fonction de la liste des contacts au moment de l'appel. Si la Livebox n'a mémorisé aucun nom, alors le programme essai d'en trouver un dynamiquement à partir de la liste des contacts enregistrés par correspondance avec le numéro de téléphone.
+- **Duration** : durée de l'appel.
+
+Un **double clic** sur un appel permet de facilement créer ou éditer le contact correspondant.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des appels :
+- **`Refresh`** : rafraichi la liste des appels.
+- **`Delete`** : supprime l'appel sélectionné.
+- **`Delete all...`** : supprime tous les appels.
+
+### Contacts
+La liste des contacts, sur la droite, affiche les colonnes suivantes :
+- **Name** : nom du contact, au format nom + prénom.
+- **Mobile** : numéro de téléphone portable.
+- **Home** : numéro de téléphone fixe.
+- **Work** : numéro de téléphone professionnel.
+- **Ring** : type de sonnerie sélectionné parmi les 7 supportés par la Livebox.
+
+Un **double clic** sur un contact permet de facilement l'éditer.
+**Attention** : La Livebox supporte un maximum de 255 contacts.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des contacts :
+- **`Refresh`** : rafraichi la liste des contacts.
+- **`Add..`** : permet de rajouter un contact. Attention aucun test de doublon n'est effectué.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone_Contact.png)
+
+- **`Edit...`** : pour éditer le contact sélectionné.
+- **`Delete`** : supprime le contact sélectionné.
+- **`Delete all...`** : supprime tous les contacts.
+- **`Phone Ring`** : permet de tester le téléphone. Sur la gauche du bouton on peut sélectionner un des 7 types de sonnerie proposés par la Livebox, sinon le type par défaut est utilisé.
+- **`Export...`** : permet d'exporter l'ensemble des contacts dans un fichier au [format VCF](https://en.wikipedia.org/wiki/VCard). Très utile pour les sauvegarder.
+- **`Import...`** : permet d'importer un ou plusieurs fichiers au [format VCF](https://en.wikipedia.org/wiki/VCard). Attention aucun test de doublon n'est effectué. Si la limite du nombre de contacts maximum supporté (255) est atteint l'import est interrompu.
+
+
 ## Actions - Boutons d'actions et de contrôle
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions.png)
@@ -205,7 +260,7 @@ Les actions concernant le **Wifi** :
 - **`Guest Wifi OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
 - **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce planificateur doit être configuré depuis l'interface Web de la Livebox.
 - **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
-- **`Show global status...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
+- **`Show Global Status...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_WifiGlobalStatus.png)
 
@@ -222,9 +277,9 @@ Les actions concernant les **Reboots** (redémarrages de la Livebox) :
     - **Shutdown Date** : la date et heure de l'extinction.
     - **Shutdown Reason** : la raison de cette extinction. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
 
-Les actions diverses, **Misc** :
-- **Phone Ring** : pour forcer la sonnerie du téléphone afin de la tester.
-- **Show LED Status...** : écran expérimental supposé afficher l'état des LEDs de la Livebox, mais les APIs correspondantes ne semblent plus supportées par la Livebox 5 et les valeurs retournées ne sont pas correctes.
+Autres actions :
+- **Quit Application** : pour quitter l'application. Strictement équivalent à fermer la fenêtre de l'application.
+- Un clic sur le lien GitHub de l'application ouvrira la page correspondante sur votre navigateur.
 
 
 ## Onglets répéteurs Wifi
@@ -262,7 +317,7 @@ Les actions concernant le **Wifi** :
 - **`Wifi Scheduler ON`** : permet d'activer le planificateur Wifi du répéteur. Ce planificateur doit être configuré depuis l'interface Web du répéteur.
 - **`Wifi Scheduler OFF`** : permet de désactiver le planificateur Wifi du répéteur.
 
-L'état global du Wifi peut être consulté via le bouton `Show global status...` de l'onglet `Actions`.
+L'état global du Wifi peut être consulté via le bouton `Show Global Status...` de l'onglet `Actions`.
 
 Les actions concernant les **Reboots** (redémarrages du répéteur) :
 - **`Reboot Repeater...`** : permet de forcer un redémarrage du répéteur.
@@ -286,10 +341,3 @@ Les onglets de répéteur Wifi proposent les boutons suivants :
 - **`Wifi Infos`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
 - **`LAN Infos`** : affiche les informations générales sur la connectivité LAN. Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
-
-
-## Prochaines fonctionnalités prévues
-
-Prochaines fonctionnalités en cours de développement :
-- Support de la liste des contacts téléphoniques.
-- Support des appels téléphoniques.
