@@ -22,9 +22,10 @@ class CallCol(IntEnum):
 	Type = 1
 	Time = 2
 	Number = 3
-	Contact = 4
-	Duration = 5
-	Count = 6
+	ContactSource = 4	# N=None, L=Livebox, D=Dynamic guess
+	Contact = 5
+	Duration = 6
+	Count = 7
 ICON_COLUMNS = [CallCol.Type]
 
 class ContactCol(IntEnum):
@@ -58,6 +59,7 @@ class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
 			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
 
 
+
 # ################################ LmPhone class ################################
 class LmPhone:
 
@@ -68,8 +70,9 @@ class LmPhone:
 		# Call list
 		self._callList = QtWidgets.QTableWidget()
 		self._callList.setColumnCount(CallCol.Count)
-		self._callList.setHorizontalHeaderLabels(('Key', 'T', 'Time', 'Number', 'Contact', 'Duration'))
+		self._callList.setHorizontalHeaderLabels(('Key', 'T', 'Time', 'Number', 'CS', 'Contact', 'Duration'))
 		self._callList.setColumnHidden(CallCol.Key, True)
+		self._callList.setColumnHidden(CallCol.ContactSource, True)
 		aHeader = self._callList.horizontalHeader()
 		aHeader.setSectionResizeMode(CallCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		aHeader.setSectionResizeMode(CallCol.Time, QtWidgets.QHeaderView.ResizeMode.Fixed)
@@ -210,13 +213,14 @@ class LmPhone:
 
 		# Init context
 		self._phoneDataLoaded = False
+		self._contactMatching = {}
 
 
 	### Click on phone tab
 	def phoneTabClick(self):
 		if not self._phoneDataLoaded:
+			self.loadContactList()	# Load it first for dynamic contact matching in call list
 			self.loadCallList()
-			self.loadContactList()
 			self._phoneDataLoaded = True
 
 
@@ -356,7 +360,12 @@ class LmPhone:
 				aTime.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				aNumber = QtWidgets.QTableWidgetItem(c.get('remoteNumber'))
 				aNumber.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-				aContact = QtWidgets.QTableWidgetItem(c.get('remoteName'))
+				aContactStr = c.get('remoteName')
+				if len(aContactStr):
+					aContactSource = QtWidgets.QTableWidgetItem('L')	# Livebox source
+				else:
+					aContactSource = QtWidgets.QTableWidgetItem('N')	# None
+				aContact = QtWidgets.QTableWidgetItem(aContactStr)
 
 				aSeconds = c.get('duration')
 				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
@@ -373,16 +382,40 @@ class LmPhone:
 				self._callList.setItem(i, CallCol.Type, aCallTypeIcon)
 				self._callList.setItem(i, CallCol.Time, aTime)
 				self._callList.setItem(i, CallCol.Number, aNumber)
+				self._callList.setItem(i, CallCol.ContactSource, aContactSource)
 				self._callList.setItem(i, CallCol.Contact, aContact)
 				self._callList.setItem(i, CallCol.Duration, aDuration)
 
 				i += 1
+			self.assignContactToCalls()
 
 		self._callList.sortItems(CallCol.Time, QtCore.Qt.SortOrder.DescendingOrder)
 
 		self._callList.setSortingEnabled(True)
 
 		self.endTask()
+
+
+	### Assign contacts to calls via matching context
+	def assignContactToCalls(self):
+		self._callList.setSortingEnabled(False)
+
+		n = self._callList.rowCount()
+		i = 0
+		while (i < n):
+			if self._callList.item(i, CallCol.ContactSource).text() != 'L':
+				aPhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text())
+				aContactName = self.findMatchingContact(aPhoneNb)
+				if aContactName is not None:
+					aContactSource = QtWidgets.QTableWidgetItem('P')	# Program source
+					aForeground = self._callList.item(i, CallCol.Contact).foreground()
+					aContact = QtWidgets.QTableWidgetItem(aContactName)
+					aContact.setForeground(aForeground)
+					self._callList.setItem(i, CallCol.ContactSource, aContactSource)
+					self._callList.setItem(i, CallCol.Contact, aContact)
+			i += 1
+
+		self._callList.setSortingEnabled(True)
 
 
 	### Click on contact list refresh button
@@ -419,7 +452,10 @@ class LmPhone:
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
+				aContact = self.getContactRow(aCurrentSelection)
+				self.rmvContactFromMatchingIndex(aContact)
 				self._contactList.removeRow(aCurrentSelection)
+				self.assignContactToCalls()
 			else:
 				LmTools.DisplayError('Contact delete query failed.')
 		else:
@@ -526,6 +562,8 @@ class LmPhone:
 				break
 
 		self._contactList.setSortingEnabled(True)
+
+		self.assignContactToCalls()
 		self.endTask()
 
 		if len(aFileError):
@@ -592,6 +630,7 @@ class LmPhone:
 						if self.addLiveboxContact(c):
 							self._contactList.insertRow(0)
 							self.setContactRow(0, c)
+							self.addContactToMatchingIndex(c)
 							QtCore.QCoreApplication.processEvents()
 						else:
 							f.close()
@@ -691,6 +730,7 @@ class LmPhone:
 
 		self._contactList.setSortingEnabled(False)
 
+		self._contactMatching = {}
 		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
@@ -704,10 +744,12 @@ class LmPhone:
 				self._contactList.insertRow(i)
 				aContact = self.decodeLiveboxContact(c)
 				self.setContactRow(i, aContact)
+				self.addContactToMatchingIndex(aContact)
 				i += 1
 
 		self._contactList.sortItems(ContactCol.Name, QtCore.Qt.SortOrder.AscendingOrder)
 		self._contactList.setSortingEnabled(True)
+		self.assignContactToCalls()
 
 		self.endTask()
 
@@ -771,6 +813,18 @@ class LmPhone:
 		self._contactList.setItem(iLine, ContactCol.Ring, aRingTone)
 
 
+	### Get contact from row
+	def getContactRow(self, iLine):
+		aContact = {}
+		aContact['key'] = self._contactList.item(iLine, ContactCol.Key).text()
+		aContact['formattedName'] = self._contactList.item(iLine, ContactCol.Name).text()
+		aContact['cell'] = self._contactList.item(iLine, ContactCol.Cell).text()
+		aContact['home'] = self._contactList.item(iLine, ContactCol.Home).text()
+		aContact['work'] = self._contactList.item(iLine, ContactCol.Work).text()
+		aContact['ringtone'] = self._contactList.item(iLine, ContactCol.Ring).text()
+		return aContact
+
+
 	### Add contact dialog
 	def addContactDialog(self, iDefaultContactData):
 		aAddContactDialog = EditContactDialog(False, iDefaultContactData, self)
@@ -781,6 +835,8 @@ class LmPhone:
 				self._contactList.insertRow(0)
 				self.setContactRow(0, aContact)
 				self._contactList.setSortingEnabled(True)
+				self.addContactToMatchingIndex(aContact)
+				self.assignContactToCalls()
 
 
 	### Add a contact in Livebox
@@ -878,11 +934,63 @@ class LmPhone:
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
+				aCurrentContact = self.getContactRow(iLine)
+				self.rmvContactFromMatchingIndex(aCurrentContact)
 				self._contactList.setSortingEnabled(False)
 				self.setContactRow(iLine, aContact)
 				self._contactList.setSortingEnabled(True)
+				self.addContactToMatchingIndex(aContact)
+				self.assignContactToCalls()
 			else:
 				LmTools.DisplayError('Contact update query failed.')
+
+
+	### Add contact to matching index
+	def addContactToMatchingIndex(self, iContact):
+		aContactEntry = { 'key': iContact['key'], 'name': iContact['formattedName'] }
+		self.addNumberToMatchingIndex(LmPhone.intlPhoneNumber(iContact['cell']), aContactEntry)
+		self.addNumberToMatchingIndex(LmPhone.intlPhoneNumber(iContact['work']), aContactEntry)
+		self.addNumberToMatchingIndex(LmPhone.intlPhoneNumber(iContact['home']), aContactEntry)
+
+
+	### Remove contact from matching index
+	def rmvContactFromMatchingIndex(self, iContact):
+		aContactEntry = { 'key': iContact['key'], 'name': iContact['formattedName'] }
+		self.rmvNumberFromMatchingIndex(LmPhone.intlPhoneNumber(iContact['cell']), aContactEntry)
+		self.rmvNumberFromMatchingIndex(LmPhone.intlPhoneNumber(iContact['work']), aContactEntry)
+		self.rmvNumberFromMatchingIndex(LmPhone.intlPhoneNumber(iContact['home']), aContactEntry)
+
+
+	### Add a phone number to matching index
+	def addNumberToMatchingIndex(self, iPhoneNumber, iContactEntry):
+		if len(iPhoneNumber):
+			aPhoneEntry = self._contactMatching.get(iPhoneNumber)
+			if aPhoneEntry is None:
+				self._contactMatching[iPhoneNumber] = [ iContactEntry ]
+			else:
+				self._contactMatching[iPhoneNumber].append(iContactEntry)
+
+
+	### Remove a phone number from matching index
+	def rmvNumberFromMatchingIndex(self, iPhoneNumber, iContactEntry):
+		if len(iPhoneNumber):
+			aPhoneEntry = self._contactMatching.get(iPhoneNumber)
+			if aPhoneEntry is not None:
+				try:
+					self._contactMatching[iPhoneNumber].remove(iContactEntry)
+				except:
+					pass
+
+
+	### Find a contact name matching a phone number
+	def findMatchingContact(self, iPhoneNumber):
+		if len(iPhoneNumber):
+			aPhoneEntry = self._contactMatching.get(iPhoneNumber)
+			if aPhoneEntry is not None:
+				n = len(aPhoneEntry)
+				if n:
+					return aPhoneEntry[n - 1]['name']
+		return None
 
 
 
