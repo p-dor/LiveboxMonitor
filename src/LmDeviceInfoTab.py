@@ -361,7 +361,9 @@ class LmDeviceInfo:
 		aIPv6List = d.get('IPv6Address', [])
 		if len(aIPv6List):
 			for aIPV6 in aIPv6List:
-				i = self.addInfoLine(self._infoAList, i, 'IPv6 Address', aIPV6.get('Address', '') + ' (' + aIPV6.get('Status', '') + ')')
+				i = self.addInfoLine(self._infoAList, i, 'IPv6 Address', aIPV6.get('Address', '') +
+																		 ' [' + aIPV6.get('Scope', '') + ']' +
+																		 ' (' + aIPV6.get('Status', '') + ')')
 
 		aMacAddr = d.get('PhysAddress', '')
 		if len(aMacAddr) == 0:
