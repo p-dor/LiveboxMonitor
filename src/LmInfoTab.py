@@ -590,6 +590,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, 'Remote Gateway', d.get('RemoteGateway'))
 			i = self.addInfoLine(self._liveboxAList, i, 'DNS Servers', d.get('DNSServers'))
 			i = self.addInfoLine(self._liveboxAList, i, 'IPv6 Address', d.get('IPv6Address'))
+			i = self.addInfoLine(self._liveboxAList, i, 'IPv6 Prefix', d.get('IPv6DelegatedPrefix'))
 
 		try:
 			d = self._session.request('DeviceInfo:get')
