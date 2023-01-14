@@ -1,6 +1,5 @@
 ### Livebox Monitor device list tab module ###
 
-import json
 import datetime
 
 from enum import IntEnum
@@ -122,15 +121,9 @@ class LmDeviceList:
 		aDeviceInfoButton.clicked.connect(self.deviceInfoButtonClick)
 		aDeviceEventsButton = QtWidgets.QPushButton('Device Events')
 		aDeviceEventsButton.clicked.connect(self.deviceEventsButtonClick)
-		aShowRawDeviceListButton = QtWidgets.QPushButton('Raw Device List...')
-		aShowRawDeviceListButton.clicked.connect(self.showRawDeviceListButtonClick)
-		aShowRawTopologyButton = QtWidgets.QPushButton('Raw Topology...')
-		aShowRawTopologyButton.clicked.connect(self.showRawTopologyButtonClick)
 		aHBox.addWidget(aRefreshDeviceListButton)
 		aHBox.addWidget(aDeviceInfoButton)
 		aHBox.addWidget(aDeviceEventsButton)
-		aHBox.addWidget(aShowRawDeviceListButton)
-		aHBox.addWidget(aShowRawTopologyButton)
 
 		# Layout
 		aVBox = QtWidgets.QVBoxLayout()
@@ -217,16 +210,6 @@ class LmDeviceList:
 			aLine = self.findDeviceLine(self._eventDList, aKey)
 			self._eventDList.selectRow(aLine)
 		self.switchToDeviceEventsTab()
-
-
-	### Click on show raw device list button
-	def showRawDeviceListButtonClick(self):
-		LmTools.DisplayInfos('Raw Device List', json.dumps(self._liveboxDevices, indent = 2))
-
-
-	### Click on show raw topology button
-	def showRawTopologyButtonClick(self):
-		LmTools.DisplayInfos('Raw Topology', json.dumps(self._liveboxTopology, indent = 2))
 
 
 	### Load device list
