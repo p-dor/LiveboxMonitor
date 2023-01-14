@@ -116,6 +116,7 @@ class LmEvents:
 		self._liveboxEventLoop.moveToThread(self._liveboxEventThread)
 		self._liveboxEventThread.started.connect(self._liveboxEventLoop.run)
 		self._liveboxEventLoop._eventReceived.connect(self.processLiveboxEvent)
+		self._liveboxEventLoop._resume.connect(self._liveboxEventLoop.resume)
 		self._liveboxEventThread.start()
 
 
@@ -130,13 +131,12 @@ class LmEvents:
 		if self._liveboxEventThread is None:
 			self.startEventLoop()
 		else:
-			self._liveboxEventLoop.run()
+			self._liveboxEventLoop._resume.emit()
 
 
 	### Stop the Livebox event collector thread
 	def stopEventLoop(self):
 		if self._liveboxEventThread is not None:
-			self._liveboxEventLoop.stop()
 			self._liveboxEventThread.quit()
 			self._liveboxEventThread.wait()
 			self._liveboxEventThread = None
@@ -342,30 +342,49 @@ class LmEvents:
 # ############# Livebox events collector thread #############
 class LiveboxEventThread(QtCore.QObject):
 	_eventReceived = QtCore.pyqtSignal(dict)
+	_resume = QtCore.pyqtSignal()
 
 	def __init__(self, iSession):
 		super(LiveboxEventThread, self).__init__()
-		self._isRunning = False
 		self._session = iSession
+		self._timer = None
+		self._loop = None
+		self._isRunning = False
 
 
 	def run(self):
-		self._isRunning = True
-		while (self._isRunning):
-			aResult = self._session.eventRequest(['Devices.Device'], iTimeout = 2)
-			if aResult is not None:
-				if aResult.get('errors') is not None:
-					# Session has probably timed out on Livebox side, resign
-					LmTools.LogDebug(1, 'Errors in event request, resign')
-					if self._session.signin() <= 0:
-						time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
-				else:
-					aEvents = aResult.get('events')
-					if aEvents is not None:
-						for e in aEvents:
-							self._eventReceived.emit(e)
+		self._timer = QtCore.QTimer()
+		self._timer.timeout.connect(self.collectEvents)
+		self._loop = QtCore.QEventLoop()
+		self.resume()
+
+
+	def resume(self):
+		if not self._isRunning:
+			self._timer.start(0)
+			self._isRunning = True
+			self._loop.exec()
+			self._timer.stop()
+			self._isRunning = False
 
 
 	def stop(self):
-		self._isRunning = False
+		if self._isRunning:
+			self._loop.exit()
+
+
+	def collectEvents(self):
+		aResult = self._session.eventRequest(['Devices.Device'], iTimeout = 2)
+		if aResult is not None:
+			if aResult.get('errors') is not None:
+				# Session has probably timed out on Livebox side, resign
+				LmTools.LogDebug(1, 'Errors in event request, resign')
+				if self._session.signin() <= 0:
+					time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
+			else:
+				aEvents = aResult.get('events')
+				if aEvents is not None:
+					for e in aEvents:
+						self._eventReceived.emit(e)
+
 
