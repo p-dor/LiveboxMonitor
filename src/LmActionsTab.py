@@ -1,5 +1,6 @@
 ### Livebox Monitor actions tab module ###
 
+import json
 import webbrowser
 
 from PyQt6 import QtGui
@@ -9,6 +10,7 @@ from PyQt6 import QtWidgets
 from src import LmTools
 from src.LmIcons import LmIcon
 from src import LmConfig
+from src.LmConfig import LmConf
 
 
 # ################################ VARS & DEFS ################################
@@ -129,9 +131,10 @@ class LmActions:
 		aRebootGroupBox = QtWidgets.QGroupBox('Reboots')
 		aRebootGroupBox.setLayout(aRebootButtons)
 
-		# About and quit column
+		# About, preferences, debug and quit column
 		aRightZone = QtWidgets.QVBoxLayout()
 
+		# About box
 		aAboutWidgets = QtWidgets.QVBoxLayout()
 		aAboutWidgets.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aAboutWidgets.setSpacing(15)
@@ -151,7 +154,7 @@ class LmActions:
 
 		aOpenSourceURL = QtWidgets.QLabel(PROJECT_URL)
 		aOpenSourceURL.setStyleSheet('QLabel { color : blue; }')
-		aOpenSourceURL.mousePressEvent = self.OpenSourceButtonClick
+		aOpenSourceURL.mousePressEvent = self.openSourceButtonClick
 		aAboutWidgets.addWidget(aOpenSourceURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
 		aAboutWidgets.addWidget(QtWidgets.QLabel(COPYRIGHT), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
@@ -161,6 +164,41 @@ class LmActions:
 
 		aRightZone.addWidget(aAboutGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
+		# Prefs box
+		aPrefsButtons = QtWidgets.QVBoxLayout()
+		aPrefsButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aPrefsButtons.setSpacing(20)
+
+		aChangeProfileButton = QtWidgets.QPushButton('Change Profile...')
+		aChangeProfileButton.clicked.connect(self.changeProfileButtonClick)
+		aPrefsButtons.addWidget(aChangeProfileButton)
+
+		aPrefsGroupBox = QtWidgets.QGroupBox('Preferences')
+		aPrefsGroupBox.setLayout(aPrefsButtons)
+
+		aRightZone.addWidget(aPrefsGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+
+		# Debug box
+		aDebugButtons = QtWidgets.QVBoxLayout()
+		aDebugButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aDebugButtons.setSpacing(20)
+
+		aShowRawDeviceListButton = QtWidgets.QPushButton('Raw Device List...')
+		aShowRawDeviceListButton.clicked.connect(self.showRawDeviceListButtonClick)
+		aDebugButtons.addWidget(aShowRawDeviceListButton)
+		aShowRawTopologyButton = QtWidgets.QPushButton('Raw Topology...')
+		aShowRawTopologyButton.clicked.connect(self.showRawTopologyButtonClick)
+		aDebugButtons.addWidget(aShowRawTopologyButton)
+		aSetLogLevelButton = QtWidgets.QPushButton('Set Log Level...')
+		aSetLogLevelButton.clicked.connect(self.setLogLevelButtonClick)
+		aDebugButtons.addWidget(aSetLogLevelButton)
+
+		aDebugGroupBox = QtWidgets.QGroupBox('Debug')
+		aDebugGroupBox.setLayout(aDebugButtons)
+
+		aRightZone.addWidget(aDebugGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+
+		# Quit button
 		aQuitButton = QtWidgets.QPushButton('Quit Application')
 		aQuitButton.clicked.connect(self.quitButtonClick)
 		aQuitButton.setMinimumWidth(BUTTON_WIDTH)
@@ -341,8 +379,35 @@ class LmActions:
 
 
 	### Open Source project web button
-	def OpenSourceButtonClick(self, iEvent):
+	def openSourceButtonClick(self, iEvent):
 		webbrowser.open_new_tab(PROJECT_URL)
+
+
+	### Change the current profile in use
+	def changeProfileButtonClick(self):
+		if LmConf.askProfile():
+			LmConf.assignProfile()
+			self.resetUI()
+
+
+	### Click on show raw device list button
+	def showRawDeviceListButtonClick(self):
+		LmTools.DisplayInfos('Raw Device List', json.dumps(self._liveboxDevices, indent = 2))
+
+
+	### Click on show raw topology button
+	def showRawTopologyButtonClick(self):
+		LmTools.DisplayInfos('Raw Topology', json.dumps(self._liveboxTopology, indent = 2))
+
+
+	### Click on set log level button
+	def setLogLevelButtonClick(self):
+		aLevels = ['0', '1', '2']
+		aLevel, aOK = QtWidgets.QInputDialog.getItem(None, 'Log level selection',
+													 'Please select a log level:',
+													 aLevels, LmConf.LogLevel, False)
+		if aOK:
+			LmConf.setLogLevel(int(aLevel))
 
 
 	### Click on Quit Application button
