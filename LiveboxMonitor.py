@@ -53,6 +53,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Initialize the application
 	def __init__(self):
 		super(LiveboxMonitorUI, self).__init__()
+		self._resetFlag = False
 		self._appReady = False
 		self._repeaters = []
 		if not NO_THREAD:
@@ -97,6 +98,12 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		aGrid.addWidget(self._tabWidget)
 
 		self.setLayout(aGrid)
+
+
+	### Reset the UI, e.g. after a change of profile
+	def resetUI(self):
+		self._resetFlag = True
+		self.close()
 
 
 	### Handle change of tab event
@@ -282,11 +289,16 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 # ############# Main #############
 
 if __name__ == '__main__':
-	LmConf.load()
 	aApp = QtWidgets.QApplication(sys.argv)
-	SetApplicationStyle()
-	LmIcon.load()
-	aUI = LiveboxMonitorUI()
-	aApp.aboutToQuit.connect(aUI.appTerminate)
-	if aUI.isSigned():
-		aApp.exec()
+	if LmConf.load():
+		SetApplicationStyle()
+		LmIcon.load()
+		while True:
+			aUI = LiveboxMonitorUI()
+			aApp.aboutToQuit.connect(aUI.appTerminate)
+			if aUI.isSigned():
+				aApp.exec()
+				if not aUI._resetFlag:
+					break
+			else:
+				break
