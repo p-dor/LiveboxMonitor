@@ -40,6 +40,12 @@ class ValQual(IntEnum):
 Error = functools.partial(print, file = sys.stderr)
 
 
+# Set verbosity
+def SetVerbosity(iLevel):
+	global gVerbosity
+	gVerbosity = iLevel
+
+
 # Debug logging according to level
 def LogDebug(iLevel, *iArgs):
 	if gVerbosity >= iLevel:
