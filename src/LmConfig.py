@@ -16,6 +16,9 @@ from cryptography.fernet import Fernet
 
 from src import LmTools
 
+from __init__ import __build__
+
+
 
 # ################################ VARS & DEFS ################################
 
@@ -23,7 +26,7 @@ from src import LmTools
 CONFIG_FILE = 'Config.txt'
 
 # Config default
-DCFG_LIVEBOX_URL = 'http://livebox.home/'
+DCFG_LIVEBOX_URL = 'http://livebox/'
 DCFG_LIVEBOX_USER = 'admin'
 DCFG_LIVEBOX_PASSWORD = ''
 DCFG_FILTER_DEVICES = True
@@ -34,6 +37,7 @@ DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
 DCFG_LIST_LINE_HEIGHT = 30
 DCFG_LIST_LINE_FONT_SIZE = 0
+DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
 
 
@@ -323,6 +327,8 @@ def SetLiveboxModel(iModel):
 # ################################ Config Class ################################
 
 class LmConf:
+	Profiles = None
+	CurrProfile = None
 	LiveboxURL = DCFG_LIVEBOX_URL
 	LiveboxUser = DCFG_LIVEBOX_USER
 	LiveboxPassword = DCFG_LIVEBOX_PASSWORD
@@ -335,35 +341,27 @@ class LmConf:
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
 	ListLineHeight = DCFG_LIST_LINE_HEIGHT
 	ListLineFontSize = DCFG_LIST_LINE_FONT_SIZE
+	LogLevel = DCFG_LOG_LEVEL
 	Repeaters = DCFG_REPEATERS
 	AllDeviceIconsLoaded = False
 
 
-	### Load configuration
+	### Load configuration, if returns False the program aborts starting
 	@staticmethod
 	def load():
+		aDirtyConfig = False
 		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
 		try:
 			with open(aConfigFilePath) as aConfigFile:
 				aConfig = json.load(aConfigFile)
-				p = aConfig.get('Livebox URL')
+				aDirtyConfig = LmConf.convert(aConfig)
+				p = aConfig.get('Profiles')
 				if p is not None:
-					LmConf.LiveboxURL = p
-				p = aConfig.get('Livebox User')
-				if p is not None:
-					LmConf.LiveboxUser = p
-				p = aConfig.get('Livebox Password')
-				if p is not None:
-					try:
-						LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
-					except:
-						LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
-				p = aConfig.get('Filter Devices')
-				if p is not None:
-					LmConf.FilterDevices = p
-				p = aConfig.get('MacAddr Table File')
-				if p is not None:
-					LmConf.MacAddrTableFile = p
+					LmConf.Profiles = p
+					if not LmConf.selectProfile():
+						return False
+				if LmConf.CurrProfile is None:
+					raise Exception('No profile detected')
 				p = aConfig.get('MacAddr API Key')
 				if p is not None:
 					LmConf.MacAddrApiKey = p
@@ -382,12 +380,143 @@ class LmConf:
 				p = aConfig.get('List Line Font Size')
 				if p is not None:
 					LmConf.ListLineFontSize = int(p)
+				p = aConfig.get('Log Level')
+				if p is not None:
+					LmConf.LogLevel = int(p)
+					if LmConf.LogLevel < 0:
+						LmConf.LogLevel = 0
+					elif LmConf.LogLevel > 2:
+						LmConf.LogLevel = 2
+					LmTools.SetVerbosity(LmConf.LogLevel)
 				p = aConfig.get('Repeaters')
 				if p is not None:
 					LmConf.Repeaters = p
-		except:
-			LmTools.Error('No or wrong configuration file, creating one.')
+		except OSError:
+			LmTools.Error('No configuration file, creating one.')
+			aDirtyConfig = True
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			if LmTools.AskQuestion('Wrong configuration file, fully reset it?'):
+				aDirtyConfig = True
+			else:
+				return False
+
+		if aDirtyConfig:
 			LmConf.save()
+		return True
+
+
+	### Select a profile in the profile list depending on default parameters
+	#   Returns False if user cancels
+	@staticmethod
+	def selectProfile():
+		# Search for first default profile
+		LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Default']), None)
+
+		# If no default found or if Ctrl key pressed, ask for it
+		aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
+		if (LmConf.CurrProfile is None) or (aModifiers == QtCore.Qt.KeyboardModifier.ControlModifier):
+			if not LmConf.askProfile():
+				return False
+
+		if LmConf.CurrProfile is not None:
+			LmConf.assignProfile()
+
+		return True
+
+
+	### Ask user to choose a profile, returns False if user cancels
+	@staticmethod
+	def askProfile():
+		if len(LmConf.Profiles) == 0:
+			return True
+
+		aProfileList = [p['Name'] for p in LmConf.Profiles]
+		if LmConf.CurrProfile is None:
+			aCurrentIndex = 0
+		else:
+			aCurrentIndex = aProfileList.index(LmConf.CurrProfile['Name'])
+
+		aProfileName, aOK = QtWidgets.QInputDialog.getItem(None, 'Profile selection',
+														   'Please select a profile to use:',
+														   aProfileList, aCurrentIndex, False)
+		if aOK:
+			LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Name'] == aProfileName), None)
+			return True
+		return False
+
+
+	### Assign parameters depending on current profile
+	@staticmethod
+	def assignProfile():
+		p = LmConf.CurrProfile.get('Livebox URL')
+		if p is not None:
+			LmConf.LiveboxURL = p
+		else:
+			LmConf.LiveboxURL = DCFG_LIVEBOX_URL
+
+		p = LmConf.CurrProfile.get('Livebox User')
+		if p is not None:
+			LmConf.LiveboxUser = p
+		else:
+			LmConf.LiveboxUser = DCFG_LIVEBOX_USER
+
+		p = LmConf.CurrProfile.get('Livebox Password')
+		if p is not None:
+			try:
+				LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+			except:
+				LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
+		else:
+			LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
+
+		p = LmConf.CurrProfile.get('Filter Devices')
+		if p is not None:
+			LmConf.FilterDevices = p
+		else:
+			LmConf.FilterDevices = DCFG_FILTER_DEVICES
+
+		p = LmConf.CurrProfile.get('MacAddr Table File')
+		if p is not None:
+			LmConf.MacAddrTableFile = p
+		else:
+			LmConf.MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
+
+
+	### Adapt config format to latest version, returns True is changes were done
+	@staticmethod
+	def convert(iConfig):
+		aDirtyConfig = False
+		aVersion = iConfig.get('Version')
+
+		if aVersion is None:
+			aVersion = LmConf.convertFor096(iConfig)
+			aDirtyConfig = True
+
+		return aDirtyConfig
+
+
+	### Adapt config format to 0.9.6 version, return corresponding version number
+	@staticmethod
+	def convertFor096(iConfig):
+		iConfig['Version'] = 0x000906
+
+		# Convert Livebox parameters into main profile
+		aProfiles = []
+		aMainProfile = {}
+
+		aMainProfile['Name'] = 'Main'
+		aMainProfile['Livebox URL'] = iConfig['Livebox URL']
+		aMainProfile['Livebox User'] = iConfig['Livebox User']
+		aMainProfile['Livebox Password'] = iConfig['Livebox Password']
+		aMainProfile['Filter Devices'] = iConfig['Filter Devices']
+		aMainProfile['MacAddr Table File'] = iConfig['MacAddr Table File']
+		aMainProfile['Default'] = True
+		aProfiles.append(aMainProfile)
+
+		iConfig['Profiles'] = aProfiles
+
+		return 0x000906
 
 
 	### Save configuration file
@@ -407,17 +536,27 @@ class LmConf:
 		try:
 			with open(aConfigFilePath, 'w') as aConfigFile:
 				aConfig = {}
-				aConfig['Livebox URL'] = LmConf.LiveboxURL
-				aConfig['Livebox User'] = LmConf.LiveboxUser
-				aConfig['Livebox Password'] = Fernet(SECRET.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
-				aConfig['Filter Devices'] = LmConf.FilterDevices
-				aConfig['MacAddr Table File'] = LmConf.MacAddrTableFile
+				aConfig['Version'] = __build__
+				if LmConf.CurrProfile is None:
+					LmConf.CurrProfile = {}
+					LmConf.CurrProfile['Name'] = 'Main'
+					LmConf.CurrProfile['Default'] = True
+				LmConf.CurrProfile['Livebox URL'] = LmConf.LiveboxURL
+				LmConf.CurrProfile['Livebox User'] = LmConf.LiveboxUser
+				LmConf.CurrProfile['Livebox Password'] = Fernet(SECRET.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
+				LmConf.CurrProfile['Filter Devices'] = LmConf.FilterDevices
+				LmConf.CurrProfile['MacAddr Table File'] = LmConf.MacAddrTableFile
+				if LmConf.Profiles is None:
+					LmConf.Profiles = []
+					LmConf.Profiles.append(LmConf.CurrProfile)
+				aConfig['Profiles'] = LmConf.Profiles
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
 				aConfig['Phone Code'] = LmConf.PhoneCode
 				aConfig['List Header Height'] = LmConf.ListHeaderHeight
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
 				aConfig['List Line Height'] = LmConf.ListLineHeight
 				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
+				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['Repeaters'] = LmConf.Repeaters
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
@@ -428,6 +567,18 @@ class LmConf:
 	@staticmethod
 	def setLiveboxPassword(iPassword):
 		LmConf.LiveboxPassword = iPassword
+		LmConf.save()
+
+
+	### Set log level
+	@staticmethod
+	def setLogLevel(iLevel):
+		if iLevel < 0:
+			iLevel = 0
+		elif iLevel > 2:
+			iLevel = 2
+		LmConf.LogLevel = iLevel
+		LmTools.SetVerbosity(iLevel)
 		LmConf.save()
 
 
