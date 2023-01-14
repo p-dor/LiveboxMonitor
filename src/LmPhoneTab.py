@@ -212,8 +212,22 @@ class LmPhone:
 		self._tabWidget.addTab(self._phoneTab, 'Phone')
 
 		# Init context
+		self.phoneTabInit()
+
+
+	### Init phone tab context
+	def phoneTabInit(self):
 		self._phoneDataLoaded = False
 		self._contactMatching = {}
+
+
+	### Reset phone tab
+	def phoneTabReset(self):
+		self._callList.clearContents()
+		self._callList.setRowCount(0)
+		self._contactList.clearContents()
+		self._contactList.setRowCount(0)		
+		self.phoneTabInit()
 
 
 	### Click on phone tab
@@ -287,7 +301,8 @@ class LmPhone:
 					i += 1
 
 			# Then try to find the contact by phone number
-			aPhoneNb  = LmPhone.intlPhoneNumber(self._callList.item(aCurrentSelection, CallCol.Number).text())
+			aRawPhoneNb = self._callList.item(aCurrentSelection, CallCol.Number).text()
+			aPhoneNb  = LmPhone.intlPhoneNumber(aRawPhoneNb)
 			if len(aPhoneNb):
 				i = 0
 				while (i < n):
@@ -307,7 +322,7 @@ class LmPhone:
 			else:
 				aContact['name'] = aName
 				aContact['firstname'] = ''
-			aContact['cell'] = aPhoneNb
+			aContact['cell'] = aRawPhoneNb
 			aContact['home'] = ''
 			aContact['work'] = ''
 			aContact['ringtone'] = '1'
