@@ -396,7 +396,7 @@ class LmConf:
 			aDirtyConfig = True
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			if LmTools.AskQuestion('Wrong configuration file, fully reset it?'):
+			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
 				aDirtyConfig = True
 			else:
 				return False
@@ -619,6 +619,7 @@ class LmConf:
 			with open(aMacAddrTableFilePath) as aMacTableFile:
 				LmConf.MacAddrTable = json.load(aMacTableFile)
 		except:
+			LmTools.DisplayError('Wrong or inexistant {} file.'.format(LmConf.MacAddrTableFile))
 			LmConf.MacAddrTable = {}
 
 
