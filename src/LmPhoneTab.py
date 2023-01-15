@@ -1018,28 +1018,28 @@ class EditContactDialog(QtWidgets.QDialog):
 		self._ready = False
 
 		aFirstNameEditLabel = QtWidgets.QLabel('First name', self)
-		self._firstNameEdit = QtWidgets.QLineEdit()
+		self._firstNameEdit = QtWidgets.QLineEdit(self)
 		self._firstNameEdit.textChanged.connect(self.textChanged)
 
 		aNameEditLabel = QtWidgets.QLabel('Name', self)
-		self._nameEdit = QtWidgets.QLineEdit()
+		self._nameEdit = QtWidgets.QLineEdit(self)
 		self._nameEdit.textChanged.connect(self.textChanged)
 
 		aPhoneNbRegExp = QtCore.QRegularExpression(r'^[0-9+*#]{1}[0-9*#]{19}$')
 		aPhoneNbValidator = QtGui.QRegularExpressionValidator(aPhoneNbRegExp, self)
 
 		aCellEditLabel = QtWidgets.QLabel('Mobile', self)
-		self._cellEdit = QtWidgets.QLineEdit()
+		self._cellEdit = QtWidgets.QLineEdit(self)
 		self._cellEdit.setValidator(aPhoneNbValidator)
 		self._cellEdit.textChanged.connect(self.textChanged)
 
 		aHomeEditLabel = QtWidgets.QLabel('Home', self)
-		self._homeEdit = QtWidgets.QLineEdit()
+		self._homeEdit = QtWidgets.QLineEdit(self)
 		self._homeEdit.setValidator(aPhoneNbValidator)
 		self._homeEdit.textChanged.connect(self.textChanged)
 
 		aWorkEditLabel = QtWidgets.QLabel('Work', self)
-		self._workEdit = QtWidgets.QLineEdit()
+		self._workEdit = QtWidgets.QLineEdit(self)
 		self._workEdit.setValidator(aPhoneNbValidator)
 		self._workEdit.textChanged.connect(self.textChanged)
 
