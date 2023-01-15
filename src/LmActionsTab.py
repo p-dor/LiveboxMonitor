@@ -12,12 +12,12 @@ from src.LmIcons import LmIcon
 from src import LmConfig
 from src.LmConfig import LmConf
 
+from __init__ import __url__, __copyright__
+
 
 # ################################ VARS & DEFS ################################
 
 # Static Config
-COPYRIGHT = 'Copyright 2022-23 Pierre Dor'
-PROJECT_URL = 'https://github.com/p-dor/LiveboxMonitor'
 BUTTON_WIDTH = 150
 
 # Wifi status keys
@@ -152,12 +152,12 @@ class LmActions:
 
 		aAboutWidgets.addWidget(QtWidgets.QLabel('An Open Source project'), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aOpenSourceURL = QtWidgets.QLabel(PROJECT_URL)
+		aOpenSourceURL = QtWidgets.QLabel(__url__)
 		aOpenSourceURL.setStyleSheet('QLabel { color : blue; }')
 		aOpenSourceURL.mousePressEvent = self.openSourceButtonClick
 		aAboutWidgets.addWidget(aOpenSourceURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aAboutWidgets.addWidget(QtWidgets.QLabel(COPYRIGHT), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aAboutWidgets.addWidget(QtWidgets.QLabel(__copyright__), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
 		aAboutGroupBox = QtWidgets.QGroupBox('About')
 		aAboutGroupBox.setLayout(aAboutWidgets)
@@ -380,7 +380,7 @@ class LmActions:
 
 	### Open Source project web button
 	def openSourceButtonClick(self, iEvent):
-		webbrowser.open_new_tab(PROJECT_URL)
+		webbrowser.open_new_tab(__url__)
 
 
 	### Change the current profile in use
