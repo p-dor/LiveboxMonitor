@@ -449,17 +449,8 @@ class LmConf:
 	### Assign parameters depending on current profile
 	@staticmethod
 	def assignProfile():
-		p = LmConf.CurrProfile.get('Livebox URL')
-		if p is not None:
-			LmConf.LiveboxURL = p
-		else:
-			LmConf.LiveboxURL = DCFG_LIVEBOX_URL
-
-		p = LmConf.CurrProfile.get('Livebox User')
-		if p is not None:
-			LmConf.LiveboxUser = p
-		else:
-			LmConf.LiveboxUser = DCFG_LIVEBOX_USER
+		LmConf.LiveboxURL = LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL)
+		LmConf.LiveboxUser = LmConf.CurrProfile.get('Livebox User', DCFG_LIVEBOX_USER)
 
 		p = LmConf.CurrProfile.get('Livebox Password')
 		if p is not None:
@@ -470,17 +461,8 @@ class LmConf:
 		else:
 			LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
 
-		p = LmConf.CurrProfile.get('Filter Devices')
-		if p is not None:
-			LmConf.FilterDevices = p
-		else:
-			LmConf.FilterDevices = DCFG_FILTER_DEVICES
-
-		p = LmConf.CurrProfile.get('MacAddr Table File')
-		if p is not None:
-			LmConf.MacAddrTableFile = p
-		else:
-			LmConf.MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
+		LmConf.FilterDevices = LmConf.CurrProfile.get('Filter Devices', DCFG_FILTER_DEVICES)
+		LmConf.MacAddrTableFile = LmConf.CurrProfile.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
 
 
 	### Adapt config format to latest version, returns True is changes were done
@@ -506,11 +488,11 @@ class LmConf:
 		aMainProfile = {}
 
 		aMainProfile['Name'] = 'Main'
-		aMainProfile['Livebox URL'] = iConfig['Livebox URL']
-		aMainProfile['Livebox User'] = iConfig['Livebox User']
-		aMainProfile['Livebox Password'] = iConfig['Livebox Password']
-		aMainProfile['Filter Devices'] = iConfig['Filter Devices']
-		aMainProfile['MacAddr Table File'] = iConfig['MacAddr Table File']
+		aMainProfile['Livebox URL'] = iConfig.get('Livebox URL', DCFG_LIVEBOX_URL)
+		aMainProfile['Livebox User'] = iConfig.get('Livebox User', DCFG_LIVEBOX_USER)
+		aMainProfile['Livebox Password'] = iConfig.get('Livebox Password', DCFG_LIVEBOX_PASSWORD)
+		aMainProfile['Filter Devices'] = iConfig.get('Filter Devices', DCFG_FILTER_DEVICES)
+		aMainProfile['MacAddr Table File'] = iConfig.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
 		aMainProfile['Default'] = True
 		aProfiles.append(aMainProfile)
 
