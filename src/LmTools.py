@@ -110,6 +110,17 @@ def isIPv4(iString):
 	return re.fullmatch(IPv4_RE, iString) is not None
 
 
+# Cleanup URL
+def cleanURL(iURL):
+	n = len(iURL)
+	if n:
+		if not iURL[n - 1] == '/':
+			iURL += '/'
+		if not iURL.startswith('http://'):
+			iURL = 'http://' + iURL
+	return iURL
+
+
 
 # ################################ Formatting Tools ################################
 

@@ -26,7 +26,7 @@ from __init__ import __build__
 CONFIG_FILE = 'Config.txt'
 
 # Config default
-DCFG_LIVEBOX_URL = 'http://livebox/'
+DCFG_LIVEBOX_URL = 'http://livebox.home/'
 DCFG_LIVEBOX_USER = 'admin'
 DCFG_LIVEBOX_PASSWORD = ''
 DCFG_FILTER_DEVICES = True
@@ -40,7 +40,6 @@ DCFG_LIST_LINE_FONT_SIZE = 0
 DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
 
-
 # Static config
 ICON_URL = 'assets/common/images/app_conf/'
 SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
@@ -51,9 +50,9 @@ DIAG_HEIGHT_ADJUST = 0		# Space to add to a dialog height to respect a table wis
 TABLE_ADJUST = 4			# Space to add to a table height to respect a table wished height
 SCROLL_BAR_ADJUST = 0		# Space to add to last table col to give room for the scroll bar
 LIST_HEADER_FONT_SIZE = 0	# 0 = default system font, value can be overriden by LmConf.ListHeaderFontSize
-LIST_HEADER_FONT = QtGui.QFont()
+LIST_HEADER_FONT = None
 LIST_LINE_FONT_SIZE = 0		# 0 = default system font, value can be overriden by LmConf.ListLineFontSize
-LIST_LINE_FONT = QtGui.QFont()
+LIST_LINE_FONT = None
 LIST_STYLESHEET = ''
 LIST_HEADER_STYLESHEET = ''
 
@@ -265,11 +264,13 @@ def SetApplicationStyle():
 			'''
 
 	# Setup table's fonts
+	LIST_HEADER_FONT = QtGui.QFont()
 	LIST_HEADER_FONT.setBold(True)
 	if LmConf.ListHeaderFontSize:
 		LIST_HEADER_FONT.setPointSize(LmConf.ListHeaderFontSize)
 	elif LIST_HEADER_FONT_SIZE:
 		LIST_HEADER_FONT.setPointSize(LIST_HEADER_FONT_SIZE)
+	LIST_LINE_FONT = QtGui.QFont()
 	if LmConf.ListLineFontSize:
 		LIST_LINE_FONT.setPointSize(LmConf.ListLineFontSize)
 	elif LIST_LINE_FONT_SIZE:
@@ -449,7 +450,7 @@ class LmConf:
 	### Assign parameters depending on current profile
 	@staticmethod
 	def assignProfile():
-		LmConf.LiveboxURL = LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL)
+		LmConf.LiveboxURL = LmTools.cleanURL(LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL))
 		LmConf.LiveboxUser = LmConf.CurrProfile.get('Livebox User', DCFG_LIVEBOX_USER)
 
 		p = LmConf.CurrProfile.get('Livebox Password')
@@ -463,6 +464,8 @@ class LmConf:
 
 		LmConf.FilterDevices = LmConf.CurrProfile.get('Filter Devices', DCFG_FILTER_DEVICES)
 		LmConf.MacAddrTableFile = LmConf.CurrProfile.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
+		if len(LmConf.MacAddrTableFile) == 0:
+			LmConf.MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 
 
 	### Adapt config format to latest version, returns True is changes were done
@@ -691,3 +694,308 @@ class LmConf:
 				LmConf.getDeviceIcon(d)
 
 			LmConf.AllDeviceIconsLoaded = True
+
+
+
+# ################################ Prefs dialog ################################
+
+class PrefsDialog(QtWidgets.QDialog):
+	def __init__(self, iParent = None):
+		super(PrefsDialog, self).__init__(iParent)
+		self.resize(550, 310)
+
+		# Profiles box
+		aProfileLayout = QtWidgets.QHBoxLayout()
+		aProfileLayout.setSpacing(30)
+
+		aProfileListLayout = QtWidgets.QVBoxLayout()
+		aProfileListLayout.setSpacing(5)
+
+		self._profileSelection = -1
+		self._profileList = QtWidgets.QListWidget(self)
+		self._profileList.setMaximumWidth(190)
+		self._profileList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+		self._profileList.itemSelectionChanged.connect(self.profileListClick)
+		aProfileListLayout.addWidget(self._profileList, 0)
+
+		aProfileButtonBox = QtWidgets.QHBoxLayout()
+		aProfileButtonBox.setSpacing(5)
+
+		aAddProfileButton = QtWidgets.QPushButton('Add')
+		aAddProfileButton.clicked.connect(self.addProfileButtonClick)
+		aProfileButtonBox.addWidget(aAddProfileButton)
+		aDelProfileButton = QtWidgets.QPushButton('Delete')
+		aDelProfileButton.clicked.connect(self.delProfileButtonClick)
+		aProfileButtonBox.addWidget(aDelProfileButton)
+		aProfileListLayout.addLayout(aProfileButtonBox, 0)
+		aProfileLayout.addLayout(aProfileListLayout, 0)
+
+		aProfileNameLabel = QtWidgets.QLabel('Name', self)
+		self._profileName = QtWidgets.QLineEdit(self)
+		self._profileName.textChanged.connect(self.profileNameChanged)
+
+		aLiveboxUrlLabel = QtWidgets.QLabel('Livebox URL', self)
+		self._liveboxUrl = QtWidgets.QLineEdit(self)
+
+		aLiveboxUserLabel = QtWidgets.QLabel('Livebox User', self)
+		self._liveboxUser = QtWidgets.QLineEdit(self)
+
+		self._filterDevices = QtWidgets.QCheckBox('Filter Devices', self)
+
+		aMacAddrTableFileLabel = QtWidgets.QLabel('MacAddr Table File', self)
+		self._macAddrTableFile = QtWidgets.QLineEdit(self)
+
+		self._defaultProfile = QtWidgets.QCheckBox('Default', self)
+
+		aProfileEditGrid = QtWidgets.QGridLayout()
+		aProfileEditGrid.setSpacing(10)
+		aProfileEditGrid.addWidget(aProfileNameLabel, 1, 0)
+		aProfileEditGrid.addWidget(self._profileName, 1, 1)
+		aProfileEditGrid.addWidget(aLiveboxUrlLabel, 2, 0)
+		aProfileEditGrid.addWidget(self._liveboxUrl, 2, 1)
+		aProfileEditGrid.addWidget(aLiveboxUserLabel, 3, 0)
+		aProfileEditGrid.addWidget(self._liveboxUser, 3, 1)
+		aProfileEditGrid.addWidget(self._filterDevices, 4, 0)
+		aProfileEditGrid.addWidget(aMacAddrTableFileLabel, 5, 0)
+		aProfileEditGrid.addWidget(self._macAddrTableFile, 5, 1)
+		aProfileEditGrid.addWidget(self._defaultProfile, 6, 0)
+		aProfileLayout.addLayout(aProfileEditGrid, 1)
+
+		aProfileGroupBox = QtWidgets.QGroupBox('Profiles')
+		aProfileGroupBox.setLayout(aProfileLayout)
+
+		# General preferences box
+		aMacAddrApiKeyLabel = QtWidgets.QLabel('macaddress.io API Key', self)
+		self._macAddrApiKey = QtWidgets.QLineEdit(self)
+
+		aPhoneCodeLabel = QtWidgets.QLabel('Intl Phone Code', self)
+		self._phoneCode = QtWidgets.QLineEdit(self)
+		aPhoneCodeValidator = QtGui.QIntValidator()
+		aPhoneCodeValidator.setRange(1, 999999)
+		self._phoneCode.setValidator(aPhoneCodeValidator)
+
+		aIntValidator = QtGui.QIntValidator()
+		aIntValidator.setRange(1, 99)
+
+		aListHeaderHeightLabel = QtWidgets.QLabel('List Header Height', self)
+		self._listHeaderHeight = QtWidgets.QLineEdit(self)
+		self._listHeaderHeight.setValidator(aIntValidator)
+
+		aListHeaderFontSizeLabel = QtWidgets.QLabel('List Header Font Size', self)
+		self._listHeaderFontSize = QtWidgets.QLineEdit(self)
+		self._listHeaderFontSize.setValidator(aIntValidator)
+
+		aListLineHeightLabel = QtWidgets.QLabel('List Line Height', self)
+		self._listLineHeight = QtWidgets.QLineEdit(self)
+		self._listLineHeight.setValidator(aIntValidator)
+
+		aListLineFontSizeLabel = QtWidgets.QLabel('List Line Font Size', self)
+		self._listLineFontSize = QtWidgets.QLineEdit(self)
+		self._listLineFontSize.setValidator(aIntValidator)
+
+		aPrefsEditGrid = QtWidgets.QGridLayout()
+		aPrefsEditGrid.setSpacing(10)
+		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 1, 0)
+		aPrefsEditGrid.addWidget(self._macAddrApiKey, 1, 1)
+		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 2, 0)
+		aPrefsEditGrid.addWidget(self._phoneCode, 2, 1)
+		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 3, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderHeight, 3, 1)
+		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 4, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 4, 1)
+		aPrefsEditGrid.addWidget(aListLineHeightLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._listLineHeight, 5, 1)
+		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 6, 0)
+		aPrefsEditGrid.addWidget(self._listLineFontSize, 6, 1)
+
+		aPrefsGroupBox = QtWidgets.QGroupBox('Preferences')
+		aPrefsGroupBox.setLayout(aPrefsEditGrid)		
+
+		# Button bar
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aOkButton = QtWidgets.QPushButton('OK', self)
+		aOkButton.clicked.connect(self.okButtonClick)
+		aOkButton.setDefault(True)
+		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+
+		# Final layout
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
+		aVBox.addWidget(aProfileGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+		aVBox.addWidget(aPrefsGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+		aVBox.addLayout(aButtonBar, 1)
+
+		self.setWindowTitle('Preferences')
+		self.setModal(True)
+		self.loadPrefs()
+		self.show()
+
+
+	### Load preferences data
+	def loadPrefs(self):
+		self._profiles = []
+
+		# Load profile list
+		for p in LmConf.Profiles:
+			self._profiles.append(p.copy())
+			i = QtWidgets.QListWidgetItem(p['Name'], self._profileList)
+			if p == LmConf.CurrProfile:
+				self._profileList.setCurrentItem(i)
+
+		# Load paramaters
+		self._macAddrApiKey.setText(LmConf.MacAddrApiKey)
+		self._phoneCode.setText(LmConf.PhoneCode)
+		self._listHeaderHeight.setText(str(LmConf.ListHeaderHeight))
+		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
+		self._listLineHeight.setText(str(LmConf.ListLineHeight))
+		self._listLineFontSize.setText(str(LmConf.ListLineFontSize))
+
+
+	### Save preferences data
+	def savePrefs(self):
+		# Save profile data
+		LmConf.Profiles = self._profiles
+
+		# Try to restore current profile by name
+		aCurrProfileName = LmConf.CurrProfile.get('Name')
+		p = next((p for p in LmConf.Profiles if p['Name'] == aCurrProfileName), None)
+		if p is None:
+			# Otherwise take the default
+			p = next((p for p in LmConf.Profiles if p['Default']), None)
+		if p is None:
+			# If not default take the first
+			p = LmConf.Profiles[0]
+		LmConf.CurrProfile = p
+
+		# Save parameters
+		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
+		LmConf.PhoneCode = self._phoneCode.text()
+		LmConf.ListHeaderHeight = int(self._listHeaderHeight.text())
+		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
+		LmConf.ListLineHeight = int(self._listLineHeight.text())
+		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
+
+
+	### Click on profile list item
+	def profileListClick(self):
+		aNewSelection = self._profileList.currentRow()
+
+		# Save previous values before switch to new
+		if self._profileSelection >= 0:
+			# Check of selection really changed
+			if self._profileSelection == aNewSelection:
+				return
+
+			# Save values
+			if not self.saveProfile():
+				self._profileList.setCurrentRow(self._profileSelection)
+				return
+
+		# Load new values
+		self._profileSelection = -1		# To inhibit name text change event
+		p = self._profiles[aNewSelection]
+		self._profileName.setText(p['Name'])
+		self._liveboxUrl.setText(p['Livebox URL'])
+		self._liveboxUser.setText(p['Livebox User'])
+		if p['Filter Devices']:
+			self._filterDevices.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._filterDevices.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		self._macAddrTableFile.setText(p['MacAddr Table File'])
+		if p['Default']:
+			self._defaultProfile.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._defaultProfile.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		self._profileSelection = aNewSelection
+
+
+	### Save current profile in profiles buffer, returns False if failed
+	def saveProfile(self):
+		# Check if name is not duplicated
+		aProfileName = self._profileName.text()
+		if len(aProfileName) == 0:
+			LmTools.DisplayError('Please set profile name.')
+			return False
+
+		if self.countProfileName(aProfileName) > 1:
+			LmTools.DisplayError('Duplicated name.')
+			return False
+
+		# If default profile is selected, set all others to false
+		aDefault = self._defaultProfile.checkState() == QtCore.Qt.CheckState.Checked
+		if aDefault:
+			for p in self._profiles:
+				p['Default'] = False
+
+		# Save in profiles buffer
+		p = self._profiles[self._profileSelection]
+		p['Name'] = self._profileName.text()
+		p['Livebox URL'] = LmTools.cleanURL(self._liveboxUrl.text())
+		p['Livebox User'] = self._liveboxUser.text()
+		p['Filter Devices'] = self._filterDevices.checkState() == QtCore.Qt.CheckState.Checked
+		p['MacAddr Table File'] = self._macAddrTableFile.text()
+		p['Default'] = aDefault
+		return True
+
+
+	### Profile name text changed
+	def profileNameChanged(self, iText):
+		if self._profileSelection >= 0:
+			self._profileList.item(self._profileSelection).setText(iText)
+
+
+	### Find number of profiles in list matching a name
+	def countProfileName(self, iName):
+		return len(self._profileList.findItems(iName, QtCore.Qt.MatchFlag.MatchExactly))
+
+
+	### Click on add profile button
+	def addProfileButtonClick(self):
+		# First try to save current profile adding one
+		if not self.saveProfile():
+			return
+
+		# Add new empty profile in buffer
+		p = {}
+		p['Name'] = ''
+		p['Livebox URL'] = DCFG_LIVEBOX_URL
+		p['Livebox User'] = DCFG_LIVEBOX_USER
+		p['Filter Devices'] = DCFG_FILTER_DEVICES
+		p['MacAddr Table File'] = DCFG_MACADDR_TABLE_FILE
+		p['Default'] = False
+		self._profiles.append(p)
+
+		# Add new item in list and select it
+		i = QtWidgets.QListWidgetItem(p['Name'], self._profileList)
+		self._profileList.setCurrentItem(i)
+
+
+	### Click on delete profile button
+	def delProfileButtonClick(self):
+		if len(self._profiles) == 1:
+			LmTools.DisplayError('You must have at least one profile.')
+			return
+
+		# Delete the list line
+		i = self._profileSelection
+		self._profileSelection = -1 	# Inhibit event handling
+		self._profileList.takeItem(i)
+
+		# Remove the profile from profiles buffer
+		self._profiles.pop(i)
+
+		# Update selection
+		self._profileSelection = self._profileList.currentRow()
+
+
+	### Click on OK button
+	def okButtonClick(self):
+		# First try to save current profile before leaving
+		if self.saveProfile():
+			self.savePrefs()
+			self.accept()

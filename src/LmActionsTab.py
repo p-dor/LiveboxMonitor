@@ -11,6 +11,8 @@ from src import LmTools
 from src.LmIcons import LmIcon
 from src import LmConfig
 from src.LmConfig import LmConf
+from src.LmConfig import PrefsDialog
+from src.LmConfig import SetApplicationStyle
 
 from __init__ import __url__, __copyright__
 
@@ -164,19 +166,23 @@ class LmActions:
 
 		aRightZone.addWidget(aAboutGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
-		# Prefs box
-		aPrefsButtons = QtWidgets.QVBoxLayout()
-		aPrefsButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-		aPrefsButtons.setSpacing(20)
+		# Setup box
+		aSetupButtons = QtWidgets.QVBoxLayout()
+		aSetupButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aSetupButtons.setSpacing(20)
+
+		aPrefsButton = QtWidgets.QPushButton('Preferences...')
+		aPrefsButton.clicked.connect(self.prefsButtonClick)
+		aSetupButtons.addWidget(aPrefsButton)
 
 		aChangeProfileButton = QtWidgets.QPushButton('Change Profile...')
 		aChangeProfileButton.clicked.connect(self.changeProfileButtonClick)
-		aPrefsButtons.addWidget(aChangeProfileButton)
+		aSetupButtons.addWidget(aChangeProfileButton)
 
-		aPrefsGroupBox = QtWidgets.QGroupBox('Preferences')
-		aPrefsGroupBox.setLayout(aPrefsButtons)
+		aSetupGroupBox = QtWidgets.QGroupBox('Setup')
+		aSetupGroupBox.setLayout(aSetupButtons)
 
-		aRightZone.addWidget(aPrefsGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+		aRightZone.addWidget(aSetupGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# Debug box
 		aDebugButtons = QtWidgets.QVBoxLayout()
@@ -383,6 +389,16 @@ class LmActions:
 		webbrowser.open_new_tab(__url__)
 
 
+	### Click on preferences button
+	def prefsButtonClick(self):
+		aPrefsDialog = PrefsDialog(self)
+		if aPrefsDialog.exec():
+			LmConf.assignProfile()
+			LmConf.save()
+			SetApplicationStyle()
+			self.resetUI()
+
+
 	### Change the current profile in use
 	def changeProfileButtonClick(self):
 		if LmConf.askProfile():
@@ -465,7 +481,6 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 			self._historyTable.setItem(i, 2, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('ShutdownDate'))))
 			self._historyTable.setItem(i, 3, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', 'Unknown')))
 			i += 1
-
 
 
 
