@@ -916,7 +916,7 @@ class LmPhone:
 
 		# Edit dialog
 		aEditContactDialog = EditContactDialog(True, aContact, self)
-		if (aEditContactDialog.exec()):
+		if aEditContactDialog.exec():
 			aContact = aEditContactDialog.getContact()
 			aLBContact['name'] = 'N:' + aContact['name'] + ';' + aContact['firstname'] + ';'
 			aLBContact['n'] = 'N:' + aContact['name'] + ';' + aContact['firstname'] + ';;;;;;;'
@@ -1104,7 +1104,7 @@ class EditContactDialog(QtWidgets.QDialog):
 		self.show()
 
 
-	def textChanged(self, aText):
+	def textChanged(self, iText):
 		if self._ready:
 			self.setOkButtonState()
 
