@@ -62,7 +62,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.initStatsLoop()
 			self.initRepeaterStatsLoop()
 		self._applicationName = 'Livebox Monitor v' + __version__
-		self.setWindowTitle(self._applicationName)
+		self.setWindowTitle(self.appWindowTitle())
 		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
 		self.setGeometry(100, 100, 1300, 102 + LmConfig.WindowHeight(21))
 		self.show()
@@ -243,16 +243,23 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.close()
 
 
+	### Return window's base title to use
+	def appWindowTitle(self):
+		if len(LmConf.Profiles) > 1:
+			return self._applicationName + ' [' + LmConf.CurrProfile['Name'] + ']'
+		return self._applicationName
+
+
 	### Show the start of a long task
 	def startTask(self, iTask):
-		self.setWindowTitle(self._applicationName + ' - ' + iTask)
+		self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
 		LmTools.MouseCursor_Busy()
 
 
 	### End a long task
 	def endTask(self):
 		LmTools.MouseCursor_Normal()
-		self.setWindowTitle(self._applicationName)
+		self.setWindowTitle(self.appWindowTitle())
 
 
 	### Switch to device list tab
