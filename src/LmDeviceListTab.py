@@ -124,7 +124,7 @@ class LmDeviceList:
 		aDeviceEventsButton = QtWidgets.QPushButton('Device Events')
 		aDeviceEventsButton.clicked.connect(self.deviceEventsButtonClick)
 		aHBox.addWidget(aDeviceEventsButton)
-		aIPv6Button = QtWidgets.QPushButton('IPv6')
+		aIPv6Button = QtWidgets.QPushButton('IPv6...')
 		aIPv6Button.clicked.connect(self.ipv6ButtonClick)
 		aHBox.addWidget(aIPv6Button)
 
