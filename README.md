@@ -278,7 +278,8 @@ Les actions concernant le **Setup** (réglages) :
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_Preferences.png)
 
     Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal (main) est créé automatiquement. Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.
-    Au lancement du programme, le profil par défaut est utilisé, mais si aucun profil par défaut n'est configuré ou si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.
+    Au lancement du programme, le profil par défaut est utilisé, mais si aucun profil par défaut n'est configuré ou si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.  
+ 
     Pour chaque **profil** il est possible de configurer :
     - `Name` : nom du profil.
     - `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
