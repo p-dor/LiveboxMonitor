@@ -550,7 +550,15 @@ class LmConf:
 
 	### Set Livebox password
 	@staticmethod
-	def setLiveboxPassword(iPassword):
+	def setLiveboxURL(iURL):
+		LmConf.LiveboxURL = iURL
+		LmConf.save()
+
+
+	### Set Livebox password
+	@staticmethod
+	def setLiveboxUserPassword(iUser, iPassword):
+		LmConf.LiveboxUser = iUser
 		LmConf.LiveboxPassword = iPassword
 		LmConf.save()
 
@@ -697,6 +705,126 @@ class LmConf:
 
 
 
+# ############# Livebox connection dialog #############
+class LiveboxCnxDialog(QtWidgets.QDialog):
+	def __init__(self, iURL, iParent = None):
+		super(LiveboxCnxDialog, self).__init__(iParent)
+		self.resize(450, 150)
+
+		aWarnBox = QtWidgets.QVBoxLayout()
+		aWarnBox.setSpacing(4)
+		aW1Label = QtWidgets.QLabel('Cannot connect to the Livebox.')
+		aW1Label.setFont(LmTools.BOLD_FONT)
+		aWarnBox.addWidget(aW1Label)
+		aW2Label = QtWidgets.QLabel('It might be unreachable, in that case just wait.')
+		aWarnBox.addWidget(aW2Label)
+		aW3Label = QtWidgets.QLabel('Otherwise, try http://livebox.home/, http://livebox/ or http://192.168.1.1/.')
+		aWarnBox.addWidget(aW3Label)
+
+		aUrlLabel = QtWidgets.QLabel('Livebox URL')
+		self._urlEdit = QtWidgets.QLineEdit()
+		self._urlEdit.textChanged.connect(self.textChanged)
+
+		aEditGrid = QtWidgets.QGridLayout()
+		aEditGrid.setSpacing(10)
+		aEditGrid.addWidget(aUrlLabel, 1, 0)
+		aEditGrid.addWidget(self._urlEdit, 1, 1)
+
+		aButtonBar = QtWidgets.QHBoxLayout()
+		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(15)
+		aVBox.addLayout(aWarnBox, 0)
+		aVBox.addLayout(aEditGrid, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		self._urlEdit.setFocus()
+		self.setWindowTitle('Livebox connection')
+
+		self._urlEdit.setText(iURL)
+
+		self.setModal(True)
+		self.show()
+
+
+	def textChanged(self, iText):
+		self._okButton.setDisabled(len(self.getURL()) == 0)
+
+
+	def getURL(self):
+		return self._urlEdit.text()
+
+
+
+# ############# Livebox signin dialog #############
+class LiveboxSigninDialog(QtWidgets.QDialog):
+	def __init__(self, iUser, iPassword, iParent = None):
+		super(LiveboxSigninDialog, self).__init__(iParent)
+		self.resize(450, 130)
+
+		aUserLabel = QtWidgets.QLabel('User')
+		self._userEdit = QtWidgets.QLineEdit()
+		self._userEdit.textChanged.connect(self.textChanged)
+
+		aPasswordLabel = QtWidgets.QLabel('Password')
+		self._passwordEdit = QtWidgets.QLineEdit()
+		self._passwordEdit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+		self._passwordEdit.textChanged.connect(self.textChanged)
+
+		aEditGrid = QtWidgets.QGridLayout()
+		aEditGrid.setSpacing(10)
+		aEditGrid.addWidget(aUserLabel, 1, 0)
+		aEditGrid.addWidget(self._userEdit, 1, 1)
+		aEditGrid.addWidget(aPasswordLabel, 2, 0)
+		aEditGrid.addWidget(self._passwordEdit, 2, 1)
+
+		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.addLayout(aEditGrid, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		self._userEdit.setFocus()
+		self.setWindowTitle('Wrong password')
+
+		self._userEdit.setText(iUser)
+		self._passwordEdit.setText(iPassword)
+
+		self.setModal(True)
+		self.show()
+
+
+	def textChanged(self, iText):
+		self._okButton.setDisabled((len(self.getUser()) == 0) or (len(self.getPassword()) == 0))
+
+
+	def getUser(self):
+		return self._userEdit.text()
+
+
+	def getPassword(self):
+		return self._passwordEdit.text()
+
+
+
 # ################################ Prefs dialog ################################
 
 class PrefsDialog(QtWidgets.QDialog):
@@ -712,7 +840,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileListLayout.setSpacing(5)
 
 		self._profileSelection = -1
-		self._profileList = QtWidgets.QListWidget(self)
+		self._profileList = QtWidgets.QListWidget()
 		self._profileList.setMaximumWidth(190)
 		self._profileList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._profileList.itemSelectionChanged.connect(self.profileListClick)
@@ -730,22 +858,22 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileListLayout.addLayout(aProfileButtonBox, 0)
 		aProfileLayout.addLayout(aProfileListLayout, 0)
 
-		aProfileNameLabel = QtWidgets.QLabel('Name', self)
-		self._profileName = QtWidgets.QLineEdit(self)
+		aProfileNameLabel = QtWidgets.QLabel('Name')
+		self._profileName = QtWidgets.QLineEdit()
 		self._profileName.textChanged.connect(self.profileNameChanged)
 
-		aLiveboxUrlLabel = QtWidgets.QLabel('Livebox URL', self)
-		self._liveboxUrl = QtWidgets.QLineEdit(self)
+		aLiveboxUrlLabel = QtWidgets.QLabel('Livebox URL')
+		self._liveboxUrl = QtWidgets.QLineEdit()
 
-		aLiveboxUserLabel = QtWidgets.QLabel('Livebox User', self)
-		self._liveboxUser = QtWidgets.QLineEdit(self)
+		aLiveboxUserLabel = QtWidgets.QLabel('Livebox User')
+		self._liveboxUser = QtWidgets.QLineEdit()
 
-		self._filterDevices = QtWidgets.QCheckBox('Filter Devices', self)
+		self._filterDevices = QtWidgets.QCheckBox('Filter Devices')
 
-		aMacAddrTableFileLabel = QtWidgets.QLabel('MacAddr Table File', self)
-		self._macAddrTableFile = QtWidgets.QLineEdit(self)
+		aMacAddrTableFileLabel = QtWidgets.QLabel('MacAddr Table File')
+		self._macAddrTableFile = QtWidgets.QLineEdit()
 
-		self._defaultProfile = QtWidgets.QCheckBox('Default', self)
+		self._defaultProfile = QtWidgets.QCheckBox('Default')
 
 		aProfileEditGrid = QtWidgets.QGridLayout()
 		aProfileEditGrid.setSpacing(10)
@@ -765,11 +893,11 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileGroupBox.setLayout(aProfileLayout)
 
 		# General preferences box
-		aMacAddrApiKeyLabel = QtWidgets.QLabel('macaddress.io API Key', self)
-		self._macAddrApiKey = QtWidgets.QLineEdit(self)
+		aMacAddrApiKeyLabel = QtWidgets.QLabel('macaddress.io API Key')
+		self._macAddrApiKey = QtWidgets.QLineEdit()
 
-		aPhoneCodeLabel = QtWidgets.QLabel('Intl Phone Code', self)
-		self._phoneCode = QtWidgets.QLineEdit(self)
+		aPhoneCodeLabel = QtWidgets.QLabel('Intl Phone Code')
+		self._phoneCode = QtWidgets.QLineEdit()
 		aPhoneCodeValidator = QtGui.QIntValidator()
 		aPhoneCodeValidator.setRange(1, 999999)
 		self._phoneCode.setValidator(aPhoneCodeValidator)
@@ -777,20 +905,20 @@ class PrefsDialog(QtWidgets.QDialog):
 		aIntValidator = QtGui.QIntValidator()
 		aIntValidator.setRange(1, 99)
 
-		aListHeaderHeightLabel = QtWidgets.QLabel('List Header Height', self)
-		self._listHeaderHeight = QtWidgets.QLineEdit(self)
+		aListHeaderHeightLabel = QtWidgets.QLabel('List Header Height')
+		self._listHeaderHeight = QtWidgets.QLineEdit()
 		self._listHeaderHeight.setValidator(aIntValidator)
 
-		aListHeaderFontSizeLabel = QtWidgets.QLabel('List Header Font Size', self)
-		self._listHeaderFontSize = QtWidgets.QLineEdit(self)
+		aListHeaderFontSizeLabel = QtWidgets.QLabel('List Header Font Size')
+		self._listHeaderFontSize = QtWidgets.QLineEdit()
 		self._listHeaderFontSize.setValidator(aIntValidator)
 
-		aListLineHeightLabel = QtWidgets.QLabel('List Line Height', self)
-		self._listLineHeight = QtWidgets.QLineEdit(self)
+		aListLineHeightLabel = QtWidgets.QLabel('List Line Height')
+		self._listLineHeight = QtWidgets.QLineEdit()
 		self._listLineHeight.setValidator(aIntValidator)
 
-		aListLineFontSizeLabel = QtWidgets.QLabel('List Line Font Size', self)
-		self._listLineFontSize = QtWidgets.QLineEdit(self)
+		aListLineFontSizeLabel = QtWidgets.QLabel('List Line Font Size')
+		self._listLineFontSize = QtWidgets.QLineEdit()
 		self._listLineFontSize.setValidator(aIntValidator)
 
 		aPrefsEditGrid = QtWidgets.QGridLayout()
@@ -813,11 +941,11 @@ class PrefsDialog(QtWidgets.QDialog):
 
 		# Button bar
 		aButtonBar = QtWidgets.QHBoxLayout()
-		aOkButton = QtWidgets.QPushButton('OK', self)
+		aOkButton = QtWidgets.QPushButton('OK')
 		aOkButton.clicked.connect(self.okButtonClick)
 		aOkButton.setDefault(True)
 		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)

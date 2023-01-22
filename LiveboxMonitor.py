@@ -18,6 +18,8 @@ from src.LmConfig import LmConf
 from src.LmConfig import SetApplicationStyle
 from src.LmConfig import SetLiveboxModel
 from src.LmConfig import MonitorTab
+from src.LmConfig import LiveboxCnxDialog
+from src.LmConfig import LiveboxSigninDialog
 from src.LmSession import LmSession
 from src import LmConfig
 from src import LmDeviceListTab
@@ -183,17 +185,24 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.close()
 
 			if r < 0:
-				LmTools.DisplayError('Cannot connect to the Livebox.')
-				return False
+				aDialog = LiveboxCnxDialog(LmConf.LiveboxURL, self)
+				if aDialog.exec():
+					aURL = aDialog.getURL()
+					# Remove unwanted characters (can be set via Paste action) + cleanup
+					aURL = LmTools.cleanURL(re.sub('[\n\t]', '', aURL))
+					LmConf.setLiveboxURL(aURL)
+					self.show()
+					continue
+				else:
+					LmTools.DisplayError('Cannot connect to the Livebox.')
+					return False
 
-			aPassword, aOK = QtWidgets.QInputDialog.getText(self, 'Wrong password',
-															'Please enter Livebox password:',
-															QtWidgets.QLineEdit.EchoMode.Password,
-															text = LmConf.LiveboxPassword)
-			if aOK:
-				# Remove unwanted characters from password (can be set via Paste action)
-				aPassword = re.sub('[\n\t]', '', aPassword)
-				LmConf.setLiveboxPassword(aPassword)
+			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, self)
+			if aDialog.exec():
+				# Remove unwanted characters (can be set via Paste action)
+				aUser = re.sub('[\n\t]', '', aDialog.getUser())
+				aPassword = re.sub('[\n\t]', '', aDialog.getPassword())
+				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:
 				LmTools.DisplayError('Livebox authentication failed.')
