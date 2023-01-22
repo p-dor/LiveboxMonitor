@@ -42,4 +42,4 @@ exe = EXE(pyz,
 app = BUNDLE(exe,
         name='LiveboxMonitor_Console.app',
         icon='ico/LiveboxMonitor.ico',
-        version='0.9.6')
+        version='0.9.7')

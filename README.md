@@ -28,10 +28,15 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 ### Téléchargement
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor_Console.exe)
-- MacOS : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor.dmg)
-- MacOS avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.6/LiveboxMonitor_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Console.exe)
+- MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor.dmg)
+- MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Console.dmg)
+
+
+## Discussion
+
+Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
 
 
 ## Configuration
@@ -42,29 +47,20 @@ Le programme créé automatiquement dans son répertoire deux fichiers de config
 
 **Note** : lorsque les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, les fichiers de configurations se trouvent dans les répertoires standards du système :
 - Windows : `%APPDATA%\LiveboxMonitor`
-- MacOS (Intel) : `~/Library/Application Support/LiveboxMonitor`
+- MacOS : `~/Library/Application Support/LiveboxMonitor`
 
 ### Le fichier Config.txt
 
-Le programme supporte ces clefs de configuration :  
-- `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
-- `Livebox User` : login pour l'ouverture de session. Par défaut `admin`.
-- `Livebox Password` : le mot de passe crypté pour l'ouverture de session. Ce mot de passe est demandé automatiquement au lancement du programme s'il n'est pas renseigné ou s'il est erroné. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
-- `Filter Devices` : active (valeur `true`) ou pas (valeur `false`) le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
-- `MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`.
-- `MacAddr API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
-- `Phone Code` : indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts. Par défaut le code de la France est utilisé, c'est à dire 33.
-- `List Header Height` : hauteur en pixels des entêtes de liste, par défaut 25.
-- `List Header Font Size` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
-- `List Line Height` : hauteur en pixels des lignes de liste, par défaut 30.
-- `List Line Font Size` :  taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
-- `Repeaters` : cette partie est générée automatiquement par le programme si des mots de passe différents sont utilisés pour le ou les répéteurs Wifi Orange connectés. La structure de ce paramètre est aussi au format JSON, utilise pour clef les adresses MAC des répéteurs, et référence pour chaque répéteur les valeurs 'User' & 'Password' (encrypté de la même manière que le mot de passe de la Livebox).
+Ce fichier est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer. Les réglages principaux se font via le bouton `Preferences...` de l'onglet `Actions`.
+À savoir :  
+- Les mots de passe y sont stockés cryptés. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
+- La clef `Repeaters` est générée automatiquement par le programme si des mots de passe différents sont utilisés pour le ou les répéteurs Wifi Orange connectés. La structure de ce paramètre est aussi au format JSON, utilise pour clef les adresses MAC des répéteurs, et référence pour chaque répéteur les valeurs 'User' & 'Password'.
 
 ### Le fichier MacAddrTable.txt
 
 Ce fichier est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer.
 Les clefs correspondent aux adresses MAC des appareils et les valeurs au nom attribué.
-Tout appareil détecté dont l'adresse MAC n'est pas répertoriée sera affiché comme 'UNKNOWN' (inconnu) en rouge.  Cette fonctionnalité est surtout utile pour détecter les nouveaux appareils ou des tentatives d'intrusions.
+Tout appareil détecté dont l'adresse MAC n'est pas répertoriée sera affiché comme 'UNKNOWN' (inconnu) en rouge. Cette fonctionnalité est surtout utile pour détecter les nouveaux appareils ou des tentatives d'intrusions.
 
 Pourquoi utiliser une base de noms locale alors que la Livebox stocke aussi des noms ?
 - Parce que la Livebox "oublie" tout appareil qui ne s'est pas connecté depuis plus d'un mois.
@@ -81,7 +77,7 @@ La liste des appareils affiche les colonnes suivantes :
 - **Livebox Name** : nom de l'appareil tel que paramétré dans la Livebox et visible dans l'interface Web de la Livebox. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...` de l'onglet `Device Infos`.
 - **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
 - **IP** : adresse IP v4 de l'appareil sur le LAN. Cette adresse s'affiche en caractères gras si cette adresse est réservée pour cet appareil dans la configuration DHCP de la Livebox. Et elle s'affiche en rouge si l'adresse n'est pas atteignable sur le réseau (unreacheable), typiquement lorsque l'appareil n'est pas actif.
-- **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth`  signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion, soit 2.4GHz soit 5GHz.
+- **Link** : point de liaison de l'appareil avec le réseau. D'abord le nom de l'appareil, c'est à dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `eth` signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion, soit 2.4GHz soit 5GHz.
 - **A** : indique par une icône si l'appareil est actif ou non. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
 - **Wifi** : qualité de la connexion Wifi.
 - **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consulter via l'onglet `Events`.
@@ -99,8 +95,7 @@ L'onglet `Device List` propose les boutons suivants :
 - **`Refresh`** : permet de forcer le rafraichissement de la liste des appareils, non seulement dans cet onglet mais aussi dans les onglets `Device Infos` et `Events`. Utile par exemple si le programme est lancé alors que l'ordinateur sort de veille : des événements ayant probablement été raté par le programme, un rafraichissement permettra de retrouver une vue à jour.
 - **`Device Infos`** : permet de basculer dans l'onglet `Device Infos` pour l'appareil sélectionné et de voir directement ses informations.
 - **`Device Events`** : permet de basculer dans l'onglet `Events` pour l'appareil sélectionné et de voir directement les événements reçus le concernant.
-- **`Raw Device List...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
-- **`Raw Topology...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
+- **`IPv6...`** : permet d'avoir le statut d'activation de l'IPv6, l'adresse IPv6 de la Livebox ainsi que son préfix, et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.
 
 
 ## Livebox Stats/Infos - Statistiques de trafic et infos avancées de la Livebox
@@ -229,8 +224,8 @@ La liste des contacts, sur la droite, affiche les colonnes suivantes :
 - **Work** : numéro de téléphone professionnel.
 - **Ring** : type de sonnerie sélectionné parmi les 7 supportés par la Livebox.
 
-Un **double clic** sur un contact permet de facilement l'éditer.
-**Attention** : La Livebox supporte un maximum de 255 contacts.
+Un **double clic** sur un contact permet de facilement l'éditer.  
+**Attention** : la Livebox supporte un maximum de 255 contacts.
 
 ### Boutons
 Les boutons suivants sont proposés pour gérer la liste des contacts :
@@ -276,6 +271,35 @@ Les actions concernant les **Reboots** (redémarrages de la Livebox) :
     - **Boot Reason** : la raison de ce démarrage. Typiquement "NMC" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur de la Livebox.
     - **Shutdown Date** : la date et heure de l'extinction.
     - **Shutdown Reason** : la raison de cette extinction. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
+
+Les actions concernant le **Setup** (réglages) :
+- **`Preferences...`** : permet d'afficher l'écran des préférences du programme.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_Preferences.png)
+
+    Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal (main) est créé automatiquement. Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.
+    Au lancement du programme, le profil par défaut est utilisé. Si aucun profil par défaut n'est configuré ou si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.
+    Pour chaque profil il est possible de configurer :
+    - `Name` : nom du profil.
+    - `Livebox URL` : adresse de la Livebox. La valeur par défaut est `http://livebox.home/`.
+    - `Livebox User` : login pour l'ouverture de session. Par défaut `admin`. Le mot de passe est demandé automatiquement lors de l'utilisation du profil s'il n'est pas renseigné ou s'il est erroné.
+    - `Filter Devices` : active le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox. Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox. Ce paramètre est activé par défaut.
+    - `MacAddr Table File` : nom du fichier de stockage des noms d'appareils. Par défaut `MacAddrTable.txt`. Voire `Le fichier MacAddrTable.txt` de la section `Configuration` pour plus d'explications.
+    - `Default` : indique qu'il s'agit du profil par défaut à utiliser au lancement du programme. Il ne peut y avoir qu'un seul profil par défaut.
+    Les préférences générales permettent de régler :
+    - `macaddress.io API Key` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabriquant d'un appareil à partir de son adresse MAC. C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
+    - `Intl Phone Code` : indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts. Par défaut le code de la France est utilisé, c'est à dire 33.
+    - `List Header Height` : hauteur en pixels des entêtes de liste, par défaut 25.
+    - `List Header Font Size` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
+    - `List Line Height` : hauteur en pixels des lignes de liste, par défaut 30.
+    - `List Line Font Size` : taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
+- **`Change Profile...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
+
+Les actions techniques de **Debug** (débogage) :
+- **`Raw Device List...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
+- **`Raw Topology...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
+- **`Set Log Level...`** : permet de changer le niveau de logs dans la console. Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement du programme.
+
 
 Autres actions :
 - **Quit Application** : pour quitter l'application. Strictement équivalent à fermer la fenêtre de l'application.
