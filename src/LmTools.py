@@ -217,7 +217,7 @@ class TextDialog(QtWidgets.QDialog):
 		aVbox = QtWidgets.QVBoxLayout(self)
 
 		self._textBox = QtWidgets.QTextEdit()
-		self._OKButton = QtWidgets.QPushButton('OK', self)
+		self._OKButton = QtWidgets.QPushButton('OK')
 		self._OKButton.clicked.connect(self.accept)
 		self._OKButton.setDefault(True)
 

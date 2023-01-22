@@ -456,7 +456,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		LmConfig.SetTableStyle(self._historyTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK', self)
+		aOKButton = QtWidgets.QPushButton('OK')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
@@ -511,7 +511,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		LmConfig.SetTableStyle(self._statusTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK', self)
+		aOKButton = QtWidgets.QPushButton('OK')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)

@@ -410,7 +410,7 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		super(SetDeviceNameDialog, self).__init__(iParent)
 		self.resize(350, 150)
 
-		aLabel = QtWidgets.QLabel('Names for [' + iDeviceKey + '] device:', self)
+		aLabel = QtWidgets.QLabel('Names for [' + iDeviceKey + '] device:')
 
 		self._nameCheckBox = QtWidgets.QCheckBox('Monitor Name')
 		self._nameCheckBox.clicked.connect(self.nameClick)
@@ -443,10 +443,10 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		aNameGrid.addWidget(self._liveboxNameCheckBox, 2, 0)
 		aNameGrid.addWidget(self._liveboxNameEdit, 2, 1)
 
-		aOKButton = QtWidgets.QPushButton('OK', self)
+		aOKButton = QtWidgets.QPushButton('OK')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -503,9 +503,9 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 
 		self._ignoreSignal = False
 
-		aLabel = QtWidgets.QLabel('Type for [' + iDeviceKey + '] device:', self)
+		aLabel = QtWidgets.QLabel('Type for [' + iDeviceKey + '] device:')
 
-		self._typeNameCombo = QtWidgets.QComboBox(self)
+		self._typeNameCombo = QtWidgets.QComboBox()
 		self._typeNameCombo.setIconSize(QtCore.QSize(45, 45))
 
 		i = 0
@@ -519,10 +519,10 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 		self._typeKeyEdit.textChanged.connect(self.typeKeyTyped)
 		self._typeKeyEdit.setText(iDeviceTypeKey)
 
-		aOKButton = QtWidgets.QPushButton('OK', self)
+		aOKButton = QtWidgets.QPushButton('OK')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)

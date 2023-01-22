@@ -165,7 +165,7 @@ class LmPhone:
 
 		aPhoneRingSet = QtWidgets.QHBoxLayout()
 		aPhoneRingSet.setSpacing(2)
-		self._ringToneCombo = QtWidgets.QComboBox(self)
+		self._ringToneCombo = QtWidgets.QComboBox()
 		self._ringToneCombo.addItem('-')
 		i = 1
 		while i <= 7:
@@ -843,7 +843,7 @@ class LmPhone:
 	### Add contact dialog
 	def addContactDialog(self, iDefaultContactData):
 		aAddContactDialog = EditContactDialog(False, iDefaultContactData, self)
-		if (aAddContactDialog.exec()):
+		if aAddContactDialog.exec():
 			aContact = aAddContactDialog.getContact()
 			if self.addLiveboxContact(aContact):
 				self._contactList.setSortingEnabled(False)
@@ -1017,34 +1017,34 @@ class EditContactDialog(QtWidgets.QDialog):
 
 		self._ready = False
 
-		aFirstNameEditLabel = QtWidgets.QLabel('First name', self)
-		self._firstNameEdit = QtWidgets.QLineEdit(self)
+		aFirstNameEditLabel = QtWidgets.QLabel('First name')
+		self._firstNameEdit = QtWidgets.QLineEdit()
 		self._firstNameEdit.textChanged.connect(self.textChanged)
 
-		aNameEditLabel = QtWidgets.QLabel('Name', self)
-		self._nameEdit = QtWidgets.QLineEdit(self)
+		aNameEditLabel = QtWidgets.QLabel('Name')
+		self._nameEdit = QtWidgets.QLineEdit()
 		self._nameEdit.textChanged.connect(self.textChanged)
 
 		aPhoneNbRegExp = QtCore.QRegularExpression(r'^[0-9+*#]{1}[0-9*#]{19}$')
-		aPhoneNbValidator = QtGui.QRegularExpressionValidator(aPhoneNbRegExp, self)
+		aPhoneNbValidator = QtGui.QRegularExpressionValidator(aPhoneNbRegExp)
 
-		aCellEditLabel = QtWidgets.QLabel('Mobile', self)
-		self._cellEdit = QtWidgets.QLineEdit(self)
+		aCellEditLabel = QtWidgets.QLabel('Mobile')
+		self._cellEdit = QtWidgets.QLineEdit()
 		self._cellEdit.setValidator(aPhoneNbValidator)
 		self._cellEdit.textChanged.connect(self.textChanged)
 
-		aHomeEditLabel = QtWidgets.QLabel('Home', self)
-		self._homeEdit = QtWidgets.QLineEdit(self)
+		aHomeEditLabel = QtWidgets.QLabel('Home')
+		self._homeEdit = QtWidgets.QLineEdit()
 		self._homeEdit.setValidator(aPhoneNbValidator)
 		self._homeEdit.textChanged.connect(self.textChanged)
 
-		aWorkEditLabel = QtWidgets.QLabel('Work', self)
-		self._workEdit = QtWidgets.QLineEdit(self)
+		aWorkEditLabel = QtWidgets.QLabel('Work')
+		self._workEdit = QtWidgets.QLineEdit()
 		self._workEdit.setValidator(aPhoneNbValidator)
 		self._workEdit.textChanged.connect(self.textChanged)
 
-		aRingToneEditLabel = QtWidgets.QLabel('Ring tone', self)
-		self._ringToneCombo = QtWidgets.QComboBox(self)
+		aRingToneEditLabel = QtWidgets.QLabel('Ring tone')
+		self._ringToneCombo = QtWidgets.QComboBox()
 		i = 1
 		while i <= 7:
 			self._ringToneCombo.addItem(str(i))
@@ -1065,10 +1065,10 @@ class EditContactDialog(QtWidgets.QDialog):
 		aEditGrid.addWidget(aRingToneEditLabel, 6, 0)
 		aEditGrid.addWidget(self._ringToneCombo, 6, 1)
 
-		self._okButton = QtWidgets.QPushButton('OK', self)
+		self._okButton = QtWidgets.QPushButton('OK')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel', self)
+		aCancelButton = QtWidgets.QPushButton('Cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar = QtWidgets.QHBoxLayout()
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)

@@ -976,19 +976,19 @@ class IPv6Dialog(QtWidgets.QDialog):
 		self.resize(850, 110 + LmConfig.DialogHeight(12))
 
 		# IPv6 info box
-		aIPv6EnabledLabel = QtWidgets.QLabel('IPv6 enabled:', self)
-		aIPv6Enabled = QtWidgets.QLabel(self)
+		aIPv6EnabledLabel = QtWidgets.QLabel('IPv6 enabled:')
+		aIPv6Enabled = QtWidgets.QLabel()
 		if iEnabled:
 			aIPv6Enabled.setPixmap(LmIcon.TickPixmap)
 		else:
 			aIPv6Enabled.setPixmap(LmIcon.CrossPixmap)
 
-		aAddrLabel = QtWidgets.QLabel('IPv6 address:', self)
-		aAddr = QtWidgets.QLineEdit(iAddr, self)
+		aAddrLabel = QtWidgets.QLabel('IPv6 address:')
+		aAddr = QtWidgets.QLineEdit(iAddr)
 		aAddr.setReadOnly(True)
 
-		aPrefixLabel = QtWidgets.QLabel('IPv6 prefix:', self)
-		aPrefix = QtWidgets.QLineEdit(iPrefix, self)
+		aPrefixLabel = QtWidgets.QLabel('IPv6 prefix:')
+		aPrefix = QtWidgets.QLineEdit(iPrefix)
 		aPrefix.setReadOnly(True)
 
 		aIPv6InfoGrid = QtWidgets.QGridLayout()
@@ -1028,7 +1028,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK', self)
+		aOKButton = QtWidgets.QPushButton('OK')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
@@ -1099,7 +1099,8 @@ class IPv6Dialog(QtWidgets.QDialog):
 							aResize = True
 						aIPv6Str += a
 					self._deviceTable.setItem(i, IPv6Col.IPv6, QtWidgets.QTableWidgetItem(aIPv6Str))
-					self._deviceTable.resizeRowToContents(i)
+					if aResize:
+						self._deviceTable.resizeRowToContents(i)
 
 					i += 1
 
