@@ -32,6 +32,8 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 - Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Console.exe)
 - MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor.dmg)
 - MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Console.dmg)
+- MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Silicon.dmg)
+- MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Silicon_Console.dmg)
 
 
 ## Discussion
