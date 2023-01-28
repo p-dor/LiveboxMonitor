@@ -36,6 +36,17 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 - MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/0.9.7/LiveboxMonitor_Silicon_Console.dmg)
 
 
+### Utilisation directe via les sources
+
+Installation :
+    `git clone https://github.com/p-dor/LiveboxMonitor.git
+    cd LiveboxMonitor
+    pip install -r requirements.txt`
+
+Lancement :
+    `python3 LiveboxMonitor.py`
+
+
 ## Discussion
 
 Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
