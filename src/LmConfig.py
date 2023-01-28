@@ -629,8 +629,10 @@ class LmConf:
 		try:
 			with open(aMacAddrTableFilePath) as aMacTableFile:
 				LmConf.MacAddrTable = json.load(aMacTableFile)
-		except:
-			LmTools.DisplayError('Wrong or inexistant {} file.'.format(LmConf.MacAddrTableFile))
+		except OSError:		# No file
+			LmConf.MacAddrTable = {}
+		except BaseException as e:
+			LmTools.DisplayError('Wrong {} file format, cannot use.'.format(LmConf.MacAddrTableFile))
 			LmConf.MacAddrTable = {}
 
 
