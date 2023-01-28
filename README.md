@@ -39,12 +39,16 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 ### Utilisation directe via les sources
 
 Installation :  
-    `git clone https://github.com/p-dor/LiveboxMonitor.git  
+```
+    git clone https://github.com/p-dor/LiveboxMonitor.git  
     cd LiveboxMonitor  
-    pip install -r requirements.txt`
+    pip install -r requirements.txt
+```
 
-Lancement :  
-    `python3 LiveboxMonitor.py`
+Lancement : 
+``` 
+    python3 LiveboxMonitor.py
+```
 
 
 ## Discussion
