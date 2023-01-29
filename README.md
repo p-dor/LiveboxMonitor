@@ -10,7 +10,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteur Wifi Orange connecté.
 
-**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus.
+**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus. Des retours positifs concernant le fonctionneement avec une Livebox 4 ont aussi été émis, mais aucune adaptation particulière n'a été faite, si des utilisateurs veulent contribuer à cette adaptation en me communiquant quelques informations merci de me contacter. 
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -49,6 +49,14 @@ Lancement :
 ``` 
     python3 LiveboxMonitor.py
 ```
+
+
+## Prise en main
+
+L'interface se veut intuitive mais il vaut mieux se reporter à la documentation pour comprendre certains comportements ou représentation.
+Les points importants à comprendre avant de commencer :
+- Il est normal que lors du premier lancement de l'application tous les appareils soient marqués comme inconnus (**UNKNOWN** en rouge). En effet un des buts de ce programme est d'identifier rapidement des appareils inconnus connectés sur le réseau grâce à une base de noms locale (le fichier `MacAddrTable.txt`). Il faut donc commencer par nommer chaque appareil que vous jugez légitime grâce au bouton `Assign Name...` de l'onglet `Device Infos`. Cette base locale constituera la référence de confiance de tous les appareils légitimes sur votre réseau. Le bouton `Assign name...` vous permettra aussi de facilement assigner le même nom que celui qui a été donné à la Livebox.
+- Il est normal que les statistiques réseau apparaissent et disparaissent. En effet le programme rafraîchit ces statistiques toutes les secondes (ou toutes les 30 secondes dans certains cas), et si d'un rafraîchissement à l'autre il n'y a pas eu de transfert la case devient vide. Ce choix a été fait pour permettre de mieux visualiser les cases non vides, là où il se passe quelque chose.
 
 
 ## Discussion
