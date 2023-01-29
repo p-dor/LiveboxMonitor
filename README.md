@@ -10,7 +10,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteur Wifi Orange connecté.
 
-**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus. Des retours positifs concernant le fonctionneement avec une Livebox 4 ont aussi été émis, mais aucune adaptation particulière n'a été faite, si des utilisateurs veulent contribuer à cette adaptation en me communiquant quelques informations merci de me contacter. 
+**AVERTISSEMENT** : le programme est actuellement dans une phase béta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus. Des retours positifs concernant le fonctionnement avec une Livebox 4 ont aussi été émis, mais aucune adaptation particulière n'a été faite, si des utilisateurs veulent contribuer à cette adaptation en me communiquant quelques informations merci de me contacter. 
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
