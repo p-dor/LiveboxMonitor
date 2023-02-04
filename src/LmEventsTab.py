@@ -12,6 +12,7 @@ from PyQt6 import QtWidgets
 
 from src import LmTools
 from src import LmConfig
+from src.LmConfig import LmConf
 from src.LmDeviceListTab import DSelCol
 
 
@@ -379,7 +380,7 @@ class LiveboxEventThread(QtCore.QObject):
 			if aResult.get('errors') is not None:
 				# Session has probably timed out on Livebox side, resign
 				LmTools.LogDebug(1, 'Errors in event request, resign')
-				if self._session.signin() <= 0:
+				if self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword) <= 0:
 					time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
 			else:
 				aEvents = aResult.get('events')
