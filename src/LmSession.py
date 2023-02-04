@@ -24,6 +24,8 @@ class LmSession:
 	### Constructor
 	def __init__(self, iUrl, iSessionName = 'LiveboxMonitor'):
 		self._url = iUrl
+		self._user = ''
+		self._password = ''
 		self._name = iSessionName
 		self._session = None
 		self._channelID = 0
@@ -40,6 +42,10 @@ class LmSession:
 
 		# Close current session if any
 		self.close()
+
+		# Save current user/password
+		self._user = iUser
+		self._password = iPassword
 
 		for i in range(2):
 			if not iNewSession and os.path.exists(aStateFilePath):
@@ -131,7 +137,7 @@ class LmSession:
 	def request(self, iPath, iArgs = None, iGet = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Check session is established
 		if self._session is None:
-			if self.signin() <= 0:
+			if self.signin(self._user, self._password) <= 0:
 				return { 'errors' : 'No session' }
 
 		# Build request path
@@ -220,7 +226,7 @@ class LmSession:
 	def eventRequest(self, iEvents, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Check session is established
 		if self._session is None:
-			if self.signin() <= 0:
+			if self.signin(self._user, self._password) <= 0:
 				return { 'errors' : 'No session' }
 
 		aData = { }
