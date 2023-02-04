@@ -259,15 +259,49 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+
+			# First get current schedule
 			try:
-				aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
-				if (aReply is not None) and (aReply.get('status', False)):
-					LmTools.DisplayStatus('Device ' + aKey + ' successfully blocked.')
-				else:
-					LmTools.DisplayError('Block query failed.')
+				aReply = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': aKey })
+				if (aReply is None) or (aReply.get('status') is None):
+					LmTools.DisplayError('Scheduler:getSchedule query failed.')
+					return
+				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Block query error.')
+				LmTools.DisplayError('Scheduler:getSchedule query error.')
+				return
+
+			# If has schedule override it, otherwise add it
+			if aHasSchedule:
+				try:
+					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
+					if (aReply is not None) and (aReply.get('status', False)):
+						LmTools.DisplayStatus('Device ' + aKey + ' successfully blocked.')
+					else:
+						LmTools.Error('Error: {}'.format(aReply))
+						LmTools.DisplayError('Block query failed.')
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					LmTools.DisplayError('Block query error.')
+			else:
+				try:
+					aInfos = {}
+					aInfos['base'] = 'Weekly'
+					aInfos['def'] = 'Enable'
+					aInfos['ID'] = aKey
+					aInfos['schedule'] = []
+					aInfos['enable'] = True
+					aInfos['override'] = 'Disable'
+					aReply = self._session.request('Scheduler:addSchedule', { 'type': 'ToD', 'info': aInfos })
+					if (aReply is not None) and (aReply.get('status', False)):
+						LmTools.DisplayStatus('Device ' + aKey + ' successfully blocked.')
+					else:
+						LmTools.Error('Error: {}'.format(aReply))
+						LmTools.DisplayError('Block query failed.')
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					LmTools.DisplayError('Block query error.')
 		else:
 			LmTools.DisplayError('Please select a device.')
 
@@ -277,15 +311,32 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+
+			# First get current schedule
 			try:
-				aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
-				if (aReply is not None) and (aReply.get('status', False)):
-					LmTools.DisplayStatus('Device ' + aKey + ' successfully unblocked.')
-				else:
-					LmTools.DisplayError('Unblock query failed.')
+				aReply = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': aKey })
+				if (aReply is None) or (aReply.get('status') is None):
+					LmTools.DisplayError('Scheduler:getSchedule query failed.')
+					return
+				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Unblock query error.')
+				LmTools.DisplayError('Scheduler:getSchedule query error.')
+				return
+
+			# If has schedule override it, otherwise no need to unlock
+			if aHasSchedule:
+				try:
+					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
+					if (aReply is not None) and (aReply.get('status', False)):
+						LmTools.DisplayStatus('Device ' + aKey + ' successfully unblocked.')
+					else:
+						LmTools.DisplayError('Unblock query failed.')
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					LmTools.DisplayError('Unblock query error.')
+			else:
+				LmTools.DisplayStatus('Device ' + aKey + ' is not blocked.')
 		else:
 			LmTools.DisplayError('Please select a device.')
 
