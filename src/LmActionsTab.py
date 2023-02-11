@@ -442,9 +442,9 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		self._historyTable.setColumnCount(4)
 		self._historyTable.setHorizontalHeaderLabels(('Boot Date', 'Boot Reason', 'Shutdown Date', 'Shutdown Reason'))
 		aHeader = self._historyTable.horizontalHeader()
-		aHeader.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		aHeader.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._historyTable.setColumnWidth(0, 125)
 		self._historyTable.setColumnWidth(1, 225)
@@ -498,11 +498,12 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 			aHeaders.append(s[WifiKey.AccessPoint])
 		self._statusTable.setHorizontalHeaderLabels((*aHeaders,))
 		aTableHeader = self._statusTable.horizontalHeader()
+		aTableHeader.setSectionsMovable(False)
+		aTableHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aTableHeader.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._statusTable.setColumnWidth(0, 200)
 		i = 1
 		while i <= len(self._status):
-			aTableHeader.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeMode.Fixed)
 			self._statusTable.setColumnWidth(i, 125)
 			i += 1
 		self._statusTable.verticalHeader().hide()
