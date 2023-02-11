@@ -121,6 +121,60 @@ def cleanURL(iURL):
 	return iURL
 
 
+# Collect error descriptions from Livebox replies
+def getErrorsFromLiveboxReply(iReply):
+	d = ''
+	if iReply is not None:
+		aErrors = iReply.get('errors')
+		if (aErrors is not None) and (type(aErrors).__name__ == 'list'):
+			for e in aErrors:
+				if len(d):
+					d += '.\n'
+				d += e.get('description', '')
+
+	return d
+
+
+# Determine device IPv4 address info from IPv4 list, return the struct, none if nothing found
+def determineIP(iDevice):
+	if iDevice is not None:
+		# Retrieve the list
+		aIPv4List = iDevice.get('IPv4Address', [])
+
+		# If only one, return it
+		if len(aIPv4List) == 1:
+			return aIPv4List[0]
+
+		# Retrieve the reference IP address, but it can be an IPv6
+		aRefIP = iDevice.get('IPAddress')
+		if aRefIP is not None:
+			if not isIPv4(aRefIP):
+				aRefIP = None
+
+		# If there's no ref, return the first reachable address, otherwise the first
+		if aRefIP is None:
+			for i in aIPv4List:
+				if i.get('Status', '') == 'reachable':
+					return i
+			if len(aIPv4List) > 1:
+				return aIPv4List[0]
+
+		# If we have a ref, search for it in the list
+		else:
+			for i in aIPv4List:
+				if aRefIP == i.get('Address', ''):
+					return i
+
+			# If nothing found, build artificially a struct
+			i = []
+			i['Address'] = aRefIP
+			i['Status'] = ''
+			i['Reserved'] = False
+			return i
+
+	return None
+
+
 
 # ################################ Formatting Tools ################################
 
