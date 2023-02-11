@@ -190,9 +190,10 @@ class MonitorTab(IntEnum):
 	LiveboxInfos = 1
 	DeviceInfos = 2
 	DeviceEvents = 3
-	Phone = 4
-	Actions = 5
-	Repeaters = 6  # Index of first, and others incrementally
+	Dhcp = 4
+	Phone = 5
+	Actions = 6
+	Repeaters = 7  # Index of first, and others incrementally
 
 
 
