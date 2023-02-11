@@ -37,8 +37,9 @@ class LmDeviceInfo:
 		self._infoDList.setHorizontalHeaderLabels(('Key', 'Name', 'MAC'))
 		self._infoDList.setColumnHidden(DSelCol.Key, True)
 		aHeader = self._infoDList.horizontalHeader()
-		aHeader.setSectionResizeMode(DSelCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
+		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoDList.setColumnWidth(DSelCol.Name, 200)
 		self._infoDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.SCROLL_BAR_ADJUST)
@@ -56,7 +57,8 @@ class LmDeviceInfo:
 		self._infoAList.setColumnCount(InfoCol.Count)
 		self._infoAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
 		aHeader = self._infoAList.horizontalHeader()
-		aHeader.setSectionResizeMode(InfoCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._infoAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoAList.setColumnWidth(InfoCol.Attribute, 200)
@@ -180,7 +182,6 @@ class LmDeviceInfo:
 		try:
 			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':setName', { 'name': iDeviceName })
 			if (aReply is not None) and (aReply.get('status', False)):
-				LmTools.DisplayStatus('Livebox name successfully assigned.')
 				return True
 			else:
 				LmTools.DisplayError('Set Livebox name query failed.')
@@ -195,7 +196,6 @@ class LmDeviceInfo:
 		try:
 			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':removeName', { 'source': 'webui' })
 			if (aReply is not None) and (aReply.get('status', False)):
-				LmTools.DisplayStatus('Livebox name successfully removed.')
 				return True
 			else:
 				LmTools.DisplayError('Remove Livebox name query failed.')
@@ -221,7 +221,6 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Devices.Device.' + aKey + ':setType', { 'type': aType })
 					if (aReply is not None) and (aReply.get('status', False)):
-						LmTools.DisplayStatus('Type successfully assigned.')
 						self.infoDeviceListClick()
 					else:
 						LmTools.DisplayError('Set type query failed.')
@@ -244,7 +243,6 @@ class LmDeviceInfo:
 						self._infoDList.setCurrentCell(-1, -1)
 						# Call event handler directly - in some (unknown) cases, the event is not raised
 						self.processDeviceDeletedEvent(aKey)
-						LmTools.DisplayStatus('Device ' + aKey + ' successfully removed.')
 					else:
 						LmTools.DisplayError('Destroy device query failed.')
 				except BaseException as e:
@@ -277,7 +275,7 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						LmTools.DisplayStatus('Device ' + aKey + ' successfully blocked.')
+						LmTools.DisplayStatus('Device ' + aKey + ' now blocked.')
 					else:
 						LmTools.Error('Error: {}'.format(aReply))
 						LmTools.DisplayError('Block query failed.')
@@ -295,7 +293,7 @@ class LmDeviceInfo:
 					aInfos['override'] = 'Disable'
 					aReply = self._session.request('Scheduler:addSchedule', { 'type': 'ToD', 'info': aInfos })
 					if (aReply is not None) and (aReply.get('status', False)):
-						LmTools.DisplayStatus('Device ' + aKey + ' successfully blocked.')
+						LmTools.DisplayStatus('Device ' + aKey + ' now blocked.')
 					else:
 						LmTools.Error('Error: {}'.format(aReply))
 						LmTools.DisplayError('Block query failed.')
@@ -329,7 +327,7 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						LmTools.DisplayStatus('Device ' + aKey + ' successfully unblocked.')
+						LmTools.DisplayStatus('Device ' + aKey + ' now unblocked.')
 					else:
 						LmTools.DisplayError('Unblock query failed.')
 				except BaseException as e:
@@ -401,10 +399,20 @@ class LmDeviceInfo:
 			for aType in aTypeList:
 				i = self.addInfoLine(self._infoAList, i, 'Type', aType.get('Type', '') + ' (' + aType.get('Source', '') + ')')
 
+		aActiveIPStruct = LmTools.determineIP(d)
+		if aActiveIPStruct is not None:
+			aActiveIP = aActiveIPStruct.get('Address', '')
+		else:
+			aActiveIP = ''
 		aIPv4List = d.get('IPv4Address', [])
 		if len(aIPv4List):
 			for aIPV4 in aIPv4List:
-				s = aIPV4.get('Address', '') + ' (' + aIPV4.get('Status', '') + ')'
+				aIP = aIPV4.get('Address', '')
+				s = aIP + ' ('
+				if (len(aActiveIP) > 0) and (aActiveIP == aIP):
+					s += 'active, '
+				s += aIPV4.get('Status', '') + ')'
+
 				if aIPV4.get('Reserved', False):
 					s += ' - Reserved'
 				i = self.addInfoLine(self._infoAList, i, 'IPv4 Address', s)
@@ -438,6 +446,7 @@ class LmDeviceInfo:
 		i = self.addInfoLine(self._infoAList, i, 'Model Name', d.get('ModelName'))
 		i = self.addInfoLine(self._infoAList, i, 'Software Version', d.get('SoftwareVersion'))
 		i = self.addInfoLine(self._infoAList, i, 'Hardware Version', d.get('HardwareVersion'))
+		i = self.addInfoLine(self._infoAList, i, 'DHCP Option 55', d.get('DHCPOption55'))
 
 		aSysSoftware = d.get('SSW')
 		if aSysSoftware is not None:
@@ -450,7 +459,14 @@ class LmDeviceInfo:
 
 		i = self.addInfoLine(self._infoAList, i, 'Wifi Signal Strength', LmTools.FmtInt(d.get('SignalStrength')))
 		i = self.addInfoLine(self._infoAList, i, 'Wifi Signal Noise Ratio', LmTools.FmtInt(d.get('SignalNoiseRatio')))
-		
+
+		aSysSoftwareStd = d.get('SSWSta')
+		if aSysSoftwareStd is not None:
+			i = self.addInfoLine(self._infoAList, i, 'Supported Standards', aSysSoftwareStd.get('SupportedStandards'))
+			i = self.addInfoLine(self._infoAList, i, 'Supports 2.4GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports24GHz')))
+			i = self.addInfoLine(self._infoAList, i, 'Supports 5GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports5GHz')))
+			i = self.addInfoLine(self._infoAList, i, 'Supports 6GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports6GHz')))
+
 		self.endTask()
 
 
@@ -596,20 +612,20 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 		return self._typeKeyEdit.text()
 
 
-	def typeNameSelected(self, aIndex):
+	def typeNameSelected(self, iIndex):
 		if not self._ignoreSignal:
 			self._ignoreSignal = True
-			self._typeKeyEdit.setText(LmConfig.DEVICE_TYPES[aIndex]['Key'])
+			self._typeKeyEdit.setText(LmConfig.DEVICE_TYPES[iIndex]['Key'])
 			self._ignoreSignal = False
 
 
-	def typeKeyTyped(self, aTypeKey):
+	def typeKeyTyped(self, iTypeKey):
 		if not self._ignoreSignal:
 			self._ignoreSignal = True
 			i = 0
 			aFound = False
 			for d in LmConfig.DEVICE_TYPES:
-				if d['Key'] == aTypeKey:
+				if d['Key'] == iTypeKey:
 					aFound = True
 					break
 				i += 1
