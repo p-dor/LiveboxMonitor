@@ -79,7 +79,8 @@ class LmRepeater:
 		aStatsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
 		aStatsList.setColumnHidden(StatsCol.Key, True)
 		aHeader = aStatsList.horizontalHeader()
-		aHeader.setSectionResizeMode(StatsCol.Name, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
@@ -174,7 +175,8 @@ class LmRepeater:
 		aRepeaterAList.setColumnCount(InfoCol.Count)
 		aRepeaterAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
 		aHeader = aRepeaterAList.horizontalHeader()
-		aHeader.setSectionResizeMode(InfoCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aRepeaterAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		aRepeaterAList.setColumnWidth(InfoCol.Attribute, 200)
@@ -245,11 +247,11 @@ class LmRepeater:
 			except:
 				aName = DEFAULT_REPEATER_NAME + str(aIndex + 1)
 
-			aIPv4Struct = iDevice.get('IPv4Address')
-			if (aIPv4Struct is not None) and (len(aIPv4Struct)):
-				aIPAddress = aIPv4Struct[0].get('Address', '')
-			else:
+			aIPStruct = LmTools.determineIP(iDevice)
+			if aIPStruct is None:
 				aIPAddress = None
+			else:
+				aIPAddress = aIPStruct.get('Address')
 
 			aActive = iDevice.get('Active', False)
 
@@ -495,6 +497,7 @@ class LmRepHandler:
 				LmTools.MouseCursor_Normal()
 				LmTools.DisplayError('Cannot connect to repeater ' + self._name + ' (' + self._ipAddr + ').')
 				self._session = None
+				self._signed = False
 				break
 
 			LmTools.MouseCursor_Normal()
@@ -508,6 +511,7 @@ class LmRepHandler:
 				LmConf.setRepeaterPassword(self._macAddr, aPassword)
 			else:
 				self._session = None
+				self._signed = False
 				break
 
 		self.setTabIcon()
@@ -522,7 +526,8 @@ class LmRepHandler:
 	def signout(self):
 		if self.isSigned():
 			self._signed = False
-			self._session.close()
+			if self._session is not None:
+				self._session.close()
 			self._session = None
 			self.setTabIcon()
 
@@ -567,11 +572,11 @@ class LmRepHandler:
 
 	### Process a device updated event
 	def processDeviceUpdatedEvent(self, iEvent):
-		aIPv4Struct = iEvent.get('IPv4Address')
-		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
+		aIPv4Struct = LmTools.determineIP(iEvent)
+		if aIPv4Struct is None:
 			aIPv4 = None
 		else:
-			aIPv4 = aIPv4Struct[0].get('Address', '')
+			aIPv4 = aIPv4Struct.get('Address')
 		if self._ipAddr != aIPv4:
 			self.processIPAddressEvent(aIPv4)
 
@@ -852,6 +857,8 @@ class LmRepHandler:
 		if d is not None:
 			s = d.get('status', False)
 			d = d.get('data')
+		else:
+			s = False
 		if (not s) or (d is None):
 			i = self.addInfoLine(i, 'Time', 'Time:getTime query error', LmTools.ValQual.Error)
 		else:
