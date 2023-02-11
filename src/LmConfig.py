@@ -751,7 +751,10 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aButtonBar, 1)
 
 		self._urlEdit.setFocus()
-		self.setWindowTitle('Livebox connection')
+		aTitle = 'Livebox connection'
+		if len(LmConf.Profiles) > 1:
+			aTitle += ' [' + LmConf.CurrProfile['Name'] + ']'
+		self.setWindowTitle(aTitle)
 
 		self._urlEdit.setText(iURL)
 
@@ -806,7 +809,10 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aButtonBar, 1)
 
 		self._userEdit.setFocus()
-		self.setWindowTitle('Wrong password')
+		aTitle = 'Wrong password'
+		if len(LmConf.Profiles) > 1:
+			aTitle += ' [' + LmConf.CurrProfile['Name'] + ']'
+		self.setWindowTitle(aTitle)
 
 		self._userEdit.setText(iUser)
 		self._passwordEdit.setText(iPassword)
