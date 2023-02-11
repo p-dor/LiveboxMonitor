@@ -237,24 +237,22 @@ class LmDhcp:
 	def dhcpSetupButtonClick(self):
 		# Retrieve current values
 		try:
-			d = self._session.request('DHCPv4.Server:getDHCPServerPool')
+			d = self._session.request('NMC:getLANIP')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
 		if d is not None:
-			d = d.get('status')
-		if d is not None:
-			d = d.get('default')
+			d = d.get('data')
 		if d is None:
 			LmTools.DisplayError('DHCP query failed.')
 			return
 
 		# Load current values
-		aDHCPEnabled = d.get('Enable')
-		aDHCPAddress = d.get('Server')
-		aDHCPMask = d.get('SubnetMask')
-		aDHCPMinAddress = d.get('MinAddress')
-		aDHCPMaxAddress = d.get('MaxAddress')
+		aDHCPEnabled = d.get('DHCPEnable')
+		aDHCPAddress = d.get('Address')
+		aDHCPMask = d.get('Netmask')
+		aDHCPMinAddress = d.get('DHCPMinAddress')
+		aDHCPMaxAddress = d.get('DHCPMaxAddress')
 		if ((aDHCPEnabled is None) or
 			(aDHCPAddress is None) or
 			(aDHCPMask is None) or
