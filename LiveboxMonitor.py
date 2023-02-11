@@ -181,7 +181,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	def signin(self):
 		while True:
 			self.startTask('Signing in...')
-			self._session = LmSession(LmConf.LiveboxURL)
+			self._session = LmSession(LmConf.LiveboxURL, 'LiveboxMonitor_' + LmConf.CurrProfile['Name'])
 			try:
 				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword)
 			except BaseException as e:
