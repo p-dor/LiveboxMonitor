@@ -26,6 +26,7 @@ from src import LmDeviceListTab
 from src import LmInfoTab
 from src import LmDeviceInfoTab
 from src import LmEventsTab
+from src import LmDhcpTab
 from src import LmPhoneTab
 from src import LmActionsTab
 from src import LmRepeaterTab
@@ -48,6 +49,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 										  LmInfoTab.LmInfo,
 										  LmDeviceInfoTab.LmDeviceInfo,
 										  LmEventsTab.LmEvents,
+										  LmDhcpTab.LmDhcp,
 										  LmPhoneTab.LmPhone,
 										  LmActionsTab.LmActions,
 										  LmRepeaterTab.LmRepeater):
@@ -91,6 +93,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self.createLiveboxInfoTab()
 		self.createDeviceInfoTab()
 		self.createEventsTab()
+		self.createDhcpTab()
 		self.createPhoneTab()
 		self.createActionsTab()
 
@@ -131,6 +134,12 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
+			elif iNewTabIndex == MonitorTab.Dhcp:
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
+				self.dhcpTabClick()
 			elif iNewTabIndex == MonitorTab.Phone:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
@@ -289,6 +298,11 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Switch to device events tab
 	def switchToDeviceEventsTab(self):
 		self._tabWidget.setCurrentIndex(MonitorTab.DeviceEvents)
+
+
+	### Switch to DHCP tab
+	def switchToDhcpTab(self):
+		self._tabWidget.setCurrentIndex(MonitorTab.Dhcp)
 
 
 	### Switch to phone tab
