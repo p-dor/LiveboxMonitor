@@ -12,6 +12,7 @@ from src import LmTools
 from src import LmConfig
 from src.LmConfig import LmConf
 from src.LmIcons import LmIcon
+from src.LmDhcpTab import DhcpCol
 
 
 # ################################ VARS & DEFS ################################
@@ -77,19 +78,11 @@ class LmDeviceList:
 		self._deviceList.setHorizontalHeaderLabels(('Key', 'T', 'Name', 'Livebox Name', 'MAC', 'IP', 'Link', 'A', 'Wifi', 'E', 'Down', 'Up', 'DRate', 'URate'))
 		self._deviceList.setColumnHidden(DevCol.Key, True)
 		aHeader = self._deviceList.horizontalHeader()
-		aHeader.setSectionResizeMode(DevCol.Type, QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DevCol.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.IP, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		aHeader.setSectionResizeMode(DevCol.Link, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DevCol.Active, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.Wifi, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.Event, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.Down, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.Up, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(DevCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._deviceList.setColumnWidth(DevCol.Type, 48)
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
@@ -382,15 +375,15 @@ class LmDeviceList:
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))
 		self._deviceList.setItem(iLine, DevCol.LBName, aLBName)
 
-		aIPv4Struct = iDevice.get('IPv4Address')
-		if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
+		aIPStruct = LmTools.determineIP(iDevice)
+		if aIPStruct is None:
 			aIPv4 = ''
 			aIPv4Reacheable = ''
 			aIPv4Reserved = False
 		else:
-			aIPv4 = aIPv4Struct[0].get('Address', '')
-			aIPv4Reacheable = aIPv4Struct[0].get('Status', '')
-			aIPv4Reserved = aIPv4Struct[0].get('Reserved', False)
+			aIPv4 = aIPStruct.get('Address', '')
+			aIPv4Reacheable = aIPStruct.get('Status', '')
+			aIPv4Reserved = aIPStruct.get('Reserved', False)
 		aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
 		self._deviceList.setItem(iLine, DevCol.IP, aIP)
 
@@ -441,6 +434,10 @@ class LmDeviceList:
 		aLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 		if aLine >= 0:
 			self.formatNameWidget(self._eventDList, aLine, iDeviceKey, DSelCol.Name)
+
+		aLine = self.findDeviceLine(self._dhcpDList, iDeviceKey)
+		if aLine >= 0:
+			self.formatNameWidget(self._dhcpDList, aLine, iDeviceKey, DhcpCol.Name)
 
 		self.repeaterUpdateDeviceName(iDeviceKey)
 
@@ -516,6 +513,22 @@ class LmDeviceList:
 					return i
 				i += 1
 		return -1
+
+
+	### Get list of devices MAC, Livebox name and IP
+	def getDeviceList(self):
+		aList = []
+		i = 0
+		n = self._deviceList.rowCount()
+		while (i < n):
+			aDevice = {}
+			aDevice['MAC'] = self._deviceList.item(i, DevCol.MAC).text()
+			aDevice['LBName'] = self._deviceList.item(i, DevCol.LBName).text()
+			aDevice['IP'] = self._deviceList.item(i, DevCol.IP).text()
+			aDevice['Active'] = self._deviceList.item(i, DevCol.Active).data(QtCore.Qt.ItemDataRole.UserRole) == 1
+			aList.append(aDevice)
+			i += 1
+		return aList
 
 
 	### Build link map
@@ -808,12 +821,30 @@ class LmDeviceList:
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
 			if iEvent.get('Family', '') == 'ipv4':
-				aIPv4 = iEvent.get('Address', '')
-				aIPv4Reacheable = iEvent.get('Status', '')
-				aIPv4Reserved = iEvent.get('Reserved', False)
-				aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
-				self._deviceList.setItem(aListLine, DevCol.IP, aIP)
-				self.repeaterIPAddressEvent(iDeviceKey, aIPv4)
+				# Get IP known by the program
+				aKnownIP = self._deviceList.item(aListLine, DevCol.IP).text()
+
+				# Get current device IP
+				try:
+					aReply = self._session.request('Devices.Device.' + iDeviceKey + ':getFirstParameter', { 'parameter': 'IPAddress' })
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					aReply = None
+				if aReply is None:
+					aCurrIP = aKnownIP
+				else:
+					aCurrIP = aReply.get('status', '')
+
+				# Proceed only if there's a change
+				if aKnownIP != aCurrIP:
+					# If current IP is the one of the event, take it, overwise wait for next device update event
+					aIPv4 = iEvent.get('Address', '')
+					if (LmTools.isIPv4(aIPv4)) and (aCurrIP == aIPv4):
+						aIPv4Reacheable = iEvent.get('Status', '')
+						aIPv4Reserved = iEvent.get('Reserved', False)
+						aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
+						self._deviceList.setItem(aListLine, DevCol.IP, aIP)
+						self.repeaterIPAddressEvent(iDeviceKey, aIPv4)
 
 
 	### Process a new device_added, eth_device_added or wifi_device_added event
@@ -1006,12 +1037,10 @@ class IPv6Dialog(QtWidgets.QDialog):
 		self._deviceTable.setHorizontalHeaderLabels(('Key', 'Name', 'Livebox Name', 'MAC', 'A', 'IPv4', 'IPv6'))
 		self._deviceTable.setColumnHidden(IPv6Col.Key, True)
 		aHeader = self._deviceTable.horizontalHeader()
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(IPv6Col.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(IPv6Col.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(IPv6Col.MAC, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(IPv6Col.Active, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(IPv6Col.IPv4, QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(IPv6Col.IPv6, QtWidgets.QHeaderView.ResizeMode.Fixed)
 		self._deviceTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._deviceTable.setColumnWidth(IPv6Col.Name, 300)
 		self._deviceTable.setColumnWidth(IPv6Col.LBName, 300)
@@ -1079,15 +1108,15 @@ class IPv6Dialog(QtWidgets.QDialog):
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
 					self._deviceTable.setItem(i, IPv6Col.Active, aActiveIcon)
 
-					aIPv4Struct = d.get('IPv4Address')
-					if (aIPv4Struct is None) or (len(aIPv4Struct) == 0):
+					aIPStruct = LmTools.determineIP(d)
+					if aIPStruct is None:
 						aIPv4 = ''
 						aIPv4Reacheable = ''
 						aIPv4Reserved = False
 					else:
-						aIPv4 = aIPv4Struct[0].get('Address', '')
-						aIPv4Reacheable = aIPv4Struct[0].get('Status', '')
-						aIPv4Reserved = aIPv4Struct[0].get('Reserved', False)
+						aIPv4 = aIPStruct.get('Address', '')
+						aIPv4Reacheable = aIPStruct.get('Status', '')
+						aIPv4Reserved = aIPStruct.get('Reserved', False)
 					aIP = p.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
 					self._deviceTable.setItem(i, IPv6Col.IPv4, aIP)
 
@@ -1105,7 +1134,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 					i += 1
 
 			self._deviceTable.sortItems(IPv6Col.Active, QtCore.Qt.SortOrder.DescendingOrder)
-			self._deviceTable.setSortingEnabled(False)
+			self._deviceTable.setSortingEnabled(True)
 
 
 
