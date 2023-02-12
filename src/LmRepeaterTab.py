@@ -29,6 +29,15 @@ DEFAULT_REPEATER_NAME = 'RW #'
 # Interfaces
 NET_INTF = []
 
+# LB4 Interfaces
+NET_INTF_LB4 = [
+	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
+]
+
 # LB5 Interfaces
 NET_INTF_LB5 = [
 	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
@@ -60,8 +69,10 @@ def SetRepeaterLiveboxModel(iModel):
 
 	if iModel == 'LB6':
 		NET_INTF = NET_INTF_LB6
-	else:
+	elif iModel == 'LB5':
 		NET_INTF = NET_INTF_LB5
+	else:
+		NET_INTF = NET_INTF_LB4
 
 
 

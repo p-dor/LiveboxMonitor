@@ -936,6 +936,8 @@ class LmInfo:
 			if s['Type'] == 'ont':
 				aOntIntf = s['Key']
 				break
+		if aOntIntf is None:
+			return
 
 		try:
 			d = self._session.request('NeMo.Intf.' + aOntIntf + ':getMIBs', { 'mibs': 'gpon' })

@@ -59,6 +59,21 @@ LIST_HEADER_STYLESHEET = ''
 # Interfaces
 NET_INTF = []
 
+# LB4 Interfaces
+NET_INTF_LB4 = [
+	{ 'Key': 'eth0',     'Name': 'WAN',          'Type': 'wan', 'SwapStats': False },
+	{ 'Key': 'dsl0',     'Name': 'xDSL',         'Type': 'wan', 'SwapStats': False },
+	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth1',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth2',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth3',     'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth4',     'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'wl0',      'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'eth6',     'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'wlguest2', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'wlguest5', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+]
+
 # LB5 Interfaces
 NET_INTF_LB5 = [
 	{ 'Key': 'veip0',    'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
@@ -91,6 +106,12 @@ NET_INTF_LB6 = [
 
 # Interface name mapping
 INTF_NAME_MAP = []
+
+# LB4 Interface name mapping
+INTF_NAME_MAP_LB4 = {
+	"Livebox":  {"eth0":"Eth1", "eth1":"Eth2", "eth2":"Eth3", "eth3":"Eth4"},
+	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
+}
 
 # LB5 Interface name mapping
 INTF_NAME_MAP_LB5 = {
@@ -320,9 +341,12 @@ def SetLiveboxModel(iModel):
 	if iModel == 'LB6':
 		NET_INTF = NET_INTF_LB6
 		INTF_NAME_MAP = INTF_NAME_MAP_LB6
-	else:
+	elif iModel == 'LB5':
 		NET_INTF = NET_INTF_LB5
 		INTF_NAME_MAP = INTF_NAME_MAP_LB5
+	else:
+		NET_INTF = NET_INTF_LB4
+		INTF_NAME_MAP = INTF_NAME_MAP_LB4
 
 
 

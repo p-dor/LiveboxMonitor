@@ -248,6 +248,8 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 				self._liveboxModel = 'LB6'
 			elif aModel == 'Livebox Fibre':
 				self._liveboxModel = 'LB5'
+			elif aModel == 'Livebox 4':
+				self._liveboxModel = 'LB4'
 			else:
 				self._liveboxModel = 'LBx'
 
