@@ -2,15 +2,16 @@
 
 L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox et détecter rapidement les intrusions,
-- Obtenir des statistiques détaillées de trafic,
+- Obtenir des statistiques détaillées de trafic, par appareil, global,
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
-- Avoir des détails sur les appareils qui se connectent (actifs ou non),
+- Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
+- Contrôler de manière fine les réglages du serveur DHCP,
 - Contrôler l'état du Wifi,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
 
-**AVERTISSEMENT** : le programme est actuellement dans une phase bêta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour une Livebox 6**, des tests supplémentaires avec une Livebox 6 seraient bienvenus. Des retours positifs concernant le fonctionnement avec une Livebox 4 ont aussi été émis, mais aucune adaptation particulière n'a été faite, si des utilisateurs veulent contribuer à cette adaptation en me communiquant quelques informations merci de me contacter. 
+**AVERTISSEMENT** : le programme est actuellement dans une phase bêta et nécessite des retours utilisateurs pour certifier qu'il fonctionne dans des contextes différents. Il a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4 et 6**, des tests supplémentaires avec une Livebox 4 ou 6 seraient bienvenus. 
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -55,8 +56,11 @@ Lancement :
 
 L'interface se veut intuitive mais il vaut mieux se reporter à la documentation pour comprendre certains comportements ou représentations.
 Les points importants à comprendre avant de commencer :
+- La connexion s'établit avec exactement les mêmes informations que pour accéder à l'interface Web de configuration de la Livebox. Pour l'URL il faut essayer http://livebox.home/, http://livebox/ ou http://192.168.1.1/. Pour l'utilisateur il faut laisser à la valeur par défaut `admin`. Et pour le mot de passe c'est soit ce que vous avez indiqué vous-même soit le mot de passe d'origine. Plus d'informations [ici](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-5-acceder-a-l-interface-de-configuration_292471-827404) pour la Livebox 5, ou [ici](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-6-acceder-a-l-interface-de-configuration_363963-897414) pour la Livebox 6.
 - Il est normal que lors du premier lancement de l'application tous les appareils soient marqués comme inconnus (**UNKNOWN** en rouge). En effet un des buts de ce programme est d'identifier rapidement des appareils inconnus connectés sur le réseau grâce à une base de noms locale (le fichier `MacAddrTable.txt`). Il faut donc commencer par nommer chaque appareil que vous jugez légitime grâce au bouton `Assign Name...` de l'onglet `Device Infos`. Cette base locale constituera la référence de confiance de tous les appareils légitimes sur votre réseau. Le bouton `Assign name...` vous permettra aussi de facilement assigner le même nom que celui qui a été donné à la Livebox.
 - Il est normal que les statistiques réseau apparaissent et disparaissent. En effet le programme rafraîchit ces statistiques toutes les secondes (ou toutes les 30 secondes dans certains cas), et si d'un rafraîchissement à l'autre il n'y a pas eu de transfert la case devient vide. Ce choix a été fait pour permettre de mieux visualiser les cases non-vides, là où il se passe quelque chose.
+- Toutes les colonnes dans le programme sont redimensionnables à la souris sauf certaines qui s'élargissent dynamiquement en fonction de la taille de la fenêtre. Donc, en fonction de la situation, vous pouvez soit redimensionner la colonne soit la fenêtre avec la souris pour ajuster la largeur d'une colonne.
+- On peut copier la valeur de n'importe quelle cellule de liste dans le presse-papiers. Pour cela il suffit de cliquer sur la cellule et de taper Ctrl-C.
 
 
 ## Discussion
@@ -134,8 +138,8 @@ Et toutes les informations sont accessibles par les boutons, chaque bouton rempl
 
 Liste permettant de surveiller l'état du trafic :
 - **Name** : nom de l'interface réseau. `Fiber` concerne tout le trafic WAN, c'est-à-dire externe entre la Livebox et internet. `LAN` tout le trafic interne transitant à travers la Livebox. Ensuite on dispose des statistiques par interface précise. Les interfaces `Guest` concernent le trafic du réseau Wifi invité, s'il est activé.
-- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue.
-- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
+- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
 - **DRate** : taux d'octets reçus par seconde par l'interface dans la dernière seconde.
 - **URate** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde.
 
@@ -179,7 +183,7 @@ Lorsqu'un appareil est sélectionné dans cette liste ses informations détaill�
 
 ### Boutons
 L'onglet `Device Infos` propose les boutons suivants :
-- **`Refresh`** : rafraîchi les informations affichées pour l'appareil sélectionné.
+- **`Refresh`** : rafraîchit les informations affichées pour l'appareil sélectionné.
 - **`Assign Name...`** : permet d'attribuer ou d'effacer le nom local (Monitor) et/ou le nom Livebox de l'appareil sélectionné.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
@@ -217,6 +221,44 @@ Un double clic sur un événement ou un clic sur le bouton **`Display Event`** p
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
 
 
+## DHCP - Contrôle fin du serveur DHCP
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP.png)
+
+### Baux statiques
+La liste des baux statiques configurés est affichée sur la gauche. Les deux domaines de réseau sont gérés :
+- `Home` : votre réseau privé, dont vous pouvez configurer sa plage d'IPs.
+- `Guest` : le réseau Wifi invité, qui a sa propre plage d'IPs (non-modifiable).
+La liste affiche les colonnes suivantes :
+- **Name** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assign Name...` de l'onglet `Device Infos`.
+- **Domain** : domaine d'assignation, `Home` ou `Guest`.
+- **MAC** : adresse MAC, aussi appelée adresse physique de l'appareil.
+- **IP** : adresse IP assignée statiquement à l'appareil.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des baux :
+- **`Refresh`** : rafraîchit la liste des baux statiques.
+- **`Add...`** : permet d'ajouter un bail.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP_AddBinding.png)
+    La liste des appareils proposés est triée et est composée d'un mélange des appareils connectés et ceux référencés dans le fichier local des adresses MAC. L'adresse MAC est directement déduite de l'appareil sélectionné mais on peut en taper une totalement à la main. Choisir le domaine réseau entre `Home` ou `Guest`, et une adresse IP libre sera automatiquement proposée mais elle ci reste bien sûr configurable. Attention un même appareil ne peut être configuré que sur un seul domaine, et s'il se connecte sur un domaine alors qu'un bail statique est configuré sur l'autre ce bail sera automatiquement supprimé.
+- **`Delete`** : supprime le bail sélectionné.
+
+### Informations DHCP détaillées
+La liste sur la droite affiche de nombreux détails sur le serveur DHCP:
+- La configuration détaillée des deux domaines `Home` et `Guest`.
+- Des détails sur le DHCPv4 ainsi que toutes les options DHCP envoyées et reçues.
+- Des détails sur le DHCPv6 ainsi que toutes les options DHCP envoyées et reçues.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des baux :
+- **`Refresh`** : rafraîchit la liste des informations DHCP.
+- **`DHCP Setup...`** : permet de configurer le serveur DHCP.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP_Setup.png)
+    Permet d'activer ou de désactiver le serveur, de changer l'adresse IP de la Livebox, de changer le masque de sous-réseau du serveur DHCP ainsi que la plage d'adresse IP pour le domaine `Home`.
+
+
 ## Phone - Liste des appels téléphoniques / liste des contacts
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone.png)
@@ -237,7 +279,7 @@ Un **double clic** sur un appel permet de facilement créer ou éditer le contac
 
 ### Boutons
 Les boutons suivants sont proposés pour gérer la liste des appels :
-- **`Refresh`** : rafraîchi la liste des appels.
+- **`Refresh`** : rafraîchit la liste des appels.
 - **`Delete`** : supprime l'appel sélectionné.
 - **`Delete all...`** : supprime tous les appels.
 
@@ -254,7 +296,7 @@ Un **double clic** sur un contact permet de facilement l'éditer.
 
 ### Boutons
 Les boutons suivants sont proposés pour gérer la liste des contacts :
-- **`Refresh`** : rafraîchi la liste des contacts.
+- **`Refresh`** : rafraîchit la liste des contacts.
 - **`Add..`** : permet de rajouter un contact. Attention aucun test de doublon n'est effectué.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone_Contact.png)
@@ -352,8 +394,8 @@ Et toutes les informations détaillées sont accessibles via la barre de boutons
 
 Liste permettant de surveiller l'état du trafic géré par le répéteur :
 - **Name** : nom de l'interface réseau. `LAN` concerne tout le trafic entre le répéteur et la Livebox. Ensuite on dispose des statistiques par interface précise (les deux prises Ethernet ainsi que les deux bandes Wifi).
-- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue.
-- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue.
+- **Down** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
+- **Up** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
 - **DRate** : taux d'octets reçus par seconde par l'interface dans la dernière seconde.
 - **URate** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde.
 
