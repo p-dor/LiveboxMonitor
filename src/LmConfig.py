@@ -1135,6 +1135,9 @@ class PrefsDialog(QtWidgets.QDialog):
 		i = QtWidgets.QListWidgetItem(p['Name'], self._profileList)
 		self._profileList.setCurrentItem(i)
 
+		# Set focus on profile's name
+		self._profileName.setFocus()
+
 
 	### Click on delete profile button
 	def delProfileButtonClick(self):
