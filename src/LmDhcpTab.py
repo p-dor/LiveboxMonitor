@@ -13,6 +13,9 @@ from src import LmConfig
 from src.LmIcons import LmIcon
 from src.LmConfig import LmConf
 from src.LmInfoTab import InfoCol
+from src.LmLanguages import GetDhcpLabel as lx
+from src.LmLanguages import GetDhcpBindingDialogLabel as lbx
+from src.LmLanguages import GetDhcpSetupDialogLabel as lsx
 
 
 # ################################ VARS & DEFS ################################
@@ -32,17 +35,22 @@ class LmDhcp:
 
 	### Create DHCP tab
 	def createDhcpTab(self):
-		self._dhcpTab = QtWidgets.QWidget()
+		self._dhcpTab = QtWidgets.QWidget(objectName = 'dhcpTab')
 
 		# DHCP binding list
-		self._dhcpDList = QtWidgets.QTableWidget()
+		self._dhcpDList = QtWidgets.QTableWidget(objectName = 'dhcpDList')
 		self._dhcpDList.setColumnCount(DhcpCol.Count)
-		self._dhcpDList.setHorizontalHeaderLabels(('Key', 'Name', 'Domain', 'MAC', 'IP'))
+		self._dhcpDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Domain'), lx('MAC'), lx('IP')))
 		self._dhcpDList.setColumnHidden(DhcpCol.Key, True)
 		aHeader = self._dhcpDList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(DhcpCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(DhcpCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DhcpCol.Domain, QtCore.Qt.Orientation.Horizontal, 'dlist_Domain', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DhcpCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DhcpCol.IP, QtCore.Qt.Orientation.Horizontal, 'dlist_IP', QtCore.Qt.ItemDataRole.UserRole)
 		self._dhcpDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._dhcpDList.setColumnWidth(DhcpCol.Name, 200)
 		self._dhcpDList.setColumnWidth(DhcpCol.Domain, 60)
@@ -59,13 +67,13 @@ class LmDhcp:
 		# DHCP binding button bar
 		aBindingButtonsBox = QtWidgets.QHBoxLayout()
 		aBindingButtonsBox.setSpacing(30)
-		aRefreshBindingButton = QtWidgets.QPushButton('Refresh')
+		aRefreshBindingButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refreshBinding')
 		aRefreshBindingButton.clicked.connect(self.refreshDhcpBindingButtonClick)
 		aBindingButtonsBox.addWidget(aRefreshBindingButton)
-		aAddBindingButton = QtWidgets.QPushButton('Add...')
+		aAddBindingButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addBinding')
 		aAddBindingButton.clicked.connect(self.addDhcpBindingButtonClick)
 		aBindingButtonsBox.addWidget(aAddBindingButton)
-		aDelBindingButton = QtWidgets.QPushButton('Delete')
+		aDelBindingButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'delBinding')
 		aDelBindingButton.clicked.connect(self.delDhcpBindingButtonClick)
 		aBindingButtonsBox.addWidget(aDelBindingButton)
 
@@ -76,13 +84,16 @@ class LmDhcp:
 		aBindingBox.addLayout(aBindingButtonsBox, 0)
 
 		# Attribute list
-		self._dhcpAList = QtWidgets.QTableWidget()
+		self._dhcpAList = QtWidgets.QTableWidget(objectName = 'dhcpAList')
 		self._dhcpAList.setColumnCount(InfoCol.Count)
-		self._dhcpAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
+		self._dhcpAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
 		aHeader = self._dhcpAList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
 		self._dhcpAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._dhcpAList.setColumnWidth(InfoCol.Attribute, 200)
 		self._dhcpAList.setColumnWidth(InfoCol.Value, 500)
@@ -94,10 +105,10 @@ class LmDhcp:
 		# Attribute button bar
 		aAttributeButtonsBox = QtWidgets.QHBoxLayout()
 		aAttributeButtonsBox.setSpacing(30)
-		aRefreshDhcpAttributeButton = QtWidgets.QPushButton('Refresh')
+		aRefreshDhcpAttributeButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refreshDhcpAttribute')
 		aRefreshDhcpAttributeButton.clicked.connect(self.refreshDhcpAttributeButtonClick)
 		aAttributeButtonsBox.addWidget(aRefreshDhcpAttributeButton)
-		aDhcpSetupButton = QtWidgets.QPushButton('DHCP Setup...')
+		aDhcpSetupButton = QtWidgets.QPushButton(lx('DHCP Setup...'), objectName = 'dhcpSetup')
 		aDhcpSetupButton.clicked.connect(self.dhcpSetupButtonClick)
 		aAttributeButtonsBox.addWidget(aDhcpSetupButton)
 
@@ -119,7 +130,8 @@ class LmDhcp:
 		aHBox.addLayout(aAttributeBox, 1)
 		self._dhcpTab.setLayout(aHBox)
 
-		self._tabWidget.addTab(self._dhcpTab, 'DHCP')
+		LmConfig.SetToolTips(self._dhcpTab, 'dhcp')
+		self._tabWidget.addTab(self._dhcpTab, lx('DHCP'))
 
 		# Set default values
 		self._homeIpServer = '192.168.1.1'
@@ -190,7 +202,7 @@ class LmDhcp:
 				return
 
 			if (aReply is not None) and ('status' in aReply):
-				aErrors = LmTools.getErrorsFromLiveboxReply(aReply)
+				aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 				if len(aErrors):
 					LmTools.DisplayError(aErrors)
 				self.refreshDhcpBindingButtonClick()
@@ -216,7 +228,7 @@ class LmDhcp:
 				return
 
 			if (aReply is not None) and ('status' in aReply):
-				aErrors = LmTools.getErrorsFromLiveboxReply(aReply)
+				aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 				if len(aErrors):
 					LmTools.DisplayError(aErrors)
 				self.refreshDhcpBindingButtonClick()
@@ -317,7 +329,7 @@ class LmDhcp:
 					return
 
 				if (aReply is not None) and ('status' in aReply):
-					aErrors = LmTools.getErrorsFromLiveboxReply(aReply)
+					aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 					if len(aErrors):
 						LmTools.DisplayError(aErrors)
 				else:
@@ -326,7 +338,7 @@ class LmDhcp:
 
 	### Load DHCP bindings
 	def loadDhcpBindings(self):
-		self.startTask('Getting DHCP bindings...')
+		self.startTask(lx('Getting DHCP bindings...'))
 		self._dhcpDList.setSortingEnabled(False)
 
 		# Home domain
@@ -414,10 +426,10 @@ class LmDhcp:
 
 	### Load DHCP infos list
 	def loadDhcpInfo(self):
-		self.startTask('Getting DHCP information...')
+		self.startTask(lx('Getting DHCP information...'))
 
 		i = 0
-		i = self.addTitleLine(self._dhcpAList, i, 'DHCP Home Information')
+		i = self.addTitleLine(self._dhcpAList, i, lx('DHCP Home Information'))
 
 		# Home domain + DHCPv6 infos
 		g = None
@@ -432,19 +444,19 @@ class LmDhcp:
 			g = d.get('guest')
 			d = d.get('default')
 		if d is None:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4', 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4'), 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Enabled', LmTools.FmtBool(d.get('Enable')))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Status', d.get('Status'))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Gateway', d.get('Server'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Enabled'), LmTools.FmtBool(d.get('Enable')))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Status'), d.get('Status'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Gateway'), d.get('Server'))
 			self._homeIpServer = d.get('Server')
-			i = self.addInfoLine(self._dhcpAList, i, 'Subnet Mask', d.get('SubnetMask'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('Subnet Mask'), d.get('SubnetMask'))
 			self._homeIpMask = d.get('SubnetMask')
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Start', d.get('MinAddress'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Start'), d.get('MinAddress'))
 			self._homeIpStart = d.get('MinAddress')
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 End', d.get('MaxAddress'))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Lease Time', LmTools.FmtTime(d.get('LeaseTime')))
-			i = self.addInfoLine(self._dhcpAList, i, 'DNS Servers', d.get('DNSServers'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 End'), d.get('MaxAddress'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Lease Time'), LmTools.FmtTime(d.get('LeaseTime')))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DNS Servers'), d.get('DNSServers'))
 
 		try:
 			d = self._session.request('DHCPv6.Server:getDHCPv6ServerStatus')
@@ -454,9 +466,9 @@ class LmDhcp:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv6', 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv6'), 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv6 Status', d)
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv6 Status'), d)
 
 		try:
 			d = self._session.request('DHCPv6.Server:getPDPrefixInformation')
@@ -466,7 +478,7 @@ class LmDhcp:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv6', 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv6'), 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
 		else:
 			if (type(d).__name__ == 'list') and len(d):
 				aPrefix = d[0].get('Prefix')
@@ -474,27 +486,27 @@ class LmDhcp:
 					aPrefixLen = d[0].get('PrefixLen')
 					if aPrefixLen is not None:
 						aPrefix += '/' + str(aPrefixLen)
-					i = self.addInfoLine(self._dhcpAList, i, 'DHCPv6 Prefix', aPrefix)
+					i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv6 Prefix'), aPrefix)
 
 		# Guest domain
 		if g is not None:
-			i = self.addTitleLine(self._dhcpAList, i, 'DHCP Guest Information')
+			i = self.addTitleLine(self._dhcpAList, i, lx('DHCP Guest Information'))
 
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Enabled', LmTools.FmtBool(g.get('Enable')))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Status', g.get('Status'))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Gateway', g.get('Server'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Enabled'), LmTools.FmtBool(g.get('Enable')))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Status'), g.get('Status'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Gateway'), g.get('Server'))
 			self._guestIpServer = g.get('Server')
-			i = self.addInfoLine(self._dhcpAList, i, 'Subnet Mask', g.get('SubnetMask'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('Subnet Mask'), g.get('SubnetMask'))
 			self._guestIpMask = g.get('SubnetMask')
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Start', g.get('MinAddress'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Start'), g.get('MinAddress'))
 			self._guestIpStart = g.get('MinAddress')
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 End', g.get('MaxAddress'))
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4 Lease Time', LmTools.FmtTime(g.get('LeaseTime')))
-			i = self.addInfoLine(self._dhcpAList, i, 'DNS Servers', g.get('DNSServers'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 End'), g.get('MaxAddress'))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4 Lease Time'), LmTools.FmtTime(g.get('LeaseTime')))
+			i = self.addInfoLine(self._dhcpAList, i, lx('DNS Servers'), g.get('DNSServers'))
 
 
 		# DHCPv4
-		i = self.addTitleLine(self._dhcpAList, i, 'DHCPv4')
+		i = self.addTitleLine(self._dhcpAList, i, lx('DHCPv4'))
 
 		try:
 			d = self._session.request('NeMo.Intf.data:getMIBs', { 'mibs': 'dhcp dhcpv6' })
@@ -504,38 +516,38 @@ class LmDhcp:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._dhcpAList, i, 'DHCPv4', 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv4'), 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
 		else:
 			p = d.get('dhcp')
 
 			if p is not None:
 				p = p.get('dhcp_data')
 			if p is not None:
-				i = self.addInfoLine(self._dhcpAList, i, 'Status', p.get('DHCPStatus'))
-				i = self.addInfoLine(self._dhcpAList, i, 'Lease Time', LmTools.FmtTime(p.get('LeaseTime')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Lease Time Remaining', LmTools.FmtTime(p.get('LeaseTimeRemaining')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Check Authentication', LmTools.FmtBool(p.get('CheckAuthentication')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Authentication Information', p.get('AuthenticationInformation'))
-				i = self.loadDhcpInfoOptions('DHCPv4 Sent Options', i, p.get('SentOption'))
-				i = self.loadDhcpInfoOptions('DHCPv4 Received Options', i, p.get('ReqOption'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Status'), p.get('DHCPStatus'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Lease Time'), LmTools.FmtTime(p.get('LeaseTime')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Lease Time Remaining'), LmTools.FmtTime(p.get('LeaseTimeRemaining')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Check Authentication'), LmTools.FmtBool(p.get('CheckAuthentication')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Authentication Information'), p.get('AuthenticationInformation'))
+				i = self.loadDhcpInfoOptions(lx('DHCPv4 Sent Options'), i, p.get('SentOption'))
+				i = self.loadDhcpInfoOptions(lx('DHCPv4 Received Options'), i, p.get('ReqOption'))
 
 			# DHCPv6
-			i = self.addTitleLine(self._dhcpAList, i, 'DHCPv6')
+			i = self.addTitleLine(self._dhcpAList, i, lx('DHCPv6'))
 
 			p = d.get('dhcpv6')
 
 			if p is not None:
 				p = p.get('dhcpv6_data')
 			if p is not None:
-				i = self.addInfoLine(self._dhcpAList, i, 'Status', p.get('DHCPStatus'))
-				i = self.addInfoLine(self._dhcpAList, i, 'DUID', p.get('DUID'))
-				i = self.addInfoLine(self._dhcpAList, i, 'Request Addresses', LmTools.FmtBool(p.get('RequestAddresses')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Request Prefixes', LmTools.FmtBool(p.get('RequestPrefixes')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Requested Options', p.get('RequestedOptions'))
-				i = self.addInfoLine(self._dhcpAList, i, 'Check Authentication', LmTools.FmtBool(p.get('CheckAuthentication')))
-				i = self.addInfoLine(self._dhcpAList, i, 'Authentication Information', p.get('AuthenticationInfo'))
-				i = self.loadDhcpInfoOptions('DHCPv6 Sent Options', i, p.get('SentOption'))
-				i = self.loadDhcpInfoOptions('DHCPv6 Received Options', i, p.get('ReceivedOption'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Status'), p.get('DHCPStatus'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('DUID'), p.get('DUID'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Request Addresses'), LmTools.FmtBool(p.get('RequestAddresses')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Request Prefixes'), LmTools.FmtBool(p.get('RequestPrefixes')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Requested Options'), p.get('RequestedOptions'))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Check Authentication'), LmTools.FmtBool(p.get('CheckAuthentication')))
+				i = self.addInfoLine(self._dhcpAList, i, lx('Authentication Information'), p.get('AuthenticationInfo'))
+				i = self.loadDhcpInfoOptions(lx('DHCPv6 Sent Options'), i, p.get('SentOption'))
+				i = self.loadDhcpInfoOptions(lx('DHCPv6 Received Options'), i, p.get('ReceivedOption'))
 
 		self.endTask()
 
@@ -565,27 +577,27 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 		self._guestIpSuggest = iGuestIpSuggest
 		self._ignoreSignal = False
 
-		aDeviceLabel = QtWidgets.QLabel('Device:')
-		self._deviceCombo = QtWidgets.QComboBox()
+		aDeviceLabel = QtWidgets.QLabel(lbx('Device:'), objectName = 'deviceLabel')
+		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
 		self.loadDeviceList()
 		for d in self._comboDeviceList:
 			self._deviceCombo.addItem(d['Name'])
 		self._deviceCombo.activated.connect(self.deviceSelected)
 
-		aMacLabel = QtWidgets.QLabel('MAC address:')
-		self._macEdit = QtWidgets.QLineEdit()
+		aMacLabel = QtWidgets.QLabel(lbx('MAC address:'), objectName = 'macLabel')
+		self._macEdit = QtWidgets.QLineEdit(objectName = 'macEdit')
 		aMacRegExp = QtCore.QRegularExpression(r'^(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})$')
 		aMacValidator = QtGui.QRegularExpressionValidator(aMacRegExp)
 		self._macEdit.setValidator(aMacValidator)
 		self._macEdit.textChanged.connect(self.macTyped)
 
-		aDomainLabel = QtWidgets.QLabel('Domain:')
-		self._domainCombo = QtWidgets.QComboBox()
+		aDomainLabel = QtWidgets.QLabel(lbx('Domain:'), objectName = 'domainLabel')
+		self._domainCombo = QtWidgets.QComboBox(objectName = 'domainCombo')
 		self._domainCombo.addItems(['Home', 'Guest'])
 		self._domainCombo.activated.connect(self.domainSelected)
 
-		aIPLabel = QtWidgets.QLabel('IP address:')
-		self._ipEdit = QtWidgets.QLineEdit()
+		aIPLabel = QtWidgets.QLabel(lbx('IP address:'), objectName = 'ipLabel')
+		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
 		aIpRegExp = QtCore.QRegularExpression(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
 		self._ipEdit.setValidator(aIpValidator)
@@ -602,10 +614,10 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 		aGrid.addWidget(aIPLabel, 4, 0)
 		aGrid.addWidget(self._ipEdit, 4, 1)
 
-		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton = QtWidgets.QPushButton(lbx('OK'), objectName = 'ok')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lbx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -617,7 +629,9 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('Add DHCP binding')
+		LmConfig.SetToolTips(self, 'dbinding')
+
+		self.setWindowTitle(lbx('Add DHCP binding'))
 		self.suggestIP()
 		self.setOkButtonState()
 		self.setModal(True)
@@ -648,7 +662,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
 		# Insert unknown device at the beginning
 		aDevice = {}
-		aDevice['Name'] = '-Unknown-'
+		aDevice['Name'] = lbx('-Unknown-')
 		aDevice['MAC'] = ''
 		self._comboDeviceList.insert(0, aDevice)
 
@@ -737,7 +751,7 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		super(DhcpSetupDialog, self).__init__(iParent)
 		self.resize(300, 225)
 
-		self._enableCheckBox = QtWidgets.QCheckBox('DHCP Enabled')
+		self._enableCheckBox = QtWidgets.QCheckBox(lsx('DHCP Enabled'), objectName = 'enableCheckbox')
 		if iEnabled:
 			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
@@ -746,26 +760,26 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aIpRegExp = QtCore.QRegularExpression(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
 
-		aLiveBoxIpLabel = QtWidgets.QLabel('Livebox IP address:')
-		self._liveboxIpEdit = QtWidgets.QLineEdit()
+		aLiveboxIpLabel = QtWidgets.QLabel(lsx('Livebox IP address:'), objectName = 'liveboxIpLabel')
+		self._liveboxIpEdit = QtWidgets.QLineEdit(objectName = 'liveboxIpEdit')
 		self._liveboxIpEdit.setValidator(aIpValidator)
 		self._liveboxIpEdit.setText(iAddress)
 		self._liveboxIpEdit.textChanged.connect(self.textTyped)
 
-		aMaskLabel = QtWidgets.QLabel('Subnet mask:')
-		self._maskEdit = QtWidgets.QLineEdit()
+		aMaskLabel = QtWidgets.QLabel(lsx('Subnet mask:'), objectName = 'maskLabel')
+		self._maskEdit = QtWidgets.QLineEdit(objectName = 'maskEdit')
 		self._maskEdit.setValidator(aIpValidator)
 		self._maskEdit.setText(iMask)
 		self._maskEdit.textChanged.connect(self.textTyped)
 
-		aMinIpLabel = QtWidgets.QLabel('DHCP start IP:')
-		self._minEdit = QtWidgets.QLineEdit()
+		aMinIpLabel = QtWidgets.QLabel(lsx('DHCP start IP:'), objectName = 'minLabel')
+		self._minEdit = QtWidgets.QLineEdit(objectName = 'minEdit')
 		self._minEdit.setValidator(aIpValidator)
 		self._minEdit.setText(iMin)
 		self._minEdit.textChanged.connect(self.textTyped)
 
-		aMaxIpLabel = QtWidgets.QLabel('DHCP end IP:')
-		self._maxEdit = QtWidgets.QLineEdit()
+		aMaxIpLabel = QtWidgets.QLabel(lsx('DHCP end IP:'), objectName = 'maxLabel')
+		self._maxEdit = QtWidgets.QLineEdit(objectName = 'maxEdit')
 		self._maxEdit.setValidator(aIpValidator)
 		self._maxEdit.setText(iMax)
 		self._maxEdit.textChanged.connect(self.textTyped)
@@ -773,7 +787,7 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aGrid = QtWidgets.QGridLayout()
 		aGrid.setSpacing(10)
 		aGrid.addWidget(self._enableCheckBox, 1, 0)
-		aGrid.addWidget(aLiveBoxIpLabel, 2, 0)
+		aGrid.addWidget(aLiveboxIpLabel, 2, 0)
 		aGrid.addWidget(self._liveboxIpEdit, 2, 1)
 		aGrid.addWidget(aMaskLabel, 3, 0)
 		aGrid.addWidget(self._maskEdit, 3, 1)
@@ -782,10 +796,10 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aGrid.addWidget(aMaxIpLabel, 5, 0)
 		aGrid.addWidget(self._maxEdit, 5, 1)
 
-		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton = QtWidgets.QPushButton(lsx('OK'), objectName = 'ok')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lsx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -797,7 +811,9 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('DHCP Setup')
+		LmConfig.SetToolTips(self, 'dsetup')
+
+		self.setWindowTitle(lsx('DHCP Setup'))
 		self.setOkButtonState()
 		self.setModal(True)
 		self.show()

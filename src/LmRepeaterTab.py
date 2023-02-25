@@ -18,6 +18,7 @@ from src.LmSession import LmSession
 from src.LmInfoTab import InfoCol
 from src.LmInfoTab import StatsCol
 from src.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
+from src.LmLanguages import GetRepeaterLabel as lx
 
 
 # ################################ VARS & DEFS ################################
@@ -82,12 +83,12 @@ class LmRepeater:
 
 	### Create Repeater tab
 	def createRepeaterTab(self, iRepeater):
-		iRepeater._tab = QtWidgets.QWidget()
+		iRepeater._tab = QtWidgets.QWidget(objectName = 'repeaterTab')
 
 		# Statistics list
-		aStatsList = QtWidgets.QTableWidget()
+		aStatsList = QtWidgets.QTableWidget(objectName = 'statsList')
 		aStatsList.setColumnCount(StatsCol.Count)
-		aStatsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
+		aStatsList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Rx'), lx('Tx'), lx('RxRate'), lx('TxRate')))
 		aStatsList.setColumnHidden(StatsCol.Key, True)
 		aHeader = aStatsList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
@@ -96,6 +97,12 @@ class LmRepeater:
 		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(StatsCol.Name, QtCore.Qt.Orientation.Horizontal, 'stats_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.Down, QtCore.Qt.Orientation.Horizontal, 'stats_Rx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.Up, QtCore.Qt.Orientation.Horizontal, 'stats_Tx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'stats_RxRate', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'stats_TxRate', QtCore.Qt.ItemDataRole.UserRole)
 		aStatsList.setColumnWidth(StatsCol.Name, 100)
 		aStatsList.setColumnWidth(StatsCol.Down, 65)
 		aStatsList.setColumnWidth(StatsCol.Up, 65)
@@ -123,11 +130,11 @@ class LmRepeater:
 		aButtonsSet1 = QtWidgets.QHBoxLayout()
 		aButtonsSet1.setSpacing(20)
 
-		aWifiOnButton = QtWidgets.QPushButton('Wifi ON')
+		aWifiOnButton = QtWidgets.QPushButton(lx('Wifi ON'), objectName = 'wifiOn')
 		aWifiOnButton.clicked.connect(iRepeater.wifiOnButtonClick)
 		aButtonsSet1.addWidget(aWifiOnButton)
 
-		aWifiOffButton = QtWidgets.QPushButton('Wifi OFF')
+		aWifiOffButton = QtWidgets.QPushButton(lx('Wifi OFF'), objectName = 'wifiOff')
 		aWifiOffButton.clicked.connect(iRepeater.wifiOffButtonClick)
 		aButtonsSet1.addWidget(aWifiOffButton)
 
@@ -135,11 +142,11 @@ class LmRepeater:
 		aButtonsSet2 = QtWidgets.QHBoxLayout()
 		aButtonsSet2.setSpacing(20)
 
-		aSchedulerOnButton = QtWidgets.QPushButton('Wifi Scheduler ON')
+		aSchedulerOnButton = QtWidgets.QPushButton(lx('Wifi Scheduler ON'), objectName = 'schedulerOn')
 		aSchedulerOnButton.clicked.connect(iRepeater.schedulerOnButtonClick)
 		aButtonsSet2.addWidget(aSchedulerOnButton)
 
-		aSchedulerOffButton = QtWidgets.QPushButton('Wifi Scheduler OFF')
+		aSchedulerOffButton = QtWidgets.QPushButton(lx('Wifi Scheduler OFF'), objectName = 'schedulerOff')
 		aSchedulerOffButton.clicked.connect(iRepeater.schedulerOffButtonClick)
 		aButtonsSet2.addWidget(aSchedulerOffButton)
 
@@ -147,11 +154,11 @@ class LmRepeater:
 		aButtonsSet3 = QtWidgets.QHBoxLayout()
 		aButtonsSet3.setSpacing(20)
 
-		aRebootRepeaterButton = QtWidgets.QPushButton('Reboot Repeater...')
+		aRebootRepeaterButton = QtWidgets.QPushButton(lx('Reboot Repeater...'), objectName = 'rebootRepeater')
 		aRebootRepeaterButton.clicked.connect(iRepeater.rebootRepeaterButtonClick)
 		aButtonsSet3.addWidget(aRebootRepeaterButton)
 
-		aRebootHistoryButton = QtWidgets.QPushButton('Reboot History...')
+		aRebootHistoryButton = QtWidgets.QPushButton(lx('Reboot History...'), objectName = 'rebootHistory')
 		aRebootHistoryButton.clicked.connect(iRepeater.rebootHistoryButtonClick)
 		aButtonsSet3.addWidget(aRebootHistoryButton)
 
@@ -159,12 +166,12 @@ class LmRepeater:
 		aButtonsSet4 = QtWidgets.QHBoxLayout()
 		aButtonsSet4.setSpacing(20)
 
-		aResignButton = QtWidgets.QPushButton('Resign...')
+		aResignButton = QtWidgets.QPushButton(lx('Resign...'), objectName = 'resign')
 		aResignButton.clicked.connect(iRepeater.resignButtonClick)
 		aButtonsSet4.addWidget(aResignButton)
 
 		# Action buttons group box
-		aGroupBox = QtWidgets.QGroupBox('Actions')
+		aGroupBox = QtWidgets.QGroupBox(lx('Actions'), objectName = 'actionsGroup')
 		aGroupBoxLayout = QtWidgets.QVBoxLayout()
 		aGroupBoxLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aGroupBoxLayout.setSpacing(20)
@@ -182,13 +189,16 @@ class LmRepeater:
 		aLeftBox.addWidget(aGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# Attribute list
-		aRepeaterAList = QtWidgets.QTableWidget()
+		aRepeaterAList = QtWidgets.QTableWidget(objectName = 'repeaterAList')
 		aRepeaterAList.setColumnCount(InfoCol.Count)
-		aRepeaterAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
+		aRepeaterAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
 		aHeader = aRepeaterAList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
 		aRepeaterAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		aRepeaterAList.setColumnWidth(InfoCol.Attribute, 200)
 		aRepeaterAList.setColumnWidth(InfoCol.Value, 600)
@@ -208,15 +218,15 @@ class LmRepeater:
 		aButtonsBox = QtWidgets.QHBoxLayout()
 		aButtonsBox.setSpacing(10)
 
-		aRepeaterInfoButton = QtWidgets.QPushButton('Repeater Infos')
+		aRepeaterInfoButton = QtWidgets.QPushButton(lx('Repeater Infos'), objectName = 'repeaterInfo')
 		aRepeaterInfoButton.clicked.connect(iRepeater.repeaterInfoButtonClick)
 		aButtonsBox.addWidget(aRepeaterInfoButton)
 
-		aWifiInfoButton = QtWidgets.QPushButton('Wifi Infos')
+		aWifiInfoButton = QtWidgets.QPushButton(lx('Wifi Infos'), objectName = 'wifiInfo')
 		aWifiInfoButton.clicked.connect(iRepeater.wifiInfoButtonClick)
 		aButtonsBox.addWidget(aWifiInfoButton)
 
-		aLanInfoButton = QtWidgets.QPushButton('LAN Infos')
+		aLanInfoButton = QtWidgets.QPushButton(lx('LAN Infos'), objectName = 'lanInfo')
 		aLanInfoButton.clicked.connect(iRepeater.lanInfoButtonClick)
 		aButtonsBox.addWidget(aLanInfoButton)
 
@@ -225,7 +235,7 @@ class LmRepeater:
 		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 		aButtonsBox.addWidget(aSeparator)
 
-		aExportInfoButton = QtWidgets.QPushButton('Export...')
+		aExportInfoButton = QtWidgets.QPushButton(lx('Export...'), objectName = 'exportInfo')
 		aExportInfoButton.clicked.connect(iRepeater.exportInfoButtonClick)
 		aButtonsBox.addWidget(aExportInfoButton)
 
@@ -236,6 +246,7 @@ class LmRepeater:
 		aVBox.addLayout(aButtonsBox, 1)
 		iRepeater._tab.setLayout(aVBox)
 
+		LmConfig.SetToolTips(iRepeater._tab, 'repeater')
 		self._tabWidget.addTab(iRepeater._tab, iRepeater._name)
 		iRepeater.setTabIcon()
 
@@ -258,7 +269,7 @@ class LmRepeater:
 			except:
 				aName = DEFAULT_REPEATER_NAME + str(aIndex + 1)
 
-			aIPStruct = LmTools.determineIP(iDevice)
+			aIPStruct = LmTools.DetermineIP(iDevice)
 			if aIPStruct is None:
 				aIPAddress = None
 			else:
@@ -299,7 +310,7 @@ class LmRepeater:
 
 	### Sign in to all repeaters
 	def signinRepeaters(self):
-		self.startTask('Signing in to repeaters...')
+		self.startTask(lx('Signing in to repeaters...'))
 		for r in self._repeaters:
 			r.signin()
 		self.endTask()
@@ -512,8 +523,8 @@ class LmRepHandler:
 				break
 
 			LmTools.MouseCursor_Normal()
-			aPassword, aOK = QtWidgets.QInputDialog.getText(self._app, 'Wrong repeater password',
-															'Please enter password for repeater ' + self._name + ' (' + self._ipAddr + '):',
+			aPassword, aOK = QtWidgets.QInputDialog.getText(self._app, lx('Wrong repeater password'),
+															lx('Please enter password for repeater {0} ({1}):').format(self._name, self._ipAddr),
 															QtWidgets.QLineEdit.EchoMode.Password,
 															text = aPassword)
 			if aOK:
@@ -583,7 +594,7 @@ class LmRepHandler:
 
 	### Process a device updated event
 	def processDeviceUpdatedEvent(self, iEvent):
-		aIPv4Struct = LmTools.determineIP(iEvent)
+		aIPv4Struct = LmTools.DetermineIP(iEvent)
 		if aIPv4Struct is None:
 			aIPv4 = None
 		else:
@@ -619,7 +630,7 @@ class LmRepHandler:
 	### Click on Repeater infos button
 	def repeaterInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask('Getting repeater information...')
+			self._app.startTask(lx('Getting repeater information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
@@ -634,7 +645,7 @@ class LmRepHandler:
 	### Click on Wifi infos button
 	def wifiInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask('Getting Wifi information...')
+			self._app.startTask(lx('Getting Wifi information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
@@ -649,7 +660,7 @@ class LmRepHandler:
 	### Click on LAN infos button
 	def lanInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask('Getting LAN information...')
+			self._app.startTask(lx('Getting LAN information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
@@ -664,7 +675,7 @@ class LmRepHandler:
 	### Click on Export infos button
 	def exportInfoButtonClick(self):
 		if self.isSigned():
-			aFileName = QtWidgets.QFileDialog.getSaveFileName(self._app, 'Save File', self._name + ' Infos.txt', '*.txt')
+			aFileName = QtWidgets.QFileDialog.getSaveFileName(self._app, lx('Save File'), lx('{} Infos.txt').format(self._name), '*.txt')
 			aFileName = aFileName[0]
 			if aFileName == '':
 				return
@@ -676,7 +687,7 @@ class LmRepHandler:
 				LmTools.DisplayError('Cannot create the file.')
 				return
 
-			self._app.startTask('Exporting all information...')
+			self._app.startTask(lx('Exporting all information...'))
 
 			i = 0
 			i = self.loadRepeaterInfo(i)
@@ -840,7 +851,7 @@ class LmRepHandler:
 
 	### Load Repeater infos
 	def loadRepeaterInfo(self, iIndex = 0):
-		i = self.addTitleLine(iIndex, 'Repeater Information')
+		i = self.addTitleLine(iIndex, lx('Repeater Information'))
 
 		try:
 			d = self._session.request('DeviceInfo:get')
@@ -850,15 +861,15 @@ class LmRepHandler:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(i, 'Repeater Infos', 'DeviceInfo:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Repeater Infos'), 'DeviceInfo:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'Model Name', d.get('ModelName'))
-			i = self.addInfoLine(i, 'Repeater Up Time', LmTools.FmtTime(d.get('UpTime')))
-			i = self.addInfoLine(i, 'Serial Number', d.get('SerialNumber'))
-			i = self.addInfoLine(i, 'Hardware Version', d.get('HardwareVersion'))
-			i = self.addInfoLine(i, 'Software Version', d.get('SoftwareVersion'))
-			i = self.addInfoLine(i, 'Orange Firmware Version', d.get('AdditionalSoftwareVersion'))
-			i = self.addInfoLine(i, 'Country', LmTools.FmtStrUpper(d.get('Country')))
+			i = self.addInfoLine(i, lx('Model Name'), d.get('ModelName'))
+			i = self.addInfoLine(i, lx('Repeater Up Time'), LmTools.FmtTime(d.get('UpTime')))
+			i = self.addInfoLine(i, lx('Serial Number'), d.get('SerialNumber'))
+			i = self.addInfoLine(i, lx('Hardware Version'), d.get('HardwareVersion'))
+			i = self.addInfoLine(i, lx('Software Version'), d.get('SoftwareVersion'))
+			i = self.addInfoLine(i, lx('Orange Firmware Version'), d.get('AdditionalSoftwareVersion'))
+			i = self.addInfoLine(i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
 
 		try:
 			d = self._session.request('Time:getTime')
@@ -871,9 +882,9 @@ class LmRepHandler:
 		else:
 			s = False
 		if (not s) or (d is None):
-			i = self.addInfoLine(i, 'Time', 'Time:getTime query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Time'), 'Time:getTime query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'Time', d.get('time'))
+			i = self.addInfoLine(i, lx('Time'), d.get('time'))
 
 		# Unfortunately DeviceInfo.MemoryStatus:get service access is denied.
 
@@ -882,7 +893,7 @@ class LmRepHandler:
 
 	### Load Wifi infos
 	def loadWifiInfo(self, iIndex = 0):
-		i = self.addTitleLine(iIndex, 'Wifi Information')
+		i = self.addTitleLine(iIndex, lx('Wifi Information'))
 
 		try:
 			d = self._session.request('NMC.Wifi:get')
@@ -892,13 +903,13 @@ class LmRepHandler:
 		if d is not None:
 			d = d.get('data')
 		if d is None:
-			i = self.addInfoLine(i, 'Wifi', 'NMC.Wifi:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Wifi'), 'NMC.Wifi:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'Enabled', LmTools.FmtBool(d.get('Enable')))
-			i = self.addInfoLine(i, 'Active', LmTools.FmtBool(d.get('Status')))
-			i = self.addInfoLine(i, 'Read Only', LmTools.FmtBool(d.get('ReadOnlyStatus')))
-			i = self.addInfoLine(i, 'Pairing Status', d.get('PairingStatus'))
-			i = self.addInfoLine(i, 'PIN Code', d.get('PINCode'))
+			i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(d.get('Enable')))
+			i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(d.get('Status')))
+			i = self.addInfoLine(i, lx('Read Only'), LmTools.FmtBool(d.get('ReadOnlyStatus')))
+			i = self.addInfoLine(i, lx('Pairing Status'), d.get('PairingStatus'))
+			i = self.addInfoLine(i, lx('PIN Code'), d.get('PINCode'))
 
 		try:
 			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
@@ -910,14 +921,14 @@ class LmRepHandler:
 		else:
 			d = None
 		if d is None:
-			i = self.addInfoLine(i, 'Scheduler Enabled', 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Scheduler Enabled'), 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
 		else:
 			d = d.get('scheduleInfo', [])
 			if len(d):
 				aActive = d[0].get('enable', False)
 			else:
 				aActive = False
-			i = self.addInfoLine(i, 'Scheduler Enabled', LmTools.FmtBool(aActive))
+			i = self.addInfoLine(i, lx('Scheduler Enabled'), LmTools.FmtBool(aActive))
 
 		b = None
 		w = None
@@ -943,7 +954,7 @@ class LmRepHandler:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
-			i = self.addInfoLine(i, 'Wifi', 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Wifi'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return i 
 
 		for s in NET_INTF:
@@ -955,8 +966,8 @@ class LmRepHandler:
 			aIntfKey = None
 			aBase = b.get(s['Key'])
 			if aBase is not None:
-				i = self.addInfoLine(i, 'Enabled', LmTools.FmtBool(aBase.get('Enable')))
-				i = self.addInfoLine(i, 'Active', LmTools.FmtBool(aBase.get('Status')))
+				i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(aBase.get('Enable')))
+				i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(aBase.get('Status')))
 				aLowLevelIntf = aBase.get('LLIntf')
 				if aLowLevelIntf is not None:
 					for aKey in aLowLevelIntf:
@@ -968,54 +979,54 @@ class LmRepHandler:
 			if (q is None) or (r is None):
 				continue
 
-			i = self.addInfoLine(i, 'Radio Status', q.get('RadioStatus'))
-			i = self.addInfoLine(i, 'VAP Status', r.get('VAPStatus'))
-			i = self.addInfoLine(i, 'Vendor Name', LmTools.FmtStrUpper(q.get('VendorName')))
-			i = self.addInfoLine(i, 'MAC Address', LmTools.FmtStrUpper(r.get('MACAddress')))
-			i = self.addInfoLine(i, 'SSID', r.get('SSID'))
-			i = self.addInfoLine(i, 'SSID Advertisement', LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
+			i = self.addInfoLine(i, lx('Radio Status'), q.get('RadioStatus'))
+			i = self.addInfoLine(i, lx('VAP Status'), r.get('VAPStatus'))
+			i = self.addInfoLine(i, lx('Vendor Name'), LmTools.FmtStrUpper(q.get('VendorName')))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(r.get('MACAddress')))
+			i = self.addInfoLine(i, lx('SSID'), r.get('SSID'))
+			i = self.addInfoLine(i, lx('SSID Advertisement'), LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
 
 			t = r.get('Security')
 			if t is not None:
-				i = self.addInfoLine(i, 'Security Mode', t.get('ModeEnabled'))
-				i = self.addInfoLine(i, 'WEP Key', t.get('WEPKey'))
-				i = self.addInfoLine(i, 'PreShared Key', t.get('PreSharedKey'))
-				i = self.addInfoLine(i, 'Key Pass Phrase', t.get('KeyPassPhrase'))
+				i = self.addInfoLine(i, lx('Security Mode'), t.get('ModeEnabled'))
+				i = self.addInfoLine(i, lx('WEP Key'), t.get('WEPKey'))
+				i = self.addInfoLine(i, lx('PreShared Key'), t.get('PreSharedKey'))
+				i = self.addInfoLine(i, lx('Key Pass Phrase'), t.get('KeyPassPhrase'))
 
 			t = r.get('WPS')
 			if t is not None:
-				i = self.addInfoLine(i, 'WPS Enabled', LmTools.FmtBool(t.get('Enable')))
-				i = self.addInfoLine(i, 'WPS Methods', t.get('ConfigMethodsEnabled'))
-				i = self.addInfoLine(i, 'WPS Self PIN', t.get('SelfPIN'))
-				i = self.addInfoLine(i, 'WPS Pairing In Progress', LmTools.FmtBool(t.get('PairingInProgress')))
+				i = self.addInfoLine(i, lx('WPS Enabled'), LmTools.FmtBool(t.get('Enable')))
+				i = self.addInfoLine(i, lx('WPS Methods'), t.get('ConfigMethodsEnabled'))
+				i = self.addInfoLine(i, lx('WPS Self PIN'), t.get('SelfPIN'))
+				i = self.addInfoLine(i, lx('WPS Pairing In Progress'), LmTools.FmtBool(t.get('PairingInProgress')))
 
 			t = r.get('MACFiltering')
 			if t is not None:
-				i = self.addInfoLine(i, 'MAC Filtering', t.get('Mode'))
+				i = self.addInfoLine(i, lx('MAC Filtering'), t.get('Mode'))
 
-			i = self.addInfoLine(i, 'Max Bitrate', LmTools.FmtInt(q.get('MaxBitRate')))
-			i = self.addInfoLine(i, 'AP Mode', LmTools.FmtBool(q.get('AP_Mode')))
-			i = self.addInfoLine(i, 'STA Mode', LmTools.FmtBool(q.get('STA_Mode')))
-			i = self.addInfoLine(i, 'WDS Mode', LmTools.FmtBool(q.get('WDS_Mode')))
-			i = self.addInfoLine(i, 'WET Mode', LmTools.FmtBool(q.get('WET_Mode')))
-			i = self.addInfoLine(i, 'Frequency Band', q.get('OperatingFrequencyBand'))
-			i = self.addInfoLine(i, 'Channel Bandwidth', q.get('CurrentOperatingChannelBandwidth'))
-			i = self.addInfoLine(i, 'Standard', q.get('OperatingStandards'))
-			i = self.addInfoLine(i, 'Channel', LmTools.FmtInt(q.get('Channel')))
-			i = self.addInfoLine(i, 'Auto Channel Supported', LmTools.FmtBool(q.get('AutoChannelSupported')))
-			i = self.addInfoLine(i, 'Auto Channel Enabled', LmTools.FmtBool(q.get('AutoChannelEnable')))
-			i = self.addInfoLine(i, 'Channel Change Reason', q.get('ChannelChangeReason'))
-			i = self.addInfoLine(i, 'Max Associated Devices', LmTools.FmtInt(q.get('MaxAssociatedDevices')))
-			i = self.addInfoLine(i, 'Active Associated Devices', LmTools.FmtInt(q.get('ActiveAssociatedDevices')))
-			i = self.addInfoLine(i, 'Noise', LmTools.FmtInt(q.get('Noise')))
-			i = self.addInfoLine(i, 'Antenna Defect', LmTools.FmtBool(q.get('AntennaDefect')))
+			i = self.addInfoLine(i, lx('Max Bitrate'), LmTools.FmtInt(q.get('MaxBitRate')))
+			i = self.addInfoLine(i, lx('AP Mode'), LmTools.FmtBool(q.get('AP_Mode')))
+			i = self.addInfoLine(i, lx('STA Mode'), LmTools.FmtBool(q.get('STA_Mode')))
+			i = self.addInfoLine(i, lx('WDS Mode'), LmTools.FmtBool(q.get('WDS_Mode')))
+			i = self.addInfoLine(i, lx('WET Mode'), LmTools.FmtBool(q.get('WET_Mode')))
+			i = self.addInfoLine(i, lx('Frequency Band'), q.get('OperatingFrequencyBand'))
+			i = self.addInfoLine(i, lx('Channel Bandwidth'), q.get('CurrentOperatingChannelBandwidth'))
+			i = self.addInfoLine(i, lx('Standard'), q.get('OperatingStandards'))
+			i = self.addInfoLine(i, lx('Channel'), LmTools.FmtInt(q.get('Channel')))
+			i = self.addInfoLine(i, lx('Auto Channel Supported'), LmTools.FmtBool(q.get('AutoChannelSupported')))
+			i = self.addInfoLine(i, lx('Auto Channel Enabled'), LmTools.FmtBool(q.get('AutoChannelEnable')))
+			i = self.addInfoLine(i, lx('Channel Change Reason'), q.get('ChannelChangeReason'))
+			i = self.addInfoLine(i, lx('Max Associated Devices'), LmTools.FmtInt(q.get('MaxAssociatedDevices')))
+			i = self.addInfoLine(i, lx('Active Associated Devices'), LmTools.FmtInt(q.get('ActiveAssociatedDevices')))
+			i = self.addInfoLine(i, lx('Noise'), LmTools.FmtInt(q.get('Noise')))
+			i = self.addInfoLine(i, lx('Antenna Defect'), LmTools.FmtBool(q.get('AntennaDefect')))
 
 		return i
 
 
 	### Load LAN infos
 	def loadLanInfo(self, iIndex = 0):
-		i = self.addTitleLine(iIndex, 'LAN Information')
+		i = self.addTitleLine(iIndex, lx('LAN Information'))
 
 		d = None
 		try:
@@ -1026,24 +1037,24 @@ class LmRepHandler:
 		if q is not None:
 			d = q.get('status')
 		if (d is None) or (not d):
-			i = self.addInfoLine(i, 'LAN Infos', 'NMC:getWANStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('LAN Infos'), 'NMC:getWANStatus query error', LmTools.ValQual.Error)
 		if q is not None:
 			d = q.get('data')
 		else:
 			d = None
 		if d is None:
-			i = self.addInfoLine(i, 'LAN Infos', 'NMC:getWANStatus data error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('LAN Infos'), 'NMC:getWANStatus data error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'MAC Address', LmTools.FmtStrUpper(d.get('MACAddress')))
-			i = self.addInfoLine(i, 'Link Status', LmTools.FmtStrCapitalize(d.get('LinkState')))
-			i = self.addInfoLine(i, 'Link Type', LmTools.FmtStrUpper(d.get('LinkType')))
-			i = self.addInfoLine(i, 'Protocol', LmTools.FmtStrUpper(d.get('Protocol')))
-			i = self.addInfoLine(i, 'Connection Status', d.get('ConnectionState'))
-			i = self.addInfoLine(i, 'Last Connection Error', d.get('LastConnectionError'))
-			i = self.addInfoLine(i, 'IP Address', d.get('IPAddress'))
-			i = self.addInfoLine(i, 'Remote Gateway', d.get('RemoteGateway'))
-			i = self.addInfoLine(i, 'DNS Servers', d.get('DNSServers'))
-			i = self.addInfoLine(i, 'IPv6 Address', d.get('IPv6Address'))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(d.get('MACAddress')))
+			i = self.addInfoLine(i, lx('Link Status'), LmTools.FmtStrCapitalize(d.get('LinkState')))
+			i = self.addInfoLine(i, lx('Link Type'), LmTools.FmtStrUpper(d.get('LinkType')))
+			i = self.addInfoLine(i, lx('Protocol'), LmTools.FmtStrUpper(d.get('Protocol')))
+			i = self.addInfoLine(i, lx('Connection Status'), d.get('ConnectionState'))
+			i = self.addInfoLine(i, lx('Last Connection Error'), d.get('LastConnectionError'))
+			i = self.addInfoLine(i, lx('IP Address'), d.get('IPAddress'))
+			i = self.addInfoLine(i, lx('Remote Gateway'), d.get('RemoteGateway'))
+			i = self.addInfoLine(i, lx('DNS Servers'), d.get('DNSServers'))
+			i = self.addInfoLine(i, lx('IPv6 Address'), d.get('IPv6Address'))
 
 		try:
 			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'MTU' })
@@ -1051,11 +1062,11 @@ class LmRepHandler:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
 		if d is None:
-			i = self.addInfoLine(i, 'MTU', 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('MTU'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'MTU', LmTools.FmtInt(d.get('status')))
+			i = self.addInfoLine(i, lx('MTU'), LmTools.FmtInt(d.get('status')))
 
-		i = self.addTitleLine(i, 'Link to the Livebox')
+		i = self.addTitleLine(i, lx('Link to the Livebox'))
 
 		try:
 			d = self._session.request('UplinkMonitor.DefaultGateway:get')
@@ -1065,11 +1076,11 @@ class LmRepHandler:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(i, 'Livebox link Infos', 'UplinkMonitor.DefaultGateway:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('Livebox link Infos'), 'UplinkMonitor.DefaultGateway:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, 'IP Address', d.get('IPv4Address'))
-			i = self.addInfoLine(i, 'MAC Address', LmTools.FmtStrUpper(d.get('MACAddress')))
-			i = self.addInfoLine(i, 'Interface', LmTools.FmtStrCapitalize(d.get('NeMoIntfName')))
+			i = self.addInfoLine(i, lx('IP Address'), d.get('IPv4Address'))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(d.get('MACAddress')))
+			i = self.addInfoLine(i, lx('Interface'), LmTools.FmtStrCapitalize(d.get('NeMoIntfName')))
 
 		b = None
 		try:
@@ -1084,7 +1095,7 @@ class LmRepHandler:
 			d = d.get('eth')
 
 		if (d is None) or (b is None):
-			i = self.addInfoLine(i, 'LAN', 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(i, lx('LAN'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return
 
 		for s in NET_INTF:
@@ -1097,13 +1108,13 @@ class LmRepHandler:
 			if (q is None) or (r is None):
 				continue
 
-			i = self.addInfoLine(i, 'Enabled', LmTools.FmtBool(q.get('Enable')))
-			i = self.addInfoLine(i, 'Active', LmTools.FmtBool(q.get('Status')))
-			i = self.addInfoLine(i, 'Current Bit Rate', LmTools.FmtInt(r.get('CurrentBitRate')))
-			i = self.addInfoLine(i, 'Max Bit Rate Supported', LmTools.FmtInt(r.get('MaxBitRateSupported')))
-			i = self.addInfoLine(i, 'Current Duplex Mode', r.get('CurrentDuplexMode'))
-			i = self.addInfoLine(i, 'Power Saving Supported', LmTools.FmtBool(q.get('PowerSavingSupported')))
-			i = self.addInfoLine(i, 'Power Saving Enabled', LmTools.FmtBool(q.get('PowerSavingEnabled')))
+			i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(q.get('Enable')))
+			i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(q.get('Status')))
+			i = self.addInfoLine(i, lx('Current Bit Rate'), LmTools.FmtInt(r.get('CurrentBitRate')))
+			i = self.addInfoLine(i, lx('Max Bit Rate Supported'), LmTools.FmtInt(r.get('MaxBitRateSupported')))
+			i = self.addInfoLine(i, lx('Current Duplex Mode'), r.get('CurrentDuplexMode'))
+			i = self.addInfoLine(i, lx('Power Saving Supported'), LmTools.FmtBool(q.get('PowerSavingSupported')))
+			i = self.addInfoLine(i, lx('Power Saving Enabled'), LmTools.FmtBool(q.get('PowerSavingEnabled')))
 
 		return i
 
