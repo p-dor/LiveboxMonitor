@@ -30,6 +30,7 @@ from src import LmDhcpTab
 from src import LmPhoneTab
 from src import LmActionsTab
 from src import LmRepeaterTab
+from src.LmLanguages import GetMainLabel as lx
 
 from __init__ import __version__
 
@@ -78,6 +79,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			QtCore.QCoreApplication.processEvents()
 			self.loadDeviceList()
 			self.initRepeaters()
+			LmConfig.SetToolTips(self, 'main')
 			self._appReady = True
 			if not NO_THREAD:
 				self.startEventLoop()
@@ -87,7 +89,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Create main window
 	def initUI(self):
 		# Tab Widgets
-		self._tabWidget = QtWidgets.QTabWidget(self)
+		self._tabWidget = QtWidgets.QTabWidget(self, objectName = 'tabWidget')
 		self._tabWidget.currentChanged.connect(self.tabChangedEvent)
 		self.createDeviceListTab()
 		self.createLiveboxInfoTab()
@@ -161,7 +163,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Window close event
 	def closeEvent(self, iEvent):
 		if not NO_THREAD:
-			self.startTask('Terminating threads...')
+			self.startTask(lx('Terminating threads...'))
 			self.stopEventLoop()
 			self.stopStatsLoop()
 			self.stopWifiStatsLoop()
@@ -180,7 +182,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	### Sign in to Livebox
 	def signin(self):
 		while True:
-			self.startTask('Signing in...')
+			self.startTask(lx('Signing in...'))
 			self._session = LmSession(LmConf.LiveboxURL, 'LiveboxMonitor_' + LmConf.CurrProfile['Name'])
 			try:
 				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword)
@@ -198,7 +200,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 				if aDialog.exec():
 					aURL = aDialog.getURL()
 					# Remove unwanted characters (can be set via Paste action) + cleanup
-					aURL = LmTools.cleanURL(re.sub('[\n\t]', '', aURL))
+					aURL = LmTools.CleanURL(re.sub('[\n\t]', '', aURL))
 					LmConf.setLiveboxURL(aURL)
 					self.show()
 					continue
@@ -263,7 +265,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.close()
 
 
-	### Return window's base title to use
+	### Return window base title to use
 	def appWindowTitle(self):
 		if len(LmConf.Profiles) > 1:
 			return self._applicationName + ' [' + LmConf.CurrProfile['Name'] + ']'
@@ -326,6 +328,13 @@ if __name__ == '__main__':
 		SetApplicationStyle()
 		LmIcon.load()
 		while True:
+			# Set Qt language to selected preference
+			aTranslator = QtCore.QTranslator()
+			aTransPath = QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath)
+			aTranslator.load("qtbase_" + LmConf.Language.lower(), aTransPath)
+			aApp.installTranslator(aTranslator)
+
+			# Start UI
 			aUI = LiveboxMonitorUI()
 			aApp.aboutToQuit.connect(aUI.appTerminate)
 			if aUI.isSigned():
