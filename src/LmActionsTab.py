@@ -13,6 +13,9 @@ from src import LmConfig
 from src.LmConfig import LmConf
 from src.LmConfig import PrefsDialog
 from src.LmConfig import SetApplicationStyle
+from src.LmLanguages import GetActionsLabel as lx
+from src.LmLanguages import GetActionsRHistoryDialogLabel as lrx
+from src.LmLanguages import GetActionsWGlobalDialogLabel as lwx
 
 from __init__ import __url__, __copyright__
 
@@ -54,7 +57,7 @@ class LmActions:
 
 	### Create actions tab
 	def createActionsTab(self):
-		self._actionsTab = QtWidgets.QWidget()
+		self._actionsTab = QtWidgets.QWidget(objectName = 'actionTab')
 
 		# Wifi buttons group
 		aWifiButtons = QtWidgets.QVBoxLayout()
@@ -64,12 +67,12 @@ class LmActions:
 		aWifiSet = QtWidgets.QHBoxLayout()
 		aWifiSet.setSpacing(20)
 
-		aWifiOnButton = QtWidgets.QPushButton('Wifi ON')
+		aWifiOnButton = QtWidgets.QPushButton(lx('Wifi ON'), objectName = 'wifiOn')
 		aWifiOnButton.clicked.connect(self.wifiOnButtonClick)
 		aWifiOnButton.setMinimumWidth(BUTTON_WIDTH)
 		aWifiSet.addWidget(aWifiOnButton)
 
-		aWifiOffButton = QtWidgets.QPushButton('Wifi OFF')
+		aWifiOffButton = QtWidgets.QPushButton(lx('Wifi OFF'), objectName = 'wifiOff')
 		aWifiOffButton.clicked.connect(self.wifiOffButtonClick)
 		aWifiOffButton.setMinimumWidth(BUTTON_WIDTH)
 		aWifiSet.addWidget(aWifiOffButton)
@@ -78,12 +81,12 @@ class LmActions:
 		aGuestWifiSet = QtWidgets.QHBoxLayout()
 		aGuestWifiSet.setSpacing(20)
 
-		aGuestWifiOnButton = QtWidgets.QPushButton('Guest Wifi ON')
+		aGuestWifiOnButton = QtWidgets.QPushButton(lx('Guest Wifi ON'), objectName = 'guestWifiOn')
 		aGuestWifiOnButton.clicked.connect(self.guestWifiOnButtonClick)
 		aGuestWifiOnButton.setMinimumWidth(BUTTON_WIDTH)
 		aGuestWifiSet.addWidget(aGuestWifiOnButton)
 
-		aGuestWifiOffButton = QtWidgets.QPushButton('Guest Wifi OFF')
+		aGuestWifiOffButton = QtWidgets.QPushButton(lx('Guest Wifi OFF'), objectName = 'guestWifiOff')
 		aGuestWifiOffButton.clicked.connect(self.guestWifiOffButtonClick)
 		aGuestWifiOffButton.setMinimumWidth(BUTTON_WIDTH)
 		aGuestWifiSet.addWidget(aGuestWifiOffButton)
@@ -92,12 +95,12 @@ class LmActions:
 		aSchedulerSet = QtWidgets.QHBoxLayout()
 		aSchedulerSet.setSpacing(20)
 
-		aSchedulerOnButton = QtWidgets.QPushButton('Wifi Scheduler ON')
+		aSchedulerOnButton = QtWidgets.QPushButton(lx('Wifi Scheduler ON'), objectName = 'schedulerOn')
 		aSchedulerOnButton.clicked.connect(self.schedulerOnButtonClick)
 		aSchedulerOnButton.setMinimumWidth(BUTTON_WIDTH)
 		aSchedulerSet.addWidget(aSchedulerOnButton)
 
-		aSchedulerOffButton = QtWidgets.QPushButton('Wifi Scheduler OFF')
+		aSchedulerOffButton = QtWidgets.QPushButton(lx('Wifi Scheduler OFF'), objectName = 'schedulerOff')
 		aSchedulerOffButton.clicked.connect(self.schedulerOffButtonClick)
 		aSchedulerOffButton.setMinimumWidth(BUTTON_WIDTH)
 		aSchedulerSet.addWidget(aSchedulerOffButton)
@@ -108,11 +111,11 @@ class LmActions:
 		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 		aWifiButtons.addWidget(aSeparator)
 
-		aWifiGlobalStatusButton = QtWidgets.QPushButton('Show Global Status...')
+		aWifiGlobalStatusButton = QtWidgets.QPushButton(lx('Show Global Status...'), objectName = 'wifiGlobalStatus')
 		aWifiGlobalStatusButton.clicked.connect(self.wifiGlobalStatusButtonClick)
 		aWifiButtons.addWidget(aWifiGlobalStatusButton)
 
-		aWifiGroupBox = QtWidgets.QGroupBox('Wifi')
+		aWifiGroupBox = QtWidgets.QGroupBox(lx('Wifi'), objectName = 'wifiGroup')
 		aWifiGroupBox.setLayout(aWifiButtons)
 
 		# Reboot buttons column
@@ -120,17 +123,17 @@ class LmActions:
 		aRebootButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aRebootButtons.setSpacing(20)
 
-		aRebootLiveboxButton = QtWidgets.QPushButton('Reboot Livebox...')
+		aRebootLiveboxButton = QtWidgets.QPushButton(lx('Reboot Livebox...'), objectName = 'rebootLivebox')
 		aRebootLiveboxButton.clicked.connect(self.rebootLiveboxButtonClick)
 		aRebootLiveboxButton.setMinimumWidth(BUTTON_WIDTH)
 		aRebootButtons.addWidget(aRebootLiveboxButton)
 
-		aRebootHistoryButton = QtWidgets.QPushButton('Reboot History...')
+		aRebootHistoryButton = QtWidgets.QPushButton(lx('Reboot History...'), objectName = 'rebootHistory')
 		aRebootHistoryButton.clicked.connect(self.rebootHistoryButtonClick)
 		aRebootHistoryButton.setMinimumWidth(BUTTON_WIDTH)
 		aRebootButtons.addWidget(aRebootHistoryButton)
 
-		aRebootGroupBox = QtWidgets.QGroupBox('Reboots')
+		aRebootGroupBox = QtWidgets.QGroupBox(lx('Reboots'), objectName = 'rebootGroup')
 		aRebootGroupBox.setLayout(aRebootButtons)
 
 		# About, preferences, debug and quit column
@@ -141,27 +144,27 @@ class LmActions:
 		aAboutWidgets.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aAboutWidgets.setSpacing(15)
 
-		aAppIcon = QtWidgets.QLabel()
+		aAppIcon = QtWidgets.QLabel(objectName = 'appIcon')
 		aAppIcon.setPixmap(LmIcon.AppIconPixmap)
 		aAppIcon.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 		aAppIcon.setMaximumWidth(64)
 		aAppIcon.setMinimumWidth(64)
 		aAboutWidgets.addWidget(aAppIcon, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aAppName = QtWidgets.QLabel(self._applicationName)
+		aAppName = QtWidgets.QLabel(self._applicationName, objectName = 'appName')
 		aAppName.setFont(LmTools.BOLD_FONT)
 		aAboutWidgets.addWidget(aAppName, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aAboutWidgets.addWidget(QtWidgets.QLabel('An Open Source project'), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+		aAboutWidgets.addWidget(QtWidgets.QLabel(lx('An Open Source project')), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aOpenSourceURL = QtWidgets.QLabel(__url__)
+		aOpenSourceURL = QtWidgets.QLabel(__url__, objectName = 'openSourceURL')
 		aOpenSourceURL.setStyleSheet('QLabel { color : blue; }')
 		aOpenSourceURL.mousePressEvent = self.openSourceButtonClick
 		aAboutWidgets.addWidget(aOpenSourceURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
 		aAboutWidgets.addWidget(QtWidgets.QLabel(__copyright__), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-		aAboutGroupBox = QtWidgets.QGroupBox('About')
+		aAboutGroupBox = QtWidgets.QGroupBox(lx('About'), objectName = 'aboutGroup')
 		aAboutGroupBox.setLayout(aAboutWidgets)
 
 		aRightZone.addWidget(aAboutGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
@@ -171,15 +174,15 @@ class LmActions:
 		aSetupButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aSetupButtons.setSpacing(20)
 
-		aPrefsButton = QtWidgets.QPushButton('Preferences...')
+		aPrefsButton = QtWidgets.QPushButton(lx('Preferences...'), objectName = 'prefs')
 		aPrefsButton.clicked.connect(self.prefsButtonClick)
 		aSetupButtons.addWidget(aPrefsButton)
 
-		aChangeProfileButton = QtWidgets.QPushButton('Change Profile...')
+		aChangeProfileButton = QtWidgets.QPushButton(lx('Change Profile...'), objectName = 'changeProfile')
 		aChangeProfileButton.clicked.connect(self.changeProfileButtonClick)
 		aSetupButtons.addWidget(aChangeProfileButton)
 
-		aSetupGroupBox = QtWidgets.QGroupBox('Setup')
+		aSetupGroupBox = QtWidgets.QGroupBox(lx('Setup'), objectName = 'setupGroup')
 		aSetupGroupBox.setLayout(aSetupButtons)
 
 		aRightZone.addWidget(aSetupGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
@@ -189,23 +192,23 @@ class LmActions:
 		aDebugButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aDebugButtons.setSpacing(20)
 
-		aShowRawDeviceListButton = QtWidgets.QPushButton('Raw Device List...')
+		aShowRawDeviceListButton = QtWidgets.QPushButton(lx('Raw Device List...'), objectName = 'showRawDeviceList')
 		aShowRawDeviceListButton.clicked.connect(self.showRawDeviceListButtonClick)
 		aDebugButtons.addWidget(aShowRawDeviceListButton)
-		aShowRawTopologyButton = QtWidgets.QPushButton('Raw Topology...')
+		aShowRawTopologyButton = QtWidgets.QPushButton(lx('Raw Topology...'), objectName = 'showRawTopology')
 		aShowRawTopologyButton.clicked.connect(self.showRawTopologyButtonClick)
 		aDebugButtons.addWidget(aShowRawTopologyButton)
-		aSetLogLevelButton = QtWidgets.QPushButton('Set Log Level...')
+		aSetLogLevelButton = QtWidgets.QPushButton(lx('Set Log Level...'), objectName = 'setLogLevel')
 		aSetLogLevelButton.clicked.connect(self.setLogLevelButtonClick)
 		aDebugButtons.addWidget(aSetLogLevelButton)
 
-		aDebugGroupBox = QtWidgets.QGroupBox('Debug')
+		aDebugGroupBox = QtWidgets.QGroupBox(lx('Debug'), objectName = 'debugGroup')
 		aDebugGroupBox.setLayout(aDebugButtons)
 
 		aRightZone.addWidget(aDebugGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# Quit button
-		aQuitButton = QtWidgets.QPushButton('Quit Application')
+		aQuitButton = QtWidgets.QPushButton(lx('Quit Application'), objectName = 'quit')
 		aQuitButton.clicked.connect(self.quitButtonClick)
 		aQuitButton.setMinimumWidth(BUTTON_WIDTH)
 		aRightZone.addWidget(aQuitButton, 1, QtCore.Qt.AlignmentFlag.AlignBottom)
@@ -219,7 +222,8 @@ class LmActions:
 		aHBox.addLayout(aRightZone, 1)
 		self._actionsTab.setLayout(aHBox)
 
-		self._tabWidget.addTab(self._actionsTab, 'Actions')
+		LmConfig.SetToolTips(self._actionsTab, 'actions')
+		self._tabWidget.addTab(self._actionsTab, lx('Actions'))
 
 
 	### Click on Wifi ON button
@@ -328,7 +332,7 @@ class LmActions:
 
 	### Click on Global Wifi Status button
 	def wifiGlobalStatusButtonClick(self):
-		self.startTask('Getting Wifi Global Status...')
+		self.startTask(lx('Getting Wifi Global Status...'))
 
 		# Getting Livebox status
 		aLiveboxStatus = self.getLiveboxWifiStatus()
@@ -363,7 +367,7 @@ class LmActions:
 
 	### Click on Reboot History button
 	def rebootHistoryButtonClick(self):
-		self.startTask('Getting Reboot History...')
+		self.startTask(lx('Getting Reboot History...'))
 
 		try:
 			d = self._session.request('NMC.Reboot.Reboot:get')
@@ -395,6 +399,7 @@ class LmActions:
 		if aPrefsDialog.exec():
 			LmConf.assignProfile()
 			LmConf.save()
+			LmConf.apply()
 			SetApplicationStyle()
 			self.resetUI()
 
@@ -408,19 +413,19 @@ class LmActions:
 
 	### Click on show raw device list button
 	def showRawDeviceListButtonClick(self):
-		LmTools.DisplayInfos('Raw Device List', json.dumps(self._liveboxDevices, indent = 2))
+		LmTools.DisplayInfos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent = 2))
 
 
 	### Click on show raw topology button
 	def showRawTopologyButtonClick(self):
-		LmTools.DisplayInfos('Raw Topology', json.dumps(self._liveboxTopology, indent = 2))
+		LmTools.DisplayInfos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent = 2))
 
 
 	### Click on set log level button
 	def setLogLevelButtonClick(self):
 		aLevels = ['0', '1', '2']
-		aLevel, aOK = QtWidgets.QInputDialog.getItem(None, 'Log level selection',
-													 'Please select a log level:',
+		aLevel, aOK = QtWidgets.QInputDialog.getItem(None, lx('Log level selection'),
+													 lx('Please select a log level:'),
 													 aLevels, LmConf.LogLevel, False)
 		if aOK:
 			LmConf.setLogLevel(int(aLevel))
@@ -438,14 +443,19 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		super(RebootHistoryDialog, self).__init__(iParent)
 		self.resize(550, 56 + LmConfig.DialogHeight(10))
 
-		self._historyTable = QtWidgets.QTableWidget()
+		self._historyTable = QtWidgets.QTableWidget(objectName = 'historyTable')
 		self._historyTable.setColumnCount(4)
-		self._historyTable.setHorizontalHeaderLabels(('Boot Date', 'Boot Reason', 'Shutdown Date', 'Shutdown Reason'))
+		self._historyTable.setHorizontalHeaderLabels((lrx('Boot Date'), lrx('Boot Reason'), lrx('Shutdown Date'), lrx('Shutdown Reason')))
 		aHeader = self._historyTable.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(0, QtCore.Qt.Orientation.Horizontal, 'reboot_BootDate', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(1, QtCore.Qt.Orientation.Horizontal, 'reboot_BootReason', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(2, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownDate', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(3, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownReason', QtCore.Qt.ItemDataRole.UserRole)
 		self._historyTable.setColumnWidth(0, 125)
 		self._historyTable.setColumnWidth(1, 225)
 		self._historyTable.setColumnWidth(2, 125)
@@ -456,7 +466,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		LmConfig.SetTableStyle(self._historyTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK')
+		aOKButton = QtWidgets.QPushButton(lrx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
@@ -465,7 +475,9 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._historyTable, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle(iName + ' Reboot History')
+		LmConfig.SetToolTips(self, 'rhistory')
+
+		self.setWindowTitle(lrx('{} Reboot History').format(iName))
 		self.setModal(True)
 		self.show()
 
@@ -477,9 +489,9 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 			d = iHistory[aKey]
 			self._historyTable.insertRow(i)
 			self._historyTable.setItem(i, 0, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('BootDate'))))
-			self._historyTable.setItem(i, 1, QtWidgets.QTableWidgetItem(d.get('BootReason', 'Unknown')))
+			self._historyTable.setItem(i, 1, QtWidgets.QTableWidgetItem(d.get('BootReason', lrx('Unknown'))))
 			self._historyTable.setItem(i, 2, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('ShutdownDate'))))
-			self._historyTable.setItem(i, 3, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', 'Unknown')))
+			self._historyTable.setItem(i, 3, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', lrx('Unknown'))))
 			i += 1
 
 
@@ -490,10 +502,10 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		super(WifiGlobalStatusDialog, self).__init__(iParent)
 
 		self._status = iStatus
-		self._statusTable = QtWidgets.QTableWidget()
+		self._statusTable = QtWidgets.QTableWidget(objectName = 'statusTable')
 		self._statusTable.setColumnCount(1 + len(iStatus))
 		aHeaders = []
-		aHeaders.append('Interfaces')
+		aHeaders.append(lwx('Interfaces'))
 		for s in self._status:
 			aHeaders.append(s[WifiKey.AccessPoint])
 		self._statusTable.setHorizontalHeaderLabels((*aHeaders,))
@@ -512,7 +524,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		LmConfig.SetTableStyle(self._statusTable)
 
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK')
+		aOKButton = QtWidgets.QPushButton(lwx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
@@ -524,28 +536,30 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		i = self.loadStatus(iLiveboxModel)
 		self.resize(550, 56 + LmConfig.DialogHeight(i))
 
-		self.setWindowTitle('Wifi Global Status')
+		LmConfig.SetToolTips(self, 'wglobal')
+
+		self.setWindowTitle(lwx('Wifi Global Status'))
 		self.setModal(True)
 		self.show()
 
 
 	def loadStatus(self, iLiveboxModel):
 		i = 0
-		i = self.addStatusLine('Wifi Enabled', WifiKey.Enable, i)
-		i = self.addStatusLine('Wifi Active', WifiKey.Status, i)
-		i = self.addStatusLine('Wifi Scheduler', WifiKey.Scheduler, i)
-		i = self.addStatusLine('Wifi 2.4GHz Enabled', WifiKey.Wifi2Enable, i)
-		i = self.addStatusLine('Wifi 2.4GHz Active', WifiKey.Wifi2Status, i)
-		i = self.addStatusLine('Wifi 2.4GHz VAP', WifiKey.Wifi2VAP, i)
-		i = self.addStatusLine('Wifi 5GHz Enabled', WifiKey.Wifi5Enable, i)
-		i = self.addStatusLine('Wifi 5GHz Active', WifiKey.Wifi5Status, i)
-		i = self.addStatusLine('Wifi 5GHz VAP', WifiKey.Wifi5VAP, i)
+		i = self.addStatusLine(lwx('{} Enabled').format('Wifi'), WifiKey.Enable, i)
+		i = self.addStatusLine(lwx('{} Active').format('Wifi'), WifiKey.Status, i)
+		i = self.addStatusLine(lwx('Wifi Scheduler'), WifiKey.Scheduler, i)
+		i = self.addStatusLine(lwx('{} Enabled').format('Wifi 2.4GHz'), WifiKey.Wifi2Enable, i)
+		i = self.addStatusLine(lwx('{} Active').format('Wifi 2.4GHz'), WifiKey.Wifi2Status, i)
+		i = self.addStatusLine(lwx('{} VAP').format('Wifi 2.4GHz'), WifiKey.Wifi2VAP, i)
+		i = self.addStatusLine(lwx('{} Enabled').format('Wifi 5GHz'), WifiKey.Wifi5Enable, i)
+		i = self.addStatusLine(lwx('{} Active').format('Wifi 5GHz'), WifiKey.Wifi5Status, i)
+		i = self.addStatusLine(lwx('{} VAP').format('Wifi 5GHz'), WifiKey.Wifi5VAP, i)
 		if iLiveboxModel == 'LB6':
-			i = self.addStatusLine('Wifi 6GHz Enabled', WifiKey.Wifi6Enable, i)
-			i = self.addStatusLine('Wifi 6GHz Active', WifiKey.Wifi6Status, i)
-			i = self.addStatusLine('Wifi 6GHz VAP', WifiKey.Wifi6VAP, i)
-		i = self.addStatusLine('Guest 2.4GHz VAP', WifiKey.Guest2VAP, i)
-		i = self.addStatusLine('Guest 5GHz VAP', WifiKey.Guest5VAP, i)
+			i = self.addStatusLine(lwx('{} Enabled').format('Wifi 6GHz'), WifiKey.Wifi6Enable, i)
+			i = self.addStatusLine(lwx('{} Active').format('Wifi 6GHz'), WifiKey.Wifi6Status, i)
+			i = self.addStatusLine(lwx('{} VAP').format('Wifi 6GHz'), WifiKey.Wifi6VAP, i)
+		i = self.addStatusLine(lwx('{} VAP').format(lwx('Guest 2.4GHz')), WifiKey.Guest2VAP, i)
+		i = self.addStatusLine(lwx('{} VAP').format(lwx('Guest 5GHz')), WifiKey.Guest5VAP, i)
 		return i
 
 
@@ -568,17 +582,17 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 				aIconItem.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setCellWidget(iIndex, i, aIconItem)
 			elif aStatus == WifiStatus.Error:
-				aItem = QtWidgets.QTableWidgetItem('Error')
+				aItem = QtWidgets.QTableWidgetItem(lwx('Error'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setItem(iIndex, i, aItem)
 			elif aStatus == WifiStatus.Inactive:
-				aItem = QtWidgets.QTableWidgetItem('Inactive')
+				aItem = QtWidgets.QTableWidgetItem(lwx('Inactive'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setItem(iIndex, i, aItem)
 			elif aStatus == WifiStatus.Unsigned:
-				aItem = QtWidgets.QTableWidgetItem('Not signed')
+				aItem = QtWidgets.QTableWidgetItem(lwx('Not signed'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setItem(iIndex, i, aItem)
