@@ -55,13 +55,13 @@ class LmDhcp:
 		self._dhcpDList.setColumnWidth(DhcpCol.Name, 200)
 		self._dhcpDList.setColumnWidth(DhcpCol.Domain, 60)
 		self._dhcpDList.setColumnWidth(DhcpCol.MAC, 120)
-		self._dhcpDList.setColumnWidth(DhcpCol.IP, 105 + LmConfig.SCROLL_BAR_ADJUST)
+		self._dhcpDList.setColumnWidth(DhcpCol.IP, 105)
 		self._dhcpDList.verticalHeader().hide()
 		self._dhcpDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
 		self._dhcpDList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._dhcpDList.setSortingEnabled(True)
 		self._dhcpDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._dhcpDList.setMinimumWidth(515 + LmConfig.SCROLL_BAR_ADJUST)
+		self._dhcpDList.setMinimumWidth(515)
 		LmConfig.SetTableStyle(self._dhcpDList)
 
 		# DHCP binding button bar

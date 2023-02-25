@@ -53,7 +53,6 @@ SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 WIND_HEIGHT_ADJUST = 0		# Space to add to a window height to respect a table wished height inside
 DIAG_HEIGHT_ADJUST = 0		# Space to add to a dialog height to respect a table wished height inside
 TABLE_ADJUST = 4			# Space to add to a table height to respect a table wished height
-SCROLL_BAR_ADJUST = 0		# Space to add to last table col to give room for the scroll bar
 LIST_HEADER_FONT_SIZE = 0	# 0 = default system font, value can be overriden by LmConf.ListHeaderFontSize
 LIST_HEADER_FONT = None
 LIST_LINE_FONT_SIZE = 0		# 0 = default system font, value can be overriden by LmConf.ListLineFontSize
@@ -228,7 +227,6 @@ class MonitorTab(IntEnum):
 def SetApplicationStyle():
 	global WIND_HEIGHT_ADJUST
 	global DIAG_HEIGHT_ADJUST
-	global SCROLL_BAR_ADJUST
 	global TABLE_ADJUST
 	global LIST_HEADER_FONT_SIZE
 	global LIST_HEADER_FONT
@@ -249,7 +247,6 @@ def SetApplicationStyle():
 		WIND_HEIGHT_ADJUST = 2
 		DIAG_HEIGHT_ADJUST = -4
 		TABLE_ADJUST = 4
-		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 12
 		LIST_LINE_FONT_SIZE = 10
 		LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
@@ -263,7 +260,6 @@ def SetApplicationStyle():
 		WIND_HEIGHT_ADJUST = 0
 		DIAG_HEIGHT_ADJUST = 0
 		TABLE_ADJUST = 4
-		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 0	# Let system default
 		LIST_LINE_FONT_SIZE = 0		# Let system default
 		LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
@@ -278,7 +274,6 @@ def SetApplicationStyle():
 		WIND_HEIGHT_ADJUST = 4
 		DIAG_HEIGHT_ADJUST = 30
 		TABLE_ADJUST = 4
-		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 11
 		LIST_LINE_FONT_SIZE = 10
 		LIST_STYLESHEET = 'QTableView { color:black; background-color:#F0F0F0; gridline-color:#FFFFFF }'

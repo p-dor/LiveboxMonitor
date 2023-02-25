@@ -111,7 +111,7 @@ class LmRepeater:
 		aStatsList.verticalHeader().hide()
 		aStatsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		aStatsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		aStatsList.setMinimumWidth(450 + LmConfig.SCROLL_BAR_ADJUST)
+		aStatsList.setMinimumWidth(450)
 		LmConfig.SetTableStyle(aStatsList)
 
 		i = 0
