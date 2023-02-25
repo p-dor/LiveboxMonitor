@@ -13,6 +13,8 @@ from src import LmConfig
 from src.LmConfig import LmConf
 from src.LmIcons import LmIcon
 from src.LmDhcpTab import DhcpCol
+from src.LmLanguages import GetDeviceListLabel as lx
+from src.LmLanguages import GetIPv6DialogLabel as lix
 
 
 # ################################ VARS & DEFS ################################
@@ -70,12 +72,24 @@ class LmDeviceList:
 
 	### Create device list tab
 	def createDeviceListTab(self):
-		self._deviceListTab = QtWidgets.QWidget()
+		self._deviceListTab = QtWidgets.QWidget(objectName = 'deviceListTab')
 
 		# Device list columns
-		self._deviceList = QtWidgets.QTableWidget()
+		self._deviceList = QtWidgets.QTableWidget(objectName = 'deviceList')
 		self._deviceList.setColumnCount(DevCol.Count)
-		self._deviceList.setHorizontalHeaderLabels(('Key', 'T', 'Name', 'Livebox Name', 'MAC', 'IP', 'Link', 'A', 'Wifi', 'E', 'Down', 'Up', 'DRate', 'URate'))
+		self._deviceList.setHorizontalHeaderLabels(('Key', lx('T'), 
+														   lx('Name'),
+														   lx('Livebox Name'),
+														   lx('MAC'),
+														   lx('IP'),
+														   lx('Link'),
+														   lx('A'),
+														   lx('Wifi'),
+														   lx('E'),
+														   lx('Rx'),
+														   lx('Tx'),
+														   lx('RxRate'),
+														   lx('TxRate')))
 		self._deviceList.setColumnHidden(DevCol.Key, True)
 		aHeader = self._deviceList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
@@ -83,6 +97,20 @@ class LmDeviceList:
 		aHeader.setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(DevCol.Link, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(DevCol.Type, QtCore.Qt.Orientation.Horizontal, 'dlist_Type', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.LBName, QtCore.Qt.Orientation.Horizontal, 'dlist_LBName', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.IP, QtCore.Qt.Orientation.Horizontal, 'dlist_IP', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Link, QtCore.Qt.Orientation.Horizontal, 'dlist_Link', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Active, QtCore.Qt.Orientation.Horizontal, 'dlist_Active', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Wifi, QtCore.Qt.Orientation.Horizontal, 'dlist_Wifi', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Event, QtCore.Qt.Orientation.Horizontal, 'dlist_Event', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Down, QtCore.Qt.Orientation.Horizontal, 'dlist_Rx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.Up, QtCore.Qt.Orientation.Horizontal, 'dlist_Tx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'dlist_RxRate', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DevCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'dlist_TxRate', QtCore.Qt.ItemDataRole.UserRole)
 		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._deviceList.setColumnWidth(DevCol.Type, 48)
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
@@ -108,16 +136,16 @@ class LmDeviceList:
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setSpacing(30)
-		aRefreshDeviceListButton = QtWidgets.QPushButton('Refresh')
+		aRefreshDeviceListButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refresh')
 		aRefreshDeviceListButton.clicked.connect(self.refreshDeviceListButtonClick)
 		aHBox.addWidget(aRefreshDeviceListButton)
-		aDeviceInfoButton = QtWidgets.QPushButton('Device Infos')
+		aDeviceInfoButton = QtWidgets.QPushButton(lx('Device Infos'), objectName = 'deviceInfo')
 		aDeviceInfoButton.clicked.connect(self.deviceInfoButtonClick)
 		aHBox.addWidget(aDeviceInfoButton)
-		aDeviceEventsButton = QtWidgets.QPushButton('Device Events')
+		aDeviceEventsButton = QtWidgets.QPushButton(lx('Device Events'), objectName = 'deviceEvents')
 		aDeviceEventsButton.clicked.connect(self.deviceEventsButtonClick)
 		aHBox.addWidget(aDeviceEventsButton)
-		aIPv6Button = QtWidgets.QPushButton('IPv6...')
+		aIPv6Button = QtWidgets.QPushButton(lx('IPv6...'), objectName = 'ipv6')
 		aIPv6Button.clicked.connect(self.ipv6ButtonClick)
 		aHBox.addWidget(aIPv6Button)
 
@@ -128,7 +156,8 @@ class LmDeviceList:
 		aVBox.addLayout(aHBox, 1)
 		self._deviceListTab.setLayout(aVBox)
 
-		self._tabWidget.addTab(self._deviceListTab, 'Device List')
+		LmConfig.SetToolTips(self._deviceListTab, 'dlist')
+		self._tabWidget.addTab(self._deviceListTab, lx('Device List'))
 
 
 	### Init the Livebox Wifi stats collector thread
@@ -210,7 +239,7 @@ class LmDeviceList:
 
 	### Click on IPv6 button
 	def ipv6ButtonClick(self):
-		self.startTask('Getting IPv6 Information...')
+		self.startTask(lx('Getting IPv6 Information...'))
 
 		# Get IPv6 status
 		aIPv6Enabled = None
@@ -275,7 +304,7 @@ class LmDeviceList:
 
 	### Load device list
 	def loadDeviceList(self):
-		self.startTask('Loading device list...')
+		self.startTask(lx('Loading device list...'))
 
 		self._deviceList.setSortingEnabled(False)
 		self._infoDList.setSortingEnabled(False)
@@ -314,7 +343,7 @@ class LmDeviceList:
 
 		self._eventDList.insertRow(i)
 		self._eventDList.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
-		self._eventDList.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem('<None>'))
+		self._eventDList.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
 
 		self._deviceList.setCurrentCell(-1, -1)
 		self._infoDList.setCurrentCell(-1, -1)
@@ -375,7 +404,7 @@ class LmDeviceList:
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))
 		self._deviceList.setItem(iLine, DevCol.LBName, aLBName)
 
-		aIPStruct = LmTools.determineIP(iDevice)
+		aIPStruct = LmTools.DetermineIP(iDevice)
 		if aIPStruct is None:
 			aIPv4 = ''
 			aIPv4Reacheable = ''
@@ -389,7 +418,7 @@ class LmDeviceList:
 
 		aLinkIntf = self.findDeviceLink(iDevice.get('Key', ''))
 		if aLinkIntf is None:
-			aLinkName = 'Unknown'
+			aLinkName = lx('Unknown')
 			aLinkType = ''
 		else:
 			aLinkName = aLinkIntf['Name']
@@ -465,7 +494,7 @@ class LmDeviceList:
 		try:
 			aName = QtWidgets.QTableWidgetItem(LmConf.MacAddrTable[iMacAddr])
 		except:
-			aName = QtWidgets.QTableWidgetItem('UNKNOWN')
+			aName = QtWidgets.QTableWidgetItem(lx('UNKNOWN'))
 			aName.setBackground(QtCore.Qt.GlobalColor.red)
 		iList.setItem(iLine, iNameCol, aName)
 		
@@ -666,8 +695,8 @@ class LmDeviceList:
 		# Try to find a previously received statistic record
 		aPrevStats = self._statsMap.get(iDeviceKey)
 		if aPrevStats is not None:
-			aPrevDownBytes = aPrevStats['Down']
-			aPrevUpBytes = aPrevStats['Up']
+			aPrevDownBytes = aPrevStats['Rx']
+			aPrevUpBytes = aPrevStats['Tx']
 			aPrevTimestamp = aPrevStats['Time']
 			aElapsed = int((aTimestamp - aPrevTimestamp).total_seconds())
 			if aElapsed > 0:
@@ -676,8 +705,8 @@ class LmDeviceList:
 
 		# Remember current stats
 		aStats = {}
-		aStats['Down'] = aDownBytes
-		aStats['Up'] = aUpBytes
+		aStats['Rx'] = aDownBytes
+		aStats['Tx'] = aUpBytes
 		aStats['Time'] = aTimestamp
 		self._statsMap[iDeviceKey] = aStats
 
@@ -751,7 +780,7 @@ class LmDeviceList:
 
 			# Check if IP changed
 			aIPv4 = iEvent.get('IPAddress')
-			if (aIPv4 is not None) and (LmTools.isIPv4(aIPv4)):
+			if (aIPv4 is not None) and (LmTools.IsIPv4(aIPv4)):
 				self._deviceList.item(aListLine, DevCol.IP).setText(aIPv4)
 				self.repeaterIPAddressEvent(iDeviceKey, aIPv4)
 
@@ -835,11 +864,11 @@ class LmDeviceList:
 				else:
 					aCurrIP = aReply.get('status', '')
 
-				# Proceed only if there's a change
+				# Proceed only if there is a change
 				if aKnownIP != aCurrIP:
 					# If current IP is the one of the event, take it, overwise wait for next device update event
 					aIPv4 = iEvent.get('Address', '')
-					if (LmTools.isIPv4(aIPv4)) and (aCurrIP == aIPv4):
+					if (LmTools.IsIPv4(aIPv4)) and (aCurrIP == aIPv4):
 						aIPv4Reacheable = iEvent.get('Status', '')
 						aIPv4Reserved = iEvent.get('Reserved', False)
 						aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
@@ -1007,19 +1036,19 @@ class IPv6Dialog(QtWidgets.QDialog):
 		self.resize(850, 110 + LmConfig.DialogHeight(12))
 
 		# IPv6 info box
-		aIPv6EnabledLabel = QtWidgets.QLabel('IPv6 enabled:')
-		aIPv6Enabled = QtWidgets.QLabel()
+		aIPv6EnabledLabel = QtWidgets.QLabel(lix('IPv6 enabled:'), objectName = 'ipv6EnabledLabel')
+		aIPv6Enabled = QtWidgets.QLabel(objectName = 'ipv6Enabled')
 		if iEnabled:
 			aIPv6Enabled.setPixmap(LmIcon.TickPixmap)
 		else:
 			aIPv6Enabled.setPixmap(LmIcon.CrossPixmap)
 
-		aAddrLabel = QtWidgets.QLabel('IPv6 address:')
-		aAddr = QtWidgets.QLineEdit(iAddr)
+		aAddrLabel = QtWidgets.QLabel(lix('IPv6 address:'), objectName = 'addrLabel')
+		aAddr = QtWidgets.QLineEdit(iAddr, objectName = 'addr')
 		aAddr.setReadOnly(True)
 
-		aPrefixLabel = QtWidgets.QLabel('IPv6 prefix:')
-		aPrefix = QtWidgets.QLineEdit(iPrefix)
+		aPrefixLabel = QtWidgets.QLabel(lix('IPv6 prefix:'), objectName = 'prefixLabel')
+		aPrefix = QtWidgets.QLineEdit(iPrefix, objectName = 'prefix')
 		aPrefix.setReadOnly(True)
 
 		aIPv6InfoGrid = QtWidgets.QGridLayout()
@@ -1032,9 +1061,14 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aIPv6InfoGrid.addWidget(aPrefix, 2, 3)
 
 		# Device table
-		self._deviceTable = QtWidgets.QTableWidget()
+		self._deviceTable = QtWidgets.QTableWidget(objectName = 'ipv6Table')
 		self._deviceTable.setColumnCount(IPv6Col.Count)
-		self._deviceTable.setHorizontalHeaderLabels(('Key', 'Name', 'Livebox Name', 'MAC', 'A', 'IPv4', 'IPv6'))
+		self._deviceTable.setHorizontalHeaderLabels(('Key', lix('Name'),
+															lix('Livebox Name'),
+															lix('MAC'),
+															lix('A'),
+															lix('IPv4'),
+															lix('IPv6')))
 		self._deviceTable.setColumnHidden(IPv6Col.Key, True)
 		aHeader = self._deviceTable.horizontalHeader()
 		aHeader.setSectionsMovable(False)
@@ -1042,6 +1076,13 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aHeader.setSectionResizeMode(IPv6Col.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(IPv6Col.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		self._deviceTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		aModel = aHeader.model()
+		aModel.setHeaderData(IPv6Col.Name, QtCore.Qt.Orientation.Horizontal, 'ipv6_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.LBName, QtCore.Qt.Orientation.Horizontal, 'ipv6_LBName', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.MAC, QtCore.Qt.Orientation.Horizontal, 'ipv6_MAC', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.Active, QtCore.Qt.Orientation.Horizontal, 'ipv6_Active', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.IPv4, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv4', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.IPv6, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv6', QtCore.Qt.ItemDataRole.UserRole)
 		self._deviceTable.setColumnWidth(IPv6Col.Name, 300)
 		self._deviceTable.setColumnWidth(IPv6Col.LBName, 300)
 		self._deviceTable.setColumnWidth(IPv6Col.MAC, 120)
@@ -1057,7 +1098,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton('OK')
+		aOKButton = QtWidgets.QPushButton(lix('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
 		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
@@ -1067,7 +1108,9 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._deviceTable, 1)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('IPv6 Devices')
+		LmConfig.SetToolTips(self, 'ipv6')
+
+		self.setWindowTitle(lix('IPv6 Devices'))
 		self.setModal(True)
 		self.show()
 
@@ -1108,7 +1151,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
 					self._deviceTable.setItem(i, IPv6Col.Active, aActiveIcon)
 
-					aIPStruct = LmTools.determineIP(d)
+					aIPStruct = LmTools.DetermineIP(d)
 					if aIPStruct is None:
 						aIPv4 = ''
 						aIPv4Reacheable = ''

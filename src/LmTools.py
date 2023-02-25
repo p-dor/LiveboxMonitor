@@ -13,6 +13,9 @@ from PyQt6 import QtGui
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 
+from src import LmLanguages
+from src.LmLanguages import GetToolsLabel as lx
+
 
 # ################################ VARS & DEFS ################################
 
@@ -55,7 +58,7 @@ def LogDebug(iLevel, *iArgs):
 # Display an error popup
 def DisplayError(iErrorMsg):
 	aMsgBox = QtWidgets.QMessageBox()
-	aMsgBox.setWindowTitle('Error')
+	aMsgBox.setWindowTitle(lx('Error'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Critical)
 	aMsgBox.setText(iErrorMsg)
 	aMsgBox.exec()
@@ -64,7 +67,7 @@ def DisplayError(iErrorMsg):
 # Display a status popup
 def DisplayStatus(iStatusMsg):
 	aMsgBox = QtWidgets.QMessageBox()
-	aMsgBox.setWindowTitle('Status')
+	aMsgBox.setWindowTitle(lx('Status'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Information)
 	aMsgBox.setText(iStatusMsg)
 	aMsgBox.exec()
@@ -73,7 +76,7 @@ def DisplayStatus(iStatusMsg):
 # Ask a question and return True if OK clicked
 def AskQuestion(iQuestionMsg):
 	aMsgBox = QtWidgets.QMessageBox()
-	aMsgBox.setWindowTitle('Please confirm')
+	aMsgBox.setWindowTitle(lx('Please confirm'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Question)
 	aMsgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
 	aMsgBox.setText(iQuestionMsg)
@@ -106,12 +109,12 @@ def ExtractMacAddrFromString(iString):
 
 
 # Check if valid IPv4 address
-def isIPv4(iString):
+def IsIPv4(iString):
 	return re.fullmatch(IPv4_RE, iString) is not None
 
 
 # Cleanup URL
-def cleanURL(iURL):
+def CleanURL(iURL):
 	n = len(iURL)
 	if n:
 		if not iURL[n - 1] == '/':
@@ -122,7 +125,7 @@ def cleanURL(iURL):
 
 
 # Collect error descriptions from Livebox replies
-def getErrorsFromLiveboxReply(iReply):
+def GetErrorsFromLiveboxReply(iReply):
 	d = ''
 	if iReply is not None:
 		aErrors = iReply.get('errors')
@@ -136,7 +139,7 @@ def getErrorsFromLiveboxReply(iReply):
 
 
 # Determine device IPv4 address info from IPv4 list, return the struct, none if nothing found
-def determineIP(iDevice):
+def DetermineIP(iDevice):
 	if iDevice is not None:
 		# Retrieve the list
 		aIPv4List = iDevice.get('IPv4Address', [])
@@ -148,10 +151,10 @@ def determineIP(iDevice):
 		# Retrieve the reference IP address, but it can be an IPv6
 		aRefIP = iDevice.get('IPAddress')
 		if aRefIP is not None:
-			if not isIPv4(aRefIP):
+			if not IsIPv4(aRefIP):
 				aRefIP = None
 
-		# If there's no ref, return the first reachable address, otherwise the first
+		# If there is no ref, return the first reachable address, otherwise the first
 		if aRefIP is None:
 			for i in aIPv4List:
 				if i.get('Status', '') == 'reachable':
@@ -192,8 +195,8 @@ def FmtBool(iBool):
 	if iBool is None:
 		return ''
 	if iBool:
-		return 'True'
-	return 'False'
+		return lx('True')
+	return lx('False')
 
 
 # Format integer
@@ -271,7 +274,7 @@ class TextDialog(QtWidgets.QDialog):
 		aVbox = QtWidgets.QVBoxLayout(self)
 
 		self._textBox = QtWidgets.QTextEdit()
-		self._OKButton = QtWidgets.QPushButton('OK')
+		self._OKButton = QtWidgets.QPushButton(lx('OK'))
 		self._OKButton.clicked.connect(self.accept)
 		self._OKButton.setDefault(True)
 

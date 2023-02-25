@@ -11,6 +11,7 @@ from PyQt6 import QtWidgets
 from src import LmTools
 from src import LmConfig
 from src.LmActionsTab import WifiKey, WifiStatus
+from src.LmLanguages import GetInfoLabel as lx
 
 
 # ################################ VARS & DEFS ################################
@@ -36,12 +37,16 @@ class LmInfo:
 
 	### Create Livebox info tab
 	def createLiveboxInfoTab(self):
-		self._liveboxInfoTab = QtWidgets.QWidget()
+		self._liveboxInfoTab = QtWidgets.QWidget(objectName = 'liveboxInfoTab')
 
 		# Statistics list
-		self._statsList = QtWidgets.QTableWidget()
+		self._statsList = QtWidgets.QTableWidget(objectName = 'statsList')
 		self._statsList.setColumnCount(StatsCol.Count)
-		self._statsList.setHorizontalHeaderLabels(('Key', 'Name', 'Down', 'Up', 'DRate', 'URate'))
+		self._statsList.setHorizontalHeaderLabels(('Key', lx('Name'),
+														  lx('Rx'),
+														  lx('Tx'),
+														  lx('RxRate'),
+														  lx('TxRate')))
 		self._statsList.setColumnHidden(StatsCol.Key, True)
 		aHeader = self._statsList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
@@ -50,6 +55,12 @@ class LmInfo:
 		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
 		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(StatsCol.Name, QtCore.Qt.Orientation.Horizontal, 'stats_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.Down, QtCore.Qt.Orientation.Horizontal, 'stats_Rx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.Up, QtCore.Qt.Orientation.Horizontal, 'stats_Tx', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'stats_RxRate', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(StatsCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'stats_TxRate', QtCore.Qt.ItemDataRole.UserRole)
 		self._statsList.setColumnWidth(StatsCol.Name, 100)
 		self._statsList.setColumnWidth(StatsCol.Down, 65)
 		self._statsList.setColumnWidth(StatsCol.Up, 65)
@@ -72,13 +83,16 @@ class LmInfo:
 		self._statsList.setMaximumHeight(aStatsListSize)
 
 		# Attribute list
-		self._liveboxAList = QtWidgets.QTableWidget()
+		self._liveboxAList = QtWidgets.QTableWidget(objectName = 'liveboxAList')
 		self._liveboxAList.setColumnCount(InfoCol.Count)
-		self._liveboxAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
+		self._liveboxAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
 		aHeader = self._liveboxAList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
 		self._liveboxAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._liveboxAList.setColumnWidth(InfoCol.Attribute, 200)
 		self._liveboxAList.setColumnWidth(InfoCol.Value, 600)
@@ -98,35 +112,35 @@ class LmInfo:
 		aButtonsBox = QtWidgets.QHBoxLayout()
 		aButtonsBox.setSpacing(10)
 
-		aLiveboxInfoButton = QtWidgets.QPushButton('Livebox Infos')
+		aLiveboxInfoButton = QtWidgets.QPushButton(lx('Livebox Infos'), objectName = 'liveboxInfo')
 		aLiveboxInfoButton.clicked.connect(self.liveboxInfoButtonClick)
 		aButtonsBox.addWidget(aLiveboxInfoButton)
 
-		aInternetInfoButton = QtWidgets.QPushButton('Internet Infos')
+		aInternetInfoButton = QtWidgets.QPushButton(lx('Internet Infos'), objectName = 'internetInfo')
 		aInternetInfoButton.clicked.connect(self.internetInfoButtonClick)
 		aButtonsBox.addWidget(aInternetInfoButton)
 
-		aWifiInfoButton = QtWidgets.QPushButton('Wifi Infos')
+		aWifiInfoButton = QtWidgets.QPushButton(lx('Wifi Infos'), objectName = 'wifiInfo')
 		aWifiInfoButton.clicked.connect(self.wifiInfoButtonClick)
 		aButtonsBox.addWidget(aWifiInfoButton)
 
-		aLanInfoButton = QtWidgets.QPushButton('LAN Infos')
+		aLanInfoButton = QtWidgets.QPushButton(lx('LAN Infos'), objectName = 'lanInfo')
 		aLanInfoButton.clicked.connect(self.lanInfoButtonClick)
 		aButtonsBox.addWidget(aLanInfoButton)
 
-		aOntInfoButton = QtWidgets.QPushButton('ONT Infos')
+		aOntInfoButton = QtWidgets.QPushButton(lx('ONT Infos'), objectName = 'ontInfo')
 		aOntInfoButton.clicked.connect(self.ontInfoButtonClick)
 		aButtonsBox.addWidget(aOntInfoButton)
 
-		aVoiPInfoButton = QtWidgets.QPushButton('VoIP Infos')
+		aVoiPInfoButton = QtWidgets.QPushButton(lx('VoIP Infos'), objectName = 'voipInfo')
 		aVoiPInfoButton.clicked.connect(self.voipInfoButtonClick)
 		aButtonsBox.addWidget(aVoiPInfoButton)
 
-		aIptvInfoButton = QtWidgets.QPushButton('IPTV Infos')
+		aIptvInfoButton = QtWidgets.QPushButton(lx('IPTV Infos'), objectName = 'iptvInfo')
 		aIptvInfoButton.clicked.connect(self.iptvInfoButtonClick)
 		aButtonsBox.addWidget(aIptvInfoButton)
 
-		aUsbInfoButton = QtWidgets.QPushButton('USB Infos')
+		aUsbInfoButton = QtWidgets.QPushButton(lx('USB Infos'), objectName = 'usbInfo')
 		aUsbInfoButton.clicked.connect(self.usbInfoButtonClick)
 		aButtonsBox.addWidget(aUsbInfoButton)
 
@@ -135,7 +149,7 @@ class LmInfo:
 		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 		aButtonsBox.addWidget(aSeparator)
 
-		aExportInfoButton = QtWidgets.QPushButton('Export...')
+		aExportInfoButton = QtWidgets.QPushButton(lx('Export...'), objectName = 'exportInfo')
 		aExportInfoButton.clicked.connect(self.exportInfoButtonClick)
 		aButtonsBox.addWidget(aExportInfoButton)
 		self._exportFile = None
@@ -147,7 +161,8 @@ class LmInfo:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._liveboxInfoTab.setLayout(aVBox)
 
-		self._tabWidget.addTab(self._liveboxInfoTab, 'Livebox Stats/Infos')
+		LmConfig.SetToolTips(self._liveboxInfoTab, 'info')
+		self._tabWidget.addTab(self._liveboxInfoTab, lx('Livebox Stats/Infos'))
 
 
 	### Init the Livebox stats collector thread
@@ -323,7 +338,7 @@ class LmInfo:
 
 	### Click on Livebox infos button
 	def liveboxInfoButtonClick(self):
-		self.startTask('Getting Livebox information...')
+		self.startTask(lx('Getting Livebox information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -335,7 +350,7 @@ class LmInfo:
 
 	### Click on Internet infos button
 	def internetInfoButtonClick(self):
-		self.startTask('Getting Internet information...')
+		self.startTask(lx('Getting Internet information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -347,7 +362,7 @@ class LmInfo:
 
 	### Click on Wifi infos button
 	def wifiInfoButtonClick(self):
-		self.startTask('Getting Wifi information...')
+		self.startTask(lx('Getting Wifi information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -359,7 +374,7 @@ class LmInfo:
 
 	### Click on LAN infos button
 	def lanInfoButtonClick(self):
-		self.startTask('Getting LAN information...')
+		self.startTask(lx('Getting LAN information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -371,7 +386,7 @@ class LmInfo:
 
 	### Click on ONT infos button
 	def ontInfoButtonClick(self):
-		self.startTask('Getting ONT information...')
+		self.startTask(lx('Getting ONT information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -383,7 +398,7 @@ class LmInfo:
 
 	### Click on VoIP infos button
 	def voipInfoButtonClick(self):
-		self.startTask('Getting VoIP information...')
+		self.startTask(lx('Getting VoIP information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -395,7 +410,7 @@ class LmInfo:
 
 	### Click on IPTV infos button
 	def iptvInfoButtonClick(self):
-		self.startTask('Getting IPTV information...')
+		self.startTask(lx('Getting IPTV information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -407,7 +422,7 @@ class LmInfo:
 
 	### Click on USB infos button
 	def usbInfoButtonClick(self):
-		self.startTask('Getting USB information...')
+		self.startTask(lx('Getting USB information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
@@ -419,7 +434,7 @@ class LmInfo:
 
 	### Click on Export infos button
 	def exportInfoButtonClick(self):
-		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', 'Livebox Infos.txt', '*.txt')
+		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Save File'), lx('Livebox Infos') + '.txt', '*.txt')
 		aFileName = aFileName[0]
 		if aFileName == '':
 			return
@@ -431,7 +446,7 @@ class LmInfo:
 			LmTools.DisplayError('Cannot create the file.')
 			return
 
-		self.startTask('Exporting all information...')
+		self.startTask(lx('Exporting all information...'))
 
 		i = 0
 		i = self.loadLiveboxInfo(i)
@@ -452,7 +467,7 @@ class LmInfo:
 	### Load Livebox infos
 	def loadLiveboxInfo(self, iIndex = 0):
 		aLiveboxMAC = ''
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'Livebox Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Livebox Information'))
 
 		try:
 			d = self._session.request('DeviceInfo:get')
@@ -462,30 +477,30 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Livebox Infos', 'DeviceInfo:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Livebox Infos'), 'DeviceInfo:get query error', LmTools.ValQual.Error)
 		else:
 			aLiveboxMAC = d.get('BaseMAC', '').upper()
-			i = self.addInfoLine(self._liveboxAList, i, 'Model', d.get('ProductClass'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Status', LmTools.FmtStrCapitalize(d.get('DeviceStatus')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Livebox Up Time', LmTools.FmtTime(d.get('UpTime')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Manufacturer', d.get('Manufacturer'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Manufacturer Model Name', d.get('ModelName'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Description', d.get('Description'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Serial Number', d.get('SerialNumber'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Hardware Version', d.get('HardwareVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Software Version', d.get('SoftwareVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Rescue Version', d.get('RescueVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Modem Firmware Version', d.get('ModemFirmwareVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Orange Firmware Version', d.get('AdditionalSoftwareVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Spec Version', d.get('SpecVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Provisioning Code', d.get('ProvisioningCode'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Country', LmTools.FmtStrUpper(d.get('Country')))
-			i = self.addInfoLine(self._liveboxAList, i, 'MAC Address', aLiveboxMAC)
-			i = self.addInfoLine(self._liveboxAList, i, 'External IP Address', d.get('ExternalIPAddress'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Number Of Reboots', LmTools.FmtInt(d.get('NumberOfReboots')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Upgrade Occurred', LmTools.FmtBool(d.get('UpgradeOccurred')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Reset Occurred', LmTools.FmtBool(d.get('ResetOccurred')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Restore Occurred', LmTools.FmtBool(d.get('RestoreOccurred')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Model'), d.get('ProductClass'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Status'), LmTools.FmtStrCapitalize(d.get('DeviceStatus')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Livebox Up Time'), LmTools.FmtTime(d.get('UpTime')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer'), d.get('Manufacturer'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer Model Name'), d.get('ModelName'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Description'), d.get('Description'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), d.get('SerialNumber'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Software Version'), d.get('SoftwareVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Rescue Version'), d.get('RescueVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Modem Firmware Version'), d.get('ModemFirmwareVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Orange Firmware Version'), d.get('AdditionalSoftwareVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Spec Version'), d.get('SpecVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Provisioning Code'), d.get('ProvisioningCode'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('MAC Address'), aLiveboxMAC)
+			i = self.addInfoLine(self._liveboxAList, i, lx('External IP Address'), d.get('ExternalIPAddress'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Number Of Reboots'), LmTools.FmtInt(d.get('NumberOfReboots')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Upgrade Occurred'), LmTools.FmtBool(d.get('UpgradeOccurred')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Reset Occurred'), LmTools.FmtBool(d.get('ResetOccurred')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Restore Occurred'), LmTools.FmtBool(d.get('RestoreOccurred')))
 
 		if len(aLiveboxMAC):
 			try:
@@ -496,16 +511,16 @@ class LmInfo:
 			if d is not None:
 				d = d.get('status')
 			if d is None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Livebox Infos', 'Devices.Device:get query error', LmTools.ValQual.Error)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Livebox Infos'), 'Devices.Device:get query error', LmTools.ValQual.Error)
 			else:
-				i = self.addInfoLine(self._liveboxAList, i, 'Name', d.get('Name'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(d.get('Active')))
-				i = self.addInfoLine(self._liveboxAList, i, 'Last Boot', LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
-				i = self.addInfoLine(self._liveboxAList, i, 'Boot Loader Version', d.get('BootLoaderVersion'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Firewall Level', d.get('FirewallLevel'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Internet Active', LmTools.FmtBool(d.get('Internet')))
-				i = self.addInfoLine(self._liveboxAList, i, 'IPTV Active', LmTools.FmtBool(d.get('IPTV')))
-				i = self.addInfoLine(self._liveboxAList, i, 'Telephony Active', LmTools.FmtBool(d.get('Telephony')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Name'), d.get('Name'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(d.get('Active')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Last Boot'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Boot Loader Version'), d.get('BootLoaderVersion'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firewall Level'), d.get('FirewallLevel'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Internet Active'), LmTools.FmtBool(d.get('Internet')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Active'), LmTools.FmtBool(d.get('IPTV')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Telephony Active'), LmTools.FmtBool(d.get('Telephony')))
 
 		try:
 			d = self._session.request('Time:getTime')
@@ -516,9 +531,9 @@ class LmInfo:
 			s = d.get('status', False)
 			d = d.get('data')
 		if (not s) or (d is None):
-			i = self.addInfoLine(self._liveboxAList, i, 'Time', 'Time:getTime query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Time'), 'Time:getTime query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Time', d.get('time'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Time'), d.get('time'))
 
 		try:
 			d = self._session.request('DeviceInfo.MemoryStatus:get')
@@ -528,10 +543,10 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Memory', 'DeviceInfo.MemoryStatus:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Memory'), 'DeviceInfo.MemoryStatus:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Total Memory', LmTools.FmtInt(d.get('Total')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Free Memory', LmTools.FmtInt(d.get('Free')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Total Memory'), LmTools.FmtInt(d.get('Total')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Free Memory'), LmTools.FmtInt(d.get('Free')))
 
 		return i
 
@@ -539,7 +554,7 @@ class LmInfo:
 	### Load Internet infos
 	def loadInternetInfo(self, iIndex = 0):
 		aLiveboxMAC = ''
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'Internet Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Internet Information'))
 
 		try:
 			d = self._session.request('NMC:get')
@@ -549,21 +564,21 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Connection', 'NMC:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Connection'), 'NMC:get query error', LmTools.ValQual.Error)
 		else:
 			aAccessType = d.get('WanMode')
 			if (aAccessType is not None) and (len(aAccessType) >=4):
 				if aAccessType[0:4] == 'GPON':
-					i = self.addInfoLine(self._liveboxAList, i, 'Access Type', 'ONT Fiber (' + aAccessType + ')')
+					i = self.addInfoLine(self._liveboxAList, i, lx('Access Type'), 'ONT Fiber (' + aAccessType + ')')
 				else:
-					i = self.addInfoLine(self._liveboxAList, i, 'Access Type', 'ADSL (' + aAccessType + ')')
+					i = self.addInfoLine(self._liveboxAList, i, lx('Access Type'), 'ADSL (' + aAccessType + ')')
 			
-			i = self.addInfoLine(self._liveboxAList, i, 'Username', d.get('Username'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Factory Reset Scheduled', LmTools.FmtBool(d.get('FactoryResetScheduled')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Connection Error', LmTools.FmtBool(d.get('ConnectionError')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Offer Type', d.get('OfferType'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Offer Name', d.get('OfferName'))
-			i = self.addInfoLine(self._liveboxAList, i, 'IPTV Mode', d.get('IPTVMode'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Username'), d.get('Username'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Factory Reset Scheduled'), LmTools.FmtBool(d.get('FactoryResetScheduled')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Connection Error'), LmTools.FmtBool(d.get('ConnectionError')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Offer Type'), d.get('OfferType'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Offer Name'), d.get('OfferName'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Mode'), d.get('IPTVMode'))
 
 		d = None
 		try:
@@ -574,26 +589,26 @@ class LmInfo:
 		if q is not None:
 			d = q.get('status')
 		if (d is None) or (not d):
-			i = self.addInfoLine(self._liveboxAList, i, 'Internet Infos', 'NMC:getWANStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Internet Infos'), 'NMC:getWANStatus query error', LmTools.ValQual.Error)
 		if q is not None:
 			d = q.get('data')
 		else:
 			d = None
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Internet Infos', 'NMC:getWANStatus data error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Internet Infos'), 'NMC:getWANStatus data error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'WAN Status', LmTools.FmtStrCapitalize(d.get('WanState')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Link Status', LmTools.FmtStrCapitalize(d.get('LinkState')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Link Type', LmTools.FmtStrUpper(d.get('LinkType')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Protocol', LmTools.FmtStrUpper(d.get('Protocol')))
-			i = self.addInfoLine(self._liveboxAList, i, 'GPON State', d.get('GponState'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Connection Status', d.get('ConnectionState'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Last Connection Error', d.get('LastConnectionError'))
-			i = self.addInfoLine(self._liveboxAList, i, 'IP Address', d.get('IPAddress'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Remote Gateway', d.get('RemoteGateway'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DNS Servers', d.get('DNSServers'))
-			i = self.addInfoLine(self._liveboxAList, i, 'IPv6 Address', d.get('IPv6Address'))
-			i = self.addInfoLine(self._liveboxAList, i, 'IPv6 Prefix', d.get('IPv6DelegatedPrefix'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('WAN Status'), LmTools.FmtStrCapitalize(d.get('WanState')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Link Status'), LmTools.FmtStrCapitalize(d.get('LinkState')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Link Type'), LmTools.FmtStrUpper(d.get('LinkType')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Protocol'), LmTools.FmtStrUpper(d.get('Protocol')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('GPON State'), d.get('GponState'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Connection Status'), d.get('ConnectionState'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Last Connection Error'), d.get('LastConnectionError'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('IP Address'), d.get('IPAddress'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Remote Gateway'), d.get('RemoteGateway'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DNS Servers'), d.get('DNSServers'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPv6 Address'), d.get('IPv6Address'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPv6 Prefix'), d.get('IPv6DelegatedPrefix'))
 
 		try:
 			d = self._session.request('DeviceInfo:get')
@@ -603,7 +618,7 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Internet Infos', 'DeviceInfo:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Internet Infos'), 'DeviceInfo:get query error', LmTools.ValQual.Error)
 		else:
 			aLiveboxMAC = d.get('BaseMAC', '').upper()
 
@@ -616,18 +631,18 @@ class LmInfo:
 			if d is not None:
 				d = d.get('status')
 			if d is None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Internet Infos', 'Devices.Device:get query error', LmTools.ValQual.Error)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Internet Infos'), 'Devices.Device:get query error', LmTools.ValQual.Error)
 			else:
-				i = self.addInfoLine(self._liveboxAList, i, 'Last Connection', LmTools.FmtLiveboxTimestamp(d.get('LastConnection')))
-				i = self.addInfoLine(self._liveboxAList, i, 'Firewall Level', d.get('FirewallLevel'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Last Connection'), LmTools.FmtLiveboxTimestamp(d.get('LastConnection')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firewall Level'), d.get('FirewallLevel'))
 				aRate = d.get('DownstreamMaxBitRate')
 				if aRate is not None:
 					aRate *= 1024
-					i = self.addInfoLine(self._liveboxAList, i, 'Max Down Bit Rate', LmTools.FmtBytes(aRate))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Max Down Bit Rate'), LmTools.FmtBytes(aRate))
 				aRate = d.get('UpstreamMaxBitRate')
 				if aRate is not None:
 					aRate *= 1024
-					i = self.addInfoLine(self._liveboxAList, i, 'Max Up Bit Rate', LmTools.FmtBytes(aRate))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Max Up Bit Rate'), LmTools.FmtBytes(aRate))
 
 		try:
 			d = self._session.request('NeMo.Intf.data:getMIBs', { 'mibs': 'dhcp' })
@@ -641,18 +656,18 @@ class LmInfo:
 		if d is not None:
 			d = d.get('dhcp_data')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Connection', 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Connection'), 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCP Status', d.get('DHCPStatus'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Subnet Mask', d.get('SubnetMask'))
-			i = self.addInfoLine(self._liveboxAList, i, 'IP Routers', d.get('IPRouters'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCP Server', d.get('DHCPServer'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Renew', LmTools.FmtBool(d.get('Renew')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Authentication', LmTools.FmtBool(d.get('CheckAuthentication')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Authentication Information', d.get('AuthenticationInformation'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Connection Up Time', LmTools.FmtTime(d.get('Uptime')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Lease Time', LmTools.FmtTime(d.get('LeaseTime')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Lease Time Remaining', LmTools.FmtTime(d.get('LeaseTimeRemaining')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCP Status'), d.get('DHCPStatus'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Subnet Mask'), d.get('SubnetMask'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('IP Routers'), d.get('IPRouters'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCP Server'), d.get('DHCPServer'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Renew'), LmTools.FmtBool(d.get('Renew')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Authentication'), LmTools.FmtBool(d.get('CheckAuthentication')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Authentication Information'), d.get('AuthenticationInformation'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Connection Up Time'), LmTools.FmtTime(d.get('Uptime')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Lease Time'), LmTools.FmtTime(d.get('LeaseTime')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Lease Time Remaining'), LmTools.FmtTime(d.get('LeaseTimeRemaining')))
 
 		try:
 			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'VLANID' })
@@ -660,9 +675,9 @@ class LmInfo:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'VLAN ID', 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('VLAN ID'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'VLAN ID', LmTools.FmtInt(d.get('status')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('VLAN ID'), LmTools.FmtInt(d.get('status')))
 
 		try:
 			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'MTU' })
@@ -670,16 +685,16 @@ class LmInfo:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'MTU', 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('MTU'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'MTU', LmTools.FmtInt(d.get('status')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('MTU'), LmTools.FmtInt(d.get('status')))
 
 		return i
 
 
 	### Load Wifi infos
 	def loadWifiInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'Wifi Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Wifi Information'))
 
 		try:
 			d = self._session.request('NMC.Wifi:get')
@@ -689,11 +704,11 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Wifi', 'NMC.Wifi:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NMC.Wifi:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Enabled', LmTools.FmtBool(d.get('Enable')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(d.get('Status')))
-			i = self.addInfoLine(self._liveboxAList, i, 'BGN User Bandwidth', d.get('BGNUserBandwidth'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Enabled'), LmTools.FmtBool(d.get('Enable')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(d.get('Status')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('BGN User Bandwidth'), d.get('BGNUserBandwidth'))
 
 		try:
 			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
@@ -705,14 +720,14 @@ class LmInfo:
 		else:
 			d = None
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Scheduler Enabled', 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Scheduler Enabled'), 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
 		else:
 			d = d.get('scheduleInfo', [])
 			if len(d):
 				aActive = d[0].get('enable', False)
 			else:
 				aActive = False
-			i = self.addInfoLine(self._liveboxAList, i, 'Scheduler Enabled', LmTools.FmtBool(aActive))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Scheduler Enabled'), LmTools.FmtBool(aActive))
 
 		b = None
 		w = None
@@ -738,7 +753,7 @@ class LmInfo:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
-			i = self.addInfoLine(self._liveboxAList, i, 'Wifi', 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return i 
 
 		for s in LmConfig.NET_INTF:
@@ -750,8 +765,8 @@ class LmInfo:
 			aIntfKey = None
 			aBase = b.get(s['Key'])
 			if aBase is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Enabled', LmTools.FmtBool(aBase.get('Enable')))
-				i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(aBase.get('Status')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Enabled'), LmTools.FmtBool(aBase.get('Enable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(aBase.get('Status')))
 				aLowLevelIntf = aBase.get('LLIntf')
 				if aLowLevelIntf is not None:
 					for aKey in aLowLevelIntf:
@@ -763,47 +778,47 @@ class LmInfo:
 			if (q is None) or (r is None):
 				continue
 
-			i = self.addInfoLine(self._liveboxAList, i, 'Radio Status', q.get('RadioStatus'))
-			i = self.addInfoLine(self._liveboxAList, i, 'VAP Status', r.get('VAPStatus'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Vendor Name', LmTools.FmtStrUpper(q.get('VendorName')))
-			i = self.addInfoLine(self._liveboxAList, i, 'MAC Address', LmTools.FmtStrUpper(r.get('MACAddress')))
-			i = self.addInfoLine(self._liveboxAList, i, 'SSID', r.get('SSID'))
-			i = self.addInfoLine(self._liveboxAList, i, 'SSID Advertisement', LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Radio Status'), q.get('RadioStatus'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('VAP Status'), r.get('VAPStatus'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Vendor Name'), LmTools.FmtStrUpper(q.get('VendorName')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('MAC Address'), LmTools.FmtStrUpper(r.get('MACAddress')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('SSID'), r.get('SSID'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('SSID Advertisement'), LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
 
 			t = r.get('Security')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Security Mode', t.get('ModeEnabled'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WEP Key', t.get('WEPKey'))
-				i = self.addInfoLine(self._liveboxAList, i, 'PreShared Key', t.get('PreSharedKey'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Key Pass Phrase', t.get('KeyPassPhrase'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Security Mode'), t.get('ModeEnabled'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WEP Key'), t.get('WEPKey'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('PreShared Key'), t.get('PreSharedKey'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Key Pass Phrase'), t.get('KeyPassPhrase'))
 
 			t = r.get('WPS')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Enabled', LmTools.FmtBool(t.get('Enable')))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Methods', t.get('ConfigMethodsEnabled'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Self PIN', t.get('SelfPIN'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Pairing In Progress', LmTools.FmtBool(t.get('PairingInProgress')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Enabled'), LmTools.FmtBool(t.get('Enable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Methods'), t.get('ConfigMethodsEnabled'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Self PIN'), t.get('SelfPIN'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Pairing In Progress'), LmTools.FmtBool(t.get('PairingInProgress')))
 
 			t = r.get('MACFiltering')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'MAC Filtering', t.get('Mode'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MAC Filtering'), t.get('Mode'))
 
-			i = self.addInfoLine(self._liveboxAList, i, 'Max Bitrate', LmTools.FmtInt(q.get('MaxBitRate')))
-			i = self.addInfoLine(self._liveboxAList, i, 'AP Mode', LmTools.FmtBool(q.get('AP_Mode')))
-			i = self.addInfoLine(self._liveboxAList, i, 'STA Mode', LmTools.FmtBool(q.get('STA_Mode')))
-			i = self.addInfoLine(self._liveboxAList, i, 'WDS Mode', LmTools.FmtBool(q.get('WDS_Mode')))
-			i = self.addInfoLine(self._liveboxAList, i, 'WET Mode', LmTools.FmtBool(q.get('WET_Mode')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Frequency Band', q.get('OperatingFrequencyBand'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Channel Bandwidth', q.get('CurrentOperatingChannelBandwidth'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Standard', q.get('OperatingStandards'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Channel', LmTools.FmtInt(q.get('Channel')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Auto Channel Supported', LmTools.FmtBool(q.get('AutoChannelSupported')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Auto Channel Enabled', LmTools.FmtBool(q.get('AutoChannelEnable')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Channel Change Reason', q.get('ChannelChangeReason'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Max Associated Devices', LmTools.FmtInt(q.get('MaxAssociatedDevices')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Active Associated Devices', LmTools.FmtInt(q.get('ActiveAssociatedDevices')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Noise', LmTools.FmtInt(q.get('Noise')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Antenna Defect', LmTools.FmtBool(q.get('AntennaDefect')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Max Bitrate'), LmTools.FmtInt(q.get('MaxBitRate')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('AP Mode'), LmTools.FmtBool(q.get('AP_Mode')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('STA Mode'), LmTools.FmtBool(q.get('STA_Mode')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('WDS Mode'), LmTools.FmtBool(q.get('WDS_Mode')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('WET Mode'), LmTools.FmtBool(q.get('WET_Mode')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Frequency Band'), q.get('OperatingFrequencyBand'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Channel Bandwidth'), q.get('CurrentOperatingChannelBandwidth'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Standard'), q.get('OperatingStandards'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Channel'), LmTools.FmtInt(q.get('Channel')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Auto Channel Supported'), LmTools.FmtBool(q.get('AutoChannelSupported')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Auto Channel Enabled'), LmTools.FmtBool(q.get('AutoChannelEnable')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Channel Change Reason'), q.get('ChannelChangeReason'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Max Associated Devices'), LmTools.FmtInt(q.get('MaxAssociatedDevices')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Active Associated Devices'), LmTools.FmtInt(q.get('ActiveAssociatedDevices')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Noise'), LmTools.FmtInt(q.get('Noise')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Antenna Defect'), LmTools.FmtBool(q.get('AntennaDefect')))
 
 		try:
 			d = self._session.request('NeMo.Intf.guest:getMIBs', { 'mibs': 'wlanvap' })
@@ -816,7 +831,7 @@ class LmInfo:
 			d = d.get('wlanvap')
 
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Wifi', 'NeMo.Intf.guest:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NeMo.Intf.guest:getMIBs query error', LmTools.ValQual.Error)
 			return i
 
 		for s in LmConfig.NET_INTF:
@@ -828,35 +843,35 @@ class LmInfo:
 			if r is None:
 				continue
 
-			i = self.addInfoLine(self._liveboxAList, i, 'VAP Status', r.get('VAPStatus'))
-			i = self.addInfoLine(self._liveboxAList, i, 'MAC Address', LmTools.FmtStrUpper(r.get('MACAddress')))
-			i = self.addInfoLine(self._liveboxAList, i, 'SSID', r.get('SSID'))
-			i = self.addInfoLine(self._liveboxAList, i, 'SSID Advertisement', LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('VAP Status'), r.get('VAPStatus'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('MAC Address'), LmTools.FmtStrUpper(r.get('MACAddress')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('SSID'), r.get('SSID'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('SSID Advertisement'), LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
 
 			t = r.get('Security')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Security Mode', t.get('ModeEnabled'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WEP Key', t.get('WEPKey'))
-				i = self.addInfoLine(self._liveboxAList, i, 'PreShared Key', t.get('PreSharedKey'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Key Pass Phrase', t.get('KeyPassPhrase'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Security Mode'), t.get('ModeEnabled'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WEP Key'), t.get('WEPKey'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('PreShared Key'), t.get('PreSharedKey'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Key Pass Phrase'), t.get('KeyPassPhrase'))
 
 			t = r.get('WPS')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Enabled', LmTools.FmtBool(t.get('Enable')))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Methods', t.get('ConfigMethodsEnabled'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Self PIN', t.get('SelfPIN'))
-				i = self.addInfoLine(self._liveboxAList, i, 'WPS Pairing In Progress', LmTools.FmtBool(t.get('PairingInProgress')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Enabled'), LmTools.FmtBool(t.get('Enable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Methods'), t.get('ConfigMethodsEnabled'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Self PIN'), t.get('SelfPIN'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('WPS Pairing In Progress'), LmTools.FmtBool(t.get('PairingInProgress')))
 
 			t = r.get('MACFiltering')
 			if t is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'MAC Filtering', t.get('Mode'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MAC Filtering'), t.get('Mode'))
 
 		return i
 
 
 	### Load LAN infos
 	def loadLanInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'LAN Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('LAN Information'))
 
 		try:
 			d = self._session.request('DHCPv4.Server:getDHCPServerPool', { 'id': 'default' })
@@ -868,15 +883,15 @@ class LmInfo:
 		if d is not None:
 			d = d.get('default')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4', 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4'), 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 Enabled', LmTools.FmtBool(d.get('Enable')))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 Status', d.get('Status'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 Gateway', d.get('Server'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Subnet Mask', d.get('SubnetMask'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 Start', d.get('MinAddress'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 End', d.get('MaxAddress'))
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv4 Lease Time', LmTools.FmtTime(d.get('LeaseTime')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Enabled'), LmTools.FmtBool(d.get('Enable')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Status'), d.get('Status'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Gateway'), d.get('Server'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Subnet Mask'), d.get('SubnetMask'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Start'), d.get('MinAddress'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 End'), d.get('MaxAddress'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Lease Time'), LmTools.FmtTime(d.get('LeaseTime')))
 
 		try:
 			d = self._session.request('DHCPv6.Server:getDHCPv6ServerStatus')
@@ -886,9 +901,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv6', 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv6'), 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'DHCPv6 Status', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv6 Status'), d)
 
 		b = None
 		try:
@@ -903,7 +918,7 @@ class LmInfo:
 			d = d.get('eth')
 
 		if (d is None) or (b is None):
-			i = self.addInfoLine(self._liveboxAList, i, 'LAN', 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('LAN'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return
 
 		for s in LmConfig.NET_INTF:
@@ -916,20 +931,20 @@ class LmInfo:
 			if (q is None) or (r is None):
 				continue
 
-			i = self.addInfoLine(self._liveboxAList, i, 'Enabled', LmTools.FmtBool(q.get('Enable')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(q.get('Status')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Current Bit Rate', LmTools.FmtInt(r.get('CurrentBitRate')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Max Bit Rate Supported', LmTools.FmtInt(r.get('MaxBitRateSupported')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Current Duplex Mode', r.get('CurrentDuplexMode'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Power Saving Supported', LmTools.FmtBool(q.get('PowerSavingSupported')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Power Saving Enabled', LmTools.FmtBool(q.get('PowerSavingEnabled')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Enabled'), LmTools.FmtBool(q.get('Enable')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(q.get('Status')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Current Bit Rate'), LmTools.FmtInt(r.get('CurrentBitRate')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Max Bit Rate Supported'), LmTools.FmtInt(r.get('MaxBitRateSupported')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Current Duplex Mode'), r.get('CurrentDuplexMode'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Power Saving Supported'), LmTools.FmtBool(q.get('PowerSavingSupported')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Power Saving Enabled'), LmTools.FmtBool(q.get('PowerSavingEnabled')))
 
 		return i
 
 
 	### Load ONT infos
 	def loadOntInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'ONT Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('ONT Information'))
 
 		aOntIntf = None
 		for s in LmConfig.NET_INTF:
@@ -951,13 +966,13 @@ class LmInfo:
 		if d is not None:
 			d = d.get(aOntIntf)
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'ONT', 'NeMo.Intf.' + aOntIntf + ':getMIBs query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('ONT'), 'NeMo.Intf.' + aOntIntf + ':getMIBs query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'VEIP PPTP UNI', LmTools.FmtBool(d.get('VeipPptpUni')))
-			i = self.addInfoLine(self._liveboxAList, i, 'OMCI Is Tm Owner', LmTools.FmtBool(d.get('OmciIsTmOwner')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('VEIP PPTP UNI'), LmTools.FmtBool(d.get('VeipPptpUni')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('OMCI Is Tm Owner'), LmTools.FmtBool(d.get('OmciIsTmOwner')))
 			v = d.get('MaxBitRateSupported')
 			if v is not None:
-				i = self.addInfoLine(self._liveboxAList, i, 'Max Bit Rate Supported', str(v / 1000) + ' mW')
+				i = self.addInfoLine(self._liveboxAList, i, lx('Max Bit Rate Supported'), str(v / 1000) + ' mW')
 
 			v = d.get('SignalRxPower')
 			if v is not None:
@@ -968,7 +983,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Signal RxPower', str(v) + ' dBm', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Signal RxPower'), str(v) + ' dBm', aQual)
 
 			v = d.get('SignalTxPower')
 			if v is not None:
@@ -979,7 +994,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Signal TxPower', str(v) + ' dBm', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Signal TxPower'), str(v) + ' dBm', aQual)
 
 			v = d.get('Temperature')
 			if v is not None:
@@ -989,7 +1004,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Temperature', str(v) + '°', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Temperature'), str(v) + '°', aQual)
 
 			v = d.get('Voltage')
 			if v is not None:
@@ -1000,7 +1015,7 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'Voltage', str(v) + ' V', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Voltage'), str(v) + ' V', aQual)
 
 			v = d.get('Bias')
 			if v is not None:
@@ -1012,42 +1027,42 @@ class LmInfo:
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, 'BIAS', str(v) + ' mA', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('BIAS'), str(v) + ' mA', aQual)
 
-			i = self.addInfoLine(self._liveboxAList, i, 'Serial Number', d.get('SerialNumber'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Hardware Version', d.get('HardwareVersion'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Equipment ID', d.get('EquipmentId'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Vendor ID', d.get('VendorId'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Vendor Product Code', LmTools.FmtInt(d.get('VendorProductCode')))
-			i = self.addInfoLine(self._liveboxAList, i, 'Pon ID', d.get('PonId'))
-			i = self.addInfoLine(self._liveboxAList, i, 'Registration ID', d.get('RegistrationID'))
-			i = self.addInfoLine(self._liveboxAList, i, 'ONT Software Version 0', d.get('ONTSoftwareVersion0'))
-			i = self.addInfoLine(self._liveboxAList, i, 'ONT Software Version 1', d.get('ONTSoftwareVersion1'))
-			i = self.addInfoLine(self._liveboxAList, i, 'ONT Software Version Active', LmTools.FmtInt(d.get('ONTSoftwareVersionActive')))
-			i = self.addInfoLine(self._liveboxAList, i, 'ONU State', d.get('ONUState'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), d.get('SerialNumber'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Equipment ID'), d.get('EquipmentId'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Vendor ID'), d.get('VendorId'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Vendor Product Code'), LmTools.FmtInt(d.get('VendorProductCode')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Pon ID'), d.get('PonId'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Registration ID'), d.get('RegistrationID'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 0'), d.get('ONTSoftwareVersion0'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 1'), d.get('ONTSoftwareVersion1'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version Active'), LmTools.FmtInt(d.get('ONTSoftwareVersionActive')))
+			i = self.addInfoLine(self._liveboxAList, i, lx('ONU State'), d.get('ONUState'))
 			aRate = d.get('DownstreamMaxRate')
 			if aRate is not None:
 				aRate *= 1024
-				i = self.addInfoLine(self._liveboxAList, i, 'Max Down Bit Rate', LmTools.FmtBytes(aRate))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Max Down Bit Rate'), LmTools.FmtBytes(aRate))
 			aRate = d.get('UpstreamMaxRate')
 			if aRate is not None:
 				aRate *= 1024
-				i = self.addInfoLine(self._liveboxAList, i, 'Max Up Bit Rate', LmTools.FmtBytes(aRate))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Max Up Bit Rate'), LmTools.FmtBytes(aRate))
 			aRate = d.get('DownstreamCurrRate')
 			if aRate is not None:
 				aRate *= 1024
-				i = self.addInfoLine(self._liveboxAList, i, 'Current Down Bit Rate', LmTools.FmtBytes(aRate))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Current Down Bit Rate'), LmTools.FmtBytes(aRate))
 			aRate = d.get('UpstreamCurrRate')
 			if aRate is not None:
 				aRate *= 1024
-				i = self.addInfoLine(self._liveboxAList, i, 'Current Up Bit Rate', LmTools.FmtBytes(aRate))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Current Up Bit Rate'), LmTools.FmtBytes(aRate))
 
 		return i
 
 
 	### Load VoIP infos
 	def loadVoipInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'VoIP Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('VoIP Information'))
 
 		try:
 			d = self._session.request('VoiceService.VoiceApplication:listTrunks')
@@ -1057,25 +1072,25 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'VoIP', 'VoiceService.VoiceApplication:listTrunks query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('VoIP'), 'VoiceService.VoiceApplication:listTrunks query error', LmTools.ValQual.Error)
 		else:
 			for q in d:
-				i = self.addInfoLine(self._liveboxAList, i, 'VoIP Enabled', q.get('enable'))
-				i = self.addInfoLine(self._liveboxAList, i, 'Protocol', q.get('signalingProtocol'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('VoIP Enabled'), q.get('enable'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Protocol'), q.get('signalingProtocol'))
 				aLines = q.get('trunk_lines')
 				if aLines is not None:
 					for l in aLines:
 						aName = l.get('name', 'Line')
-						i = self.addInfoLine(self._liveboxAList, i, aName + ' Enabled', l.get('enable'))
-						i = self.addInfoLine(self._liveboxAList, i, aName + ' Status', l.get('status'))
-						i = self.addInfoLine(self._liveboxAList, i, aName + ' Status Info', l.get('statusInfo'))
-						i = self.addInfoLine(self._liveboxAList, i, aName + ' Number', l.get('directoryNumber'))
+						i = self.addInfoLine(self._liveboxAList, i, lx('{} Enabled').format(aName), l.get('enable'))
+						i = self.addInfoLine(self._liveboxAList, i, lx('{} Status').format(aName), l.get('status'))
+						i = self.addInfoLine(self._liveboxAList, i, lx('{} Status Info').format(aName), l.get('statusInfo'))
+						i = self.addInfoLine(self._liveboxAList, i, lx('{} Number').format(aName), l.get('directoryNumber'))
 
 		# No DECT on Livebox 6
 		if self._liveboxModel == 'LB6':
 			return i
 
-		i = self.addTitleLine(self._liveboxAList, i, 'DECT Information')
+		i = self.addTitleLine(self._liveboxAList, i, lx('DECT Information'))
 
 		try:
 			d = self._session.request('DECT:getName')
@@ -1085,9 +1100,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Name', 'DECT:getName query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Name'), 'DECT:getName query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Name', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Name'), d)
 
 		try:
 			d = self._session.request('DECT:getPIN')
@@ -1097,9 +1112,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'PIN', 'DECT:getPIN query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('PIN'), 'DECT:getPIN query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'PIN', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('PIN'), d)
 
 		try:
 			d = self._session.request('DECT:getRFPI')
@@ -1109,9 +1124,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'RFPI', 'DECT:getRFPI query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('RFPI'), 'DECT:getRFPI query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'RFPI', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('RFPI'), d)
 
 		try:
 			d = self._session.request('DECT:getVersion')
@@ -1121,9 +1136,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Software Version', 'DECT:getVersion query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Software Version'), 'DECT:getVersion query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Software Version', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Software Version'), d)
 
 		try:
 			d = self._session.request('DECT:getStandardVersion')
@@ -1133,9 +1148,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'CAT-iq Version', 'DECT:getStandardVersion query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('CAT-iq Version'), 'DECT:getStandardVersion query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'CAT-iq Version', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('CAT-iq Version'), d)
 
 		try:
 			d = self._session.request('DECT:getPairingStatus')
@@ -1145,9 +1160,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Pairing Status', 'DECT:getPairingStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Pairing Status'), 'DECT:getPairingStatus query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Pairing Status', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Pairing Status'), d)
 
 		try:
 			d = self._session.request('DECT:getRadioState')
@@ -1157,9 +1172,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Radio State', 'DECT:getRadioState query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Radio State'), 'DECT:getRadioState query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Radio State', LmTools.FmtBool(d))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Radio State'), LmTools.FmtBool(d))
 
 		try:
 			d = self._session.request('DECT.Repeater:get')
@@ -1169,16 +1184,16 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Repeater Status', 'DECT.Repeater:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Repeater Status'), 'DECT.Repeater:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Repeater Status', d.get('Status'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Repeater Status'), d.get('Status'))
 
 		return i
 
 
 	### Load IPTV infos
 	def loadIptvInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'IPTV Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('IPTV Information'))
 
 		try:
 			d = self._session.request('NMC.OrangeTV:getIPTVStatus')
@@ -1190,9 +1205,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('IPTVStatus')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'IPTV Status', 'NMC.OrangeTV:getIPTVStatus query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Status'), 'NMC.OrangeTV:getIPTVStatus query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'IPTV Status', d)
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Status'), d)
 
 		try:
 			d = self._session.request('NMC.OrangeTV:getIPTVMultiScreens')
@@ -1204,9 +1219,9 @@ class LmInfo:
 		if d is not None:
 			d = d.get('Enable')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'Multi Screens Status', 'NMC.OrangeTV:getIPTVMultiScreens query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('Multi Screens Status'), 'NMC.OrangeTV:getIPTVMultiScreens query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(self._liveboxAList, i, 'Multi Screens Status', 'Available' if d else 'Disabled')
+			i = self.addInfoLine(self._liveboxAList, i, lx('Multi Screens Status'), lx('Available') if d else lx('Disabled'))
 
 		try:
 			d = self._session.request('NMC.OrangeTV:getIPTVConfig')
@@ -1216,7 +1231,7 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'IPTV Config', 'NMC.OrangeTV:IPTVConfig query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Config'), 'NMC.OrangeTV:IPTVConfig query error', LmTools.ValQual.Error)
 		else:
 			for q in d:
 				aNames = q.get('ChannelFlags')
@@ -1228,7 +1243,7 @@ class LmInfo:
 							aNamesStr += ', '
 						aNamesStr += n
 					aStatus = q.get('ChannelStatus', False)
-					aValue = 'Available' if aStatus else 'Disabled'
+					aValue = lx('Available') if aStatus else lx('Disabled')
 					aChannelType = q.get('ChannelType')
 					if aChannelType is not None:
 						aValue += ' - ' + aChannelType
@@ -1242,7 +1257,7 @@ class LmInfo:
 
 	### Load USB infos
 	def loadUsbInfo(self, iIndex = 0):
-		i = self.addTitleLine(self._liveboxAList, iIndex, 'USB Information')
+		i = self.addTitleLine(self._liveboxAList, iIndex, lx('USB Information'))
 
 		try:
 			d = self._session.request('Devices:get', { 'expression': 'usb' })
@@ -1252,33 +1267,33 @@ class LmInfo:
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			i = self.addInfoLine(self._liveboxAList, i, 'USB', 'Devices:get query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._liveboxAList, i, lx('USB'), 'Devices:get query error', LmTools.ValQual.Error)
 		else:
 			aDeviceFound = False
 			for q in d:
 				aSource = q.get('DiscoverySource')
 				if aSource == 'selfusb':
 					if q.get('Active', False):
-						aActive = 'Active'
+						aActive = lx('Active')
 					else:
-						aActive = 'Inactive'
-					i = self.addInfoLine(self._liveboxAList, i, q.get('Name', 'Unknown USB'), aActive)
+						aActive = lx('Inactive')
+					i = self.addInfoLine(self._liveboxAList, i, q.get('Name', lx('Unknown USB')), aActive)
 				elif aSource == 'usb_storage':
-					i = self.addTitleLine(self._liveboxAList, i, 'USB Device Storage')
-					i = self.addInfoLine(self._liveboxAList, i, 'Key', q.get('Key'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Device Type', q.get('DeviceType'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(q.get('Active')))
-					i = self.addInfoLine(self._liveboxAList, i, 'First Seen', LmTools.FmtLiveboxTimestamp(q.get('FirstSeen')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Last Connection', LmTools.FmtLiveboxTimestamp(q.get('LastConnection')))
-					i = self.addInfoLine(self._liveboxAList, i, 'File System', q.get('FileSystem'))
+					i = self.addTitleLine(self._liveboxAList, i, lx('USB Device Storage'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Key'), q.get('Key'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Device Type'), q.get('DeviceType'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(q.get('Active')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('First Seen'), LmTools.FmtLiveboxTimestamp(q.get('FirstSeen')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Last Connection'), LmTools.FmtLiveboxTimestamp(q.get('LastConnection')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('File System'), q.get('FileSystem'))
 					n = q.get('Capacity')
 					if n is not None:
 						n *= 1024 * 1024
-						i = self.addInfoLine(self._liveboxAList, i, 'Capacity', LmTools.FmtBytes(n))
+						i = self.addInfoLine(self._liveboxAList, i, lx('Capacity'), LmTools.FmtBytes(n))
 					n = q.get('UsedSpace')
 					if n is not None:
 						n *= 1024 * 1024
-						i = self.addInfoLine(self._liveboxAList, i, 'Used Space', LmTools.FmtBytes(n))
+						i = self.addInfoLine(self._liveboxAList, i, lx('Used Space'), LmTools.FmtBytes(n))
 					aNames = q.get('Names')
 					if aNames is not None:
 						aStr = ''
@@ -1288,23 +1303,23 @@ class LmInfo:
 								if len(aStr):
 									aStr += ', '
 								aStr += aName
-						i = self.addInfoLine(self._liveboxAList, i, 'Names', aStr)
+						i = self.addInfoLine(self._liveboxAList, i, lx('Names'), aStr)
 				elif aSource == 'usb_dev':
-					i = self.addTitleLine(self._liveboxAList, i, 'USB Device')
-					i = self.addInfoLine(self._liveboxAList, i, 'Name', q.get('Name'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Device Type', q.get('DeviceType'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Active', LmTools.FmtBool(q.get('Active')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Last Connection', LmTools.FmtLiveboxTimestamp(q.get('LastConnection')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Location', q.get('Location'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Owner', q.get('Owner'))
-					i = self.addInfoLine(self._liveboxAList, i, 'USB Version', q.get('USBVersion'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Device Version', LmTools.FmtInt(q.get('DeviceVersion')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Product ID', LmTools.FmtInt(q.get('ProductID')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Vendor ID', LmTools.FmtInt(q.get('VendorID')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Manufacturer', q.get('Manufacturer'))
-					i = self.addInfoLine(self._liveboxAList, i, 'SerialNumber', q.get('SerialNumber'))
-					i = self.addInfoLine(self._liveboxAList, i, 'Port', LmTools.FmtInt(q.get('Port')))
-					i = self.addInfoLine(self._liveboxAList, i, 'Rate', q.get('Rate'))
+					i = self.addTitleLine(self._liveboxAList, i, lx('USB Device'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Name'), q.get('Name'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Device Type'), q.get('DeviceType'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(q.get('Active')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Last Connection'), LmTools.FmtLiveboxTimestamp(q.get('LastConnection')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Location'), q.get('Location'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Owner'), q.get('Owner'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('USB Version'), q.get('USBVersion'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Device Version'), LmTools.FmtInt(q.get('DeviceVersion')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Product ID'), LmTools.FmtInt(q.get('ProductID')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Vendor ID'), LmTools.FmtInt(q.get('VendorID')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer'), q.get('Manufacturer'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), q.get('SerialNumber'))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Port'), LmTools.FmtInt(q.get('Port')))
+					i = self.addInfoLine(self._liveboxAList, i, lx('Rate'), q.get('Rate'))
 
 		return i
 
@@ -1512,3 +1527,37 @@ class LiveboxStatsThread(QtCore.QObject):
 						e['RxErrors'] = aStats.get('RxErrors', 0)
 						e['TxErrors'] = aStats.get('TxErrors', 0)
 					self._statsReceived.emit(e)
+
+
+'''
+	# Experimental alternate way, but not successful:
+	# - Stats are not real time, not relevant.
+	# - Counters look 64bits but are recycling chaotically, after 512Go, or 3Go, ...
+	def collectStats(self):
+		for s in LmConfig.NET_INTF:
+			if s['Type'] == 'wan':
+				aResult = self._session.request('HomeLan:getWANCounters')
+			else:
+				aResult = self._session.request('HomeLan.Interface.' + s['Key'] + '.Stats:get')
+			if aResult is not None:
+				aStats = aResult.get('status')
+				if type(aStats).__name__ == 'dict':
+					e = {}
+					e['Key'] = s['Key']
+					e['Timestamp'] = datetime.datetime.now()
+					if s['SwapStats']:
+						e['RxBytes'] = aStats.get('BytesSent', 0)
+						e['TxBytes'] = aStats.get('BytesReceived', 0)
+						e['RxErrors'] = 0
+						e['TxErrors'] = 0
+					else:
+						e['RxBytes'] = aStats.get('BytesReceived', 0)
+						e['TxBytes'] = aStats.get('BytesSent', 0)
+						e['RxErrors'] = 0
+						e['TxErrors'] = 0
+					self._statsReceived.emit(e)
+'''
+
+
+
+

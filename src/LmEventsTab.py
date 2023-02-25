@@ -14,6 +14,7 @@ from src import LmTools
 from src import LmConfig
 from src.LmConfig import LmConf
 from src.LmDeviceListTab import DSelCol
+from src.LmLanguages import GetEventsLabel as lx
 
 
 # ################################ VARS & DEFS ################################
@@ -35,17 +36,20 @@ class LmEvents:
 
 	### Create events tab
 	def createEventsTab(self):
-		self._eventsTab = QtWidgets.QWidget()
+		self._eventsTab = QtWidgets.QWidget(objectName = 'eventsTab')
 
 		# Device list
-		self._eventDList = QtWidgets.QTableWidget()
+		self._eventDList = QtWidgets.QTableWidget(objectName = 'eventDList')
 		self._eventDList.setColumnCount(DSelCol.Count)
-		self._eventDList.setHorizontalHeaderLabels(('Key', 'Name', 'MAC'))
+		self._eventDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('MAC')))
 		self._eventDList.setColumnHidden(DSelCol.Key, True)
 		aHeader = self._eventDList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(DSelCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DSelCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
 		self._eventDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._eventDList.setColumnWidth(DSelCol.Name, 200)
 		self._eventDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.SCROLL_BAR_ADJUST)
@@ -59,14 +63,18 @@ class LmEvents:
 		LmConfig.SetTableStyle(self._eventDList)
 
 		# Event list
-		self._eventList = QtWidgets.QTableWidget()
+		self._eventList = QtWidgets.QTableWidget(objectName = 'eventList')
 		self._eventList.setColumnCount(EventCol.Count)
-		self._eventList.setHorizontalHeaderLabels(('Key', 'Time', 'Reason', 'Attributes'))
+		self._eventList.setHorizontalHeaderLabels(('Key', lx('Time'), lx('Reason'), lx('Attributes')))
 		self._eventList.setColumnHidden(EventCol.Key, True)
 		aHeader = self._eventList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(EventCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(EventCol.Time, QtCore.Qt.Orientation.Horizontal, 'elist_Time', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(EventCol.Reason, QtCore.Qt.Orientation.Horizontal, 'elist_Reason', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(EventCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'elist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
 		self._eventList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._eventList.setColumnWidth(EventCol.Time, 80)
 		self._eventList.setColumnWidth(EventCol.Reason, 150)
@@ -88,7 +96,7 @@ class LmEvents:
 		# Button bar
 		aButtonsBox = QtWidgets.QHBoxLayout()
 		aButtonsBox.setSpacing(30)
-		aDisplayEventButton = QtWidgets.QPushButton('Display Event')
+		aDisplayEventButton = QtWidgets.QPushButton(lx('Display Event'), objectName = 'displayEvent')
 		aDisplayEventButton.clicked.connect(self.displayEventButtonClick)
 		aButtonsBox.addWidget(aDisplayEventButton)
 
@@ -99,7 +107,8 @@ class LmEvents:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._eventsTab.setLayout(aVBox)
 
-		self._tabWidget.addTab(self._eventsTab, 'Events')
+		LmConfig.SetToolTips(self._eventsTab, 'events')
+		self._tabWidget.addTab(self._eventsTab, lx('Events'))
 
 
 	### Init the Livebox event collector thread
@@ -209,7 +218,7 @@ class LmEvents:
 		aCursor.insertText(json.dumps(e['Attributes'], indent=2), aStandardFormat)
 		aCursor.endEditBlock()
 
-		LmTools.DisplayInfos('Event Entry', None, aTextDoc)
+		LmTools.DisplayInfos(lx('Event Entry'), None, aTextDoc)
 
 
 	### Update event list

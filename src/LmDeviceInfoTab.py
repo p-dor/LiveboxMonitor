@@ -14,7 +14,9 @@ from src import LmConfig
 from src.LmConfig import LmConf
 from src.LmDeviceListTab import DSelCol
 from src.LmInfoTab import InfoCol
-
+from src.LmLanguages import GetDeviceInfoLabel as lx
+from src.LmLanguages import GetDeviceNameDialogLabel as lnx
+from src.LmLanguages import GetDeviceTypeDialogLabel as ltx
 
 
 # ################################ VARS & DEFS ################################
@@ -29,17 +31,20 @@ class LmDeviceInfo:
 
 	### Create device info tab
 	def createDeviceInfoTab(self):
-		self._deviceInfoTab = QtWidgets.QWidget()
+		self._deviceInfoTab = QtWidgets.QWidget(objectName = 'deviceInfoTab')
 
 		# Device list
-		self._infoDList = QtWidgets.QTableWidget()
+		self._infoDList = QtWidgets.QTableWidget(objectName = 'infoDList')
 		self._infoDList.setColumnCount(DSelCol.Count)
-		self._infoDList.setHorizontalHeaderLabels(('Key', 'Name', 'MAC'))
+		self._infoDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('MAC')))
 		self._infoDList.setColumnHidden(DSelCol.Key, True)
 		aHeader = self._infoDList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(DSelCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DSelCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
 		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoDList.setColumnWidth(DSelCol.Name, 200)
 		self._infoDList.setColumnWidth(DSelCol.MAC, 120 + LmConfig.SCROLL_BAR_ADJUST)
@@ -53,13 +58,16 @@ class LmDeviceInfo:
 		LmConfig.SetTableStyle(self._infoDList)
 
 		# Attribute list
-		self._infoAList = QtWidgets.QTableWidget()
+		self._infoAList = QtWidgets.QTableWidget(objectName = 'infoAList')
 		self._infoAList.setColumnCount(InfoCol.Count)
-		self._infoAList.setHorizontalHeaderLabels(('Attribute', 'Value'))
+		self._infoAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
 		aHeader = self._infoAList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
 		self._infoAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoAList.setColumnWidth(InfoCol.Attribute, 200)
 		self._infoAList.setColumnWidth(InfoCol.Value, 600)
@@ -77,22 +85,22 @@ class LmDeviceInfo:
 		# Button bar
 		aButtonsBox = QtWidgets.QHBoxLayout()
 		aButtonsBox.setSpacing(30)
-		aRefreshDeviceInfoButton = QtWidgets.QPushButton('Refresh')
+		aRefreshDeviceInfoButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refresh')
 		aRefreshDeviceInfoButton.clicked.connect(self.refreshDeviceInfoButtonClick)
 		aButtonsBox.addWidget(aRefreshDeviceInfoButton)
-		aAssignNameButton = QtWidgets.QPushButton('Assign Name...')
+		aAssignNameButton = QtWidgets.QPushButton(lx('Assign Name...'), objectName = 'assignName')
 		aAssignNameButton.clicked.connect(self.assignNameButtonClick)
 		aButtonsBox.addWidget(aAssignNameButton)
-		aAssignTypeButton = QtWidgets.QPushButton('Assign Type...')
+		aAssignTypeButton = QtWidgets.QPushButton(lx('Assign Type...'), objectName = 'assignType')
 		aAssignTypeButton.clicked.connect(self.assignTypeButtonClick)
 		aButtonsBox.addWidget(aAssignTypeButton)
-		aForgetButton = QtWidgets.QPushButton('Forget...')
+		aForgetButton = QtWidgets.QPushButton(lx('Forget...'), objectName = 'forget')
 		aForgetButton.clicked.connect(self.forgetButtonClick)
 		aButtonsBox.addWidget(aForgetButton)
-		aBlockDeviceButton = QtWidgets.QPushButton('Block')
+		aBlockDeviceButton = QtWidgets.QPushButton(lx('Block'), objectName = 'block')
 		aBlockDeviceButton.clicked.connect(self.blockDeviceButtonClick)
 		aButtonsBox.addWidget(aBlockDeviceButton)
-		aUnblockDeviceButton = QtWidgets.QPushButton('Unblock')
+		aUnblockDeviceButton = QtWidgets.QPushButton(lx('Unblock'), objectName = 'unblock')
 		aUnblockDeviceButton.clicked.connect(self.unblockDeviceButtonClick)
 		aButtonsBox.addWidget(aUnblockDeviceButton)
 
@@ -103,7 +111,8 @@ class LmDeviceInfo:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._deviceInfoTab.setLayout(aVBox)
 
-		self._tabWidget.addTab(self._deviceInfoTab, 'Device Infos')
+		LmConfig.SetToolTips(self._deviceInfoTab, 'dinfo')
+		self._tabWidget.addTab(self._deviceInfoTab, lx('Device Infos'))
 
 		# Init context
 		self.initDeviceContext()
@@ -211,7 +220,7 @@ class LmDeviceInfo:
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 
-			self.startTask('Loading device icons...')
+			self.startTask(lx('Loading device icons...'))
 			LmConf.loadDeviceIcons()
 			self.endTask()
 
@@ -341,7 +350,7 @@ class LmDeviceInfo:
 
 	### Update device infos list
 	def updateDeviceInfo(self, iDeviceKey):
-		self.startTask('Getting device information...')
+		self.startTask(lx('Getting device information...'))
 
 		try:
 			d = self._session.request('Devices.Device.' + iDeviceKey + ':get')
@@ -356,9 +365,9 @@ class LmDeviceInfo:
 			return
 
 		i = 0
-		i = self.addInfoLine(self._infoAList, i, 'Key', iDeviceKey)
-		i = self.addInfoLine(self._infoAList, i, 'Active', LmTools.FmtBool(d.get('Active')))
-		i = self.addInfoLine(self._infoAList, i, 'Authenticated', LmTools.FmtBool(d.get('AuthenticationState')))
+		i = self.addInfoLine(self._infoAList, i, lx('Key'), iDeviceKey)
+		i = self.addInfoLine(self._infoAList, i, lx('Active'), LmTools.FmtBool(d.get('Active')))
+		i = self.addInfoLine(self._infoAList, i, lx('Authenticated'), LmTools.FmtBool(d.get('AuthenticationState')))
 
 		try:
 			aData = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': iDeviceKey })
@@ -369,37 +378,37 @@ class LmDeviceInfo:
 				aData = aData.get('scheduleInfo')
 			if (aData is not None):
 				aBlocked = (aData.get('override', '') == 'Disable') and (aData.get('value', '') == 'Disable')
-			i = self.addInfoLine(self._infoAList, i, 'Blocked', LmTools.FmtBool(aBlocked))
+			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), LmTools.FmtBool(aBlocked))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			i = self.addInfoLine(self._infoAList, i, 'Blocked', 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
+			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
 
-		i = self.addInfoLine(self._infoAList, i, 'First connection', LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
-		i = self.addInfoLine(self._infoAList, i, 'Last connection', LmTools.FmtLiveboxTimestamp(d.get('LastConnection')))
-		i = self.addInfoLine(self._infoAList, i, 'Last changed', LmTools.FmtLiveboxTimestamp(d.get('LastChanged')))
-		i = self.addInfoLine(self._infoAList, i, 'Source', d.get('DiscoverySource'))
+		i = self.addInfoLine(self._infoAList, i, lx('First connection'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
+		i = self.addInfoLine(self._infoAList, i, lx('Last connection'), LmTools.FmtLiveboxTimestamp(d.get('LastConnection')))
+		i = self.addInfoLine(self._infoAList, i, lx('Last changed'), LmTools.FmtLiveboxTimestamp(d.get('LastChanged')))
+		i = self.addInfoLine(self._infoAList, i, lx('Source'), d.get('DiscoverySource'))
 
 		self._currentDeviceLiveboxName = d.get('Name', None)
-		i = self.addInfoLine(self._infoAList, i, 'Livebox Name', self._currentDeviceLiveboxName)
+		i = self.addInfoLine(self._infoAList, i, lx('Livebox Name'), self._currentDeviceLiveboxName)
 
 		aNameList = d.get('Names', [])
 		if len(aNameList):
 			for aName in aNameList:
-				i = self.addInfoLine(self._infoAList, i, 'Name', aName.get('Name', '') + ' (' + aName.get('Source', '') + ')')
+				i = self.addInfoLine(self._infoAList, i, lx('Name'), aName.get('Name', '') + ' (' + aName.get('Source', '') + ')')
 		
 		aDNSList = d.get('mDNSService', [])
 		if len(aDNSList):
 			for aDNSName in aDNSList:
-				i = self.addInfoLine(self._infoAList, i, 'DNS Name', aDNSName.get('Name', '') + ' (' + aDNSName.get('ServiceName', '') + ')')
+				i = self.addInfoLine(self._infoAList, i, lx('DNS Name'), aDNSName.get('Name', '') + ' (' + aDNSName.get('ServiceName', '') + ')')
 
 		self._currentDeviceType = d.get('DeviceType', '')
 
 		aTypeList = d.get('DeviceTypes', [])
 		if len(aTypeList):
 			for aType in aTypeList:
-				i = self.addInfoLine(self._infoAList, i, 'Type', aType.get('Type', '') + ' (' + aType.get('Source', '') + ')')
+				i = self.addInfoLine(self._infoAList, i, lx('Type'), aType.get('Type', '') + ' (' + aType.get('Source', '') + ')')
 
-		aActiveIPStruct = LmTools.determineIP(d)
+		aActiveIPStruct = LmTools.DetermineIP(d)
 		if aActiveIPStruct is not None:
 			aActiveIP = aActiveIPStruct.get('Address', '')
 		else:
@@ -415,14 +424,14 @@ class LmDeviceInfo:
 
 				if aIPV4.get('Reserved', False):
 					s += ' - Reserved'
-				i = self.addInfoLine(self._infoAList, i, 'IPv4 Address', s)
+				i = self.addInfoLine(self._infoAList, i, lx('IPv4 Address'), s)
 
 		aIPv6List = d.get('IPv6Address', [])
 		if len(aIPv6List):
 			for aIPV6 in aIPv6List:
-				i = self.addInfoLine(self._infoAList, i, 'IPv6 Address', aIPV6.get('Address', '') +
-																		 ' [' + aIPV6.get('Scope', '') + ']' +
-																		 ' (' + aIPV6.get('Status', '') + ')')
+				i = self.addInfoLine(self._infoAList, i, lx('IPv6 Address'), aIPV6.get('Address', '') +
+																			 ' [' + aIPV6.get('Scope', '') + ']' +
+																			 ' (' + aIPV6.get('Status', '') + ')')
 
 		aMacAddr = d.get('PhysAddress', '')
 		if len(aMacAddr) == 0:
@@ -435,37 +444,37 @@ class LmDeviceInfo:
 				aCompDetails = aData.get('vendorDetails')
 				if aCompDetails is not None:
 					aManufacturer = aCompDetails.get('companyName', '') + ' - ' + aCompDetails.get('countryCode', '')
-				i = self.addInfoLine(self._infoAList, i, 'Manufacturer', aManufacturer)
+				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), aManufacturer)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				i = self.addInfoLine(self._infoAList, i, 'Manufacturer', 'Web query error', LmTools.ValQual.Error)
+				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
 
-		i = self.addInfoLine(self._infoAList, i, 'Vendor ID', d.get('VendorClassID'))
-		i = self.addInfoLine(self._infoAList, i, 'Serial Number', d.get('SerialNumber'))
-		i = self.addInfoLine(self._infoAList, i, 'Product Class', d.get('ProductClass'))
-		i = self.addInfoLine(self._infoAList, i, 'Model Name', d.get('ModelName'))
-		i = self.addInfoLine(self._infoAList, i, 'Software Version', d.get('SoftwareVersion'))
-		i = self.addInfoLine(self._infoAList, i, 'Hardware Version', d.get('HardwareVersion'))
-		i = self.addInfoLine(self._infoAList, i, 'DHCP Option 55', d.get('DHCPOption55'))
+		i = self.addInfoLine(self._infoAList, i, lx('Vendor ID'), d.get('VendorClassID'))
+		i = self.addInfoLine(self._infoAList, i, lx('Serial Number'), d.get('SerialNumber'))
+		i = self.addInfoLine(self._infoAList, i, lx('Product Class'), d.get('ProductClass'))
+		i = self.addInfoLine(self._infoAList, i, lx('Model Name'), d.get('ModelName'))
+		i = self.addInfoLine(self._infoAList, i, lx('Software Version'), d.get('SoftwareVersion'))
+		i = self.addInfoLine(self._infoAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
+		i = self.addInfoLine(self._infoAList, i, lx('DHCP Option 55'), d.get('DHCPOption55'))
 
 		aSysSoftware = d.get('SSW')
 		if aSysSoftware is not None:
-			i = self.addInfoLine(self._infoAList, i, 'Full Software Version', aSysSoftware.get('SoftwareVersion'))
-			i = self.addInfoLine(self._infoAList, i, 'State', aSysSoftware.get('State'))
-			i = self.addInfoLine(self._infoAList, i, 'Protocol', aSysSoftware.get('Protocol'))
-			i = self.addInfoLine(self._infoAList, i, 'Current Mode', aSysSoftware.get('CurrentMode'))
-			i = self.addInfoLine(self._infoAList, i, 'Pairing Time', LmTools.FmtLiveboxTimestamp(aSysSoftware.get('PairingTime')))
-			i = self.addInfoLine(self._infoAList, i, 'Uplink Type', aSysSoftware.get('UplinkType'))
+			i = self.addInfoLine(self._infoAList, i, lx('Full Software Version'), aSysSoftware.get('SoftwareVersion'))
+			i = self.addInfoLine(self._infoAList, i, lx('State'), aSysSoftware.get('State'))
+			i = self.addInfoLine(self._infoAList, i, lx('Protocol'), aSysSoftware.get('Protocol'))
+			i = self.addInfoLine(self._infoAList, i, lx('Current Mode'), aSysSoftware.get('CurrentMode'))
+			i = self.addInfoLine(self._infoAList, i, lx('Pairing Time'), LmTools.FmtLiveboxTimestamp(aSysSoftware.get('PairingTime')))
+			i = self.addInfoLine(self._infoAList, i, lx('Uplink Type'), aSysSoftware.get('UplinkType'))
 
-		i = self.addInfoLine(self._infoAList, i, 'Wifi Signal Strength', LmTools.FmtInt(d.get('SignalStrength')))
-		i = self.addInfoLine(self._infoAList, i, 'Wifi Signal Noise Ratio', LmTools.FmtInt(d.get('SignalNoiseRatio')))
+		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Strength'), LmTools.FmtInt(d.get('SignalStrength')))
+		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Noise Ratio'), LmTools.FmtInt(d.get('SignalNoiseRatio')))
 
 		aSysSoftwareStd = d.get('SSWSta')
 		if aSysSoftwareStd is not None:
-			i = self.addInfoLine(self._infoAList, i, 'Supported Standards', aSysSoftwareStd.get('SupportedStandards'))
-			i = self.addInfoLine(self._infoAList, i, 'Supports 2.4GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports24GHz')))
-			i = self.addInfoLine(self._infoAList, i, 'Supports 5GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports5GHz')))
-			i = self.addInfoLine(self._infoAList, i, 'Supports 6GHz', LmTools.FmtBool(aSysSoftwareStd.get('Supports6GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supported Standards'), aSysSoftwareStd.get('SupportedStandards'))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 2.4GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports24GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 5GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports5GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 6GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports6GHz')))
 
 		self.endTask()
 
@@ -477,11 +486,11 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		super(SetDeviceNameDialog, self).__init__(iParent)
 		self.resize(350, 150)
 
-		aLabel = QtWidgets.QLabel('Names for [' + iDeviceKey + '] device:')
+		aLabel = QtWidgets.QLabel(lnx('Names for [{}] device:').format(iDeviceKey), objectName = 'mainLabel')
 
-		self._nameCheckBox = QtWidgets.QCheckBox('Monitor Name')
+		self._nameCheckBox = QtWidgets.QCheckBox(lnx('Local Name'), objectName = 'nameCheckBox')
 		self._nameCheckBox.clicked.connect(self.nameClick)
-		self._nameEdit = QtWidgets.QLineEdit()
+		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
 		if iName is None:
 			self._nameCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 			self._nameEdit.setDisabled(True)
@@ -491,9 +500,9 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 			self._currentName = iName
 			self._nameEdit.setText(self._currentName)
 
-		self._liveboxNameCheckBox = QtWidgets.QCheckBox('Livebox Name')
+		self._liveboxNameCheckBox = QtWidgets.QCheckBox(lnx('Livebox Name'), objectName = 'liveboxNameCheckBox')
 		self._liveboxNameCheckBox.clicked.connect(self.liveboxNameClick)
-		self._liveboxNameEdit = QtWidgets.QLineEdit()
+		self._liveboxNameEdit = QtWidgets.QLineEdit(objectName = 'liveboxNameEdit')
 		if iLiveboxName is None:
 			self._liveboxNameCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 			self._liveboxNameEdit.setDisabled(True)
@@ -510,10 +519,10 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		aNameGrid.addWidget(self._liveboxNameCheckBox, 2, 0)
 		aNameGrid.addWidget(self._liveboxNameEdit, 2, 1)
 
-		aOKButton = QtWidgets.QPushButton('OK')
+		aOKButton = QtWidgets.QPushButton(lnx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lnx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -526,7 +535,9 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aNameGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('Assign device names')
+		LmConfig.SetToolTips(self, 'dname')
+
+		self.setWindowTitle(lnx('Assign device names'))
 		self.setModal(True)
 		self.show()
 
@@ -570,9 +581,9 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 
 		self._ignoreSignal = False
 
-		aLabel = QtWidgets.QLabel('Type for [' + iDeviceKey + '] device:')
+		aLabel = QtWidgets.QLabel(ltx('Type for [{}] device:').format(iDeviceKey), objectName = 'mainLabel')
 
-		self._typeNameCombo = QtWidgets.QComboBox()
+		self._typeNameCombo = QtWidgets.QComboBox(objectName = 'typeNameCombo')
 		self._typeNameCombo.setIconSize(QtCore.QSize(45, 45))
 
 		i = 0
@@ -582,14 +593,14 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 			i += 1
 		self._typeNameCombo.activated.connect(self.typeNameSelected)
 
-		self._typeKeyEdit = QtWidgets.QLineEdit()
+		self._typeKeyEdit = QtWidgets.QLineEdit(objectName = 'typeKeyEdit')
 		self._typeKeyEdit.textChanged.connect(self.typeKeyTyped)
 		self._typeKeyEdit.setText(iDeviceTypeKey)
 
-		aOKButton = QtWidgets.QPushButton('OK')
+		aOKButton = QtWidgets.QPushButton(ltx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
 		aOKButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(ltx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aHBox = QtWidgets.QHBoxLayout()
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -603,7 +614,9 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._typeKeyEdit, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		self.setWindowTitle('Assign a device type')
+		LmConfig.SetToolTips(self, 'dtype')
+
+		self.setWindowTitle(ltx('Assign a device type'))
 		self.setModal(True)
 		self.show()
 

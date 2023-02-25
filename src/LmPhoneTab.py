@@ -12,6 +12,8 @@ from src import LmTools
 from src import LmConfig
 from src.LmIcons import LmIcon
 from src.LmConfig import LmConf
+from src.LmLanguages import GetPhoneLabel as lx
+from src.LmLanguages import GetPhoneContactDialogLabel as lcx
 
 
 # ################################ VARS & DEFS ################################
@@ -65,18 +67,24 @@ class LmPhone:
 
 	### Create phone tab
 	def createPhoneTab(self):
-		self._phoneTab = QtWidgets.QWidget()
+		self._phoneTab = QtWidgets.QWidget(objectName = 'phoneTab')
 
 		# Call list
-		self._callList = QtWidgets.QTableWidget()
+		self._callList = QtWidgets.QTableWidget(objectName = 'callList')
 		self._callList.setColumnCount(CallCol.Count)
-		self._callList.setHorizontalHeaderLabels(('Key', 'T', 'Time', 'Number', 'CS', 'Contact', 'Duration'))
+		self._callList.setHorizontalHeaderLabels(('Key', lx('T'), lx('Time'), lx('Number'), 'CS', lx('Contact'), lx('Duration')))
 		self._callList.setColumnHidden(CallCol.Key, True)
 		self._callList.setColumnHidden(CallCol.ContactSource, True)
 		aHeader = self._callList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(CallCol.Contact, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(CallCol.Type, QtCore.Qt.Orientation.Horizontal, 'calist_Type', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(CallCol.Time, QtCore.Qt.Orientation.Horizontal, 'calist_Time', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(CallCol.Number, QtCore.Qt.Orientation.Horizontal, 'calist_Number', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(CallCol.Contact, QtCore.Qt.Orientation.Horizontal, 'calist_Contact', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(CallCol.Duration, QtCore.Qt.Orientation.Horizontal, 'calist_Duration', QtCore.Qt.ItemDataRole.UserRole)
 		self._callList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._callList.setColumnWidth(CallCol.Type, 30)
 		self._callList.setColumnWidth(CallCol.Time, 130)
@@ -97,13 +105,13 @@ class LmPhone:
 		# Call button bar
 		aCallButtonsBox = QtWidgets.QHBoxLayout()
 		aCallButtonsBox.setSpacing(30)
-		aRefreshCallButton = QtWidgets.QPushButton('Refresh')
+		aRefreshCallButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refreshCall')
 		aRefreshCallButton.clicked.connect(self.refreshCallButtonClick)
 		aCallButtonsBox.addWidget(aRefreshCallButton)
-		aDeleteCallButton = QtWidgets.QPushButton('Delete')
+		aDeleteCallButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteCall')
 		aDeleteCallButton.clicked.connect(self.deleteCallButtonClick)
 		aCallButtonsBox.addWidget(aDeleteCallButton)
-		aDeleteAllCallsButton = QtWidgets.QPushButton('Delete All...')
+		aDeleteAllCallsButton = QtWidgets.QPushButton(lx('Delete All...'), objectName = 'deleteAllCalls')
 		aDeleteAllCallsButton.clicked.connect(self.deleteAllCallsButtonClick)
 		aCallButtonsBox.addWidget(aDeleteAllCallsButton)
 
@@ -114,14 +122,20 @@ class LmPhone:
 		aCallBox.addLayout(aCallButtonsBox, 0)
 
 		# Contact list
-		self._contactList = QtWidgets.QTableWidget()
+		self._contactList = QtWidgets.QTableWidget(objectName = 'contactList')
 		self._contactList.setColumnCount(ContactCol.Count)
-		self._contactList.setHorizontalHeaderLabels(('Key', 'Name', 'Mobile', 'Home', 'Work', 'Ring'))
+		self._contactList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Mobile'), lx('Home'), lx('Work'), lx('Ring')))
 		self._contactList.setColumnHidden(ContactCol.Key, True)
 		aHeader = self._contactList.horizontalHeader()
 		aHeader.setSectionsMovable(False)
 		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		aHeader.setSectionResizeMode(ContactCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aModel = aHeader.model()
+		aModel.setHeaderData(ContactCol.Name, QtCore.Qt.Orientation.Horizontal, 'colist_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(ContactCol.Cell, QtCore.Qt.Orientation.Horizontal, 'colist_Cell', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(ContactCol.Home, QtCore.Qt.Orientation.Horizontal, 'colist_Home', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(ContactCol.Work, QtCore.Qt.Orientation.Horizontal, 'colist_Work', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(ContactCol.Ring, QtCore.Qt.Orientation.Horizontal, 'colist_Ring', QtCore.Qt.ItemDataRole.UserRole)
 		self._contactList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._contactList.setColumnWidth(ContactCol.Name, 250)
 		self._contactList.setColumnWidth(ContactCol.Cell, 110)
@@ -139,19 +153,19 @@ class LmPhone:
 		# Contact button bar
 		aContactButtonsBox = QtWidgets.QHBoxLayout()
 		aContactButtonsBox.setSpacing(10)
-		aRefreshContactButton = QtWidgets.QPushButton('Refresh')
+		aRefreshContactButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refreshContact')
 		aRefreshContactButton.clicked.connect(self.refreshContactButtonClick)
 		aContactButtonsBox.addWidget(aRefreshContactButton)
-		aAddContactButton = QtWidgets.QPushButton('Add...')
+		aAddContactButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addContact')
 		aAddContactButton.clicked.connect(self.addContactButtonClick)
 		aContactButtonsBox.addWidget(aAddContactButton)
-		aEditContactButton = QtWidgets.QPushButton('Edit...')
+		aEditContactButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editContact')
 		aEditContactButton.clicked.connect(self.editContactButtonClick)
 		aContactButtonsBox.addWidget(aEditContactButton)
-		aDeleteContactButton = QtWidgets.QPushButton('Delete')
+		aDeleteContactButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteContact')
 		aDeleteContactButton.clicked.connect(self.deleteContactButtonClick)
 		aContactButtonsBox.addWidget(aDeleteContactButton)
-		aDeleteAllContactsButton = QtWidgets.QPushButton('Delete All...')
+		aDeleteAllContactsButton = QtWidgets.QPushButton(lx('Delete All...'), objectName = 'deleteAllContacts')
 		aDeleteAllContactsButton.clicked.connect(self.deleteAllContactsButtonClick)
 		aContactButtonsBox.addWidget(aDeleteAllContactsButton)
 
@@ -161,7 +175,7 @@ class LmPhone:
 
 		aPhoneRingSet = QtWidgets.QHBoxLayout()
 		aPhoneRingSet.setSpacing(2)
-		self._ringToneCombo = QtWidgets.QComboBox()
+		self._ringToneCombo = QtWidgets.QComboBox(objectName = 'ringToneCombo')
 		self._ringToneCombo.addItem('-')
 		i = 1
 		while i <= 7:
@@ -169,15 +183,15 @@ class LmPhone:
 			i += 1
 		self._ringToneCombo.setMaximumWidth(55)
 		aPhoneRingSet.addWidget(self._ringToneCombo)
-		aPhoneRingButton = QtWidgets.QPushButton('Phone Ring')
+		aPhoneRingButton = QtWidgets.QPushButton(lx('Phone Ring'), objectName = 'phoneRing')
 		aPhoneRingButton.clicked.connect(self.phoneRingButtonClick)
 		aPhoneRingSet.addWidget(aPhoneRingButton)
 		aToolButtonsBox.addLayout(aPhoneRingSet, 0)
 
-		aExportContactsButton = QtWidgets.QPushButton('Export...')
+		aExportContactsButton = QtWidgets.QPushButton(lx('Export...'), objectName = 'exportContacts')
 		aExportContactsButton.clicked.connect(self.exportContactsButtonClick)
 		aToolButtonsBox.addWidget(aExportContactsButton)
-		aImportContactsButton = QtWidgets.QPushButton('Import...')
+		aImportContactsButton = QtWidgets.QPushButton(lx('Import...'), objectName = 'importContacts')
 		aImportContactsButton.clicked.connect(self.importContactsButtonClick)
 		aToolButtonsBox.addWidget(aImportContactsButton)
 
@@ -205,7 +219,8 @@ class LmPhone:
 		aHBox.addLayout(aContactBox, 1)
 		self._phoneTab.setLayout(aHBox)
 
-		self._tabWidget.addTab(self._phoneTab, 'Phone')
+		LmConfig.SetToolTips(self._phoneTab, 'phone')
+		self._tabWidget.addTab(self._phoneTab, lx('Phone'))
 
 		# Init context
 		self.phoneTabInit()
@@ -327,7 +342,7 @@ class LmPhone:
 
 	### Load phone call list
 	def loadCallList(self):
-		self.startTask('Loading phone call list...')
+		self.startTask(lx('Loading phone call list...'))
 
 		self._callList.setSortingEnabled(False)
 
@@ -381,7 +396,7 @@ class LmPhone:
 				aSeconds = c.get('duration')
 				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
 				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
-				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 
 				if aMissedCall:
 					aTime.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
@@ -516,7 +531,7 @@ class LmPhone:
 
 	### Click on export contacts button
 	def exportContactsButtonClick(self):
-		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Export File', 'Livebox Contacts.vcf', '*.vcf')
+		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Livebox Contacts') + '.vcf', '*.vcf')
 		aFileName = aFileName[0]
 		if aFileName == '':
 			return
@@ -528,7 +543,7 @@ class LmPhone:
 			LmTools.DisplayError('Cannot create the file.')
 			return
 
-		self.startTask('Exporting all contacts...')
+		self.startTask(lx('Exporting all contacts...'))
 
 		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
 		if aContactList is not None:
@@ -558,10 +573,10 @@ class LmPhone:
 
 	### Click on import contacts button
 	def importContactsButtonClick(self):
-		aFiles = QtWidgets.QFileDialog.getOpenFileNames(self, 'Select files to import', '', '*.vcf')
+		aFiles = QtWidgets.QFileDialog.getOpenFileNames(self, lx('Select files to import'), '', '*.vcf')
 		aFiles = aFiles[0]
 
-		self.startTask('Importing contacts...')
+		self.startTask(lx('Importing contacts...'))
 		self._contactList.setSortingEnabled(False)
 
 		aFileError = []
@@ -578,7 +593,7 @@ class LmPhone:
 		self.endTask()
 
 		if len(aFileError):
-			aErrorStr = 'Cannot import file(s): '
+			aErrorStr = lx('Cannot import file(s): ')
 			for f in aFileError:
 				aErrorStr += f + ', '
 			n = len(aErrorStr)
@@ -737,7 +752,7 @@ class LmPhone:
 
 	### Load contact list
 	def loadContactList(self):
-		self.startTask('Loading contact list...')
+		self.startTask(lx('Loading contact list...'))
 
 		self._contactList.setSortingEnabled(False)
 
@@ -1013,34 +1028,34 @@ class EditContactDialog(QtWidgets.QDialog):
 
 		self._ready = False
 
-		aFirstNameEditLabel = QtWidgets.QLabel('First name')
-		self._firstNameEdit = QtWidgets.QLineEdit()
+		aFirstNameEditLabel = QtWidgets.QLabel(lcx('First name'), objectName = 'firstNameLabel')
+		self._firstNameEdit = QtWidgets.QLineEdit(objectName = 'firstNameEdit')
 		self._firstNameEdit.textChanged.connect(self.textChanged)
 
-		aNameEditLabel = QtWidgets.QLabel('Name')
-		self._nameEdit = QtWidgets.QLineEdit()
+		aNameEditLabel = QtWidgets.QLabel(lcx('Name'), objectName = 'nameLabel')
+		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
 		self._nameEdit.textChanged.connect(self.textChanged)
 
 		aPhoneNbRegExp = QtCore.QRegularExpression(r'^[0-9+*#]{1}[0-9*#]{19}$')
 		aPhoneNbValidator = QtGui.QRegularExpressionValidator(aPhoneNbRegExp)
 
-		aCellEditLabel = QtWidgets.QLabel('Mobile')
-		self._cellEdit = QtWidgets.QLineEdit()
+		aCellEditLabel = QtWidgets.QLabel(lcx('Mobile'), objectName = 'cellLabel')
+		self._cellEdit = QtWidgets.QLineEdit(objectName = 'cellEdit')
 		self._cellEdit.setValidator(aPhoneNbValidator)
 		self._cellEdit.textChanged.connect(self.textChanged)
 
-		aHomeEditLabel = QtWidgets.QLabel('Home')
-		self._homeEdit = QtWidgets.QLineEdit()
+		aHomeEditLabel = QtWidgets.QLabel(lcx('Home'), objectName = 'homeLabel')
+		self._homeEdit = QtWidgets.QLineEdit(objectName = 'homeEdit')
 		self._homeEdit.setValidator(aPhoneNbValidator)
 		self._homeEdit.textChanged.connect(self.textChanged)
 
-		aWorkEditLabel = QtWidgets.QLabel('Work')
-		self._workEdit = QtWidgets.QLineEdit()
+		aWorkEditLabel = QtWidgets.QLabel(lcx('Work'), objectName = 'workLabel')
+		self._workEdit = QtWidgets.QLineEdit(objectName = 'workEdit')
 		self._workEdit.setValidator(aPhoneNbValidator)
 		self._workEdit.textChanged.connect(self.textChanged)
 
-		aRingToneEditLabel = QtWidgets.QLabel('Ring tone')
-		self._ringToneCombo = QtWidgets.QComboBox()
+		aRingToneEditLabel = QtWidgets.QLabel(lcx('Ring tone'), objectName = 'ringToneLabel')
+		self._ringToneCombo = QtWidgets.QComboBox(objectName = 'ringToneCombo')
 		i = 1
 		while i <= 7:
 			self._ringToneCombo.addItem(str(i))
@@ -1061,10 +1076,10 @@ class EditContactDialog(QtWidgets.QDialog):
 		aEditGrid.addWidget(aRingToneEditLabel, 6, 0)
 		aEditGrid.addWidget(self._ringToneCombo, 6, 1)
 
-		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton = QtWidgets.QPushButton(lcx('OK'), objectName = 'ok')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lcx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar = QtWidgets.QHBoxLayout()
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -1078,10 +1093,12 @@ class EditContactDialog(QtWidgets.QDialog):
 
 		self._firstNameEdit.setFocus()
 
+		LmConfig.SetToolTips(self, 'pcontact')
+
 		if iEditMode:
-			self.setWindowTitle('Contact edition')
+			self.setWindowTitle(lcx('Contact edition'))
 		else:
-			self.setWindowTitle('Contact creation')
+			self.setWindowTitle(lcx('Contact creation'))
 
 		if iContact is None:
 			self._contact = {}
