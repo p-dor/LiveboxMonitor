@@ -964,6 +964,8 @@ TOOLTIPS = {
 		'languageLabel': '',
 		'languageCombo': '',
 		'tooltips': '',
+		'statsFrequencyLabel': '',
+		'statsFrequencyEdit': '',
 		'macAddrApiKeyLabel': '',
 		'macAddrApiKeyEdit': '',
 		'phoneCodeLabel': '',

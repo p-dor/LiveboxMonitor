@@ -10,6 +10,7 @@ from PyQt6 import QtWidgets
 
 from src import LmTools
 from src import LmConfig
+from src.LmConfig import LmConf
 from src.LmActionsTab import WifiKey, WifiStatus
 from src.LmLanguages import GetInfoLabel as lx
 
@@ -1495,7 +1496,7 @@ class LiveboxStatsThread(QtCore.QObject):
 
 	def resume(self):
 		if not self._isRunning:
-			self._timer.start(1000)
+			self._timer.start(LmConf.StatsFrequency)
 			self._isRunning = True
 			self._loop.exec()
 			self._timer.stop()

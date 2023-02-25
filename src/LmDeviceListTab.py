@@ -1203,7 +1203,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 
 	def resume(self):
 		if not self._isRunning:
-			self._timer.start(1000)
+			self._timer.start(LmConf.StatsFrequency)
 			self._isRunning = True
 			self._loop.exec()
 			self._timer.stop()

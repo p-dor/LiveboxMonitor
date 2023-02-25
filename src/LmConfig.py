@@ -34,9 +34,10 @@ DCFG_LIVEBOX_USER = 'admin'
 DCFG_LIVEBOX_PASSWORD = ''
 DCFG_FILTER_DEVICES = True
 DCFG_MACADDR_TABLE_FILE = 'MacAddrTable.txt'
-DCFG_MACADDR_API_KEY = ''
 DCFG_LANGUAGE = 'FR'
 DCFG_TOOLTIPS = True
+DCFG_STATS_FREQUENCY = 3000
+DCFG_MACADDR_API_KEY = ''
 DCFG_PHONE_CODE = '33'
 DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
@@ -390,9 +391,10 @@ class LmConf:
 	FilterDevices = DCFG_FILTER_DEVICES
 	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
-	MacAddrApiKey = DCFG_MACADDR_API_KEY
 	Language = DCFG_LANGUAGE
 	Tooltips = DCFG_TOOLTIPS
+	StatsFrequency = DCFG_STATS_FREQUENCY
+	MacAddrApiKey = DCFG_MACADDR_API_KEY
 	PhoneCode = DCFG_PHONE_CODE
 	ListHeaderHeight = DCFG_LIST_HEADER_HEIGHT
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
@@ -419,9 +421,6 @@ class LmConf:
 						return False
 				if LmConf.CurrProfile is None:
 					raise Exception('No profile detected')
-				p = aConfig.get('MacAddr API Key')
-				if p is not None:
-					LmConf.MacAddrApiKey = p
 				p = aConfig.get('Language')
 				if p is not None:
 					LmConf.Language = str(p)
@@ -430,6 +429,12 @@ class LmConf:
 				p = aConfig.get('Tooltips')
 				if p is not None:
 					LmConf.Tooltips = bool(p)
+				p = aConfig.get('Stats Frequency')
+				if p is not None:
+					LmConf.StatsFrequency = int(p)
+				p = aConfig.get('MacAddr API Key')
+				if p is not None:
+					LmConf.MacAddrApiKey = p
 				p = aConfig.get('Phone Code')
 				if p is not None:
 					LmConf.PhoneCode = str(p)
@@ -608,9 +613,10 @@ class LmConf:
 					LmConf.Profiles = []
 					LmConf.Profiles.append(LmConf.CurrProfile)
 				aConfig['Profiles'] = LmConf.Profiles
-				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
 				aConfig['Language'] = LmConf.Language
 				aConfig['Tooltips'] = LmConf.Tooltips
+				aConfig['Stats Frequency'] = LmConf.StatsFrequency
+				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
 				aConfig['Phone Code'] = LmConf.PhoneCode
 				aConfig['List Header Height'] = LmConf.ListHeaderHeight
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
@@ -992,14 +998,18 @@ class PrefsDialog(QtWidgets.QDialog):
 		aMacAddrApiKeyLabel = QtWidgets.QLabel(lx('macaddress.io API Key'), objectName = 'macAddrApiKeyLabel')
 		self._macAddrApiKey = QtWidgets.QLineEdit(objectName = 'macAddrApiKeyEdit')
 
+		aIntValidator = QtGui.QIntValidator()
+		aIntValidator.setRange(1, 99)
+
+		aStatsFrequencyLabel = QtWidgets.QLabel(lx('Stats Frequency'), objectName = 'statsFrequencyLabel')
+		self._statsFrequency = QtWidgets.QLineEdit(objectName = 'statsFrequencyEdit')
+		self._statsFrequency.setValidator(aIntValidator)
+
 		aPhoneCodeLabel = QtWidgets.QLabel(lx('Intl Phone Code'), objectName = 'phoneCodeLabel')
 		self._phoneCode = QtWidgets.QLineEdit(objectName = 'phoneCodeEdit')
 		aPhoneCodeValidator = QtGui.QIntValidator()
 		aPhoneCodeValidator.setRange(1, 999999)
 		self._phoneCode.setValidator(aPhoneCodeValidator)
-
-		aIntValidator = QtGui.QIntValidator()
-		aIntValidator.setRange(1, 99)
 
 		aListHeaderHeightLabel = QtWidgets.QLabel(lx('List Header Height'), objectName = 'listHeaderHeightLabel')
 		self._listHeaderHeight = QtWidgets.QLineEdit(objectName = 'listHeaderHeightEdit')
@@ -1022,18 +1032,20 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(aLanguageLabel, 1, 0)
 		aPrefsEditGrid.addWidget(self._languageCombo, 1, 1)
 		aPrefsEditGrid.addWidget(self._tooltips, 2, 0)
-		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 3, 0)
-		aPrefsEditGrid.addWidget(self._macAddrApiKey, 3, 1)
-		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 4, 0)
-		aPrefsEditGrid.addWidget(self._phoneCode, 4, 1)
-		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 5, 0)
-		aPrefsEditGrid.addWidget(self._listHeaderHeight, 5, 1)
-		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 6, 0)
-		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 6, 1)
-		aPrefsEditGrid.addWidget(aListLineHeightLabel, 7, 0)
-		aPrefsEditGrid.addWidget(self._listLineHeight, 7, 1)
-		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 8, 0)
-		aPrefsEditGrid.addWidget(self._listLineFontSize, 8, 1)
+		aPrefsEditGrid.addWidget(aStatsFrequencyLabel, 3, 0)
+		aPrefsEditGrid.addWidget(self._statsFrequency, 3, 1)
+		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 4, 0)
+		aPrefsEditGrid.addWidget(self._macAddrApiKey, 4, 1)
+		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._phoneCode, 5, 1)
+		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 6, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderHeight, 6, 1)
+		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 7, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 7, 1)
+		aPrefsEditGrid.addWidget(aListLineHeightLabel, 8, 0)
+		aPrefsEditGrid.addWidget(self._listLineHeight, 8, 1)
+		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 9, 0)
+		aPrefsEditGrid.addWidget(self._listLineFontSize, 9, 1)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)		
@@ -1077,7 +1089,6 @@ class PrefsDialog(QtWidgets.QDialog):
 				self._profileList.setCurrentItem(i)
 
 		# Load paramaters
-		self._macAddrApiKey.setText(LmConf.MacAddrApiKey)
 		try:
 			i = LmLanguages.LANGUAGES_KEY.index(LmConf.Language)
 		except:
@@ -1087,6 +1098,8 @@ class PrefsDialog(QtWidgets.QDialog):
 			self._tooltips.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
 			self._tooltips.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		self._statsFrequency.setText(str(int(LmConf.StatsFrequency / 1000)))
+		self._macAddrApiKey.setText(LmConf.MacAddrApiKey)
 		self._phoneCode.setText(LmConf.PhoneCode)
 		self._listHeaderHeight.setText(str(LmConf.ListHeaderHeight))
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
@@ -1111,9 +1124,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.CurrProfile = p
 
 		# Save parameters
-		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
 		LmConf.Language = LmLanguages.LANGUAGES_KEY[self._languageCombo.currentIndex()]
 		LmConf.Tooltips = self._tooltips.checkState() == QtCore.Qt.CheckState.Checked
+		LmConf.StatsFrequency = int(self._statsFrequency.text()) * 1000
+		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
 		LmConf.PhoneCode = self._phoneCode.text()
 		LmConf.ListHeaderHeight = int(self._listHeaderHeight.text())
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())

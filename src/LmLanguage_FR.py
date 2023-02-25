@@ -555,8 +555,9 @@ LABELS = {
 		'MacAddr Table File': 'Fichier Table MacAddr',
 		'Default': 'Défaut',
 		'Profiles': 'Profils',
-		'macaddress.io API Key': 'API Key macaddress.io',
 		'Language': 'Langage',
+		'Stats Frequency': 'Fréquence Stats',
+		'macaddress.io API Key': 'API Key macaddress.io',
 		'Intl Phone Code': 'Indicatif Téléphonique',
 		'List Header Height': 'Hauteur Entêtes',
 		'List Header Font Size': 'Taille Police Entêtes',
@@ -950,6 +951,8 @@ TOOLTIPS = {
 						  'Il ne peut y avoir qu\'un seul profil par défaut.',
 		'languageCombo': 'Langue utilisée par l\'application.',
 		'tooltips': 'Active ou non les tooltips.',
+		'statsFrequencyEdit': 'Fréquence de rafraîchissement, en secondes, de toutes les statistiques.\n'
+							  'Par défaut 3 secondes.',
 		'macAddrApiKeyEdit': 'Le programme utilise l\'API du site macaddress.io pour déterminer le fabricant d\'un appareil\n'
 							 'à partir de son adresse MAC (champ "Fabricant" dans les informations détaillées par appareil).\n'
 							 'C\'est un service gratuit, mais il faut créer un compte et indiquer ici l\'API Key correspondante\n'

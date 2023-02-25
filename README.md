@@ -230,6 +230,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 La liste des baux statiques configurés est affichée sur la gauche. Les deux domaines de réseau sont gérés :
 - `Home` : votre réseau privé, dont vous pouvez configurer sa plage d'IPs.
 - `Guest` : le réseau Wifi invité, qui a sa propre plage d'IPs (non-modifiable).
+
 La liste affiche les colonnes suivantes :
 - **Nom** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 - **Domaine** : domaine d'assignation, `Home` ou `Guest`.
@@ -361,6 +362,7 @@ Les actions concernant les **Réglages** :
     Les **préférences** générales permettent de régler :
     - `Langage` : langue utilisée par l'application, à choisir entre Français (défaut) et Anglais.
     - `Tooltips` : active ou non les tooltips.
+    - `Fréquence Stats` : Fréquence de rafraîchissement, en secondes, de toutes les statistiques. Par défaut 3 secondes.
     - `API Key macaddress.io` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabricant d'un appareil à partir de son adresse MAC (champ **Fabricant** dans les informations détaillées par appareil). C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
     - `Indicatif Téléphonique` : indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts. Par défaut le code de la France est utilisé, c'est-à-dire 33.
     - `Hauteur Entêtes` : hauteur en pixels des entêtes de liste, par défaut 25.
