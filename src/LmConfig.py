@@ -15,9 +15,12 @@ from PyQt6 import QtWidgets
 from cryptography.fernet import Fernet
 
 from src import LmTools
+from src import LmLanguages
+from src.LmLanguages import GetConfigPrefsDialogLabel as lx
+from src.LmLanguages import GetConfigCnxDialogLabel as lcx
+from src.LmLanguages import GetConfigSigninDialogLabel as lsx
 
 from __init__ import __build__
-
 
 
 # ################################ VARS & DEFS ################################
@@ -32,6 +35,8 @@ DCFG_LIVEBOX_PASSWORD = ''
 DCFG_FILTER_DEVICES = True
 DCFG_MACADDR_TABLE_FILE = 'MacAddrTable.txt'
 DCFG_MACADDR_API_KEY = ''
+DCFG_LANGUAGE = 'FR'
+DCFG_TOOLTIPS = True
 DCFG_PHONE_CODE = '33'
 DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
@@ -62,7 +67,6 @@ NET_INTF = []
 # LB4 Interfaces
 NET_INTF_LB4 = [
 	{ 'Key': 'eth0',     'Name': 'WAN',          'Type': 'wan', 'SwapStats': False },
-	{ 'Key': 'dsl0',     'Name': 'xDSL',         'Type': 'wan', 'SwapStats': False },
 	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth1',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'eth2',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
@@ -248,7 +252,7 @@ def SetApplicationStyle():
 		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 12
 		LIST_LINE_FONT_SIZE = 10
-		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
+		LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
@@ -262,7 +266,7 @@ def SetApplicationStyle():
 		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 0	# Let system default
 		LIST_LINE_FONT_SIZE = 0		# Let system default
-		LIST_STYLESHEET = 'color:black; background-color:#FAFAFA'
+		LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
 				border-width: 0px 0px 1px 0px;
@@ -274,14 +278,15 @@ def SetApplicationStyle():
 		WIND_HEIGHT_ADJUST = 4
 		DIAG_HEIGHT_ADJUST = 30
 		TABLE_ADJUST = 4
-		SCROLL_BAR_ADJUST = 20
+		SCROLL_BAR_ADJUST = 0
 		LIST_HEADER_FONT_SIZE = 11
 		LIST_LINE_FONT_SIZE = 10
-		LIST_STYLESHEET = 'color:black; background-color:#F0F0F0; gridline-color:#FFFFFF'
+		LIST_STYLESHEET = 'QTableView { color:black; background-color:#F0F0F0; gridline-color:#FFFFFF }'
 		LIST_HEADER_STYLESHEET = '''
 			QHeaderView::section {
-				border-width: 0px 0px 1px 0px;
-				border-color: grey
+				color:black;
+				background-color:#C0C0C0;
+				border: 0px
 			}
 			'''
 
@@ -333,6 +338,35 @@ def DialogHeight(iRowNb):
 	return TableHeight(iRowNb) + DIAG_HEIGHT_ADJUST
 
 
+# Assign Tooltips to all QWidgets in a window/dialog/tab
+def SetToolTips(iQtObject, iKey):
+	if LmConf.Tooltips:
+		aItemList = iQtObject.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly)
+		for aItem in aItemList:
+			k = aItem.objectName()
+			if len(k):
+				aType = type(aItem).__name__
+				if aType == 'QTableWidget':
+					h = aItem.horizontalHeader()
+					m = h.model()
+					for c in range(h.count()):
+						k = m.headerData(c, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.UserRole)
+						if k is not None:
+							aItem.horizontalHeaderItem(c).setToolTip(LmLanguages.GetToolTip(iKey, k))
+				elif aType == 'QTabWidget':
+					for i in range(aItem.count()):
+						k = aItem.widget(i).objectName()
+						if len(k):
+							aItem.setTabToolTip(i, LmLanguages.GetToolTip(iKey, k))
+				elif aType == 'QGroupBox':
+					# Set tooltip to the group if any
+					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
+					# Recursive call to handle group content
+					SetToolTips(aItem, iKey)
+				else:
+					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
+
+
 # Setup configuration according to Livebox model
 def SetLiveboxModel(iModel):
 	global NET_INTF
@@ -362,6 +396,8 @@ class LmConf:
 	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
 	MacAddrApiKey = DCFG_MACADDR_API_KEY
+	Language = DCFG_LANGUAGE
+	Tooltips = DCFG_TOOLTIPS
 	PhoneCode = DCFG_PHONE_CODE
 	ListHeaderHeight = DCFG_LIST_HEADER_HEIGHT
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
@@ -391,6 +427,14 @@ class LmConf:
 				p = aConfig.get('MacAddr API Key')
 				if p is not None:
 					LmConf.MacAddrApiKey = p
+				p = aConfig.get('Language')
+				if p is not None:
+					LmConf.Language = str(p)
+					if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
+						LmConf.Language = DCFG_LANGUAGE
+				p = aConfig.get('Tooltips')
+				if p is not None:
+					LmConf.Tooltips = bool(p)
 				p = aConfig.get('Phone Code')
 				if p is not None:
 					LmConf.PhoneCode = str(p)
@@ -429,7 +473,16 @@ class LmConf:
 
 		if aDirtyConfig:
 			LmConf.save()
+
+		LmConf.apply()
+
 		return True
+
+
+	### Apply immediate actions derived from configuration
+	@staticmethod
+	def apply():
+		LmLanguages.SetLanguage(LmConf.Language)
 
 
 	### Select a profile in the profile list depending on default parameters
@@ -463,8 +516,8 @@ class LmConf:
 		else:
 			aCurrentIndex = aProfileList.index(LmConf.CurrProfile['Name'])
 
-		aProfileName, aOK = QtWidgets.QInputDialog.getItem(None, 'Profile selection',
-														   'Please select a profile to use:',
+		aProfileName, aOK = QtWidgets.QInputDialog.getItem(None, lx('Profile selection'),
+														   lx('Please select a profile to use:'),
 														   aProfileList, aCurrentIndex, False)
 		if aOK:
 			LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Name'] == aProfileName), None)
@@ -475,7 +528,7 @@ class LmConf:
 	### Assign parameters depending on current profile
 	@staticmethod
 	def assignProfile():
-		LmConf.LiveboxURL = LmTools.cleanURL(LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL))
+		LmConf.LiveboxURL = LmTools.CleanURL(LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL))
 		LmConf.LiveboxUser = LmConf.CurrProfile.get('Livebox User', DCFG_LIVEBOX_USER)
 
 		p = LmConf.CurrProfile.get('Livebox Password')
@@ -515,7 +568,7 @@ class LmConf:
 		aProfiles = []
 		aMainProfile = {}
 
-		aMainProfile['Name'] = 'Main'
+		aMainProfile['Name'] = lx('Main')
 		aMainProfile['Livebox URL'] = iConfig.get('Livebox URL', DCFG_LIVEBOX_URL)
 		aMainProfile['Livebox User'] = iConfig.get('Livebox User', DCFG_LIVEBOX_USER)
 		aMainProfile['Livebox Password'] = iConfig.get('Livebox Password', DCFG_LIVEBOX_PASSWORD)
@@ -549,7 +602,7 @@ class LmConf:
 				aConfig['Version'] = __build__
 				if LmConf.CurrProfile is None:
 					LmConf.CurrProfile = {}
-					LmConf.CurrProfile['Name'] = 'Main'
+					LmConf.CurrProfile['Name'] = lx('Main')
 					LmConf.CurrProfile['Default'] = True
 				LmConf.CurrProfile['Livebox URL'] = LmConf.LiveboxURL
 				LmConf.CurrProfile['Livebox User'] = LmConf.LiveboxUser
@@ -561,6 +614,8 @@ class LmConf:
 					LmConf.Profiles.append(LmConf.CurrProfile)
 				aConfig['Profiles'] = LmConf.Profiles
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
+				aConfig['Language'] = LmConf.Language
+				aConfig['Tooltips'] = LmConf.Tooltips
 				aConfig['Phone Code'] = LmConf.PhoneCode
 				aConfig['List Header Height'] = LmConf.ListHeaderHeight
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
@@ -740,16 +795,17 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 
 		aWarnBox = QtWidgets.QVBoxLayout()
 		aWarnBox.setSpacing(4)
-		aW1Label = QtWidgets.QLabel('Cannot connect to the Livebox.')
+		aW1Label = QtWidgets.QLabel(lcx('Cannot connect to the Livebox.'), objectName = 'w1Label')
 		aW1Label.setFont(LmTools.BOLD_FONT)
 		aWarnBox.addWidget(aW1Label)
-		aW2Label = QtWidgets.QLabel('It might be unreachable, in that case just wait.')
+		aW2Label = QtWidgets.QLabel(lcx('It might be unreachable, in that case just wait.'), objectName = 'w2Label')
 		aWarnBox.addWidget(aW2Label)
-		aW3Label = QtWidgets.QLabel('Otherwise, try http://livebox.home/, http://livebox/ or http://192.168.1.1/.')
+		aW3Label = QtWidgets.QLabel(lcx('Otherwise, try {0}, {1} or {2}.').format('http://livebox.home/', 'http://livebox/', 'http://192.168.1.1/'),
+									objectName = 'w3Label')
 		aWarnBox.addWidget(aW3Label)
 
-		aUrlLabel = QtWidgets.QLabel('Livebox URL')
-		self._urlEdit = QtWidgets.QLineEdit()
+		aUrlLabel = QtWidgets.QLabel(lcx('Livebox URL'), objectName = 'urlLabel')
+		self._urlEdit = QtWidgets.QLineEdit(objectName = 'urlEdit')
 		self._urlEdit.textChanged.connect(self.textChanged)
 
 		aEditGrid = QtWidgets.QGridLayout()
@@ -758,10 +814,10 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 		aEditGrid.addWidget(self._urlEdit, 1, 1)
 
 		aButtonBar = QtWidgets.QHBoxLayout()
-		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton = QtWidgets.QPushButton(lcx('OK'), objectName = 'ok')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lcx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
 		aButtonBar.setSpacing(10)
@@ -775,7 +831,10 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aButtonBar, 1)
 
 		self._urlEdit.setFocus()
-		aTitle = 'Livebox connection'
+
+		SetToolTips(self, 'cnx')
+
+		aTitle = lcx('Livebox connection')
 		if len(LmConf.Profiles) > 1:
 			aTitle += ' [' + LmConf.CurrProfile['Name'] + ']'
 		self.setWindowTitle(aTitle)
@@ -801,12 +860,12 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 		super(LiveboxSigninDialog, self).__init__(iParent)
 		self.resize(450, 130)
 
-		aUserLabel = QtWidgets.QLabel('User')
-		self._userEdit = QtWidgets.QLineEdit()
+		aUserLabel = QtWidgets.QLabel(lsx('User'), objectName = 'userLabel')
+		self._userEdit = QtWidgets.QLineEdit(objectName = 'userEdit')
 		self._userEdit.textChanged.connect(self.textChanged)
 
-		aPasswordLabel = QtWidgets.QLabel('Password')
-		self._passwordEdit = QtWidgets.QLineEdit()
+		aPasswordLabel = QtWidgets.QLabel(lsx('Password'), objectName = 'passwordLabel')
+		self._passwordEdit = QtWidgets.QLineEdit(objectName = 'passwordEdit')
 		self._passwordEdit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
 		self._passwordEdit.textChanged.connect(self.textChanged)
 
@@ -817,10 +876,10 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 		aEditGrid.addWidget(aPasswordLabel, 2, 0)
 		aEditGrid.addWidget(self._passwordEdit, 2, 1)
 
-		self._okButton = QtWidgets.QPushButton('OK')
+		self._okButton = QtWidgets.QPushButton(lsx('OK'), objectName = 'ok')
 		self._okButton.clicked.connect(self.accept)
 		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lsx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar = QtWidgets.QHBoxLayout()
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -833,7 +892,10 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aButtonBar, 1)
 
 		self._userEdit.setFocus()
-		aTitle = 'Wrong password'
+
+		SetToolTips(self, 'signin')
+
+		aTitle = lsx('Wrong password')
 		if len(LmConf.Profiles) > 1:
 			aTitle += ' [' + LmConf.CurrProfile['Name'] + ']'
 		self.setWindowTitle(aTitle)
@@ -873,7 +935,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileListLayout.setSpacing(5)
 
 		self._profileSelection = -1
-		self._profileList = QtWidgets.QListWidget()
+		self._profileList = QtWidgets.QListWidget(objectName = 'profileList')
 		self._profileList.setMaximumWidth(190)
 		self._profileList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._profileList.itemSelectionChanged.connect(self.profileListClick)
@@ -882,31 +944,31 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileButtonBox = QtWidgets.QHBoxLayout()
 		aProfileButtonBox.setSpacing(5)
 
-		aAddProfileButton = QtWidgets.QPushButton('Add')
+		aAddProfileButton = QtWidgets.QPushButton(lx('Add'), objectName = 'addProfile')
 		aAddProfileButton.clicked.connect(self.addProfileButtonClick)
 		aProfileButtonBox.addWidget(aAddProfileButton)
-		aDelProfileButton = QtWidgets.QPushButton('Delete')
+		aDelProfileButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'delProfile')
 		aDelProfileButton.clicked.connect(self.delProfileButtonClick)
 		aProfileButtonBox.addWidget(aDelProfileButton)
 		aProfileListLayout.addLayout(aProfileButtonBox, 0)
 		aProfileLayout.addLayout(aProfileListLayout, 0)
 
-		aProfileNameLabel = QtWidgets.QLabel('Name')
-		self._profileName = QtWidgets.QLineEdit()
+		aProfileNameLabel = QtWidgets.QLabel(lx('Name'), objectName = 'profileNameLabel')
+		self._profileName = QtWidgets.QLineEdit(objectName = 'profileNameEdit')
 		self._profileName.textChanged.connect(self.profileNameChanged)
 
-		aLiveboxUrlLabel = QtWidgets.QLabel('Livebox URL')
-		self._liveboxUrl = QtWidgets.QLineEdit()
+		aLiveboxUrlLabel = QtWidgets.QLabel(lx('Livebox URL'), objectName = 'liveboxUrlLabel')
+		self._liveboxUrl = QtWidgets.QLineEdit(objectName = 'liveboxUrlEdit')
 
-		aLiveboxUserLabel = QtWidgets.QLabel('Livebox User')
-		self._liveboxUser = QtWidgets.QLineEdit()
+		aLiveboxUserLabel = QtWidgets.QLabel(lx('Livebox User'), objectName = 'liveboxUserLabel')
+		self._liveboxUser = QtWidgets.QLineEdit(objectName = 'liveboxUserEdit')
 
-		self._filterDevices = QtWidgets.QCheckBox('Filter Devices')
+		self._filterDevices = QtWidgets.QCheckBox(lx('Filter Devices'), objectName = 'filterDevices')
 
-		aMacAddrTableFileLabel = QtWidgets.QLabel('MacAddr Table File')
-		self._macAddrTableFile = QtWidgets.QLineEdit()
+		aMacAddrTableFileLabel = QtWidgets.QLabel(lx('MacAddr Table File'), objectName = 'macAddrTableFileLabel')
+		self._macAddrTableFile = QtWidgets.QLineEdit(objectName = 'macAddrTableFileEdit')
 
-		self._defaultProfile = QtWidgets.QCheckBox('Default')
+		self._defaultProfile = QtWidgets.QCheckBox(lx('Default'), objectName = 'defaultProfile')
 
 		aProfileEditGrid = QtWidgets.QGridLayout()
 		aProfileEditGrid.setSpacing(10)
@@ -922,15 +984,21 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileEditGrid.addWidget(self._defaultProfile, 6, 0)
 		aProfileLayout.addLayout(aProfileEditGrid, 1)
 
-		aProfileGroupBox = QtWidgets.QGroupBox('Profiles')
+		aProfileGroupBox = QtWidgets.QGroupBox(lx('Profiles'), objectName = 'profileGroup')
 		aProfileGroupBox.setLayout(aProfileLayout)
 
 		# General preferences box
-		aMacAddrApiKeyLabel = QtWidgets.QLabel('macaddress.io API Key')
-		self._macAddrApiKey = QtWidgets.QLineEdit()
+		aLanguageLabel = QtWidgets.QLabel(lx('Language'), objectName = 'languageLabel')
+		self._languageCombo = QtWidgets.QComboBox(objectName = 'languageCombo')
+		for i in range(len(LmLanguages.LANGUAGES_KEY)):
+			self._languageCombo.addItem(LmLanguages.LANGUAGES_KEY[i] + ' - ' + LmLanguages.LANGUAGES_NAME[i])
 
-		aPhoneCodeLabel = QtWidgets.QLabel('Intl Phone Code')
-		self._phoneCode = QtWidgets.QLineEdit()
+		self._tooltips = QtWidgets.QCheckBox(lx('Tooltips'), objectName = 'tooltips')
+		aMacAddrApiKeyLabel = QtWidgets.QLabel(lx('macaddress.io API Key'), objectName = 'macAddrApiKeyLabel')
+		self._macAddrApiKey = QtWidgets.QLineEdit(objectName = 'macAddrApiKeyEdit')
+
+		aPhoneCodeLabel = QtWidgets.QLabel(lx('Intl Phone Code'), objectName = 'phoneCodeLabel')
+		self._phoneCode = QtWidgets.QLineEdit(objectName = 'phoneCodeEdit')
 		aPhoneCodeValidator = QtGui.QIntValidator()
 		aPhoneCodeValidator.setRange(1, 999999)
 		self._phoneCode.setValidator(aPhoneCodeValidator)
@@ -938,47 +1006,50 @@ class PrefsDialog(QtWidgets.QDialog):
 		aIntValidator = QtGui.QIntValidator()
 		aIntValidator.setRange(1, 99)
 
-		aListHeaderHeightLabel = QtWidgets.QLabel('List Header Height')
-		self._listHeaderHeight = QtWidgets.QLineEdit()
+		aListHeaderHeightLabel = QtWidgets.QLabel(lx('List Header Height'), objectName = 'listHeaderHeightLabel')
+		self._listHeaderHeight = QtWidgets.QLineEdit(objectName = 'listHeaderHeightEdit')
 		self._listHeaderHeight.setValidator(aIntValidator)
 
-		aListHeaderFontSizeLabel = QtWidgets.QLabel('List Header Font Size')
-		self._listHeaderFontSize = QtWidgets.QLineEdit()
+		aListHeaderFontSizeLabel = QtWidgets.QLabel(lx('List Header Font Size'), objectName = 'listHeaderFontSizeLabel')
+		self._listHeaderFontSize = QtWidgets.QLineEdit(objectName = 'listHeaderFontSizeEdit')
 		self._listHeaderFontSize.setValidator(aIntValidator)
 
-		aListLineHeightLabel = QtWidgets.QLabel('List Line Height')
-		self._listLineHeight = QtWidgets.QLineEdit()
+		aListLineHeightLabel = QtWidgets.QLabel(lx('List Line Height'), objectName = 'listLineHeightLabel')
+		self._listLineHeight = QtWidgets.QLineEdit(objectName = 'listLineHeightEdit')
 		self._listLineHeight.setValidator(aIntValidator)
 
-		aListLineFontSizeLabel = QtWidgets.QLabel('List Line Font Size')
-		self._listLineFontSize = QtWidgets.QLineEdit()
+		aListLineFontSizeLabel = QtWidgets.QLabel(lx('List Line Font Size'), objectName = 'listLineFontSizeLabel')
+		self._listLineFontSize = QtWidgets.QLineEdit(objectName = 'listLineFontSize')
 		self._listLineFontSize.setValidator(aIntValidator)
 
 		aPrefsEditGrid = QtWidgets.QGridLayout()
 		aPrefsEditGrid.setSpacing(10)
-		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 1, 0)
-		aPrefsEditGrid.addWidget(self._macAddrApiKey, 1, 1)
-		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 2, 0)
-		aPrefsEditGrid.addWidget(self._phoneCode, 2, 1)
-		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 3, 0)
-		aPrefsEditGrid.addWidget(self._listHeaderHeight, 3, 1)
-		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 4, 0)
-		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 4, 1)
-		aPrefsEditGrid.addWidget(aListLineHeightLabel, 5, 0)
-		aPrefsEditGrid.addWidget(self._listLineHeight, 5, 1)
-		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 6, 0)
-		aPrefsEditGrid.addWidget(self._listLineFontSize, 6, 1)
+		aPrefsEditGrid.addWidget(aLanguageLabel, 1, 0)
+		aPrefsEditGrid.addWidget(self._languageCombo, 1, 1)
+		aPrefsEditGrid.addWidget(self._tooltips, 2, 0)
+		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 3, 0)
+		aPrefsEditGrid.addWidget(self._macAddrApiKey, 3, 1)
+		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 4, 0)
+		aPrefsEditGrid.addWidget(self._phoneCode, 4, 1)
+		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderHeight, 5, 1)
+		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 6, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 6, 1)
+		aPrefsEditGrid.addWidget(aListLineHeightLabel, 7, 0)
+		aPrefsEditGrid.addWidget(self._listLineHeight, 7, 1)
+		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 8, 0)
+		aPrefsEditGrid.addWidget(self._listLineFontSize, 8, 1)
 
-		aPrefsGroupBox = QtWidgets.QGroupBox('Preferences')
+		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)		
 
 		# Button bar
 		aButtonBar = QtWidgets.QHBoxLayout()
-		aOkButton = QtWidgets.QPushButton('OK')
+		aOkButton = QtWidgets.QPushButton(lx('OK'), objectName = 'ok')
 		aOkButton.clicked.connect(self.okButtonClick)
 		aOkButton.setDefault(True)
 		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aCancelButton = QtWidgets.QPushButton('Cancel')
+		aCancelButton = QtWidgets.QPushButton(lx('Cancel'), objectName = 'cancel')
 		aCancelButton.clicked.connect(self.reject)
 		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -991,7 +1062,9 @@ class PrefsDialog(QtWidgets.QDialog):
 		aVBox.addWidget(aPrefsGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 		aVBox.addLayout(aButtonBar, 1)
 
-		self.setWindowTitle('Preferences')
+		SetToolTips(self, 'prefs')
+
+		self.setWindowTitle(lx('Preferences'))
 		self.setModal(True)
 		self.loadPrefs()
 		self.show()
@@ -1010,6 +1083,15 @@ class PrefsDialog(QtWidgets.QDialog):
 
 		# Load paramaters
 		self._macAddrApiKey.setText(LmConf.MacAddrApiKey)
+		try:
+			i = LmLanguages.LANGUAGES_KEY.index(LmConf.Language)
+		except:
+			i = 0
+		self._languageCombo.setCurrentIndex(i)
+		if LmConf.Tooltips:
+			self._tooltips.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._tooltips.setCheckState(QtCore.Qt.CheckState.Unchecked)
 		self._phoneCode.setText(LmConf.PhoneCode)
 		self._listHeaderHeight.setText(str(LmConf.ListHeaderHeight))
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
@@ -1035,6 +1117,8 @@ class PrefsDialog(QtWidgets.QDialog):
 
 		# Save parameters
 		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
+		LmConf.Language = LmLanguages.LANGUAGES_KEY[self._languageCombo.currentIndex()]
+		LmConf.Tooltips = self._tooltips.checkState() == QtCore.Qt.CheckState.Checked
 		LmConf.PhoneCode = self._phoneCode.text()
 		LmConf.ListHeaderHeight = int(self._listHeaderHeight.text())
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
@@ -1096,7 +1180,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		# Save in profiles buffer
 		p = self._profiles[self._profileSelection]
 		p['Name'] = self._profileName.text()
-		p['Livebox URL'] = LmTools.cleanURL(self._liveboxUrl.text())
+		p['Livebox URL'] = LmTools.CleanURL(self._liveboxUrl.text())
 		p['Livebox User'] = self._liveboxUser.text()
 		p['Filter Devices'] = self._filterDevices.checkState() == QtCore.Qt.CheckState.Checked
 		p['MacAddr Table File'] = self._macAddrTableFile.text()
