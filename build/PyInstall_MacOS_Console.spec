@@ -40,6 +40,6 @@ exe = EXE(pyz,
           entitlements_file=None)
 
 app = BUNDLE(exe,
-        name='../LiveboxMonitor_Console.app',
-        icon='ico/LiveboxMonitor.ico',
+        name='LiveboxMonitor_Console.app',
+        icon='../ico/LiveboxMonitor.ico',
         version='1.0')
