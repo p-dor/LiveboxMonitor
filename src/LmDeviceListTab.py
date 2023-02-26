@@ -1053,12 +1053,12 @@ class IPv6Dialog(QtWidgets.QDialog):
 
 		aIPv6InfoGrid = QtWidgets.QGridLayout()
 		aIPv6InfoGrid.setSpacing(10)
-		aIPv6InfoGrid.addWidget(aIPv6EnabledLabel, 1, 0)
-		aIPv6InfoGrid.addWidget(aIPv6Enabled, 1, 1)
-		aIPv6InfoGrid.addWidget(aAddrLabel, 2, 0)
-		aIPv6InfoGrid.addWidget(aAddr, 2, 1)
-		aIPv6InfoGrid.addWidget(aPrefixLabel, 2, 2)
-		aIPv6InfoGrid.addWidget(aPrefix, 2, 3)
+		aIPv6InfoGrid.addWidget(aIPv6EnabledLabel, 0, 0)
+		aIPv6InfoGrid.addWidget(aIPv6Enabled, 0, 1)
+		aIPv6InfoGrid.addWidget(aAddrLabel, 1, 0)
+		aIPv6InfoGrid.addWidget(aAddr, 1, 1)
+		aIPv6InfoGrid.addWidget(aPrefixLabel, 1, 2)
+		aIPv6InfoGrid.addWidget(aPrefix, 1, 3)
 
 		# Device table
 		self._deviceTable = QtWidgets.QTableWidget(objectName = 'ipv6Table')

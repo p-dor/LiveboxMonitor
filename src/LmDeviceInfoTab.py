@@ -514,10 +514,10 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 
 		aNameGrid = QtWidgets.QGridLayout()
 		aNameGrid.setSpacing(10)
-		aNameGrid.addWidget(self._nameCheckBox, 1, 0)
-		aNameGrid.addWidget(self._nameEdit, 1, 1)
-		aNameGrid.addWidget(self._liveboxNameCheckBox, 2, 0)
-		aNameGrid.addWidget(self._liveboxNameEdit, 2, 1)
+		aNameGrid.addWidget(self._nameCheckBox, 0, 0)
+		aNameGrid.addWidget(self._nameEdit, 0, 1)
+		aNameGrid.addWidget(self._liveboxNameCheckBox, 1, 0)
+		aNameGrid.addWidget(self._liveboxNameEdit, 1, 1)
 
 		aOKButton = QtWidgets.QPushButton(lnx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
