@@ -645,9 +645,9 @@ TOOLTIPS = {
 		'dlist_Rx': 'Nombre d\'octets reçus par l\'appareil depuis le dernier démarrage de la Livebox.',
 		'dlist_Tx': 'Nombre d\'octets envoyés par l\'appareil depuis le dernier démarrage de la Livebox.',
 		'dlist_RxRate': 'Taux d\'octets reçus par seconde par l\'appareil dans les dernières 30 secondes si affiché en noir,\n'
-						'dans la dernière seconde si affiché en bleu.',
+						'dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).',
 		'dlist_TxRate': 'Taux d\'octets envoyés par seconde par l\'appareil dans les dernières 30 secondes si affiché en noir,\n'
-						'dans la dernière seconde si affiché en bleu.',
+						'dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).',
 		'refresh': 'Force le rafraîchissement de la liste des appareils, dans cet onglet mais aussi dans les onglets "Infos Appareil" et "Événements".\n'
 				   'Utile par exemple si le programme est actif alors que l\'ordinateur sort de veille : des événements ayant probablement\n'
 				   'été raté par le programme, un rafraîchissement permettra de retrouver une vue à jour.',
@@ -691,9 +691,11 @@ TOOLTIPS = {
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
 					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
 					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
-		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans la dernière seconde.\n'
+		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans les trois dernières secondes.\n'
+						'La fréquence réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
-		'stats_TxRate': 'Taux d\'octets envoyés par seconde par l\'interface dans la dernière seconde.\n'
+		'stats_TxRate': 'Taux d\'octets envoyés par seconde par l\'interface dans les trois dernières secondes.\n'
+						'La fréquence réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
 		'liveboxInfo': 'Affiche les informations principales concernant la Livebox, telles que les versions de logiciels,\n'
 					   'l\'adresse IP WAN, les services actifs, l\'état de la mémoire, etc.',
@@ -899,8 +901,10 @@ TOOLTIPS = {
 		'stats_Tx': 'Nombre d\'octets envoyés par l\'interface.\n'
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
 					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
-		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans la dernière seconde.',
-		'stats_TxRate': 'Taux d\'octets envoyés par seconde par l\'interface dans la dernière seconde.',
+		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans les trois dernières secondes.\n'
+						'La fréquence est réglable dans les préférences.',
+		'stats_TxRate': 'Taux d\'octets envoyés par seconde par l\'interface dans les trois dernières secondes.\n'
+						'La fréquence est réglable dans les préférences.',
 		'wifiOn': 'Permet d\'activer l\'interface Wifi du répéteur.',
 		'wifiOff': 'Permet de désactiver l\'interface Wifi du répéteur.',
 		'schedulerOn': 'Permet d\'activer le planificateur Wifi du répéteur.\n'

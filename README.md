@@ -58,7 +58,7 @@ L'interface se veut intuitive mais il vaut mieux se reporter à la documentation
 Les points importants à comprendre avant de commencer :
 - La connexion s'établit avec exactement les mêmes informations que pour accéder à l'interface Web de configuration de la Livebox. Pour l'URL il faut essayer http://livebox.home/, http://livebox/ ou http://192.168.1.1/. Pour l'utilisateur il faut laisser à la valeur par défaut `admin`. Et pour le mot de passe c'est soit ce que vous avez indiqué vous-même soit le mot de passe d'origine. Plus d'informations [ici pour la Livebox 5](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-5-acceder-a-l-interface-de-configuration_292471-827404), ou [ici pour la Livebox 6](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-6-acceder-a-l-interface-de-configuration_363963-897414).
 - Il est normal que lors du premier lancement de l'application tous les appareils soient marqués comme inconnus (**INCONNU** en rouge). En effet un des buts de ce programme est d'identifier rapidement des appareils inconnus connectés sur le réseau grâce à une base de noms locale (le fichier `MacAddrTable.txt`). Il faut donc commencer par nommer chaque appareil que vous jugez légitime grâce au bouton `Assigner Nom...` de l'onglet `Infos Appareil`. Cette base locale constituera la référence de confiance de tous les appareils légitimes sur votre réseau. Le bouton `Assigner Nom...` vous permettra aussi de facilement assigner le même nom que celui qui a été donné à la Livebox.
-- Il est normal que les statistiques réseau apparaissent et disparaissent. En effet le programme rafraîchit ces statistiques toutes les secondes (ou toutes les 30 secondes dans certains cas), et si d'un rafraîchissement à l'autre il n'y a pas eu de transfert la case devient vide. Ce choix a été fait pour permettre de mieux visualiser les cases non-vides, là où il se passe quelque chose.
+- Il est normal que les statistiques réseau apparaissent et disparaissent. En effet le programme rafraîchit ces statistiques toutes les 3 secondes par défaut (ou toutes les 30 secondes dans certains cas), et si d'un rafraîchissement à l'autre il n'y a pas eu de transfert la case devient vide. Ce choix a été fait pour permettre de mieux visualiser les cases non-vides, là où il se passe quelque chose.
 - Toutes les colonnes dans le programme sont redimensionnables à la souris sauf certaines qui s'élargissent dynamiquement en fonction de la taille de la fenêtre. Donc, en fonction de la situation, vous pouvez soit redimensionner la colonne soit la fenêtre avec la souris pour ajuster la largeur d'une colonne.
 - On peut copier la valeur de n'importe quelle cellule de liste dans le presse-papiers. Pour cela il suffit de cliquer sur la cellule et de taper Ctrl-C.
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
@@ -113,8 +113,8 @@ La liste des appareils affiche les colonnes suivantes :
 - **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consultés via l'onglet `Événements`.
 - **Rx** : nombre d'octets reçus par l'appareil depuis le dernier démarrage de la Livebox.
 - **Tx** : nombre d'octets envoyés par l'appareil depuis le dernier démarrage de la Livebox.
-- **TauxRx** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans la dernière seconde si affiché en bleu.
-- **TauxTx** : taux d'octets envoyés par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans la dernière seconde si affiché en bleu.
+- **TauxRx** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
+- **TauxTx** : taux d'octets envoyés par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
 
 Les statistiques d'octets envoyés ou reçus par seconde sont calculées grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les secondes. Ces dernières sont affichées en bleu.
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
@@ -141,8 +141,8 @@ Liste permettant de surveiller l'état du trafic :
 - **Nom** : nom de l'interface réseau. `Fiber` concerne tout le trafic WAN, c'est-à-dire externe entre la Livebox et internet. `LAN` tout le trafic interne transitant à travers la Livebox. Ensuite on dispose des statistiques par interface précise. Les interfaces `Guest` concernent le trafic du réseau Wifi invité, s'il est activé.
 - **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
 - **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
-- **TauxRx** : taux d'octets reçus par seconde par l'interface dans la dernière seconde. S'affiche en rouge si des erreurs de transmission sont détectées. 
-- **TauxTx** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde. S'affiche en rouge si des erreurs de transmission sont détectées.
+- **TauxRx** : taux d'octets reçus par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences). S'affiche en rouge si des erreurs de transmission sont détectées. 
+- **TauxTx** : taux d'octets envoyés par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences). S'affiche en rouge si des erreurs de transmission sont détectées.
 
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
 Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
@@ -403,8 +403,8 @@ Liste permettant de surveiller l'état du trafic géré par le répéteur :
 - **Nom** : nom de l'interface réseau. `LAN` concerne tout le trafic entre le répéteur et la Livebox. Ensuite on dispose des statistiques par interface précise (les deux prises Ethernet ainsi que les deux bandes Wifi).
 - **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
 - **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
-- **TauxRx** : taux d'octets reçus par seconde par l'interface dans la dernière seconde.
-- **TauxTx** : taux d'octets envoyés par seconde par l'interface dans la dernière seconde.
+- **TauxRx** : taux d'octets reçus par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences).
+- **TauxTx** : taux d'octets envoyés par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences).
 
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par le répéteur.
 Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie le répéteur (il ne s'agit pas d'un défaut du programme).
