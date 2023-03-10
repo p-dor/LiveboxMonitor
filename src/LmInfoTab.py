@@ -459,7 +459,12 @@ class LmInfo:
 		i = self.loadIptvInfo(i)
 		i = self.loadUsbInfo(i)
 
-		self._exportFile.close()
+		try:
+			self._exportFile.close()
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Cannot save the file.')
+
 		self._exportFile = None
 
 		self.endTask()
@@ -953,7 +958,7 @@ class LmInfo:
 				aOntIntf = s['Key']
 				break
 		if aOntIntf is None:
-			return
+			return i
 
 		try:
 			d = self._session.request('NeMo.Intf.' + aOntIntf + ':getMIBs', { 'mibs': 'gpon' })
