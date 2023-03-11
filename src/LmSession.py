@@ -283,3 +283,24 @@ class LmSession:
 		LmTools.LogDebug(1, '-------------------------')
 		self._channelID = r.get('channelid', 0)
 		return r
+
+
+	# It is possible to query DeviceInfo service without being logged, e.g. to get MAC address
+	@staticmethod
+	def getLiveboxMAC(iLiveboxURL):
+		if iLiveboxURL is not None:
+			try:
+				r = requests.Session().post(iLiveboxURL  + 'ws',
+						   data = '{"service":"DeviceInfo", "method":"get", "parameters":{}}',
+						   headers = {'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
+						   timeout = 1)
+			except:
+				r = None
+			if r is not None:
+				s = r.json().get('status')
+				if s is not None:
+					s = s.get('BaseMAC')
+					if s is not None:
+						return s.upper()
+
+		return None
