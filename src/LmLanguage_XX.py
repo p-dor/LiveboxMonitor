@@ -619,8 +619,6 @@ LABELS = {
 	# Config - Preferences
 	'prefs': {
 		'Main': '',
-		'Profile selection': '',
-		'Please select a profile to use:': '',
 		'Add': '',
 		'Delete': '',
 		'Name': '',
@@ -662,6 +660,21 @@ LABELS = {
 		'Cancel': '',
 		'Wrong password': ''
 	},
+
+	# Config - Select profile
+	'sprofile': {
+		'Profile selection': '',
+		'Please select a profile to use:': '',
+		'Associated Livebox MAC:': '',
+		'Detected Livebox MAC:': '',
+		'New Profile...': '',
+		'OK': '',
+		'Cancel': '',
+		'<None>': '',
+		'No Livebox detected at profile\'s URL.': '',
+		'Detected MAC will be associated to this profile.': '',
+		'Warning: another Livebox is associated to this profile.': ''
+	}
 
 	# Tools
 	'tools': {
@@ -1000,6 +1013,20 @@ TOOLTIPS = {
 		'userEdit': '',
 		'passwordLabel': '',
 		'passwordEdit': '',
+		'ok': '',
+		'cancel': ''
+	},
+
+	# Config - Select profile
+	'sprofile': {
+		'mainLabel': '',
+		'profileCombo': '',
+		'assMacLabel': '',
+		'assMacValue': '',
+		'detMacLabel': '',
+		'detMacValue': '',
+		'warnLabel': '',
+		'createProfile': '',
 		'ok': '',
 		'cancel': ''
 	}

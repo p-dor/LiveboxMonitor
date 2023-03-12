@@ -15,10 +15,12 @@ from PyQt6 import QtWidgets
 from cryptography.fernet import Fernet
 
 from src import LmTools
+from src.LmSession import LmSession
 from src import LmLanguages
 from src.LmLanguages import GetConfigPrefsDialogLabel as lx
 from src.LmLanguages import GetConfigCnxDialogLabel as lcx
 from src.LmLanguages import GetConfigSigninDialogLabel as lsx
+from src.LmLanguages import GetSelectProfileDialogLabel as lpx
 
 from __init__ import __build__
 
@@ -388,6 +390,7 @@ class LmConf:
 	LiveboxURL = DCFG_LIVEBOX_URL
 	LiveboxUser = DCFG_LIVEBOX_USER
 	LiveboxPassword = DCFG_LIVEBOX_PASSWORD
+	LiveboxMAC = ''
 	FilterDevices = DCFG_FILTER_DEVICES
 	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
@@ -410,66 +413,67 @@ class LmConf:
 	def load():
 		aDirtyConfig = False
 		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
-		try:
-			with open(aConfigFilePath) as aConfigFile:
-				aConfig = json.load(aConfigFile)
-				aDirtyConfig = LmConf.convert(aConfig)
-				p = aConfig.get('Profiles')
-				if p is not None:
-					LmConf.Profiles = p
-					if not LmConf.selectProfile():
-						return False
-				if LmConf.CurrProfile is None:
-					raise Exception('No profile detected')
-				p = aConfig.get('Language')
-				if p is not None:
-					LmConf.Language = str(p)
-					if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
-						LmConf.Language = DCFG_LANGUAGE
-				p = aConfig.get('Tooltips')
-				if p is not None:
-					LmConf.Tooltips = bool(p)
-				p = aConfig.get('Stats Frequency')
-				if p is not None:
-					LmConf.StatsFrequency = int(p)
-				p = aConfig.get('MacAddr API Key')
-				if p is not None:
-					LmConf.MacAddrApiKey = p
-				p = aConfig.get('Phone Code')
-				if p is not None:
-					LmConf.PhoneCode = str(p)
-				p = aConfig.get('List Header Height')
-				if p is not None:
-					LmConf.ListHeaderHeight = int(p)
-				p = aConfig.get('List Header Font Size')
-				if p is not None:
-					LmConf.ListHeaderFontSize = int(p)
-				p = aConfig.get('List Line Height')
-				if p is not None:
-					LmConf.ListLineHeight = int(p)
-				p = aConfig.get('List Line Font Size')
-				if p is not None:
-					LmConf.ListLineFontSize = int(p)
-				p = aConfig.get('Log Level')
-				if p is not None:
-					LmConf.LogLevel = int(p)
-					if LmConf.LogLevel < 0:
-						LmConf.LogLevel = 0
-					elif LmConf.LogLevel > 2:
-						LmConf.LogLevel = 2
-					LmTools.SetVerbosity(LmConf.LogLevel)
-				p = aConfig.get('Repeaters')
-				if p is not None:
-					LmConf.Repeaters = p
-		except OSError:
-			LmTools.Error('No configuration file, creating one.')
-			aDirtyConfig = True
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
-				aDirtyConfig = True
-			else:
-				return False
+#		try:
+		with open(aConfigFilePath) as aConfigFile:
+			aConfig = json.load(aConfigFile)
+			aDirtyConfig = LmConf.convert(aConfig)
+			p = aConfig.get('Language')
+			if p is not None:
+				LmConf.Language = str(p)
+				if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
+					LmConf.Language = DCFG_LANGUAGE
+			LmLanguages.SetLanguage(LmConf.Language)
+			p = aConfig.get('Profiles')
+			if p is not None:
+				LmConf.Profiles = p
+				if not LmConf.selectProfile():
+					return False
+			if LmConf.CurrProfile is None:
+				raise Exception('No profile detected')
+			p = aConfig.get('Tooltips')
+			if p is not None:
+				LmConf.Tooltips = bool(p)
+			p = aConfig.get('Stats Frequency')
+			if p is not None:
+				LmConf.StatsFrequency = int(p)
+			p = aConfig.get('MacAddr API Key')
+			if p is not None:
+				LmConf.MacAddrApiKey = p
+			p = aConfig.get('Phone Code')
+			if p is not None:
+				LmConf.PhoneCode = str(p)
+			p = aConfig.get('List Header Height')
+			if p is not None:
+				LmConf.ListHeaderHeight = int(p)
+			p = aConfig.get('List Header Font Size')
+			if p is not None:
+				LmConf.ListHeaderFontSize = int(p)
+			p = aConfig.get('List Line Height')
+			if p is not None:
+				LmConf.ListLineHeight = int(p)
+			p = aConfig.get('List Line Font Size')
+			if p is not None:
+				LmConf.ListLineFontSize = int(p)
+			p = aConfig.get('Log Level')
+			if p is not None:
+				LmConf.LogLevel = int(p)
+				if LmConf.LogLevel < 0:
+					LmConf.LogLevel = 0
+				elif LmConf.LogLevel > 2:
+					LmConf.LogLevel = 2
+				LmTools.SetVerbosity(LmConf.LogLevel)
+			p = aConfig.get('Repeaters')
+			if p is not None:
+				LmConf.Repeaters = p
+#		except OSError:
+#			LmTools.Error('No configuration file, creating one.')
+#			aDirtyConfig = True
+#		except BaseException as e:
+#			LmTools.Error('Error: {}'.format(e))
+#			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
+#				aDirtyConfig = True
+#			else:
+#				return False
 
 		if aDirtyConfig:
 			LmConf.save()
@@ -489,13 +493,38 @@ class LmConf:
 	#   Returns False if user cancels
 	@staticmethod
 	def selectProfile():
-		# Search for first default profile
-		LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Default']), None)
+		# First collect reachable profiles and those matching Livebox's MAC address
+		LmTools.MouseCursor_Busy()
+		aReachableProfiles = []
+		aMatchingProfiles = []
+		for p in LmConf.Profiles:
+			aProfileMAC = p.get('Livebox MacAddr')
+			aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+			if aLiveboxMAC is not None:
+				aReachableProfiles.append(p)
+				if aLiveboxMAC == aProfileMAC:
+					aMatchingProfiles.append(p)
+		LmTools.MouseCursor_Normal()
 
-		# If no default found or if Ctrl key pressed, ask for it
+		# If only one matching profile, take it
+		aMatchingProfilesNb = len(aMatchingProfiles)
+		if aMatchingProfilesNb == 1:
+			LmConf.CurrProfile = aMatchingProfiles[0]
+		elif aMatchingProfilesNb > 1:
+			# Take a potential default in matching list
+			LmConf.CurrProfile = next((p for p in aMatchingProfiles if p['Default']), None)
+			# Otherwise take the first one
+			if LmConf.CurrProfile is None:
+				LmConf.CurrProfile = aMatchingProfiles[0]
+
+		# Otherwise, search for first default profile
+		if LmConf.CurrProfile is None:
+			LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Default']), None)
+
+		# If no match/default found or if Ctrl key pressed, ask for it
 		aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
 		if (LmConf.CurrProfile is None) or (aModifiers == QtCore.Qt.KeyboardModifier.ControlModifier):
-			if not LmConf.askProfile():
+			if not LmConf.askProfile(aMatchingProfiles):
 				return False
 
 		if LmConf.CurrProfile is not None:
@@ -506,21 +535,23 @@ class LmConf:
 
 	### Ask user to choose a profile, returns False if user cancels
 	@staticmethod
-	def askProfile():
+	def askProfile(iMatchingProfiles = None):
 		if len(LmConf.Profiles) == 0:
 			return True
 
-		aProfileList = [p['Name'] for p in LmConf.Profiles]
-		if LmConf.CurrProfile is None:
-			aCurrentIndex = 0
-		else:
-			aCurrentIndex = aProfileList.index(LmConf.CurrProfile['Name'])
+		LmTools.MouseCursor_Busy()
+		if iMatchingProfiles is None:
+			iMatchingProfiles = []
+			for p in LmConf.Profiles:
+				aProfileMAC = p.get('Livebox MacAddr')
+				aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+				if (aLiveboxMAC is not None) and (aLiveboxMAC == aProfileMAC):
+					iMatchingProfiles.append(p)
+		LmTools.MouseCursor_Normal()
 
-		aProfileName, aOK = QtWidgets.QInputDialog.getItem(None, lx('Profile selection'),
-														   lx('Please select a profile to use:'),
-														   aProfileList, aCurrentIndex, False)
-		if aOK:
-			LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Name'] == aProfileName), None)
+		aSelectProfileDialog = SelectProfileDialog(iMatchingProfiles)
+		if aSelectProfileDialog.exec():
+			LmConf.CurrProfile = LmConf.Profiles[aSelectProfileDialog.profileIndex()]
 			return True
 		return False
 
@@ -540,6 +571,7 @@ class LmConf:
 		else:
 			LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
 
+		LmConf.LiveboxMAC = LmConf.CurrProfile.get('Livebox MacAddr', '')
 		LmConf.FilterDevices = LmConf.CurrProfile.get('Filter Devices', DCFG_FILTER_DEVICES)
 		LmConf.MacAddrTableFile = LmConf.CurrProfile.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
 		if len(LmConf.MacAddrTableFile) == 0:
@@ -607,6 +639,7 @@ class LmConf:
 				LmConf.CurrProfile['Livebox URL'] = LmConf.LiveboxURL
 				LmConf.CurrProfile['Livebox User'] = LmConf.LiveboxUser
 				LmConf.CurrProfile['Livebox Password'] = Fernet(SECRET.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
+				LmConf.CurrProfile['Livebox MacAddr'] = LmConf.LiveboxMAC
 				LmConf.CurrProfile['Filter Devices'] = LmConf.FilterDevices
 				LmConf.CurrProfile['MacAddr Table File'] = LmConf.MacAddrTableFile
 				if LmConf.Profiles is None:
@@ -642,6 +675,14 @@ class LmConf:
 		LmConf.LiveboxUser = iUser
 		LmConf.LiveboxPassword = iPassword
 		LmConf.save()
+
+
+	### Set Livebox MAC address
+	@staticmethod
+	def setLiveboxMAC(iMacAddr):
+		if LmConf.LiveboxMAC != iMacAddr:
+			LmConf.LiveboxMAC = iMacAddr
+			LmConf.save()
 
 
 	### Set log level
@@ -919,6 +960,122 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 	def getPassword(self):
 		return self._passwordEdit.text()
 
+
+
+# ############# Profile selection dialog #############
+class SelectProfileDialog(QtWidgets.QDialog):
+	def __init__(self, iMatchingProfiles, iParent = None):
+		super(SelectProfileDialog, self).__init__(iParent)
+		self.resize(350, 130)
+
+		aMainLabel = QtWidgets.QLabel(lpx('Please select a profile to use:'), objectName = 'mainLabel')
+		self._profileCombo = QtWidgets.QComboBox(objectName = 'profileCombo')
+		i = 0
+		aCurrentIndex = 0
+		for p in LmConf.Profiles:
+			aName = p['Name']
+			self._profileCombo.addItem(aName)
+			if (LmConf.CurrProfile is not None) and (LmConf.CurrProfile['Name'] == aName):
+				aCurrentIndex = i
+			i += 1
+		self._profileCombo.currentIndexChanged.connect(self.profileSelected)
+
+		aAssociatedMacLabel = QtWidgets.QLabel(lpx('Associated Livebox MAC:'), objectName = 'assMacLabel')
+		self._assMac = QtWidgets.QLabel(objectName = 'assMacValue')
+		self._assMac.setFont(LmTools.BOLD_FONT)
+
+		aDetectedMacLabel = QtWidgets.QLabel(lpx('Detected Livebox MAC:'), objectName = 'detMacLabel')
+		self._detMac = QtWidgets.QLabel(objectName = 'detMacValue')
+		self._detMac.setFont(LmTools.BOLD_FONT)
+
+		self._warning = QtWidgets.QLabel('', objectName = 'warnLabel')
+
+		aGrid = QtWidgets.QGridLayout()
+		aGrid.setSpacing(10)
+		aGrid.addWidget(aMainLabel, 0, 0)
+		aGrid.addWidget(self._profileCombo, 1, 0, 1, 2)
+		aGrid.addWidget(aAssociatedMacLabel, 2, 0)
+		aGrid.addWidget(self._assMac, 2, 1)
+		aGrid.addWidget(aDetectedMacLabel, 3, 0)
+		aGrid.addWidget(self._detMac, 3, 1)
+		aGrid.addWidget(self._warning, 4, 0, 4, 2)
+
+		aCreateProfileButton = QtWidgets.QPushButton(lpx('New Profile...'), objectName = 'createProfile')
+		aCreateProfileButton.clicked.connect(self.createProfile)
+		aCreateProfileButton.setEnabled(False)	# ###TODO### Pending implementation
+		aOkButton = QtWidgets.QPushButton(lpx('OK'), objectName = 'ok')
+		aOkButton.clicked.connect(self.accept)
+		aOkButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton(lpx('Cancel'), objectName = 'cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(aCreateProfileButton, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aOkButtonBar = QtWidgets.QHBoxLayout()
+		aOkButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aOkButtonBar.setSpacing(10)
+		aOkButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aOkButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addLayout(aOkButtonBar)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
+		aVBox.addLayout(aGrid, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		SetToolTips(self, 'sprofile')
+
+		self.setWindowTitle(lpx('Profile selection'))
+
+		if aCurrentIndex:
+			self._profileCombo.setCurrentIndex(aCurrentIndex)
+		else:
+			self.profileSelected(0)
+
+		self.setModal(True)
+		self.show()
+
+
+	def profileSelected(self, iIndex):
+		p = LmConf.Profiles[iIndex]
+		aAssociatedLiveboxMAC = p.get('Livebox MacAddr')
+		if aAssociatedLiveboxMAC is None:
+			self._assMac.setText(lpx('<None>'))
+			self._assMac.setStyleSheet('QLabel { color : green }')
+		else:
+			self._assMac.setText(aAssociatedLiveboxMAC)
+			self._assMac.setStyleSheet('QLabel { color : black }')
+
+		LmTools.MouseCursor_Busy()
+		aDetectedLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+		LmTools.MouseCursor_Normal()
+		if aDetectedLiveboxMAC is None:
+			self._detMac.setText(lpx('<None>'))
+			self._detMac.setStyleSheet('QLabel { color : red }')
+			self._warning.setText(lpx('No Livebox detected at profile\'s URL.'))
+			self._warning.setStyleSheet('QLabel { color : red }')
+		else:
+			self._detMac.setText(aDetectedLiveboxMAC)
+			if aAssociatedLiveboxMAC is None:
+				self._detMac.setStyleSheet('QLabel { color : green }')
+				self._warning.setText(lpx('Detected MAC will be associated to this profile.'))
+				self._warning.setStyleSheet('QLabel { color : green }')
+			elif aDetectedLiveboxMAC == aAssociatedLiveboxMAC:
+				self._detMac.setStyleSheet('QLabel { color : green }')
+				self._warning.setText('')
+				self._warning.setStyleSheet('QLabel { color : black }')
+			else:
+				self._detMac.setStyleSheet('QLabel { color : red }')
+				self._warning.setText(lpx('Warning: another Livebox is associated to this profile.'))
+				self._warning.setStyleSheet('QLabel { color : red }')
+
+
+	def profileIndex(self):
+		return self._profileCombo.currentIndex()
+
+
+	def createProfile(self):
+		self.reject()	# ###TODO### Pending implementation
 
 
 # ################################ Prefs dialog ################################

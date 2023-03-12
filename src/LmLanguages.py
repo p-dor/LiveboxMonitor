@@ -39,8 +39,8 @@ LANGUAGES_KEY = [ 'FR', 'EN' ]
 LANGUAGES_NAME = [ 'Français', 'English']
 
 # Labels & Tooltips - to set according to current language
-LABELS = []
-TOOLTIPS = []
+LABELS = {}
+TOOLTIPS = {}
 
 
 # ################################ Tools ################################
@@ -115,6 +115,7 @@ def GetRepeaterLabel(iString): return GetLabel('repeater', iString)
 def GetConfigPrefsDialogLabel(iString): return GetLabel('prefs', iString)
 def GetConfigCnxDialogLabel(iString): return GetLabel('cnx', iString)
 def GetConfigSigninDialogLabel(iString): return GetLabel('signin', iString)
+def GetSelectProfileDialogLabel(iString): return GetLabel('sprofile', iString)
 
 # Tools
 def GetToolsLabel(iString): return GetLabel('tools', iString)

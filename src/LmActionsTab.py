@@ -158,7 +158,7 @@ class LmActions:
 		aAboutWidgets.addWidget(QtWidgets.QLabel(lx('An Open Source project')), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
 		aOpenSourceURL = QtWidgets.QLabel(__url__, objectName = 'openSourceURL')
-		aOpenSourceURL.setStyleSheet('QLabel { color : blue; }')
+		aOpenSourceURL.setStyleSheet('QLabel { color : blue }')
 		aOpenSourceURL.mousePressEvent = self.openSourceButtonClick
 		aAboutWidgets.addWidget(aOpenSourceURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
@@ -406,7 +406,7 @@ class LmActions:
 
 	### Change the current profile in use
 	def changeProfileButtonClick(self):
-		if LmConf.askProfile():
+		if LmConf.askProfile(None):
 			LmConf.assignProfile()
 			self.resetUI()
 

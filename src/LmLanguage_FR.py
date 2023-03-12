@@ -544,8 +544,6 @@ LABELS = {
 	# Config - Preferences
 	'prefs': {
 		'Main': 'Principal',
-		'Profile selection': 'Sélection d\'un profil',
-		'Please select a profile to use:': 'Sélectionnez un profil :',
 		'Add': 'Ajouter',
 		'Delete': 'Supprimer',
 		'Name': 'Nom',
@@ -583,6 +581,20 @@ LABELS = {
 		'Password': 'Mot de passe',
 		'Cancel': 'Annuler',
 		'Wrong password': 'Mauvais mot de passe'
+	},
+
+	# Config - Select profile
+	'sprofile': {
+		'Profile selection': 'Sélection d\'un profil',
+		'Please select a profile to use:': 'Sélectionnez un profil :',
+		'Associated Livebox MAC:': 'MAC Livebox associée:',
+		'Detected Livebox MAC:': 'MAC Livebox détectée:',
+		'New Profile...': 'Nouveau Profil...',
+		'Cancel': 'Annuler',
+		'<None>': '<Aucune>',
+		'No Livebox detected at profile\'s URL.': 'Aucune Livebox détectée à l\'URL du profil.',
+		'Detected MAC will be associated to this profile.': 'La Livebox détectée sera associée à ce profil.',
+		'Warning: another Livebox is associated to this profile.': 'Attention : une autre Livebox est déjà associée à ce profil.'
 	},
 
 	# Tools
@@ -989,5 +1001,18 @@ TOOLTIPS = {
 						'se trouve sur la carte Wifi. Il est constitué des 8 premiers caractères (sans espace) de la clé de\n'
 						'sécurité visible sur l\'étiquette située sous votre Livebox.\n'
 						'Lisez la documentation pour plus de détails.'
+	},
+
+	# Config - Select profile
+	'sprofile': {
+		'assMacValue': 'Adresse physique de la Livebox associée au profil sélectionné.\n'
+					   'Si aucune adresse n\'est associée le profil n\'a jamais été utilisé et peut être associé\n'
+					   'à n\'importe quelle Livebox sur le réseau.',
+		'detMacValue': 'Adresse physique de la Livebox détectée via l\'URL du profil sélectionné.\n'
+					   'Si aucune Livebox n\'est détectée cela veut dire que la connexion va échouer et qu\'une autre\n'
+					   'URL sera demandée.\n'
+					   'Si l\'adresse physique est différente de celle associée au profil sélectionné l\'ancienne adresse\n'
+					   'sera remplacée par la nouvelle.',
+		'createProfile': 'Permet de créer un nouveau profil et de l\'utiliser directement.'
 	}
 }

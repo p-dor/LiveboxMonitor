@@ -85,8 +85,10 @@ TOOLTIPS = {
 		'passwordEdit': 'The password is either what you set up yourself or if you didn\'t change it, it is what is in\n'
 						'your Wifi card (corresponds to the first 8 characters, without spaces, of the security key visible\n'
 						'on the sticker at the back of your Livebox).'
-	}
+	},
 
+	# Config - Select profile
+	'sprofile': {}
 }
 
   
