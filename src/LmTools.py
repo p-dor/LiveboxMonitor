@@ -119,7 +119,7 @@ def CleanURL(iURL):
 	if n:
 		if not iURL[n - 1] == '/':
 			iURL += '/'
-		if not iURL.startswith('http://'):
+		if not iURL.startswith('http://') and not iURL.startswith('https://'):
 			iURL = 'http://' + iURL
 	return iURL
 

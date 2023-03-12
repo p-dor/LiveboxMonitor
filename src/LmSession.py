@@ -24,6 +24,7 @@ class LmSession:
 	### Constructor
 	def __init__(self, iUrl, iSessionName = 'LiveboxMonitor'):
 		self._url = iUrl
+		self._verify = iUrl.startswith('http://')
 		self._user = ''
 		self._password = ''
 		self._name = iSessionName
@@ -72,7 +73,7 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
-					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT)
+					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self._session = None
@@ -105,7 +106,7 @@ class LmSession:
 
 			# Check authentication
 			try:
-				r = self._session.post(self._url + 'ws', data = '{"service":"Time", "method":"getTime", "parameters":{}}', headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT)
+				r = self._session.post(self._url + 'ws', data = '{"service":"Time", "method":"getTime", "parameters":{}}', headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.Error('Authentification check query failed.')
@@ -152,7 +153,7 @@ class LmSession:
 			LmTools.LogDebug(1, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout)
+				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
 				#t = b'[' + t.replace(b'}{', b'},{')+b']'
@@ -181,7 +182,7 @@ class LmSession:
 			LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahServiceHeaders, timeout = iTimeout)
+				t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
 			except requests.exceptions.Timeout as e:
@@ -242,7 +243,7 @@ class LmSession:
 		LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
 		aTimeStamp = datetime.datetime.now()
 		try:
-			t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahEventHeaders, timeout = iTimeout)
+			t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahEventHeaders, timeout = iTimeout, verify = self._verify)
 			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 			t = t.content
 		except requests.exceptions.Timeout as e:
