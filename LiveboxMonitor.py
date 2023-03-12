@@ -245,6 +245,8 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			LmTools.Error('Error: cannot determine Livebox model')
 			self._liveboxModel = 'LBx'
 		else:
+			aMacAddr = d.get('BaseMAC', '').upper()
+			LmConf.setLiveboxMAC(aMacAddr)
 			aModel = d.get('ProductClass', '')
 			if aModel == 'Livebox 6':
 				self._liveboxModel = 'LB6'
@@ -323,6 +325,12 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 # ############# Main #############
 
 if __name__ == '__main__':
+	# Prevent logging to fail if running without console
+	if sys.stderr is None:
+		sys.stderr = open(os.devnull, "w")
+	if sys.stdout is None:
+		sys.stdout = open(os.devnull, "w")
+
 	aApp = QtWidgets.QApplication(sys.argv)
 	if LmConf.load():
 		SetApplicationStyle()
