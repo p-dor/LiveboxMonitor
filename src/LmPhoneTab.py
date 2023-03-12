@@ -566,7 +566,11 @@ class LmPhone:
 				aExportFile.write('RINGTONE:' + aContact['ringtone'] + '\n')
 				aExportFile.write('END:VCARD\n')
 
-		aExportFile.close()
+		try:
+			aExportFile.close()
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Cannot save the file.')
 
 		self.endTask()
 

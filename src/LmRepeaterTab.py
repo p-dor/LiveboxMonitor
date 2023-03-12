@@ -694,7 +694,12 @@ class LmRepHandler:
 			i = self.loadWifiInfo(i)
 			i = self.loadLanInfo(i)
 
-			self._app._exportFile.close()
+			try:
+				self._app._exportFile.close()
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.DisplayError('Cannot save the file.')
+
 			self._app._exportFile = None
 
 			self._app.endTask()
