@@ -413,67 +413,67 @@ class LmConf:
 	def load():
 		aDirtyConfig = False
 		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
-#		try:
-		with open(aConfigFilePath) as aConfigFile:
-			aConfig = json.load(aConfigFile)
-			aDirtyConfig = LmConf.convert(aConfig)
-			p = aConfig.get('Language')
-			if p is not None:
-				LmConf.Language = str(p)
-				if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
-					LmConf.Language = DCFG_LANGUAGE
-			LmLanguages.SetLanguage(LmConf.Language)
-			p = aConfig.get('Profiles')
-			if p is not None:
-				LmConf.Profiles = p
-				if not LmConf.selectProfile():
-					return False
-			if LmConf.CurrProfile is None:
-				raise Exception('No profile detected')
-			p = aConfig.get('Tooltips')
-			if p is not None:
-				LmConf.Tooltips = bool(p)
-			p = aConfig.get('Stats Frequency')
-			if p is not None:
-				LmConf.StatsFrequency = int(p)
-			p = aConfig.get('MacAddr API Key')
-			if p is not None:
-				LmConf.MacAddrApiKey = p
-			p = aConfig.get('Phone Code')
-			if p is not None:
-				LmConf.PhoneCode = str(p)
-			p = aConfig.get('List Header Height')
-			if p is not None:
-				LmConf.ListHeaderHeight = int(p)
-			p = aConfig.get('List Header Font Size')
-			if p is not None:
-				LmConf.ListHeaderFontSize = int(p)
-			p = aConfig.get('List Line Height')
-			if p is not None:
-				LmConf.ListLineHeight = int(p)
-			p = aConfig.get('List Line Font Size')
-			if p is not None:
-				LmConf.ListLineFontSize = int(p)
-			p = aConfig.get('Log Level')
-			if p is not None:
-				LmConf.LogLevel = int(p)
-				if LmConf.LogLevel < 0:
-					LmConf.LogLevel = 0
-				elif LmConf.LogLevel > 2:
-					LmConf.LogLevel = 2
-				LmTools.SetVerbosity(LmConf.LogLevel)
-			p = aConfig.get('Repeaters')
-			if p is not None:
-				LmConf.Repeaters = p
-#		except OSError:
-#			LmTools.Error('No configuration file, creating one.')
-#			aDirtyConfig = True
-#		except BaseException as e:
-#			LmTools.Error('Error: {}'.format(e))
-#			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
-#				aDirtyConfig = True
-#			else:
-#				return False
+		try:
+			with open(aConfigFilePath) as aConfigFile:
+				aConfig = json.load(aConfigFile)
+				aDirtyConfig = LmConf.convert(aConfig)
+				p = aConfig.get('Language')
+				if p is not None:
+					LmConf.Language = str(p)
+					if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
+						LmConf.Language = DCFG_LANGUAGE
+				LmLanguages.SetLanguage(LmConf.Language)
+				p = aConfig.get('Profiles')
+				if p is not None:
+					LmConf.Profiles = p
+					if not LmConf.selectProfile():
+						return False
+				if LmConf.CurrProfile is None:
+					raise Exception('No profile detected')
+				p = aConfig.get('Tooltips')
+				if p is not None:
+					LmConf.Tooltips = bool(p)
+				p = aConfig.get('Stats Frequency')
+				if p is not None:
+					LmConf.StatsFrequency = int(p)
+				p = aConfig.get('MacAddr API Key')
+				if p is not None:
+					LmConf.MacAddrApiKey = p
+				p = aConfig.get('Phone Code')
+				if p is not None:
+					LmConf.PhoneCode = str(p)
+				p = aConfig.get('List Header Height')
+				if p is not None:
+					LmConf.ListHeaderHeight = int(p)
+				p = aConfig.get('List Header Font Size')
+				if p is not None:
+					LmConf.ListHeaderFontSize = int(p)
+				p = aConfig.get('List Line Height')
+				if p is not None:
+					LmConf.ListLineHeight = int(p)
+				p = aConfig.get('List Line Font Size')
+				if p is not None:
+					LmConf.ListLineFontSize = int(p)
+				p = aConfig.get('Log Level')
+				if p is not None:
+					LmConf.LogLevel = int(p)
+					if LmConf.LogLevel < 0:
+						LmConf.LogLevel = 0
+					elif LmConf.LogLevel > 2:
+						LmConf.LogLevel = 2
+					LmTools.SetVerbosity(LmConf.LogLevel)
+				p = aConfig.get('Repeaters')
+				if p is not None:
+					LmConf.Repeaters = p
+		except OSError:
+			LmTools.Error('No configuration file, creating one.')
+			aDirtyConfig = True
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
+				aDirtyConfig = True
+			else:
+				return False
 
 		if aDirtyConfig:
 			LmConf.save()
