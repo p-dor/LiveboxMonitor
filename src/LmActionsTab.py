@@ -554,7 +554,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		i = self.addStatusLine(lwx('{} Enabled').format('Wifi 5GHz'), WifiKey.Wifi5Enable, i)
 		i = self.addStatusLine(lwx('{} Active').format('Wifi 5GHz'), WifiKey.Wifi5Status, i)
 		i = self.addStatusLine(lwx('{} VAP').format('Wifi 5GHz'), WifiKey.Wifi5VAP, i)
-		if iLiveboxModel == 'LB6':
+		if iLiveboxModel >= 6:
 			i = self.addStatusLine(lwx('{} Enabled').format('Wifi 6GHz'), WifiKey.Wifi6Enable, i)
 			i = self.addStatusLine(lwx('{} Active').format('Wifi 6GHz'), WifiKey.Wifi6Status, i)
 			i = self.addStatusLine(lwx('{} VAP').format('Wifi 6GHz'), WifiKey.Wifi6VAP, i)

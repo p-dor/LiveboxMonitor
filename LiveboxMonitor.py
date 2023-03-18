@@ -239,19 +239,19 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			d = d.get('status')
 		if d is None:
 			LmTools.Error('Error: cannot determine Livebox model')
-			self._liveboxModel = 'LBx'
+			self._liveboxModel = 0
 		else:
 			aMacAddr = d.get('BaseMAC', '').upper()
 			LmConf.setLiveboxMAC(aMacAddr)
 			aModel = d.get('ProductClass', '')
 			if aModel == 'Livebox 6':
-				self._liveboxModel = 'LB6'
+				self._liveboxModel = 6
 			elif aModel == 'Livebox Fibre':
-				self._liveboxModel = 'LB5'
+				self._liveboxModel = 5
 			elif aModel == 'Livebox 4':
-				self._liveboxModel = 'LB4'
+				self._liveboxModel = 4
 			else:
-				self._liveboxModel = 'LBx'
+				self._liveboxModel = 0
 
 		SetLiveboxModel(self._liveboxModel)
 		LmRepeaterTab.SetRepeaterLiveboxModel(self._liveboxModel)

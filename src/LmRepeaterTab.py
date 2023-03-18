@@ -68,9 +68,9 @@ def SetRepeaterLiveboxModel(iModel):
 	global NET_INTF_LB5
 	global NET_INTF_LB6
 
-	if iModel == 'LB6':
+	if iModel == 6:
 		NET_INTF = NET_INTF_LB6
-	elif iModel == 'LB5':
+	elif iModel == 5:
 		NET_INTF = NET_INTF_LB5
 	else:
 		NET_INTF = NET_INTF_LB4
@@ -1139,7 +1139,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Inactive
 			u[WifiKey.Wifi5Status] = WifiStatus.Inactive
 			u[WifiKey.Wifi5VAP] = WifiStatus.Inactive
-			if iLiveboxModel == 'LB6':
+			if iLiveboxModel >= 6:
 				u[WifiKey.Wifi6Enable] = WifiStatus.Inactive
 				u[WifiKey.Wifi6Status] = WifiStatus.Inactive
 				u[WifiKey.Wifi6VAP] = WifiStatus.Inactive
@@ -1155,7 +1155,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5Status] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5VAP] = WifiStatus.Unsigned
-			if iLiveboxModel == 'LB6':
+			if iLiveboxModel >= 6:
 				u[WifiKey.Wifi6Enable] = WifiStatus.Unsigned
 				u[WifiKey.Wifi6Status] = WifiStatus.Unsigned
 				u[WifiKey.Wifi6VAP] = WifiStatus.Unsigned
@@ -1223,7 +1223,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Error
 			u[WifiKey.Wifi5Status] = WifiStatus.Error
 			u[WifiKey.Wifi5VAP] = WifiStatus.Error
-			if iLiveboxModel == 'LB6':
+			if iLiveboxModel >= 6:
 				u[WifiKey.Wifi6Enable] = WifiStatus.Error
 				u[WifiKey.Wifi6Status] = WifiStatus.Error
 				u[WifiKey.Wifi6VAP] = WifiStatus.Error

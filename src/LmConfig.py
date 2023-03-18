@@ -370,10 +370,10 @@ def SetLiveboxModel(iModel):
 	global NET_INTF
 	global INTF_NAME_MAP
 
-	if iModel == 'LB6':
+	if iModel == 6:
 		NET_INTF = NET_INTF_LB6
 		INTF_NAME_MAP = INTF_NAME_MAP_LB6
-	elif iModel == 'LB5':
+	elif iModel == 5:
 		NET_INTF = NET_INTF_LB5
 		INTF_NAME_MAP = INTF_NAME_MAP_LB5
 	else:
