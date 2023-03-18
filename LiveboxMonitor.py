@@ -1,12 +1,8 @@
-### Python program to monitor a Livebox 5 ###
-# Livebox authentication & service request interfaces copied/adapted from sysbus package
-
-# References:
-# Qt6 ->    https://www.riverbankcomputing.com/static/Docs/PyQt6/index.html
-#			https://doc.qt.io/
+### Python program to monitor & administrate a Livebox 4, 5 or 6 ###
 
 import sys
 import re
+import traceback
 
 from PyQt6 import QtCore
 from PyQt6 import QtGui
@@ -321,6 +317,19 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self._tabWidget.setCurrentIndex(MonitorTab.Actions)
 
 
+# ############# Fatal error handler #############
+
+def exceptHook(iType, iValue, iTraceBack):
+	aTraceBack = ''.join(traceback.format_exception(iType, iValue, iTraceBack))
+
+	aMsgBox = QtWidgets.QMessageBox()
+	aMsgBox.setWindowTitle(lx('Fatal Error'))
+	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Critical)
+	aMsgBox.setText(aTraceBack + '\nApplication will now quit.')
+	aMsgBox.exec()
+
+	QtWidgets.QApplication.quit()
+
 
 # ############# Main #############
 
@@ -332,6 +341,7 @@ if __name__ == '__main__':
 		sys.stdout = open(os.devnull, "w")
 
 	aApp = QtWidgets.QApplication(sys.argv)
+	sys.excepthook = exceptHook
 	if LmConf.load():
 		SetApplicationStyle()
 		LmIcon.load()
