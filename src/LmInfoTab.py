@@ -131,7 +131,8 @@ class LmInfo:
 
 		aOntInfoButton = QtWidgets.QPushButton(lx('ONT Infos'), objectName = 'ontInfo')
 		aOntInfoButton.clicked.connect(self.ontInfoButtonClick)
-		aButtonsBox.addWidget(aOntInfoButton)
+		if self._liveboxModel >= 5:
+			aButtonsBox.addWidget(aOntInfoButton)
 
 		aVoiPInfoButton = QtWidgets.QPushButton(lx('VoIP Infos'), objectName = 'voipInfo')
 		aVoiPInfoButton.clicked.connect(self.voipInfoButtonClick)
@@ -454,7 +455,8 @@ class LmInfo:
 		i = self.loadInternetInfo(i)
 		i = self.loadWifiInfo(i)
 		i = self.loadLanInfo(i)
-		i = self.loadOntInfo(i)
+		if self._liveboxModel >= 5:
+			i = self.loadOntInfo(i)
 		i = self.loadVoipInfo(i)
 		i = self.loadIptvInfo(i)
 		i = self.loadUsbInfo(i)
@@ -1025,7 +1027,7 @@ class LmInfo:
 
 			v = d.get('Bias')
 			if v is not None:
-				if self._liveboxModel == 'LB6':
+				if self._liveboxModel >= 6:
 					v /= 1000
 				if (v < 0) or (v > 150):
 					aQual = LmTools.ValQual.Error
@@ -1093,7 +1095,7 @@ class LmInfo:
 						i = self.addInfoLine(self._liveboxAList, i, lx('{} Number').format(aName), l.get('directoryNumber'))
 
 		# No DECT on Livebox 6
-		if self._liveboxModel == 'LB6':
+		if self._liveboxModel >= 6:
 			return i
 
 		i = self.addTitleLine(self._liveboxAList, i, lx('DECT Information'))
@@ -1400,7 +1402,7 @@ class LmInfo:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Error
 			u[WifiKey.Wifi5Status] = WifiStatus.Error
 			u[WifiKey.Wifi5VAP] = WifiStatus.Error
-			if self._liveboxModel == 'LB6':
+			if self._liveboxModel >= 6:
 				u[WifiKey.Wifi6Enable] = WifiStatus.Error
 				u[WifiKey.Wifi6Status] = WifiStatus.Error
 				u[WifiKey.Wifi6VAP] = WifiStatus.Error
