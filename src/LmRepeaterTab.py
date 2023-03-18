@@ -24,7 +24,7 @@ from src.LmLanguages import GetRepeaterLabel as lx
 # ################################ VARS & DEFS ################################
 
 # Static Config
-WIFI_REPEATER_PRODUCT_CLASSES = ['WIFI6REPSERCOMM']
+WIFI_REPEATER_PRODUCT_CLASSES = ['WIFI6REPSERCOMM', 'WIFIREPARCFR']
 DEFAULT_REPEATER_NAME = 'RW #'
 
 # Interfaces
