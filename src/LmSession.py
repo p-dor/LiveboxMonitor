@@ -1,5 +1,5 @@
 ### Livebox Monitor session module ###
-# Interfaces copied/adapted from sysbus package
+# Interfaces copied/adapted from sysbus package - https://github.com/rene-d/sysbus
 
 import os
 import json
@@ -15,6 +15,7 @@ from src import LmTools
 # ################################ VARS & DEFS ################################
 APP_NAME = 'so_sdkut'
 DEFAULT_TIMEOUT = 5
+LIVEBOX_SCAN_TIMEOUT = 0.3
 
 
 # ################################ LmSession class ################################
@@ -294,7 +295,7 @@ class LmSession:
 				r = requests.Session().post(iLiveboxURL  + 'ws',
 						   data = '{"service":"DeviceInfo", "method":"get", "parameters":{}}',
 						   headers = {'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
-						   timeout = 1)
+						   timeout = LIVEBOX_SCAN_TIMEOUT)
 			except:
 				r = None
 			if r is not None:
