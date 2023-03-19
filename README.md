@@ -76,6 +76,20 @@ Les points importants à comprendre avant de commencer :
 Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
 
 
+## Profils
+Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement, mais il est possible d'en créer d'autres soit au démarrage du programme dans la fenêtre de sélection de profils soit dans les préférences du programme.  
+Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.  
+Plusieurs informations sont associées à chaque profil, telle que l'URL de la Livebox, son mot de passe, etc. Le programme associe aussi automatiquement l'adresse physique (MAC) de la Livebox sur laquelle la connexion s'est effectuée.
+
+Que se passe-t-il au lancement du programme ?
+- Si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.
+- Sinon, si un profil par défaut est configuré, il sera sélectionné.
+- Sinon, le programme parcours la liste des profils et cherche si une Livebox avec la même adresse physique que celle associée au profil répond à l'URL du profil. Le premier profil qui répond à ces critères est sélectionné.
+- Si aucun profil trouvé, le programme affiche un dialogue pour sélectionner le profil à utiliser.
+
+Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un profil pour une Livebox différente de celle avec lequel il est normalement associé. Si vous validez le dialogue, le profil sera mis à jour pour être associé à cette nouvelle Livebox. Le dialogue de sélection de profils vous permet aussi de créer un nouveau profil si aucun dans la liste ne convient.
+
+
 ## Configuration
 
 Le programme créé automatiquement dans son répertoire deux fichiers de configuration au format JSON :
@@ -355,8 +369,7 @@ Les actions concernant les **Réglages** :
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_Preferences.png)
 
-    Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement. Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.
-    Au lancement du programme, le profil par défaut est utilisé, mais si aucun profil par défaut n'est configuré ou si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.  
+    Voir la section **Profils*** ci-dessus pour plus de détail sur leur fonctionnement.  
  
     Pour chaque **profil** il est possible de configurer :
     - `Nom` : nom du profil.
