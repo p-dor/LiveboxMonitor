@@ -2,6 +2,7 @@
 
 import datetime
 import re
+import json
 
 from enum import IntEnum
 
@@ -24,14 +25,24 @@ from src.LmLanguages import GetRepeaterLabel as lx
 # ################################ VARS & DEFS ################################
 
 # Static Config
-WIFI_REPEATER_PRODUCT_CLASSES = ['WIFI6REPSERCOMM', 'WIFIREPARCFR']
+WIFI_REPEATER_5 = 'WIFIREPARCFR'
+WIFI_REPEATER_6 = 'WIFI6REPSERCOMM'
+WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
+WIFI_REPEATER_VERSION_MAP = { WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6 }
 DEFAULT_REPEATER_NAME = 'RW #'
+DEBUG_BUTTON = False
 
-# Interfaces
-NET_INTF = []
+#  Wifi Repeater 5 Interfaces
+NET_INTF_WR5 = [
+	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth1_0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth1_1',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'wl0',        'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
+]
 
-# LB4 Interfaces
-NET_INTF_LB4 = [
+# Wifi Repeater 6 Interfaces
+NET_INTF_WR6 = [
 	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
@@ -39,17 +50,8 @@ NET_INTF_LB4 = [
 	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
 ]
 
-# LB5 Interfaces
-NET_INTF_LB5 = [
-	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
-]
-
-# LB6 Interfaces
-NET_INTF_LB6 = [
+# Wifi Repeater 6 Interfaces with a Livebox 6
+NET_INTF_WR6_LB6 = [
 	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
 	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
 	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
@@ -57,23 +59,6 @@ NET_INTF_LB6 = [
 	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
 	{ 'Key': 'vap6g0priv', 'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  }
 ]
-
-
-
-# ################################ Tools ################################
-
-# Setup configuration according to Livebox model
-def SetRepeaterLiveboxModel(iModel):
-	global NET_INTF
-	global NET_INTF_LB5
-	global NET_INTF_LB6
-
-	if iModel == 6:
-		NET_INTF = NET_INTF_LB6
-	elif iModel == 5:
-		NET_INTF = NET_INTF_LB5
-	else:
-		NET_INTF = NET_INTF_LB4
 
 
 
@@ -115,7 +100,7 @@ class LmRepeater:
 		LmConfig.SetTableStyle(aStatsList)
 
 		i = 0
-		for s in NET_INTF:
+		for s in iRepeater._netIntf:
 			aStatsList.insertRow(i)
 			aStatsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
 			aStatsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(s['Name']))
@@ -139,16 +124,17 @@ class LmRepeater:
 		aButtonsSet1.addWidget(aWifiOffButton)
 
 		# 2nd action buttons line
-		aButtonsSet2 = QtWidgets.QHBoxLayout()
-		aButtonsSet2.setSpacing(20)
+		if iRepeater._version >= 6:		# Scheduler available only starting WR6
+			aButtonsSet2 = QtWidgets.QHBoxLayout()
+			aButtonsSet2.setSpacing(20)
 
-		aSchedulerOnButton = QtWidgets.QPushButton(lx('Wifi Scheduler ON'), objectName = 'schedulerOn')
-		aSchedulerOnButton.clicked.connect(iRepeater.schedulerOnButtonClick)
-		aButtonsSet2.addWidget(aSchedulerOnButton)
+			aSchedulerOnButton = QtWidgets.QPushButton(lx('Wifi Scheduler ON'), objectName = 'schedulerOn')
+			aSchedulerOnButton.clicked.connect(iRepeater.schedulerOnButtonClick)
+			aButtonsSet2.addWidget(aSchedulerOnButton)
 
-		aSchedulerOffButton = QtWidgets.QPushButton(lx('Wifi Scheduler OFF'), objectName = 'schedulerOff')
-		aSchedulerOffButton.clicked.connect(iRepeater.schedulerOffButtonClick)
-		aButtonsSet2.addWidget(aSchedulerOffButton)
+			aSchedulerOffButton = QtWidgets.QPushButton(lx('Wifi Scheduler OFF'), objectName = 'schedulerOff')
+			aSchedulerOffButton.clicked.connect(iRepeater.schedulerOffButtonClick)
+			aButtonsSet2.addWidget(aSchedulerOffButton)
 
 		# 3nd action buttons line
 		aButtonsSet3 = QtWidgets.QHBoxLayout()
@@ -170,15 +156,23 @@ class LmRepeater:
 		aResignButton.clicked.connect(iRepeater.resignButtonClick)
 		aButtonsSet4.addWidget(aResignButton)
 
+		# Debug Button
+		if DEBUG_BUTTON:
+			aDebugButton = QtWidgets.QPushButton('Debug...', objectName = 'debug')
+			aDebugButton.clicked.connect(iRepeater.debugButtonClick)
+
 		# Action buttons group box
 		aGroupBox = QtWidgets.QGroupBox(lx('Actions'), objectName = 'actionsGroup')
 		aGroupBoxLayout = QtWidgets.QVBoxLayout()
 		aGroupBoxLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 		aGroupBoxLayout.setSpacing(20)
 		aGroupBoxLayout.addLayout(aButtonsSet1, 0)
-		aGroupBoxLayout.addLayout(aButtonsSet2, 0)
+		if iRepeater._version >= 6:		# Scheduler available only starting WR6
+			aGroupBoxLayout.addLayout(aButtonsSet2, 0)
 		aGroupBoxLayout.addLayout(aButtonsSet3, 0)
 		aGroupBoxLayout.addLayout(aButtonsSet4, 0)
+		if DEBUG_BUTTON:
+			aGroupBoxLayout.addWidget(aDebugButton)
 		aGroupBox.setLayout(aGroupBoxLayout)
 
 		# Stats & actions box
@@ -253,7 +247,8 @@ class LmRepeater:
 
 	### Itentify potential Wifi Repeater device & add it to the list
 	def identifyRepeater(self, iDevice):
-		if iDevice.get('ProductClass', '' ) in WIFI_REPEATER_PRODUCT_CLASSES:
+		aProdClass = iDevice.get('ProductClass', '' )
+		if aProdClass in WIFI_REPEATER_PRODUCT_CLASSES:
 			aKey = iDevice.get('Key', '')
 
 			# Check if not already there
@@ -269,6 +264,8 @@ class LmRepeater:
 			except:
 				aName = DEFAULT_REPEATER_NAME + str(aIndex + 1)
 
+			aVersion = WIFI_REPEATER_VERSION_MAP[aProdClass]
+
 			aIPStruct = LmTools.DetermineIP(iDevice)
 			if aIPStruct is None:
 				aIPAddress = None
@@ -277,7 +274,7 @@ class LmRepeater:
 
 			aActive = iDevice.get('Active', False)
 
-			aRepeater = LmRepHandler(self, aIndex, aKey, aMacAddr, aName, aIPAddress, aActive)
+			aRepeater = LmRepHandler(self, aIndex, aKey, aMacAddr, aName, aVersion, aIPAddress, aActive)
 			self._repeaters.append(aRepeater)
 
 			return aRepeater
@@ -478,11 +475,12 @@ class LmRepeater:
 class LmRepHandler:
 
 	### Init handler
-	def __init__(self, iApp, iIndex, iKey, iMacAddr, iName, iIPAddress, iActive):
+	def __init__(self, iApp, iIndex, iKey, iMacAddr, iName, iVersion, iIPAddress, iActive):
 		self._app = iApp
 		self._key = iKey
 		self._macAddr = iMacAddr
 		self._name = iName
+		self._version = iVersion
 		self._ipAddr = iIPAddress
 		self._active = iActive
 		self._session = None
@@ -492,6 +490,20 @@ class LmRepHandler:
 		self._statsList = None
 		self._statsMap = {}
 		self._repeaterAList = None
+		self.setNetIntf()
+
+
+	### Set Net Interfaces according to Repeater and Livebox versions
+	def setNetIntf(self):
+		if self._version == 5:
+			self._netIntf = NET_INTF_WR5
+		elif self._version == 6:
+			if self._app._liveboxModel >= 6:
+				self._netIntf = NET_INTF_WR6_LB6
+			else:
+				self._netIntf = NET_INTF_WR6
+		else:
+			self._netIntf = "None"
 
 
 	### Sign in to repeater
@@ -844,6 +856,38 @@ class LmRepHandler:
 			LmTools.DisplayError('Repeater is inactive.')
 
 
+	### Click on Debug button
+	def debugButtonClick(self):
+		if self.isSigned():
+			try:
+				LmTools.MouseCursor_Busy()
+				d = self._session.request('NeMo.Intf.data:getMIBs')
+				LmTools.MouseCursor_Normal()
+				if d is None:
+					LmTools.DisplayError('NeMo.Intf.data:getMIBs service failed')
+				else:
+					LmTools.DisplayInfos('NeMo.Intf.data:getMIBs', json.dumps(d, indent = 2))
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.MouseCursor_Normal()
+				LmTools.DisplayError('NeMo.Intf.data:getMIBs service error')
+
+			try:
+				LmTools.MouseCursor_Busy()
+				d = self._session.request('NeMo.Intf.lan:getMIBs')
+				LmTools.MouseCursor_Normal()
+				if d is None:
+					LmTools.DisplayError('NeMo.Intf.lan:getMIBs service failed')
+				else:
+					LmTools.DisplayInfos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent = 2))
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				LmTools.MouseCursor_Normal()
+				LmTools.DisplayError('NeMo.Intf.lan:getMIBs service error')
+		else:
+			LmTools.DisplayError('Not signed to repeater.')		
+
+
 	### Add a title line in an info attribute/value list
 	def addTitleLine(self, iLine, iTitle):
 		return self._app.addTitleLine(self._repeaterAList, iLine, iTitle)
@@ -916,24 +960,25 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Pairing Status'), d.get('PairingStatus'))
 			i = self.addInfoLine(i, lx('PIN Code'), d.get('PINCode'))
 
-		try:
-			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-		if (d is not None) and (d.get('status', False)):
-			d = d.get('data')
-		else:
-			d = None
-		if d is None:
-			i = self.addInfoLine(i, lx('Scheduler Enabled'), 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
-		else:
-			d = d.get('scheduleInfo', [])
-			if len(d):
-				aActive = d[0].get('enable', False)
+		if self._version >= 6:		# Scheduler available only starting WR6
+			try:
+				d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				d = None
+			if (d is not None) and (d.get('status', False)):
+				d = d.get('data')
 			else:
-				aActive = False
-			i = self.addInfoLine(i, lx('Scheduler Enabled'), LmTools.FmtBool(aActive))
+				d = None
+			if d is None:
+				i = self.addInfoLine(i, lx('Scheduler Enabled'), 'Scheduler:getCompleteSchedules query error', LmTools.ValQual.Error)
+			else:
+				d = d.get('scheduleInfo', [])
+				if len(d):
+					aActive = d[0].get('enable', False)
+				else:
+					aActive = False
+				i = self.addInfoLine(i, lx('Scheduler Enabled'), LmTools.FmtBool(aActive))
 
 		b = None
 		w = None
@@ -962,7 +1007,7 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Wifi'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return i 
 
-		for s in NET_INTF:
+		for s in self._netIntf:
 			if s['Type'] != 'wif':
 				continue
 			i = self.addTitleLine(i, s['Name'])
@@ -1103,7 +1148,7 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('LAN'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return
 
-		for s in NET_INTF:
+		for s in self._netIntf:
 			if s['Type'] != 'eth':
 				continue
 			i = self.addTitleLine(i, s['Name'])
@@ -1175,23 +1220,24 @@ class LmRepHandler:
 			u[WifiKey.Enable] = WifiStatus.Enable if d.get('Enable', False) else WifiStatus.Disable
 			u[WifiKey.Status] = WifiStatus.Enable if d.get('Status', False) else WifiStatus.Disable
 
-		try:
-			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-		if (d is not None) and (d.get('status', False)):
-			d = d.get('data')
-		else:
-			d = None
-		if d is None:
-			u[WifiKey.Scheduler] = WifiStatus.Error
-		else:
-			d = d.get('scheduleInfo', [])
-			if len(d):
-				u[WifiKey.Scheduler] = WifiStatus.Enable if d[0].get('enable', False) else WifiStatus.Disable
+		if self._version >= 6:		# Scheduler available only starting WR6
+			try:
+				d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				d = None
+			if (d is not None) and (d.get('status', False)):
+				d = d.get('data')
 			else:
-				u[WifiKey.Scheduler] = WifiStatus.Disable
+				d = None
+			if d is None:
+				u[WifiKey.Scheduler] = WifiStatus.Error
+			else:
+				d = d.get('scheduleInfo', [])
+				if len(d):
+					u[WifiKey.Scheduler] = WifiStatus.Enable if d[0].get('enable', False) else WifiStatus.Disable
+				else:
+					u[WifiKey.Scheduler] = WifiStatus.Disable
 
 		b = None
 		w = None
@@ -1228,7 +1274,7 @@ class LmRepHandler:
 				u[WifiKey.Wifi6Status] = WifiStatus.Error
 				u[WifiKey.Wifi6VAP] = WifiStatus.Error
 		else:
-			for s in NET_INTF:
+			for s in self._netIntf:
 				if s['Type'] != 'wif':
 					continue
 
@@ -1309,7 +1355,7 @@ class RepeaterStatsThread(QtCore.QObject):
 	def collectStats(self):
 		for r in self._repeaters:
 			if r.isSigned():
-				for s in NET_INTF:
+				for s in r._netIntf:
 					if r._session is not None:
 						aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
 						if aResult is not None:

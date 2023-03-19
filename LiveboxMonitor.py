@@ -254,7 +254,6 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 				self._liveboxModel = 0
 
 		SetLiveboxModel(self._liveboxModel)
-		LmRepeaterTab.SetRepeaterLiveboxModel(self._liveboxModel)
 
 
 	### Exit with escape
