@@ -94,8 +94,8 @@ Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un
 Il est possible d'utiliser le programme à distance si l'accès à distance de la Livebox est activé.
 Dans la configuration de la Livebox, cliquez sur la tuile "Mon accès à distance". Activez l'accès, configurez un nom, un mot de passe, et un numéro de port personnalisé. Vous pouvez aussi en profiter pour activer un DynDNS pour éviter de changer l'URL à chaque fois que votre IP internet change.  
 
-Votre URL de connexion devient alors quelque chose comme ceci : https://monIP:monPort/
-Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort/
+Votre URL de connexion devient alors quelque chose comme ceci : https://monIP:monPort/  
+Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort/  
 Évidement configurez aussi le nom et le mot de passe de connexion en fonction.
 
 
