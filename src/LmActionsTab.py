@@ -406,9 +406,12 @@ class LmActions:
 
 	### Change the current profile in use
 	def changeProfileButtonClick(self):
-		if LmConf.askProfile(None):
+		r = LmConf.askProfile(None)
+		if r == 1:
 			LmConf.assignProfile()
 			self.resetUI()
+		elif r == 2:
+			self.prefsButtonClick()
 
 
 	### Click on show raw device list button

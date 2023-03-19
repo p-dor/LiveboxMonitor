@@ -594,7 +594,9 @@ LABELS = {
 		'<None>': '<Aucune>',
 		'No Livebox detected at profile\'s URL.': 'Aucune Livebox détectée à l\'URL du profil.',
 		'Detected MAC will be associated to this profile.': 'La Livebox détectée sera associée à ce profil.',
-		'Warning: another Livebox is associated to this profile.': 'Attention : une autre Livebox est déjà associée à ce profil.'
+		'Warning: another Livebox is associated to this profile.': 'Attention : une autre Livebox est déjà associée à ce profil.',
+		'Create Profile': 'Créer un profil',
+		'Profile name:': 'Nom du profil:'
 	},
 
 	# Tools

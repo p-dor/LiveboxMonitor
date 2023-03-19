@@ -439,7 +439,11 @@ class LmConf:
 			p = aConfig.get('Profiles')
 			if p is not None:
 				LmConf.Profiles = p
-				if not LmConf.selectProfile():
+				aOK, aDirty = LmConf.selectProfile()
+				if aOK:
+					if aDirty:
+						aDirtyConfig = True
+				else:
 					return False
 			if LmConf.CurrProfile is None:
 				raise Exception('No profile detected')
@@ -497,54 +501,57 @@ class LmConf:
 
 
 	### Select a profile in the profile list depending on default parameters
-	#   Returns False if user cancels
+	#   Returns a tuple of 2 booleans: 1/ False if user cancels, 2/ True if config needs to be saved
 	@staticmethod
 	def selectProfile():
-		# First collect reachable profiles and those matching Livebox's MAC address
-		LmTools.MouseCursor_Busy()
-		aReachableProfiles = []
-		aMatchingProfiles = []
-		for p in LmConf.Profiles:
-			aProfileMAC = p.get('Livebox MacAddr')
-			aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
-			if aLiveboxMAC is not None:
-				aReachableProfiles.append(p)
-				if aLiveboxMAC == aProfileMAC:
-					aMatchingProfiles.append(p)
-		LmTools.MouseCursor_Normal()
+		# First search for a default profile
+		LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Default']), None)
 
-		# If only one matching profile, take it
-		aMatchingProfilesNb = len(aMatchingProfiles)
-		if aMatchingProfilesNb == 1:
-			LmConf.CurrProfile = aMatchingProfiles[0]
-		elif aMatchingProfilesNb > 1:
-			# Take a potential default in matching list
-			LmConf.CurrProfile = next((p for p in aMatchingProfiles if p['Default']), None)
-			# Otherwise take the first one
-			if LmConf.CurrProfile is None:
-				LmConf.CurrProfile = aMatchingProfiles[0]
-
-		# Otherwise, search for first default profile
+		# Find dynamically if no default
 		if LmConf.CurrProfile is None:
-			LmConf.CurrProfile = next((p for p in LmConf.Profiles if p['Default']), None)
+			# First collect reachable profiles and those matching Livebox's MAC address
+			LmTools.MouseCursor_Busy()
+			aReachableProfiles = []
+			aMatchingProfiles = []
+			for p in LmConf.Profiles:
+				aProfileMAC = p.get('Livebox MacAddr')
+				aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+				if aLiveboxMAC is not None:
+					aReachableProfiles.append(p)
+					if aLiveboxMAC == aProfileMAC:
+						aMatchingProfiles.append(p)
+			LmTools.MouseCursor_Normal()
+
+			# If at least one matching profile, take the first
+			if len(aMatchingProfiles):
+				LmConf.CurrProfile = aMatchingProfiles[0]
+		else:
+			aMatchingProfiles = None
 
 		# If no match/default found or if Ctrl key pressed, ask for it
 		aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
+		aDirtyConfig = False
 		if (LmConf.CurrProfile is None) or (aModifiers == QtCore.Qt.KeyboardModifier.ControlModifier):
-			if not LmConf.askProfile(aMatchingProfiles):
-				return False
+			r = LmConf.askProfile(aMatchingProfiles)
+			if r == 0:
+				return False, False
+			elif r == 2:
+				if LmConf.createProfile():
+					aDirtyConfig = True
+				else:
+					return False, False
 
 		if LmConf.CurrProfile is not None:
 			LmConf.assignProfile()
 
-		return True
+		return True, aDirtyConfig
 
 
-	### Ask user to choose a profile, returns False if user cancels
+	### Ask user to choose a profile, returns 0 if user cancels, 1 if one selected, 2 if need to create a new one
 	@staticmethod
 	def askProfile(iMatchingProfiles = None):
 		if len(LmConf.Profiles) == 0:
-			return True
+			return 1
 
 		LmTools.MouseCursor_Busy()
 		if iMatchingProfiles is None:
@@ -558,9 +565,40 @@ class LmConf:
 
 		aSelectProfileDialog = SelectProfileDialog(iMatchingProfiles)
 		if aSelectProfileDialog.exec():
+			if aSelectProfileDialog.doCreateProfile():
+				return 2
 			LmConf.CurrProfile = LmConf.Profiles[aSelectProfileDialog.profileIndex()]
-			return True
-		return False
+			return 1
+		return 0
+
+
+	### Create a new profile, return False is user cancelled
+	#staticmethod
+	def createProfile():
+		# Loop until finding a unique name or user cancels
+		while True:
+			aName, aOK = QtWidgets.QInputDialog.getText(None, lpx('Create Profile'), lpx('Profile name:'))
+			if aOK:
+				q = next((p for p in LmConf.Profiles if p['Name'] == aName), None)
+				if q is None:
+					break
+				else:
+					LmTools.DisplayError('This name is already used.')
+			else:
+				return False
+
+		# Create a new profile with default values
+		p = {}
+		p['Name'] = aName
+		p['Livebox URL'] = DCFG_LIVEBOX_URL
+		p['Livebox User'] = DCFG_LIVEBOX_USER
+		p['Filter Devices'] = DCFG_FILTER_DEVICES
+		p['MacAddr Table File'] = DCFG_MACADDR_TABLE_FILE
+		p['Default'] = False
+		LmConf.Profiles.append(p)
+		LmConf.CurrProfile = p
+
+		return True
 
 
 	### Assign parameters depending on current profile
@@ -1009,7 +1047,6 @@ class SelectProfileDialog(QtWidgets.QDialog):
 
 		aCreateProfileButton = QtWidgets.QPushButton(lpx('New Profile...'), objectName = 'createProfile')
 		aCreateProfileButton.clicked.connect(self.createProfile)
-		aCreateProfileButton.setEnabled(False)	# ###TODO### Pending implementation
 		aOkButton = QtWidgets.QPushButton(lpx('OK'), objectName = 'ok')
 		aOkButton.clicked.connect(self.accept)
 		aOkButton.setDefault(True)
@@ -1038,6 +1075,8 @@ class SelectProfileDialog(QtWidgets.QDialog):
 			self._profileCombo.setCurrentIndex(aCurrentIndex)
 		else:
 			self.profileSelected(0)
+
+		self._createProfile = False
 
 		self.setModal(True)
 		self.show()
@@ -1081,8 +1120,14 @@ class SelectProfileDialog(QtWidgets.QDialog):
 		return self._profileCombo.currentIndex()
 
 
+	def doCreateProfile(self):
+		return self._createProfile
+
+
 	def createProfile(self):
-		self.reject()	# ###TODO### Pending implementation
+		self._createProfile = True
+		self.accept()
+
 
 
 # ################################ Prefs dialog ################################

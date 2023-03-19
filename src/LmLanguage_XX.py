@@ -673,7 +673,9 @@ LABELS = {
 		'<None>': '',
 		'No Livebox detected at profile\'s URL.': '',
 		'Detected MAC will be associated to this profile.': '',
-		'Warning: another Livebox is associated to this profile.': ''
+		'Warning: another Livebox is associated to this profile.': '',
+		'Create Profile': '',
+		'Profile name:': ''
 	}
 
 	# Tools
