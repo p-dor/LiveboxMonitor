@@ -429,7 +429,18 @@ class LmConf:
 					aConfigFile.close()
 				return False
 		else:
+			# Check if config version is more recent than the application
+			aConfigVersion = aConfig.get('Version', 0)
+			if aConfigVersion > __build__:
+				if not LmTools.AskQuestion('This version of the application is older than the configuration file.\n'
+										   'If you continue you might lose some setup.\n'
+										   'Are you sure you want to continue?'):
+					return False
+
+			# Potentially convert the format to newer version
 			aDirtyConfig = LmConf.convert(aConfig)
+
+			# Load all configs
 			p = aConfig.get('Language')
 			if p is not None:
 				LmConf.Language = str(p)
