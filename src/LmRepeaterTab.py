@@ -144,9 +144,10 @@ class LmRepeater:
 		aRebootRepeaterButton.clicked.connect(iRepeater.rebootRepeaterButtonClick)
 		aButtonsSet3.addWidget(aRebootRepeaterButton)
 
-		aRebootHistoryButton = QtWidgets.QPushButton(lx('Reboot History...'), objectName = 'rebootHistory')
-		aRebootHistoryButton.clicked.connect(iRepeater.rebootHistoryButtonClick)
-		aButtonsSet3.addWidget(aRebootHistoryButton)
+		if iRepeater._version >= 6:		# Reboot history available only starting WR6
+			aRebootHistoryButton = QtWidgets.QPushButton(lx('Reboot History...'), objectName = 'rebootHistory')
+			aRebootHistoryButton.clicked.connect(iRepeater.rebootHistoryButtonClick)
+			aButtonsSet3.addWidget(aRebootHistoryButton)
 
 		# 4nd action buttons line
 		aButtonsSet4 = QtWidgets.QHBoxLayout()
