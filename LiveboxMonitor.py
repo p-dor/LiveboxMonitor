@@ -4,28 +4,15 @@ import sys
 import re
 import traceback
 
-from PyQt6 import QtCore
-from PyQt6 import QtGui
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmTools
 from src.LmIcons import LmIcon
-from src.LmConfig import LmConf
-from src.LmConfig import SetApplicationStyle
-from src.LmConfig import SetLiveboxModel
-from src.LmConfig import MonitorTab
-from src.LmConfig import LiveboxCnxDialog
-from src.LmConfig import LiveboxSigninDialog
+from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel, MonitorTab,
+						  LiveboxCnxDialog, LiveboxSigninDialog)
 from src.LmSession import LmSession
-from src import LmConfig
-from src import LmDeviceListTab
-from src import LmInfoTab
-from src import LmDeviceInfoTab
-from src import LmEventsTab
-from src import LmDhcpTab
-from src import LmPhoneTab
-from src import LmActionsTab
-from src import LmRepeaterTab
+from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmDeviceInfoTab, LmEventsTab,
+				 LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
 from src.LmLanguages import GetMainLabel as lx
 
 from __init__ import __version__

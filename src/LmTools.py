@@ -9,9 +9,7 @@ import time
 from enum import IntEnum
 from dateutil import tz
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmLanguages
 from src.LmLanguages import GetToolsLabel as lx

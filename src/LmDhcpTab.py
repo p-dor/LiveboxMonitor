@@ -4,18 +4,15 @@ from enum import IntEnum
 from ipaddress import IPv4Network
 from ipaddress import IPv4Address
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools
-from src import LmConfig
+from src import LmTools, LmConfig
 from src.LmIcons import LmIcon
 from src.LmConfig import LmConf
 from src.LmInfoTab import InfoCol
-from src.LmLanguages import GetDhcpLabel as lx
-from src.LmLanguages import GetDhcpBindingDialogLabel as lbx
-from src.LmLanguages import GetDhcpSetupDialogLabel as lsx
+from src.LmLanguages import (GetDhcpLabel as lx,
+							 GetDhcpBindingDialogLabel as lbx,
+							 GetDhcpSetupDialogLabel as lsx)
 
 
 # ################################ VARS & DEFS ################################

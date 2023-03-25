@@ -5,18 +5,15 @@ import json
 
 from enum import IntEnum
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools
-from src import LmConfig
+from src import LmTools, LmConfig
 from src.LmConfig import LmConf
 from src.LmDeviceListTab import DSelCol
 from src.LmInfoTab import InfoCol
-from src.LmLanguages import GetDeviceInfoLabel as lx
-from src.LmLanguages import GetDeviceNameDialogLabel as lnx
-from src.LmLanguages import GetDeviceTypeDialogLabel as ltx
+from src.LmLanguages import (GetDeviceInfoLabel as lx,
+							 GetDeviceNameDialogLabel as lnx,
+							 GetDeviceTypeDialogLabel as ltx)
 
 
 # ################################ VARS & DEFS ################################

@@ -9,18 +9,16 @@ import base64
 
 from enum import IntEnum
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
 from src import LmTools
 from src.LmSession import LmSession
 from src import LmLanguages
-from src.LmLanguages import GetConfigPrefsDialogLabel as lx
-from src.LmLanguages import GetConfigCnxDialogLabel as lcx
-from src.LmLanguages import GetConfigSigninDialogLabel as lsx
-from src.LmLanguages import GetSelectProfileDialogLabel as lpx
+from src.LmLanguages import (GetConfigPrefsDialogLabel as lx,
+							 GetConfigCnxDialogLabel as lcx,
+							 GetConfigSigninDialogLabel as lsx,
+							 GetSelectProfileDialogLabel as lpx)
 
 from __init__ import __build__
 

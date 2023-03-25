@@ -6,12 +6,9 @@ import time
 
 from enum import IntEnum
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools
-from src import LmConfig
+from src import LmTools, LmConfig
 from src.LmConfig import LmConf
 from src.LmDeviceListTab import DSelCol
 from src.LmLanguages import GetEventsLabel as lx

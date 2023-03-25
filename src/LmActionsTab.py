@@ -3,19 +3,15 @@
 import json
 import webbrowser
 
-from PyQt6 import QtGui
-from PyQt6 import QtCore
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmTools
 from src.LmIcons import LmIcon
 from src import LmConfig
-from src.LmConfig import LmConf
-from src.LmConfig import PrefsDialog
-from src.LmConfig import SetApplicationStyle
-from src.LmLanguages import GetActionsLabel as lx
-from src.LmLanguages import GetActionsRHistoryDialogLabel as lrx
-from src.LmLanguages import GetActionsWGlobalDialogLabel as lwx
+from src.LmConfig import LmConf, PrefsDialog, SetApplicationStyle
+from src.LmLanguages import (GetActionsLabel as lx,
+							 GetActionsRHistoryDialogLabel as lrx,
+							 GetActionsWGlobalDialogLabel as lwx)
 
 from __init__ import __url__, __copyright__
 
