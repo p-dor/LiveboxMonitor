@@ -561,6 +561,7 @@ LABELS = {
 		'List Header Font Size': 'Taille Police Entêtes',
 		'List Line Height': 'Hauteur Lignes',
 		'List Line Font Size': 'Taille Police Lignes',
+		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
 		'Preferences': 'Préférences',
 		'Cancel': 'Annuler'
 	},
@@ -700,11 +701,11 @@ TOOLTIPS = {
 		'stats_Rx': 'Nombre d\'octets reçus par l\'interface.\n'
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
 					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
-					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
+					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go pour certaines interfaces.',
 		'stats_Tx': 'Nombre d\'octets envoyés par l\'interface.\n'
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
 					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
-					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
+					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go pour certaines interfaces.',
 		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans les trois dernières secondes.\n'
 						'La fréquence réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
@@ -911,9 +912,11 @@ TOOLTIPS = {
 					  'Ensuite on dispose des statistiques par interface précise (les prises Ethernet ainsi que les bandes Wifi).',
 		'stats_Rx': 'Nombre d\'octets reçus par l\'interface.\n'
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
+					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
 					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
 		'stats_Tx': 'Nombre d\'octets envoyés par l\'interface.\n'
 					'La fenêtre de temps de ce total n\'est pas connue.\n'
+					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
 					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go.',
 		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans les trois dernières secondes.\n'
 						'La fréquence est réglable dans les préférences.',
@@ -984,7 +987,10 @@ TOOLTIPS = {
 		'listLineHeightEdit': 'Hauteur en pixels des lignes de liste, par défaut 30.',
 		'listLineFontSize': 'Taille de la police de caractères des lignes de liste.\n'
 							'Une valeur à zéro signifie d\'utiliser la taille système.\n'
-							'Par défaut ce paramètre est à zéro.'
+							'Par défaut ce paramètre est à zéro.',
+		'realtimeWifiStats': 'Active ou non les statistiques en temps réel pour les appareils wifi.\n'
+							 'Celles ci s\'affichent en bleu dans l\'onglet "Appareils" et viennent recouvrir\n'
+							 'les statistiques standards qui s\'affichent en noir toutes les 30 secondes.'
 	},
 
 	# Config - Connection
