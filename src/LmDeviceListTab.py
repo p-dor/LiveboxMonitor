@@ -158,43 +158,48 @@ class LmDeviceList:
 
 	### Init the Livebox Wifi stats collector thread
 	def initWifiStatsLoop(self):
-		self._liveboxWifiStatsMap = {}
-		self._liveboxWifiStatsThread = None
-		self._liveboxWifiStatsLoop = None
+		if LmConf.RealtimeWifiStats:
+			self._liveboxWifiStatsMap = {}
+			self._liveboxWifiStatsThread = None
+			self._liveboxWifiStatsLoop = None
 
 
 	### Start the Livebox Wifi stats collector thread
 	def startWifiStatsLoop(self):
-		self._liveboxWifiStatsThread = QtCore.QThread()
-		self._liveboxWifiStatsLoop = LiveboxWifiStatsThread(self._session)
-		self._liveboxWifiStatsLoop.moveToThread(self._liveboxWifiStatsThread)
-		self._liveboxWifiStatsThread.started.connect(self._liveboxWifiStatsLoop.run)
-		self._liveboxWifiStatsLoop._wifiStatsReceived.connect(self.processLiveboxWifiStats)
-		self._liveboxWifiStatsLoop._resume.connect(self._liveboxWifiStatsLoop.resume)
-		self._liveboxWifiStatsThread.start()
+		if LmConf.RealtimeWifiStats:
+			self._liveboxWifiStatsThread = QtCore.QThread()
+			self._liveboxWifiStatsLoop = LiveboxWifiStatsThread(self._session)
+			self._liveboxWifiStatsLoop.moveToThread(self._liveboxWifiStatsThread)
+			self._liveboxWifiStatsThread.started.connect(self._liveboxWifiStatsLoop.run)
+			self._liveboxWifiStatsLoop._wifiStatsReceived.connect(self.processLiveboxWifiStats)
+			self._liveboxWifiStatsLoop._resume.connect(self._liveboxWifiStatsLoop.resume)
+			self._liveboxWifiStatsThread.start()
 
 
 	### Suspend the Livebox Wifi stats collector thread
 	def suspendWifiStatsLoop(self):
-		if self._liveboxWifiStatsThread is not None:
-			self._liveboxWifiStatsLoop.stop()
+		if LmConf.RealtimeWifiStats:
+			if self._liveboxWifiStatsThread is not None:
+				self._liveboxWifiStatsLoop.stop()
 
 
 	### Resume the Livebox Wifi stats collector thread
 	def resumeWifiStatsLoop(self):
-		if self._liveboxWifiStatsThread is None:
-			self.startWifiStatsLoop()
-		else:
-			self._liveboxWifiStatsLoop._resume.emit()
+		if LmConf.RealtimeWifiStats:
+			if self._liveboxWifiStatsThread is None:
+				self.startWifiStatsLoop()
+			else:
+				self._liveboxWifiStatsLoop._resume.emit()
 
 
 	### Stop the Livebox Wifi stats collector thread
 	def stopWifiStatsLoop(self):
-		if self._liveboxWifiStatsThread is not None:
-			self._liveboxWifiStatsThread.quit()
-			self._liveboxWifiStatsThread.wait()
-			self._liveboxWifiStatsThread = None
-			self._liveboxWifiStatsLoop = None
+		if LmConf.RealtimeWifiStats:
+			if self._liveboxWifiStatsThread is not None:
+				self._liveboxWifiStatsThread.quit()
+				self._liveboxWifiStatsThread.wait()
+				self._liveboxWifiStatsThread = None
+				self._liveboxWifiStatsLoop = None
 
 
 	### Click on refresh device list button
