@@ -73,6 +73,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 	def initUI(self):
 		# Tab Widgets
 		self._tabWidget = QtWidgets.QTabWidget(self, objectName = 'tabWidget')
+		# self._tabWidget.setMovable(True)	###TODO### EXPERIMENTAL - DISTURB THE FEATURES TO SWITCH TAB + dynamics on repeaters
 		self._tabWidget.currentChanged.connect(self.tabChangedEvent)
 		self.createDeviceListTab()
 		self.createLiveboxInfoTab()
@@ -332,6 +333,9 @@ if __name__ == '__main__':
 		SetApplicationStyle()
 		LmIcon.load()
 		while True:
+			# Apply decoupled saved preferences
+			LmConf.applySavedPrefs()
+
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()
 			aTransPath = QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath)
