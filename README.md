@@ -169,8 +169,8 @@ Et toutes les informations sont accessibles par les boutons, chaque bouton rempl
 
 Liste permettant de surveiller l'état du trafic :
 - **Nom** : nom de l'interface réseau. `Fiber` concerne tout le trafic WAN, c'est-à-dire externe entre la Livebox et internet. `LAN` tout le trafic interne transitant à travers la Livebox. Ensuite on dispose des statistiques par interface précise. Les interfaces `Guest` concernent le trafic du réseau Wifi invité, s'il est activé.
-- **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
-- **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
+- **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go pour certaines interfaces. En effet pour d'autres, un compteur de plus haute résolution est interprété toutes les 30 secondes environ et qui vient remplacer au lancement du programme le compteur de base limité à 4 Go.
+- **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go pour certaines interfaces. En effet pour d'autres, un compteur de plus haute résolution est interprété toutes les 30 secondes environ et qui vient remplacer au lancement du programme le compteur de base limité à 4 Go.
 - **TauxRx** : taux d'octets reçus par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences). S'affiche en rouge si des erreurs de transmission sont détectées. 
 - **TauxTx** : taux d'octets envoyés par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences). S'affiche en rouge si des erreurs de transmission sont détectées.
 
@@ -398,6 +398,7 @@ Les actions concernant les **Réglages** :
     - `Taille Police Entêtes` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
     - `Hauteur Lignes` : hauteur en pixels des lignes de liste, par défaut 30.
     - `Taille Police Lignes` : taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
+    - `Statistiques temps réel des appareils wifi` : Active ou non les statistiques en temps réel pour les appareils wifi. Celles ci s'affichent en bleu dans l'onglet `Appareils` et viennent recouvrir les statistiques standards qui s'affichent en noir toutes les 30 secondes.
 - **`Changer de profil...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
 
 Les actions techniques de **Débogage** :
@@ -430,8 +431,8 @@ Et toutes les informations détaillées sont accessibles via la barre de boutons
 
 Liste permettant de surveiller l'état du trafic géré par le répéteur :
 - **Nom** : nom de l'interface réseau. `LAN` concerne tout le trafic entre le répéteur et la Livebox. Ensuite on dispose des statistiques par interface précise (les deux prises Ethernet ainsi que les deux bandes Wifi).
-- **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
-- **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
+- **Rx** : nombre d'octets reçus par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
+- **Tx** : nombre d'octets envoyés par l'interface. La fenêtre de temps de ce total n'est pas connue. S'affiche en rouge si des erreurs de transmission sont détectées. Attention ce compteur est circulaire et ne dépasse pas les 4 Go.
 - **TauxRx** : taux d'octets reçus par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences).
 - **TauxTx** : taux d'octets envoyés par seconde par l'interface dans les trois dernières secondes (fréquence réglable dans les préférences).
 
