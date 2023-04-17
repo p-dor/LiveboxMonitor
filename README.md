@@ -146,9 +146,11 @@ La liste des appareils affiche les colonnes suivantes :
 - **TauxRx** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
 - **TauxTx** : taux d'octets envoyés par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
 
-Les statistiques d'octets envoyés ou reçus par seconde sont calculées grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les trois secondes (fréquence réglable dans les préférences). Ces dernières sont affichées en bleu.
+Les statistiques d'octets envoyés ou reçus par seconde sont calculées grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les trois secondes (option pour les activer/désactiver dans les préférences, ainsi que la fréquence). Ces dernières sont affichées en bleu.
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
 Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
+**Note** : le trafic TV standard de la box TV UHD n'est pas comptabilisé dans les statistiques pour cet appareil. Par contre celui de services VOD tel que Netflix est bien comptabilisé.
+
 
 ### Boutons
 L'onglet `Appareils` propose les boutons suivants :
@@ -176,6 +178,7 @@ Liste permettant de surveiller l'état du trafic :
 
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
 Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
+**Note** : le trafic TV standard de la box TV UHD n'est pas comptabilisé dans ces statistiques. Par contre celui de services VOD tel que Netflix est bien comptabilisé.
 
 ### Boutons
 L'onglet `Stats/Infos Livebox` propose les boutons suivants :
