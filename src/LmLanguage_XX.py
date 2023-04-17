@@ -636,6 +636,7 @@ LABELS = {
 		'List Header Font Size': '',
 		'List Line Height': '',
 		'List Line Font Size': '',
+		'Realtime wifi device statistics': '',
 		'Preferences': '',
 		'OK': '',
 		'Cancel': ''
@@ -993,6 +994,7 @@ TOOLTIPS = {
 		'listLineHeightEdit': '',
 		'listLineFontSizeLabel': '',
 		'listLineFontSize': '',
+		'realtimeWifiStats': '',
 		'prefsGroup': '',
 		'ok': '',
 		'cancel': ''
