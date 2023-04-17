@@ -167,6 +167,7 @@ class LmInfo:
 	### Init the Livebox stats collector thread
 	def initStatsLoop(self):
 		self._liveboxStatsMap = {}
+		self._liveboxStatsMapHomeLan = {}
 		self._liveboxStatsThread = None
 		self._liveboxStatsLoop = None
 
@@ -205,6 +206,48 @@ class LmInfo:
 			self._liveboxStatsLoop = None
 
 
+	### Process a HomeLan interface stats event
+	def processIntfStatisticsEvent(self, iIntf, iAttributes):
+		for s in LmConfig.NET_INTF:
+			if s['Key'] == iIntf:
+				e = {}
+				e['Key'] = iIntf
+				e['Source'] = 'hls'		# HomeLanStats
+				e['Timestamp'] = datetime.datetime.now()
+
+				# Only one value among the two is present per event
+				aBytesSent = iAttributes.get('BytesSent')
+				aBytesReceived = iAttributes.get('BytesReceived')
+
+				if aBytesSent is None:
+					if s['SwapStats']:
+						e['RxBytes'] = None
+					else:
+						e['TxBytes'] = None
+				else:
+					if s['SwapStats']:
+						e['RxBytes'] = int(aBytesSent)
+					else:
+						e['TxBytes'] = int(aBytesSent)
+
+				if aBytesReceived is None:
+					if s['SwapStats']:
+						e['TxBytes'] = None
+					else:
+						e['RxBytes'] = None
+				else:
+					if s['SwapStats']:
+						e['TxBytes'] = int(aBytesReceived)
+					else:
+						e['RxBytes'] = int(aBytesReceived)
+
+				e['RxErrors'] = 0
+				e['TxErrors'] = 0
+
+				self.processLiveboxStats(e)
+				break
+
+
 	### Find stats line from stat key
 	def findStatsLine(self, iStatsKey):
 		if len(iStatsKey):
@@ -219,12 +262,17 @@ class LmInfo:
 
 
 	### Process a new Livebox stats
+	# Stats can come from two sources, indicated in the 'Source' value: NetDevStats ('nds') or HomeLan ('hls').
+	# nds stats are realtime but recycling at 4Gb max / hls stats are raised every 30s but recycling at much higher numbers
+	# nds stats come will all values / hls stats come with either down or up bytes values, other is None, and errors are at zero
+	# Strategy is to display realime rates from nds events and to update the counters from the hls events
 	def processLiveboxStats(self, iStats):
 		# Get stats data
 		aKey = iStats['Key']
+		aSource = iStats['Source']
 		aTimestamp = iStats['Timestamp']
-		aDownBytes = iStats['RxBytes']
-		aUpBytes = iStats['TxBytes']
+		aDownBytes = iStats.get('RxBytes')
+		aUpBytes = iStats.get('TxBytes')
 		aDownErrors = iStats['RxErrors']
 		aUpErrors = iStats['TxErrors']
 		aDownRateBytes = 0
@@ -232,56 +280,70 @@ class LmInfo:
 		aDownDeltaErrors = 0
 		aUpDeltaErrors = 0
 
-		# Try to find a previously received statistic record
-		aPrevStats = self._liveboxStatsMap.get(aKey)
-		if aPrevStats is not None:
-			aPrevTimestamp = aPrevStats['Timestamp']
-			aPrevDownBytes = aPrevStats['RxBytes']
-			aPrevUpBytes = aPrevStats['TxBytes']
-			aElapsed = int((aTimestamp - aPrevTimestamp).total_seconds())
-			if aElapsed > 0:
-				if aDownBytes > aPrevDownBytes:
-					aDownRateBytes = int((aDownBytes - aPrevDownBytes) / aElapsed)
-				if aUpBytes > aPrevUpBytes:
-					aUpRateBytes = int((aUpBytes - aPrevUpBytes) / aElapsed)
-			aDownDeltaErrors = aDownErrors - aPrevStats['RxErrors']
-			aUpDeltaErrors = aUpErrors - aPrevStats['TxErrors']
+		# If event source is HomeLan update the counters only and remember it
+		if aSource == 'hls':
+			self._liveboxStatsMapHomeLan[aKey] = True
 
-		# Remember current stats
-		self._liveboxStatsMap[aKey] = iStats
+		# If event source is NetDevStats update all and remember last nds stats
+		elif aSource == 'nds':
+			# Try to find a previously received statistic record
+			aPrevStats = self._liveboxStatsMap.get(aKey)
+			if aPrevStats is not None:
+				aPrevTimestamp = aPrevStats['Timestamp']
+				aPrevDownBytes = aPrevStats['RxBytes']
+				aPrevUpBytes = aPrevStats['TxBytes']
+				aElapsed = int((aTimestamp - aPrevTimestamp).total_seconds())
+				if aElapsed > 0:
+					if aDownBytes > aPrevDownBytes:
+						aDownRateBytes = int((aDownBytes - aPrevDownBytes) / aElapsed)
+					if aUpBytes > aPrevUpBytes:
+						aUpRateBytes = int((aUpBytes - aPrevUpBytes) / aElapsed)
+				aDownDeltaErrors = aDownErrors - aPrevStats['RxErrors']
+				aUpDeltaErrors = aUpErrors - aPrevStats['TxErrors']
+
+			# Remember current stats
+			self._liveboxStatsMap[aKey] = iStats
+
+			# Don't erase previously received HomeLan counters
+			if self._liveboxStatsMapHomeLan.get(aKey, False):
+				aDownBytes = None
+				aUpBytes = None
 
 		# Update UI
 		aListLine = self.findStatsLine(aKey)
 		if aListLine >= 0:
-			aDown = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownBytes))
-			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
-			if aDownErrors:
-				aDown.setForeground(QtCore.Qt.GlobalColor.red)
-			self._statsList.setItem(aListLine, StatsCol.Down, aDown)
+			if aDownBytes is not None:
+				aDown = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownBytes))
+				aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				if aDownErrors:
+					aDown.setForeground(QtCore.Qt.GlobalColor.red)
+				self._statsList.setItem(aListLine, StatsCol.Down, aDown)
 
-			aUp = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpBytes))
-			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
-			if aUpErrors:
-				aUp.setForeground(QtCore.Qt.GlobalColor.red)
-			self._statsList.setItem(aListLine, StatsCol.Up, aUp)
+			if aUpBytes is not None:
+				aUp = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpBytes))
+				aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				if aUpErrors:
+					aUp.setForeground(QtCore.Qt.GlobalColor.red)
+				self._statsList.setItem(aListLine, StatsCol.Up, aUp)
 
-			if aDownRateBytes:
-				aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
-				if aDownDeltaErrors:
-					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
-				aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
-			else:
-				aDownRate = QtWidgets.QTableWidgetItem('')
-			self._statsList.setItem(aListLine, StatsCol.DownRate, aDownRate)
+			if aSource == 'nds':
+				if aDownRateBytes:
+					aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+					if aDownDeltaErrors:
+						aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
+					aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				else:
+					aDownRate = QtWidgets.QTableWidgetItem('')
+				self._statsList.setItem(aListLine, StatsCol.DownRate, aDownRate)
 
-			if aUpRateBytes:
-				aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
-				if aUpDeltaErrors:
-					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
-				aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
-			else:
-				aUpRate = QtWidgets.QTableWidgetItem('')
-			self._statsList.setItem(aListLine, StatsCol.UpRate, aUpRate)
+				if aUpRateBytes:
+					aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+					if aUpDeltaErrors:
+						aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
+					aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				else:
+					aUpRate = QtWidgets.QTableWidgetItem('')
+				self._statsList.setItem(aListLine, StatsCol.UpRate, aUpRate)
 
 
 	### Add a title line in an info attribute/value list
@@ -1513,6 +1575,7 @@ class LiveboxStatsThread(QtCore.QObject):
 
 
 	def collectStats(self):
+		# WARNING counters are recycling at 4Gb only:
 		for s in LmConfig.NET_INTF:
 			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats')
 			if aResult is not None:
@@ -1520,6 +1583,7 @@ class LiveboxStatsThread(QtCore.QObject):
 				if type(aStats).__name__ == 'dict':
 					e = {}
 					e['Key'] = s['Key']
+					e['Source'] = 'nds'		# NetDevStats
 					e['Timestamp'] = datetime.datetime.now()
 					if s['SwapStats']:
 						e['RxBytes'] = aStats.get('TxBytes', 0)
@@ -1535,10 +1599,37 @@ class LiveboxStatsThread(QtCore.QObject):
 
 
 '''
-	# Experimental alternate way, but not successful:
-	# - Stats are not real time, not relevant.
-	# - Counters look 64bits but are recycling chaotically, after 512Go, or 3Go, ...
-	def collectStats(self):
+		# EXPERIMENTAL - not successful:
+		# - HomeLan:getWANCounters generates wrong HomeLan veip0 stats events
+		# - HomeLan events do not cover all interfaces -> need to keep getNetDevStats()
+		for s in LmConfig.NET_INTF:
+			if s['Type'] == 'wan':	# WARNING -> need to add a 'wan' line in LmConfig.NET_INTF
+				aResult = self._session.request('HomeLan:getWANCounters')	# WARNING: Works but generates wrong HomeLan veip0 stats events
+				if aResult is not None:
+					aStats = aResult.get('status')
+					if type(aStats).__name__ == 'dict':
+						e = {}
+						e['Key'] = s['Key']
+						e['Timestamp'] = datetime.datetime.now()		# WARNING - can use timestamp coming from stat itself
+						if s['SwapStats']:
+							e['RxBytes'] = aStats.get('BytesSent', 0)
+							e['TxBytes'] = aStats.get('BytesReceived', 0)
+							e['RxErrors'] = 0
+							e['TxErrors'] = 0
+						else:
+							e['RxBytes'] = aStats.get('BytesReceived', 0)
+							e['TxBytes'] = aStats.get('BytesSent', 0)
+							e['RxErrors'] = 0
+							e['TxErrors'] = 0
+						self._statsReceived.emit(e)
+				break
+
+'''
+
+'''
+		# EXPERIMENTAL - not successful:
+		# - Stats are not real time, not relevant.
+		# - Counters look 64bits but are recycling chaotically, after 512Gb, or 3Gb, ...
 		for s in LmConfig.NET_INTF:
 			if s['Type'] == 'wan':
 				aResult = self._session.request('HomeLan:getWANCounters')
