@@ -3,6 +3,7 @@
 import datetime
 
 from enum import IntEnum
+from ipaddress import IPv4Address
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -524,7 +525,11 @@ class LmDeviceList:
 	### Format IPv4 cell
 	@staticmethod
 	def formatIPv4TableWidget(iIPv4, iReacheableStatus, iReserved):
-		aIP = QtWidgets.QTableWidgetItem(iIPv4)
+		aIP = NumericSortItem(iIPv4)
+		if len(iIPv4):
+			aIP.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(iIPv4)))
+		else:
+			aIP.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
 		if iReacheableStatus != 'reachable':
 			aIP.setForeground(QtCore.Qt.GlobalColor.red)
 		if iReserved:
@@ -782,7 +787,9 @@ class LmDeviceList:
 			# Check if IP changed
 			aIPv4 = iEvent.get('IPAddress')
 			if (aIPv4 is not None) and (LmTools.IsIPv4(aIPv4)):
-				self._deviceList.item(aListLine, DevCol.IP).setText(aIPv4)
+				aIP = self._deviceList.item(aListLine, DevCol.IP)
+				aIP.setText(aIPv4)
+				aIP.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIPv4)))
 				self.repeaterIPAddressEvent(iDeviceKey, aIPv4)
 
 			# Check if name changed
