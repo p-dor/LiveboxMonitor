@@ -43,6 +43,7 @@ DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
 DCFG_LIST_LINE_HEIGHT = 30
 DCFG_LIST_LINE_FONT_SIZE = 0
+DCFG_REALTIME_WIFI_STATS = False
 DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
 
@@ -66,30 +67,30 @@ NET_INTF = []
 
 # LB4 Interfaces
 NET_INTF_LB4 = [
-	{ 'Key': 'eth0',     'Name': 'WAN',          'Type': 'wan', 'SwapStats': False },
-	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth1',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth2',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth3',     'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth4',     'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'wl0',      'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'eth6',     'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'wlguest2', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
-	{ 'Key': 'wlguest5', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+	{ 'Key': 'eth0',       'Name': 'WAN',          'Type': 'wan', 'SwapStats': False },
+	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth1',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth2',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth3',       'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth4',       'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'wl0',        'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'eth6',       'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'wlguest2',   'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'wlguest5',   'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
 # LB5 Interfaces
 NET_INTF_LB5 = [
-	{ 'Key': 'veip0',    'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
-	{ 'Key': 'bridge',   'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth1',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth2',     'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth3',     'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'wl0',      'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'eth4',     'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'wlguest2', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
-	{ 'Key': 'wlguest5', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+	{ 'Key': 'veip0',       'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'bridge',      'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'eth0',        'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth1',        'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth2',        'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'eth3',        'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'wl0',         'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'eth4',        'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'wlguest2',    'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'wlguest5',    'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
 # LB6 Interfaces
@@ -401,6 +402,8 @@ class LmConf:
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
 	ListLineHeight = DCFG_LIST_LINE_HEIGHT
 	ListLineFontSize = DCFG_LIST_LINE_FONT_SIZE
+	RealtimeWifiStats = DCFG_REALTIME_WIFI_STATS
+	RealtimeWifiStats_save = RealtimeWifiStats	# Need to decouple saving as master value must not be changed live
 	LogLevel = DCFG_LOG_LEVEL
 	Repeaters = DCFG_REPEATERS
 	AllDeviceIconsLoaded = False
@@ -480,6 +483,10 @@ class LmConf:
 			p = aConfig.get('List Line Font Size')
 			if p is not None:
 				LmConf.ListLineFontSize = int(p)
+			p = aConfig.get('Realtime Wifi Stats')
+			if p is not None:
+				LmConf.RealtimeWifiStats = bool(p)
+				LmConf.RealtimeWifiStats_save = LmConf.RealtimeWifiStats
 			p = aConfig.get('Log Level')
 			if p is not None:
 				LmConf.LogLevel = int(p)
@@ -507,6 +514,12 @@ class LmConf:
 	@staticmethod
 	def apply():
 		LmLanguages.SetLanguage(LmConf.Language)
+
+
+	### Apply decoupled saved values after application auto restarts following pref's change
+	@staticmethod
+	def applySavedPrefs():
+		LmConf.RealtimeWifiStats = LmConf.RealtimeWifiStats_save
 
 
 	### Select a profile in the profile list depending on default parameters
@@ -709,6 +722,7 @@ class LmConf:
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
 				aConfig['List Line Height'] = LmConf.ListLineHeight
 				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
+				aConfig['Realtime Wifi Stats'] = LmConf.RealtimeWifiStats_save
 				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['Repeaters'] = LmConf.Repeaters
 				json.dump(aConfig, aConfigFile, indent = 4)
@@ -1245,6 +1259,8 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listLineFontSize = QtWidgets.QLineEdit(objectName = 'listLineFontSize')
 		self._listLineFontSize.setValidator(aIntValidator)
 
+		self._realtimeWifiStats = QtWidgets.QCheckBox(lx('Realtime wifi device statistics'), objectName = 'realtimeWifiStats')
+
 		aPrefsEditGrid = QtWidgets.QGridLayout()
 		aPrefsEditGrid.setSpacing(10)
 
@@ -1266,9 +1282,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(self._listLineHeight, 4, 1)
 		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
 		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
+		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 5, 0, 5, 2)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
-		aPrefsGroupBox.setLayout(aPrefsEditGrid)		
+		aPrefsGroupBox.setLayout(aPrefsEditGrid)
 
 		# Button bar
 		aButtonBar = QtWidgets.QHBoxLayout()
@@ -1325,6 +1342,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
 		self._listLineHeight.setText(str(LmConf.ListLineHeight))
 		self._listLineFontSize.setText(str(LmConf.ListLineFontSize))
+		if LmConf.RealtimeWifiStats_save:
+			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 	### Save preferences data
@@ -1353,6 +1374,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
 		LmConf.ListLineHeight = int(self._listLineHeight.text())
 		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
+		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.checkState() == QtCore.Qt.CheckState.Checked
 
 
 	### Click on profile list item
