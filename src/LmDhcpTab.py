@@ -26,6 +26,17 @@ class DhcpCol(IntEnum):
 	IP = 4
 	Count = 5
 
+# Sorting columns by numeric
+class NumericSortItem(QtWidgets.QTableWidgetItem):
+	def __lt__(self, iOther):
+		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
+		if x is None:
+			x = 0
+		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
+		if y is None:
+			y = 0
+		return x < y
+
 
 # ################################ LmDhcp class ################################
 class LmDhcp:
@@ -379,7 +390,10 @@ class LmDhcp:
 			self.formatNameWidget(self._dhcpDList, i, aKey, DhcpCol.Name)
 			self._dhcpDList.setItem(i, DhcpCol.Domain, QtWidgets.QTableWidgetItem(iDomain))
 			self.formatMacWidget(self._dhcpDList, i, aKey, DhcpCol.MAC)
-			self._dhcpDList.setItem(i, DhcpCol.IP, QtWidgets.QTableWidgetItem(aIP))
+
+			aIpItem = NumericSortItem(aIP)
+			aIpItem.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIP)))
+			self._dhcpDList.setItem(i, DhcpCol.IP, aIpItem)
 
 			i += 1
 
