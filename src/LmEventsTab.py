@@ -248,65 +248,89 @@ class LmEvents:
 		d = iEvent.get('data')
 		if d is not None:
 			h = d.get('handler', '')
-			o = d.get('object')
-			if o is not None:
-				r = o.get('reason', '')
-				a = o.get('attributes')
-			else:
-				r = ''
-				a = None
-			# Try to guess device key from handler
-			aDeviceKey = LmTools.ExtractMacAddrFromString(h)
-			if len(aDeviceKey):
-				self.updateEventIndicator(aDeviceKey)
-				if r == 'Statistics':
-					e = a.get(aDeviceKey)
-					if e is not None:
-						self.processStatisticsEvent(aDeviceKey, e)
-						self.bufferizeEvent(aDeviceKey, h, r, e)
-					else:
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif r == 'changed':
-					self.processChangedEvent(aDeviceKey, h, a)
-					self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif r == 'device_name_changed':
-					e = a.get(aDeviceKey)
-					if e is not None:
-						self.processDeviceNameChangedEvent(aDeviceKey, e)
-						self.bufferizeEvent(aDeviceKey, h, r, e)
-					else:
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif (r == 'device_updated') or (r == 'eth_device_updated') or (r == 'wifi_device_updated'):
-					e = a.get(aDeviceKey)
-					if e is not None:
-						self.processDeviceUpdatedEvent(aDeviceKey, e)
-						self.bufferizeEvent(aDeviceKey, h, r, e)
-					else:
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif r == 'ip_address_added':
-					e = a.get(aDeviceKey)
-					if e is not None:
-						self.processIPAddressAddedEvent(aDeviceKey, a[aDeviceKey])
-						self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
-					else:
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif (r == 'device_added') or (r == 'eth_device_added') or (r == 'wifi_device_added'):
-					e = a.get(aDeviceKey)
-					if e is not None:
-						self.processDeviceAddedEvent(aDeviceKey, a[aDeviceKey])
-						self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
-					else:
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-				elif (r == 'device_deleted') or (r == 'eth_device_deleted') or (r == 'wifi_device_deleted'):
-					self.processDeviceDeletedEvent(aDeviceKey)
+			if h.startswith('Devices'):
+				self.processDeviceEvent(d)
+			elif h.startswith('HomeLan'):
+				self.processHomeLanEvent(d)
+
+
+	### Process a new Device event
+	def processDeviceEvent(self, iEventData):
+		h = iEventData.get('handler', '')
+		o = iEventData.get('object')
+		if o is not None:
+			r = o.get('reason', '')
+			a = o.get('attributes')
+		else:
+			r = ''
+			a = None
+
+		# Try to guess device key from handler
+		aDeviceKey = LmTools.ExtractMacAddrFromString(h)
+		if len(aDeviceKey):
+			self.updateEventIndicator(aDeviceKey)
+			if r == 'Statistics':
+				e = a.get(aDeviceKey)
+				if e is not None:
+					self.processStatisticsEvent(aDeviceKey, e)
+					self.bufferizeEvent(aDeviceKey, h, r, e)
 				else:
-					# Check if device is in the list, otherwise put the event in the None list
-					if (self.findDeviceLine(self._eventDList, aDeviceKey) >= 0):
-						self.bufferizeEvent(aDeviceKey, h, r, a)
-					else:
-						self.bufferizeEvent(None, h, r, a)
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif r == 'changed':
+				self.processChangedEvent(aDeviceKey, h, a)
+				self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif r == 'device_name_changed':
+				e = a.get(aDeviceKey)
+				if e is not None:
+					self.processDeviceNameChangedEvent(aDeviceKey, e)
+					self.bufferizeEvent(aDeviceKey, h, r, e)
+				else:
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif (r == 'device_updated') or (r == 'eth_device_updated') or (r == 'wifi_device_updated'):
+				e = a.get(aDeviceKey)
+				if e is not None:
+					self.processDeviceUpdatedEvent(aDeviceKey, e)
+					self.bufferizeEvent(aDeviceKey, h, r, e)
+				else:
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif r == 'ip_address_added':
+				e = a.get(aDeviceKey)
+				if e is not None:
+					self.processIPAddressAddedEvent(aDeviceKey, a[aDeviceKey])
+					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+				else:
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif (r == 'device_added') or (r == 'eth_device_added') or (r == 'wifi_device_added'):
+				e = a.get(aDeviceKey)
+				if e is not None:
+					self.processDeviceAddedEvent(aDeviceKey, a[aDeviceKey])
+					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+				else:
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+			elif (r == 'device_deleted') or (r == 'eth_device_deleted') or (r == 'wifi_device_deleted'):
+				self.processDeviceDeletedEvent(aDeviceKey)
 			else:
-				self.bufferizeEvent(None, h, r, a)
+				# Check if device is in the list, otherwise put the event in the None list
+				if (self.findDeviceLine(self._eventDList, aDeviceKey) >= 0):
+					self.bufferizeEvent(aDeviceKey, h, r, a)
+				else:
+					self.bufferizeEvent(None, h, r, a)
+		else:
+			self.bufferizeEvent(None, h, r, a)
+
+
+	### Process a new HomeLan event
+	def processHomeLanEvent(self, iEventData):
+		h = iEventData.get('handler', '')
+		o = iEventData.get('object')
+		if o is not None:
+			a = o.get('attributes')
+		else:
+			return
+
+		if h.startswith('HomeLan.Interface.') and h.endswith('.Stats'):
+			aIntf = h[18:-6]
+			self.processIntfStatisticsEvent(aIntf, a)
 
 
 	### Store event in buffer, for the UI
@@ -382,7 +406,7 @@ class LiveboxEventThread(QtCore.QObject):
 
 
 	def collectEvents(self):
-		aResult = self._session.eventRequest(['Devices.Device'], iTimeout = 2)
+		aResult = self._session.eventRequest(['Devices.Device', 'HomeLan'], iTimeout = 2)
 		if aResult is not None:
 			if aResult.get('errors') is not None:
 				# Session has probably timed out on Livebox side, resign
