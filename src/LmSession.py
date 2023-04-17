@@ -2,6 +2,7 @@
 # Interfaces copied/adapted from sysbus package - https://github.com/rene-d/sysbus
 
 import os
+import sys
 import json
 import tempfile
 import pickle
@@ -15,7 +16,7 @@ from src import LmTools
 # ################################ VARS & DEFS ################################
 APP_NAME = 'so_sdkut'
 DEFAULT_TIMEOUT = 5
-LIVEBOX_SCAN_TIMEOUT = 0.3
+LIVEBOX_SCAN_TIMEOUT = 0.4
 
 
 # ################################ LmSession class ################################
@@ -149,7 +150,7 @@ class LmSession:
 			if iArgs is None:
 				c += '?_restDepth=-1'
 			else:
-				c += '?_restDepth='  + str(iArgs)
+				c += '?_restDepth=' + str(iArgs)
 
 			LmTools.LogDebug(1, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
@@ -157,7 +158,6 @@ class LmSession:
 				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
-				#t = b'[' + t.replace(b'}{', b'},{')+b']'
 			except requests.exceptions.Timeout as e:
 				if not iSilent:
 					LmTools.Error('Request timeout error: {}'.format(e))
@@ -166,6 +166,13 @@ class LmSession:
 				if not iSilent:
 					LmTools.Error('Request error: {}'.format(e))
 				return { 'errors' : 'Request exception' }
+
+			t = t.decode('utf-8', errors = 'replace')
+			if t.startswith(',"errors":'):
+				t = '{' + t[1:] + '}'
+			elif t.find('}{') > 0:
+				LmTools.LogDebug(2, 'Multiple json lists')
+				t = '[' + t.replace('}{', '},{') + ']'
 		else:
 			# Setup request parameters
 			aData = { }
@@ -195,10 +202,7 @@ class LmSession:
 					LmTools.Error('Request error: {}'.format(e))
 				return { 'errors' : 'Request exception' }
 
-		t = t.decode('utf-8', errors = 'replace')
-		if iGet and t.find('}{'):
-			LmTools.LogDebug(2, 'Multiple json lists')
-			t = '[' + t.replace('}{', '},{') + ']'
+			t = t.decode('utf-8', errors = 'replace')
 
 		try:
 			r = json.loads(t)
