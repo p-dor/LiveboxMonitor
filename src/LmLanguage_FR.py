@@ -562,6 +562,7 @@ LABELS = {
 		'List Line Height': 'Hauteur Lignes',
 		'List Line Font Size': 'Taille Police Lignes',
 		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
+		'Use native graphical interface style': 'Utiliser le style d\'interface graphique natif',
 		'Preferences': 'Préférences',
 		'Cancel': 'Annuler'
 	},
@@ -990,7 +991,11 @@ TOOLTIPS = {
 							'Par défaut ce paramètre est à zéro.',
 		'realtimeWifiStats': 'Active ou non les statistiques en temps réel pour les appareils wifi.\n'
 							 'Celles ci s\'affichent en bleu dans l\'onglet "Appareils" et viennent recouvrir\n'
-							 'les statistiques standards qui s\'affichent en noir toutes les 30 secondes.'
+							 'les statistiques standards qui s\'affichent en noir toutes les 30 secondes.',
+		'nativeUIStyle': 'Par défaut le style "Fusion" est utilisé sur toutes les plateformes.\n'
+						 'Cette option permet sur les plateformes Windows et MacOS d\'utiliser\n'
+						 'un style graphique plus natif.\n'
+						 'Elle n\'a aucun effet sur les plateformes Linux.'
 	},
 
 	# Config - Connection

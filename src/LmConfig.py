@@ -44,6 +44,7 @@ DCFG_LIST_HEADER_FONT_SIZE = 0
 DCFG_LIST_LINE_HEIGHT = 30
 DCFG_LIST_LINE_FONT_SIZE = 0
 DCFG_REALTIME_WIFI_STATS = False
+DCFG_NATIVE_UI_STYLE = False
 DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
 
@@ -240,24 +241,52 @@ def SetApplicationStyle():
 	aKeys = QtWidgets.QStyleFactory.keys()
 	aPlatform =  platform.system()
 	aStyle = 'Fusion'
-	if aPlatform == 'Windows':
-		aStyle = 'Windows'
-	elif aPlatform == 'Darwin':
-		aStyle = 'macOS'
+	if LmConf.NativeUIStyle:
+		if aPlatform == 'Windows':
+			aStyle = 'Windows'
+		elif aPlatform == 'Darwin':
+			aStyle = 'macOS'
 
 	if aStyle == 'Fusion':
-		WIND_HEIGHT_ADJUST = 2
-		DIAG_HEIGHT_ADJUST = -4
-		TABLE_ADJUST = 4
-		LIST_HEADER_FONT_SIZE = 12
-		LIST_LINE_FONT_SIZE = 10
-		LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
-		LIST_HEADER_STYLESHEET = '''
-			QHeaderView::section {
-				border-width: 0px 0px 1px 0px;
-				border-color: grey
-			}
-			'''
+		if aPlatform == 'Windows':
+			WIND_HEIGHT_ADJUST = 2
+			DIAG_HEIGHT_ADJUST = -4
+			TABLE_ADJUST = 2
+			LIST_HEADER_FONT_SIZE = 0	# Let system default
+			LIST_LINE_FONT_SIZE = 0		# Let system default
+			LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
+			LIST_HEADER_STYLESHEET = '''
+				QHeaderView::section {
+					border-width: 0px 0px 1px 0px;
+					border-color: grey
+				}
+				'''
+		elif aPlatform == 'Darwin':
+			WIND_HEIGHT_ADJUST = 2
+			DIAG_HEIGHT_ADJUST = -4
+			TABLE_ADJUST = 2
+			LIST_HEADER_FONT_SIZE = 11
+			LIST_LINE_FONT_SIZE = 10
+			LIST_STYLESHEET = 'QTableView { color:black; background-color:#F0F0F0; gridline-color:#FFFFFF }'
+			LIST_HEADER_STYLESHEET = '''
+				QHeaderView::section {
+					border-width: 0px 0px 1px 0px;
+					border-color: grey
+				}
+				'''
+		else:
+			WIND_HEIGHT_ADJUST = 2
+			DIAG_HEIGHT_ADJUST = -4
+			TABLE_ADJUST = 4
+			LIST_HEADER_FONT_SIZE = 12
+			LIST_LINE_FONT_SIZE = 10
+			LIST_STYLESHEET = 'QTableView { color:black; background-color:#FAFAFA }'
+			LIST_HEADER_STYLESHEET = '''
+				QHeaderView::section {
+					border-width: 0px 0px 1px 0px;
+					border-color: grey
+				}
+				'''
 	elif aStyle == 'Windows':
 		WIND_HEIGHT_ADJUST = 0
 		DIAG_HEIGHT_ADJUST = 0
@@ -404,6 +433,7 @@ class LmConf:
 	ListLineFontSize = DCFG_LIST_LINE_FONT_SIZE
 	RealtimeWifiStats = DCFG_REALTIME_WIFI_STATS
 	RealtimeWifiStats_save = RealtimeWifiStats	# Need to decouple saving as master value must not be changed live
+	NativeUIStyle = DCFG_NATIVE_UI_STYLE
 	LogLevel = DCFG_LOG_LEVEL
 	Repeaters = DCFG_REPEATERS
 	AllDeviceIconsLoaded = False
@@ -487,6 +517,9 @@ class LmConf:
 			if p is not None:
 				LmConf.RealtimeWifiStats = bool(p)
 				LmConf.RealtimeWifiStats_save = LmConf.RealtimeWifiStats
+			p = aConfig.get('Native UI Style')
+			if p is not None:
+				LmConf.NativeUIStyle = bool(p)
 			p = aConfig.get('Log Level')
 			if p is not None:
 				LmConf.LogLevel = int(p)
@@ -723,6 +756,7 @@ class LmConf:
 				aConfig['List Line Height'] = LmConf.ListLineHeight
 				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
 				aConfig['Realtime Wifi Stats'] = LmConf.RealtimeWifiStats_save
+				aConfig['Native UI Style'] = LmConf.NativeUIStyle
 				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['Repeaters'] = LmConf.Repeaters
 				json.dump(aConfig, aConfigFile, indent = 4)
@@ -1260,6 +1294,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listLineFontSize.setValidator(aIntValidator)
 
 		self._realtimeWifiStats = QtWidgets.QCheckBox(lx('Realtime wifi device statistics'), objectName = 'realtimeWifiStats')
+		self._nativeUIStyle = QtWidgets.QCheckBox(lx('Use native graphical interface style'), objectName = 'nativeUIStyle')
 
 		aPrefsEditGrid = QtWidgets.QGridLayout()
 		aPrefsEditGrid.setSpacing(10)
@@ -1283,6 +1318,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
 		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
 		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 5, 0, 5, 2)
+		aPrefsEditGrid.addWidget(self._nativeUIStyle, 6, 0, 6, 2)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1346,6 +1382,10 @@ class PrefsDialog(QtWidgets.QDialog):
 			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
 			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if LmConf.NativeUIStyle:
+			self._nativeUIStyle.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._nativeUIStyle.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 	### Save preferences data
@@ -1375,6 +1415,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.ListLineHeight = int(self._listLineHeight.text())
 		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
 		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.checkState() == QtCore.Qt.CheckState.Checked
+		LmConf.NativeUIStyle = self._nativeUIStyle.checkState() == QtCore.Qt.CheckState.Checked
 
 
 	### Click on profile list item

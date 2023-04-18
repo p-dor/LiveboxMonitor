@@ -637,6 +637,7 @@ LABELS = {
 		'List Line Height': '',
 		'List Line Font Size': '',
 		'Realtime wifi device statistics': '',
+		'Use native graphical interface style': '',
 		'Preferences': '',
 		'OK': '',
 		'Cancel': ''
@@ -995,6 +996,7 @@ TOOLTIPS = {
 		'listLineFontSizeLabel': '',
 		'listLineFontSize': '',
 		'realtimeWifiStats': '',
+		'nativeUIStyle': '',
 		'prefsGroup': '',
 		'ok': '',
 		'cancel': ''

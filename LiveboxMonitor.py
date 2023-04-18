@@ -330,9 +330,10 @@ if __name__ == '__main__':
 	aApp = QtWidgets.QApplication(sys.argv)
 	sys.excepthook = exceptHook
 	if LmConf.load():
-		SetApplicationStyle()
 		LmIcon.load()
 		while True:
+			SetApplicationStyle()
+
 			# Apply decoupled saved preferences
 			LmConf.applySavedPrefs()
 

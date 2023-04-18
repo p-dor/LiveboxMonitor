@@ -146,9 +146,9 @@ La liste des appareils affiche les colonnes suivantes :
 - **TauxRx** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
 - **TauxTx** : taux d'octets envoyés par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
 
-Les statistiques d'octets envoyés ou reçus par seconde sont calculées grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les trois secondes (option pour les activer/désactiver dans les préférences, ainsi que la fréquence). Ces dernières sont affichées en bleu.
+Les statistiques d'octets envoyés ou reçus par seconde sont calculées grâce aux statistiques envoyées par la Livebox sous forme d'événement toutes les 30 secondes par appareil. Cette résolution étant peu significative le programme utilise une autre interface disponible pour les appareils Wifi uniquement pour obtenir des statistiques toutes les trois secondes (option pour les activer/désactiver dans les préférences, ainsi que la fréquence). Ces dernières sont affichées en bleu.  
 Si une statistique s'affiche en rouge cela signifie que des erreurs de transfert ont été détectées par la Livebox.
-Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).
+Les statistiques semblent parfois surprenantes, mais il s'agit d'une interprétation sans filtre de ce que renvoie la Livebox (il ne s'agit pas d'un défaut du programme).  
 **Note** : le trafic TV standard de la box TV UHD n'est pas comptabilisé dans les statistiques pour cet appareil. Par contre celui de services VOD tel que Netflix est bien comptabilisé.
 
 
@@ -401,7 +401,9 @@ Les actions concernant les **Réglages** :
     - `Taille Police Entêtes` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
     - `Hauteur Lignes` : hauteur en pixels des lignes de liste, par défaut 30.
     - `Taille Police Lignes` : taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
-    - `Statistiques temps réel des appareils wifi` : Active ou non les statistiques en temps réel pour les appareils wifi. Celles ci s'affichent en bleu dans l'onglet `Appareils` et viennent recouvrir les statistiques standards qui s'affichent en noir toutes les 30 secondes.
+    - `Statistiques temps réel des appareils wifi` : active ou non les statistiques en temps réel pour les appareils wifi. Celles ci s'affichent en bleu dans l'onglet `Appareils` et viennent recouvrir les statistiques standards qui s'affichent en noir toutes les 30 secondes.
+    - `Utiliser le style d\'interface graphique natif` : par défaut le style "Fusion" est utilisé sur toutes les plateformes. Cette option permet sur les plateformes Windows et MacOS d'utiliser un style graphique plus natif. Cette option n'a aucun effet sur les plateformes Linux.  
+
 - **`Changer de profil...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
 
 Les actions techniques de **Débogage** :
