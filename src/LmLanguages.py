@@ -85,6 +85,10 @@ def GetIPv6DialogLabel(iString): return GetLabel('ipv6', iString)
 # Livebox infos
 def GetInfoLabel(iString): return GetLabel('info', iString)
 
+# Graph
+def GetGraphLabel(iString): return GetLabel('graph', iString)
+def GetAddGraphDialogLabel(iString): return GetLabel('addgraph', iString)
+
 # Device infos
 def GetDeviceInfoLabel(iString): return GetLabel('dinfo', iString)
 def GetDeviceNameDialogLabel(iString): return GetLabel('dname', iString)

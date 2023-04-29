@@ -20,7 +20,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 
 ## Installation
 
-L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique.
+L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique et sur [PyQtGraph](https://www.pyqtgraph.org/) pour les graphes statistiques.
 
 Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
@@ -84,7 +84,7 @@ Plusieurs informations sont associées à chaque profil, telle que l'URL de la L
 Que se passe-t-il au lancement du programme ?
 - Si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.
 - Sinon, si un profil par défaut est configuré, il sera sélectionné.
-- Sinon, le programme parcours la liste des profils et cherche si une Livebox avec la même adresse physique que celle associée au profil répond à l'URL du profil. Le premier profil qui répond à ces critères est sélectionné.
+- Sinon, le programme parcourt la liste des profils et cherche si une Livebox avec la même adresse physique que celle associée au profil répond à l'URL du profil. Le premier profil qui répond à ces critères est sélectionné.
 - Si aucun profil trouvé, le programme affiche un dialogue pour sélectionner le profil à utiliser.
 
 Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un profil pour une Livebox différente de celle avec lequel il est normalement associé. Si vous validez le dialogue, le profil sera mis à jour pour être associé à cette nouvelle Livebox. Le dialogue de sélection de profils vous permet aussi de créer un nouveau profil si aucun dans la liste ne convient.
@@ -402,7 +402,7 @@ Les actions concernant les **Réglages** :
     - `Hauteur Lignes` : hauteur en pixels des lignes de liste, par défaut 30.
     - `Taille Police Lignes` : taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
     - `Statistiques temps réel des appareils wifi` : active ou non les statistiques en temps réel pour les appareils wifi. Celles ci s'affichent en bleu dans l'onglet `Appareils` et viennent recouvrir les statistiques standards qui s'affichent en noir toutes les 30 secondes.
-    - `Utiliser le style d\'interface graphique natif` : par défaut le style "Fusion" est utilisé sur toutes les plateformes. Cette option permet sur les plateformes Windows et MacOS d'utiliser un style graphique plus natif. Cette option n'a aucun effet sur les plateformes Linux.  
+    - `Utiliser le style d'interface graphique natif` : par défaut le style "Fusion" est utilisé sur toutes les plateformes. Cette option permet sur les plateformes Windows et MacOS d'utiliser un style graphique plus natif. Cette option n'a aucun effet sur les plateformes Linux.  
 
 - **`Changer de profil...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
 

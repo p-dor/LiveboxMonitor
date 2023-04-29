@@ -264,6 +264,53 @@ LABELS = {
 		'Rate': ''
 	},
 
+	# Graph
+	'graph': {
+		'Graph': '',
+		'Interfaces and devices to display': '',
+		'Name': '',
+		'Type': '',
+		'ID': '',
+		'Color': '',
+		'Add': '',
+		'Delete': '',
+		'Window:': '',
+		'hours (0 = max)': '',
+		'Background color:': '',
+		'Apply': '',
+		'Export...': '',
+		'Download': '',
+		'Traffic (MB)': '',
+		'Time': '',
+		'Upload': '',
+		'Traffic (MB)': '',
+		'Time': '',
+		'Graph': '',
+		'Loading configuration...': '',
+		'Plotting graphes...': '',
+		'Interface': '',
+		'Device': '',
+		'Plotting graphes...': '',
+		'Select Export Folder': '',
+		'Exporting statistics...': ''
+	},
+
+	# Add graph dialog
+	'addgraph': {
+		'Type:': '',
+		'Interface': '',
+		'Device': '',
+		'Object:': '',
+		'Color:': '',
+		'ID:': '',
+		'Measures number:': '',
+		'History:': '',
+		'OK': '',
+		'Cancel': '',
+		'Add a graph': '',
+		'{:.1f} hours': ''
+	},
+
 	# Device infos
 	'dinfo': {
 		'Name': '',
@@ -700,6 +747,7 @@ TOOLTIPS = {
 	'main': {
 		'deviceListTab': '',
 		'liveboxInfoTab': '',
+		'graphTab': '',
 		'deviceInfoTab': '',
 		'eventsTab': '',
 		'dhcpTab': '',
@@ -764,6 +812,45 @@ TOOLTIPS = {
 		'iptvInfo': '',
 		'usbInfo': '',
 		'exportInfo': ''
+	},
+
+	# Graph
+	'graph': {
+		'graphList_Name': '',
+		'graphList_Type': '',
+		'graphList_ID': '',
+		'graphList_Color': '',
+		'selectLabel': '',
+		'graphList': '',
+		'addGraph': '',
+		'delGraph': '',
+		'windowLabel': '',
+		'windowEdit': '',
+		'windowUnit': '',
+		'backColorLabel': '',
+		'backColor': '',
+		'apply': '',
+		'export': '',
+		'downGraph': '',
+		'upGraph': ''
+	},
+
+	# Add graph dialog
+	'addgraph': {
+		'typeLabel': '',
+		'typeCombo': '',
+		'objectLabel': '',
+		'objectCombo': '',
+		'colorLabel': '',
+		'colorEdit': '',
+		'IDLabel': '',
+		'IDValue': '',
+		'measureLabel': '',
+		'measureValue': '',
+		'historyLabel': '',
+		'historyValue': '',
+		'ok': '',
+		'cancel': ''
 	},
 
 	# Device infos

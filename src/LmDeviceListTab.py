@@ -709,6 +709,11 @@ class LmDeviceList:
 				aDownRateBytes = int((aDownBytes - aPrevDownBytes) / aElapsed)
 				aUpRateBytes = int((aUpBytes - aPrevUpBytes) / aElapsed)
 
+			# Update potential running graph
+			self.graphUpdateDeviceEvent(iDeviceKey, int(aTimestamp.timestamp()),
+										aDownBytes - aPrevDownBytes,
+										aUpBytes  - aPrevUpBytes)
+
 		# Remember current stats
 		aStats = {}
 		aStats['Rx'] = aDownBytes

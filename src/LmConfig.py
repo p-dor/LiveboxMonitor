@@ -47,6 +47,7 @@ DCFG_REALTIME_WIFI_STATS = False
 DCFG_NATIVE_UI_STYLE = False
 DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
+DCFG_GRAPH = None
 
 # Static config
 ICON_URL = 'assets/common/images/app_conf/'
@@ -215,12 +216,13 @@ DEVICE_TYPES = [
 class MonitorTab(IntEnum):
 	DeviceList = 0
 	LiveboxInfos = 1
-	DeviceInfos = 2
-	DeviceEvents = 3
-	Dhcp = 4
-	Phone = 5
-	Actions = 6
-	Repeaters = 7  # Index of first, and others incrementally
+	Graph = 2
+	DeviceInfos = 3
+	DeviceEvents = 4
+	Dhcp = 5
+	Phone = 6
+	Actions = 7
+	Repeaters = 8  # Index of first, and others incrementally
 
 
 
@@ -436,6 +438,7 @@ class LmConf:
 	NativeUIStyle = DCFG_NATIVE_UI_STYLE
 	LogLevel = DCFG_LOG_LEVEL
 	Repeaters = DCFG_REPEATERS
+	Graph = DCFG_GRAPH
 	AllDeviceIconsLoaded = False
 
 
@@ -531,6 +534,9 @@ class LmConf:
 			p = aConfig.get('Repeaters')
 			if p is not None:
 				LmConf.Repeaters = p
+			p = aConfig.get('Graph')
+			if p is not None:
+				LmConf.Graph = p
 
 		if aConfigFile is not None:
 			aConfigFile.close()
@@ -759,6 +765,7 @@ class LmConf:
 				aConfig['Native UI Style'] = LmConf.NativeUIStyle
 				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['Repeaters'] = LmConf.Repeaters
+				aConfig['Graph'] = LmConf.Graph
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))

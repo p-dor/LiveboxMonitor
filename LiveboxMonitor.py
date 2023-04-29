@@ -3,6 +3,7 @@
 import sys
 import re
 import traceback
+import locale
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -11,8 +12,8 @@ from src.LmIcons import LmIcon
 from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel, MonitorTab,
 						  LiveboxCnxDialog, LiveboxSigninDialog)
 from src.LmSession import LmSession
-from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmDeviceInfoTab, LmEventsTab,
-				 LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab,
+				 LmEventsTab, LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
 from src.LmLanguages import GetMainLabel as lx
 
 from __init__ import __version__
@@ -31,6 +32,7 @@ NO_THREAD = False 	# Use only to speed up testing while developping
 # ############# Main window class #############
 class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 										  LmInfoTab.LmInfo,
+										  LmGraphTab.LmGraph,
 										  LmDeviceInfoTab.LmDeviceInfo,
 										  LmEventsTab.LmEvents,
 										  LmDhcpTab.LmDhcp,
@@ -77,6 +79,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self._tabWidget.currentChanged.connect(self.tabChangedEvent)
 		self.createDeviceListTab()
 		self.createLiveboxInfoTab()
+		self.createGraphTab()
 		self.createDeviceInfoTab()
 		self.createEventsTab()
 		self.createDhcpTab()
@@ -110,6 +113,12 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 					self.suspendWifiStatsLoop()
 					self.resumeStatsLoop()
 					self.suspendRepeaterStatsLoop()
+			elif iNewTabIndex == MonitorTab.Graph:
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
+				self.graphTabClick()
 			elif iNewTabIndex == MonitorTab.DeviceInfos:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
@@ -279,6 +288,11 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self._tabWidget.setCurrentIndex(MonitorTab.LiveboxInfos)
 
 
+	### Switch to graph tab
+	def switchToGraphTab(self):
+		self._tabWidget.setCurrentIndex(MonitorTab.Graph)
+
+
 	### Switch to device infos tab
 	def switchToDeviceInfosTab(self):
 		self._tabWidget.setCurrentIndex(MonitorTab.DeviceInfos)
@@ -336,6 +350,9 @@ if __name__ == '__main__':
 
 			# Apply decoupled saved preferences
 			LmConf.applySavedPrefs()
+
+			# Assign Python locale to selected preference
+			locale.setlocale(locale.LC_ALL, LmConf.Language.lower() + '_' + LmConf.Language.upper())
 
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()

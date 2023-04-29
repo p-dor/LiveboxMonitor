@@ -13,6 +13,7 @@ TOOLTIPS = {
 	'main': {
 		'deviceListTab': 'Manage the list of devices.',
 		'liveboxInfoTab': 'Detailed information about the Livebox and traffic statistics.',
+		'graphTab': 'Traffic plots per interface and per device.',
 		'deviceInfoTab': 'Detailed information and setup for each device.',
 		'eventsTab': 'Raised events for each device.',
 		'dhcpTab': 'Detailed DHCP information and setup.',
@@ -29,6 +30,12 @@ TOOLTIPS = {
 
 	# Livebox infos
 	'info': {},
+
+	# Graph
+	'graph': {},
+
+	# Add graph dialog
+	'addgraph': {},
 
 	# Device infos
 	'dinfo': {},

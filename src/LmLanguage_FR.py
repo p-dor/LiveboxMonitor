@@ -31,9 +31,9 @@ LABELS = {
 
 	# Device list - IPv6 dialog
 	'ipv6': {
-		'IPv6 enabled:': 'IPv6 activé:',
-		'IPv6 address:': 'Adresse IPv6:',
-		'IPv6 prefix:': 'Préfixe IPv6:',
+		'IPv6 enabled:': 'IPv6 activé :',
+		'IPv6 address:': 'Adresse IPv6 :',
+		'IPv6 prefix:': 'Préfixe IPv6 :',
 		'Name': 'Nom',
 		'Livebox Name': 'Nom Livebox',
 		'IPv6 Devices': 'Appareils IPv6'
@@ -228,6 +228,43 @@ LABELS = {
 		'Rate': 'Taux'
 	},
 
+	# Graph
+	'graph': {
+		'Graph': 'Graphe',
+		'Interfaces and devices to display': 'Interfaces et appareils à afficher',
+		'Name': 'Nom',
+		'Color': 'Couleur',
+		'Add': 'Ajouter',
+		'Delete': 'Supprimer',
+		'Window:': 'Fenêtre :',
+		'hours (0 = max)': 'heures (0 = max)',
+		'Background color:': 'Couleur de fond :',
+		'Apply': 'Appliquer',
+		'Download': 'Réception',
+		'Traffic (MB)': 'Trafic (Mo)',
+		'Time': 'Heure',
+		'Upload': 'Émission',
+		'Loading configuration...': 'Chargement de la configuration...',
+		'Plotting graphes...': 'Tracer des graphiques...',
+		'Device': 'Appareil',
+		'Select Export Folder': 'Sélectionnez le dossier d\'export',
+		'Exporting statistics...': 'Export des statistiques...'
+	},
+
+	# Add graph dialog
+	'addgraph': {
+		'Type:': 'Type :',
+		'Device': 'Appareil',
+		'Object:': 'Objet :',
+		'Color:': 'Couleur :',
+		'ID:': 'ID :',
+		'Measures number:': 'Nombre de mesures :',
+		'History:': 'Historique :',
+		'Cancel': 'Annuler',
+		'Add a graph': 'Ajouter un graphique',
+		'{:.1f} hours': '{:.1f} heures'
+	},
+
 	# Device infos
 	'dinfo': {
 		'Name': 'Nom',
@@ -342,10 +379,10 @@ LABELS = {
 
 	# DHCP - Binding dialog
 	'dbinding': {
-		'Device:': 'Appareil',
-		'MAC address:': 'Adresse MAC',
-		'Domain:': 'Domaine',
-		'IP address:': 'Adresse IP',
+		'Device:': 'Appareil :',
+		'MAC address:': 'Adresse MAC :',
+		'Domain:': 'Domaine :',
+		'IP address:': 'Adresse IP :',
 		'Cancel': 'Annuler',
 		'Add DHCP binding': 'Ajouter un Bail DHCP',
 		'-Unknown-': '-Inconnu-'
@@ -354,10 +391,10 @@ LABELS = {
 	# DHCP - Setup dialog
 	'dsetup': {
 		'DHCP Enabled': 'DHCP Actif',
-		'Livebox IP address:': 'Adresse IP Livebox',
-		'Subnet mask:': 'Masque sous-réseau',
-		'DHCP start IP:': 'Début DHCP',
-		'DHCP end IP:': 'Fin DHCP',
+		'Livebox IP address:': 'Adresse IP Livebox :',
+		'Subnet mask:': 'Masque sous-réseau :',
+		'DHCP start IP:': 'Début DHCP :',
+		'DHCP end IP:': 'Fin DHCP :',
 		'Cancel': 'Annuler',
 		'DHCP Setup': 'Réglages DHCP'
 	},
@@ -470,7 +507,7 @@ LABELS = {
 		'LAN Infos': 'Informations LAN',
 		'Signing in to repeaters...': 'Authentification Répéteurs...',
 		'Wrong repeater password': 'Mauvais mot de passe répéteur',
-		'Please enter password for repeater {0} ({1}):': 'Mot de passe pour le répéteur {0} ({1}):',
+		'Please enter password for repeater {0} ({1}):': 'Mot de passe pour le répéteur {0} ({1}) :',
 		'Getting repeater information...': 'Chargement des informations du répéteur...',
 		'Getting Wifi information...': 'Chargement des informations Wifi...',
 		'Getting LAN information...': 'Chargement des informations LAN...',
@@ -589,8 +626,8 @@ LABELS = {
 	'sprofile': {
 		'Profile selection': 'Sélection d\'un profil',
 		'Please select a profile to use:': 'Sélectionnez un profil :',
-		'Associated Livebox MAC:': 'MAC Livebox associée:',
-		'Detected Livebox MAC:': 'MAC Livebox détectée:',
+		'Associated Livebox MAC:': 'MAC Livebox associée :',
+		'Detected Livebox MAC:': 'MAC Livebox détectée :',
 		'New Profile...': 'Nouveau Profil...',
 		'Cancel': 'Annuler',
 		'<None>': '<Aucune>',
@@ -598,7 +635,7 @@ LABELS = {
 		'Detected MAC will be associated to this profile.': 'La Livebox détectée sera associée à ce profil.',
 		'Warning: another Livebox is associated to this profile.': 'Attention : une autre Livebox est déjà associée à ce profil.',
 		'Create Profile': 'Créer un profil',
-		'Profile name:': 'Nom du profil:'
+		'Profile name:': 'Nom du profil :'
 	},
 
 	# Tools
@@ -620,6 +657,7 @@ TOOLTIPS = {
 	'main': {
 		'deviceListTab': 'Gérer la liste des appareils.',
 		'liveboxInfoTab': 'Informations détaillées sur la Livebox et statistiques de trafic.',
+		'graphTab': 'Courbes de trafic par interface et par appareil.',
 		'deviceInfoTab': 'Informations détaillées et réglages pour chaque appareil.',
 		'eventsTab': 'Journal d\'événements pour chaque appareil.',
 		'dhcpTab': 'Informations détaillées et réglages DHCP.',
@@ -736,6 +774,58 @@ TOOLTIPS = {
 				   'ses informations sont affichées.',
 		'exportInfo': 'Permet d\'exporter l\'ensemble des informations affichées par chacun des boutons dans un fichier texte.\n'
 					  'Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.'
+	},
+
+	# Graph
+	'graph': {
+		'graphList_Name': 'Nom de l\'interface réseau ou de l\'appareil.',
+		'graphList_Type': 'Type de l\'objet à afficher.',
+		'graphList_ID': 'Identificateur interne de l\'interface ou de l\'appareil.\n'
+						'Pour les interfaces il s\'agit du nom interne utilisé par la Livebox.\n'
+						'Pour les appareils il s\'agit de l\'adresse physique (MAC).',
+		'graphList_Color': 'Couleur à utiliser pour afficher le graphique de chaque objet.',
+		'addGraph': 'Permet d\'ajouter une interface ou un appareil à la liste des graphiques à afficher.',
+		'delGraph': 'Permet de supprimer l\'interface ou l\'appareil sélectionné de la liste des graphiques.',
+		'windowEdit': 'Fenêtre en heures d\'affichage des graphiques, à partir du présent.\n'
+					  'Une valeur à 0 affichera l\'ensemble des statistiques disponibles dans la Livebox.',
+		'backColor': 'Couleur de fond à utiliser pour les graphiques de réception et d\'émission.\n'
+					 'Un clic droit supprime toute couleur.',
+		'apply': 'Appliquer la configuration sélectionnée ci-dessus et dessiner les graphiques.\n'
+				 'Cette action a aussi pour effet de sauvegarder la configuration, celle-ci sera\n'
+				 'donc restaurée lors du prochain lancement du programme.',
+		'export': 'Permet d\'exporter les données correspondantes à la configuration ci-dessus dans\n'
+				  'des fichiers au format CSV. Un fichier par interface / appareil est généré.\n'
+				  'La configuration doit avoir été appliquée avant d\'être exportée.\n'
+				  'Les temps exportés sont au format "Unix Epoch".',
+		'downGraph': 'Graphique des données reçues pour chaque interface / appareil sélectionné.\n'
+					 'Les volumes sont en méga-octets reçus entre deux échantillons, typiquement\n'
+					 'toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n'
+					 'de nouveaux échantillons.\n'
+					 'Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n'
+					 'vue normale en cliquant dans le coin en bas à gauche.',
+		'upGraph': 'Graphique des données émises pour chaque interface / appareil sélectionné.\n'
+				   'Les volumes sont en méga-octets transmis entre deux échantillons, typiquement\n'
+				   'toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n'
+				   'de nouveaux échantillons.\n'
+					'Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n'
+					'vue normale en cliquant dans le coin en bas à gauche.'
+	},
+
+	# Add graph dialog
+	'addgraph': {
+		'typeCombo': 'Sélection du type d\'objet à rajouter.',
+		'objectCombo': 'Sélection de l\'interface ou de l\'appareil à rajouter.\n'
+					   'Pour les appareils il s\'agit du nom local (fichier table MacAddr), si aucun\n'
+					   'nom local n\'a été assigné l\'adresse physique (MAC) sera utilisée.',
+		'colorEdit': 'Couleur à utiliser pour afficher le graphique correspondant.',
+		'IDValue': 'Identificateur interne de l\'interface ou de l\'appareil.\n'
+				   'Pour les interfaces il s\'agit du nom interne utilisé par la Livebox.\n'
+				   'Pour les appareils il s\'agit de l\'adresse physique (MAC).',
+		'measureValue': 'Nombre de mesures de statistique actuellement stockées par la Livebox pour\n'
+						'l\'interface ou l\'appareil. Généralement la fréquence d\'échantillonnage est\n'
+						'de 30 secondes et le nombre maximum de mesures stockées est de 8680.',
+		'historyValue': 'Temps total de la fenêtre de statistiques estimé à partir du nombre de\n'
+						'mesures et de la fréquence d\'échantillonnage.'
 	},
 
 	# Device infos
