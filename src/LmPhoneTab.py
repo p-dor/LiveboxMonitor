@@ -562,13 +562,13 @@ class LmPhone:
 				aExportFile.write('RINGTONE:' + aContact['ringtone'] + '\n')
 				aExportFile.write('END:VCARD\n')
 
+		self.endTask()
+
 		try:
 			aExportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			LmTools.DisplayError('Cannot save the file.')
-
-		self.endTask()
 
 
 	### Click on import contacts button
