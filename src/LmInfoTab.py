@@ -160,6 +160,10 @@ class LmInfo:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._liveboxInfoTab.setLayout(aVBox)
 
+		# Init context
+		self._homeLanIntfStatsMap = {}
+		self._liveboxStatsMapHomeLan = {}
+
 		LmConfig.SetToolTips(self._liveboxInfoTab, 'info')
 		self._tabWidget.addTab(self._liveboxInfoTab, lx('Livebox Stats/Infos'))
 
@@ -167,7 +171,6 @@ class LmInfo:
 	### Init the Livebox stats collector thread
 	def initStatsLoop(self):
 		self._liveboxStatsMap = {}
-		self._liveboxStatsMapHomeLan = {}
 		self._liveboxStatsThread = None
 		self._liveboxStatsLoop = None
 
@@ -244,7 +247,39 @@ class LmInfo:
 				e['RxErrors'] = 0
 				e['TxErrors'] = 0
 
+				# Update UI
 				self.processLiveboxStats(e)
+
+				# Update potential running graph
+				aBytesReceived = e['RxBytes']
+				aDeltaReceived = None
+				aBytesSent = e['TxBytes']
+				aDeltaSent = None
+
+				# Try to find a previously received statistic record
+				aPrevStats = self._homeLanIntfStatsMap.get(iIntf)
+				if aPrevStats is not None:
+					aPrevDownBytes = aPrevStats['RxBytes']
+					if aBytesReceived is not None:
+						if (aPrevDownBytes is not None) and (aBytesReceived > aPrevDownBytes):
+							aDeltaReceived = aBytesReceived - aPrevDownBytes
+					else:
+						aBytesReceived = aPrevDownBytes
+
+					aPrevUpBytes = aPrevStats['TxBytes']
+					if aBytesSent is not None:
+						if (aPrevUpBytes is not None) and (aBytesSent > aPrevUpBytes):
+							aDeltaSent = aBytesSent - aPrevUpBytes
+					else:
+						aBytesSent = aPrevUpBytes
+
+				# Remember current stats
+				s = {}
+				s['RxBytes'] = aBytesReceived
+				s['TxBytes'] = aBytesSent
+				self._homeLanIntfStatsMap[iIntf] = s
+
+				self.graphUpdateInterfaceEvent(iIntf, int(e['Timestamp'].timestamp()), aDeltaReceived, aDeltaSent)
 				break
 
 
@@ -520,6 +555,8 @@ class LmInfo:
 		i = self.loadIptvInfo(i)
 		i = self.loadUsbInfo(i)
 
+		self.endTask()
+
 		try:
 			self._exportFile.close()
 		except BaseException as e:
@@ -527,8 +564,6 @@ class LmInfo:
 			LmTools.DisplayError('Cannot save the file.')
 
 		self._exportFile = None
-
-		self.endTask()
 
 
 	### Load Livebox infos
