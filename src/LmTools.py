@@ -292,3 +292,56 @@ class TextDialog(QtWidgets.QDialog):
 		self.setGeometry(200, 200, 800, 500)
 		self.setModal(True)
 		self.show()
+
+
+# ############# Color picker button #############
+# Custom QtWidget to show a chosen color.
+# Left-clicking the button shows the color-chooser, while
+# right-clicking resets the color to None (no-color).
+
+class ColorButton(QtWidgets.QPushButton):
+	_colorChanged = QtCore.pyqtSignal(object)
+
+	def __init__(self, *args, iColor = None, **kwargs):
+		super(ColorButton, self).__init__(*args, **kwargs)
+
+		self._color = None
+		self._default = iColor
+		self.pressed.connect(self.onColorPicker)
+
+		# Set the initial/default state.
+		self.setColor(self._default)
+
+
+	def setColor(self, iColor):
+		if iColor != self._color:
+			self._color = iColor
+			self._colorChanged.emit(iColor)
+
+		if self._color:
+			self.setStyleSheet('QPushButton { background-color:%s }' % self._color)
+		else:
+			self.setStyleSheet('')
+
+
+	def getColor(self):
+		return self._color
+
+
+	def onColorPicker(self):
+		# Show color-picker dialog to select color.
+		# Qt will use the native dialog by default.
+
+		aDialog = QtWidgets.QColorDialog()
+		if self._color:
+			aDialog.setCurrentColor(QtGui.QColor(self._color))
+
+		if aDialog.exec():
+			self.setColor(aDialog.currentColor().name())
+
+
+	def mousePressEvent(self, iEvent):
+		if iEvent.button() == QtCore.Qt.MouseButton.RightButton:
+			self.setColor(self._default)
+
+		return super(ColorButton, self).mousePressEvent(iEvent)
