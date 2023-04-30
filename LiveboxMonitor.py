@@ -30,21 +30,22 @@ NO_THREAD = False 	# Use only to speed up testing while developping
 # ################################ APPLICATION ################################
 
 # ############# Main window class #############
-class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
-										  LmInfoTab.LmInfo,
-										  LmGraphTab.LmGraph,
-										  LmDeviceInfoTab.LmDeviceInfo,
-										  LmEventsTab.LmEvents,
-										  LmDhcpTab.LmDhcp,
-										  LmPhoneTab.LmPhone,
-										  LmActionsTab.LmActions,
-										  LmRepeaterTab.LmRepeater):
+class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
+											  LmInfoTab.LmInfo,
+											  LmGraphTab.LmGraph,
+											  LmDeviceInfoTab.LmDeviceInfo,
+											  LmEventsTab.LmEvents,
+											  LmDhcpTab.LmDhcp,
+											  LmPhoneTab.LmPhone,
+											  LmActionsTab.LmActions,
+											  LmRepeaterTab.LmRepeater):
 
 	### Initialize the application
 	def __init__(self):
 		super(LiveboxMonitorUI, self).__init__()
 		self._resetFlag = False
 		self._appReady = False
+		self._statusBar = None
 		self._repeaters = []
 		if not NO_THREAD:
 			self.initEventLoop()
@@ -52,7 +53,6 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 			self.initStatsLoop()
 			self.initRepeaterStatsLoop()
 		self._applicationName = 'Livebox Monitor v' + __version__
-		self.setWindowTitle(self.appWindowTitle())
 		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
 		self.setGeometry(100, 100, 1300, 102 + LmConfig.WindowHeight(21))
 		self.show()
@@ -60,6 +60,7 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		if self.signin():
 			self.adjustToLiveboxModel()
 			self.initUI()
+			self.setWindowTitle(self.appWindowTitle())
 			LmConf.loadMacAddrTable()
 			QtCore.QCoreApplication.processEvents()
 			self.loadDeviceList()
@@ -73,6 +74,14 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 	### Create main window
 	def initUI(self):
+		# Status bar
+		self._statusBar = QtWidgets.QStatusBar()
+		self._statusBarProfile = QtWidgets.QLabel('[' + LmConf.CurrProfile['Name'] + ']')
+		self._statusBarProfile.mousePressEvent = self.statusBarProfileClick
+		self._statusBar.addPermanentWidget(self._statusBarProfile)
+		self.setStatusBar(self._statusBar)
+		QtCore.QCoreApplication.processEvents()
+
 		# Tab Widgets
 		self._tabWidget = QtWidgets.QTabWidget(self, objectName = 'tabWidget')
 		# self._tabWidget.setMovable(True)	###TODO### EXPERIMENTAL - DISTURB THE FEATURES TO SWITCH TAB + dynamics on repeaters
@@ -86,18 +95,18 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 		self.createPhoneTab()
 		self.createActionsTab()
 
-		# Layout
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(self._tabWidget)
-
-		self.setLayout(aGrid)
+		self.setCentralWidget(self._tabWidget)
 
 
 	### Reset the UI, e.g. after a change of profile
 	def resetUI(self):
 		self._resetFlag = True
 		self.close()
+
+
+	### Click on the profile indication in the status bar
+	def statusBarProfileClick(self, iEvent):
+		self.changeProfileButtonClick()
 
 
 	### Handle change of tab event
@@ -261,21 +270,29 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 	### Return window base title to use
 	def appWindowTitle(self):
-		if len(LmConf.Profiles) > 1:
+		if (self._statusBar is None) and (len(LmConf.Profiles) > 1):
 			return self._applicationName + ' [' + LmConf.CurrProfile['Name'] + ']'
 		return self._applicationName
 
 
 	### Show the start of a long task
 	def startTask(self, iTask):
-		self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
+		if self._statusBar is None:
+			self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
+		else:
+			self._statusBar.showMessage(iTask)
+			QtCore.QCoreApplication.processEvents()
 		LmTools.MouseCursor_Busy()
 
 
 	### End a long task
 	def endTask(self):
 		LmTools.MouseCursor_Normal()
-		self.setWindowTitle(self.appWindowTitle())
+		if self._statusBar is None:
+			self.setWindowTitle(self.appWindowTitle())
+		else:
+			self._statusBar.clearMessage()
+			QtCore.QCoreApplication.processEvents()
 
 
 	### Switch to device list tab
@@ -319,7 +336,6 @@ class LiveboxMonitorUI(QtWidgets.QWidget, LmDeviceListTab.LmDeviceList,
 
 
 # ############# Fatal error handler #############
-
 def exceptHook(iType, iValue, iTraceBack):
 	aTraceBack = ''.join(traceback.format_exception(iType, iValue, iTraceBack))
 
@@ -333,7 +349,6 @@ def exceptHook(iType, iValue, iTraceBack):
 
 
 # ############# Main #############
-
 if __name__ == '__main__':
 	# Prevent logging to fail if running without console
 	if sys.stderr is None:
