@@ -46,4 +46,4 @@ exe = EXE(
 app = BUNDLE(exe,
     name='LiveboxMonitor_Console.app',
     icon='../ico/LiveboxMonitor.ico',
-    version='1.0')
+    version='1.1')
