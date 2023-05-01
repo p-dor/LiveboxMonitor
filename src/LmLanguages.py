@@ -36,6 +36,7 @@ CURRENT_LANGUAGE = 'EN'
 # Supported languages
 LANGUAGES_KEY = [ 'FR', 'EN' ]
 LANGUAGES_NAME = [ 'Français', 'English']
+LANGUAGES_LOCALE = { 'FR': 'fr_FR', 'EN': 'en_US' }
 
 # Labels & Tooltips - to set according to current language
 LABELS = {}
