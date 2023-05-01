@@ -14,6 +14,9 @@ from src.LmLanguages import GetInfoLabel as lx
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'liveboxInfoTab'
+
 # List columns
 class InfoCol(IntEnum):
 	Attribute = 0
@@ -35,7 +38,7 @@ class LmInfo:
 
 	### Create Livebox info tab
 	def createLiveboxInfoTab(self):
-		self._liveboxInfoTab = QtWidgets.QWidget(objectName = 'liveboxInfoTab')
+		self._liveboxInfoTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Statistics list
 		self._statsList = QtWidgets.QTableWidget(objectName = 'statsList')

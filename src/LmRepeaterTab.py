@@ -9,7 +9,7 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmTools, LmConfig
-from src.LmConfig import LmConf, MonitorTab
+from src.LmConfig import LmConf
 from src.LmIcons import LmIcon
 from src.LmSession import LmSession
 from src.LmInfoTab import InfoCol, StatsCol
@@ -18,6 +18,9 @@ from src.LmLanguages import GetRepeaterLabel as lx
 
 
 # ################################ VARS & DEFS ################################
+
+# Tab name
+TAB_NAME = 'repeaterTab'	# 'Key' dynamic property indicates the MAC addr
 
 # Static Config
 WIFI_REPEATER_5 = 'WIFIREPARCFR'
@@ -63,7 +66,8 @@ class LmRepeater:
 
 	### Create Repeater tab
 	def createRepeaterTab(self, iRepeater):
-		iRepeater._tab = QtWidgets.QWidget(objectName = 'repeaterTab')
+		iRepeater._tab = QtWidgets.QWidget(objectName = TAB_NAME)
+		iRepeater._tab.setProperty('Key', iRepeater._key)
 
 		# Statistics list
 		aStatsList = QtWidgets.QTableWidget(objectName = 'statsList')
@@ -237,7 +241,8 @@ class LmRepeater:
 		iRepeater._tab.setLayout(aVBox)
 
 		LmConfig.SetToolTips(iRepeater._tab, 'repeater')
-		self._tabWidget.addTab(iRepeater._tab, iRepeater._name)
+		self._tabWidget.insertTab(iRepeater.tabIndexFromConfig(), iRepeater._tab, iRepeater._name)
+#		self._tabWidget.addTab(iRepeater._tab, iRepeater._name)
 		iRepeater.setTabIcon()
 
 
@@ -482,7 +487,7 @@ class LmRepHandler:
 		self._session = None
 		self._signed = False
 		self._tab = None
-		self._tabIndex = MonitorTab.Repeaters + iIndex
+		self._index = iIndex
 		self._statsList = None
 		self._statsMap = {}
 		self._repeaterAList = None
@@ -567,15 +572,57 @@ class LmRepHandler:
 		return (self._ipAddr is not None) and self._active
 
 
+	### Get tab index from configuration at creation time
+	def tabIndexFromConfig(self):
+		# If no config, append
+		n = self._app._tabWidget.count()
+		if LmConf.Tabs is None:
+			return n
+
+		# If not in config, append
+		aEntryName = TAB_NAME + '_' + self._key
+		try:
+			i = LmConf.Tabs.index(aEntryName)
+		except:
+			return n
+
+		# Try to find the tab immediately on the left
+		while i:
+			j = i
+			while j:
+				j -= 1
+				t = LmConf.Tabs[j]
+				if t.startswith(TAB_NAME + '_'):
+					k = t[len(TAB_NAME) + 1:]
+					t = TAB_NAME
+				else:
+					k = None
+
+				aLeftTabIndex = self._app.getTabIndex(t, k)
+				if aLeftTabIndex != -1:
+					return aLeftTabIndex + 1
+			i -= 1
+
+		# No left tab found, must be the first then
+		return 0
+
+
+	### Get tab index
+	def tabIndex(self):
+		if self._tab is not None:
+			return self._app._tabWidget.indexOf(self._tab)
+		return -1
+
+
 	### Set tab icon according to connection status
 	def setTabIcon(self):
 		if self._tab is not None:
 			if self.isSigned():
-				self._app._tabWidget.setTabIcon(self._tabIndex, QtGui.QIcon(LmIcon.TickPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.TickPixmap))
 			elif self.isActive():
-				self._app._tabWidget.setTabIcon(self._tabIndex, QtGui.QIcon(LmIcon.DenyPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.DenyPixmap))
 			else:
-				self._app._tabWidget.setTabIcon(self._tabIndex, QtGui.QIcon(LmIcon.CrossPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.CrossPixmap))
 
 
 	### Find Repeater stats line from stat key
@@ -595,9 +642,9 @@ class LmRepHandler:
 	def processUpdateDeviceName(self):
 		aNewName = LmConf.MacAddrTable.get(self._key, None)
 		if aNewName is None:
-			aNewName = DEFAULT_REPEATER_NAME + str(self._tabIndex - MonitorTab.Repeaters + 1)
+			aNewName = DEFAULT_REPEATER_NAME + str(self._index + 1)
 		self._name = aNewName
-		self._app._tabWidget.setTabText(self._tabIndex, self._name)
+		self._app._tabWidget.setTabText(self.tabIndex(), self._name)
 
 
 	### Process a device updated event

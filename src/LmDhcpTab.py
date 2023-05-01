@@ -17,6 +17,9 @@ from src.LmLanguages import (GetDhcpLabel as lx,
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'dhcpDList'
+
 # List columns
 class DhcpCol(IntEnum):
 	Key = 0		# Must be the same as DevCol.Key
@@ -43,7 +46,7 @@ class LmDhcp:
 
 	### Create DHCP tab
 	def createDhcpTab(self):
-		self._dhcpTab = QtWidgets.QWidget(objectName = 'dhcpTab')
+		self._dhcpTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# DHCP binding list
 		self._dhcpDList = QtWidgets.QTableWidget(objectName = 'dhcpDList')

@@ -18,6 +18,9 @@ from src.LmLanguages import (GetDeviceInfoLabel as lx,
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'deviceInfoTab'
+
 # Static Config
 MACADDR_URL = 'https://api.macaddress.io/v1?apiKey={0}&output=json&search={1}'
 
@@ -28,7 +31,7 @@ class LmDeviceInfo:
 
 	### Create device info tab
 	def createDeviceInfoTab(self):
-		self._deviceInfoTab = QtWidgets.QWidget(objectName = 'deviceInfoTab')
+		self._deviceInfoTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list
 		self._infoDList = QtWidgets.QTableWidget(objectName = 'infoDList')

@@ -16,6 +16,9 @@ from src.LmLanguages import GetDeviceListLabel as lx, GetIPv6DialogLabel as lix
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'deviceListTab'
+
 # List columns
 class DevCol(IntEnum):
 	Key = 0
@@ -69,7 +72,7 @@ class LmDeviceList:
 
 	### Create device list tab
 	def createDeviceListTab(self):
-		self._deviceListTab = QtWidgets.QWidget(objectName = 'deviceListTab')
+		self._deviceListTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list columns
 		self._deviceList = QtWidgets.QTableWidget(objectName = 'deviceList')

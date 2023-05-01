@@ -48,6 +48,7 @@ DCFG_NATIVE_UI_STYLE = False
 DCFG_LOG_LEVEL = 0
 DCFG_REPEATERS = None
 DCFG_GRAPH = None
+DCFG_TABS = None
 
 # Static config
 ICON_URL = 'assets/common/images/app_conf/'
@@ -212,19 +213,6 @@ DEVICE_TYPES = [
 ]
 
 
-# Tab indexes
-class MonitorTab(IntEnum):
-	DeviceList = 0
-	LiveboxInfos = 1
-	Graph = 2
-	DeviceInfos = 3
-	DeviceEvents = 4
-	Dhcp = 5
-	Phone = 6
-	Actions = 7
-	Repeaters = 8  # Index of first, and others incrementally
-
-
 
 # ################################ Tools ################################
 
@@ -290,7 +278,7 @@ def SetApplicationStyle():
 				}
 				'''
 	elif aStyle == 'Windows':
-		WIND_HEIGHT_ADJUST = 0
+		WIND_HEIGHT_ADJUST = -1
 		DIAG_HEIGHT_ADJUST = 0
 		TABLE_ADJUST = 4
 		LIST_HEADER_FONT_SIZE = 0	# Let system default
@@ -304,7 +292,7 @@ def SetApplicationStyle():
 			}
 			'''
 	elif aStyle == 'macOS':
-		WIND_HEIGHT_ADJUST = 4
+		WIND_HEIGHT_ADJUST = -4
 		DIAG_HEIGHT_ADJUST = 30
 		TABLE_ADJUST = 4
 		LIST_HEADER_FONT_SIZE = 11
@@ -439,6 +427,7 @@ class LmConf:
 	LogLevel = DCFG_LOG_LEVEL
 	Repeaters = DCFG_REPEATERS
 	Graph = DCFG_GRAPH
+	Tabs = DCFG_TABS
 	AllDeviceIconsLoaded = False
 
 
@@ -537,6 +526,9 @@ class LmConf:
 			p = aConfig.get('Graph')
 			if p is not None:
 				LmConf.Graph = p
+			p = aConfig.get('Tabs')
+			if p is not None:
+				LmConf.Tabs = p
 
 		if aConfigFile is not None:
 			aConfigFile.close()
@@ -766,6 +758,7 @@ class LmConf:
 				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['Repeaters'] = LmConf.Repeaters
 				aConfig['Graph'] = LmConf.Graph
+				aConfig['Tabs'] = LmConf.Tabs
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))

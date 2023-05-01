@@ -16,6 +16,9 @@ from src.LmLanguages import GetEventsLabel as lx
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'eventDList'
+
 # Static Config
 MAX_EVENT_BUFFER_PER_DEVICE = 100
 
@@ -33,7 +36,7 @@ class LmEvents:
 
 	### Create events tab
 	def createEventsTab(self):
-		self._eventsTab = QtWidgets.QWidget(objectName = 'eventsTab')
+		self._eventsTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list
 		self._eventDList = QtWidgets.QTableWidget(objectName = 'eventDList')

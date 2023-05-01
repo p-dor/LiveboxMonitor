@@ -9,7 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmTools
 from src.LmIcons import LmIcon
-from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel, MonitorTab,
+from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 						  LiveboxCnxDialog, LiveboxSigninDialog)
 from src.LmSession import LmSession
 from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab,
@@ -19,12 +19,20 @@ from src.LmLanguages import GetMainLabel as lx
 from __init__ import __version__
 
 
-
 # ################################ VARS & DEFS ################################
 
 # Static Config
 NO_THREAD = False 	# Use only to speed up testing while developping
-
+TAB_ORDER = [
+	LmDeviceListTab.TAB_NAME,
+	LmInfoTab.TAB_NAME,
+	LmGraphTab.TAB_NAME,
+	LmDeviceInfoTab.TAB_NAME,
+	LmEventsTab.TAB_NAME,
+	LmDhcpTab.TAB_NAME,
+	LmPhoneTab.TAB_NAME,
+	LmActionsTab.TAB_NAME
+]
 
 
 # ################################ APPLICATION ################################
@@ -84,16 +92,28 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 		# Tab Widgets
 		self._tabWidget = QtWidgets.QTabWidget(self, objectName = 'tabWidget')
-		# self._tabWidget.setMovable(True)	###TODO### EXPERIMENTAL - DISTURB THE FEATURES TO SWITCH TAB + dynamics on repeaters
+		self._tabWidget.setMovable(True)
 		self._tabWidget.currentChanged.connect(self.tabChangedEvent)
-		self.createDeviceListTab()
-		self.createLiveboxInfoTab()
-		self.createGraphTab()
-		self.createDeviceInfoTab()
-		self.createEventsTab()
-		self.createDhcpTab()
-		self.createPhoneTab()
-		self.createActionsTab()
+		self._tabWidget.tabBar().tabMoved.connect(self.tabMovedEvent)
+
+		aTabOrder = self.getTabsOrder()
+		for t in aTabOrder:
+			if t == LmDeviceListTab.TAB_NAME:
+				self.createDeviceListTab()
+			elif t == LmInfoTab.TAB_NAME:
+				self.createLiveboxInfoTab()
+			elif t == LmGraphTab.TAB_NAME:
+				self.createGraphTab()
+			elif t == LmDeviceInfoTab.TAB_NAME:
+				self.createDeviceInfoTab()
+			elif t == LmEventsTab.TAB_NAME:
+				self.createEventsTab()
+			elif t == LmDhcpTab.TAB_NAME:
+				self.createDhcpTab()
+			elif t == LmPhoneTab.TAB_NAME:
+				self.createPhoneTab()
+			elif t == LmActionsTab.TAB_NAME:
+				self.createActionsTab()
 
 		self.setCentralWidget(self._tabWidget)
 
@@ -112,54 +132,106 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	### Handle change of tab event
 	def tabChangedEvent(self, iNewTabIndex):
 		if self._appReady:
-			if iNewTabIndex == MonitorTab.DeviceList:
+			aTabName = self._tabWidget.widget(iNewTabIndex).objectName()
+			if aTabName == LmDeviceListTab.TAB_NAME:
 				if not NO_THREAD:
 					self.resumeWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
-			elif iNewTabIndex == MonitorTab.LiveboxInfos:
+			elif aTabName == LmInfoTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.resumeStatsLoop()
 					self.suspendRepeaterStatsLoop()
-			elif iNewTabIndex == MonitorTab.Graph:
+			elif aTabName == LmGraphTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
 				self.graphTabClick()
-			elif iNewTabIndex == MonitorTab.DeviceInfos:
+			elif aTabName == LmDeviceInfoTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
-			elif iNewTabIndex == MonitorTab.DeviceEvents:
+			elif aTabName == LmEventsTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
-			elif iNewTabIndex == MonitorTab.Dhcp:
+			elif aTabName == LmDhcpTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
 				self.dhcpTabClick()
-			elif iNewTabIndex == MonitorTab.Phone:
+			elif aTabName == LmPhoneTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
 				self.phoneTabClick()
-			elif iNewTabIndex == MonitorTab.Actions:
+			elif aTabName == LmActionsTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
-			elif iNewTabIndex >= MonitorTab.Repeaters:
+			elif aTabName == LmRepeaterTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
 					self.suspendStatsLoop()
 					self.resumeRepeaterStatsLoop()
+
+
+	### Handle move of tab event
+	def tabMovedEvent(self, iFromIndex, iToIndex):
+		self.saveTabsOrder()
+
+
+	### Get tabs order
+	def getTabsOrder(self):
+		# If nothing in config return the standard order
+		if LmConf.Tabs is None:
+			return TAB_ORDER
+		else:
+			# Rebuild the list by checking in case it would be corrupted / incomplete
+			o = []
+			for t in LmConf.Tabs:
+				if t in TAB_ORDER:
+					o.append(t)
+			for t in TAB_ORDER:
+				if t not in LmConf.Tabs:
+					o.append(t)
+			return o
+
+
+	### Save tabs order in configuration
+	def saveTabsOrder(self):
+		LmConf.Tabs = []	# Reset
+		n = self._tabWidget.count()
+		i = 0
+		while i < n:
+			aTab = self._tabWidget.widget(i)
+			aKey = aTab.property('Key')
+			if aKey is not None:
+				LmConf.Tabs.append(aTab.objectName() + '_' + aKey)
+			else:
+				LmConf.Tabs.append(aTab.objectName())
+			i += 1
+		LmConf.save()
+
+
+	### Get tab index from name & key, key can be None, returns -1 of not found
+	def getTabIndex(self, iName, iKey):
+		n = self._tabWidget.count()
+		i = 0
+		while i < n:
+			aTab = self._tabWidget.widget(i)
+			aKey = aTab.property('Key')
+			if (iName == aTab.objectName()) and (iKey == aTab.property('Key')):
+				return i
+			i += 1
+		return -1
 
 
 	### Window close event
@@ -297,42 +369,42 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Switch to device list tab
 	def switchToDeviceListTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.DeviceList)
+		self._tabWidget.setCurrentWidget(self._deviceListTab)
 
 
 	### Switch to Livebox infos tab
 	def switchToLiveboxInfosTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.LiveboxInfos)
+		self._tabWidget.setCurrentWidget(self._liveboxInfoTab)
 
 
 	### Switch to graph tab
 	def switchToGraphTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.Graph)
+		self._tabWidget.setCurrentWidget(self._graphTab)
 
 
 	### Switch to device infos tab
 	def switchToDeviceInfosTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.DeviceInfos)
+		self._tabWidget.setCurrentWidget(self._deviceInfoTab)
 
 
 	### Switch to device events tab
 	def switchToDeviceEventsTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.DeviceEvents)
+		self._tabWidget.setCurrentWidget(self._eventsTab)
 
 
 	### Switch to DHCP tab
 	def switchToDhcpTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.Dhcp)
+		self._tabWidget.setCurrentWidget(self._dhcpTab)
 
 
 	### Switch to phone tab
 	def switchToPhoneTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.Phone)
+		self._tabWidget.setCurrentWidget(self._phoneTab)
 
 
 	### Switch to actions tab
 	def switchToActionsTab(self):
-		self._tabWidget.setCurrentIndex(MonitorTab.Actions)
+		self._tabWidget.setCurrentWidget(self._actionsTab)
 
 
 # ############# Fatal error handler #############
@@ -366,8 +438,11 @@ if __name__ == '__main__':
 			# Apply decoupled saved preferences
 			LmConf.applySavedPrefs()
 
-			# Assign Python locale to selected preference
-			locale.setlocale(locale.LC_ALL, LmConf.Language.lower() + '_' + LmConf.Language.upper())
+			# Assign Python locale to selected preference (useful e.g. for pyqtgraph time axis localization)
+			try:
+				locale.setlocale(locale.LC_ALL, (LmConf.Language.lower() + '_' + LmConf.Language.upper(), 'UTF-8'))
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
 
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()

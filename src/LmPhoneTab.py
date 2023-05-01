@@ -14,6 +14,9 @@ from src.LmLanguages import GetPhoneLabel as lx, GetPhoneContactDialogLabel as l
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'phoneTab'
+
 # List columns
 class CallCol(IntEnum):
 	Key = 0
@@ -63,7 +66,7 @@ class LmPhone:
 
 	### Create phone tab
 	def createPhoneTab(self):
-		self._phoneTab = QtWidgets.QWidget(objectName = 'phoneTab')
+		self._phoneTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Call list
 		self._callList = QtWidgets.QTableWidget(objectName = 'callList')

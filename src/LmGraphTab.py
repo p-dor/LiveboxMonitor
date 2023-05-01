@@ -15,6 +15,9 @@ from src.LmLanguages import (GetGraphLabel as lx,
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'graphTab'
+
 # Config default
 DCFG_WINDOW = 24	# 1 day
 DCFG_BACKGROUND_COLOR = '#000000' 		# (0, 0, 0)
@@ -51,7 +54,7 @@ class LmGraph:
 
 	### Create Graph tab
 	def createGraphTab(self):
-		self._graphTab = QtWidgets.QWidget(objectName = 'graphTab')
+		self._graphTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Graph list box
 		aGraphListLayout = QtWidgets.QVBoxLayout()
@@ -160,6 +163,11 @@ class LmGraph:
 		self._upGraph.setLabel('bottom', lx('Time'), **aStyles)
 		aUpAxis = pg.DateAxisItem()
 		self._upGraph.setAxisItems({'bottom':aUpAxis})
+
+		# To inhibit useless "skipping QEventPoint" logs on MacOS when moving the mouse on graphs
+		# -> https://stackoverflow.com/questions/75746637/how-to-suppress-qt-pointer-dispatch-warning
+		self._downGraph.viewport().setAttribute(QtCore.Qt.WidgetAttribute.WA_AcceptTouchEvents, False)
+		self._upGraph.viewport().setAttribute(QtCore.Qt.WidgetAttribute.WA_AcceptTouchEvents, False)
 
 		aGraphBox.addWidget(self._downGraph)
 		aGraphBox.addWidget(self._upGraph)

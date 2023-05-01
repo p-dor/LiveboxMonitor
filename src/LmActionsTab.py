@@ -18,6 +18,9 @@ from __init__ import __url__, __copyright__
 
 # ################################ VARS & DEFS ################################
 
+# Tab name
+TAB_NAME = 'actionTab'
+
 # Static Config
 BUTTON_WIDTH = 150
 
@@ -53,7 +56,7 @@ class LmActions:
 
 	### Create actions tab
 	def createActionsTab(self):
-		self._actionsTab = QtWidgets.QWidget(objectName = 'actionTab')
+		self._actionsTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Wifi buttons group
 		aWifiButtons = QtWidgets.QVBoxLayout()
