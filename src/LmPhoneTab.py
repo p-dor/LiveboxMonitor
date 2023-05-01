@@ -243,9 +243,9 @@ class LmPhone:
 	### Click on phone tab
 	def phoneTabClick(self):
 		if not self._phoneDataLoaded:
+			self._phoneDataLoaded = True	# Must be first to avoid reentrency during tab drag&drop
 			self.loadContactList()	# Load it first for dynamic contact matching in call list
 			self.loadCallList()
-			self._phoneDataLoaded = True
 
 
 	### Click on call list refresh button

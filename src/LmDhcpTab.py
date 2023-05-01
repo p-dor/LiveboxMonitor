@@ -164,9 +164,9 @@ class LmDhcp:
 	### Click on DHCP tab
 	def dhcpTabClick(self):
 		if not self._dhcpDataLoaded:
-			self.loadDhcpInfo()		# Load first as home/guest server, start & mask must be known before DHCP bindings
+			self._dhcpDataLoaded = True		# Must be first to avoid reentrency during tab drag&drop
+			self.loadDhcpInfo()			# Load first as home/guest server, start & mask must be known before DHCP bindings
 			self.loadDhcpBindings()
-			self._dhcpDataLoaded = True
 
 
 	### Click on refresh DHCP binding button

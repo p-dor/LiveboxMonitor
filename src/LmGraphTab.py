@@ -204,6 +204,21 @@ class LmGraph:
 	### Click on graph tab
 	def graphTabClick(self):
 		if not self._graphDataLoaded:
+			self._graphDataLoaded = True	# Must be first to avoid reentrency during tab drag&drop
+
+			self.startTask(lx('Loading configuration...'))
+			self.loadStatParams()
+			self.loadHomeLanInterfaces()
+			self.loadHomeLanDevices()
+			self.loadGraphConfig()
+			self.endTask()
+
+			self.startTask(lx('Plotting graphes...'))
+			self.plotGraph()
+			self.endTask()
+
+
+	def graphTabInitTask(self):
 			self.startTask(lx('Loading configuration...'))
 			self.loadStatParams()
 			self.loadHomeLanInterfaces()
