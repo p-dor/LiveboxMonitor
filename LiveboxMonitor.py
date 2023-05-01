@@ -14,7 +14,7 @@ from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 from src.LmSession import LmSession
 from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab,
 				 LmEventsTab, LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from src.LmLanguages import GetMainLabel as lx
+from src.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
 
 from __init__ import __version__
 
@@ -353,6 +353,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
 		else:
 			self._statusBar.showMessage(iTask)
+			QtCore.QCoreApplication.sendPostedEvents()
 			QtCore.QCoreApplication.processEvents()
 		LmTools.MouseCursor_Busy()
 
@@ -440,7 +441,7 @@ if __name__ == '__main__':
 
 			# Assign Python locale to selected preference (useful e.g. for pyqtgraph time axis localization)
 			try:
-				locale.setlocale(locale.LC_ALL, (LmConf.Language.lower() + '_' + LmConf.Language.upper(), 'UTF-8'))
+				locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 
