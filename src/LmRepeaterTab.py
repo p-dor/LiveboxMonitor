@@ -242,7 +242,6 @@ class LmRepeater:
 
 		LmConfig.SetToolTips(iRepeater._tab, 'repeater')
 		self._tabWidget.insertTab(iRepeater.tabIndexFromConfig(), iRepeater._tab, iRepeater._name)
-#		self._tabWidget.addTab(iRepeater._tab, iRepeater._name)
 		iRepeater.setTabIcon()
 
 
