@@ -599,7 +599,7 @@ class LmGraph:
 			iObject['UpLine'].setData(ut, u)
 
 
-	### Load the current valid devices
+	### Load the current valid interfaces
 	def loadHomeLanInterfaces(self):
 		try:
 			aReply = self._session.request('HomeLan.Interface:get')
