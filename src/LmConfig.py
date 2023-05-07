@@ -909,11 +909,12 @@ class LmConf:
 				aIconPixMap = QtGui.QPixmap()
 
 				try:
-					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'])
+					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'],
+											 timeout = 5, verify = LmConf.LiveboxURL.startswith('http://'))
 					if not aIconPixMap.loadFromData(aIconData.content):
 						LmTools.Error('Cannot load device icon ' + iDevice['Icon'] + '.')
-				except:
-					LmTools.Error('Cannot request device icon ' + iDevice['Icon'] + '.')
+				except BaseException as e:
+					LmTools.Error('Error: {}. Cannot request device icon ' + iDevice['Icon'] + '.'.format(e))
 
 				iDevice['PixMap'] = aIconPixMap
 
