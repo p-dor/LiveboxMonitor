@@ -3,6 +3,7 @@
 L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox et détecter rapidement les intrusions,
 - Obtenir des statistiques détaillées de trafic, par appareil, global,
+- Visualiser graphiquement les statistiques de trafic sur plusieurs jours, par appareil ou par interface,
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
 - Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
@@ -66,8 +67,10 @@ Les points importants à comprendre avant de commencer :
 - La connexion s'établit avec exactement les mêmes informations que pour accéder à l'interface Web de configuration de la Livebox. Pour l'URL il faut essayer http://livebox.home/, http://livebox/ ou http://192.168.1.1/. Pour l'utilisateur il faut laisser à la valeur par défaut `admin`. Et pour le mot de passe c'est soit ce que vous avez indiqué vous-même soit le mot de passe d'origine. Plus d'informations [ici pour la Livebox 5](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-5-acceder-a-l-interface-de-configuration_292471-827404), ou [ici pour la Livebox 6](https://assistance.orange.fr/livebox-modem/toutes-les-livebox-et-modems/installer-et-utiliser/piloter-et-parametrer-votre-materiel/l-interface-de-configuration/livebox-6-acceder-a-l-interface-de-configuration_363963-897414).
 - Il est normal que lors du premier lancement de l'application tous les appareils soient marqués comme inconnus (**INCONNU** en rouge). En effet un des buts de ce programme est d'identifier rapidement des appareils inconnus connectés sur le réseau grâce à une base de noms locale (le fichier `MacAddrTable.txt`). Il faut donc commencer par nommer chaque appareil que vous jugez légitime grâce au bouton `Assigner Nom...` de l'onglet `Infos Appareil`. Cette base locale constituera la référence de confiance de tous les appareils légitimes sur votre réseau. Le bouton `Assigner Nom...` vous permettra aussi de facilement assigner le même nom que celui qui a été donné à la Livebox.
 - Il est normal que les statistiques réseau apparaissent et disparaissent. En effet le programme rafraîchit ces statistiques toutes les 3 secondes par défaut (ou toutes les 30 secondes dans certains cas), et si d'un rafraîchissement à l'autre il n'y a pas eu de transfert la case devient vide. Ce choix a été fait pour permettre de mieux visualiser les cases non-vides, là où il se passe quelque chose.
+- Tous les onglets peuvent être déplacés à la souris pour être mis dans l'ordre qui vous convient. Cet ordre sera restauré au prochain lancement du programme.
 - Toutes les colonnes dans le programme sont redimensionnables à la souris sauf certaines qui s'élargissent dynamiquement en fonction de la taille de la fenêtre. Donc, en fonction de la situation, vous pouvez soit redimensionner la colonne soit la fenêtre avec la souris pour ajuster la largeur d'une colonne.
 - On peut copier la valeur de n'importe quelle cellule de liste dans le presse-papiers. Pour cela il suffit de cliquer sur la cellule et de taper Ctrl-C.
+- Le programme dispose d'une barre de statut en bas de la fen6etre. Elle affiche sur la gauche des tâches en cours et sur la droite le nom du profil en cours (voir la section **Profils** ci-dessous). Un clic sur le nom de profil affichera la fenêtre pour en changer.
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
 
@@ -192,6 +195,33 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 - **`Infos IPTV`** : affiche les informations générales relatives aux services de télévision.
 - **`Infos USB`** : affiche les informations concernant le ou les ports USBs. Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox, ses informations sont affichées.
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
+
+
+## Graphe - Courbes graphiques de trafic par interface et par appareil
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph.png)
+
+Affiche les graphiques des données reçues et transmises pour chaque interface / appareil sélectionné à partir de données stockées par la Livebox elle-même. Les volumes sont en méga-octets entre deux échantillons, en principe toutes les 30 secondes (l'échantillonnage et sa fréquence sont contrôlés par la Livebox). Les graphes se mettent à jour automatiquement à la réception de nouveaux échantillons sous forme d'événements.  
+Il est possible de naviguer et de zoomer dans les graphiques à la souris, puis de revenir à la vue normale en cliquant dans le coin en bas à gauche. Un clic droit sur un graphe permet d'accéder à d'autres fonctionnalités telles que l'exportation en différents formats. Toute la documentation est accessible [ici](https://pyqtgraph.readthedocs.io/en/latest/user_guide/index.html).
+
+### Sélection des interfaces et des appareils
+Il faut commencer par sélectionner les interfaces et/ou les appareils dont on veut obtenir les graphiques, pour cela deux boutons sont disponibles :
+- **`Ajouter...`** : affiche un dialogue permettant de sélectionner une interface ou un appareil.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph_Add.png)
+
+    Commencer par sélectionner le type, interface ou appareil. Puis l'interface ou l'appareil en question, ainsi que la couleur à utiliser sur le graphique pour cet objet. La sélection n'affiche que des objets pour lesquels des mesures sont potentiellement disponibles. Pour les appareils les noms locaux sont utilisés, et par défaut l'adresse physique (MAC). Le dialogue affiche en informations complémentaires l'identifiant interne à la Livebox de l'objet sélectionné, le nombre d'échantillons stockés dans la Livebox pour cet objet (le nombre maximum est fixé à 8680 par la Livebox) et une estimation de la fenêtre de temps correspondante. Cependant cette fenêtre de temps peut être erronée, car si l'interface ou l'appareil sont déconnectés pendant une période de temps aucun échantillon n'est émis durant cette période. Ce qui veut dire que la période de temps totale entre le plus ancien échantillon et le plus récent peut être bien plus longue que cette estimation.
+- **`Supprimer`** : permet de supprimer l'interface ou l'appareil sélectionné.
+
+### Options des graphiques
+Des options sont disponibles pour paramétrer les graphiques :
+- **`Fenêtre`** : fenêtre de temps en heure de l'affichage des graphiques, à partir du présent. Une valeur à 0 affichera l'ensemble des statistiques disponibles dans la Livebox pour les objets sélectionnés.
+- **`Couleur de fond`** : couleur de fond à utiliser pour les graphiques de réception et d'émission. Un clic droit supprime toute couleur, la couleur par défaut sera donc utilisée.
+
+### Génération des graphiques
+Le bouton **`Appliquer`** permet de charger toutes les informations relatives aux interfaces et appareils sélectionnés, de dessiner les graphiques correspondants en tenant compte des options ci-dessus, et de sauvegarder la configuration. Celle-ci sera automatiquement rechargée au prochain lancement du programme.  
+
+Le bouton **`Export...`** permet d'exporter au format CSV (avec la virgule comme séparateur) les dernières données chargées par le bouton `Appliquer` ainsi que celles reçues entre temps via des événements.
 
 
 ## Infos Appareil - Informations détaillées pour chaque appareil connu
