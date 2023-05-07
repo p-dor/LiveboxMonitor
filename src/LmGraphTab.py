@@ -98,7 +98,7 @@ class LmGraph:
 		# Interface / device graph list button bar
 		aGraphListButtonBox = QtWidgets.QHBoxLayout()
 		aGraphListButtonBox.setSpacing(5)
-		aAddGraphButton = QtWidgets.QPushButton(lx('Add'), objectName = 'addGraph')
+		aAddGraphButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addGraph')
 		aAddGraphButton.clicked.connect(self.addGraphButtonClick)
 		aGraphListButtonBox.addWidget(aAddGraphButton)
 		aDelGraphButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'delGraph')

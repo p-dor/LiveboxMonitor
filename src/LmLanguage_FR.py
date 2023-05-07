@@ -234,7 +234,7 @@ LABELS = {
 		'Interfaces and devices to display': 'Interfaces et appareils à afficher',
 		'Name': 'Nom',
 		'Color': 'Couleur',
-		'Add': 'Ajouter',
+		'Add...': 'Ajouter...',
 		'Delete': 'Supprimer',
 		'Window:': 'Fenêtre :',
 		'hours (0 = max)': 'heures (0 = max)',

@@ -272,7 +272,7 @@ LABELS = {
 		'Type': '',
 		'ID': '',
 		'Color': '',
-		'Add': '',
+		'Add...': '',
 		'Delete': '',
 		'Window:': '',
 		'hours (0 = max)': '',
