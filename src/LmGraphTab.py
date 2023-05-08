@@ -463,7 +463,9 @@ class LmGraph:
 	def plotGraph(self):
 		# Apply current setup
 		self._downGraph.setBackground(self._graphBackColor)
+		self._downGraph.showGrid(x = True, y = True, alpha = 0.4)
 		self._upGraph.setBackground(self._graphBackColor)
+		self._upGraph.showGrid(x = True, y = True, alpha = 0.4)
 
 		# Reset
 		self._graphData = []
