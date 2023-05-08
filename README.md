@@ -70,7 +70,7 @@ Les points importants à comprendre avant de commencer :
 - Tous les onglets peuvent être déplacés à la souris pour être mis dans l'ordre qui vous convient. Cet ordre sera restauré au prochain lancement du programme.
 - Toutes les colonnes dans le programme sont redimensionnables à la souris sauf certaines qui s'élargissent dynamiquement en fonction de la taille de la fenêtre. Donc, en fonction de la situation, vous pouvez soit redimensionner la colonne soit la fenêtre avec la souris pour ajuster la largeur d'une colonne.
 - On peut copier la valeur de n'importe quelle cellule de liste dans le presse-papiers. Pour cela il suffit de cliquer sur la cellule et de taper Ctrl-C.
-- Le programme dispose d'une barre de statut en bas de la fen6etre. Elle affiche sur la gauche des tâches en cours et sur la droite le nom du profil en cours (voir la section **Profils** ci-dessous). Un clic sur le nom de profil affichera la fenêtre pour en changer.
+- Le programme dispose d'une barre de statut en bas de la fenêtre. Elle affiche sur la gauche des tâches en cours et sur la droite le nom du profil en cours (voir la section **Profils** ci-dessous). Un clic sur le nom de profil affichera la fenêtre pour en changer.
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
 
@@ -197,7 +197,7 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
 
 
-## Graphe - Courbes graphiques de trafic par interface et par appareil
+## Graphe - Courbes de trafic par interface et par appareil
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph.png)
 
