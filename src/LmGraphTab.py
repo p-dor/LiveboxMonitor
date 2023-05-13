@@ -340,7 +340,7 @@ class LmGraph:
 		n =  min(len(dt), len(ut))
 		i = 0
 		while i < n:
-			aExportFile.write('{}, {}, {}, {}\n'.format(str(dt[i]),
+			aExportFile.write('{}; {}; {}; {}\n'.format(str(dt[i]),
 														str(int(d[i] * UNIT_DIVIDER)),
 														str(ut[i]),
 														str(int(u[i] * UNIT_DIVIDER))))
