@@ -18,7 +18,7 @@ from src.LmLanguages import (GetDhcpLabel as lx,
 # ################################ VARS & DEFS ################################
 
 # Tab name
-TAB_NAME = 'dhcpDList'
+TAB_NAME = 'dhcpTab'
 
 # List columns
 class DhcpCol(IntEnum):

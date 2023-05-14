@@ -17,7 +17,7 @@ from src.LmLanguages import GetEventsLabel as lx
 # ################################ VARS & DEFS ################################
 
 # Tab name
-TAB_NAME = 'eventDList'
+TAB_NAME = 'eventsTab'
 
 # Static Config
 MAX_EVENT_BUFFER_PER_DEVICE = 100
