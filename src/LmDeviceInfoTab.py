@@ -439,7 +439,7 @@ class LmDeviceInfo:
 		aManufacturer = ''
 		if (len(LmConf.MacAddrApiKey)) and (len(aMacAddr)):
 			try:
-				aData = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, aMacAddr))
+				aData = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, aMacAddr), timeout = 2)
 				aData = json.loads(aData.content)
 				aCompDetails = aData.get('vendorDetails')
 				if aCompDetails is not None:
