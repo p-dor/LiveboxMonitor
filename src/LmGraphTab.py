@@ -218,20 +218,6 @@ class LmGraph:
 			self.endTask()
 
 
-	def graphTabInitTask(self):
-			self.startTask(lx('Loading configuration...'))
-			self.loadStatParams()
-			self.loadHomeLanInterfaces()
-			self.loadHomeLanDevices()
-			self.loadGraphConfig()
-			self.endTask()
-
-			self.startTask(lx('Plotting graphes...'))
-			self.plotGraph()
-			self._graphDataLoaded = True
-			self.endTask()
-
-
 	### Click on add graph button
 	def addGraphButtonClick(self):
 		aAddGraphDialog = AddGraphDialog(self)
@@ -599,6 +585,17 @@ class LmGraph:
 
 			# Update graph
 			iObject['UpLine'].setData(ut, u)
+
+
+	### Update graph list with new device name
+	def graphUpdateDeviceName(self, iDeviceKey):
+		i = self.findGraphObjectLine(TYPE_DEVICE, iDeviceKey)
+		if i > -1:
+			try:
+				aName = LmConf.MacAddrTable[iDeviceKey]
+			except:
+				aName = iDeviceKey
+			self._graphList.setItem(i, GraphCol.Name, QtWidgets.QTableWidgetItem(aName))
 
 
 	### Load the current valid interfaces

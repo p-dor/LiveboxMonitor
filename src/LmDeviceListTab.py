@@ -473,6 +473,7 @@ class LmDeviceList:
 		if aLine >= 0:
 			self.formatNameWidget(self._dhcpDList, aLine, iDeviceKey, DhcpCol.Name)
 
+		self.graphUpdateDeviceName(iDeviceKey)
 		self.repeaterUpdateDeviceName(iDeviceKey)
 
 
