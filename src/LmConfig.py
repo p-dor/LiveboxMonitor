@@ -6,6 +6,7 @@ import platform
 import requests
 import json
 import base64
+import webbrowser
 
 from enum import IntEnum
 
@@ -18,9 +19,10 @@ from src import LmLanguages
 from src.LmLanguages import (GetConfigPrefsDialogLabel as lx,
 							 GetConfigCnxDialogLabel as lcx,
 							 GetConfigSigninDialogLabel as lsx,
-							 GetSelectProfileDialogLabel as lpx)
+							 GetSelectProfileDialogLabel as lpx,
+							 GetReleaseWarningDialogLabel as lrx)
 
-from __init__ import __build__
+from __init__ import __url__, __version__, __build__
 
 
 # ################################ VARS & DEFS ################################
@@ -46,11 +48,14 @@ DCFG_LIST_LINE_FONT_SIZE = 0
 DCFG_REALTIME_WIFI_STATS = False
 DCFG_NATIVE_UI_STYLE = False
 DCFG_LOG_LEVEL = 0
+DCFG_NO_RELEASE_WARNING = 0
 DCFG_REPEATERS = None
 DCFG_GRAPH = None
 DCFG_TABS = None
 
 # Static config
+GIT_REPO = 'p-dor/LiveboxMonitor'
+GITRELEASE_URL = 'https://api.github.com/repos/{}/releases/latest'
 ICON_URL = 'assets/common/images/app_conf/'
 SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 
@@ -399,6 +404,40 @@ def SetLiveboxModel(iModel):
 		INTF_NAME_MAP = INTF_NAME_MAP_LB4
 
 
+# Check if latest release
+def ReleaseCheck():
+	# Call GitHub API to fetch latest release infos
+	try:
+		d = requests.get(GITRELEASE_URL.format(GIT_REPO), timeout = 1)
+		d = json.loads(d.content)
+		v = d['tag_name']
+	except BaseException as e:
+		LmTools.Error('Cannot get latest release infos. Error: {}'.format(e))
+		return
+
+	# Convert version string into hex int aligned with __build__ representation
+	s = v.split('.')
+	l = len(s)
+	aMajor = s[0]
+	if l >= 2:
+	    aMinor = s[1]
+	else:
+	    aMinor = '00'         
+	if l >= 3:
+	    aPatch = s[2]
+	else:
+	    aPatch = '00'         
+	r = int(aMajor.zfill(2) + aMinor.zfill(2) + aPatch.zfill(2), 16)
+
+	# Warn if this release is not the latest
+	if (r > __build__) and (LmConf.NoReleaseWarning != r):
+		aReleaseWarningDialog = ReleaseWarningDialog(v)
+		if aReleaseWarningDialog.exec():
+			return
+		# User decided to not be warned again, remember in config
+		LmConf.NoReleaseWarning = r
+		LmConf.save()
+
 
 # ################################ Config Class ################################
 
@@ -425,6 +464,7 @@ class LmConf:
 	RealtimeWifiStats_save = RealtimeWifiStats	# Need to decouple saving as master value must not be changed live
 	NativeUIStyle = DCFG_NATIVE_UI_STYLE
 	LogLevel = DCFG_LOG_LEVEL
+	NoReleaseWarning = DCFG_NO_RELEASE_WARNING
 	Repeaters = DCFG_REPEATERS
 	Graph = DCFG_GRAPH
 	Tabs = DCFG_TABS
@@ -520,6 +560,9 @@ class LmConf:
 				elif LmConf.LogLevel > 2:
 					LmConf.LogLevel = 2
 				LmTools.SetVerbosity(LmConf.LogLevel)
+			p = aConfig.get('No Release Warning')
+			if p is not None:
+				LmConf.NoReleaseWarning = int(p)
 			p = aConfig.get('Repeaters')
 			if p is not None:
 				LmConf.Repeaters = p
@@ -756,6 +799,7 @@ class LmConf:
 				aConfig['Realtime Wifi Stats'] = LmConf.RealtimeWifiStats_save
 				aConfig['Native UI Style'] = LmConf.NativeUIStyle
 				aConfig['Log Level'] = LmConf.LogLevel
+				aConfig['No Release Warning'] = LmConf.NoReleaseWarning
 				aConfig['Repeaters'] = LmConf.Repeaters
 				aConfig['Graph'] = LmConf.Graph
 				aConfig['Tabs'] = LmConf.Tabs
@@ -932,7 +976,7 @@ class LmConf:
 
 
 
-# ############# Livebox connection dialog #############
+# ################################ Livebox connection dialog ################################
 class LiveboxCnxDialog(QtWidgets.QDialog):
 	def __init__(self, iURL, iParent = None):
 		super(LiveboxCnxDialog, self).__init__(iParent)
@@ -999,7 +1043,7 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 
 
 
-# ############# Livebox signin dialog #############
+# ################################ Livebox signin dialog ################################
 class LiveboxSigninDialog(QtWidgets.QDialog):
 	def __init__(self, iUser, iPassword, iParent = None):
 		super(LiveboxSigninDialog, self).__init__(iParent)
@@ -1065,7 +1109,7 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 
 
 
-# ############# Profile selection dialog #############
+# ################################ Profile selection dialog ################################
 class SelectProfileDialog(QtWidgets.QDialog):
 	def __init__(self, iMatchingProfiles, iParent = None):
 		super(SelectProfileDialog, self).__init__(iParent)
@@ -1540,3 +1584,52 @@ class PrefsDialog(QtWidgets.QDialog):
 		if self.saveProfile():
 			self.savePrefs()
 			self.accept()
+
+
+
+# ################################ New release warning dialog ################################
+class ReleaseWarningDialog(QtWidgets.QDialog):
+	def __init__(self, iNewRelease, iParent = None):
+		super(ReleaseWarningDialog, self).__init__(iParent)
+		self.resize(450, 150)
+
+		aWarnBox = QtWidgets.QVBoxLayout()
+		aWarnBox.setSpacing(4)
+		aNewReleaseLabel = QtWidgets.QLabel(lrx('New release {0} has been published.').format(iNewRelease), objectName = 'nreal')
+		aNewReleaseLabel.setFont(LmTools.BOLD_FONT)
+		aWarnBox.addWidget(aNewReleaseLabel)
+		aCurrReleaseLabel = QtWidgets.QLabel(lrx('You are using release {0}.').format(__version__), objectName = 'creal')
+		aWarnBox.addWidget(aCurrReleaseLabel)
+		aDownloadURL = QtWidgets.QLabel(__url__, objectName = 'downloadURL')
+		aDownloadURL.setStyleSheet('QLabel { color : blue }')
+		aDownloadURL.mousePressEvent = self.downloadUrlClick
+		aWarnBox.addWidget(aDownloadURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aOkButton = QtWidgets.QPushButton(lrx('OK'), objectName = 'ok')
+		aOkButton.clicked.connect(self.accept)
+		aOkButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton(lrx('Don\'t warn me again'), objectName = 'nowarning')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(15)
+		aVBox.addLayout(aWarnBox, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		SetToolTips(self, 'rwarn')
+
+		self.setWindowTitle(lrx('You are not using the latest release'))
+
+		self.setModal(True)
+		self.show()
+
+
+	### Project's URL web button
+	def downloadUrlClick(self, iEvent):
+		webbrowser.open_new_tab(__url__)
+

@@ -95,7 +95,8 @@ TOOLTIPS = {
 	},
 
 	# Config - Select profile
-	'sprofile': {}
-}
+	'sprofile': {},
 
-  
+	# Config - Release warning
+	'rwarn': {}
+}

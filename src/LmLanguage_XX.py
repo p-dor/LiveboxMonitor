@@ -725,7 +725,16 @@ LABELS = {
 		'Warning: another Livebox is associated to this profile.': '',
 		'Create Profile': '',
 		'Profile name:': ''
-	}
+	},
+
+	# Config - Release warning
+	'rwarn': {
+		'New release {0} has been published.': '',
+		'You are using release {0}.': '',
+		'OK': '',
+		'Don\'t warn me again': '',
+		'You are not using the latest release': ''
+	},
 
 	# Tools
 	'tools': {
@@ -1122,5 +1131,14 @@ TOOLTIPS = {
 		'createProfile': '',
 		'ok': '',
 		'cancel': ''
+	},
+
+	# Config - Release warning
+	'rwarn': {
+		'nreal': '',
+		'creal': '',
+		'downloadURL': '',
+		'ok': '',
+		'nowarning': ''
 	}
 }

@@ -120,6 +120,7 @@ def GetConfigPrefsDialogLabel(iString): return GetLabel('prefs', iString)
 def GetConfigCnxDialogLabel(iString): return GetLabel('cnx', iString)
 def GetConfigSigninDialogLabel(iString): return GetLabel('signin', iString)
 def GetSelectProfileDialogLabel(iString): return GetLabel('sprofile', iString)
+def GetReleaseWarningDialogLabel(iString): return GetLabel('rwarn', iString)
 
 # Tools
 def GetToolsLabel(iString): return GetLabel('tools', iString)

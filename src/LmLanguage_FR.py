@@ -638,6 +638,14 @@ LABELS = {
 		'Profile name:': 'Nom du profil :'
 	},
 
+	# Config - Release warning
+	'rwarn': {
+		'New release {0} has been published.': 'Une nouvelle version {0} a été publiée.',
+		'You are using release {0}.': 'Vous utilisez la version {0}.',
+		'Don\'t warn me again': 'Ne plus m\'avertir',
+		'You are not using the latest release': 'Vous n\'utilisez pas la dernière version'
+	},
+
 	# Tools
 	'tools': {
 		'Error': 'Erreur',
@@ -1117,5 +1125,12 @@ TOOLTIPS = {
 					   'Si l\'adresse physique est différente de celle associée au profil sélectionné l\'ancienne adresse\n'
 					   'sera remplacée par la nouvelle.',
 		'createProfile': 'Permet de créer un nouveau profil et de l\'utiliser directement.'
+	},
+
+	# Config - Release warning
+	'rwarn': {
+		'downloadURL': 'Cliquez ici pour ouvrir la page web de l\'application sur votre navigateur.\n'
+					   'Vous pourrez y télécharger la nouvelle version.',
+		'nowarning': 'Cliquez ici pour ne plus être averti concernant cette version.'
 	}
 }

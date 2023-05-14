@@ -10,7 +10,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from src import LmTools
 from src.LmIcons import LmIcon
 from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
-						  LiveboxCnxDialog, LiveboxSigninDialog)
+						  ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
 from src.LmSession import LmSession
 from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab,
 				 LmEventsTab, LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
@@ -433,6 +433,7 @@ if __name__ == '__main__':
 	sys.excepthook = exceptHook
 	if LmConf.load():
 		LmIcon.load()
+		ReleaseCheck()
 		while True:
 			SetApplicationStyle()
 
