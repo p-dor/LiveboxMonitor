@@ -584,48 +584,54 @@ class LmDeviceList:
 		for d in iNode:
 			aTags = d.get('Tags', '').split()
 
+			# Init
+			aDeviceKey = iDeviceKey
+			aDeviceName = iDeviceName
+			aInterfaceKey = iInterfaceKey
+			aInterfaceName = iInterfaceName
+
 			# Handle interface end points
 			if 'interface' in aTags:
-				iInterfaceKey = d.get('Key', '')
+				aInterfaceKey = d.get('Key', '')
 				aInterfaceType = d.get('InterfaceType', '')
 				if aInterfaceType == 'Ethernet':
 					aInterfaceType = 'eth'
-					iInterfaceName = d.get('NetDevName', '')
-					if len(iInterfaceName) == 0:
-						iInterfaceName = d.get('Name', '')
+					aInterfaceName = d.get('NetDevName', '')
+					if len(aInterfaceName) == 0:
+						aInterfaceName = d.get('Name', '')
 					if iDeviceName == 'Livebox':
 						aNameMap = LmConfig.INTF_NAME_MAP['Livebox']
 					else:
 						aNameMap = LmConfig.INTF_NAME_MAP['Repeater']
-					aMappedName = aNameMap.get(iInterfaceName)
+					aMappedName = aNameMap.get(aInterfaceName)
 					if aMappedName is not None:
-						iInterfaceName = aMappedName
+						aInterfaceName = aMappedName
 				else:
 					aInterfaceType = 'wif'
 					aWifiBand = d.get('OperatingFrequencyBand', '')
 					if len(aWifiBand):
-						iInterfaceName = 'Wifi ' + aWifiBand
+						aInterfaceName = 'Wifi ' + aWifiBand
 					else:
-						iInterfaceName = d.get('Name', '')
+						aInterfaceName = d.get('Name', '')
 				aMapEntry = {}
-				aMapEntry['Key'] = iInterfaceKey
+				aMapEntry['Key'] = aInterfaceKey
 				aMapEntry['Type'] = aInterfaceType
-				aMapEntry['DevKey'] = iDeviceKey
-				aMapEntry['DevName'] = iDeviceName
-				aMapEntry['IntName'] = iInterfaceName
-				aMapEntry['Name'] = iDeviceName + ' ' + iInterfaceName
+				aMapEntry['DevKey'] = aDeviceKey
+				aMapEntry['DevName'] = aDeviceName
+				aMapEntry['IntName'] = aInterfaceName
+				aMapEntry['Name'] = aDeviceName + ' ' + aInterfaceName
 				self._interfaceMap.append(aMapEntry)
 
 			# Handle devices
 			if 'physical' in aTags:
-				iDeviceKey = d.get('Key', '')
-				iDeviceName = d.get('Name', '')
+				aDeviceKey = d.get('Key', '')
+				aDeviceName = d.get('Name', '')
 				aMapEntry = {}
-				aMapEntry['Key'] = iDeviceKey
-				aMapEntry['InterfaceKey'] = iInterfaceKey
+				aMapEntry['Key'] = aDeviceKey
+				aMapEntry['InterfaceKey'] = aInterfaceKey
 				self._deviceMap.append(aMapEntry)
 
-			self.buildLinksMapNode(d.get('Children', []), iDeviceKey, iDeviceName, iInterfaceKey, iInterfaceName)
+			self.buildLinksMapNode(d.get('Children', []), aDeviceKey, aDeviceName, aInterfaceKey, aInterfaceName)
 
 
 	### Find device link name from device key
