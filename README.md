@@ -30,12 +30,12 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 ### Téléchargement
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor_Console.exe)
-- MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor.dmg)
-- MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor_Console.dmg)
-- MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor_Silicon.dmg)
-- MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1/LiveboxMonitor_Silicon_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Console.exe)
+- MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor.dmg)
+- MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Console.dmg)
+- MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon.dmg)
+- MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon_Console.dmg)
 
 
 ### Utilisation directe via les sources
