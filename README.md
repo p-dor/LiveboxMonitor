@@ -37,7 +37,7 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 - MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon.dmg)
 - MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon_Console.dmg)
 
-Nouveautés de la version 1.1.1 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
+Nouveautés de la version 1.1.1 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
 
 
 ### Utilisation directe via les sources
