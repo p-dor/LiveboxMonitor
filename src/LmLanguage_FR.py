@@ -399,6 +399,77 @@ LABELS = {
 		'DHCP Setup': 'Réglages DHCP'
 	},
 
+	# NAT/PAT
+	'natpat': {
+		'Name': 'Nom',
+		'Port Forwarding Rule Description': 'Description Redirection de Port',
+		'Protocols': 'Protocoles',
+		'Internal Port': 'Port Interne',
+		'External Port': 'Port Externe',
+		'Device': 'Appareil',
+		'External IPs': 'IPs Externes',
+		'Refresh': 'Rafraîchir',
+		'Add...': 'Ajouter...',
+		'Edit...': 'Modifier...',
+		'Delete': 'Supprimer',
+		'Delete All...': 'Tout Supprimer...',
+		'Protocol Forwarding Rule Description': 'Description Redirection de Protocole',
+		'Disable': 'Désactiver',
+		'Enable': 'Activer',
+		'Saving rule...': 'Sauvegarde de la règle...',
+		'Deleting rule...': 'Suppression de la règle...',
+		'Deleting rules...': 'Suppression des règles...',
+		'Export File': 'Fichier d\'export',
+		'Port Forwarding Rules': 'Règles de Redirection de Port',
+		'Exporting port forwarding rules...': 'Export des règles de redirection de port...',
+		'Select file to import': 'Sélectionnez le fichier à importer',
+		'Importing port forwarding rules...': 'Import des règles de redirection de port...',
+		'Protocol Forwarding Rules': 'Règles de Redirection de Protocole',
+		'Exporting protocol forwarding rules...': 'Export des règles de redirection de protocole...',
+		'Importing protocol forwarding rules...': 'Import des règles de redirection de protocole...',
+		'Loading port forwarding rules...': 'Chargement des règles de redirection de port...',
+		'All': 'Toutes',
+		'Loading protocol forwarding rules...': 'Chargement des règles de redirection de protocole...'
+	},
+
+	# NAT/PAT - PAT rule dialog
+	'patrule': {
+		'Enabled': 'Active',
+		'Type:': 'Type :',
+		'Name:': 'Nom :',
+		'Description:': 'Description :',
+		'Protocols:': 'Protocoles :',
+		'Internal Port:': 'Port Interne :',
+		'External Port:': 'Port Externe :',
+		'Device:': 'Appareil :',
+		'IP Address:': 'Adresse IP :',
+		'External IPs:': 'IPs Externes :',
+		'Cancel': 'Annuler',
+		'Port Forwarding Rule': 'Règle de Redirection de Port',
+		'-Unknown-': '-Inconnu-'
+	},
+
+	# NAT/PAT - PTF rule dialog
+	'ptfrule': {
+		'Enabled': 'Active',
+		'Type:': 'Type :',
+		'Name:': 'Nom :',
+		'Description:': 'Description :',
+		'Protocols:': 'Protocoles :',
+		'Device:': 'Appareil :',
+		'IP Address:': 'Adresse IP :',
+		'External IPs:': 'IPs Externes :',
+		'Cancel': 'Annuler',
+		'Protocol Forwarding Rule': 'Règle de Redirection de Protocole',
+		'-Unknown-': '-Inconnu-'
+	},
+
+	# NAT/PAT - rule type selection dialog
+	'nprtype': {
+		'Cancel': 'Annuler',
+		'Select rule types': 'Sélectionnez les types de règle'
+	},
+
 	# Phone
 	'phone': {
 		'Time': 'Heure',
@@ -669,6 +740,7 @@ TOOLTIPS = {
 		'deviceInfoTab': 'Informations détaillées et réglages pour chaque appareil.',
 		'eventsTab': 'Journal d\'événements pour chaque appareil.',
 		'dhcpTab': 'Informations détaillées et réglages DHCP.',
+		'natPatTab': 'Réglages de redirection de ports et de protocoles.',
 		'phoneTab': 'Gérer les appels téléphoniques et la liste des contacts.',
 		'actionTab': 'Actions variées, préférences et informations sur l\'application.',
 		'repeaterTab': 'Informations détaillées sur le répéteur Wifi et statistiques de trafic.\n'
@@ -913,11 +985,103 @@ TOOLTIPS = {
 
 	# DHCP - Setup dialog
 	'dsetup': {
-		'enableCheckbox': 'Activer ou désactive le serveur DHCP.',
+		'enableCheckbox': 'Active ou désactive le serveur DHCP.',
 		'liveboxIpEdit': 'Permet de changer l\'adresse IP de la Livebox.',
 		'maskEdit': 'Permet de changer le masque de sous-réseau du serveur DHCP.',
 		'minEdit': 'Adresse IP de départ pour le domaine "Home".',
 		'maxEdit': 'Adresse IP de fin pour le domaine "Home".'
+	},
+
+	# NAT/PAT
+	'natpat': {
+		'plist_Enabled': 'Indique par une icône si la règle est active ou non.',
+		'plist_Type': 'Indique le type de la règle.',
+		'plist_ID': 'Indique le nom de la règle.',
+		'plist_Description': 'Description de la règle.',
+		'plist_Protocols': 'Liste des protocoles concernés par la règle.',
+		'plist_IntPort': 'Port interne sur lequel le trafic est redirigé.',
+		'plist_ExtPort': 'Port externe à rediriger.',
+		'plist_Device': 'Appareil sur lequel le trafic est redirigé.',
+		'plist_ExtIPs': 'Liste des adresses IPs externes concernées par la règle.',
+		'refreshPat': 'Rafraîchit la liste des règles de redirection de port.',
+		'enablePat': 'Active/désactive la règle sélectionnée.',
+		'addPat': 'Permet d\'ajouter une règle de redirection de port.',
+		'editPat': 'Permet de modifier la règle de redirection de port sélectionnée.',
+		'deletePat': 'Permet de supprimer la règle de redirection de port sélectionnée.',
+		'deleteAllPat': 'Permet de supprimer toutes les règles de redirection de port.',
+		'exportPat': 'Permet d\'exporter dans un fichier les règles de redirection\n'
+					 'de port d\'un ou plusieurs types choisis.',
+		'importPat': 'Permet de réimporter des règles de redirection de port précédemment\n'
+					 'exportée dans un fichier. Si des règles de même nom existent déjà\n'
+					 'elles seront écrasées par celles importées.',
+		'tlist_Enabled': 'Indique par une icône si la règle est active ou non.',
+		'tlist_Type': 'Indique le type de la règle.',
+		'tlist_ID': 'Indique le nom de la règle.',
+		'tlist_Description': 'Description de la règle.',
+		'tlist_Protocols': 'Liste des protocoles concernés par la règle.',
+		'tlist_Device': 'Appareil sur lequel le trafic est redirigé.',
+		'tlist_ExtIPs': 'Liste des adresses IPs externes concernées par la règle.',
+		'refreshPtf': 'Rafraîchit la liste des règles de redirection de protocole.',
+		'enablePtf': 'Active/désactive la règle sélectionnée.',
+		'addPtf': 'Permet d\'ajouter une règle de redirection de protocole.',
+		'editPtf': 'Permet de modifier la règle de redirection de protocole sélectionnée.',
+		'deletePtf': 'Permet de supprimer la règle de redirection de protocole sélectionnée.',
+		'deleteAllPtf': 'Permet de supprimer toutes les règles de redirection de protocole.',
+		'exportPtf': 'Permet d\'exporter dans un fichier les règles de redirection\n'
+					 'de protocole d\'un ou plusieurs types choisis.',
+		'importPtf': 'Permet de réimporter des règles de redirection de protocole\n'
+					 'précédemment exportée dans un fichier. Si des règles de même nom\n'
+					 'existent déjà elles seront écrasées par celles importées.'
+	},
+
+	# NAT/PAT - PAT rule dialog
+	'patrule': {
+		'enableCheckbox': 'Active ou désactive la règle.',
+		'typeCombo': 'Sélectionnez le type de règle. UPnP est un type interne, vous ne\n'
+					 'devriez pas avoir à créer ou modifier une règle de ce type.',
+		'nameEdit': 'Nom unique de la règle. Si une règle du même nom existe déjà elle\n'
+					'sera écrasée.',
+		'descEdit': 'Description de la règle.',
+		'tcpCheckbox': 'Redirige ou pas le trafic TCP.',
+		'udpCheckbox': 'Redirige ou pas le trafic UDP.',
+		'intPortEdit': 'Port interne sur lequel le trafic doit être redirigé.',
+		'extPortCheckbox': 'Permet de choisir un port externe différent du port interne.\n'
+						   'Cette option est obligatoire pour les types IPv4 & UPnP.',
+		'extPortEdit': 'Port externe à rediriger.',
+		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',
+		'ipEdit': 'Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n'
+				  'être redirigé.',
+		'extIPsEdit': 'Liste des adresses IPs (v4 ou v6 en fonction du type) externes concernées\n'
+					  'par la règle. Chaque adresse doit être séparée par une virgule.\n'
+					  'Laisser vide si aucun filtrage par IP externe n\'est requis.'
+	},
+
+	# NAT/PAT - PTF rule dialog
+	'ptfrule': {
+		'enableCheckbox': 'Active ou désactive la règle.',
+		'typeCombo': 'Sélectionnez le type de règle.',
+		'nameEdit': 'Nom unique de la règle. Si une règle du même nom existe déjà elle\n'
+					'sera écrasée.',
+		'descEdit': 'Description de la règle.',
+		'tcpCheckbox': 'Redirige ou pas le trafic TCP.',
+		'udpCheckbox': 'Redirige ou pas le trafic UDP.',
+		'ahCheckbox': 'Redirige ou pas le trafic AH.',
+		'greCheckbox': 'Redirige ou pas le trafic GRE.',
+		'espCheckbox': 'Redirige ou pas le trafic ESP.',
+		'icmpCheckbox': 'Redirige ou pas le trafic ICMP (v4 ou v6 en fonction du type).',
+		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',
+		'ipEdit': 'Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n'
+				  'être redirigé.',
+		'extIPsEdit': 'Liste des adresses IPs (v4 ou v6 en fonction du type) externes concernées\n'
+					  'par la règle. Chaque adresse doit être séparée par une virgule.\n'
+					  'Laisser vide si aucun filtrage par IP externe n\'est requis.'
+	},
+
+	# NAT/PAT - rule type selection dialog
+	'nprtype': {
+		'ipV4Checkbox': 'Sélectionne ou pas les règles de type IPv4.',
+		'ipV6Checkbox': 'Sélectionne ou pas les règles de type IPv6.',
+		'upnpCheckbox': 'Sélectionne ou pas les règles de type UPnP.'
 	},
 
 	# Phone

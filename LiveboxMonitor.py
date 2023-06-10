@@ -12,8 +12,8 @@ from src.LmIcons import LmIcon
 from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 						  ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
 from src.LmSession import LmSession
-from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab,
-				 LmEventsTab, LmDhcpTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
+				 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
 from src.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
 
 from __init__ import __version__
@@ -30,6 +30,7 @@ TAB_ORDER = [
 	LmDeviceInfoTab.TAB_NAME,
 	LmEventsTab.TAB_NAME,
 	LmDhcpTab.TAB_NAME,
+	LmNatPatTab.TAB_NAME,
 	LmPhoneTab.TAB_NAME,
 	LmActionsTab.TAB_NAME
 ]
@@ -44,6 +45,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 											  LmDeviceInfoTab.LmDeviceInfo,
 											  LmEventsTab.LmEvents,
 											  LmDhcpTab.LmDhcp,
+											  LmNatPatTab.LmNatPat,
 											  LmPhoneTab.LmPhone,
 											  LmActionsTab.LmActions,
 											  LmRepeaterTab.LmRepeater):
@@ -51,6 +53,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	### Initialize the application
 	def __init__(self):
 		super(LiveboxMonitorUI, self).__init__()
+		self._taskNb = 0
+		self._taskStack = []
 		self._resetFlag = False
 		self._appReady = False
 		self._statusBar = None
@@ -78,6 +82,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			if not NO_THREAD:
 				self.startEventLoop()
 				self.startWifiStatsLoop()
+
+			# Force tag change tasks once app is ready
+			self.tabChangedEvent(self._tabWidget.currentIndex())
 
 
 	### Create main window
@@ -110,6 +117,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				self.createEventsTab()
 			elif t == LmDhcpTab.TAB_NAME:
 				self.createDhcpTab()
+			elif t == LmNatPatTab.TAB_NAME:
+				self.createNatPatTab()
 			elif t == LmPhoneTab.TAB_NAME:
 				self.createPhoneTab()
 			elif t == LmActionsTab.TAB_NAME:
@@ -165,6 +174,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self.suspendStatsLoop()
 					self.suspendRepeaterStatsLoop()
 				self.dhcpTabClick()
+			elif aTabName == LmNatPatTab.TAB_NAME:
+				if not NO_THREAD:
+					self.suspendWifiStatsLoop()
+					self.suspendStatsLoop()
+					self.suspendRepeaterStatsLoop()
+				self.natPatTabClick()
 			elif aTabName == LmPhoneTab.TAB_NAME:
 				if not NO_THREAD:
 					self.suspendWifiStatsLoop()
@@ -347,25 +362,83 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		return self._applicationName
 
 
-	### Show the start of a long task
+	### Show the start of a long task - they can be nested
 	def startTask(self, iTask):
+		self._taskNb += 1
+		self._taskStack.append(iTask)
+		LmTools.MouseCursor_Busy()	# Stack cursor change
+
 		if self._statusBar is None:
 			self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
 		else:
 			self._statusBar.showMessage(iTask)
 			QtCore.QCoreApplication.sendPostedEvents()
 			QtCore.QCoreApplication.processEvents()
-		LmTools.MouseCursor_Busy()
+
+		LmTools.LogDebug(2, 'TASK STARTING stack={} task={}'.format(self._taskNb, iTask))
 
 
-	### End a long task
+	### End a long (nested) task
 	def endTask(self):
-		LmTools.MouseCursor_Normal()
-		if self._statusBar is None:
-			self.setWindowTitle(self.appWindowTitle())
-		else:
-			self._statusBar.clearMessage()
-			QtCore.QCoreApplication.processEvents()
+		if self._taskNb:
+			self._taskNb -= 1
+			self._taskStack.pop()
+			LmTools.MouseCursor_Normal()	# Unstack cursor change
+
+			if self._taskNb:
+				aTask = self._taskStack[self._taskNb - 1]
+				if self._statusBar is None:
+					self.setWindowTitle(self.appWindowTitle() + ' - ' + aTask)
+				else:
+					self._statusBar.showMessage(aTask)
+					QtCore.QCoreApplication.sendPostedEvents()
+					QtCore.QCoreApplication.processEvents()
+			else:
+				aTask = '<None>'
+				if self._statusBar is None:
+					self.setWindowTitle(self.appWindowTitle())
+				else:
+					self._statusBar.clearMessage()
+					QtCore.QCoreApplication.processEvents()
+
+			LmTools.LogDebug(2, 'TASK ENDING stack={} - restoring={}'.format(self._taskNb, aTask))
+
+
+	# Display an error popup
+	def displayError(self, iErrorMsg):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceNormal()
+		LmTools.DisplayError(iErrorMsg)
+		if self._taskNb:
+			LmTools.MouseCursor_ForceBusy()
+
+
+	# Display a status popup
+	def displayStatus(self, iStatusMsg):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceNormal()
+		LmTools.DisplayStatus(iStatusMsg)
+		if self._taskNb:
+			LmTools.MouseCursor_ForceBusy()
+
+
+	# Ask a question and return True if OK clicked
+	def askQuestion(self, iQuestionMsg):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceNormal()
+		aAnswer = LmTools.AskQuestion(iQuestionMsg)
+		if self._taskNb:
+			LmTools.MouseCursor_ForceBusy()
+		return aAnswer
+
+
+	# Display an info text popup
+	def displayInfos(self, iTitle, iInfoMsg, iInfoDoc = None):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceNormal()
+		LmTools.DisplayInfos(iTitle, iInfoMsg, iInfoDoc)
+		if self._taskNb:
+			LmTools.MouseCursor_ForceBusy()
 
 
 	### Switch to device list tab
@@ -396,6 +469,11 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	### Switch to DHCP tab
 	def switchToDhcpTab(self):
 		self._tabWidget.setCurrentWidget(self._dhcpTab)
+
+
+	### Switch to NAT/PAT tab
+	def switchToNatPatTab(self):
+		self._tabWidget.setCurrentWidget(self._natPatTab)
 
 
 	### Switch to phone tab

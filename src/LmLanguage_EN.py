@@ -17,6 +17,7 @@ TOOLTIPS = {
 		'deviceInfoTab': 'Detailed information and setup for each device.',
 		'eventsTab': 'Raised events for each device.',
 		'dhcpTab': 'Detailed DHCP information and setup.',
+		'netPatTab': 'Port & protocol forwarding setup.',
 		'phoneTab': 'Manage phone calls and contact list.',
 		'actionTab': 'Various set of actions, preferences and application informations.',
 		'repeaterTab': 'Detailed information about the Wifi repeater and traffic statistics.'
@@ -57,6 +58,18 @@ TOOLTIPS = {
 
 	# DHCP - Setup dialog
 	'dsetup': {},
+
+	# NAT/PAT
+	'natpat': {},
+
+	# NAT/PAT - PAT rule dialog
+	'patrule': {},
+
+	# NAT/PAT - PTF rule dialog
+	'ptfrule': {},
+
+	# NAT/PAT - rule type selection dialog
+	'nprtype': {},
 
 	# Phone
 	'phone': {},

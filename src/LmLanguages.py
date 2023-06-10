@@ -103,6 +103,12 @@ def GetDhcpLabel(iString): return GetLabel('dhcp', iString)
 def GetDhcpBindingDialogLabel(iString): return GetLabel('dbinding', iString)
 def GetDhcpSetupDialogLabel(iString): return GetLabel('dsetup', iString)
 
+# NAT/PAT
+def GetNatPatLabel(iString): return GetLabel('natpat', iString)
+def GetPatRuleDialogLabel(iString): return GetLabel('patrule', iString)
+def GetPtfRuleDialogLabel(iString): return GetLabel('ptfrule', iString)
+def GetNatPatRuleTypeDialogLabel(iString): return GetLabel('nprtype', iString)
+
 # Phone
 def GetPhoneLabel(iString): return GetLabel('phone', iString)
 def GetPhoneContactDialogLabel(iString): return GetLabel('pcontact', iString)

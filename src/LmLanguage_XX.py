@@ -459,6 +459,93 @@ LABELS = {
 		'DHCP Setup': ''
 	},
 
+	# NAT/PAT
+	'natpat': {
+		'A': '',
+		'Type': '',
+		'Name': '',
+		'Port Forwarding Rule Description': '',
+		'Protocols': '',
+		'Internal Port': '',
+		'External Port': '',
+		'Device': '',
+		'External IPs': '',
+		'Refresh': '',
+		'Add...': '',
+		'Edit...': '',
+		'Delete': '',
+		'Delete All...': '',
+		'Export...': '',
+		'Import...': '',
+		'Protocol Forwarding Rule Description': '',
+		'NAT/PAT': '',
+		'Disable': '',
+		'Enable': '',
+		'Saving rule...': '',
+		'Deleting rule...': '',
+		'Deleting rules...': '',
+		'Export File': '',
+		'Port Forwarding Rules': '',
+		'Exporting port forwarding rules...': '',
+		'Select file to import': '',
+		'Importing port forwarding rules...': '',
+		'Protocol Forwarding Rules': '',
+		'Exporting protocol forwarding rules...': '',
+		'Importing protocol forwarding rules...': '',
+		'Loading port forwarding rules...': '',
+		'All': '',
+		'Loading protocol forwarding rules...': ''
+	},
+
+	# NAT/PAT - PAT rule dialog
+	'patrule': {
+		'Enabled': '',
+		'Type:': '',
+		'Name:': '',
+		'Description:': '',
+		'Protocols:': '',
+		'TCP': '',
+		'UDP': '',
+		'Internal Port:': '',
+		'External Port:': '',
+		'Device:': '',
+		'IP Address:': '',
+		'External IPs:': '',
+		'OK': '',
+		'Cancel': '',
+		'Port Forwarding Rule': '',
+		'-Unknown-': ''
+	},
+
+	# NAT/PAT - PTF rule dialog
+	'ptfrule': {
+		'Enabled': '',
+		'Type:': '',
+		'Name:': '',
+		'Description:': '',
+		'Protocols:': '',
+		'TCP': '',
+		'UDP': '',
+		'AH': '',
+		'GRE': '',
+		'ESP': '',
+		'ICMP': '',
+		'Device:': '',
+		'IP Address:': '',
+		'External IPs:': '',
+		'OK': '',
+		'Cancel': '',
+		'Protocol Forwarding Rule': '',
+		'-Unknown-': ''
+	},
+
+	# NAT/PAT - rule type selection dialog
+	'nprtype': {
+		'OK': '',
+		'Cancel': '',
+		'Select rule types': ''
+	},
+
 	# Phone
 	'phone': {
 		'T': '',
@@ -760,6 +847,7 @@ TOOLTIPS = {
 		'deviceInfoTab': '',
 		'eventsTab': '',
 		'dhcpTab': '',
+		'natPatTab': '',
 		'phoneTab': '',
 		'actionTab': '',
 		'repeaterTab': ''
@@ -946,6 +1034,105 @@ TOOLTIPS = {
 		'minEdit': '',
 		'maxLabel': '',
 		'maxEdit': '',
+		'ok': '',
+		'cancel': ''
+	},
+
+	# NAT/PAT
+	'natpat': {
+		'patList': '',
+		'plist_Enabled': '',
+		'plist_Type': '',
+		'plist_ID': '',
+		'plist_Description': '',
+		'plist_Protocols': '',
+		'plist_IntPort': '',
+		'plist_ExtPort': '',
+		'plist_Device': '',
+		'plist_ExtIPs': '',
+		'refreshPat': '',
+		'enablePat': '',
+		'addPat': '',
+		'editPat': '',
+		'deletePat': '',
+		'deleteAllPat': '',
+		'exportPat': '',
+		'importPat': '',
+		'ptfList': '',
+		'tlist_Enabled': '',
+		'tlist_Type': '',
+		'tlist_ID': '',
+		'tlist_Description': '',
+		'tlist_Protocols': '',
+		'tlist_Device': '',
+		'tlist_ExtIPs': '',
+		'refreshPtf': '',
+		'enablePtf': '',
+		'addPtf': '',
+		'editPtf': '',
+		'deletePtf': '',
+		'deleteAllPtf': '',
+		'exportPtf': '',
+		'importPtf': ''
+	},
+
+	# NAT/PAT - PAT rule dialog
+	'patrule': {
+		'enableCheckbox': '',
+		'typeLabel': '',
+		'typeCombo': '',
+		'nameLabel': '',
+		'nameEdit': '',
+		'descLabel': '',
+		'descEdit': '',
+		'protocolsLabel': '',
+		'tcpCheckbox': '',
+		'udpCheckbox': '',
+		'intPortLabel': '',
+		'intPortEdit': '',
+		'extPortCheckbox': '',
+		'extPortEdit': '',
+		'deviceLabel': '',
+		'deviceCombo': '',
+		'ipLabel': '',
+		'ipEdit': '',
+		'extIPsLabel': '',
+		'extIPsEdit': '',
+		'ok': '',
+		'cancel': ''
+	},
+
+	# NAT/PAT - PTF rule dialog
+	'ptfrule': {
+		'enableCheckbox': '',
+		'typeLabel': '',
+		'typeCombo': '',
+		'nameLabel': '',
+		'nameEdit': '',
+		'descLabel': '',
+		'descEdit': '',
+		'protocolsLabel': '',
+		'tcpCheckbox': '',
+		'udpCheckbox': '',
+		'ahCheckbox': '',
+		'greCheckbox': '',
+		'espCheckbox': '',
+		'icmpCheckbox': '',
+		'deviceLabel': '',
+		'deviceCombo': '',
+		'ipLabel': '',
+		'ipEdit': '',
+		'extIPsLabel': '',
+		'extIPsEdit': '',
+		'ok': '',
+		'cancel': ''
+	},
+
+	# NAT/PAT - rule type selection dialog
+	'nprtype': {
+		'ipV4Checkbox': '',
+		'ipV6Checkbox': '',
+		'upnpCheckbox': '',
 		'ok': '',
 		'cancel': ''
 	},

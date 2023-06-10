@@ -20,9 +20,22 @@ from src.LmLanguages import GetToolsLabel as lx
 # Debug verbosity
 gVerbosity = 0
 
+# Regular expressions - https://ihateregex.io/
+MAC_RS = r'(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})'
+IPv4_RS = r'(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}'
+IPv6_RS = (r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|'
+		   r'([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|'
+		   r'([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|'
+		   r'([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|'
+		   r':((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|'
+		   r'::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|'
+		   r'1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.)'
+		   r'{3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))')
+
 # Useful objects
-MAC_RE = re.compile('(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})')
-IPv4_RE = re.compile('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+MAC_RE = re.compile(MAC_RS)
+IPv4_RE = re.compile('^' + IPv4_RS + '$')
+IPv6_RE = re.compile('^' + IPv6_RS + '$')
 BOLD_FONT = QtGui.QFont()
 BOLD_FONT.setBold(True)
 
@@ -88,14 +101,24 @@ def DisplayInfos(iTitle, iInfoMsg, iInfoDoc = None):
 	aTextDialog.exec()
 
 
-# Set mouse cursor to busy
+# Set mouse cursor to busy - Stack mode
 def MouseCursor_Busy():
 	QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
 
 
-# Set mouse cursor to busy
+# Restore mouse cursor to previous state - Stack mode
 def MouseCursor_Normal():
 	QtWidgets.QApplication.restoreOverrideCursor()
+
+
+# Force mouse cursor to busy
+def MouseCursor_ForceBusy():
+	QtWidgets.QApplication.changeOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+
+
+# Force mouse cursor to normal arrow
+def MouseCursor_ForceNormal():
+	QtWidgets.QApplication.changeOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
 
 
 # Extract a valid MAC Addr from any string
@@ -109,6 +132,11 @@ def ExtractMacAddrFromString(iString):
 # Check if valid IPv4 address
 def IsIPv4(iString):
 	return re.fullmatch(IPv4_RE, iString) is not None
+
+
+# Check if valid IPv6 address
+def IsIPv6(iString):
+	return re.fullmatch(IPv6_RE, iString) is not None
 
 
 # Cleanup URL
@@ -129,9 +157,15 @@ def GetErrorsFromLiveboxReply(iReply):
 		aErrors = iReply.get('errors')
 		if (aErrors is not None) and (type(aErrors).__name__ == 'list'):
 			for e in aErrors:
-				if len(d):
-					d += '.\n'
-				d += e.get('description', '')
+				aDesc = e.get('description', '')
+				aInfo = e.get('info', '')
+				if len(aDesc):
+					if len(aInfo):
+						d += aDesc + ' -> ' + aInfo + '.\n'
+					else:
+						d += aDesc + '.\n'
+				elif len(aInfo):
+					d += aInfo + '.\n'
 
 	return d
 
@@ -264,6 +298,36 @@ def LiveboxTimestamp(iTimestamp):
 
 
 
+# ############# Column sort classes #############
+
+# Sorting columns by numeric
+class NumericSortItem(QtWidgets.QTableWidgetItem):
+	def __lt__(self, iOther):
+		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
+		if x is None:
+			x = 0
+		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
+		if y is None:
+			y = 0
+		return x < y
+
+
+# Drawing centered icons
+class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
+	def __init__(self, iParent, iColumnList):
+		super(CenteredIconsDelegate, self).__init__(iParent)
+		self._columnList = iColumnList
+
+	def paint(self, iPainter, iOption, iIndex):
+		if iIndex.column() in self._columnList:
+			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
+			if aIcon is not None:
+				aIcon.paint(iPainter, iOption.rect)
+		else:
+			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
+
+
+
 # ############# Display text dialog #############
 class TextDialog(QtWidgets.QDialog):
 	def __init__(self, parent = None):
@@ -292,6 +356,7 @@ class TextDialog(QtWidgets.QDialog):
 		self.setGeometry(200, 200, 800, 500)
 		self.setModal(True)
 		self.show()
+
 
 
 # ############# Color picker button #############
@@ -345,3 +410,23 @@ class ColorButton(QtWidgets.QPushButton):
 			self.setColor(self._default)
 
 		return super(ColorButton, self).mousePressEvent(iEvent)
+
+
+
+# ############# Multi lines edit #############
+# Custom QtWidget to type a text on multilines without carriage return.
+class MultiLinesEdit(QtWidgets.QPlainTextEdit):
+	# Prevent carriage return, e.g. in plain text fields
+	def keyPressEvent(self, iEvent):
+		if iEvent.key() in (QtCore.Qt.Key.Key_Return, QtCore.Qt.Key.Key_Enter):
+			return
+		super().keyPressEvent(iEvent)
+
+
+	# Set the maximum height to a given nb of lines
+	def setLineNumber(self, iLines):
+		f = QtGui.QFontMetrics(self.font())
+		m = self.contentsMargins()
+		d = (int(self.document().documentMargin()) + 1) * 2
+
+		self.setFixedHeight((iLines * f.lineSpacing()) + m.top() + m.bottom() + d)
