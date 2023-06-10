@@ -200,10 +200,12 @@ class LmPhone:
 		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 
 		aContactBox = QtWidgets.QVBoxLayout()
-		aContactBox.setSpacing(10)
+		aContactBox.setSpacing(13)
 		aContactBox.addWidget(self._contactList, 1)
 		aContactBox.addLayout(aContactButtonsBox, 0)
+		aContactBox.insertSpacing(-1, 2)
 		aContactBox.addWidget(aSeparator)
+		aContactBox.insertSpacing(-1, 2)
 		aContactBox.addLayout(aToolButtonsBox, 0)
 
 		# Layout
@@ -679,7 +681,7 @@ class LmPhone:
 	### VCF tag import
 	@staticmethod
 	def importVcfTag(iContact, iTag, iParams, iVal):
-		if iContact is  None:
+		if iContact is None:
 			return
 
 		# Name tag
