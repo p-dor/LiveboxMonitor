@@ -420,14 +420,18 @@ def ReleaseCheck():
 	l = len(s)
 	aMajor = s[0]
 	if l >= 2:
-	    aMinor = s[1]
+		aMinor = s[1]
 	else:
-	    aMinor = '00'         
+		aMinor = '00'
 	if l >= 3:
-	    aPatch = s[2]
+		aPatch = s[2]
 	else:
-	    aPatch = '00'         
-	r = int(aMajor.zfill(2) + aMinor.zfill(2) + aPatch.zfill(2), 16)
+		aPatch = '00'
+	try:
+		r = int(aMajor.zfill(2) + aMinor.zfill(2) + aPatch.zfill(2), 16)
+	except:
+		LmTools.Error('Cannot decode latest release infos. Error: {}'.format(e))
+		return
 
 	# Warn if this release is not the latest
 	if (r > __build__) and (LmConf.NoReleaseWarning != r):
