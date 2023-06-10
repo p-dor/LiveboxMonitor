@@ -381,7 +381,9 @@ class LmDhcp:
 	### Load DHCP bindings in the list
 	def loadDhcpBindingsInList(self, iBindings, iDomain):
 		if iBindings is None:
+			LmTools.MouseCursor_Normal()
 			LmTools.DisplayError('Cannot load ' + iDomain + ' DHCP bindings.')
+			LmTools.MouseCursor_Busy()
 			return
 
 		i = self._dhcpDList.rowCount()
@@ -600,7 +602,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
 		aMacLabel = QtWidgets.QLabel(lbx('MAC address:'), objectName = 'macLabel')
 		self._macEdit = QtWidgets.QLineEdit(objectName = 'macEdit')
-		aMacRegExp = QtCore.QRegularExpression(r'^(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})$')
+		aMacRegExp = QtCore.QRegularExpression('^' + LmTools.MAC_RS + '$')
 		aMacValidator = QtGui.QRegularExpressionValidator(aMacRegExp)
 		self._macEdit.setValidator(aMacValidator)
 		self._macEdit.textChanged.connect(self.macTyped)
@@ -612,7 +614,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
 		aIPLabel = QtWidgets.QLabel(lbx('IP address:'), objectName = 'ipLabel')
 		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
-		aIpRegExp = QtCore.QRegularExpression(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+		aIpRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
 		self._ipEdit.setValidator(aIpValidator)
 		self._ipEdit.textChanged.connect(self.ipTyped)
@@ -771,7 +773,7 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		else:
 			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-		aIpRegExp = QtCore.QRegularExpression(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+		aIpRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
 
 		aLiveboxIpLabel = QtWidgets.QLabel(lsx('Livebox IP address:'), objectName = 'liveboxIpLabel')
