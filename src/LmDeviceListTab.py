@@ -316,27 +316,46 @@ class LmDeviceList:
 		self._eventDList.setSortingEnabled(False)
 		self._eventList.setSortingEnabled(False)
 
-		self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
-		if (self._liveboxDevices is not None):
+		# Init
+		self._interfaceMap = []
+		self._deviceMap = []
+		self._deviceIpNameMap = {}
+		self._deviceIpNameMapDirty = True
+
+		# Get device infos from Livebox & build IP -> name map
+		try:
+			self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self._liveboxDevices = None
+		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
-		if (self._liveboxDevices is None):
+		if self._liveboxDevices is None:
 			LmTools.MouseCursor_Normal()
 			LmTools.DisplayError('Error getting device list.')
 			LmTools.MouseCursor_Busy()
-		self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
-		if (self._liveboxTopology is not None):
+		else:
+			self.buildDeviceIpNameMap()
+			self._deviceIpNameMapDirty = False
+
+		# Get topology infos from Livebox & build link & device maps
+		try:
+			self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self._liveboxTopology = None
+		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
-		self._interfaceMap = []
-		self._deviceMap = []
-		if (self._liveboxTopology is None):
+		if self._liveboxTopology is None:
 			LmTools.MouseCursor_Normal()
 			LmTools.DisplayError('Error getting device topology.')
 			LmTools.MouseCursor_Busy()
 		else:
 			self.buildLinkMaps()
 
+		# Load devices in list, trying to identify Wifi repeaters on the fly
 		i = 0
-		if (self._liveboxDevices is not None):
+		if self._liveboxDevices is not None:
 			for d in self._liveboxDevices:
 				if self.displayableDevice(d):
 					self.identifyRepeater(d)
@@ -354,7 +373,7 @@ class LmDeviceList:
 		self._infoDList.setCurrentCell(-1, -1)
 		self._eventDList.setCurrentCell(-1, -1)
 
-		self.initDeviceContext()
+		self.initDeviceContext()	# Init selected device context for DeviceInfo tab
 
 		self._deviceList.setSortingEnabled(True)
 		self._infoDList.setSortingEnabled(True)
@@ -554,7 +573,7 @@ class LmDeviceList:
 		return -1
 
 
-	### Get list of devices MAC, Livebox name and IP
+	### Get list of devices MAC, Livebox name, IPv4 and Active from currently displayed device list
 	def getDeviceList(self):
 		aList = []
 		i = 0
@@ -568,6 +587,83 @@ class LmDeviceList:
 			aList.append(aDevice)
 			i += 1
 		return aList
+
+
+	### Load device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map if need to be refreshed
+	def loadDeviceIpNameMap(self):
+		if self._deviceIpNameMapDirty:
+			self.startTask(lx('Loading devices information...'))
+
+			d = None
+			try:
+				d = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				d = None
+			if d is not None:
+				d = d.get('status')
+			if d is None:
+				self.endTask()
+				LmTools.DisplayError('Error getting device list.')
+				return
+			self._liveboxDevices = d
+
+			self.buildDeviceIpNameMap()
+			self._deviceIpNameMapDirty = False
+
+			self.endTask()
+
+
+	# Build device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map from currently loaded device list
+	def buildDeviceIpNameMap(self):
+		# Init
+		self._deviceIpNameMap = {}
+
+		for d in self._liveboxDevices:
+			if self.displayableDevice(d):
+				# Get device infos to map for all its IP entries
+				aIPv4DeviceInfo = {}
+				aIPv4DeviceInfo['MAC'] = d.get('PhysAddress', '')
+				aIPv4DeviceInfo['LBName'] = d.get('Name', '')
+				aIPv4DeviceInfo['Active'] = d.get('Active', False)
+				aIPv4DeviceInfo['IPVers'] = 'IPv4'
+
+				# Map IPv4 address to device infos
+				aIPv4Struct = LmTools.DetermineIP(d)
+				if aIPv4Struct is not None:
+					aIPv4 = aIPv4Struct.get('Address', '')
+
+					# Add IPv4 entry
+					if len(aIPv4):
+						self._deviceIpNameMap[aIPv4] = aIPv4DeviceInfo
+
+				# Map IPv6 address(es) to device infos
+				aIPv6Struct = d.get('IPv6Address')
+				aIPv6DeviceInfo = aIPv4DeviceInfo.copy()
+				aIPv6DeviceInfo['IPVers'] = 'IPv6'
+				if aIPv6Struct is not None:
+					for a in aIPv6Struct:
+						aScope = a.get('Scope', 'link')
+						if aScope != 'link':
+							aIPv6 = a.get('Address', '')
+							if len(aIPv6):
+								self._deviceIpNameMap[aIPv6] = aIPv6DeviceInfo
+
+
+	### Get device name from IPv4 or IPv6
+	# Depends on DeviceIpNameMap correct load
+	# Returns local name in priority then LB name, then default to IP
+	def getDeviceNameFromIp(self, iIP):
+		if len(iIP):
+			aDeviceInfo = self._deviceIpNameMap.get(iIP)
+			if aDeviceInfo is None:
+				return iIP
+			else:
+				try:
+					return LmConf.MacAddrTable[aDeviceInfo['MAC']]
+				except:
+					return aDeviceInfo['LBName']
+		return ''
 
 
 	### Build link map
@@ -786,6 +882,7 @@ class LmDeviceList:
 			# Check if active status changed
 			aActiveStatus = iEvent.get('Active')
 			if aActiveStatus is not None:
+				self._deviceIpNameMapDirty = True
 				aIsActive = aActiveStatus != '0'
 				aActiveIcon = self.formatActiveTableWidget(aIsActive)
 				self._deviceList.setItem(aListLine, DevCol.Active, aActiveIcon)
@@ -799,9 +896,10 @@ class LmDeviceList:
 				aIP = self.formatIPv4TableWidget(aCurrIP.text(), aIPv4Reacheable, aReserved)
 				self._deviceList.setItem(aListLine, DevCol.IP, aIP)
 
-			# Check if IP changed
+			# Check if IPv4 changed
 			aIPv4 = iEvent.get('IPAddress')
 			if (aIPv4 is not None) and (LmTools.IsIPv4(aIPv4)):
+				self._deviceIpNameMapDirty = True
 				aIP = self._deviceList.item(aListLine, DevCol.IP)
 				aIP.setText(aIPv4)
 				aIP.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIPv4)))
@@ -810,12 +908,15 @@ class LmDeviceList:
 			# Check if name changed
 			aName = iEvent.get('Name')
 			if aName is not None:
+				self._deviceIpNameMapDirty = True
 				self._deviceList.setItem(aListLine, DevCol.LBName, QtWidgets.QTableWidgetItem(aName))
 				self.updateInterfaceMap(iDeviceKey, aName)
 
 			# Check if MAC address assigned
 			aMacAddr = iEvent.get('PhysAddress')
 			if aMacAddr is not None:
+				self._deviceIpNameMapDirty = True
+
 				self.formatNameWidget(self._deviceList, aListLine, aMacAddr, DevCol.Name)
 				self.formatMacWidget(self._deviceList, aListLine, aMacAddr, DevCol.MAC)
 
@@ -835,6 +936,8 @@ class LmDeviceList:
 
 	### Process a new device_name_changed event
 	def processDeviceNameChangedEvent(self, iDeviceKey, iEvent):
+		self._deviceIpNameMapDirty = True
+
 		# Check if device is in the UI list
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
@@ -869,12 +972,18 @@ class LmDeviceList:
 
 	### Process a new ip_address_added event
 	def processIPAddressAddedEvent(self, iDeviceKey, iEvent):
+		self._deviceIpNameMapDirty = True
+
 		# Check if device is in the UI list
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
 			if iEvent.get('Family', '') == 'ipv4':
 				# Get IP known by the program
-				aKnownIP = self._deviceList.item(aListLine, DevCol.IP).text()
+				aKnownIPItem = self._deviceList.item(aListLine, DevCol.IP)
+				if aKnownIPItem is not None:	# MT safe, can happen with // processing
+					aKnownIP = aKnownIPItem.text()
+				else:
+					aKnownIP = ''
 
 				# Get current device IP
 				try:
@@ -908,6 +1017,8 @@ class LmDeviceList:
 
 		aTags = iEvent.get('Tags', '').split()
 		if ('physical' in aTags) and (not 'self' in aTags) and (not 'voice' in aTags) and self.displayableDevice(iEvent):
+			self._deviceIpNameMapDirty = True
+
 			# Prevent device lines to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 			self._infoDList.setSortingEnabled(False)
@@ -934,6 +1045,8 @@ class LmDeviceList:
 
 	### Process a new device_deleted, eth_device_deleted or wifi_device_deleted event
 	def processDeviceDeletedEvent(self, iDeviceKey):
+		self._deviceIpNameMapDirty = True
+
 		# Remove from all UI lists
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
@@ -1162,13 +1275,12 @@ class IPv6Dialog(QtWidgets.QDialog):
 					aKey = d.get('Key', '')
 					p.addDeviceLineKey(self._deviceTable, i, aKey)
 
-					aMacAddr = d.get('PhysAddress', '')
 					p.formatNameWidget(self._deviceTable, i, aKey, IPv6Col.Name)
 
 					aLBName = QtWidgets.QTableWidgetItem(d.get('Name', ''))
 					self._deviceTable.setItem(i, IPv6Col.LBName, aLBName)
 
-					p.formatMacWidget(self._deviceTable, i, aMacAddr, IPv6Col.MAC)
+					p.formatMacWidget(self._deviceTable, i, d.get('PhysAddress', ''), IPv6Col.MAC)
 
 					aActiveStatus = d.get('Active', False)
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
