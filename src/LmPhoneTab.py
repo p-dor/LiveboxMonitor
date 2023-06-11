@@ -38,27 +38,6 @@ class ContactCol(IntEnum):
 	Ring = 5
 	Count = 6
 
-# Sorting columns by numeric
-class NumericSortItem(QtWidgets.QTableWidgetItem):
-	def __lt__(self, iOther):
-		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
-		if x is None:
-			x = 0
-		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
-		if y is None:
-			y = 0
-		return x < y
-
-# Drawing centered icons
-class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
-	def paint(self, iPainter, iOption, iIndex):
-		if iIndex.column() in ICON_COLUMNS:
-			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
-			if aIcon is not None:
-				aIcon.paint(iPainter, iOption.rect)
-		else:
-			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
-
 
 
 # ################################ LmPhone class ################################
@@ -98,7 +77,7 @@ class LmPhone:
 		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
 		self._callList.setMinimumWidth(480)
 		self._callList.setMaximumWidth(540)
-		self._callList.setItemDelegate(CenteredIconsDelegate(self))
+		self._callList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
 		LmConfig.SetTableStyle(self._callList)
 
 		# Call button bar
@@ -361,7 +340,7 @@ class LmPhone:
 
 				aKey = QtWidgets.QTableWidgetItem(c.get('callId', ''))
 
-				aCallTypeIcon = NumericSortItem()
+				aCallTypeIcon = LmTools.NumericSortItem()
 				aStatus = c.get('callType', '')
 				aOrigin = c.get('callOrigin', '')
 				if aStatus == 'succeeded':
@@ -395,7 +374,7 @@ class LmPhone:
 				aContact = QtWidgets.QTableWidgetItem(aContactStr)
 
 				aSeconds = c.get('duration')
-				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
+				aDuration = LmTools.NumericSortItem(LmTools.FmtTime(aSeconds, True))
 				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
 				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 

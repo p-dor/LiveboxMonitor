@@ -44,27 +44,6 @@ class DSelCol(IntEnum):
 	MAC = 2
 	Count = 3
 
-# Sorting columns by numeric
-class NumericSortItem(QtWidgets.QTableWidgetItem):
-	def __lt__(self, iOther):
-		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
-		if x is None:
-			x = 0
-		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
-		if y is None:
-			y = 0
-		return x < y
-
-# Drawing centered icons
-class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
-	def paint(self, iPainter, iOption, iIndex):
-		if iIndex.column() in ICON_COLUMNS:
-			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
-			if aIcon is not None:
-				aIcon.paint(iPainter, iOption.rect)
-		else:
-			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
-
 
 
 # ################################ LmDeviceList class ################################
@@ -130,7 +109,7 @@ class LmDeviceList:
 		self._deviceList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._deviceList.setSortingEnabled(True)
 		self._deviceList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._deviceList.setItemDelegate(CenteredIconsDelegate(self))
+		self._deviceList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
 		LmConfig.SetTableStyle(self._deviceList)
 
 		# Button bar
@@ -457,7 +436,7 @@ class LmDeviceList:
 		if aLinkType == 'wif':
 			aWifiSignal = iDevice.get('SignalNoiseRatio')
 			if aWifiSignal is not None:
-				aWifiIcon = NumericSortItem()
+				aWifiIcon = LmTools.NumericSortItem()
 				if aWifiSignal >= 40:
 					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
 				elif aWifiSignal >= 32:
@@ -499,7 +478,7 @@ class LmDeviceList:
 	### Format device type cell
 	@staticmethod
 	def formatDeviceTypeTableWidget(iDeviceType):
-		aDeviceTypeIcon = NumericSortItem()
+		aDeviceTypeIcon = LmTools.NumericSortItem()
 
 		i = 0
 		for d in LmConfig.DEVICE_TYPES:
@@ -535,7 +514,7 @@ class LmDeviceList:
 	### Format Active status cell
 	@staticmethod
 	def formatActiveTableWidget(iActiveStatus):
-		aActiveIconItem = NumericSortItem()
+		aActiveIconItem = LmTools.NumericSortItem()
 		if iActiveStatus:
 			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.TickPixmap))
 			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
@@ -548,7 +527,7 @@ class LmDeviceList:
 	### Format IPv4 cell
 	@staticmethod
 	def formatIPv4TableWidget(iIPv4, iReacheableStatus, iReserved):
-		aIP = NumericSortItem(iIPv4)
+		aIP = LmTools.NumericSortItem(iIPv4)
 		if len(iIPv4):
 			aIP.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(iIPv4)))
 		else:
@@ -783,7 +762,7 @@ class LmDeviceList:
 		# Set indicator on new device
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
-			aEventIndicator = NumericSortItem()
+			aEventIndicator = LmTools.NumericSortItem()
 			aEventIndicator.setIcon(QtGui.QIcon(LmIcon.NotifPixmap))
 			aEventIndicator.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 			self._deviceList.setItem(aListLine, DevCol.Event, aEventIndicator)
@@ -833,14 +812,14 @@ class LmDeviceList:
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
-			aDown = NumericSortItem(LmTools.FmtBytes(aDownBytes))
+			aDown = LmTools.NumericSortItem(LmTools.FmtBytes(aDownBytes))
 			aDown.setData(QtCore.Qt.ItemDataRole.UserRole, aDownBytes)
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Down, aDown)
 
-			aUp = NumericSortItem(LmTools.FmtBytes(aUpBytes))
+			aUp = LmTools.NumericSortItem(LmTools.FmtBytes(aUpBytes))
 			aUp.setData(QtCore.Qt.ItemDataRole.UserRole, aUpBytes)
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
@@ -848,7 +827,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = LmTools.NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -858,7 +837,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = LmTools.NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1113,7 +1092,7 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = LmTools.NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1125,7 +1104,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = LmTools.NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1153,17 +1132,6 @@ class IPv6Col(IntEnum):
 	IPv6 = 6
 	Count = 7
 IPV6_ICON_COLUMNS = [IPv6Col.Active]
-
-
-# Drawing centered icons
-class IPv6CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
-	def paint(self, iPainter, iOption, iIndex):
-		if iIndex.column() in IPV6_ICON_COLUMNS:
-			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
-			if aIcon is not None:
-				aIcon.paint(iPainter, iOption.rect)
-		else:
-			super(IPv6CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
 
 
 class IPv6Dialog(QtWidgets.QDialog):
@@ -1229,7 +1197,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		self._deviceTable.setSortingEnabled(True)
 		self._deviceTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._deviceTable.setItemDelegate(IPv6CenteredIconsDelegate(self))
+		self._deviceTable.setItemDelegate(LmTools.CenteredIconsDelegate(self, IPV6_ICON_COLUMNS))
 		LmConfig.SetTableStyle(self._deviceTable)
 
 		# Button bar
