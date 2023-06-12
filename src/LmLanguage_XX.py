@@ -574,7 +574,9 @@ LABELS = {
 		'Select files to import': '',
 		'Importing contacts...': '',
 		'Cannot import file(s): ': '',
-		'Loading contact list...': ''
+		'Loading contact list...': '',
+		'Deleting phone call list...': '',
+		'Deleting contact list...': ''
 	},
 
 	# Phone - Contact edit
@@ -620,7 +622,14 @@ LABELS = {
 		'Raw Device List': '',
 		'Raw Topology': '',
 		'Log level selection': '',
-		'Please select a log level:': ''
+		'Please select a log level:': '',
+		'Activating Wifi...': '',
+		'Deactivating Wifi...': '',
+		'Activating Guest Wifi...': '',
+		'Deactivating Guest Wifi...': '',
+		'Activating Wifi Scheduler...': '',
+		'Deactivating Wifi Scheduler...': '',
+		'Rebooting Livebox...': ''
 	},
 
 	# Actions - Reboot history
@@ -747,7 +756,14 @@ LABELS = {
 		'Max Bit Rate Supported': '',
 		'Current Duplex Mode': '',
 		'Power Saving Supported': '',
-		'Power Saving Enabled': ''
+		'Power Saving Enabled': '',
+		'Activating Repeater Wifi...': '',
+		'Deactivating Repeater Wifi...': '',
+		'Activating Repeater Scheduler...': '',
+		'Deactivating Repeater Scheduler...': '',
+		'Rebooting Repeater...': '',
+		'Getting Reboot History...': '',
+		'Signing in to repeater...': ''
 	},
 
 	# Config - Preferences

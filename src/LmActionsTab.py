@@ -227,106 +227,100 @@ class LmActions:
 
 	### Click on Wifi ON button
 	def wifiOnButtonClick(self):
+		self.startTask(lx('Activating Wifi...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('NMC.Wifi:set', { 'Enable': True, 'Status' : True })
-			LmTools.MouseCursor_Normal()
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				LmTools.DisplayError('NMC.Wifi:set service error')
+				self.displayError('NMC.Wifi:set service error')
 			else:
-				LmTools.DisplayStatus('Wifi activated.')
+				self.displayStatus('Wifi activated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('NMC.Wifi:set service error')
+			self.displayError('NMC.Wifi:set service error')
+		self.endTask()
 
 
 	### Click on Wifi OFF button
 	def wifiOffButtonClick(self):
+		self.startTask(lx('Deactivating Wifi...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('NMC.Wifi:set', { 'Enable': False, 'Status' : False })
-			LmTools.MouseCursor_Normal()
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				LmTools.DisplayError('NMC.Wifi:set service error')
+				self.displayError('NMC.Wifi:set service error')
 			else:
-				LmTools.DisplayStatus('Wifi deactivated.')
+				self.displayStatus('Wifi deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('NMC.Wifi:set service error')
+			self.displayError('NMC.Wifi:set service error')
+		self.endTask()
 
 
 	### Click on guest Wifi ON button
 	def guestWifiOnButtonClick(self):
+		self.startTask(lx('Activating Guest Wifi...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('NMC.Guest:set', { 'Enable': True })
-			LmTools.MouseCursor_Normal()
 			if d is None:
-				LmTools.DisplayError('NMC.Guest:set service error')
+				self.displayError('NMC.Guest:set service error')
 			else:
-				LmTools.DisplayStatus('Guest Wifi activated. Reactivate Scheduler if required.')
+				self.displayStatus('Guest Wifi activated. Reactivate Scheduler if required.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('NMC.Guest:set service error')
+			self.displayError('NMC.Guest:set service error')
+		self.endTask()
 
 
 	### Click on guest Wifi OFF button
 	def guestWifiOffButtonClick(self):
+		self.startTask(lx('Deactivating Guest Wifi...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('NMC.Guest:set', { 'Enable': False })
-			LmTools.MouseCursor_Normal()
 			if d is None:
-				LmTools.DisplayError('NMC.Guest:set service error')
+				self.displayError('NMC.Guest:set service error')
 			else:
-				LmTools.DisplayStatus('Guest Wifi deactivated.')
+				self.displayStatus('Guest Wifi deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('NMC.Guest:set service error')
+			self.displayError('NMC.Guest:set service error')
+		self.endTask()
 
 
 	### Click on Scheduler ON button
 	def schedulerOnButtonClick(self):
+		self.startTask(lx('Activating Wifi Scheduler...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
-			LmTools.MouseCursor_Normal()
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				LmTools.DisplayError('Scheduler:enableSchedule service error')
+				self.displayError('Scheduler:enableSchedule service error')
 			else:
-				LmTools.DisplayStatus('Scheduler activated.')
+				self.displayStatus('Scheduler activated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Scheduler:enableSchedule service error')
+			self.displayError('Scheduler:enableSchedule service error')
+		self.endTask()
 
 
 	### Click on Scheduler OFF button
 	def schedulerOffButtonClick(self):
+		self.startTask(lx('Deactivating Wifi Scheduler...'))
 		try:
-			LmTools.MouseCursor_Busy()
 			d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
-			LmTools.MouseCursor_Normal()
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				LmTools.DisplayError('Scheduler:enableSchedule service error')
+				self.displayError('Scheduler:enableSchedule service error')
 			else:
-				LmTools.DisplayStatus('Scheduler deactivated.')
+				self.displayStatus('Scheduler deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Scheduler:enableSchedule service error')
+			self.displayError('Scheduler:enableSchedule service error')
+		self.endTask()
 
 
 	### Click on Global Wifi Status button
@@ -348,20 +342,20 @@ class LmActions:
 
 	### Click on Reboot Livebox button
 	def rebootLiveboxButtonClick(self):
-		if LmTools.AskQuestion('Are you sure you want to reboot the Livebox?'):
+		if self.askQuestion('Are you sure you want to reboot the Livebox?'):
+			self.startTask(lx('Rebooting Livebox...'))
 			try:
-				LmTools.MouseCursor_Busy()
 				r = self._session.request('NMC:reboot', { 'reason': 'GUI_Reboot' })
-				LmTools.MouseCursor_Normal()
 				if r is None:
-					LmTools.DisplayError('NMC:reboot service error')
+					self.displayError('NMC:reboot service error')
 				else:
-					LmTools.DisplayStatus('Application will now quit.')
+					self.endTask()
+					self.displayStatus('Application will now quit.')
 					self.close()
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('NMC:reboot service error')
+				self.displayError('NMC:reboot service error')
+			self.endTask()
 
 
 	### Click on Reboot History button
@@ -379,7 +373,7 @@ class LmActions:
 		self.endTask()
 
 		if d is None:
-			LmTools.DisplayError('NMC.Reboot.Reboot:get service error')
+			self.displayError('NMC.Reboot.Reboot:get service error')
 			return
 
 		aHistoryDialog = RebootHistoryDialog('Livebox', self)
@@ -415,12 +409,12 @@ class LmActions:
 
 	### Click on show raw device list button
 	def showRawDeviceListButtonClick(self):
-		LmTools.DisplayInfos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent = 2))
+		self.displayInfos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent = 2))
 
 
 	### Click on show raw topology button
 	def showRawTopologyButtonClick(self):
-		LmTools.DisplayInfos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent = 2))
+		self.displayInfos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent = 2))
 
 
 	### Click on set log level button

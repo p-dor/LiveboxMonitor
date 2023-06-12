@@ -238,7 +238,7 @@ class LmDeviceList:
 			aIPv6Enabled = d.get('Enable')
 		if aIPv6Enabled is None:
 			self.endTask()
-			LmTools.DisplayError('NMC.IPv6:get service error')
+			self.displayError('NMC.IPv6:get service error')
 			return
 
 		# Get IPv6 address and prefix
@@ -260,7 +260,7 @@ class LmDeviceList:
 			aIPv6Prefix = d.get('IPv6DelegatedPrefix')
 		if (aIPv6Addr is None) or (aIPv6Prefix is None):
 			self.endTask()
-			LmTools.DisplayError('NMC:getWANStatus service error')
+			self.displayError('NMC:getWANStatus service error')
 			return
 
 		# Refresh device list
@@ -274,7 +274,7 @@ class LmDeviceList:
 			d = d.get('status')
 		if (d is None):
 			self.endTask()
-			LmTools.DisplayError('Error getting device list.')
+			self.displayError('Error getting device list.')
 			return
 		else:
 			self._liveboxDevices = d
@@ -310,9 +310,7 @@ class LmDeviceList:
 		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if self._liveboxDevices is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Error getting device list.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Error getting device list.')
 		else:
 			self.buildDeviceIpNameMap()
 			self._deviceIpNameMapDirty = False
@@ -326,9 +324,7 @@ class LmDeviceList:
 		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		if self._liveboxTopology is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Error getting device topology.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Error getting device topology.')
 		else:
 			self.buildLinkMaps()
 
@@ -583,7 +579,7 @@ class LmDeviceList:
 				d = d.get('status')
 			if d is None:
 				self.endTask()
-				LmTools.DisplayError('Error getting device list.')
+				self.displayError('Error getting device list.')
 				return
 			self._liveboxDevices = d
 
@@ -650,8 +646,8 @@ class LmDeviceList:
 		aRootNode = self._liveboxTopology[0]
 		aDeviceKey = aRootNode.get('Key', '')
 		self.buildLinksMapNode(aRootNode.get('Children', []), aDeviceKey, 'Livebox', '', '')
-#DBG	LmTools.DisplayInfos('Interface map', str(self._interfaceMap))
-#DBG	LmTools.DisplayInfos('Device map', str(self._deviceMap))
+#DBG	self.displayInfos('Interface map', str(self._interfaceMap))
+#DBG	self.displayInfos('Device map', str(self._deviceMap))
 
 
 	### Handle a topology node to build links map

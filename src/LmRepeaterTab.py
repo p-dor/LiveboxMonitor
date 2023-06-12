@@ -528,17 +528,17 @@ class LmRepHandler:
 				break
 
 			if r < 0:
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('Cannot connect to repeater ' + self._name + ' (' + self._ipAddr + ').')
+				self._app.displayError('Cannot connect to repeater ' + self._name + ' (' + self._ipAddr + ').')
 				self._session = None
 				self._signed = False
 				break
 
-			LmTools.MouseCursor_Normal()
+			self._app.suspendTask()
 			aPassword, aOK = QtWidgets.QInputDialog.getText(self._app, lx('Wrong repeater password'),
 															lx('Please enter password for repeater {0} ({1}):').format(self._name, self._ipAddr),
 															QtWidgets.QLineEdit.EchoMode.Password,
 															text = aPassword)
+			self._app.resumeTask()
 			if aOK:
 				# Remove unwanted characters from password (can be set via Paste action)
 				aPassword = re.sub('[\n\t]', '', aPassword)
@@ -693,7 +693,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Wifi infos button
@@ -708,7 +708,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on LAN infos button
@@ -723,7 +723,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Export infos button
@@ -738,7 +738,7 @@ class LmRepHandler:
 				self._app._exportFile = open(aFileName, 'w')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Cannot create the file.')
+				self._app.displayError('Cannot create the file.')
 				return
 
 			self._app.startTask(lx('Exporting all information...'))
@@ -752,119 +752,114 @@ class LmRepHandler:
 				self._app._exportFile.close()
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Cannot save the file.')
+				self._app.displayError('Cannot save the file.')
 
 			self._app._exportFile = None
 
 			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Wifi ON button
 	def wifiOnButtonClick(self):
 		if self.isSigned():
+			self._app.startTask(lx('Activating Repeater Wifi...'))
 			try:
-				LmTools.MouseCursor_Busy()
 				d = self._session.request('NMC.Wifi:set', { 'Enable': True, 'Status' : True })
-				LmTools.MouseCursor_Normal()
 				if d is None:
-					LmTools.DisplayError('NMC.Wifi:set service error')
+					self._app.displayError('NMC.Wifi:set service error')
 				else:
-					LmTools.DisplayStatus('Wifi activated (probably only 5GHz).')
+					self._app.displayStatus('Wifi activated (probably only 5GHz).')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('NMC.Wifi:set service error')
+				self._app.displayError('NMC.Wifi:set service error')
+			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Wifi OFF button
 	def wifiOffButtonClick(self):
 		if self.isSigned():
+			self._app.startTask(lx('Deactivating Repeater Wifi...'))
 			try:
-				LmTools.MouseCursor_Busy()
 				d = self._session.request('NMC.Wifi:set', { 'Enable': False, 'Status' : False })
-				LmTools.MouseCursor_Normal()
 				if d is None:
-					LmTools.DisplayError('NMC.Wifi:set service error')
+					self._app.displayError('NMC.Wifi:set service error')
 				else:
-					LmTools.DisplayStatus('Wifi deactivated (probably only 5GHz).')
+					self._app.displayStatus('Wifi deactivated (probably only 5GHz).')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('NMC.Wifi:set service error')
+				self._app.displayError('NMC.Wifi:set service error')
+			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Wifi Scheduler ON button
 	def schedulerOnButtonClick(self):
 		if self.isSigned():
+			self._app.startTask(lx('Activating Repeater Scheduler...'))
 			try:
-				LmTools.MouseCursor_Busy()
 				d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
-				LmTools.MouseCursor_Normal()
 				if d is not None:
 					d = d.get('status')
 				if (d is None) or (not d):
-					LmTools.DisplayError('Scheduler:enableSchedule service error')
+					self._app.displayError('Scheduler:enableSchedule service error')
 				else:
-					LmTools.DisplayStatus('Scheduler activated.')
+					self._app.displayStatus('Scheduler activated.')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('Scheduler:enableSchedule service error')
+				self._app.displayError('Scheduler:enableSchedule service error')
+			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Wifi Scheduler OFF button
 	def schedulerOffButtonClick(self):
 		if self.isSigned():
+			self._app.startTask(lx('Deactivating Repeater Scheduler...'))
 			try:
-				LmTools.MouseCursor_Busy()
 				d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
-				LmTools.MouseCursor_Normal()
 				if d is not None:
 					d = d.get('status')
 				if (d is None) or (not d):
-					LmTools.DisplayError('Scheduler:enableSchedule service error')
+					self._app.displayError('Scheduler:enableSchedule service error')
 				else:
-					LmTools.DisplayStatus('Scheduler deactivated.')
+					self._app.displayStatus('Scheduler deactivated.')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('Scheduler:enableSchedule service error')
+				self._app.displayError('Scheduler:enableSchedule service error')
+			self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Reboot Repeater button
 	def rebootRepeaterButtonClick(self):
 		if self.isSigned():
-			if LmTools.AskQuestion('Are you sure you want to reboot the Repeater?'):
+			if self._app.askQuestion('Are you sure you want to reboot the Repeater?'):
+				self._app.startTask(lx('Rebooting Repeater...'))
 				try:
-					LmTools.MouseCursor_Busy()
 					d = self._session.request('NMC:reboot', { 'reason': 'WebUI reboot' })
-					LmTools.MouseCursor_Normal()
 					if (d is not None) and (d.get('status', False)):
-						LmTools.DisplayStatus('Repeater is now restarting.')
+						self._app.displayStatus('Repeater is now restarting.')
 					else:
-						LmTools.DisplayError('NMC:reboot service failed')
+						self._app.displayError('NMC:reboot service failed')
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					LmTools.MouseCursor_Normal()
-					LmTools.DisplayError('NMC:reboot service error')
+					self._app.displayError('NMC:reboot service error')
+				self._app.endTask()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Reboot History button
 	def rebootHistoryButtonClick(self):
 		if self.isSigned():
-			self._app.startTask('Getting Reboot History...')
+			self._app.startTask(lx('Getting Reboot History...'))
 
 			try:
 				d = self._session.request('NMC.Reboot.Reboot:get')
@@ -877,25 +872,25 @@ class LmRepHandler:
 			self._app.endTask()
 
 			if d is None:
-				LmTools.DisplayError('NMC.Reboot.Reboot:get service error')
+				self._app.displayError('NMC.Reboot.Reboot:get service error')
 				return
 
 			aHistoryDialog = RebootHistoryDialog('Repeater', self._app)
 			aHistoryDialog.loadHistory(d)
 			aHistoryDialog.exec()
 		else:
-			LmTools.DisplayError('Not signed to repeater.')
+			self._app.displayError('Not signed to repeater.')
 
 
 	### Click on Resign button
 	def resignButtonClick(self):
 		if self.isActive():
-			if LmTools.AskQuestion('Are you sure you want to resign to the Repeater?'):
-				LmTools.MouseCursor_Busy()
+			if self._app.askQuestion('Are you sure you want to resign to the Repeater?'):
+				self._app.startTask(lx('Signing in to repeater...'))
 				self.signin()
-				LmTools.MouseCursor_Normal()
+				self._app.endTask()
 		else:
-			LmTools.DisplayError('Repeater is inactive.')
+			self._app.displayError('Repeater is inactive.')
 
 
 	### Click on Debug button
@@ -906,28 +901,28 @@ class LmRepHandler:
 				d = self._session.request('NeMo.Intf.data:getMIBs')
 				LmTools.MouseCursor_Normal()
 				if d is None:
-					LmTools.DisplayError('NeMo.Intf.data:getMIBs service failed')
+					self._app.displayError('NeMo.Intf.data:getMIBs service failed')
 				else:
-					LmTools.DisplayInfos('NeMo.Intf.data:getMIBs', json.dumps(d, indent = 2))
+					self._app.displayInfos('NeMo.Intf.data:getMIBs', json.dumps(d, indent = 2))
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('NeMo.Intf.data:getMIBs service error')
+				self._app.displayError('NeMo.Intf.data:getMIBs service error')
 
 			try:
 				LmTools.MouseCursor_Busy()
 				d = self._session.request('NeMo.Intf.lan:getMIBs')
 				LmTools.MouseCursor_Normal()
 				if d is None:
-					LmTools.DisplayError('NeMo.Intf.lan:getMIBs service failed')
+					self._app.displayError('NeMo.Intf.lan:getMIBs service failed')
 				else:
-					LmTools.DisplayInfos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent = 2))
+					self._app.displayInfos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent = 2))
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.MouseCursor_Normal()
-				LmTools.DisplayError('NeMo.Intf.lan:getMIBs service error')
+				self._app.displayError('NeMo.Intf.lan:getMIBs service error')
 		else:
-			LmTools.DisplayError('Not signed to repeater.')		
+			self._app.displayError('Not signed to repeater.')		
 
 
 	### Add a title line in an info attribute/value list

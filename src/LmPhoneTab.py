@@ -245,34 +245,34 @@ class LmPhone:
 				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList', { 'callId': aKey })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Phone call delete query error.')
+				self.displayError('Phone call delete query error.')
 				return
 
 			if (aReply is not None) and ('status' in aReply):
 				self._callList.removeRow(aCurrentSelection)
 			else:
-				LmTools.DisplayError('Phone call delete query failed.')
+				self.displayError('Phone call delete query failed.')
 		else:
-			LmTools.DisplayError('Please select a phone call.')
+			self.displayError('Please select a phone call.')
 
 
 	### Click on delete all calls button
 	def deleteAllCallsButtonClick(self):
-		if LmTools.AskQuestion('Are you sure you want to delete all phone calls?'):
-			LmTools.MouseCursor_Busy()
+		if self.askQuestion('Are you sure you want to delete all phone calls?'):
+			self.startTask(lx('Deleting phone call list...'))
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList')
 			except BaseException as e:
-				LmTools.MouseCursor_Normal()
+				self.endTask()
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Delete all calls query error.')
+				self.displayError('Delete all calls query error.')
 				return
-			LmTools.MouseCursor_Normal()
+			self.endTask()
 
 			if (aReply is not None) and ('status' in aReply):
 				self.refreshCallButtonClick()
 			else:
-				LmTools.DisplayError('Delete all calls query failed.')
+				self.displayError('Delete all calls query failed.')
 
 
 	### Double click on a call to add/edit corresponding contact
@@ -330,9 +330,7 @@ class LmPhone:
 		if aCallList is not None:
 			aCallList = aCallList.get('status')
 		if aCallList is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Error getting phone call list.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Error getting phone call list.')
 		else:
 			i = 0
 			for c in aCallList:
@@ -442,7 +440,7 @@ class LmPhone:
 		if aCurrentSelection >= 0:
 			self.editContactDialog(aCurrentSelection)
 		else:
-			LmTools.DisplayError('Please select a contact.')
+			self.displayError('Please select a contact.')
 
 
 	### Click on delete contact button
@@ -454,7 +452,7 @@ class LmPhone:
 				aReply = self._session.request('Phonebook:removeContactByUniqueID', { 'uniqueID': aKey })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Contact delete query error.')
+				self.displayError('Contact delete query error.')
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
@@ -463,28 +461,28 @@ class LmPhone:
 				self._contactList.removeRow(aCurrentSelection)
 				self.assignContactToCalls()
 			else:
-				LmTools.DisplayError('Contact delete query failed.')
+				self.displayError('Contact delete query failed.')
 		else:
-			LmTools.DisplayError('Please select a contact.')
+			self.displayError('Please select a contact.')
 
 
 	### Click on delete all contacts button
 	def deleteAllContactsButtonClick(self):
-		if LmTools.AskQuestion('Are you sure you want to delete all contacts?'):
-			LmTools.MouseCursor_Busy()
+		if self.askQuestion('Are you sure you want to delete all contacts?'):
+			self.startTask(lx('Deleting contact list...'))
 			try:
 				aReply = self._session.request('Phonebook:removeAllContacts')
 			except BaseException as e:
-				LmTools.MouseCursor_Normal()
+				self.endTask()
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Delete all contacts query error.')
+				self.displayError('Delete all contacts query error.')
 				return
-			LmTools.MouseCursor_Normal()
+			self.endTask()
 
 			if (aReply is not None) and (aReply.get('status', False)):
 				self.refreshContactButtonClick()
 			else:
-				LmTools.DisplayError('Delete all contacts query failed.')
+				self.displayError('Delete all contacts query failed.')
 
 
 	### Click on Phone Ring button
@@ -504,9 +502,9 @@ class LmPhone:
 		LmTools.MouseCursor_Normal()
 
 		if d is None:
-			LmTools.DisplayError('Ring service error.')
+			self.displayError('Ring service error.')
 		else:
-			LmTools.DisplayStatus('Phone should be ringing.')
+			self.displayStatus('Phone should be ringing.')
 
 
 	### Click on export contacts button
@@ -520,7 +518,7 @@ class LmPhone:
 			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot create the file.')
+			self.displayError('Cannot create the file.')
 			return
 
 		self.startTask(lx('Exporting all contacts...'))
@@ -529,9 +527,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Error getting contact list.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Error getting contact list.')
 		else:
 			for c in aContactList:
 				aContact = self.decodeLiveboxContact(c)
@@ -552,7 +548,7 @@ class LmPhone:
 			aExportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot save the file.')
+			self.displayError('Cannot save the file.')
 
 
 	### Click on import contacts button
@@ -582,7 +578,7 @@ class LmPhone:
 				aErrorStr += f + ', '
 			n = len(aErrorStr)
 			aErrorStr = aErrorStr[:n - 2] + '.'
-			LmTools.DisplayError(aErrorStr)
+			self.displayError(aErrorStr)
 
 
 	### VCF file import, returns: 1=Success, 0=File error, -1=Stop all error
@@ -745,9 +741,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Error getting contact list.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Error getting contact list.')
 		else:
 			i = 0
 			for c in aContactList:
@@ -877,18 +871,18 @@ class LmPhone:
 			aReply = self._session.request('Phonebook:addContactAndGenUUID', { 'contact': aData })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Contact creation query error.')
+			self.displayError('Contact creation query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
 			aKey = aReply['status']
 			if aKey is None:
-				LmTools.DisplayError('Max number of contacts reached.')
+				self.displayError('Max number of contacts reached.')
 				return False
 			iContact['key'] = aReply['status']
 			return True
 
-		LmTools.DisplayError('Contact creation query failed.')
+		self.displayError('Contact creation query failed.')
 		return False
 
 
@@ -901,10 +895,10 @@ class LmPhone:
 			aReply = self._session.request('Phonebook:getContactByUniqueID', { 'uniqueID': aKey })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Contact query error.')
+			self.displayError('Contact query error.')
 			return
 		if (aReply is None) or ('status' not in aReply):
-			LmTools.DisplayError('Cannot retrieve contact from Livebox.')
+			self.displayError('Cannot retrieve contact from Livebox.')
 			return
 		aLBContact = aReply['status']
 		aContact = self.decodeLiveboxContact(aLBContact)
@@ -940,7 +934,7 @@ class LmPhone:
 				aReply = self._session.request('Phonebook:modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Contact update query error.')
+				self.displayError('Contact update query error.')
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
@@ -952,7 +946,7 @@ class LmPhone:
 				self.addContactToMatchingIndex(aContact)
 				self.assignContactToCalls()
 			else:
-				LmTools.DisplayError('Contact update query failed.')
+				self.displayError('Contact update query failed.')
 
 
 	### Add contact to matching index

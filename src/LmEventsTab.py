@@ -171,14 +171,14 @@ class LmEvents:
 	def displayEventButtonClick(self):
 		aCurrDeviceSelection = self._eventDList.currentRow()
 		if aCurrDeviceSelection < 0:
-			LmTools.DisplayError('Please select a device.')
+			self.displayError('Please select a device.')
 			return
 
 		aDeviceKey = self._eventDList.item(aCurrDeviceSelection, DSelCol.Key).text()
 
 		aCurrEventSelection = self._eventList.currentRow()
 		if aCurrEventSelection < 0:
-			LmTools.DisplayError('No event selected.')
+			self.displayError('No event selected.')
 			return
 
 		aEventKey = int(self._eventList.item(aCurrEventSelection, EventCol.Key).text())
@@ -193,7 +193,7 @@ class LmEvents:
 				break
 
 		if e is None:
-			LmTools.DisplayError('Event entry not found.')
+			self.displayError('Event entry not found.')
 			return
 
 		# Display event entry
@@ -218,7 +218,7 @@ class LmEvents:
 		aCursor.insertText(json.dumps(e['Attributes'], indent=2), aStandardFormat)
 		aCursor.endEditBlock()
 
-		LmTools.DisplayInfos(lx('Event Entry'), None, aTextDoc)
+		self.displayInfos(lx('Event Entry'), None, aTextDoc)
 
 
 	### Update event list

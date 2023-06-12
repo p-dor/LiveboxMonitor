@@ -257,7 +257,7 @@ class LmGraph:
 		if aCurrentSelection >= 0:
 			self._graphList.removeRow(aCurrentSelection)
 		else:
-			LmTools.DisplayError('Please select a line.')
+			self.displayError('Please select a line.')
 
 
 	### Click on apply button
@@ -291,7 +291,7 @@ class LmGraph:
 				for o in self._graphData:
 					self.exportGraphObject(aFolder, o)
 		else:
-			LmTools.DisplayError('No graph to export.')
+			self.displayError('No graph to export.')
 
 
 	### Export a graph object to a file
@@ -309,7 +309,7 @@ class LmGraph:
 				continue
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('Cannot create the file.')
+				self.displayError('Cannot create the file.')
 				return
 			break
 
@@ -338,7 +338,7 @@ class LmGraph:
 			aExportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot save the file.')
+			self.displayError('Cannot save the file.')
 
 
 	### Load stats parameters
@@ -347,7 +347,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan:getReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('HomeLan getReadingInterval query error.')
+			self.displayError('HomeLan getReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:
@@ -359,7 +359,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan:getDevicesReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('HomeLan getDevicesReadingInterval query error.')
+			self.displayError('HomeLan getDevicesReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:
@@ -604,7 +604,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan.Interface:get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('HomeLan interfaces query error.')
+			self.displayError('HomeLan interfaces query error.')
 			return
 
 		if aReply is not None:
@@ -631,7 +631,7 @@ class LmGraph:
 						id = k
 					self._graphValidInterfaces.append([k, m, id])
 		else:
-			LmTools.DisplayError('HomeLan interfaces query failed.')
+			self.displayError('HomeLan interfaces query failed.')
 
 
 	### Load the current valid devices
@@ -640,7 +640,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan.Device:get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('HomeLan devices query error.')
+			self.displayError('HomeLan devices query error.')
 			return
 
 		if aReply is not None:
@@ -662,7 +662,7 @@ class LmGraph:
 						m = 0
 					self._graphValidDevices.append([a, m, a])
 		else:
-			LmTools.DisplayError('HomeLan devices query failed.')
+			self.displayError('HomeLan devices query failed.')
 
 
 	### Load the stats for the given interface ID
@@ -676,7 +676,7 @@ class LmGraph:
 				aReply = self._session.request('HomeLan:getResults', { 'InterfaceName': iID }, iTimeout = 15)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Interface statistics query error.')
+			self.displayError('Interface statistics query error.')
 			return
 
 		if aReply is not None:
@@ -701,7 +701,7 @@ class LmGraph:
 				aReply = self._session.request('HomeLan:getDeviceResults', { 'DeviceName': iID }, iTimeout = 15)				
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Device statistics query error.')
+			self.displayError('Device statistics query error.')
 			return
 
 		if aReply is not None:

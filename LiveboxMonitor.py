@@ -294,7 +294,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self.show()
 					continue
 				else:
-					LmTools.DisplayError('Cannot connect to the Livebox.')
+					self.displayError('Cannot connect to the Livebox.')
 					return False
 
 			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, self)
@@ -305,7 +305,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:
-				LmTools.DisplayError('Livebox authentication failed.')
+				self.displayError('Livebox authentication failed.')
 				return False
 
 
@@ -378,6 +378,18 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		LmTools.LogDebug(2, 'TASK STARTING stack={} task={}'.format(self._taskNb, iTask))
 
 
+	### Suspend a potential running task
+	def suspendTask(self):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceNormal()
+
+
+	### Resume a potential running task
+	def resumeTask(self):
+		if self._taskNb:
+			LmTools.MouseCursor_ForceBusy()
+
+
 	### End a long (nested) task
 	def endTask(self):
 		if self._taskNb:
@@ -406,39 +418,31 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	# Display an error popup
 	def displayError(self, iErrorMsg):
-		if self._taskNb:
-			LmTools.MouseCursor_ForceNormal()
+		self.suspendTask()
 		LmTools.DisplayError(iErrorMsg)
-		if self._taskNb:
-			LmTools.MouseCursor_ForceBusy()
+		self.resumeTask()
 
 
 	# Display a status popup
 	def displayStatus(self, iStatusMsg):
-		if self._taskNb:
-			LmTools.MouseCursor_ForceNormal()
+		self.suspendTask()
 		LmTools.DisplayStatus(iStatusMsg)
-		if self._taskNb:
-			LmTools.MouseCursor_ForceBusy()
+		self.resumeTask()
 
 
 	# Ask a question and return True if OK clicked
 	def askQuestion(self, iQuestionMsg):
-		if self._taskNb:
-			LmTools.MouseCursor_ForceNormal()
+		self.suspendTask()
 		aAnswer = LmTools.AskQuestion(iQuestionMsg)
-		if self._taskNb:
-			LmTools.MouseCursor_ForceBusy()
+		self.resumeTask()
 		return aAnswer
 
 
 	# Display an info text popup
 	def displayInfos(self, iTitle, iInfoMsg, iInfoDoc = None):
-		if self._taskNb:
-			LmTools.MouseCursor_ForceNormal()
+		self.suspendTask()
 		LmTools.DisplayInfos(iTitle, iInfoMsg, iInfoDoc)
-		if self._taskNb:
-			LmTools.MouseCursor_ForceBusy()
+		self.resumeTask()
 
 
 	### Switch to device list tab

@@ -494,7 +494,9 @@ LABELS = {
 		'Select files to import': 'Sélectionnez les fichiers à importer',
 		'Importing contacts...': 'Import des contacts...',
 		'Cannot import file(s): ': 'Impossible d\'importer le(s) fichier(s) : ',
-		'Loading contact list...': 'Chargement des contacts...'
+		'Loading contact list...': 'Chargement des contacts...',
+		'Deleting phone call list...': 'Suppression de tous les appels téléphoniques...',
+		'Deleting contact list...': 'Suppression de tous les contacts...'
 	},
 
 	# Phone - Contact edit
@@ -535,7 +537,14 @@ LABELS = {
 		'Raw Device List': 'JSON Liste Appareils',
 		'Raw Topology': 'JSON Topologie',
 		'Log level selection': 'Niveau de log',
-		'Please select a log level:': 'Sélectionnez un niveau de log :'
+		'Please select a log level:': 'Sélectionnez un niveau de log :',
+		'Activating Wifi...': 'Activation du Wifi...',
+		'Deactivating Wifi...': 'Désactivation du Wifi...',
+		'Activating Guest Wifi...': 'Activation du Wifi Invité...',
+		'Deactivating Guest Wifi...': 'Désactivation du Wifi Invité...',
+		'Activating Wifi Scheduler...': 'Activation du Planificateur Wifi...',
+		'Deactivating Wifi Scheduler...': 'Désactivation du Planificateur Wifi...',
+		'Rebooting Livebox...': 'Redémarrage de la Livebox...'
 	},
 
 	# Actions - Reboot history
@@ -646,7 +655,14 @@ LABELS = {
 		'Max Bit Rate Supported': 'Débit Max Supporté',
 		'Current Duplex Mode': 'Mode Duplex',
 		'Power Saving Supported': 'Économie Énergie Supportée',
-		'Power Saving Enabled': 'Économie Énergie Activée'
+		'Power Saving Enabled': 'Économie Énergie Activée',
+		'Activating Repeater Wifi...': 'Activation du Wifi du répéteur...',
+		'Deactivating Repeater Wifi...': 'Désactivation du Wifi du répéteur...',
+		'Activating Repeater Scheduler...': 'Activation du Planificateur Wifi du répéteur...',
+		'Deactivating Repeater Scheduler...': 'Désactivation du Planificateur Wifi du répéteur...',
+		'Rebooting Repeater...': 'Redémarrage du répéteur...',
+		'Getting Reboot History...': 'Chargement de l\'historique de redémarrages...',
+		'Signing in to repeater...': 'Authentification au répéteur...'
 	},
 
 	# Config - Preferences

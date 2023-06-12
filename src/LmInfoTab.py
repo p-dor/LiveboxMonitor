@@ -542,7 +542,7 @@ class LmInfo:
 			self._exportFile = open(aFileName, 'w')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot create the file.')
+			self.displayError('Cannot create the file.')
 			return
 
 		self.startTask(lx('Exporting all information...'))
@@ -564,7 +564,7 @@ class LmInfo:
 			self._exportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot save the file.')
+			self.displayError('Cannot save the file.')
 
 		self._exportFile = None
 

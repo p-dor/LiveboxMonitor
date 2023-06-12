@@ -198,16 +198,16 @@ class LmDhcp:
 				aReply = self._session.request('DHCPv4.Server.Pool.' + d + ':addStaticLease', { 'MACAddress': aMAC, 'IPAddress': aIP })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('DHCP binding query error.')
+				self.displayError('DHCP binding query error.')
 				return
 
 			if (aReply is not None) and ('status' in aReply):
 				aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 				if len(aErrors):
-					LmTools.DisplayError(aErrors)
+					self.displayError(aErrors)
 				self.refreshDhcpBindingButtonClick()
 			else:
-				LmTools.DisplayError('DHCP binding query failed.')
+				self.displayError('DHCP binding query failed.')
 
 
 	### Click on delete DHCP binding button
@@ -224,18 +224,18 @@ class LmDhcp:
 				aReply = self._session.request('DHCPv4.Server.Pool.' + d + ':deleteStaticLease', { 'MACAddress': aMAC })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				LmTools.DisplayError('DHCP binding delete query error.')
+				self.displayError('DHCP binding delete query error.')
 				return
 
 			if (aReply is not None) and ('status' in aReply):
 				aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 				if len(aErrors):
-					LmTools.DisplayError(aErrors)
+					self.displayError(aErrors)
 				self.refreshDhcpBindingButtonClick()
 			else:
-				LmTools.DisplayError('DHCP binding delete query failed.')
+				self.displayError('DHCP binding delete query failed.')
 		else:
-			LmTools.DisplayError('Please select a DHCP binding.')
+			self.displayError('Please select a DHCP binding.')
 
 
 	### Click on refresh DHCP attributes button
@@ -256,7 +256,7 @@ class LmDhcp:
 		if d is not None:
 			d = d.get('data')
 		if d is None:
-			LmTools.DisplayError('DHCP query failed.')
+			self.displayError('DHCP query failed.')
 			return
 
 		# Load current values
@@ -270,7 +270,7 @@ class LmDhcp:
 			(aDHCPMask is None) or
 			(aDHCPMinAddress is None) or
 			(aDHCPMaxAddress is None)):
-			LmTools.DisplayError('Cannot retrieve DHCP information.')
+			self.displayError('Cannot retrieve DHCP information.')
 			return
 
 		# Ask user
@@ -287,7 +287,7 @@ class LmDhcp:
 			# Warn in case of DHCP disabling
 			if (not aNewDHCPEnabled) and (aDHCPEnabled):
 				aChange = True
-				if not LmTools.AskQuestion('Deactivating the DHCP server is likely to disconnect your home devices. Continue?'):
+				if not self.askQuestion('Deactivating the DHCP server is likely to disconnect your home devices. Continue?'):
 					return
 
 			# Warn in case of address changes
@@ -296,9 +296,9 @@ class LmDhcp:
 				(aNewDHCPMinAddress != aDHCPMinAddress) or
 				(aNewDHCPMaxAddress != aDHCPMaxAddress)):
 				aChange = True
-				if not LmTools.AskQuestion('Modifying the IP address of your Livebox and the other settings of the DHCP server, ' \
-										   'may interrupt all your services. You will need to redefine the static IP addresses ' \
-										   'according to the new addressing plan. Continue?'):
+				if not self.askQuestion('Modifying the IP address of your Livebox and the other settings of the DHCP server, ' \
+										'may interrupt all your services. You will need to redefine the static IP addresses ' \
+										'according to the new addressing plan. Continue?'):
 					return
 
 			if aChange:
@@ -325,15 +325,15 @@ class LmDhcp:
 					aReply = self._session.request('NetMaster.LAN.default.Bridge.lan:setIPv4', p)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					LmTools.DisplayError('DHCP setup query error.')
+					self.displayError('DHCP setup query error.')
 					return
 
 				if (aReply is not None) and ('status' in aReply):
 					aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 					if len(aErrors):
-						LmTools.DisplayError(aErrors)
+						self.displayError(aErrors)
 				else:
-					LmTools.DisplayError('DHCP setup query failed.')
+					self.displayError('DHCP setup query failed.')
 
 
 	### Load DHCP bindings
@@ -370,9 +370,7 @@ class LmDhcp:
 	### Load DHCP bindings in the list
 	def loadDhcpBindingsInList(self, iBindings, iDomain):
 		if iBindings is None:
-			LmTools.MouseCursor_Normal()
-			LmTools.DisplayError('Cannot load ' + iDomain + ' DHCP bindings.')
-			LmTools.MouseCursor_Busy()
+			self.displayError('Cannot load ' + iDomain + ' DHCP bindings.')
 			return
 
 		i = self._dhcpDList.rowCount()
