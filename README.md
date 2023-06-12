@@ -62,6 +62,12 @@ Lancement :
 - MacOS : **10.15 (Catalina)** ou plus récent.
 
 
+## À propos de l'auteur
+
+L'auteur de ce logiciel est un professionnel de l'informatique n'ayant aucun lien avec Orange. Ce logiciel n'est donc en rien un produit d'Orange.  
+Aucune documentation des APIs de la Livebox n'étant disponible, l'élaboration a été effectuée à partir de techniques classiques de rétro-ingénierie (reverse engineering), et l'ensemble du projet sur le temps libre de l'auteur.
+
+
 ## Prise en main
 
 L'interface se veut intuitive mais il vaut mieux se reporter à la documentation pour comprendre certains comportements ou représentations.
