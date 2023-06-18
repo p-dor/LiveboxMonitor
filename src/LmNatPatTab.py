@@ -385,20 +385,31 @@ class LmNatPat:
 		if aTypeDialog.exec():
 			self.startTask(lx('Deleting rules...'))
 			t = aTypeDialog.getTypes()
-			i = 0
-			c = 0
-			n = self._patList.rowCount()
-			while (i < n):
-				r = self.getPatRuleFromList(i)
-				if (r is not None) and t[r['Type']]:
-					self.delPatRule(r)
-					c += 1
-				i += 1
+
+			# Delete all IPv4 rules if selected
+			if t[RULE_TYPE_IPv4]:
+				self.delAllIPv4PatRule(False)
+
+			# Delete all UPnP rules if selected
+			if t[RULE_TYPE_UPnP]:
+				self.delAllIPv4PatRule(True)
+
+			# Delete one by one IPv6 rules if selected
+			if t[RULE_TYPE_IPv6]:
+				i = 0
+				n = self._patList.rowCount()
+				while (i < n):
+					r = self.getPatRuleFromList(i)
+					if (r is not None) and (r['Type'] == RULE_TYPE_IPv6):
+						self.delPatRule(r)
+					i += 1
+
+			# Commit & refresh
 			self.commitNatPatRuleChange()
 			self.refreshPatList()
 			self.endTask()
 
-			self.displayStatus('{} rule(s) deleted.'.format(c))
+			self.displayStatus('All selected rule(s) deleted.')
 
 
 	### Click on export PAT rules button
@@ -1102,6 +1113,33 @@ class LmNatPat:
 			return aReply['status']
 		else:
 			self.displayError('Firewall deletePinhole query failed.')
+			return False
+
+
+	### Delete all IPv4 or UPnP PAT rules from Livebox, return True if successful
+	def delAllIPv4PatRule(self, iUPnP):
+		# Build parameters
+		if iUPnP:
+			o = 'upnp'
+		else:
+			o = 'webui'
+
+		# Call Livebox API
+		try:
+			aReply = self._session.request('Firewall:deletePortForwarding', { 'origin': o })
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self.displayError('Firewall deletePortForwarding query error.')
+			return False
+
+		if (aReply is not None) and ('status' in aReply):
+			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			if len(aErrors):
+				self.displayError(aErrors)
+				return False
+			return aReply['status']
+		else:
+			self.displayError('Firewall deletePortForwarding query failed.')
 			return False
 
 
