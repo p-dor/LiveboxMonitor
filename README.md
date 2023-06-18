@@ -334,6 +334,67 @@ Les boutons suivants sont proposés pour gérer la liste des baux :
     Permet d'activer ou de désactiver le serveur, de changer l'adresse IP de la Livebox, de changer le masque de sous-réseau du serveur DHCP ainsi que la plage d'adresse IP pour le domaine `Home`.
 
 
+## NAT/PAT - Règles de redirection de port et de protocole
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat.png)
+
+Cet onglet permet de gérer de façon fine les règles de redirection de port et de protocole IPv4, IPv6 et UPnP de la Livebox. De par cette gestion fine il peut arriver que certaines règles, bien que correctement stockées et interprétées par la Livebox, ne s'affichent pas dans l'interface Web de la Livebox. Ceci est normal et ne représente pas vraiment de problème.
+
+### Redirections de port
+La liste des règles de redirection de port, en haut, affiche les colonnes suivantes :
+- **A** : icône indiquant si la règle est active ou non.
+- **Type** : type de la règle, entre IPv4, IPv6 et UPnP. Les règles UPnP sont gérées automatiquement par la Livebox et vous ne devriez normalement pas avoir à les modifier.
+- **Nom** : nom de la règle.
+- **Description** : description de la règle.
+- **Protocoles** : liste des protocoles concernés par la règle. 
+- **Port Interne** : port interne sur lequel le trafic est redirigé.
+- **Port Externe** : port externe à rediriger.
+- **Appareil** : appareil (ou son adresse IP) sur lequel le trafic est redirigé.
+- **IP Externes** : liste des adresses IPs externes concernées par la règle.
+
+Un **double clic** sur une règle permet de facilement l'éditer.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des règles :
+- **`Rafraîchir`** : rafraîchit la liste des règles de redirection de port.
+- **`Activer/Désactiver`** : active/désactive la règle sélectionnée.
+- **`Ajouter...`** : permet d'ajouter une règle de redirection de port.
+- **`Modifier...`** : permet de modifier la règle de redirection de port sélectionnée.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat_PortForwarding.png)
+
+- **`Supprimer`** : supprime la règle de redirection de port sélectionnée.
+- **`Tout Supprimer...`** : permet de supprimer toutes les règles de redirection de port. Il est possible de supprimer uniquement une sélection de types de règle. Si une ou plusieurs règles posent problème à la Livebox (par exemple lorsque leur nom contient des caractères spéciaux) ce bouton peut permettre de revenir à une situation saine.
+- **`Export...`** : permet d'exporter dans un fichier les règles de redirection de port d'un ou plusieurs types choisis.
+- **`Import...`** : permet de réimporter des règles de redirection de port précédemment exportées dans un fichier. Si des règles de même nom existent déjà elles seront écrasées par celles importées.
+
+### Redirections de protocole
+La liste des règles de redirection de protocole, en bas, affiche les colonnes suivantes :
+- **A** : icône indiquant si la règle est active ou non.
+- **Type** : type de la règle, entre IPv4 et IPv6.
+- **Nom** : nom de la règle.
+- **Description** : description de la règle.
+- **Protocoles** : liste des protocoles concernés par la règle. 
+- **Appareil** : appareil (ou son adresse IP) sur lequel le trafic est redirigé.
+- **IP Externes** : liste des adresses IPs externes concernées par la règle.
+
+Un **double clic** sur une règle permet de facilement l'éditer.
+
+### Boutons
+Les boutons suivants sont proposés pour gérer la liste des règles :
+- **`Rafraîchir`** : rafraîchit la liste des règles de redirection de protocole.
+- **`Activer/Désactiver`** : active/désactive la règle sélectionnée.
+- **`Ajouter...`** : permet d'ajouter une règle de redirection de protocole.
+- **`Modifier...`** : permet de modifier la règle de redirection de protocole sélectionnée.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat_ProtocolForwarding.png)
+
+- **`Supprimer`** : supprime la règle de redirection de protocole sélectionnée.
+- **`Tout Supprimer...`** : permet de supprimer toutes les règles de redirection de protocole. Il est possible de supprimer uniquement une sélection de types de règle. Si une ou plusieurs règles posent problème à la Livebox (par exemple lorsque leur nom contient des caractères spéciaux) ce bouton peut permettre de revenir à une situation saine.
+- **`Export...`** : permet d'exporter dans un fichier les règles de redirection de protocole d'un ou plusieurs types choisis.
+- **`Import...`** : permet de réimporter des règles de redirection de protocole précédemment exportées dans un fichier. Si des règles de même nom existent déjà elles seront écrasées par celles importées.
+
+
 ## Téléphone - Liste des appels téléphoniques / liste des contacts
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone.png)

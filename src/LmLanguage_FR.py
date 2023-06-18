@@ -1029,11 +1029,12 @@ TOOLTIPS = {
 		'addPat': 'Permet d\'ajouter une règle de redirection de port.',
 		'editPat': 'Permet de modifier la règle de redirection de port sélectionnée.',
 		'deletePat': 'Permet de supprimer la règle de redirection de port sélectionnée.',
-		'deleteAllPat': 'Permet de supprimer toutes les règles de redirection de port.',
+		'deleteAllPat': 'Permet de supprimer toutes les règles de redirection de port\n'
+						'd\'un ou plusieurs types choisis.',
 		'exportPat': 'Permet d\'exporter dans un fichier les règles de redirection\n'
 					 'de port d\'un ou plusieurs types choisis.',
 		'importPat': 'Permet de réimporter des règles de redirection de port précédemment\n'
-					 'exportée dans un fichier. Si des règles de même nom existent déjà\n'
+					 'exportées dans un fichier. Si des règles de même nom existent déjà\n'
 					 'elles seront écrasées par celles importées.',
 		'tlist_Enabled': 'Indique par une icône si la règle est active ou non.',
 		'tlist_Type': 'Indique le type de la règle.',
@@ -1051,7 +1052,7 @@ TOOLTIPS = {
 		'exportPtf': 'Permet d\'exporter dans un fichier les règles de redirection\n'
 					 'de protocole d\'un ou plusieurs types choisis.',
 		'importPtf': 'Permet de réimporter des règles de redirection de protocole\n'
-					 'précédemment exportée dans un fichier. Si des règles de même nom\n'
+					 'précédemment exportées dans un fichier. Si des règles de même nom\n'
 					 'existent déjà elles seront écrasées par celles importées.'
 	},
 
