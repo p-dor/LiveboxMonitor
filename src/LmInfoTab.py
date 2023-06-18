@@ -575,6 +575,22 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Livebox Information'))
 
 		try:
+			d = self._session.request('UPnP-IGD:get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			i = self.addInfoLine(self._liveboxAList, i, lx('Livebox Infos'), 'UPnP-IGD:get query error', LmTools.ValQual.Error)
+		else:
+			i = self.addInfoLine(self._liveboxAList, i, lx('Provider'), d.get('WANAccessProvider'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Model Number'), d.get('ModelNumber'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Model Name'), d.get('ModelName'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Friendly Name'), d.get('FriendlyName'))
+			i = self.addInfoLine(self._liveboxAList, i, lx('Allowed Host Headers'), d.get('AllowedHostHeader'))
+
+		try:
 			d = self._session.request('DeviceInfo:get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
