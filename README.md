@@ -7,7 +7,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
 - Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
-- Contrôler de manière fine les réglages du serveur DHCP,
+- Contrôler de manière fine les réglages du serveur DHCP et des règles NAT/PAT,
 - Contrôler l'état du Wifi,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.

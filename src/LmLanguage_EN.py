@@ -86,6 +86,12 @@ TOOLTIPS = {
 	# Actions - Wifi global status
 	'wglobal': {},
 
+	# Actions - Firewall level
+	'fwlevel': {},
+
+	# Actions - Ping Response
+	'pingr': {},
+
 	# Repeater
 	'repeater': {},
 

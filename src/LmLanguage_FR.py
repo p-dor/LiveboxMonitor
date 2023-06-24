@@ -527,6 +527,9 @@ LABELS = {
 		'Reboot Livebox...': 'Redémarrer la Livebox...',
 		'Reboot History...': 'Historique Redémarrages...',
 		'Reboots': 'Redémarrages',
+		'Firewall Levels...': 'Niveaux de pare-feu...',
+		'Ping Responses...': 'Réponses aux pings...',
+		'Firewall': 'Pare-feu',
 		'An Open Source project': 'Un projet Open Source',
 		'About': 'À propos',
 		'Preferences...': 'Préférences...',
@@ -539,6 +542,8 @@ LABELS = {
 		'Quit Application': 'Quitter l\'application',
 		'Getting Wifi Global Status...': 'Chargement de l\'état global du Wifi...',
 		'Getting Reboot History...': 'Chargement de l\'historique de redémarrages...',
+		'Set Firewall Levels...': 'Changement des niveaux de pare-feu...',
+		'Set Ping Responses...': 'Changement des réponses aux pings...',
 		'Raw Device List': 'JSON Liste Appareils',
 		'Raw Topology': 'JSON Topologie',
 		'Log level selection': 'Niveau de log',
@@ -573,6 +578,26 @@ LABELS = {
 		'Error': 'Erreur',
 		'Inactive': 'Inactif',
 		'Not signed': 'Non authentifié'
+	},
+
+	# Actions - Firewall level
+	'fwlevel': {
+		'IPv4 Firewall Level:': 'Niveau du pare-feu IPv4',
+		'IPv6 Firewall Level:': 'Niveau du pare-feu IPv6',
+		'High': 'Élevé',
+		'Medium': 'Moyen',
+		'Low': 'Faible',
+		'Custom': 'Personnalisé',
+		'Cancel': 'Annuler',
+		'Firewall Levels': 'Niveaux des pares-feux'
+	},
+
+	# Actions - Ping Response
+	'pingr': {
+		'Respond to IPv4 ping': 'Répondre au ping IPv4',
+		'Respond to IPv6 ping': 'Répondre au ping IPv6',
+		'Cancel': 'Annuler',
+		'Ping Responses': 'Réponses aux pings'
 	},
 
 	# Repeater
@@ -1163,6 +1188,8 @@ TOOLTIPS = {
 		'rebootLivebox': 'Permet de forcer un redémarrage de la Livebox.',
 		'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
 						 'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.',
+		'firewallLevel': 'Permet de régler les niveaux des pares-feux IPv4 et IPv6.',
+		'pingResponse': 'Permet de régler les réponses aux requêtes de ping IPv4 et IPv6.',
 		'openSourceURL': 'Un clic ouvrira la page web de l\'application sur votre navigateur.',
 		'prefs': 'Permet d\'afficher l\'écran des préférences du programme.',
 		'changeProfile': 'Permet de changer le profil en cours et de relancer le programme.',
@@ -1189,6 +1216,18 @@ TOOLTIPS = {
 
 	# Actions - Wifi global status
 	'wglobal': {},
+
+	# Actions - Firewall level
+	'fwlevel': {
+		'ipV4Combo': 'Niveau du pare-feu IPv4.',
+		'ipV6Combo': 'Niveau du pare-feu IPv6.'
+	},
+
+	# Actions - Ping Response
+	'pingr': {
+		'ipV4Checkbox': 'Sélectionnez pour répondre aux requêtes de ping IPv4.',
+		'ipV6Checkbox': 'Sélectionnez pour répondre aux requêtes de ping IPv6.'
+	},
 
 	# Repeater
 	'repeater': {

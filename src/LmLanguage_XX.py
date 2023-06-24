@@ -611,6 +611,9 @@ LABELS = {
 		'Reboot Livebox...': '',
 		'Reboot History...': '',
 		'Reboots': '',
+		'Firewall Levels...': '',
+		'Ping Responses...': '',
+		'Firewall': '',
 		'An Open Source project': '',
 		'About': '',
 		'Preferences...': '',
@@ -624,6 +627,8 @@ LABELS = {
 		'Actions': '',
 		'Getting Wifi Global Status...': '',
 		'Getting Reboot History...': '',
+		'Set Firewall Levels...': '',
+		'Set Ping Responses...': '',
 		'Raw Device List': '',
 		'Raw Topology': '',
 		'Log level selection': '',
@@ -662,6 +667,28 @@ LABELS = {
 		'Error': '',
 		'Inactive': '',
 		'Not signed': ''
+	},
+
+	# Actions - Firewall level
+	'fwlevel': {
+		'IPv4 Firewall Level:': '',
+		'IPv6 Firewall Level:': '',
+		'High': '',
+		'Medium': '',
+		'Low': '',
+		'Custom': '',
+		'OK': '',
+		'Cancel': '',
+		'Firewall Levels': ''
+	},
+
+	# Actions - Ping Response
+	'pingr': {
+		'Respond to IPv4 ping': '',
+		'Respond to IPv6 ping': '',
+		'OK': '',
+		'Cancel': '',
+		'Ping Responses': ''
 	},
 
 	# Repeater
@@ -1215,6 +1242,9 @@ TOOLTIPS = {
 		'rebootLivebox': '',
 		'rebootHistory': '',
 		'rebootGroup': '',
+		'firewallLevel': '',
+		'pingResponse': '',
+		'firewallGroup': '',
 		'appIcon': '',
 		'appName': '',
 		'openSourceURL': '',
@@ -1241,6 +1271,24 @@ TOOLTIPS = {
 	# Actions - Wifi global status
 	'wglobal': {
 		'ok': ''
+	},
+
+	# Actions - Firewall level
+	'fwlevel': {
+		'ipV4Label': '',
+		'ipV4Combo': '',
+		'ipV6Label': '',
+		'ipV6Combo': '',
+		'ok': '',
+		'cancel': ''
+	},
+
+	# Actions - Ping Response
+	'pingr': {
+		'ipV4Checkbox': '',
+		'ipV6Checkbox': '',
+		'ok': '',
+		'cancel': ''
 	},
 
 	# Repeater

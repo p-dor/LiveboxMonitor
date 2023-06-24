@@ -11,7 +11,9 @@ from src import LmConfig
 from src.LmConfig import LmConf, PrefsDialog, SetApplicationStyle
 from src.LmLanguages import (GetActionsLabel as lx,
 							 GetActionsRHistoryDialogLabel as lrx,
-							 GetActionsWGlobalDialogLabel as lwx)
+							 GetActionsWGlobalDialogLabel as lwx,
+							 GetActionsFirewallLevelDialogLabel as lfx,
+							 GetActionsPingResponseDialogLabel as lpx)
 
 from __init__ import __url__, __copyright__
 
@@ -49,6 +51,10 @@ class WifiStatus:
 	Error = 'E'
 	Inactive = 'I'
 	Unsigned = 'S'
+
+# Firewall levels
+FIREWALL_LEVELS = ['High', 'Medium', 'Low', 'Custom']
+
 
 
 # ################################ LmActions class ################################
@@ -117,6 +123,11 @@ class LmActions:
 		aWifiGroupBox = QtWidgets.QGroupBox(lx('Wifi'), objectName = 'wifiGroup')
 		aWifiGroupBox.setLayout(aWifiButtons)
 
+		# Reboot & Firewall column
+		aMiddleZone = QtWidgets.QVBoxLayout()
+		aMiddleZone.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aMiddleZone.setSpacing(20)
+
 		# Reboot buttons column
 		aRebootButtons = QtWidgets.QVBoxLayout()
 		aRebootButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -134,6 +145,26 @@ class LmActions:
 
 		aRebootGroupBox = QtWidgets.QGroupBox(lx('Reboots'), objectName = 'rebootGroup')
 		aRebootGroupBox.setLayout(aRebootButtons)
+		aMiddleZone.addWidget(aRebootGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+
+		# Firewall buttons column
+		aFirewallButtons = QtWidgets.QVBoxLayout()
+		aFirewallButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+		aFirewallButtons.setSpacing(20)
+
+		aFirewallLevelButton = QtWidgets.QPushButton(lx('Firewall Levels...'), objectName = 'firewallLevel')
+		aFirewallLevelButton.clicked.connect(self.firewallLevelButtonClick)
+		aFirewallLevelButton.setMinimumWidth(BUTTON_WIDTH)
+		aFirewallButtons.addWidget(aFirewallLevelButton)
+
+		aPingResponseButton = QtWidgets.QPushButton(lx('Ping Responses...'), objectName = 'pingResponse')
+		aPingResponseButton.clicked.connect(self.pingResponseButtonClick)
+		aPingResponseButton.setMinimumWidth(BUTTON_WIDTH)
+		aFirewallButtons.addWidget(aPingResponseButton)
+
+		aFirewallGroupBox = QtWidgets.QGroupBox(lx('Firewall'), objectName = 'firewallGroup')
+		aFirewallGroupBox.setLayout(aFirewallButtons)
+		aMiddleZone.addWidget(aFirewallGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# About, preferences, debug and quit column
 		aRightZone = QtWidgets.QVBoxLayout()
@@ -217,7 +248,7 @@ class LmActions:
 		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
 		aHBox.setSpacing(40)
 		aHBox.addWidget(aWifiGroupBox, 1, QtCore.Qt.AlignmentFlag.AlignTop)
-		aHBox.addWidget(aRebootGroupBox, 1, QtCore.Qt.AlignmentFlag.AlignTop)
+		aHBox.addLayout(aMiddleZone, 1)
 		aHBox.addLayout(aRightZone, 1)
 		self._actionsTab.setLayout(aHBox)
 
@@ -233,12 +264,12 @@ class LmActions:
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				self.displayError('NMC.Wifi:set service error')
+				self.displayError('NMC.Wifi:set service failed.')
 			else:
 				self.displayStatus('Wifi activated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('NMC.Wifi:set service error')
+			self.displayError('NMC.Wifi:set service error.')
 		self.endTask()
 
 
@@ -250,12 +281,12 @@ class LmActions:
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				self.displayError('NMC.Wifi:set service error')
+				self.displayError('NMC.Wifi:set service failed.')
 			else:
 				self.displayStatus('Wifi deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('NMC.Wifi:set service error')
+			self.displayError('NMC.Wifi:set service error.')
 		self.endTask()
 
 
@@ -265,12 +296,12 @@ class LmActions:
 		try:
 			d = self._session.request('NMC.Guest:set', { 'Enable': True })
 			if d is None:
-				self.displayError('NMC.Guest:set service error')
+				self.displayError('NMC.Guest:set service failed.')
 			else:
 				self.displayStatus('Guest Wifi activated. Reactivate Scheduler if required.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('NMC.Guest:set service error')
+			self.displayError('NMC.Guest:set service error.')
 		self.endTask()
 
 
@@ -280,12 +311,12 @@ class LmActions:
 		try:
 			d = self._session.request('NMC.Guest:set', { 'Enable': False })
 			if d is None:
-				self.displayError('NMC.Guest:set service error')
+				self.displayError('NMC.Guest:set service failed.')
 			else:
 				self.displayStatus('Guest Wifi deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('NMC.Guest:set service error')
+			self.displayError('NMC.Guest:set service error.')
 		self.endTask()
 
 
@@ -297,12 +328,12 @@ class LmActions:
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				self.displayError('Scheduler:enableSchedule service error')
+				self.displayError('Scheduler:enableSchedule service failed.')
 			else:
 				self.displayStatus('Scheduler activated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Scheduler:enableSchedule service error')
+			self.displayError('Scheduler:enableSchedule service error.')
 		self.endTask()
 
 
@@ -314,12 +345,12 @@ class LmActions:
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
-				self.displayError('Scheduler:enableSchedule service error')
+				self.displayError('Scheduler:enableSchedule service failed.')
 			else:
 				self.displayStatus('Scheduler deactivated.')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Scheduler:enableSchedule service error')
+			self.displayError('Scheduler:enableSchedule service error.')
 		self.endTask()
 
 
@@ -347,14 +378,14 @@ class LmActions:
 			try:
 				r = self._session.request('NMC:reboot', { 'reason': 'GUI_Reboot' })
 				if r is None:
-					self.displayError('NMC:reboot service error')
+					self.displayError('NMC:reboot service failed.')
 				else:
 					self.endTask()
 					self.displayStatus('Application will now quit.')
 					self.close()
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				self.displayError('NMC:reboot service error')
+				self.displayError('NMC:reboot service error.')
 			self.endTask()
 
 
@@ -373,12 +404,150 @@ class LmActions:
 		self.endTask()
 
 		if d is None:
-			self.displayError('NMC.Reboot.Reboot:get service error')
+			self.displayError('NMC.Reboot.Reboot:get service error.')
 			return
 
 		aHistoryDialog = RebootHistoryDialog('Livebox', self)
 		aHistoryDialog.loadHistory(d)
 		aHistoryDialog.exec()
+
+
+	### Click on Firewall Level button
+	def firewallLevelButtonClick(self):
+		# Get current IPv4 firewall level
+		try:
+			aReply = self._session.request('Firewall:getFirewallLevel')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self.displayError('Firewall getFirewallLevel query error.')
+			return
+
+		if (aReply is not None) and ('status' in aReply):
+			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			if len(aErrors):
+				self.displayError(aErrors)
+				return
+			aFirewallIPv4Level = aReply['status']
+		else:
+			self.displayError('Firewall getFirewallLevel query failed.')
+			return
+
+		# Get current IPv6 firewall level
+		try:
+			aReply = self._session.request('Firewall:getFirewallIPv6Level')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self.displayError('Firewall getFirewallIPv6Level query error.')
+			return
+
+		if (aReply is not None) and ('status' in aReply):
+			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			if len(aErrors):
+				self.displayError(aErrors)
+				return
+			aFirewallIPv6Level = aReply['status']
+		else:
+			self.displayError('Firewall getFirewallIPv6Level query failed.')
+			return
+
+		aFirewallLevelDialog = FirewallLevelDialog(aFirewallIPv4Level, aFirewallIPv6Level, self)
+		if aFirewallLevelDialog.exec():
+			self.startTask(lx('Set Firewall Levels...'))
+
+			# Set new IPv4 firewall level if changed
+			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
+			if aNewFirewallIPv4Level != aFirewallIPv4Level:
+				try:
+					aReply = self._session.request('Firewall:setFirewallLevel', { 'level': aNewFirewallIPv4Level })
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					self.displayError('Firewall setFirewallLevel query error.')
+				else:
+					if (aReply is not None) and ('status' in aReply):
+						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+						if len(aErrors):
+							self.displayError(aErrors)
+						elif not aReply['status']:
+							self.displayError('Firewall setFirewallLevel query failed.')
+					else:
+						self.displayError('Firewall setFirewallLevel query failed.')
+
+			# Set new IPv6 firewall level if changed
+			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
+			if aNewFirewallIPv6Level != aFirewallIPv6Level:
+				try:
+					aReply = self._session.request('Firewall:setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					self.displayError('Firewall setFirewallIPv6Level query error.')
+				else:
+					if (aReply is not None) and ('status' in aReply):
+						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+						if len(aErrors):
+							self.displayError(aErrors)
+						elif not aReply['status']:
+							self.displayError('Firewall setFirewallIPv6Level query failed.')
+					else:
+						self.displayError('Firewall setFirewallIPv6Level query failed.')
+
+			self.endTask()
+
+
+	### Click on Ping Response button
+	def pingResponseButtonClick(self):
+		# ###Info### - works also for other sourceInterfaces such as veip0, eth0, voip, etc, but usefulness?
+
+		# Get current ping reponses
+		try:
+			aReply = self._session.request('Firewall:getRespondToPing', { 'sourceInterface': 'data' })
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self.displayError('Firewall getRespondToPing query error.')
+			return
+
+		if (aReply is not None) and ('status' in aReply):
+			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			if len(aErrors):
+				self.displayError(aErrors)
+				return
+
+			aReply = aReply['status']
+			aIPv4Ping = aReply.get('enableIPv4')
+			aIPv6Ping = aReply.get('enableIPv6')
+			if (aIPv4Ping is None) or (aIPv6Ping is None):
+				self.displayError('Firewall getRespondToPing query failed.')
+				return
+		else:
+			self.displayError('Firewall getRespondToPing query failed.')
+			return
+
+		aPingResponseDialog = PingResponseDialog(aIPv4Ping, aIPv6Ping, self)
+		if aPingResponseDialog.exec():
+			# Set new ping responses level if changed
+			aNewIPv4Ping = aPingResponseDialog.getIPv4()
+			aNewIPv6Ping = aPingResponseDialog.getIPv6()
+			if (aNewIPv4Ping != aIPv4Ping) or (aNewIPv6Ping != aIPv6Ping):
+				self.startTask(lx('Set Ping Responses...'))
+
+				p = {}
+				p['enableIPv4'] = aNewIPv4Ping
+				p['enableIPv6'] = aNewIPv6Ping
+				try:
+					aReply = self._session.request('Firewall:setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
+				except BaseException as e:
+					LmTools.Error('Error: {}'.format(e))
+					self.displayError('Firewall setRespondToPing query error.')
+				else:
+					if (aReply is not None) and ('status' in aReply):
+						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+						if len(aErrors):
+							self.displayError(aErrors)
+						elif not aReply['status']:
+							self.displayError('Firewall setRespondToPing query failed.')
+					else:
+						self.displayError('Firewall setRespondToPing query failed.')
+
+				self.endTask()
 
 
 	### Open Source project web button
@@ -595,3 +764,120 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 			i += 1
 
 		return iIndex + 1
+
+
+
+# ############# Firewall Level dialog #############
+class FirewallLevelDialog(QtWidgets.QDialog):
+	def __init__(self, iIPv4Level, iIPv6Level, iParent = None):
+		super(FirewallLevelDialog, self).__init__(iParent)
+		self.setMinimumWidth(230)
+		self.resize(300, 150)
+
+		aIpV4LevelLabel = QtWidgets.QLabel(lfx('IPv4 Firewall Level:'), objectName = 'ipV4Label')
+		self._ipV4LevelCombo = QtWidgets.QComboBox(objectName = 'ipV4Combo')
+		for l in FIREWALL_LEVELS:
+			self._ipV4LevelCombo.addItem(lfx(l), userData = l)
+		self._ipV4LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv4Level))
+
+		aIpV6LevelLabel = QtWidgets.QLabel(lfx('IPv6 Firewall Level:'), objectName = 'ipV6Label')
+		self._ipV6LevelCombo = QtWidgets.QComboBox(objectName = 'ipV6Combo')
+		for l in FIREWALL_LEVELS:
+			self._ipV6LevelCombo.addItem(lfx(l), userData = l)
+		self._ipV6LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv6Level))
+
+		aGrid = QtWidgets.QGridLayout()
+		aGrid.setSpacing(10)
+		aGrid.addWidget(aIpV4LevelLabel, 0, 0)
+		aGrid.addWidget(self._ipV4LevelCombo, 0, 1)
+		aGrid.addWidget(aIpV6LevelLabel, 1, 0)
+		aGrid.addWidget(self._ipV6LevelCombo, 1, 1)
+		aGrid.setColumnStretch(0, 0)
+		aGrid.setColumnStretch(1, 1)
+
+		self._okButton = QtWidgets.QPushButton(lfx('OK'), objectName = 'ok')
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton(lfx('Cancel'), objectName = 'cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aHBox = QtWidgets.QHBoxLayout()
+		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aHBox.setSpacing(10)
+		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.addLayout(aGrid, 0)
+		aVBox.addLayout(aHBox, 1)
+
+		LmConfig.SetToolTips(self, 'fwlevel')
+
+		self.setWindowTitle(lfx('Firewall Levels'))
+
+		self.setModal(True)
+		self.show()
+
+
+	def getIPv4Level(self):
+		return self._ipV4LevelCombo.currentData()
+
+
+	def getIPv6Level(self):
+		return self._ipV6LevelCombo.currentData()
+
+
+
+# ############# Ping Response dialog #############
+class PingResponseDialog(QtWidgets.QDialog):
+	def __init__(self, iIPv4, iIPv6, iParent = None):
+		super(PingResponseDialog, self).__init__(iParent)
+		self.setMinimumWidth(230)
+		self.resize(230, 150)
+
+		self._ipV4CheckBox = QtWidgets.QCheckBox(lpx('Respond to IPv4 ping'), objectName = 'ipV4Checkbox')
+		if iIPv4:
+				self._ipV4CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+				self._ipV4CheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+		self._ipV6CheckBox = QtWidgets.QCheckBox(lpx('Respond to IPv6 ping'), objectName = 'ipV6Checkbox')
+		if iIPv6:
+				self._ipV6CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+				self._ipV6CheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+		aVCBox = QtWidgets.QVBoxLayout()
+		aVCBox.setSpacing(10)
+		aVCBox.addWidget(self._ipV4CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aVCBox.addWidget(self._ipV6CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+
+		self._okButton = QtWidgets.QPushButton(lpx('OK'), objectName = 'ok')
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton(lpx('Cancel'), objectName = 'cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aHBox = QtWidgets.QHBoxLayout()
+		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aHBox.setSpacing(10)
+		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.addLayout(aVCBox, 0)
+		aVBox.addLayout(aHBox, 1)
+
+		LmConfig.SetToolTips(self, 'pingr')
+
+		self.setWindowTitle(lpx('Ping Responses'))
+
+		self.setModal(True)
+		self.show()
+
+
+	def getIPv4(self):
+		return self._ipV4CheckBox.checkState() == QtCore.Qt.CheckState.Checked
+
+
+	def getIPv6(self):
+		return self._ipV6CheckBox.checkState() == QtCore.Qt.CheckState.Checked
+
