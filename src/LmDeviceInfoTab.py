@@ -121,6 +121,7 @@ class LmDeviceInfo:
 	### Init selected device context
 	def initDeviceContext(self):
 		self._currentDeviceLiveboxName = None
+		self._currentDeviceDnsName = None
 		self._currentDeviceType = ''
 
 
@@ -147,7 +148,7 @@ class LmDeviceInfo:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 			aName = LmConf.MacAddrTable.get(aKey, None)
 
-			aSetDeviceNameDialog = SetDeviceNameDialog(aKey, aName, self._currentDeviceLiveboxName, self)
+			aSetDeviceNameDialog = SetDeviceNameDialog(aKey, aName, self._currentDeviceLiveboxName, self._currentDeviceDnsName, self)
 			if (aSetDeviceNameDialog.exec()):
 				aName = aSetDeviceNameDialog.getName()
 				if aName is None:
@@ -157,10 +158,17 @@ class LmDeviceInfo:
 
 				aName = aSetDeviceNameDialog.getLiveboxName()
 				if aName is None:
-					aSuccess = self.delDeviceLiveboxName(aKey)
+					aLbSuccess = self.delDeviceLiveboxName(aKey, False)
 				else:
-					aSuccess = self.setDeviceLiveboxName(aKey, aName)
-				if aSuccess:
+					aLbSuccess = self.setDeviceLiveboxName(aKey, aName, False)
+
+				aName = aSetDeviceNameDialog.getDnsName()
+				if aName is None:
+					aDnsSuccess = self.delDeviceLiveboxName(aKey, True)
+				else:
+					aDnsSuccess = self.setDeviceLiveboxName(aKey, aName, True)
+
+				if aLbSuccess or aDnsSuccess:
 					self.infoDeviceListClick()
 		else:
 			self.displayError('Please select a device.')
@@ -187,30 +195,43 @@ class LmDeviceInfo:
 
 
 	### Set a device name for Livebox
-	def setDeviceLiveboxName(self, iDeviceKey, iDeviceName):
+	def setDeviceLiveboxName(self, iDeviceKey, iDeviceName, iDns):
+		p = {}
+		p['name'] = iDeviceName
+		if iDns:
+			p['source'] = 'dns'
+			t = 'DNS'
+		else:
+			t = 'Livebox'
 		try:
-			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':setName', { 'name': iDeviceName })
+			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':setName', p)
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
-				self.displayError('Set Livebox name query failed.')
+				self.displayError('Set {} name query failed.'.format(t))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Set Livebox name query error.')
+			self.displayError('Set {} name query error.'.format(t))
 		return False
 
 
 	### Delete a device name from the Livebox
-	def delDeviceLiveboxName(self, iDeviceKey):
+	def delDeviceLiveboxName(self, iDeviceKey, iDns):
+		if iDns:
+			s = 'dns'
+			t = 'DNS'
+		else:
+			s = 'webui'
+			t = 'Livebox'
 		try:
-			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':removeName', { 'source': 'webui' })
+			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':removeName', { 'source': s })
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
-				self.displayError('Remove Livebox name query failed.')
+				self.displayError('Remove {} name query failed.'.format(t))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Remove Livebox name query error.')
+			self.displayError('Remove {} name query error.'.format(t))
 		return False
 
 
@@ -391,10 +412,15 @@ class LmDeviceInfo:
 		self._currentDeviceLiveboxName = d.get('Name', None)
 		i = self.addInfoLine(self._infoAList, i, lx('Livebox Name'), self._currentDeviceLiveboxName)
 
+		self._currentDeviceDnsName = None
 		aNameList = d.get('Names', [])
 		if len(aNameList):
 			for aName in aNameList:
-				i = self.addInfoLine(self._infoAList, i, lx('Name'), aName.get('Name', '') + ' (' + aName.get('Source', '') + ')')
+				aNameStr = aName.get('Name', '')
+				aSource = aName.get('Source', '')
+				if aSource == 'dns':
+					self._currentDeviceDnsName = aNameStr
+				i = self.addInfoLine(self._infoAList, i, lx('Name'), aNameStr + ' (' + aSource + ')')
 		
 		aDNSList = d.get('mDNSService', [])
 		if len(aDNSList):
@@ -482,9 +508,9 @@ class LmDeviceInfo:
 
 # ############# Set device name dialog #############
 class SetDeviceNameDialog(QtWidgets.QDialog):
-	def __init__(self, iDeviceKey, iName, iLiveboxName, iParent = None):
+	def __init__(self, iDeviceKey, iName, iLiveboxName, iDnsName, iParent = None):
 		super(SetDeviceNameDialog, self).__init__(iParent)
-		self.resize(350, 150)
+		self.resize(350, 200)
 
 		aLabel = QtWidgets.QLabel(lnx('Names for [{}] device:').format(iDeviceKey), objectName = 'mainLabel')
 
@@ -512,12 +538,26 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 			self._currentLiveboxName = iLiveboxName
 			self._liveboxNameEdit.setText(self._currentLiveboxName)
 
+		self._dnsNameCheckBox = QtWidgets.QCheckBox(lnx('DNS Name'), objectName = 'dnsNameCheckBox')
+		self._dnsNameCheckBox.clicked.connect(self.dnsNameClick)
+		self._dnsNameEdit = QtWidgets.QLineEdit(objectName = 'dnsNameEdit')
+		if iDnsName is None:
+			self._dnsNameCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._dnsNameEdit.setDisabled(True)
+			self._currentDnsName = ''
+		else:
+			self._dnsNameCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
+			self._currentDnsName = iDnsName
+			self._dnsNameEdit.setText(self._currentDnsName)
+
 		aNameGrid = QtWidgets.QGridLayout()
 		aNameGrid.setSpacing(10)
 		aNameGrid.addWidget(self._nameCheckBox, 0, 0)
 		aNameGrid.addWidget(self._nameEdit, 0, 1)
 		aNameGrid.addWidget(self._liveboxNameCheckBox, 1, 0)
 		aNameGrid.addWidget(self._liveboxNameEdit, 1, 1)
+		aNameGrid.addWidget(self._dnsNameCheckBox, 2, 0)
+		aNameGrid.addWidget(self._dnsNameEdit, 2, 1)
 
 		aOKButton = QtWidgets.QPushButton(lnx('OK'), objectName = 'ok')
 		aOKButton.clicked.connect(self.accept)
@@ -531,6 +571,7 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 
 		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
 		aVBox.addWidget(aLabel, 0)
 		aVBox.addLayout(aNameGrid, 0)
 		aVBox.addLayout(aHBox, 1)
@@ -560,6 +601,15 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 			self._liveboxNameEdit.setText('')
 
 
+	def dnsNameClick(self):
+		if (self._dnsNameCheckBox.checkState() == QtCore.Qt.CheckState.Checked):
+			self._dnsNameEdit.setDisabled(False)
+			self._dnsNameEdit.setText(self._currentDnsName)
+		else:
+			self._dnsNameEdit.setDisabled(True)
+			self._dnsNameEdit.setText('')
+
+
 	def getName(self):
 		if (self._nameCheckBox.checkState() == QtCore.Qt.CheckState.Checked):
 			return self._nameEdit.text()
@@ -569,6 +619,12 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 	def getLiveboxName(self):
 		if (self._liveboxNameCheckBox.checkState() == QtCore.Qt.CheckState.Checked):
 			return self._liveboxNameEdit.text()
+		return None
+
+
+	def getDnsName(self):
+		if (self._dnsNameCheckBox.checkState() == QtCore.Qt.CheckState.Checked):
+			return self._dnsNameEdit.text()
 		return None
 
 
