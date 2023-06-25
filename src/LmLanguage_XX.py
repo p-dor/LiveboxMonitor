@@ -61,7 +61,7 @@ LABELS = {
 		'Livebox Name': '',
 		'MAC': '',
 		'A': '',
-		'IPv4': '',
+		'IP': '',
 		'DNS': '',
 		'OK': '',
 		'Devices DNS': ''
@@ -961,7 +961,7 @@ TOOLTIPS = {
 		'dns_LBName': '',
 		'dns_MAC': '',
 		'dns_Active': '',
-		'dns_IPv4': '',
+		'dns_IP': '',
 		'dns_DNS': '',
 		'ok': ''
 	},
