@@ -875,11 +875,11 @@ TOOLTIPS = {
 					  'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
 		'dns_MAC': 'Adresse MAC, aussi appelée adresse physique de l\'appareil.',
 		'dns_Active': 'Indique par une icône si l\'appareil est actif ou non.',
-		'dns_IPv4': 'Adresse IPv4 de l\'appareil sur le LAN.\n'
-					'Cette adresse s\'affiche en caractères gras si cette adresse est réservée pour cet appareil\n'
-					'dans la configuration DHCP de la Livebox.\n'
-					'Et elle s\'affiche en rouge si l\'adresse n\'est pas atteignable sur le réseau (unreacheable),\n'
-					'typiquement lorsque l\'appareil n\'est pas actif.',
+		'dns_IP': 'Adresse IP de l\'appareil sur le LAN.\n'
+				  'Cette adresse s\'affiche en caractères gras si cette adresse est réservée pour cet appareil\n'
+				  'dans la configuration DHCP de la Livebox.\n'
+				  'Et elle s\'affiche en rouge si l\'adresse n\'est pas atteignable sur le réseau (unreacheable),\n'
+				  'typiquement lorsque l\'appareil n\'est pas actif.',
 		'dns_DNS': 'Nom DNS de l\'appareil.\n'
 				   'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".'
 	},
