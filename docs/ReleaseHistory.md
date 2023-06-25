@@ -1,5 +1,15 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
+## v1.2 - 25/06/2023
+
+- Nouvel onglet NAT/PAT permettant de régler finement les règles de redirection de port et de protocole, d'exporter et d'importer les règles, etc.
+- Plus d'informations sur le modèle de Livebox sont disponibles via le bouton "Infos Livebox".
+- Nouveau bouton "Niveaux de pare-feu..." dans l'onglet "Actions" permettant de régler le niveau de protection des pare-feux IPv4 et IPv6.
+- Nouveau bouton "Réponses aux pings..." dans l'onglet "Actions" permettant de régler les réponses aux pings en IPv4 et en IPv6.
+- Quand la Livebox retourne des erreurs plus d'informations sont disponibles dans le dialogue.
+- Corrections de bugs mineurs.
+
+
 ## v1.1.1 - 15/05/2023
 
 - Le chargement des icônes en accès distant fonctionne.

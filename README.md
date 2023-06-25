@@ -27,17 +27,17 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
 **Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5 & 6. Le support des événements a aussi été rajouté.
 
-### Téléchargement - version 1.1.1 (15/05/2023)
+### Téléchargement - version 1.2 (25/06/2023)
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
-- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor.exe)
-- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Console.exe)
-- MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor.dmg)
-- MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Console.dmg)
-- MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon.dmg)
-- MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.1.1/LiveboxMonitor_Silicon_Console.dmg)
+- Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor.exe)
+- Windows avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor_Console.exe)
+- MacOS (Intel) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor.dmg)
+- MacOS (Intel) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor_Console.dmg)
+- MacOS (Silicon) : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor_Silicon.dmg)
+- MacOS (Silicon) avec console : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.2/LiveboxMonitor_Silicon_Console.dmg)
 
-Nouveautés de la version 1.1.1 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
+Nouveautés de la version 1.2 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
 
 
 ### Utilisation directe via les sources
@@ -477,7 +477,7 @@ Les actions concernant les **Redémarrages** :
     - **Raison Arrêt** : la raison de cet arrêt. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
 
 Les actions concernant le **Pare-feu** :
-- **`Niveaux de pare-feu...`** : permet de régler les niveaux des pares-feux IPv4 et IPv6.
+- **`Niveaux de pare-feu...`** : permet de régler les niveaux des pare-feux IPv4 et IPv6.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_FirewallLevels.png)
 - **`Réponses aux pings...`** : permet de régler les réponses aux requêtes de ping IPv4 et IPv6.
