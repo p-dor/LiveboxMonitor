@@ -280,7 +280,7 @@ class LmDeviceList:
 	### Click on DNS button
 	def dnsButtonClick(self):
 		self.startTask(lx('Getting DNS Information...'))
-		self.loadDeviceIpNameMap()	###TODO### Doesn't refresh if a DNS name changed or has been assigned
+		self.loadDeviceIpNameMap()
 		self.endTask()
 
 		aDnsDialog = DnsDialog(self)
