@@ -29,6 +29,9 @@ TOOLTIPS = {
 	# Device list - IPv6 dialog
 	'ipv6': {},
 
+	# Device list - DNS dialog
+	'dns': {},
+
 	# Livebox infos
 	'info': {},
 

@@ -82,6 +82,7 @@ def GetMainLabel(iString): return GetLabel('main', iString)
 # Device list
 def GetDeviceListLabel(iString): return GetLabel('dlist', iString)
 def GetIPv6DialogLabel(iString): return GetLabel('ipv6', iString)
+def GetDnsDialogLabel(iString): return GetLabel('dns', iString)
 
 # Livebox infos
 def GetInfoLabel(iString): return GetLabel('info', iString)

@@ -30,8 +30,10 @@ LABELS = {
 		'Device Infos': '',
 		'Device Events': '',
 		'IPv6...': '',
+		'DNS...': '',
 		'Device List': '',
 		'Getting IPv6 Information...': '',
+		'Getting DNS Information...': '',
 		'Loading device list...': '',
 		'<None>': '',
 		'Unknown': '',
@@ -51,6 +53,18 @@ LABELS = {
 		'IPv6': '',
 		'OK': '',
 		'IPv6 Devices': ''
+	},
+
+	# Device list - DNS dialog
+	'dns': {
+		'Name': '',
+		'Livebox Name': '',
+		'MAC': '',
+		'A': '',
+		'IPv4': '',
+		'DNS': '',
+		'OK': '',
+		'Devices DNS': ''
 	},
 
 	# Livebox infos
@@ -371,6 +385,7 @@ LABELS = {
 		'Names for [{}] device:': '',
 		'Local Name': '',
 		'Livebox Name': '',
+		'DNS Name': '',
 		'OK': '',
 		'Cancel': '',
 		'Assign device names': ''
@@ -919,7 +934,8 @@ TOOLTIPS = {
 		'refresh': '',
 		'deviceInfo': '',
 		'deviceEvents': '',
-		'ipv6': ''
+		'ipv6': '',
+		'dns': ''
 	},
 
 	# Device list - IPv6 dialog
@@ -936,6 +952,17 @@ TOOLTIPS = {
 		'addr': '',
 		'prefixLabel': '',
 		'prefix': '',
+		'ok': ''
+	},
+
+	# Device list - DNS dialog
+	'dns': {
+		'dns_Name': '',
+		'dns_LBName': '',
+		'dns_MAC': '',
+		'dns_Active': '',
+		'dns_IPv4': '',
+		'dns_DNS': '',
 		'ok': ''
 	},
 
@@ -1019,6 +1046,8 @@ TOOLTIPS = {
 		'nameEdit': '',
 		'liveboxNameCheckBox': '',
 		'liveboxNameEdit': '',
+		'dnsNameCheckBox': '',
+		'dnsNameEdit': '',
 		'ok': '',
 		'cancel': ''
 	},

@@ -23,6 +23,7 @@ LABELS = {
 		'Device Events': 'Événements Appareil',
 		'Device List': 'Appareils',
 		'Getting IPv6 Information...': 'Chargement des informations IPv6...',
+		'Getting DNS Information...': 'Chargement des informations DNS...',
 		'Loading device list...': 'Chargement de la liste d\'appareils...',
 		'<None>': '<Aucun>',
 		'Unknown': 'Inconnu',
@@ -37,6 +38,13 @@ LABELS = {
 		'Name': 'Nom',
 		'Livebox Name': 'Nom Livebox',
 		'IPv6 Devices': 'Appareils IPv6'
+	},
+
+	# Device list - DNS dialog
+	'dns': {
+		'Name': 'Nom',
+		'Livebox Name': 'Nom Livebox',
+		'Devices DNS': 'DNS des appareils'
 	},
 
 	# Livebox infos
@@ -322,6 +330,7 @@ LABELS = {
 		'Names for [{}] device:': 'Noms pour l\'appareil [{}] :',
 		'Local Name': 'Nom Local',
 		'Livebox Name': 'Nom Livebox',
+		'DNS Name': 'Nom DNS',
 		'Cancel': 'Annuler',
 		'Assign device names': 'Assigner des noms à l\'appareil'
 	},
@@ -834,7 +843,9 @@ TOOLTIPS = {
 		'deviceInfo': 'Bascule dans l\'onglet "Infos Appareil" pour l\'appareil sélectionné afin de voir directement ses informations.',
 		'deviceEvents': 'Bascule dans l\'onglet "Événements" pour l\'appareil sélectionné afin de voir directement les événements reçus le concernant.',
 		'ipv6': 'Permet d\'avoir le statut d\'activation de l\'IPv6, l\'adresse IPv6 de la Livebox ainsi que son préfixe,\n'
-				'et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.'
+				'et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.',
+		'dns': 'Permet d\'avoir la liste des noms DNS assignés aux appareils.'
+
 	},
 
 	# Device list - IPv6 dialog
@@ -854,6 +865,23 @@ TOOLTIPS = {
 		'ipv6Enabled': 'Indique par une icône si la connectivité IPv6 est active ou non.',
 		'addr': 'Adresse IPv6 de la Livebox.',
 		'prefix': 'Préfixe IPv6 de la Livebox.'
+	},
+
+	# Device list - DNS dialog
+	'dns': {
+		'dns_Name': 'Nom local de l\'appareil.\n'
+					'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
+		'dns_LBName': 'Nom de l\'appareil tel que paramétré dans la Livebox et visible dans l\'interface Web de la Livebox.\n'
+					  'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
+		'dns_MAC': 'Adresse MAC, aussi appelée adresse physique de l\'appareil.',
+		'dns_Active': 'Indique par une icône si l\'appareil est actif ou non.',
+		'dns_IPv4': 'Adresse IPv4 de l\'appareil sur le LAN.\n'
+					'Cette adresse s\'affiche en caractères gras si cette adresse est réservée pour cet appareil\n'
+					'dans la configuration DHCP de la Livebox.\n'
+					'Et elle s\'affiche en rouge si l\'adresse n\'est pas atteignable sur le réseau (unreacheable),\n'
+					'typiquement lorsque l\'appareil n\'est pas actif.',
+		'dns_DNS': 'Nom DNS de l\'appareil.\n'
+				   'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".'
 	},
 
 	# Livebox infos
@@ -980,7 +1008,9 @@ TOOLTIPS = {
 		'nameCheckBox': 'Décocher la boite pour effacer le nom local.',
 		'nameEdit': 'Ce nom local sera stocké dans le fichier Table MacAddr configuré dans les préférences.',
 		'liveboxNameCheckBox': 'Décocher la boite pour effacer le nom Livebox.',
-		'liveboxNameEdit': 'Ce nom sera stocké par la Livebox.'
+		'liveboxNameEdit': 'Ce nom sera stocké par la Livebox.',
+		'dnsNameCheckBox': 'Décocher la boite pour effacer le nom DNS.',
+		'dnsNameEdit': 'Nom DNS à assigner à l\'appareil.'
 	},
 
 	# Device infos - Assign type dialog
