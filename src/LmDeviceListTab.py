@@ -1292,7 +1292,7 @@ class DnsCol(IntEnum):
 	LBName = 2
 	MAC = 3
 	Active = 4
-	IPv4 = 5
+	IP = 5
 	DNS = 6
 	Count = 7
 DNS_ICON_COLUMNS = [DnsCol.Active]
@@ -1310,7 +1310,7 @@ class DnsDialog(QtWidgets.QDialog):
 															ldx('Livebox Name'),
 															ldx('MAC'),
 															ldx('A'),
-															ldx('IPv4'),
+															ldx('IP'),
 															ldx('DNS')))
 		self._deviceTable.setColumnHidden(DnsCol.Key, True)
 		aHeader = self._deviceTable.horizontalHeader()
@@ -1324,13 +1324,13 @@ class DnsDialog(QtWidgets.QDialog):
 		aModel.setHeaderData(DnsCol.LBName, QtCore.Qt.Orientation.Horizontal, 'dns_LBName', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(DnsCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dns_MAC', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(DnsCol.Active, QtCore.Qt.Orientation.Horizontal, 'dns_Active', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.IPv4, QtCore.Qt.Orientation.Horizontal, 'dns_IPv4', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.IP, QtCore.Qt.Orientation.Horizontal, 'dns_IP', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(DnsCol.DNS, QtCore.Qt.Orientation.Horizontal, 'dns_DNS', QtCore.Qt.ItemDataRole.UserRole)
 		self._deviceTable.setColumnWidth(DnsCol.Name, 300)
 		self._deviceTable.setColumnWidth(DnsCol.LBName, 300)
 		self._deviceTable.setColumnWidth(DnsCol.MAC, 120)
 		self._deviceTable.setColumnWidth(DnsCol.Active, 10)
-		self._deviceTable.setColumnWidth(DnsCol.IPv4, 105)
+		self._deviceTable.setColumnWidth(DnsCol.IP, 105)
 		self._deviceTable.setColumnWidth(DnsCol.DNS, 250)
 		self._deviceTable.verticalHeader().hide()
 		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
@@ -1400,7 +1400,7 @@ class DnsDialog(QtWidgets.QDialog):
 						aIPv4Reacheable = aIPStruct.get('Status', '')
 						aIPv4Reserved = aIPStruct.get('Reserved', False)
 					aIP = p.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
-					self._deviceTable.setItem(i, DnsCol.IPv4, aIP)
+					self._deviceTable.setItem(i, DnsCol.IP, aIP)
 
 					self._deviceTable.setItem(i, DnsCol.DNS, QtWidgets.QTableWidgetItem(aDnsName))
 
