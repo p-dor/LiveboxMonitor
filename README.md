@@ -169,6 +169,7 @@ L'onglet `Appareils` propose les boutons suivants :
 - **`Infos Appareil`** : permet de basculer dans l'onglet `Infos Appareil` pour l'appareil sélectionné et de voir directement ses informations.
 - **`Événements Appareil`** : permet de basculer dans l'onglet `Événements` pour l'appareil sélectionné et de voir directement les événements reçus le concernant.
 - **`IPv6...`** : permet d'avoir le statut d'activation de l'IPv6, l'adresse IPv6 de la Livebox ainsi que son préfixe, et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.
+- **`DNS...`** : permet d'avoir la liste des noms DNS assignés aux appareils. Ces noms DNS peuvent être attribués, changés ou supprimés via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 
 
 ## Stats/Infos Livebox - Statistiques de trafic et infos avancées de la Livebox
@@ -256,7 +257,7 @@ Lorsqu'un appareil est sélectionné dans cette liste ses informations détaill�
 ### Boutons
 L'onglet `Infos Appareil` propose les boutons suivants :
 - **`Rafraîchir`** : rafraîchit les informations affichées pour l'appareil sélectionné.
-- **`Assigner Nom...`** : permet d'attribuer ou d'effacer le nom local et/ou le nom Livebox de l'appareil sélectionné.
+- **`Assigner Nom...`** : permet d'attribuer ou d'effacer le nom local, le nom Livebox et/ou le nom DNS de l'appareil sélectionné.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
 
@@ -474,6 +475,14 @@ Les actions concernant les **Redémarrages** :
     - **Raison Redémarrage** : la raison de ce démarrage. Typiquement "NMC" indique un démarrage forcé par logiciel et "Unsupported chipset" un redémarrage causé par une coupure de courant ou l'interrupteur de la Livebox.
     - **Date Arrêt** : la date et heure de l'arrêt.
     - **Raison Arrêt** : la raison de cet arrêt. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
+
+Les actions concernant le **Pare-feu** :
+- **`Niveaux de pare-feu...`** : permet de régler les niveaux des pares-feux IPv4 et IPv6.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_FirewallLevels.png)
+- **`Réponses aux pings...`** : permet de régler les réponses aux requêtes de ping IPv4 et IPv6.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_PingResponses.png)
 
 Les actions concernant les **Réglages** :
 - **`Préférences...`** : permet d'afficher l'écran des préférences du programme.
