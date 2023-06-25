@@ -11,7 +11,9 @@ from src import LmTools, LmConfig
 from src.LmConfig import LmConf
 from src.LmIcons import LmIcon
 from src.LmDhcpTab import DhcpCol
-from src.LmLanguages import GetDeviceListLabel as lx, GetIPv6DialogLabel as lix
+from src.LmLanguages import (GetDeviceListLabel as lx,
+							 GetIPv6DialogLabel as lix,
+							 GetDnsDialogLabel as ldx)
 
 
 # ################################ VARS & DEFS ################################
@@ -127,6 +129,9 @@ class LmDeviceList:
 		aIPv6Button = QtWidgets.QPushButton(lx('IPv6...'), objectName = 'ipv6')
 		aIPv6Button.clicked.connect(self.ipv6ButtonClick)
 		aHBox.addWidget(aIPv6Button)
+		aDnsButton = QtWidgets.QPushButton(lx('DNS...'), objectName = 'dns')
+		aDnsButton.clicked.connect(self.dnsButtonClick)
+		aHBox.addWidget(aDnsButton)
 
 		# Layout
 		aVBox = QtWidgets.QVBoxLayout()
@@ -263,27 +268,24 @@ class LmDeviceList:
 			self.displayError('NMC:getWANStatus service error')
 			return
 
-		# Refresh device list
-		d = None
-		try:
-			d = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-		if (d is not None):
-			d = d.get('status')
-		if (d is None):
-			self.endTask()
-			self.displayError('Error getting device list.')
-			return
-		else:
-			self._liveboxDevices = d
+		self.loadDeviceIpNameMap()
 
 		self.endTask()
 
 		aIPv6Dialog = IPv6Dialog(aIPv6Enabled, aIPv6Addr, aIPv6Prefix, self)
-		aIPv6Dialog.loadDeviceList(d)
+		aIPv6Dialog.loadDeviceList(self._liveboxDevices)
 		aIPv6Dialog.exec()
+
+
+	### Click on DNS button
+	def dnsButtonClick(self):
+		self.startTask(lx('Getting DNS Information...'))
+		self.loadDeviceIpNameMap()	###TODO### Doesn't refresh if a DNS name changed or has been assigned
+		self.endTask()
+
+		aDnsDialog = DnsDialog(self)
+		aDnsDialog.loadDeviceList(self._liveboxDevices)
+		aDnsDialog.exec()
 
 
 	### Load device list
@@ -927,6 +929,8 @@ class LmDeviceList:
 		# Check if device is in the UI list
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
+			self._deviceIpNameMapDirty = True
+
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
@@ -1276,6 +1280,133 @@ class IPv6Dialog(QtWidgets.QDialog):
 					i += 1
 
 			self._deviceTable.sortItems(IPv6Col.Active, QtCore.Qt.SortOrder.DescendingOrder)
+			self._deviceTable.setSortingEnabled(True)
+
+
+
+# ############# Display DNS dialog #############
+# List columns
+class DnsCol(IntEnum):
+	Key = 0		# Must be the same as DevCol.Key
+	Name = 1
+	LBName = 2
+	MAC = 3
+	Active = 4
+	IPv4 = 5
+	DNS = 6
+	Count = 7
+DNS_ICON_COLUMNS = [DnsCol.Active]
+
+
+class DnsDialog(QtWidgets.QDialog):
+	def __init__(self, iParent = None):
+		super(DnsDialog, self).__init__(iParent)
+		self.resize(850, 56 + LmConfig.DialogHeight(12))
+
+		# Device table
+		self._deviceTable = QtWidgets.QTableWidget(objectName = 'dnsTable')
+		self._deviceTable.setColumnCount(DnsCol.Count)
+		self._deviceTable.setHorizontalHeaderLabels(('Key', ldx('Name'),
+															ldx('Livebox Name'),
+															ldx('MAC'),
+															ldx('A'),
+															ldx('IPv4'),
+															ldx('DNS')))
+		self._deviceTable.setColumnHidden(DnsCol.Key, True)
+		aHeader = self._deviceTable.horizontalHeader()
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
+		aHeader.setSectionResizeMode(DnsCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DnsCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		self._deviceTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		aModel = aHeader.model()
+		aModel.setHeaderData(DnsCol.Name, QtCore.Qt.Orientation.Horizontal, 'dns_Name', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.LBName, QtCore.Qt.Orientation.Horizontal, 'dns_LBName', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dns_MAC', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.Active, QtCore.Qt.Orientation.Horizontal, 'dns_Active', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.IPv4, QtCore.Qt.Orientation.Horizontal, 'dns_IPv4', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DnsCol.DNS, QtCore.Qt.Orientation.Horizontal, 'dns_DNS', QtCore.Qt.ItemDataRole.UserRole)
+		self._deviceTable.setColumnWidth(DnsCol.Name, 300)
+		self._deviceTable.setColumnWidth(DnsCol.LBName, 300)
+		self._deviceTable.setColumnWidth(DnsCol.MAC, 120)
+		self._deviceTable.setColumnWidth(DnsCol.Active, 10)
+		self._deviceTable.setColumnWidth(DnsCol.IPv4, 105)
+		self._deviceTable.setColumnWidth(DnsCol.DNS, 250)
+		self._deviceTable.verticalHeader().hide()
+		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+		self._deviceTable.setSortingEnabled(True)
+		self._deviceTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._deviceTable.setItemDelegate(LmTools.CenteredIconsDelegate(self, DNS_ICON_COLUMNS))
+		LmConfig.SetTableStyle(self._deviceTable)
+
+		# Button bar
+		aHBox = QtWidgets.QHBoxLayout()
+		aOKButton = QtWidgets.QPushButton(ldx('OK'), objectName = 'ok')
+		aOKButton.clicked.connect(self.accept)
+		aOKButton.setDefault(True)
+		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.addWidget(self._deviceTable, 1)
+		aVBox.addLayout(aHBox, 1)
+
+		LmConfig.SetToolTips(self, 'dns')
+
+		self.setWindowTitle(ldx('Devices DNS'))
+		self.setModal(True)
+		self.show()
+
+
+	def loadDeviceList(self, iDevices):
+		if (iDevices is not None):
+			self._deviceTable.setSortingEnabled(False)
+			i = 0
+			p = self.parent()
+			for d in iDevices:
+				if p.displayableDevice(d):
+					# First collect DNS name
+					aDnsName = None
+					aNameList = d.get('Names', [])
+					if len(aNameList):
+						for aName in aNameList:
+							if aName.get('Source', '') == 'dns':
+								aDnsName = aName.get('Name', '')
+								break
+					if aDnsName is None:
+						continue
+
+					# Display data
+					aKey = d.get('Key', '')
+					p.addDeviceLineKey(self._deviceTable, i, aKey)
+
+					p.formatNameWidget(self._deviceTable, i, aKey, DnsCol.Name)
+
+					aLBName = QtWidgets.QTableWidgetItem(d.get('Name', ''))
+					self._deviceTable.setItem(i, DnsCol.LBName, aLBName)
+
+					p.formatMacWidget(self._deviceTable, i, d.get('PhysAddress', ''), DnsCol.MAC)
+
+					aActiveStatus = d.get('Active', False)
+					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
+					self._deviceTable.setItem(i, DnsCol.Active, aActiveIcon)
+
+					aIPStruct = LmTools.DetermineIP(d)
+					if aIPStruct is None:
+						aIPv4 = ''
+						aIPv4Reacheable = ''
+						aIPv4Reserved = False
+					else:
+						aIPv4 = aIPStruct.get('Address', '')
+						aIPv4Reacheable = aIPStruct.get('Status', '')
+						aIPv4Reserved = aIPStruct.get('Reserved', False)
+					aIP = p.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
+					self._deviceTable.setItem(i, DnsCol.IPv4, aIP)
+
+					self._deviceTable.setItem(i, DnsCol.DNS, QtWidgets.QTableWidgetItem(aDnsName))
+
+					i += 1
+
+			self._deviceTable.sortItems(DnsCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 			self._deviceTable.setSortingEnabled(True)
 
 
