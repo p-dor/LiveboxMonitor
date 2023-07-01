@@ -348,8 +348,8 @@ La liste des règles de redirection de port, en haut, affiche les colonnes suiva
 - **Nom** : nom de la règle.
 - **Description** : description de la règle.
 - **Protocoles** : liste des protocoles concernés par la règle. 
-- **Port Interne** : port interne sur lequel le trafic est redirigé.
-- **Port Externe** : port externe à rediriger.
+- **Port Interne** : port ou plage de ports interne sur lequel le trafic est redirigé.
+- **Port Externe** : port ou plage de ports externe à rediriger.
 - **Appareil** : appareil (ou son adresse IP) sur lequel le trafic est redirigé.
 - **IP Externes** : liste des adresses IPs externes concernées par la règle.
 

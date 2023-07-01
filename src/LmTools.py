@@ -31,11 +31,15 @@ IPv6_RS = (r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
 		   r'::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|'
 		   r'1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.)'
 		   r'{3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))')
+PORTS_RS = (r'^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})$|'
+			r'^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})-(6553[0-5]|'
+			r'655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})$')
 
 # Useful objects
 MAC_RE = re.compile(MAC_RS)
 IPv4_RE = re.compile('^' + IPv4_RS + '$')
 IPv6_RE = re.compile('^' + IPv6_RS + '$')
+PORTS_RE = re.compile(PORTS_RS)
 BOLD_FONT = QtGui.QFont()
 BOLD_FONT.setBold(True)
 
@@ -137,6 +141,11 @@ def IsIPv4(iString):
 # Check if valid IPv6 address
 def IsIPv6(iString):
 	return re.fullmatch(IPv6_RE, iString) is not None
+
+
+# Check if valid TCP/UDP port or ports range
+def isTcpUdpPort(iString):
+	return re.fullmatch(PORTS_RE, iString) is not None
 
 
 # Cleanup URL

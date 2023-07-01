@@ -1121,10 +1121,11 @@ TOOLTIPS = {
 		'descEdit': 'Description de la règle.',
 		'tcpCheckbox': 'Redirige ou pas le trafic TCP.',
 		'udpCheckbox': 'Redirige ou pas le trafic UDP.',
-		'intPortEdit': 'Port interne sur lequel le trafic doit être redirigé.',
-		'extPortCheckbox': 'Permet de choisir un port externe différent du port interne.\n'
-						   'Cette option est obligatoire pour les types IPv4 & UPnP.',
-		'extPortEdit': 'Port externe à rediriger.',
+		'intPortEdit': 'Port interne sur lequel le trafic doit être redirigé.\n'
+					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
+		'extPortEdit': 'Port externe à rediriger.\n'
+					   'Laisser ce champs vide s\'il s\'agit du même port que le port interne.\n'
+					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
 		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',
 		'ipEdit': 'Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n'
 				  'être redirigé.',

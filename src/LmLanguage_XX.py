@@ -1167,7 +1167,7 @@ TOOLTIPS = {
 		'udpCheckbox': '',
 		'intPortLabel': '',
 		'intPortEdit': '',
-		'extPortCheckbox': '',
+		'extPortLabel': '',
 		'extPortEdit': '',
 		'deviceLabel': '',
 		'deviceCombo': '',

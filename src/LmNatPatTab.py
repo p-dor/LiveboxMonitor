@@ -871,8 +871,16 @@ class LmNatPat:
 			p = self._patList.item(iIndex, PatCol.Protocols).text()
 			r['ProtoNames'] = p
 			r['ProtoNumbers'] = self.translateNatPatProtocols(p)
-			r['IntPort'] = self._patList.item(iIndex, PatCol.IntPort).text()
-			r['ExtPort'] = self._patList.item(iIndex, PatCol.ExtPort).text()
+			p = self._patList.item(iIndex, PatCol.IntPort).text()
+			if len(p):
+				r['IntPort'] = p
+			else:
+				r['IntPort'] = None
+			p = self._patList.item(iIndex, PatCol.ExtPort).text()
+			if len(p):
+				r['ExtPort'] = p
+			else:
+				r['ExtPort'] = None
 			r['IP'] = self._patList.item(iIndex, PatCol.DestIP).text()
 			e = self._patList.item(iIndex, PatCol.ExtIPs).text()
 			if e == lx('All'):
@@ -914,21 +922,15 @@ class LmNatPat:
 				LmTools.Error('Rule has wrong protocol {} set.'.format(p))
 				return False
 
-		try:
-			n = int(iRule.get('IntPort', '0'))
-		except:
-			n = 0
-		if (n < 1) or (n > 65535):
-			LmTools.Error('Rule has wrong internal port {} set.'.format(n))
-			return False
+		n = iRule.get('IntPort', '')
+		if (n is not None) and len(n):
+			if not LmTools.isTcpUdpPort(n):
+				LmTools.Error('Rule has wrong internal port {} set.'.format(n))
+				return False
 
 		n = iRule.get('ExtPort', '')
-		if len(n):
-			try:
-				n = int(n)
-			except:
-				n = 0
-			if (n < 1) or (n > 65535):
+		if (n is not None) and len(n):
+			if not LmTools.isTcpUdpPort(n):
 				LmTools.Error('Rule has wrong external port {} set.'.format(n))
 				return False
 
@@ -977,7 +979,9 @@ class LmNatPat:
 		r = {}
 		r['id'] = iRule['Name']
 		r['internalPort'] = iRule['IntPort']
-		r['externalPort'] = iRule['ExtPort']
+		p = iRule['ExtPort']
+		if p is not None:
+			r['externalPort'] = p
 		r['destinationIPAddress'] = iRule['IP']
 		r['enable'] = iRule['Enable']
 		r['persistent'] = True
@@ -1022,7 +1026,9 @@ class LmNatPat:
 		r['id'] = iRule['Name']
 		r['origin'] = 'webui'
 		r['sourceInterface'] = 'data'
-		r['sourcePort'] = iRule['ExtPort']
+		p = iRule['ExtPort']
+		if p is not None:
+			r['sourcePort'] = p
 		r['destinationPort'] = iRule['IntPort']
 		r['destinationIPAddress'] = iRule['IP']
 		r['sourcePrefix'] = iRule['ExtIPs']
@@ -1564,10 +1570,12 @@ class LmNatPat:
 	@staticmethod
 	def formatPortTableWidget(iPort):
 		aPort = LmTools.NumericSortItem(iPort)
-		if len(iPort):
-			aPort.setData(QtCore.Qt.ItemDataRole.UserRole, int(iPort))
-		else:
-			aPort.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
+		p = iPort.split('-')[0]		# If range is used, sort with the first port
+		try:
+			i = int(p)
+		except:
+			i = 0
+		aPort.setData(QtCore.Qt.ItemDataRole.UserRole, i)
 		return aPort
 
 
@@ -1605,24 +1613,21 @@ class PatRuleDialog(QtWidgets.QDialog):
 		aProtocolsBox.addWidget(self._tcpCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
 		aProtocolsBox.addWidget(self._udpCheckBox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-		aPortBox = QtWidgets.QHBoxLayout()
-		aPortBox.setSpacing(25)
+		aPortRegExp = QtCore.QRegularExpression(LmTools.PORTS_RS)
+		aPortValidator = QtGui.QRegularExpressionValidator(aPortRegExp)
 
 		aIntPortLabel = QtWidgets.QLabel(lrx('Internal Port:'), objectName = 'intPortLabel')
-		self._intPortEdit = QtWidgets.QSpinBox(objectName = 'intPortEdit')
-		self._intPortEdit.setRange(1, 65535)
+		self._intPortEdit = QtWidgets.QLineEdit(objectName = 'intPortEdit')
+		self._intPortEdit.setValidator(aPortValidator)
 
-		aExtPortBox = QtWidgets.QHBoxLayout()
-		aExtPortBox.setSpacing(0)
-		self._extPortCheckBox = QtWidgets.QCheckBox(lrx('External Port:'), objectName = 'extPortCheckbox')
-		self._extPortCheckBox.clicked.connect(self.extPortClick)
-		self._extPortEdit = QtWidgets.QSpinBox(objectName = 'extPortEdit')
-		self._extPortEdit.setRange(1, 65535)
-		aExtPortBox.addWidget(self._extPortCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aExtPortBox.addWidget(self._extPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aExtPortLabel = QtWidgets.QLabel(lrx('External Port:'), objectName = 'extPortLabel')
+		self._extPortEdit = QtWidgets.QLineEdit(objectName = 'extPortEdit')
+		self._extPortEdit.setValidator(aPortValidator)
 
-		aPortBox.addWidget(self._intPortEdit, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aPortBox.addLayout(aExtPortBox, 1)
+		aPortBox = QtWidgets.QHBoxLayout()
+		aPortBox.addWidget(self._intPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aPortBox.addWidget(aExtPortLabel, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aPortBox.addWidget(self._extPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
 		aDeviceLabel = QtWidgets.QLabel(lrx('Device:'), objectName = 'deviceLabel')
 		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
@@ -1696,10 +1701,8 @@ class PatRuleDialog(QtWidgets.QDialog):
 		self._descEdit.setPlainText('')
 		self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
 		self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._intPortEdit.setValue(1000)
-		self._extPortCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		self._extPortEdit.setValue(1000)
-		self.extPortClick()
+		self._intPortEdit.setText('1000')
+		self._extPortEdit.setText('1000')
 		self._deviceCombo.setCurrentIndex(0)
 		self._ipEdit.setText('')
 		self._extIPsEdit.setPlainText('')
@@ -1732,14 +1735,8 @@ class PatRuleDialog(QtWidgets.QDialog):
 		else:
 			self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-		if len(iRule['IntPort']):
-			self._intPortEdit.setValue(int(iRule['IntPort']))
-		if len(iRule['ExtPort']):
-			self._extPortCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-			self._extPortEdit.setValue(int(iRule['ExtPort']))
-		else:
-			self._extPortCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self.extPortClick()
+		self._intPortEdit.setText(iRule['IntPort'])
+		self._extPortEdit.setText(iRule['ExtPort'])
 
 		aIP = iRule['IP']
 		self._ipEdit.setText(aIP)
@@ -1773,22 +1770,14 @@ class PatRuleDialog(QtWidgets.QDialog):
 		# Adjust IP field validator
 		if self.getType() == RULE_TYPE_IPv6:
 			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6_RS + '$')
-			self._extPortCheckBox.setDisabled(False)
 		else:
 			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
-			self._extPortCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-			self.extPortClick()
-			self._extPortCheckBox.setDisabled(True)
 		aIPValidator = QtGui.QRegularExpressionValidator(aIPRegExp)
 		self._ipEdit.setValidator(aIPValidator)
 
 
 	def protocolClick(self):
 		self.setOkButtonState()
-
-
-	def extPortClick(self):
-		self._extPortEdit.setDisabled(self._extPortCheckBox.checkState() == QtCore.Qt.CheckState.Unchecked)
 
 
 	def deviceSelected(self, iIndex):
@@ -1908,13 +1897,17 @@ class PatRuleDialog(QtWidgets.QDialog):
 
 
 	def getIntPort(self):
-		return str(self._intPortEdit.value())
+		p = self._intPortEdit.text()
+		if len(p):
+			return p
+		return None
 
 
 	def getExtPort(self):
-		if self._extPortCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			return str(self._extPortEdit.value())
-		return ''
+		p = self._extPortEdit.text()
+		if len(p):
+			return p
+		return None
 
 
 	def getIP(self):
