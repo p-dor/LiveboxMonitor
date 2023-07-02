@@ -1597,6 +1597,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 
 		aNameLabel = QtWidgets.QLabel(lrx('Name:'), objectName = 'nameLabel')
 		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
+		self._nameEdit.textChanged.connect(self.nameTyped)
 
 		aDescLabel = QtWidgets.QLabel(lrx('Description:'), objectName = 'descLabel')
 		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
@@ -1776,6 +1777,10 @@ class PatRuleDialog(QtWidgets.QDialog):
 		self._ipEdit.setValidator(aIPValidator)
 
 
+	def nameTyped(self, iText):
+		self.setOkButtonState()
+
+
 	def protocolClick(self):
 		self.setOkButtonState()
 
@@ -1835,12 +1840,12 @@ class PatRuleDialog(QtWidgets.QDialog):
 		aIP = self.getIP()
 		if t == RULE_TYPE_IPv6:
 			if not LmTools.IsIPv6(aIP):
-				self.parent().DisplayError('{} is not a valid IPv6 address.'.format(aIP))
+				self.parent().displayError('{} is not a valid IPv6 address.'.format(aIP))
 				self._ipEdit.setFocus()
 				return
 		else:
 			if not LmTools.IsIPv4(aIP):
-				self.parent().DisplayError('{} is not a valid IPv4 address.'.format(aIP))
+				self.parent().displayError('{} is not a valid IPv4 address.'.format(aIP))
 				self._ipEdit.setFocus()
 				return
 
@@ -1850,18 +1855,18 @@ class PatRuleDialog(QtWidgets.QDialog):
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					self.parent().DisplayError('Empty IP address.')
+					self.parent().displayError('Empty IP address.')
 					self._extIPsEdit.setFocus()
 					return
 
 				if t == RULE_TYPE_IPv6:
 					if not LmTools.IsIPv6(aIP):
-						self.parent().DisplayError('{} is not a valid IPv6 address.'.format(aIP))
+						self.parent().displayError('{} is not a valid IPv6 address.'.format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 				else:
 					if not LmTools.IsIPv4(aIP):
-						self.parent().DisplayError('{} is not a valid IPv4 address.'.format(aIP))
+						self.parent().displayError('{} is not a valid IPv4 address.'.format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 
@@ -1936,6 +1941,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 		aNameLabel = QtWidgets.QLabel(lfx('Name:'), objectName = 'nameLabel')
 		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
+		self._nameEdit.textChanged.connect(self.nameTyped)
 
 		aDescLabel = QtWidgets.QLabel(lfx('Description:'), objectName = 'descLabel')
 		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
@@ -2134,6 +2140,10 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		self._ipEdit.setValidator(aIPValidator)
 
 
+	def nameTyped(self, iText):
+		self.setOkButtonState()
+
+
 	def protocolClick(self):
 		self.setOkButtonState()
 
@@ -2189,12 +2199,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		aIP = self.getIP()
 		if t == RULE_TYPE_IPv6:
 			if not LmTools.IsIPv6(aIP):
-				self.parent().DisplayError('{} is not a valid IPv6 address.'.format(aIP))
+				self.parent().displayError('{} is not a valid IPv6 address.'.format(aIP))
 				self._ipEdit.setFocus()
 				return
 		else:
 			if not LmTools.IsIPv4(aIP):
-				self.parent().DisplayError('{} is not a valid IPv4 address.'.format(aIP))
+				self.parent().displayError('{} is not a valid IPv4 address.'.format(aIP))
 				self._ipEdit.setFocus()
 				return
 
@@ -2204,18 +2214,18 @@ class PtfRuleDialog(QtWidgets.QDialog):
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					self.parent().DisplayError('Empty IP address.')
+					self.parent().displayError('Empty IP address.')
 					self._extIPsEdit.setFocus()
 					return
 
 				if t == RULE_TYPE_IPv6:
 					if not LmTools.IsIPv6(aIP):
-						self.parent().DisplayError('{} is not a valid IPv6 address.'.format(aIP))
+						self.parent().displayError('{} is not a valid IPv6 address.'.format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 				else:
 					if not LmTools.IsIPv4(aIP):
-						self.parent().DisplayError('{} is not a valid IPv4 address.'.format(aIP))
+						self.parent().displayError('{} is not a valid IPv4 address.'.format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 
