@@ -230,7 +230,7 @@ Des options sont disponibles pour paramétrer les graphiques :
 ### Génération des graphiques
 Le bouton **`Appliquer`** permet de charger toutes les informations relatives aux interfaces et appareils sélectionnés, de dessiner les graphiques correspondants en tenant compte des options ci-dessus, et de sauvegarder la configuration. Celle-ci sera automatiquement rechargée au prochain lancement du programme.  
 
-Le bouton **`Export...`** permet d'exporter au format CSV (avec la virgule comme séparateur) les dernières données chargées par le bouton `Appliquer` ainsi que celles reçues entre temps via des événements.
+Le bouton **`Export...`** permet d'exporter au format CSV (avec le point-virgule comme séparateur) les dernières données chargées par le bouton `Appliquer` ainsi que celles reçues entre temps via des événements.
 
 
 ## Infos Appareil - Informations détaillées pour chaque appareil connu
@@ -518,7 +518,7 @@ Les actions techniques de **Débogage** :
 - **`JSON Liste Appareils...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 - **`JSON Topologie...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 - **`Niveau de log...`** : permet de changer le niveau de logs dans la console. Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement du programme.
-
+- **`Générer documentation APIs...`** : permet de générer dans des fichiers textes l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Le programme génère un fichier par module connu, un fichier "_ALL_MODULES_" contenant l'ensemble des modules en un seul fichier, et un fichier "_PROCESSES_" qui permet d'avoir la liste des tâches tournant sur la Livebox. Certains fichiers ne contiennent qu'une erreur "Permission denied" : c'est normal, ces modules sont protégés et donc non accessibles (mais qui sait dans une prochaine version du firmeware ?). Les paramètres de fonction indiqués entre paranthèses sont optionels. Par défaut le programme génère l'ensemble des instances trouvées par type de resources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration, cependant avoir la liste des instances reste crucial pour une documentation vraiment complète.
 
 Autres actions :
 - **Quitter l'application** : pour quitter l'application. Strictement équivalent à fermer la fenêtre de l'application.
