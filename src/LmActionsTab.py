@@ -5,6 +5,7 @@ import webbrowser
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+from src import LmGenApiDocumentation
 from src import LmTools
 from src.LmIcons import LmIcon
 from src import LmConfig
@@ -231,6 +232,9 @@ class LmActions:
 		aSetLogLevelButton = QtWidgets.QPushButton(lx('Set Log Level...'), objectName = 'setLogLevel')
 		aSetLogLevelButton.clicked.connect(self.setLogLevelButtonClick)
 		aDebugButtons.addWidget(aSetLogLevelButton)
+		aGenDocButton = QtWidgets.QPushButton(lx('Generate API Documentation...'), objectName = 'getApiDoc')
+		aGenDocButton.clicked.connect(self.getDocButtonClick)
+		aDebugButtons.addWidget(aGenDocButton)
 
 		aDebugGroupBox = QtWidgets.QGroupBox(lx('Debug'), objectName = 'debugGroup')
 		aDebugGroupBox.setLayout(aDebugButtons)
@@ -594,6 +598,27 @@ class LmActions:
 													 aLevels, LmConf.LogLevel, False)
 		if aOK:
 			LmConf.setLogLevel(int(aLevel))
+
+
+	### Click on generate API documentation button
+	def getDocButtonClick(self):
+		# Check Ctlr key to switch to filtering mode
+		aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
+		aFilterValues = aModifiers == QtCore.Qt.KeyboardModifier.ControlModifier
+
+		aFolder = QtWidgets.QFileDialog.getExistingDirectory(self, lx('Select Export Folder'))
+		if len(aFolder):
+			# Check Ctlr key again to possibly switch to filtering mode
+			if not aFilterValues:
+				aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
+				aFilterValues = aModifiers == QtCore.Qt.KeyboardModifier.ControlModifier
+
+			self.startTask(lx('Generating API document files...'))
+			g = LmGenApiDocumentation.LmGenApiDoc(self, aFolder, aFilterValues)
+			g.genModuleFiles()
+			g.genFullFile()
+			g.genProcessListFile()
+			self.endTask()
 
 
 	### Click on Quit Application button

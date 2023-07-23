@@ -547,6 +547,7 @@ LABELS = {
 		'Raw Device List...': 'JSON Liste Appareils...',
 		'Raw Topology...': 'JSON Topologie...',
 		'Set Log Level...': 'Niveau de log...',
+		'Generate API Documentation...': 'Générer documentation APIs...',
 		'Debug': 'Débogage',
 		'Quit Application': 'Quitter l\'application',
 		'Getting Wifi Global Status...': 'Chargement de l\'état global du Wifi...',
@@ -557,6 +558,8 @@ LABELS = {
 		'Raw Topology': 'JSON Topologie',
 		'Log level selection': 'Niveau de log',
 		'Please select a log level:': 'Sélectionnez un niveau de log :',
+		'Select Export Folder': 'Sélectionnez le dossier d\'export',
+		'Generating API document files...': 'Génération des fichiers de documentation des APIs...',
 		'Activating Wifi...': 'Activation du Wifi...',
 		'Deactivating Wifi...': 'Désactivation du Wifi...',
 		'Activating Guest Wifi...': 'Activation du Wifi Invité...',
@@ -1230,6 +1233,8 @@ TOOLTIPS = {
 						   'Utile pour avoir plus d\'informations ou pour le débogage.',
 		'setLogLevel': 'Permet de changer le niveau de logs dans la console.\n'
 					   'Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.',
+		'getApiDoc': 'Permet d\'exporter dans un ensemble de fichiers la documentation disponible\n'
+					 'sur les API REST/JSON de la Livebox.',
 		'quit': 'Pour quitter l\'application. Strictement équivalent à fermer la fenêtre de l\'application.'
 	},
 
