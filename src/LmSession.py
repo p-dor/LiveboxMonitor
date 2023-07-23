@@ -168,6 +168,7 @@ class LmSession:
 				return { 'errors' : 'Request exception' }
 
 			t = t.decode('utf-8', errors = 'replace')
+			t = t.replace('[,]', '[]')	# Some lists, like in GET '*' request, contain a failing comma
 			if t.startswith(',"errors":'):
 				t = '{' + t[1:] + '}'
 			elif t.find('}{') > 0:
