@@ -333,9 +333,11 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		if d is None:
 			LmTools.Error('Error: cannot determine Livebox model')
 			self._liveboxModel = 0
+			self._liveboxSoftwareVersion = ''
 		else:
 			aMacAddr = d.get('BaseMAC', '').upper()
 			LmConf.setLiveboxMAC(aMacAddr)
+			self._liveboxSoftwareVersion = d.get('SoftwareVersion', '')
 			aModel = d.get('ProductClass', '')
 			if aModel == 'Livebox 6':
 				self._liveboxModel = 6
@@ -388,6 +390,20 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	def resumeTask(self):
 		if self._taskNb:
 			LmTools.MouseCursor_ForceBusy()
+
+
+	### Update a task by adding a status
+	def updateTask(self, iStatus):
+		if self._taskNb:
+			aTask = self._taskStack[self._taskNb - 1]
+			if self._statusBar is None:
+				self.setWindowTitle(self.appWindowTitle() + ' - ' + aTask + ' ' + iStatus + '.')
+			else:
+				self._statusBar.showMessage(aTask + ' ' + iStatus + '.')
+				QtCore.QCoreApplication.sendPostedEvents()
+				QtCore.QCoreApplication.processEvents()
+
+			LmTools.LogDebug(2, 'TASK UPDATE stack={} - task={} - status={}'.format(self._taskNb, aTask, iStatus))
 
 
 	### End a long (nested) task
