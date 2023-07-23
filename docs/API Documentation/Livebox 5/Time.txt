@@ -1,0 +1,13 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .Time - Name: .Time
+ == FUNCTIONS:
+  - bool getTime((string time))
+  - void getUTCTime((string time))
+  - void getStatus((string status))
+  - void getNTPServers((variant servers))
+  - bool getLocalTimeZoneName((string timezone))
+  - bool setLocalTimeZoneName(string timezone)
+  - bool listLocalTimeZoneNames((list timezones))
+

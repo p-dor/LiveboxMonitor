@@ -1,0 +1,30 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .AutoDiag - Name: .AutoDiag
+ == PARAMETERS:
+  - DiagnosticsScriptFile (type: string)
+      Attributes: read_only
+  - DiagnosticsState (type: string)
+      Validator: ['None', 'Requested', 'Cancel', 'Complete', 'Error_Internal', 'Error_Other']
+  - Results (type: string)
+      Attributes: read_only
+  - InternalGetProperty (type: bool)
+      Attributes: read_only, persistent
+  - HeaderFieldNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ScriptReflashMethod (type: string)
+      Attributes: persistent
+      Validator: ['Local', 'Remote', 'Firmware', '']
+ == FUNCTIONS:
+  - bool executeDiagnostics(string id, (bool usr))
+  - bool executeTrigger(string event)
+  - bool cancelDiagnostics()
+  - void getDiagnosticsState()
+  - void getOpenLanDiagnosticsList()
+  - void getDatamodelWhiteList()
+  - void getFunctionWhiteList()
+  - void getDiagnosticsList()
+  - list listDiagnostics()
+  - bool setUserInput(string input)
+

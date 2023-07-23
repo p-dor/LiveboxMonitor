@@ -1,0 +1,11 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .HTTPService - Name: .HTTPService
+ == PARAMETERS:
+  - EnableWebServiceStatistics (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool getAuthenticationModes()
+  - bool getCurrentUser()
+

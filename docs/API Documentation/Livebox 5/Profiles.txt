@@ -1,0 +1,19 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .Profiles - Name: .Profiles
+
+=======================================================================
+OBJECT: Profiles.Profile - Name: Profiles.Profile
+ == PARAMETERS:
+  - Current (type: string)
+      Attributes: persistent
+  - Profiles (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - variant getData()
+  - variant setData(variant data, (string profileName))
+  - void setCurrent(string profileName)
+  - list getNames()
+

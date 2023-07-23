@@ -1,0 +1,13 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .SpeedTest - Name: .SpeedTest
+ == PARAMETERS:
+  - ServerConfigNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - DiagnosticNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getWANResults()
+  - void getLinkInfo((string iface))
+

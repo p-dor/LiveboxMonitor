@@ -1,0 +1,17 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+=======================================================================
+OBJECT: .UplinkMonitor - Name: .UplinkMonitor
+
+=======================================================================
+OBJECT: UplinkMonitor.DefaultGateway - Name: UplinkMonitor.DefaultGateway
+ == PARAMETERS:
+  - IPv4Address (type: string)
+      Attributes: read_only
+  - MACAddress (type: string)
+      Attributes: read_only
+  - NetDevIndex (type: int32)
+      Attributes: read_only
+  - NeMoIntfName (type: string)
+      Attributes: read_only
+

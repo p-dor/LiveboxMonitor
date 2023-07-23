@@ -1,0 +1,11 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+
+{
+    "errors": [
+        {
+            "error": 13,
+            "description": "Permission denied",
+            "info": "ConMon"
+        }
+    ]
+}
