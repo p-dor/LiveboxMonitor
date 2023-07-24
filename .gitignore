@@ -1,5 +1,18 @@
 # Application specific 
 Config.txt
+LiveboxMonitor.bat
+LiveboxMonitor.sublime-project
+LiveboxMonitor.sublime-workspace
+MacAddrTable.txt
+back/
+build/PyInstall_Win32/
+build/PyInstall_Win32_Console/
+dist/
+pdocs/
+experiments/
+exports/
+png/
+tools/
 
 # from here, it's : https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files
@@ -12,7 +25,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
 dist/
 downloads/
