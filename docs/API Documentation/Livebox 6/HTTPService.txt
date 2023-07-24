@@ -1,0 +1,11 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .HTTPService - Name: .HTTPService
+ == PARAMETERS:
+  - EnableWebServiceStatistics (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool getAuthenticationModes()
+  - bool getCurrentUser()
+

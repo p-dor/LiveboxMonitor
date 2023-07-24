@@ -1,0 +1,5 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .Maculan - Name: .Maculan
+
