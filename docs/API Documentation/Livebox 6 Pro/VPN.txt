@@ -1,0 +1,242 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .VPN - Name: .VPN
+ == PARAMETERS:
+  - ServerEnable (type: bool)
+      Attributes: persistent
+  - ServerNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - Site2SiteEnable (type: bool)
+      Attributes: persistent
+  - Site2SiteNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - IPsecConfigurationNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - PPPConfigurationNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void setServer(string server, (bool enable), (variant settings))
+  - void deleteServer(string server)
+  - void getServer(string server, (variant settings))
+  - void listServers((list servers))
+  - void setServerClient(string server, string client, (bool enable), (variant settings))
+  - void deleteServerClient(string server, string client)
+  - void getServerClient(string server, string client, (variant settings))
+  - void listServerClients(string server, (list clients))
+  - void getServersConfig((variant config))
+  - void disconnectServerClient(string server, string client)
+  - void enableServer((bool enable), (bool enabled))
+  - void setSite2Site(string name, (bool enable), (variant settings))
+  - void deleteSite2Site(string name)
+  - void getSite2Site(string name, (variant settings))
+  - void listSite2Site((list names))
+  - void getSite2SitesConfig((variant config))
+  - void disconnectSite2Site(string name)
+  - void enableSite2Site((bool enable), (bool enabled))
+  - bool export((string fileName))
+  - bool import((string fileName))
+  - void setIPsecConfiguration(string profile, (variant settings))
+  - void deleteIPsecConfiguration(string profile)
+  - void getIPsecConfiguration(string profile, (variant settings))
+  - void listIPsecConfigurations((list profiles))
+  - void setPPPConfiguration(string profile, (variant settings))
+  - void deletePPPConfiguration(string profile)
+  - void getPPPConfiguration(string profile, (variant settings))
+  - void listPPPConfigurations((list profiles))
+
+=======================================================================
+OBJECT: VPN.Server - Name: VPN.Server
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabling', 'Enabled', 'Misconfigured', 'Error']
+  - SetupStage (type: string)
+      Attributes: read_only
+  - ListenPort (type: uint32)
+      Attributes: persistent
+  - Interface (type: string)
+      Attributes: persistent
+      Validator: ['data']
+  - InterfaceIPAddress (type: string)
+      Attributes: read_only
+  - IPsecAuthenticationMethod (type: string)
+      Attributes: persistent
+      Validator: ['PSK']
+  - IPsecPreSharedKey (type: string)
+      Attributes: persistent
+  - IPsecConfiguration (type: string)
+      Attributes: persistent
+  - IPVersion (type: uint32)
+      Attributes: persistent
+      Validator: ['4']
+  - DHCPPool (type: string)
+      Attributes: persistent
+  - RemoteHost (type: string)
+      Attributes: persistent
+  - MaxConnections (type: uint32)
+      Attributes: persistent
+  - BlockSIP (type: bool)
+      Attributes: persistent
+  - InternetAccessMode (type: string)
+      Attributes: persistent
+      Validator: ['THROUGHVPN', 'DIRECTLY', 'NOACCESS']
+  - MaxInstancesOfClients (type: uint32)
+      Attributes: read_only, persistent
+  - PPPConfiguration (type: string)
+      Attributes: persistent
+  - ClientNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: VPN.Server.Client - Name: VPN.Server.Client
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - UniqueIdentifier (type: string)
+      Attributes: read_only, persistent
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabled', 'Misconfigured', 'Error']
+  - Username (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+  - Connected (type: bool)
+      Attributes: read_only
+  - ConnectTimestamp (type: date_time)
+      Attributes: read_only
+  - ConnectionDuration (type: uint32)
+      Attributes: read_only
+  - LastConnectTimestamp (type: date_time)
+      Attributes: read_only, persistent
+  - LastConnectionDuration (type: uint32)
+      Attributes: read_only, persistent
+  - PublicIPAddress (type: string)
+      Attributes: read_only
+  - Port (type: uint32)
+      Attributes: read_only
+  - PrivateIPAddress (type: string)
+      Attributes: read_only
+  - PPPInterface (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: VPN.Site2Site - Name: VPN.Site2Site
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabling', 'Enabled', 'Misconfigured', 'Error']
+  - SetupStage (type: string)
+      Attributes: read_only
+  - WANInterface (type: string)
+      Attributes: persistent
+  - WANInterfaceIPAddress (type: string)
+      Attributes: read_only
+  - LANInterface (type: string)
+      Attributes: persistent
+  - LANInterfaceSubnet (type: string)
+      Attributes: read_only
+  - IPsecAuthenticationMethod (type: string)
+      Attributes: persistent
+      Validator: ['PSK']
+  - IPsecPreSharedKey (type: string)
+      Attributes: persistent
+  - IPsecConfiguration (type: string)
+      Attributes: persistent
+  - IPsecConnectionMode (type: string)
+      Attributes: persistent
+      Validator: ['Automatic']
+  - IPsecLocalID (type: string)
+      Attributes: persistent
+  - IPsecRemoteID (type: string)
+      Attributes: persistent
+  - IPVersion (type: uint32)
+      Attributes: persistent
+      Validator: ['4']
+  - RemoteHost (type: string)
+      Attributes: persistent
+  - RemoteHostIPAddress (type: string)
+      Attributes: read_only
+  - RemoteHostSubnet (type: string)
+      Attributes: persistent
+  - RemoteHostInterval (type: uint32)
+      Attributes: persistent
+  - Connected (type: bool)
+      Attributes: read_only
+  - ConnectTimestamp (type: date_time)
+      Attributes: read_only
+  - ConnectionDuration (type: uint32)
+      Attributes: read_only
+  - LastConnectTimestamp (type: date_time)
+      Attributes: read_only, persistent
+  - LastConnectionDuration (type: uint32)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: VPN.IPsecConfiguration - Name: VPN.IPsecConfiguration
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Mode (type: string)
+      Attributes: persistent
+      Validator: ['Transport', 'Tunnel']
+  - Protocol (type: string)
+      Attributes: persistent
+      Validator: ['ESP', 'AH']
+  - IKEVersion (type: string)
+      Attributes: persistent
+      Validator: ['IKEv1', 'IKEv2', 'IKEv1v2']
+  - IKEv2AllowedEncryptionAlgorithm (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - IKEv2AllowedPseudoRandomFunctions (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - IKEv2AllowedIntegrityAlgorithms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - IKEv2AllowedDiffieHellmanGroupTransforms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - ESPAllowedEncryptionAlgorithms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - ESPAllowedIntegrityAlgorithms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - ESPAllowedDiffieHellmanGroupTransforms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - AHAllowedIntegrityAlgorithms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - AHAllowedDiffieHellmanGroupTransforms (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - IKEPhase1Duration (type: uint32)
+      Attributes: persistent
+  - IKEPhase2Duration (type: uint32)
+      Attributes: persistent
+  - IKEDeadPeerDetectionTimeout (type: uint32)
+      Attributes: persistent
+  - IKEIDType (type: string)
+      Attributes: persistent
+      Validator: ['ID_TYPE_UNSPEC', 'ID_TYPE_FQDN']
+
+=======================================================================
+OBJECT: VPN.PPPConfiguration - Name: VPN.PPPConfiguration
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+

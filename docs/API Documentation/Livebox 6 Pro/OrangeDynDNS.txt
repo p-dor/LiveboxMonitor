@@ -1,0 +1,72 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .OrangeDynDNS - Name: .OrangeDynDNS
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Activate (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Connecting', 'Authenticating', 'Updated', 'Error_Misconfigured', 'Error', 'Disabled']
+  - Alias (type: string)
+      Attributes: persistent
+  - LastError (type: string)
+      Attributes: read_only
+      Validator: ['NO_ERROR', 'MISCONFIGURATION_ERROR', 'DNS_ERROR', 'CONNECTION_ERROR', 'AUTHENTICATION_ERROR', 'TIMEOUT_ERROR', 'PROTOCOL_ERROR']
+  - WassupServer (type: string)
+      Attributes: persistent
+  - HostnameNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - map refreshHostname()
+  - bool setHostname((string hostname), (bool enable))
+  - map getHostname()
+  - bool export()
+  - bool import()
+
+=======================================================================
+OBJECT: OrangeDynDNS.Hostname - Name: OrangeDynDNS.Hostname
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Registered', 'UpdateNeeded', 'Updating', 'Error', 'Disabled']
+  - Name (type: string)
+      Attributes: read_only, persistent
+  - Address (type: string)
+      Attributes: read_only, persistent
+  - LastUpdate (type: date_time)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: OrangeDynDNS.Server - Name: OrangeDynDNS.Server
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Name (type: string)
+      Attributes: persistent
+  - Alias (type: string)
+      Attributes: persistent
+  - ServiceName (type: string)
+      Attributes: persistent
+  - ServerAddress (type: string)
+      Attributes: persistent
+  - ServerPort (type: int32)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - CACertificate (type: string)
+      Attributes: read_only, persistent
+  - ClientCertificate (type: string)
+      Attributes: read_only, persistent
+  - PrivateKey (type: string)
+      Attributes: read_only, persistent
+  - CheckInterval (type: uint32)
+      Attributes: persistent
+  - RetryInterval (type: uint32)
+      Attributes: persistent
+  - MaxRetries (type: uint32)
+      Attributes: persistent
+
