@@ -316,7 +316,7 @@ class LmGraph:
 		self.startTask(lx('Exporting statistics...'))
 
 		# Write header line
-		aExportFile.write('Download Timestamp, Download Bytes, Upload Timestamp, Upload Bytes\n')
+		aExportFile.write('Download Timestamp; Download Bytes; Upload Timestamp; Upload Bytes\n')
 
 		dt = iObject['DownTime']
 		d = iObject['Down']
