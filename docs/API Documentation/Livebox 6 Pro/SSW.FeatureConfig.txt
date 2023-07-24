@@ -1,0 +1,77 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: SSW.FeatureConfig - Name: SSW.FeatureConfig
+ == FUNCTIONS:
+  - void startEventing((string MAC))
+  - void stopEventing((string MAC))
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.EnergySaving - Name: SSW.FeatureConfig.EnergySaving
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - FeaturesRunning (type: string)
+      Attributes: read_only
+  - MaxStatsLength (type: uint32)
+      Attributes: persistent
+  - RssiThreshold (type: int32)
+      Attributes: persistent
+  - DeltaThreshold (type: uint8)
+      Attributes: persistent
+  - AirtimeThreshold (type: uint32)
+      Attributes: persistent
+  - ModesEnabled (type: string)
+      Attributes: persistent
+  - AntennaConfiguration (type: string)
+      Attributes: persistent
+      Validator: ['Divided', 'Minimum']
+ == FUNCTIONS:
+  - void getStats()
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.EnergySaving.Stats - Name: SSW.FeatureConfig.EnergySaving.Stats
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - NrActivations (type: uint32)
+      Attributes: read_only
+  - LastUpTime (type: uint32)
+      Attributes: read_only
+  - CurrentState (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.AddOnMode - Name: SSW.FeatureConfig.AddOnMode
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - CurrentState (type: string)
+      Attributes: read_only, persistent
+      Validator: ['Invalid', 'Disabled', 'Enabled', 'Active', 'ActiveNotConnected']
+  - LastStateChange (type: date_time)
+      Attributes: read_only, persistent
+  - Active (type: bool)
+      Attributes: read_only
+  - AddonMACAddress (type: string)
+      Attributes: read_only
+  - ActiveTimeout (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1'}
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.LongStats - Name: SSW.FeatureConfig.LongStats
+ == PARAMETERS:
+  - HistoryEnable (type: bool)
+      Attributes: persistent
+  - SendPeriodicEvent (type: bool)
+      Attributes: persistent
+  - SendEventOnAssoc (type: bool)
+      Attributes: persistent
+  - SendEventOnDisassoc (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getLongHistoryStats()
+

@@ -1,0 +1,50 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .AutoDiag - Name: .AutoDiag
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DiagnosticsScriptFile (type: string)
+      Attributes: read_only
+  - FullDateEnable (type: bool)
+      Attributes: persistent
+  - NoAuthUse (type: bool)
+      Attributes: persistent
+  - InternalGetProperty (type: bool)
+      Attributes: read_only, persistent
+  - HeaderFieldNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ScriptReflashMethod (type: string)
+      Attributes: persistent
+      Validator: ['Local', 'Remote', 'Firmware', '']
+ == FUNCTIONS:
+  - bool executeDiagnostics(string id, (bool usr))
+  - bool cancelDiagnostics()
+  - void getDiagnosticsState()
+  - void getOpenLanDiagnosticsList()
+  - void getDatamodelWhiteList()
+  - void getFunctionWhiteList()
+  - void getDiagnosticsList()
+  - list listDiagnostics()
+  - bool setUserInput(string input)
+
+=======================================================================
+OBJECT: AutoDiag.HeaderField - Name: AutoDiag.HeaderField
+ == PARAMETERS:
+  - DataType (type: string)
+      Attributes: persistent
+      Validator: ['Value', 'Path']
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - Data (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+
+=======================================================================
+OBJECT: AutoDiag.Interface - Name: AutoDiag.Interface
+ == PARAMETERS:
+  - FriendlyName (type: string)
+  - Name (type: string)
+

@@ -1,0 +1,158 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+
+=======================================================================
+OBJECT: .Domino - Name: .Domino
+ == FUNCTIONS:
+  - list getDominoStatus()
+  - bool enableBackupFeature((bool enable))
+  - bool enableDominoComponent((bool enable))
+  - bool getWWANStatus((string LinkState), (string MACAddress), (string Protocol), (string ConnectionState), (string IPAddress), (string RemoteGateway), (string DNSServers))
+
+=======================================================================
+OBJECT: Domino.Intf - Name: Domino.Intf
+ == FUNCTIONS:
+  - bool activateConnection((bool activate))
+  - bool setWifiParams((string ssid), (string password), (string enc_mode))
+  - bool enableWifi((bool enable))
+
+=======================================================================
+OBJECT: Domino.Intf.ConnectionContext - Name: Domino.Intf.ConnectionContext
+ == FUNCTIONS:
+  - bool setAdminPassword((string password))
+  - bool resetAdminPassword((string currpwd), (string newpwd))
+
+=======================================================================
+OBJECT: Domino.Intf.SIM - Name: Domino.Intf.SIM
+ == FUNCTIONS:
+  - void setPin((string pin))
+  - void resetPin((string puk), (string newpin))
+
+=======================================================================
+OBJECT: Domino.Airbox - Name: Domino.Airbox
+ == PARAMETERS:
+  - SubscriptionStatus (type: string)
+      Validator: ['Unknown', 'Subscribed', 'NotSubscribed']
+
+=======================================================================
+OBJECT: Domino.Airbox.Service - Name: Domino.Airbox.Service
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+  - Login (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool setServicePassword(string Password)
+
+=======================================================================
+OBJECT: Domino.Airbox.Service.ConnectedDevice - Name: Domino.Airbox.Service.ConnectedDevice
+ == PARAMETERS:
+  - ProductID (type: string)
+  - VendorID (type: string)
+
+=======================================================================
+OBJECT: Domino.Airbox.WifiCloning - Name: Domino.Airbox.WifiCloning
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - LowerLayer (type: string)
+ == FUNCTIONS:
+  - bool setWifiCloningEnable(bool enable)
+
+=======================================================================
+OBJECT: Domino.Airbox.Backup - Name: Domino.Airbox.Backup
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - ActivationMessageEnable (type: bool)
+      Attributes: persistent
+  - TimerPreempt (type: uint32)
+      Attributes: persistent
+  - TimerMainLoss (type: uint32)
+      Attributes: persistent
+  - DeactivationMessageEnable (type: bool)
+      Attributes: persistent
+  - ActivationMode (type: string)
+      Attributes: persistent
+      Validator: ['AUTO_FULL', 'AUTO_NOTIF', 'MANUAL']
+  - TimerMainRecover (type: uint32)
+      Attributes: persistent
+  - NumberOfUse (type: uint32)
+      Attributes: read_only, persistent
+  - ServiceStatus (type: string)
+      Validator: ['enabled', 'disabled']
+  - State (type: string)
+      Validator: ['BACKUP_STOPPED', 'BACKUP_STOPPING', 'BACKUP_STARTING', 'BACKUP_STARTED_WAIT_MANUAL', 'BACKUP_STARTED_WRONGCONFIG', 'BACKUP_STARTED_NODEVICE', 'BACKUP_STARTED', 'BACKUP_RUNNING', 'BACKUP_UNKNOWN']
+ == FUNCTIONS:
+  - bool setTimerBackupParameter(string parameter, uint32 timer)
+  - bool setActivationMode(string activation)
+
+=======================================================================
+OBJECT: Domino.Cellular - Name: Domino.Cellular
+
+=======================================================================
+OBJECT: Domino.Cellular.Interface - Name: Domino.Cellular.Interface
+ == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - SupportedAccessTechnologies (type: string)
+      Attributes: read_only
+  - PreferredAccessTechnology (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'LTE', 'WCDMA']
+  - CurrentAccessTechnology (type: string)
+      Attributes: read_only, persistent
+  - RSSI (type: int32)
+      Attributes: read_only
+  - PINCheck (type: string)
+      Attributes: persistent
+  - PIN (type: string)
+      Attributes: persistent
+  - X_ORANGE-COM_PINTry (type: uint32)
+      Attributes: persistent
+  - InterferenceMode (type: string)
+      Attributes: persistent
+      Validator: ['NONE', '3G2100', '4GB7', '3G2100+4GB7']
+  - Upstream (type: bool)
+ == FUNCTIONS:
+  - bool setTechnologyMode(string mode, string interference)
+  - bool setGlobalPin(string pin)
+
+=======================================================================
+OBJECT: Domino.Cellular.Interface.USIM - Name: Domino.Cellular.Interface.USIM
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['', 'None', 'Available', 'Valid', 'Blocked', 'Error', 'New']
+  - ICCID (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool authorizeICCID((bool enable))
+
+=======================================================================
+OBJECT: Domino.Cellular.AccessPoint - Name: Domino.Cellular.AccessPoint
+ == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - APN (type: string)
+      Attributes: persistent
+  - Username (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+  - Interface (type: string)
+ == FUNCTIONS:
+  - bool setAPSettings(string apn, string username, string password)
+
