@@ -535,10 +535,10 @@ if __name__ == '__main__':
 		ReleaseCheck()
 
 		parser = argparse.ArgumentParser()
-		parser.add_argument('--proxyfile', '-p', help='proxy url definition file')
+		parser.add_argument('--redir', '-r', help='add a url redirection, REDIR format must be "url1=url2"',action='append')
 		args = parser.parse_args()
-		
-		LmSession.loadProxyUrls(args.proxyfile)
+		if args.redir:
+			LmSession.loadUrlRedirections(args.redir)
 
 		while True:
 			SetApplicationStyle()

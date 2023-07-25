@@ -9,7 +9,6 @@ import pickle
 import datetime
 import requests
 import requests.utils
-import yaml
 
 from src import LmTools
 
@@ -18,7 +17,7 @@ from src import LmTools
 APP_NAME = 'so_sdkut'
 DEFAULT_TIMEOUT = 5
 LIVEBOX_SCAN_TIMEOUT = 0.4
-PROXY_URLS = {}
+URL_REDIRECTIONS = {}
 
 # ################################ LmSession class ################################
 
@@ -36,23 +35,26 @@ class LmSession:
 		self._sahServiceHeaders = None
 		self._sahEventHeaders = None
 
-		# proxy handling
+		# url redirection handling
 		iUrl = iUrl.rstrip(" /") + "/"
-		if iUrl in PROXY_URLS:
-			self._url = PROXY_URLS[iUrl].rstrip(" /") + "/"
+		if iUrl in URL_REDIRECTIONS:
+			self._url = URL_REDIRECTIONS[iUrl].rstrip(" /") + "/"
 			print(f"redirecting '{iUrl}' to '{self._url}'")
 
-	### read a proxy url dictionnary from the proxyfile
+	### read a url redirection dictionnary from the redirection file
 	@staticmethod
-	def loadProxyUrls(proxyfile):
-		global PROXY_URLS
-		if not proxyfile:
+	def loadUrlRedirections(redirections):
+		global URL_REDIRECTIONS
+		if not redirections:
 			return
 		try:
-			with open(proxyfile,"r") as proxy_dict:
-				PROXY_URLS=yaml.load(proxy_dict,Loader=yaml.SafeLoader)
+			print("must parse:",redirections)
+			for i in redirections:
+				url_from,url_to = i.split("=",1)
+				URL_REDIRECTIONS[url_from]=url_to
+				print("added",url_from,url_to)
 		except BaseException as e:
-			print(f"erreur de lecture du fichier '{proxyfile}':",e)
+			print(f"erreur de parsing de '{i}':",e)
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iUser, iPassword, iNewSession = False):
