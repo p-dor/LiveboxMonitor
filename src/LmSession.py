@@ -95,7 +95,6 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
-					print(f"session to '{self._url}'",aAuth)
 					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
