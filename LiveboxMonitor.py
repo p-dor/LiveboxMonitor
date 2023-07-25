@@ -4,6 +4,7 @@ import sys
 import re
 import traceback
 import locale
+import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -532,6 +533,13 @@ if __name__ == '__main__':
 	if LmConf.load():
 		LmIcon.load()
 		ReleaseCheck()
+
+		parser = argparse.ArgumentParser()
+		parser.add_argument('--proxyfile', '-p', help='proxy url definition file')
+		args = parser.parse_args()
+		
+		LmSession.loadProxyUrls(args.proxyfile)
+
 		while True:
 			SetApplicationStyle()
 

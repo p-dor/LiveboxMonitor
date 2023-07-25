@@ -9,6 +9,7 @@ import pickle
 import datetime
 import requests
 import requests.utils
+import yaml
 
 from src import LmTools
 
@@ -17,7 +18,7 @@ from src import LmTools
 APP_NAME = 'so_sdkut'
 DEFAULT_TIMEOUT = 5
 LIVEBOX_SCAN_TIMEOUT = 0.4
-
+PROXY_URLS = {}
 
 # ################################ LmSession class ################################
 
@@ -35,6 +36,23 @@ class LmSession:
 		self._sahServiceHeaders = None
 		self._sahEventHeaders = None
 
+		# proxy handling
+		iUrl = iUrl.rstrip(" /") + "/"
+		if iUrl in PROXY_URLS:
+			self._url = PROXY_URLS[iUrl].rstrip(" /") + "/"
+			print(f"redirecting '{iUrl}' to '{self._url}'")
+
+	### read a proxy url dictionnary from the proxyfile
+	@staticmethod
+	def loadProxyUrls(proxyfile):
+		global PROXY_URLS
+		if not proxyfile:
+			return
+		try:
+			with open(proxyfile,"r") as proxy_dict:
+				PROXY_URLS=yaml.load(proxy_dict,Loader=yaml.SafeLoader)
+		except BaseException as e:
+			print(f"erreur de lecture du fichier '{proxyfile}':",e)
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iUser, iPassword, iNewSession = False):
@@ -75,6 +93,7 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
+					print(f"session to '{self._url}'",aAuth)
 					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
