@@ -38,23 +38,30 @@ class LmSession:
 		# url redirection handling
 		iUrl = iUrl.rstrip(" /") + "/"
 		if iUrl in URL_REDIRECTIONS:
-			self._url = URL_REDIRECTIONS[iUrl].rstrip(" /") + "/"
+			self._url = URL_REDIRECTIONS[iUrl]
 			print(f"redirecting '{iUrl}' to '{self._url}'")
 
-	### read a url redirection dictionnary from the redirection file
+	### read a url redirection list and store in it in the global dict URL_REDIRECTIONS
+	### this fail silently 
 	@staticmethod
 	def loadUrlRedirections(redirections):
+		def fixTrailingSlash(url):
+			return url.strip(" /") + "/"
+
 		global URL_REDIRECTIONS
 		if not redirections:
 			return
 		try:
-			print("must parse:",redirections)
 			for i in redirections:
 				url_from,url_to = i.split("=",1)
+				url_from = fixTrailingSlash(url_from)
+				url_to = fixTrailingSlash(url_to)
+				if url_from in URL_REDIRECTIONS:
+					raise Exception("url source de redirection deja présent")
 				URL_REDIRECTIONS[url_from]=url_to
-				print("added",url_from,url_to)
+				LmTools.LogDebug(2, 'added redirection', url_from, "to", url_to)
 		except BaseException as e:
-			print(f"erreur de parsing de '{i}':",e)
+			print(f"erreur de traitement de '{i}':",e)
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iUser, iPassword, iNewSession = False):
