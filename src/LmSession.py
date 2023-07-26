@@ -42,11 +42,11 @@ class LmSession:
 			print(f"redirecting '{iUrl}' to '{self._url}'")
 
 	### read a url redirection list and store in it in the global dict URL_REDIRECTIONS
-	### this fail silently 
+	### this fails silently 
 	@staticmethod
 	def loadUrlRedirections(redirections):
 		def fixTrailingSlash(url):
-			return url.strip(" /") + "/"
+			return url.rstrip(" /") + "/"
 
 		global URL_REDIRECTIONS
 		if not redirections:
