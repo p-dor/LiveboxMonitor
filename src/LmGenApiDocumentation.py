@@ -17,8 +17,8 @@ MODULES = [
 	'ConMon',
 	'Conntrack',
 	'CPUStats',
-	'CupsService',
-	'DECT',
+	'CupsService',				# LB5 only
+	'DECT',						# LB5 only
 	'DeviceInfo',
 	'DeviceLookup',
 	'DeviceManagement',
@@ -32,7 +32,7 @@ MODULES = [
 	'DNS',
 	'DNSSD',
 	'Domino',
-	'DSPGDECT',
+	'DSPGDECT',					# LB5 only
 	'DSPPlugin',
 	'DummyPlugin',
 	'DynDNS',
@@ -75,6 +75,7 @@ MODULES = [
 	'PasswordRecovery',
 	'Phonebook',
 	'PnP',
+	'PowerManagement',			# LB6 only
 	'PPP',
 	'Probe',
 	'Process',
@@ -87,6 +88,7 @@ MODULES = [
 	'SAHPairing',
 	'SambaService',
 	'Scheduler',
+	'Screen',					# LB6 only
 	'SpeedTest',
 	'SrvInterface',
 	'SSLEServer',
@@ -102,7 +104,7 @@ MODULES = [
 	'UplinkMonitor',
 	'UPnP',
 	'UPnP-IGD',
-	'URLMon',
+	'URLMon',					# LB5 only
 	'USBHosts',
 	'UserInterface',
 	'UserManagement',
@@ -113,7 +115,7 @@ MODULES = [
 	'WatchDog',
 	'WebuiupgradeService',
 	'WiFiBCM',
-	'WiFiQUAN',
+	'WiFiQUAN',					# LB5 only
 	'WLanScheduler',
 	'WOL',
 	'WOLProxy'
@@ -164,10 +166,23 @@ class LmGenApiDoc:
 		self.genModuleFile('*', '_PROCESSES_')
 
 
-	### Generate JSON result file for a module
+	### Generate JSON result file for a module - useful only to get raw results
 	def genModuleJsonFile(self, iModule, iName = None):
 		if iName is None:
 			iName = iModule
+
+		try:
+			d = self._session.request(iModule, iGet = True, iTimeout = 15)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			return
+
+		if d is None:
+			return
+
+		# Module doesn't exist error
+		if (type(d).__name__ == 'dict') and (d.get('error', 0) == 196618):	
+			return
 
 		aFilePath = os.path.join(self._folder, iName + '_json.txt')
 		try:
@@ -175,12 +190,6 @@ class LmGenApiDoc:
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			return
-
-		try:
-			d = self._session.request(iModule, iGet = True, iTimeout = 15)
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
 
 		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
 		json.dump(d, self._file, indent = 4)
@@ -199,6 +208,19 @@ class LmGenApiDoc:
 
 		self._app.updateTask(iName)
 
+		try:
+			d = self._session.request(iModule, iGet = True, iTimeout = 15)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			return
+
+		if d is None:
+			return
+
+		# Module doesn't exist error
+		if (type(d).__name__ == 'dict') and (d.get('error', 0) == 196618):	
+			return
+
 		aFilePath = os.path.join(self._folder, iName + '.txt')
 		try:
 			self._file = open(aFilePath, 'w')
@@ -206,19 +228,12 @@ class LmGenApiDoc:
 			LmTools.Error('Error: {}'.format(e))
 			return
 
-		try:
-			d = self._session.request(iModule, iGet = True, iTimeout = 15)
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-
 		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
-		if d is not None:
-			if type(d).__name__ != 'list':
-				d = [d]
-			for o in d:
-				if not self.genObject(o):
-					json.dump(o, self._file, indent = 4)
+		if type(d).__name__ != 'list':
+			d = [d]
+		for o in d:
+			if not self.genObject(o):
+				json.dump(o, self._file, indent = 4)
 
 		try:
 			self._file.close()
