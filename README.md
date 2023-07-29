@@ -103,11 +103,11 @@ Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un
 
 ## Options de ligne de commande
 
-- `--redir` `-r`
+- `--redir` `-r`  
 Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
-Le format est `url1=url2`
-Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`
-Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.
+Le format est `url1=url2`.  
+Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`  
+Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.  
 Cette option peut être utilisée plusieurs fois sur la même ligne.
 
 
@@ -150,7 +150,7 @@ Un fichier de noms local offre la garantie de savoir si un appareil est vraiment
 
 
 ## Linux
-En cas d'erreurs avec Wayland, il est possible de changer le moteur de rendu de Qt avec la variable d’environnement `QT_QPA_PLATFORM`.
+En cas d'erreurs avec Wayland, il est possible de changer le moteur de rendu de Qt avec la variable d’environnement `QT_QPA_PLATFORM`.  
 Par exemple : `QT_QPA_PLATFORM=xcb python3 LiveboxMonitor.py` permet d'utiliser X Window directement (qui éventuellement sera rendu avec Xwayland mais cela fonctionne).
 
 Une autre méthode consiste à supprimer la variable d’environnement `WAYLAND_DISPLAY` uniquement pour l’exécution du programme et pas de façon globale, pour ce faire : `env -u WAYLAND_DISPLAY python3 LiveboxMonitor.py`.
