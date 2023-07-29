@@ -1,7 +1,0 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
-
-{
-    "error": 196618,
-    "description": "Object or parameter not found",
-    "info": "DECT"
-}
