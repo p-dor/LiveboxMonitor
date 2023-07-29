@@ -87,16 +87,6 @@ Les points importants à comprendre avant de commencer :
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
 
-## Options de ligne de commande
-
-- `--redir` `-r`
-Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
-Le format est `url1=url2`
-Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`
-Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.
-Cette option peut être utilisée plusieurs fois sur la même ligne.
-
-
 ## Profils
 Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement, mais il est possible d'en créer d'autres soit au démarrage du programme dans la fenêtre de sélection de profils soit dans les préférences du programme.  
 Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.  
@@ -109,6 +99,16 @@ Que se passe-t-il au lancement du programme ?
 - Si aucun profil trouvé, le programme affiche un dialogue pour sélectionner le profil à utiliser.
 
 Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un profil pour une Livebox différente de celle avec lequel il est normalement associé. Si vous validez le dialogue, le profil sera mis à jour pour être associé à cette nouvelle Livebox. Le dialogue de sélection de profils vous permet aussi de créer un nouveau profil si aucun dans la liste ne convient.
+
+
+## Options de ligne de commande
+
+- `--redir` `-r`
+Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
+Le format est `url1=url2`
+Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`
+Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.
+Cette option peut être utilisée plusieurs fois sur la même ligne.
 
 
 ## Accès à distance
@@ -147,6 +147,13 @@ Pourquoi utiliser une base de noms locale alors que la Livebox stocke aussi des 
 - Parce que la Livebox "oublie" tout appareil qui ne s'est pas connecté depuis plus d'un mois.
 - Parce que parfois la Livebox perd des noms de façon impromptue pour certains appareils. C'est le cas par exemple pour le nom des répéteurs Wifi.  
 Un fichier de noms local offre la garantie de savoir si un appareil est vraiment inconnu.
+
+
+## Linux
+En cas d'erreurs avec Wayland, il est possible de changer le moteur de rendu de Qt avec la variable d’environnement `QT_QPA_PLATFORM`.
+Par exemple : `QT_QPA_PLATFORM=xcb python3 LiveboxMonitor.py` permet d'utiliser X Window directement (qui éventuellement sera rendu avec Xwayland mais cela fonctionne).
+
+Une autre méthode consiste à supprimer la variable d’environnement `WAYLAND_DISPLAY` uniquement pour l’exécution du programme et pas de façon globale, pour ce faire : `env -u WAYLAND_DISPLAY python3 LiveboxMonitor.py`.
 
 
 ## Appareils - Liste des appareils connectés
