@@ -4,6 +4,7 @@ import sys
 import re
 import traceback
 import locale
+import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -532,6 +533,13 @@ if __name__ == '__main__':
 	if LmConf.load():
 		LmIcon.load()
 		ReleaseCheck()
+
+		parser = argparse.ArgumentParser()
+		parser.add_argument('--redir', '-r', help='add a url redirection, REDIR format must be "url1=url2"',action='append')
+		args = parser.parse_args()
+		if args.redir:
+			LmSession.loadUrlRedirections(args.redir)
+
 		while True:
 			SetApplicationStyle()
 
