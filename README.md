@@ -12,7 +12,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
 
-**AVERTISSEMENT** : le programme a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4 et 6**, des tests supplémentaires avec une Livebox 4 ou 6 seraient bienvenus. Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec les modèles "Pro"**.
+**AVERTISSEMENT** : le programme a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4 et 6**, des tests supplémentaires avec une Livebox 4 ou 6 seraient bienvenus. Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -65,7 +65,12 @@ Lancement :
 ## À propos de l'auteur
 
 L'auteur de ce logiciel est un professionnel de l'informatique n'ayant aucun lien avec Orange. Ce logiciel n'est donc en rien un produit d'Orange.  
-Aucune documentation des APIs de la Livebox n'étant disponible, l'élaboration a été effectuée à partir de techniques classiques de rétro-ingénierie (reverse engineering), et l'ensemble du projet sur le temps libre de l'auteur.
+Aucune documentation officielle des APIs de la Livebox n'étant disponible, l'élaboration a été effectuée à partir de techniques classiques de rétro-ingénierie (reverse engineering), et l'ensemble du projet sur le temps libre de l'auteur.
+
+
+## Discussion
+
+Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
 
 
 ## Prise en main
@@ -82,9 +87,14 @@ Les points importants à comprendre avant de commencer :
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
 
-## Discussion
+## Options de ligne de commande
 
-Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
+- `--redir` `-r`
+Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
+Le format est `url1=url2`
+Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`
+Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.
+Cette option peut être utilisée plusieurs fois sur la même ligne.
 
 
 ## Profils
