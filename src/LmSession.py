@@ -19,14 +19,23 @@ DEFAULT_TIMEOUT = 5
 LIVEBOX_SCAN_TIMEOUT = 0.4
 URL_REDIRECTIONS = {}
 
+
 # ################################ LmSession class ################################
 
 class LmSession:
 
 	### Constructor
 	def __init__(self, iUrl, iSessionName = 'LiveboxMonitor'):
-		self._url = iUrl
-		self._verify = iUrl.startswith('http://')
+		iUrl = iUrl.rstrip(' /') + '/'
+	
+		# URL redirection handling
+		if iUrl in URL_REDIRECTIONS:
+			self._url = URL_REDIRECTIONS[iUrl]
+			print(f"Redirecting '{iUrl}' to '{self._url}'.")
+		else:
+			self._url = iUrl
+
+		self._verify = self._url.startswith('http://')
 		self._user = ''
 		self._password = ''
 		self._name = iSessionName
@@ -35,33 +44,30 @@ class LmSession:
 		self._sahServiceHeaders = None
 		self._sahEventHeaders = None
 
-		# url redirection handling
-		iUrl = iUrl.rstrip(" /") + "/"
-		if iUrl in URL_REDIRECTIONS:
-			self._url = URL_REDIRECTIONS[iUrl]
-			print(f"redirecting '{iUrl}' to '{self._url}'")
 
-	### read a url redirection list and store in it in the global dict URL_REDIRECTIONS
+	### Read a url redirection list and store in it in the global dict URL_REDIRECTIONS
 	### this fails silently 
 	@staticmethod
-	def loadUrlRedirections(redirections):
-		def fixTrailingSlash(url):
-			return url.rstrip(" /") + "/"
+	def loadUrlRedirections(iRedirections):
+		def fixTrailingSlash(iUrl):
+			return iUrl.rstrip(' /') + '/'
 
 		global URL_REDIRECTIONS
-		if not redirections:
+		if not iRedirections:
 			return
+
 		try:
-			for i in redirections:
-				url_from,url_to = i.split("=",1)
-				url_from = fixTrailingSlash(url_from)
-				url_to = fixTrailingSlash(url_to)
-				if url_from in URL_REDIRECTIONS:
-					raise Exception("url source de redirection deja présent")
-				URL_REDIRECTIONS[url_from]=url_to
-				LmTools.LogDebug(2, 'added redirection', url_from, "to", url_to)
+			for i in iRedirections:
+				aUrlFrom, aUrlTo = i.split('=', 1)
+				aUrlFrom = fixTrailingSlash(aUrlFrom)
+				aUrlTo = fixTrailingSlash(aUrlTo)
+				if aUrlFrom in URL_REDIRECTIONS:
+					raise Exception("URL source de redirection déjà présent.")
+				URL_REDIRECTIONS[aUrlFrom] = aUrlTo
+				LmTools.LogDebug(2, 'Added redirection', aUrlFrom, 'to', aUrlTo)
 		except BaseException as e:
-			print(f"erreur de traitement de '{i}':",e)
+			print(f"Erreur de traitement de '{i}':", e)
+
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
 	def signin(self, iUser, iPassword, iNewSession = False):

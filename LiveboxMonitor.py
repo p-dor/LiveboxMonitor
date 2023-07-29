@@ -524,9 +524,9 @@ def exceptHook(iType, iValue, iTraceBack):
 if __name__ == '__main__':
 	# Prevent logging to fail if running without console
 	if sys.stderr is None:
-		sys.stderr = open(os.devnull, "w")
+		sys.stderr = open(os.devnull, 'w')
 	if sys.stdout is None:
-		sys.stdout = open(os.devnull, "w")
+		sys.stdout = open(os.devnull, 'w')
 
 	aApp = QtWidgets.QApplication(sys.argv)
 	sys.excepthook = exceptHook
@@ -534,11 +534,12 @@ if __name__ == '__main__':
 		LmIcon.load()
 		ReleaseCheck()
 
-		parser = argparse.ArgumentParser()
-		parser.add_argument('--redir', '-r', help='add a url redirection, REDIR format must be "url1=url2"',action='append')
-		args = parser.parse_args()
-		if args.redir:
-			LmSession.loadUrlRedirections(args.redir)
+		# Command line parameters
+		aArgParser = argparse.ArgumentParser()
+		aArgParser.add_argument('--redir', '-r', help = 'add a url redirection, REDIR format must be "url1=url2"', action = 'append')
+		aArgs = aArgParser.parse_args()
+		if aArgs.redir:
+			LmSession.loadUrlRedirections(aArgs.redir)
 
 		while True:
 			SetApplicationStyle()
