@@ -431,7 +431,7 @@ class LmDeviceList:
 		aActiveIcon = self.formatActiveTableWidget(aActiveStatus)
 		self._deviceList.setItem(iLine, DevCol.Active, aActiveIcon)
 
-		if aLinkType == 'wif':
+		if aActiveStatus and (aLinkType == 'wif'):
 			aWifiSignal = iDevice.get('SignalNoiseRatio')
 			if aWifiSignal is not None:
 				aWifiIcon = LmTools.NumericSortItem()
@@ -445,6 +445,8 @@ class LmDeviceList:
 					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
 				elif aWifiSignal >= 10:
 					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
+				elif aWifiSignal == 0:		# Case when system doesn't know, like for Guest interface
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
 				else:
 					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
 				aWifiIcon.setData(QtCore.Qt.ItemDataRole.UserRole, aWifiSignal)
@@ -681,11 +683,18 @@ class LmDeviceList:
 						aInterfaceName = aMappedName
 				else:
 					aInterfaceType = 'wif'
-					aWifiBand = d.get('OperatingFrequencyBand', '')
-					if len(aWifiBand):
-						aInterfaceName = 'Wifi ' + aWifiBand
+					if iDeviceName == 'Livebox':
+						i = next((i for i in LmConfig.NET_INTF if i['Key'] == aInterfaceKey), None)
+						if i is None:
+							aInterfaceName = d.get('Name', aInterfaceKey)
+						else:
+							aInterfaceName = i['Name']
 					else:
-						aInterfaceName = d.get('Name', '')
+						aWifiBand = d.get('OperatingFrequencyBand', '')
+						if len(aWifiBand):
+							aInterfaceName = 'Wifi ' + aWifiBand
+						else:
+							aInterfaceName = d.get('Name', aInterfaceKey)
 				aMapEntry = {}
 				aMapEntry['Key'] = aInterfaceKey
 				aMapEntry['Type'] = aInterfaceType
