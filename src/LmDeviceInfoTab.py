@@ -164,7 +164,8 @@ class LmDeviceInfo:
 
 				aName = aSetDeviceNameDialog.getDnsName()
 				if aName is None:
-					aDnsSuccess = self.delDeviceLiveboxName(aKey, True)
+					if self._currentDeviceDnsName is not None:
+						aDnsSuccess = self.delDeviceLiveboxName(aKey, True)
 				else:
 					aDnsSuccess = self.setDeviceLiveboxName(aKey, aName, True)
 
