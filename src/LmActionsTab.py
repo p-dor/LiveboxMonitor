@@ -327,35 +327,98 @@ class LmActions:
 	### Click on Scheduler ON button
 	def schedulerOnButtonClick(self):
 		self.startTask(lx('Activating Wifi Scheduler...'))
-		try:
-			d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
-			if d is not None:
-				d = d.get('status')
-			if (d is None) or (not d):
-				self.displayError('Scheduler:enableSchedule service failed.')
-			else:
-				self.displayStatus('Scheduler activated.')
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Scheduler:enableSchedule service error.')
+		if self.schedulerOnOff(True):
+			self.displayStatus('Scheduler activated.')
+		else:
+			self.displayStatus('Something failed while trying to activate the scheduler.')
 		self.endTask()
 
 
 	### Click on Scheduler OFF button
 	def schedulerOffButtonClick(self):
 		self.startTask(lx('Deactivating Wifi Scheduler...'))
-		try:
-			d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
-			if d is not None:
-				d = d.get('status')
-			if (d is None) or (not d):
-				self.displayError('Scheduler:enableSchedule service failed.')
-			else:
-				self.displayStatus('Scheduler deactivated.')
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Scheduler:enableSchedule service error.')
+		if self.schedulerOnOff(False):
+			self.displayStatus('Scheduler deactivated.')
+		else:
+			self.displayError('Something failed while trying to deactivate the scheduler.')
 		self.endTask()
+
+
+	### Set Wifi Scheduler on or off, returns True if successful, False if failed
+	def schedulerOnOff(self, iEnable):
+		# First save network configuration
+		d = self._session.request('NMC.NetworkConfig:launchNetworkBackup', { 'delay' : True })
+		aFailed = False
+		aRestore = False
+
+		# Loop on each Wifi interface
+		n = 0
+		for i in LmConfig.NET_INTF:
+			if i['Type'] == 'wif':
+				# Get current schedule info
+				d = self._session.request('Scheduler:getSchedule', { 'type' : 'WLAN', 'ID' : i['Key'] })
+				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+				if d:
+					aStatus = d.get('status')
+				else:
+					aStatus = False
+				if aStatus:
+					d = d.get('data')
+					if d:
+						d = d.get('scheduleInfo')
+				else:
+					d = None
+				if d:
+					aSchedule = d
+				else:
+					self.displayError('Scheduler:getSchedule service failed for {} interface.\n{}'.format(i['Key'], aErrors))
+					aFailed = True
+					break
+
+				# Add schedule with proper status
+				p = {}
+				p['enable'] = iEnable
+				p['base'] = aSchedule.get('base')
+				p['def'] = aSchedule.get('def')
+				if iEnable:
+					p['override'] = aSchedule.get('override')
+				else:
+					p['override'] = 'Enable'
+				p['value'] = aSchedule.get('value')
+				p['ID'] = i['Key']
+				p['schedule'] = aSchedule.get('schedule')
+				d = self._session.request('Scheduler:addSchedule', { 'type' : 'WLAN', 'info' : p })
+				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+				if d:
+					d = d.get('status')
+				if not d:
+					self.displayError('Scheduler:addSchedule service failed for {} interface.\nLivebox might reboot.\n{}'.format(i['Key'], aErrors))
+					aFailed = True
+					if n:	# Trigger a restore (causing a Livebox reboot) if at least one succeeded previously
+						aRestore = True
+					break
+				else:
+					n += 1
+
+		# Restore network configuration if failed and try another way
+		if aFailed:
+			if aRestore:
+				self._session.request('NMC.NetworkConfig:launchNetworkRestore')		# Restore config, triggering a Livebox reboot
+			aFailed = False
+
+			for i in LmConfig.NET_INTF:
+				if i['Type'] == 'wif':
+					d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : i['Key'], 'enable': iEnable })
+					aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+					if d:
+						d = d.get('status')
+					if not d:
+						self.displayError('Scheduler:enableSchedule service failed for {} interface.\n{}'.format(i['Key'], aErrors))
+						aFailed = True
+
+		if aFailed:
+			return False
+		return True
 
 
 	### Click on Global Wifi Status button
