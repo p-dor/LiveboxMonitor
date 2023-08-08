@@ -14,6 +14,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
 from src import LmTools
+from src.LmSession import DEFAULT_TIMEOUT
 from src.LmSession import LmSession
 from src import LmLanguages
 from src.LmLanguages import (GetConfigPrefsDialogLabel as lx,
@@ -958,11 +959,14 @@ class LmConf:
 
 				try:
 					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'],
-											 timeout = 5, verify = LmConf.LiveboxURL.startswith('http://'))
+											 timeout = DEFAULT_TIMEOUT,
+											 verify = LmConf.LiveboxURL.startswith('http://'))
 					if not aIconPixMap.loadFromData(aIconData.content):
-						LmTools.Error('Cannot load device icon ' + iDevice['Icon'] + '.')
+						LmTools.Error('Cannot load device icon {}.'.format(e, iDevice['Icon']))
+				except requests.exceptions.Timeout as e:
+					LmTools.Error('Device icon {} request timeout error: {}.'.format(iDevice['Icon'], e))
 				except BaseException as e:
-					LmTools.Error('Error: {}. Cannot request device icon ' + iDevice['Icon'] + '.'.format(e))
+					LmTools.Error('Error: {}. Cannot request device icon {}.'.format(e, iDevice['Icon']))
 
 				iDevice['PixMap'] = aIconPixMap
 
