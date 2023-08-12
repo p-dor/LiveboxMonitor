@@ -77,7 +77,7 @@ class LmInfo:
 		for s in LmConfig.NET_INTF:
 			self._statsList.insertRow(i)
 			self._statsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
-			self._statsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(s['Name']))
+			self._statsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(lx(s['Name'])))
 			i += 1
 		aStatsListSize = LmConfig.TableHeight(i)
 		self._statsList.setMinimumHeight(aStatsListSize)
