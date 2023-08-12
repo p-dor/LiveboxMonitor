@@ -701,7 +701,7 @@ class LmDeviceList:
 				aMapEntry['DevKey'] = aDeviceKey
 				aMapEntry['DevName'] = aDeviceName
 				aMapEntry['IntName'] = aInterfaceName
-				aMapEntry['Name'] = aDeviceName + ' ' + aInterfaceName
+				aMapEntry['Name'] = aDeviceName + ' ' + lx(aInterfaceName)
 				self._interfaceMap.append(aMapEntry)
 
 			# Handle devices
