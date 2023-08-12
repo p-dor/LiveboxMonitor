@@ -27,7 +27,9 @@ LABELS = {
 		'Loading device list...': 'Chargement de la liste d\'appareils...',
 		'<None>': '<Aucun>',
 		'Unknown': 'Inconnu',
-		'UNKNOWN': 'INCONNU'
+		'UNKNOWN': 'INCONNU',
+		'Guest 2.4GHz': 'Invité 2.4GHz',
+		'Guest 5GHz': 'Invité 5GHz'
 	},
 
 	# Device list - IPv6 dialog
@@ -52,6 +54,9 @@ LABELS = {
 		'Name': 'Nom',
 		'RxRate': 'TauxRx',
 		'TxRate': 'TauxTx',
+		'Fiber': 'Fibre',
+		'Guest 2.4GHz': 'Invité 2.4GHz',
+		'Guest 5GHz': 'Invité 5GHz',
 		'Attribute': 'Attribut',
 		'Value': 'Valeur',
 		'Livebox Infos': 'Infos Livebox',
