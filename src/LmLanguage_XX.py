@@ -37,7 +37,9 @@ LABELS = {
 		'Loading device list...': '',
 		'<None>': '',
 		'Unknown': '',
-		'UNKNOWN': ''
+		'UNKNOWN': '',
+		'Guest 2.4GHz': '',
+		'Guest 5GHz': ''
 	},
 
 	# Device list - IPv6 dialog
@@ -74,6 +76,9 @@ LABELS = {
 		'Tx': '',
 		'RxRate': '',
 		'TxRate': '',
+		'Fiber': '',
+		'Guest 2.4GHz': '',
+		'Guest 5GHz': '',
 		'Attribute': '',
 		'Value': '',
 		'Livebox Infos': '',
