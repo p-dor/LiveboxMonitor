@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ### Python program to monitor & administrate a Livebox 4, 5 or 6 ###
 
 import sys
