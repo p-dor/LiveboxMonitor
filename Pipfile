@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyqt6 = "*"
+requests = "*"
+python-dateutil = "*"
+cryptography = "*"
+pyqtgraph = "*"
+
+[dev-packages]
+pyinstaller = "*"
+
+[requires]
+python_version = "3"
