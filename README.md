@@ -54,6 +54,25 @@ Lancement :
     python3 LiveboxMonitor.py
 ```
 
+Ou via un virtualenv.
+
+Installation :  
+```
+    git clone https://github.com/p-dor/LiveboxMonitor.git
+    cd LiveboxMonitor
+    virtualenv -p python3 .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    python3 LiveboxMonitor.py
+``` 
+
+Lancement : 
+``` 
+    cd LiveboxMonitor
+    source .venv/bin/activate
+    python3 LiveboxMonitor.py
+```
+
 
 ## Configuration minimale
 
@@ -150,6 +169,13 @@ Un fichier de noms local offre la garantie de savoir si un appareil est vraiment
 
 
 ## Linux
+En cas d'utilisation d'un virtualenv, si des erreurs de plugin Qt apparaissent, rajoutez ces commandes pour l'installation :
+
+```
+    apt install qt6-base-dev
+    apt install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+```
+
 En cas d'erreurs avec Wayland, il est possible de changer le moteur de rendu de Qt avec la variable d’environnement `QT_QPA_PLATFORM`.  
 Par exemple : `QT_QPA_PLATFORM=xcb python3 LiveboxMonitor.py` permet d'utiliser X Window directement (qui éventuellement sera rendu avec Xwayland mais cela fonctionne).
 
