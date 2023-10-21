@@ -341,7 +341,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			LmConf.setLiveboxMAC(aMacAddr)
 			self._liveboxSoftwareVersion = d.get('SoftwareVersion', '')
 			aModel = d.get('ProductClass', '')
-			if aModel == 'Livebox 6':
+			if aModel == 'Livebox 7':
+				self._liveboxModel = 7
+			elif aModel == 'Livebox 6':
 				self._liveboxModel = 6
 			elif aModel == 'Livebox Fibre':
 				self._liveboxModel = 5
