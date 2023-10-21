@@ -381,7 +381,7 @@ class LmActions:
 				p['base'] = aSchedule.get('base')
 				p['def'] = aSchedule.get('def')
 				if iEnable:
-					p['override'] = aSchedule.get('override')
+					p['override'] = ''
 				else:
 					p['override'] = 'Enable'
 				p['value'] = aSchedule.get('value')
