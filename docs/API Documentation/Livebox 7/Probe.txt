@@ -1,0 +1,12 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Probe - Name: .Probe
+ == PARAMETERS:
+  - Version (type: string)
+      Attributes: read_only
+  - BlacklistMQTT (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void logEvents(plib_event_list_t events)
+

@@ -1,0 +1,84 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .UserManagement - Name: .UserManagement
+ == FUNCTIONS:
+  - bool addUser((string name), (string password), (list groups), (bool enable), (string usertype), (string salt), (uint32 uid), (bool linux_user), (string friendlyname))
+  - bool changeUser((string name), (string password), (list groups), (bool enable), (string usertype), (string friendlyname))
+  - bool changePassword((string name), (string password))
+  - bool changePasswordSec((string name), (string password), (string old_password))
+  - bool removeUser((string name))
+  - bool removeUsers((string name), (string type))
+  - bool addGroup((string name), (bool enable), (bool linux_group))
+  - bool changeGroup((string name), (bool enable))
+  - bool removeGroup((string name))
+  - list getUsers()
+  - list getGroups()
+  - list getGroup((string name))
+  - bool getUsersAndGroups((list users), (list groups))
+  - list getUser(string name)
+  - bool addUserToGroups((string name), (list groups))
+  - bool removeUserFromGroups((string name), (list groups))
+  - bool authenticate(string name, string password, (string groupName))
+
+=======================================================================
+OBJECT: UserManagement.Group - Name: UserManagement.Group
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - GID (type: uint32)
+      Attributes: read_only, persistent
+  - GroupName (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '64'}
+  - System (type: bool)
+      Attributes: read_only, persistent
+  - LinuxGroup (type: bool)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: UserManagement.User - Name: UserManagement.User
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - UID (type: uint32)
+      Attributes: read_only, persistent
+  - LinuxUser (type: bool)
+      Attributes: read_only, persistent
+  - UserName (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '64'}
+  - Password (type: string)
+      Attributes: persistent
+  - FactoryPassword (type: string)
+      Attributes: read_only, persistent
+  - PasswordType (type: string)
+      Attributes: read_only, persistent
+      Validator: ['MD5', 'SSHA256', 'PREHASHED-SSHA256', 'SSHA512', 'PREHASHED-SSHA512', 'INVALID', 'PREHASHED-INVALID']
+  - PasswordState (type: uint8)
+      Attributes: read_only
+  - Salt (type: string)
+      Attributes: read_only, persistent
+  - UserGroupParticipation (type: string)
+      Attributes: read_only, persistent
+  - AllowFTPAccess (type: bool)
+  - AllowHTTPAccess (type: bool)
+  - RemoteAccessCapable (type: bool)
+  - UserType (type: string)
+      Attributes: read_only, persistent
+      Validator: ['system', 'limited']
+  - FriendlyName (type: string)
+      Attributes: persistent
+  - CurrentLoginTime (type: date_time)
+      Attributes: read_only, persistent
+  - CurrentLoginSource (type: string)
+      Attributes: read_only, persistent
+  - CurrentLoginIP (type: string)
+      Attributes: read_only, persistent
+  - PreviousLoginTime (type: date_time)
+      Attributes: read_only, persistent
+  - PreviousLoginSource (type: string)
+      Attributes: read_only, persistent
+  - PreviousLoginIP (type: string)
+      Attributes: read_only, persistent
+

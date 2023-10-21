@@ -1,0 +1,7 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+{
+    "error": 13,
+    "description": "Permission denied",
+    "info": "Process"
+}

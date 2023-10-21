@@ -1,0 +1,297 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Firewall - Name: .Firewall
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+  - ExcludedOriginsPCP (type: string)
+      Attributes: persistent
+  - UpnpPortForwardingStatus (type: bool)
+      Attributes: read_only
+  - UpnpPortForwardingEnable (type: bool)
+      Attributes: persistent
+  - ChainNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ProtocolForwardingNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - PinholeNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ListNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool commit()
+  - bool setRespondToPing(string sourceInterface, service_enable_t service_enable)
+  - service_enable_t getRespondToPing(string sourceInterface)
+  - string setRedirect(string id, (string sourceInterface), (string destinationPort), string protocol, (int32 ipversion), (bool enable))
+  - bool deleteRedirect(string id)
+  - list getRedirect(string id)
+  - string setProtocolForwarding(string id, string destinationIPAddress, string protocol, (string sourceInterface), (string sourcePrefix), (bool enable), (bool persistent), (string description))
+  - bool deleteProtocolForwarding(string id)
+  - list getProtocolForwarding((string id))
+  - string setPortForwarding((string id), string origin, string sourceInterface, (string externalPort), string internalPort, string destinationIPAddress, (string sourcePrefix), string protocol, (bool enable), (bool persistent), (string description), (string destinationMACAddress), (int32 leaseDuration), (bool upnpv1Compat))
+  - string refreshPortForwarding(string id, string origin, (string description), (bool persistent), (int32 leaseDuration))
+  - bool deletePortForwarding((string id), string origin, (string destinationIPAddress))
+  - list getPortForwarding((string id), (string origin))
+  - void enablePortForwarding(string id, string origin, bool enable)
+  - string setPinhole((string id), string origin, string sourceInterface, (string sourcePort), string destinationPort, string destinationIPAddress, (string sourcePrefix), string protocol, (int32 ipversion), (bool enable), (bool persistent), (string description), (string destinationMACAddress))
+  - bool deletePinhole((string id), string origin)
+  - list getPinhole((string id), (string origin))
+  - string setDMZ((string id), string sourceInterface, string destinationIPAddress, (string sourcePrefix), bool enable)
+  - bool deleteDMZ(string id)
+  - list getDMZ((string id))
+  - string setCustomRule((string id), (string chain), string action, (string destinationPort), (string sourcePort), (string destinationPrefix), (string sourcePrefix), (string protocol), (int32 ipversion), (bool enable), (string description), (string destinationMAC), (string sourceMAC), (bool persistent))
+  - bool deleteCustomRule(string id, (string chain))
+  - list getCustomRule((string id), (string chain))
+  - void setListEntry(string listName, string entryId, string destinationPrefix, string protocol, (bool enable), (string sourcePrefix))
+  - void deleteListEntry(string listName, string entryId)
+  - list getListEntries(string listName, (string entryId))
+  - bool setFirewallLevel(string level)
+  - bool setFirewallIPv6Level(string level)
+  - string getFirewallIPv6Level()
+  - string getFirewallLevel()
+
+=======================================================================
+OBJECT: Firewall.Level - Name: Firewall.Level
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+      Validator: {'max': '28'}
+  - Enable (type: bool)
+      Attributes: persistent
+  - Chain (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - ReverseChain (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+
+=======================================================================
+OBJECT: Firewall.LevelIPv6 - Name: Firewall.LevelIPv6
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+      Validator: {'max': '28'}
+  - Enable (type: bool)
+      Attributes: persistent
+  - Chain (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - ReverseChain (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+
+=======================================================================
+OBJECT: Firewall.Chain - Name: Firewall.Chain
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '28'}
+  - DefaultPolicy (type: string)
+      Attributes: persistent
+      Validator: ['Drop', 'Reject', 'Accept', 'None']
+  - RuleNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.Chain.Rule - Name: Firewall.Chain.Rule
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: persistent
+  - Target (type: string)
+      Attributes: persistent
+      Validator: ['Drop', 'Reject', 'Accept', 'TargetChain']
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Pending', 'Error']
+  - Class (type: string)
+      Attributes: persistent
+      Validator: ['Local', 'Forward', 'PortFW', '']
+  - IPVersion (type: int32)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - DestinationPort (type: string)
+      Attributes: persistent
+  - SourcePort (type: string)
+      Attributes: persistent
+  - DestinationMACAddress (type: string)
+      Attributes: persistent
+  - SourceMACAddress (type: string)
+      Attributes: persistent
+  - DestinationPrefix (type: string)
+      Attributes: persistent
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - TargetChain (type: string)
+      Attributes: persistent
+  - Description (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Firewall.Redirect - Name: Firewall.Redirect
+ == PARAMETERS:
+  - Id (type: string)
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error']
+  - SourceInterface (type: string)
+  - DestinationPorts (type: string)
+  - Protocol (type: string)
+  - IPVersion (type: uint32)
+  - Enable (type: bool)
+
+=======================================================================
+OBJECT: Firewall.ProtocolForwarding - Name: Firewall.ProtocolForwarding
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - Description (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error']
+  - SourceInterface (type: string)
+      Attributes: persistent
+      Validator: ['data']
+  - Protocol (type: string)
+      Attributes: persistent
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - DestinationIPAddress (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Firewall.PortForwarding - Name: Firewall.PortForwarding
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['webui', 'upnp', 'internal', 'cwmp', 'pass', 'pcp', 'cwmp-data', 'cwmp-mgmt', 'cwmp-iptv', 'cwmp-voip']
+  - Description (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error', 'Pending']
+  - SourceInterface (type: string)
+      Attributes: persistent
+      Validator: ['data', 'iptv', 'voip', 'mgmt']
+  - Protocol (type: string)
+      Attributes: persistent
+  - ExternalPort (type: string)
+      Attributes: persistent
+  - ExternalPortEndRange (type: uint32)
+      Attributes: persistent
+  - InternalPort (type: string)
+      Attributes: persistent
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - DestinationIPAddress (type: string)
+      Attributes: persistent
+  - DestinationMACAddress (type: string)
+      Attributes: persistent
+  - LeaseDuration (type: uint32)
+      Attributes: persistent
+  - HairpinNAT (type: bool)
+      Attributes: persistent
+  - SymmetricSNAT (type: bool)
+      Attributes: persistent
+  - UPnPV1Compat (type: bool)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Firewall.Pinhole - Name: Firewall.Pinhole
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['webui', 'upnp']
+  - Description (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error', 'Pending']
+  - SourceInterface (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - IPVersion (type: int32)
+      Attributes: persistent
+  - SourcePort (type: string)
+      Attributes: persistent
+  - DestinationPort (type: string)
+      Attributes: persistent
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - DestinationIPAddress (type: string)
+      Attributes: persistent
+  - DestinationMACAddress (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Firewall.DMZ - Name: Firewall.DMZ
+ == PARAMETERS:
+  - SourceInterface (type: string)
+      Attributes: persistent
+  - DestinationIPAddress (type: string)
+      Attributes: persistent
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error']
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Firewall.List - Name: Firewall.List
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '28'}
+  - Enable (type: bool)
+      Attributes: persistent
+  - TableName (type: string)
+      Attributes: persistent
+      Validator: ['filter', 'nat', 'mangle', 'raw']
+  - ChainName (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - DefaultPolicy (type: string)
+      Attributes: persistent
+      Validator: ['Drop', 'Reject', 'Accept', 'Return', 'TargetChain']
+  - TargetChain (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - ListEntryNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.List.Entry - Name: Firewall.List.Entry
+ == PARAMETERS:
+  - Id (type: string)
+  - Enable (type: bool)
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Pending', 'Error']
+  - Protocol (type: string)
+  - DestinationPrefix (type: string)
+  - SourcePrefix (type: string)
+

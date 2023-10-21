@@ -1,0 +1,134 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .DNS - Name: .DNS
+ == PARAMETERS:
+  - Mode (type: string)
+      Attributes: persistent
+      Validator: ['All', 'Static', 'Dynamic', 'Custom']
+ == FUNCTIONS:
+  - void setMode(string mode)
+  - string getMode()
+  - list getDNSServers(string flag)
+  - list getDNSServersByType(string type)
+
+=======================================================================
+OBJECT: DNS.Redirect - Name: DNS.Redirect
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Interfaces (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DNS.Server - Name: DNS.Server
+ == PARAMETERS:
+  - Domain (type: string)
+      Attributes: persistent
+  - Timeout (type: uint32)
+      Attributes: persistent
+  - Suppress (type: bool)
+      Attributes: persistent
+  - Syslog (type: bool)
+      Attributes: persistent
+  - WDSpoofing (type: bool)
+      Attributes: persistent
+  - WDSpoofedIPAddress (type: string)
+      Attributes: persistent
+  - WDSpoofedIPAddressV6 (type: string)
+      Attributes: persistent
+  - FallbackTimeout (type: uint16)
+      Attributes: persistent
+  - FallbackResetMin (type: uint16)
+      Attributes: persistent
+  - FallbackResetMax (type: uint16)
+      Attributes: persistent
+  - FallbackBehavior (type: string)
+      Validator: ['Legacy', 'Priority']
+  - FallbackReasonsList (type: string)
+      Attributes: persistent
+  - TTL (type: uint32)
+      Attributes: persistent
+  - DomainNeeded (type: bool)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - MACAddressEnable (type: bool)
+      Attributes: persistent
+  - MACAddressType (type: string)
+      Attributes: persistent
+      Validator: ['text', 'base64']
+ == FUNCTIONS:
+  - bool setHost((string name), (list ip_address_v4), (list ip_address_v6), (string type), (bool commit))
+  - list listHosts((string type))
+  - bool deleteHost((string name), (bool commit))
+  - bool setRoute((string id), (string dns), (string src), (uint8 srcmask), (string domain), (uint8 metric), (string intf), (bool commit), (uint32 flags))
+  - bool deleteRoute((string id), (string dns), (bool commit))
+  - void setDomain(string domain)
+  - string getDomain()
+  - map getMetrics()
+  - void resetMetrics()
+  - map getServers()
+  - void configureCache(bool enable, (uint32 maxCachedEntries), (bool commit))
+  - bool checkServer()
+  - bool commit()
+
+=======================================================================
+OBJECT: DNS.Server.Cache - Name: DNS.Server.Cache
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - MaxEntries (type: uint32)
+      Attributes: persistent
+      Validator: {'max': '1000'}
+ == FUNCTIONS:
+  - list dump()
+  - void flush()
+
+=======================================================================
+OBJECT: DNS.Server.Host - Name: DNS.Server.Host
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: persistent
+  - IPv4 (type: string)
+      Attributes: persistent
+  - IPv6 (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DNS.Server.HostNameValidation - Name: DNS.Server.HostNameValidation
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Whitelist (type: string)
+      Attributes: persistent
+  - ForbiddenExtraCharacters (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DNS.Server.Route - Name: DNS.Server.Route
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabled', 'Error']
+  - DNS (type: string)
+      Attributes: persistent
+  - SRC (type: string)
+      Attributes: persistent
+  - Srcmask (type: uint8)
+      Attributes: persistent
+  - Domain (type: string)
+      Attributes: persistent
+  - Metric (type: uint8)
+      Attributes: persistent
+  - Intf (type: string)
+      Attributes: persistent
+  - Flags (type: uint32)
+      Attributes: persistent
+

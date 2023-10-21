@@ -1,0 +1,280 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .DHCPv4 - Name: .DHCPv4
+
+=======================================================================
+OBJECT: DHCPv4.Server - Name: DHCPv4.Server
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - VerifyFirst (type: bool)
+      Attributes: persistent
+  - TrustClient (type: bool)
+      Attributes: persistent
+  - RtBehaviour (type: string)
+      Attributes: persistent
+      Validator: ['traditional', 'standard', 'msft']
+  - AckInform (type: bool)
+      Attributes: persistent
+  - PoolNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void clearStatistics()
+  - void getDHCPServerPool((string id))
+  - void createPool(string name, string interface)
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool - Name: DHCPv4.Server.Pool
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '32'}
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabled', 'Error_Misconfigured']
+  - Allocation (type: string)
+      Attributes: persistent
+      Validator: ['dynamic', 'auto']
+  - PersistentLeases (type: bool)
+      Attributes: persistent
+  - LeasesOnHold (type: bool)
+      Attributes: persistent
+  - ARPProtect (type: bool)
+      Attributes: persistent
+  - Interface (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - MinAddress (type: string)
+      Attributes: persistent
+  - MaxAddress (type: string)
+      Attributes: persistent
+  - SubnetMask (type: string)
+      Attributes: persistent
+  - IPRouters (type: string)
+      Attributes: persistent
+  - Server (type: string)
+      Attributes: persistent
+  - MinLeaseTime (type: uint32)
+      Attributes: persistent
+  - LeaseTime (type: uint32)
+      Attributes: persistent
+  - MaxLeaseTime (type: uint32)
+      Attributes: persistent
+  - DNSServers (type: string)
+      Attributes: persistent
+  - NTPServers (type: string)
+      Attributes: persistent
+  - DomainName (type: string)
+      Attributes: persistent
+      Validator: {'max': '72'}
+  - Unnumbered (type: bool)
+      Attributes: persistent
+  - IncludeOption125 (type: bool)
+      Attributes: persistent
+  - Flags (type: uint32)
+      Attributes: read_only, volatile
+  - ServerHostName (type: string)
+      Attributes: persistent
+      Validator: {'max': '63'}
+  - FileName (type: string)
+      Attributes: persistent
+      Validator: {'max': '127'}
+  - LeaseNumberOfEntries (type: uint32)
+      Attributes: read_only, volatile
+  - OptionNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - RuleNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - StaticAddressNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void addStaticLease(string MACAddress, string IPAddress)
+  - string addLeaseFromPool(string MACAddress)
+  - void setStaticLease(string MACAddress, (string IPAddress), (bool Enable))
+  - void deleteStaticLease(string MACAddress)
+  - list getStaticLeases()
+  - list getLeases((string rule))
+  - void setLeaseTime(uint32 leasetime)
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.Authentication - Name: DHCPv4.Server.Pool.Authentication
+ == PARAMETERS:
+  - Protocol (type: int32)
+      Attributes: persistent
+      Validator: {'max': '1'}
+  - Algorithm (type: uint8)
+      Attributes: persistent
+  - ConfigurationToken (type: string)
+      Attributes: persistent
+      Validator: {'max': '40'}
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.Option - Name: DHCPv4.Server.Pool.Option
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - Tag (type: uint8)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - Value (type: string)
+      Attributes: persistent
+  - Policy (type: string)
+      Attributes: persistent
+      Validator: ['requested', 'always']
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.Rule - Name: DHCPv4.Server.Pool.Rule
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: persistent
+      Validator: {'max': '32'}
+  - VendorClassID (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - VendorClassIDExclude (type: bool)
+      Attributes: persistent
+  - VendorClassIDMode (type: string)
+      Attributes: persistent
+      Validator: ['Exact', 'Prefix', 'Suffix', 'Substring']
+  - ClientID (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - ClientIDExclude (type: bool)
+      Attributes: persistent
+  - UserClassID (type: string)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - UserClassIDExclude (type: bool)
+      Attributes: persistent
+  - UserClassIDMode (type: string)
+      Attributes: persistent
+      Validator: ['Exact', 'Prefix', 'Suffix', 'Substring']
+  - Chaddr (type: string)
+      Attributes: persistent
+  - ChaddrMask (type: string)
+      Attributes: persistent
+  - ChaddrExclude (type: string)
+      Attributes: persistent
+  - Criteria (type: uint32)
+      Attributes: volatile
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.Rule.Lease - Name: DHCPv4.Server.Pool.Rule.Lease
+ == PARAMETERS:
+  - ClientID (type: string)
+      Attributes: persistent
+  - IPAddress (type: string)
+      Attributes: persistent
+  - MACAddress (type: string)
+      Attributes: persistent
+  - LeaseTimeRemaining (type: int32)
+      Attributes: read_only, volatile
+  - LeaseTime (type: uint32)
+      Attributes: persistent
+  - Gateway (type: string)
+      Attributes: persistent
+  - WaitingForPing (type: bool)
+      Attributes: read_only, volatile
+  - StoppedWaitingForPing (type: bool)
+      Attributes: read_only, volatile
+  - Active (type: bool)
+      Attributes: read_only, volatile
+  - StopLease (type: bool)
+      Attributes: read_only, volatile
+  - NullTermination (type: bool)
+      Attributes: read_only, volatile
+  - MsftClasslessRt (type: bool)
+      Attributes: persistent
+  - Reserved (type: bool)
+      Attributes: persistent
+  - Internal (type: bool)
+      Attributes: persistent
+  - OnHold (type: bool)
+      Attributes: persistent
+  - FriendlyName (type: string)
+      Attributes: persistent
+  - Flags (type: uint32)
+      Attributes: read_only, volatile
+  - TransactionID (type: uint32)
+      Attributes: read_only, volatile
+  - CIAddr (type: string)
+      Attributes: read_only, volatile
+  - GIAddr (type: string)
+      Attributes: read_only, volatile
+  - DiscoverOptionList (type: string)
+  - RequestOptionList (type: string)
+  - OptionNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void forceRenew()
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.Rule.Lease.Option - Name: DHCPv4.Server.Pool.Rule.Lease.Option
+ == PARAMETERS:
+  - Tag (type: uint8)
+      Validator: {'max': '255'}
+  - Value (type: string)
+
+=======================================================================
+OBJECT: DHCPv4.Server.Pool.StaticAddress - Name: DHCPv4.Server.Pool.StaticAddress
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Alias (type: string)
+      Attributes: persistent
+      Validator: {'max': '64'}
+  - Chaddr (type: string)
+      Attributes: persistent
+      Validator: {'max': '17'}
+  - Yiaddr (type: string)
+      Attributes: persistent
+      Validator: {'max': '15'}
+
+=======================================================================
+OBJECT: DHCPv4.Server.Stats - Name: DHCPv4.Server.Stats
+ == PARAMETERS:
+  - State (type: string)
+      Validator: ['Running']
+  - CorruptPackets (type: uint32)
+      Attributes: read_only, volatile
+  - Discover (type: uint32)
+      Attributes: read_only, volatile
+  - Request (type: uint32)
+      Attributes: read_only, volatile
+  - Decline (type: uint32)
+      Attributes: read_only, volatile
+  - Release (type: uint32)
+      Attributes: read_only, volatile
+  - Inform (type: uint32)
+      Attributes: read_only, volatile
+  - BOOTP (type: uint32)
+      Attributes: read_only, volatile
+  - OtherMessageTypes (type: uint32)
+      Attributes: read_only, volatile
+  - Offer (type: uint32)
+      Attributes: read_only, volatile
+  - ACK (type: uint32)
+      Attributes: read_only, volatile
+  - NAK (type: uint32)
+      Attributes: read_only, volatile
+  - ForceRenew (type: uint32)
+      Attributes: read_only, volatile
+  - TxFailure (type: uint32)
+      Attributes: read_only, volatile
+  - RelayOptionDropped (type: uint32)
+      Attributes: read_only, volatile
+  - SecondServerDetected (type: bool)
+      Attributes: read_only, volatile
+  - DoraCyclesAverageDuration_short_ms (type: uint32)
+      Attributes: read_only
+  - DoraCyclesAverageDuration_normal_ms (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getDoraCyclesDetails()
+

@@ -1,0 +1,36 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .PowerManagement - Name: .PowerManagement
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - Power (type: uint32)
+      Attributes: read_only
+  - InformRandomDelay (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant getSupportedModes()
+  - variant getSupportedTriggers()
+  - variant setProfiles(list profiles)
+  - variant setScheduledProfiles(list profiles)
+  - variant setScheduledProfilesOverride(list overrides)
+  - variant setTriggeredProfiles(list profiles)
+  - variant getProfiles((list profiles))
+  - void removeProfiles((list profiles))
+  - void setState(string ID, string state)
+  - bool import()
+  - bool export()
+
+=======================================================================
+OBJECT: PowerManagement.SupportedTriggers - Name: PowerManagement.SupportedTriggers
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Description (type: string)
+      Attributes: read_only
+  - Value (type: bool)
+      Attributes: read_only
+

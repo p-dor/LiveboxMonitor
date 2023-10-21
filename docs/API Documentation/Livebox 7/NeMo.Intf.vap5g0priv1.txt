@@ -1,0 +1,825 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - VAPStatus (type: string)
+      Attributes: read_only
+      Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
+  - LastChangeTime (type: uint32)
+      Attributes: read_only
+  - LastChange (type: uint32)
+      Attributes: read_only
+  - MACAddress (type: string)
+      Attributes: persistent
+  - BSSID (type: string)
+      Attributes: persistent
+  - SSID (type: string)
+      Attributes: persistent
+      Validator: {'max': '32'}
+  - RadioReference (type: string)
+      Attributes: read_only, persistent
+  - SSIDAdvertisementEnabled (type: bool)
+      Attributes: persistent
+  - RetryLimit (type: uint32)
+      Attributes: persistent
+  - WMMCapability (type: bool)
+      Attributes: read_only
+  - UAPSDCapability (type: bool)
+      Attributes: read_only
+  - WMMEnable (type: bool)
+      Attributes: persistent
+  - UAPSDEnable (type: bool)
+      Attributes: persistent
+  - APBridgeDisable (type: bool)
+      Attributes: persistent
+  - BridgeInterface (type: string)
+  - DefaultDeviceType (type: string)
+      Attributes: persistent
+      Validator: ['Video', 'Data', 'Guest']
+  - MACFilterAddressList (type: string)
+      Attributes: persistent
+  - IEEE80211kEnabled (type: bool)
+      Attributes: persistent
+  - ApRole (type: string)
+      Attributes: persistent
+      Validator: ['Off', 'Main', 'Relay', 'Remote']
+  - WDSEnable (type: bool)
+      Attributes: persistent
+  - MBOEnable (type: bool)
+      Attributes: persistent
+  - MultiAPType (type: string)
+      Attributes: persistent
+  - EssIdentifier (type: string)
+      Attributes: persistent
+  - MaxAssociatedDevices (type: uint32)
+      Attributes: persistent
+  - AssociatedDeviceNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ActiveAssociatedDeviceNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - DiscoveryMethodEnabled (type: string)
+      Attributes: persistent
+  - PersistentEnable (type: bool)
+      Attributes: persistent
+  - NATEnabled (type: bool)
+  - NetDevIndex (type: int32)
+  - NetDevType (type: string)
+      Attributes: read_only
+  - NetDevFlags (type: string)
+  - NetDevName (type: string)
+  - LLAddress (type: string)
+  - TxQueueLen (type: uint32)
+  - MTU (type: uint32)
+  - NetDevState (type: string)
+      Attributes: read_only
+  - IPv4Forwarding (type: bool)
+  - IPv4ForceIGMPVersion (type: uint32)
+      Validator: {'min': '0', 'max': '3'}
+  - IPv4AcceptSourceRoute (type: bool)
+  - IPv4AcceptLocal (type: bool)
+  - IPv4AcceptRedirects (type: bool)
+  - IPv4ArpFilter (type: bool)
+  - IPv6AcceptRA (type: bool)
+  - IPv6ActAsRouter (type: bool)
+  - IPv6AutoConf (type: bool)
+  - IPv6MaxRtrSolicitations (type: uint32)
+  - IPv6RtrSolicitationInterval (type: uint32)
+  - IPv6AcceptSourceRoute (type: bool)
+  - IPv6AcceptRedirects (type: bool)
+  - IPv6OptimisticDAD (type: bool)
+  - IPv6Disable (type: bool)
+  - IPv6HostPart (type: string)
+  - RtTable (type: int32)
+      Validator: {'max': '256'}
+  - RtPriority (type: uint32)
+  - IPv6AddrDelegate (type: string)
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber))
+  - void closeQuery((string subscriber))
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id))
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void setWLANConfig((string mibs))
+  - void kickStation((string macaddress))
+  - void kickStationReason((string macaddress), (int32 reason))
+  - void cleanStation((string macaddress))
+  - bool sendBssTransferRequest((string mac), (string target), (int class), (int channel), (int wait), (int retries), (uint32 bssidInfo), (int transitionReason))
+  - bool sendPublicAction((string mac), (string oui), (uint8 type), (uint8 subtype), (uint8 channel), (string data))
+  - bool sendRemoteMeasumentRequest((string mac), (string bssid), (uint32 class), (uint32 channel), (uint32 timeout), (string ssid))
+  - void getSSIDStats()
+  - variant getStatusHistogram()
+  - void getStationStats()
+  - uint32 getFarAssociatedDevicesCount((int32 threshold))
+  - void delNeighbourAP((string BSSID))
+  - void refreshNetDev()
+  - void getNetDevStats()
+  - void setNetDevFlag(string flags)
+  - void clearNetDevFlag(string flags)
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ULIntf - Name: NeMo.Intf.45.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.LLIntf - Name: NeMo.Intf.45.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.Query - Name: NeMo.Intf.45.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IEEE80211r - Name: NeMo.Intf.45.IEEE80211r
+ == PARAMETERS:
+  - Enabled (type: bool)
+      Attributes: persistent
+  - FTOverDSEnable (type: bool)
+      Attributes: persistent
+  - NASIdentifier (type: string)
+  - R0KHKey (type: string)
+  - MobilityDomain (type: uint16)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '65535'}
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IEEE80211u - Name: NeMo.Intf.45.IEEE80211u
+ == PARAMETERS:
+  - InterworkingEnable (type: bool)
+      Attributes: persistent
+  - QoSMapSet (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.Security - Name: NeMo.Intf.45.Security
+ == PARAMETERS:
+  - ModesSupported (type: string)
+      Attributes: read_only
+  - ModesAvailable (type: string)
+      Attributes: persistent
+  - ModeEnabled (type: string)
+      Attributes: persistent
+      Validator: ['None', 'OWE', 'WEP-64', 'WEP-128', 'WEP-128iv', 'WPA-Personal', 'WPA2-Personal', 'WPA-WPA2-Personal', 'WPA3-Personal', 'WPA2-WPA3-Personal', 'E-None', 'WPA-Enterprise', 'WPA2-Enterprise', 'WPA-WPA2-Enterprise', 'WPA3-Enterprise', 'WPA2-WPA3-Enterprise']
+  - WEPKey (type: string)
+      Attributes: persistent
+  - PreSharedKey (type: string)
+      Attributes: persistent
+  - KeyPassPhrase (type: string)
+      Attributes: persistent
+      Validator: {'min': '8', 'max': '63'}
+  - RekeyingInterval (type: uint32)
+      Attributes: persistent
+  - OWETransitionInterface (type: string)
+      Attributes: persistent
+  - TransitionDisable (type: string)
+      Attributes: persistent
+  - SAEPassphrase (type: string)
+      Attributes: persistent
+  - EncryptionMode (type: string)
+      Attributes: persistent
+      Validator: ['Default', 'AES', 'TKIP', 'TKIP-AES']
+  - RadiusServerIPAddr (type: string)
+      Attributes: persistent
+  - RadiusServerPort (type: uint32)
+      Attributes: persistent
+  - RadiusSecret (type: string)
+      Attributes: persistent
+  - RadiusDefaultSessionTimeout (type: uint32)
+      Attributes: persistent
+  - RadiusOwnIPAddress (type: string)
+      Attributes: persistent
+  - RadiusNASIdentifier (type: string)
+      Attributes: persistent
+  - RadiusCalledStationId (type: string)
+      Attributes: persistent
+  - RadiusChargeableUserId (type: bool)
+      Attributes: persistent
+  - MFPConfig (type: string)
+      Attributes: persistent
+      Validator: ['Disabled', 'Optional', 'Required']
+  - SPPAmsdu (type: int32)
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.WPS - Name: NeMo.Intf.45.WPS
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - ConfigMethodsSupported (type: string)
+      Attributes: read_only
+  - ConfigMethodsEnabled (type: string)
+      Attributes: persistent
+  - CertModeEnable (type: bool)
+      Attributes: persistent
+  - SelfPIN (type: string)
+  - Configured (type: bool)
+      Attributes: persistent
+  - PairingInProgress (type: bool)
+      Attributes: read_only
+  - UUID (type: string)
+  - RelayCredentialsEnable (type: bool)
+      Attributes: persistent
+  - RestartOnRequest (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - uint32 pushButton((string clientPIN))
+  - string generateSelfPIN()
+  - void cancelPairing()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.MACFiltering - Name: NeMo.Intf.45.MACFiltering
+ == PARAMETERS:
+  - Mode (type: string)
+      Attributes: persistent
+      Validator: ['Off', 'WhiteList', 'BlackList']
+  - TempBlacklistEnable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void addEntry((string mac))
+  - void delEntry((string mac))
+  - void addTempEntry((string mac))
+  - void delTempEntry((string mac))
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.MACFiltering.Entry - Name: NeMo.Intf.45.MACFiltering.Entry
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.MACFiltering.TempEntry - Name: NeMo.Intf.45.MACFiltering.TempEntry
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ProbeFiltering - Name: NeMo.Intf.45.ProbeFiltering
+ == FUNCTIONS:
+  - void addTempEntry((string mac))
+  - void delTempEntry((string mac))
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ProbeFiltering.TempEntry - Name: NeMo.Intf.45.ProbeFiltering.TempEntry
+ == PARAMETERS:
+  - MACAddress (type: string)
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.VendorIEs - Name: NeMo.Intf.45.VendorIEs
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void createVendorIE((string oui), (string data), (string frame_type))
+  - void deleteVendorIE((string oui), (string data))
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.VendorIEs.VendorIE - Name: NeMo.Intf.45.VendorIEs.VendorIE
+ == PARAMETERS:
+  - OUI (type: string)
+      Attributes: persistent
+  - Data (type: string)
+      Attributes: persistent
+  - FrameType (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.HotSpot2 - Name: NeMo.Intf.45.HotSpot2
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DgafDisable (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - L2TrafficInspect (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - IcmpV4Echo (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - Interworking (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - Internet (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - Hs2Ie (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - P2PEnable (type: bool)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '1'}
+  - GasDelay (type: int32)
+      Attributes: persistent
+  - AccessNetworkType (type: uint8)
+      Attributes: persistent
+  - VenueType (type: uint8)
+      Attributes: persistent
+  - VenueGroup (type: uint8)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.AssociatedDevice - Name: NeMo.Intf.45.AssociatedDevice
+ == PARAMETERS:
+  - ChargeableUserId (type: string)
+  - MACAddress (type: string)
+      Attributes: read_only
+  - AuthenticationState (type: bool)
+      Attributes: read_only
+  - LastDataDownlinkRate (type: uint32)
+      Attributes: read_only, volatile
+  - LastDataUplinkRate (type: uint32)
+      Attributes: read_only, volatile
+  - SignalStrength (type: int32)
+      Attributes: read_only, volatile
+      Validator: {'min': '-200', 'max': '0'}
+  - AvgSignalStrengthByChain (type: int32)
+      Attributes: read_only, volatile
+      Validator: {'min': '-200', 'max': '0'}
+  - SignalStrengthByChain (type: string)
+      Attributes: read_only, volatile
+  - SignalStrengthHistory (type: string)
+      Attributes: read_only, volatile
+  - Retransmissions (type: uint32)
+      Attributes: read_only, volatile
+      Validator: {'min': '0', 'max': '100'}
+  - RxErrors (type: uint32)
+      Attributes: read_only, volatile
+  - TxErrors (type: uint32)
+      Attributes: read_only, volatile
+  - Rx_Retransmissions (type: uint32)
+      Attributes: read_only, volatile
+  - Tx_Retransmissions (type: uint32)
+      Attributes: read_only, volatile
+  - Rx_RetransmissionsFailed (type: uint32)
+      Attributes: read_only, volatile
+  - Tx_RetransmissionsFailed (type: uint32)
+      Attributes: read_only, volatile
+  - RxFrameCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxFrameCount (type: uint32)
+      Attributes: read_only, volatile
+  - Active (type: bool)
+      Attributes: read_only
+  - SignalNoiseRatio (type: int32)
+      Attributes: read_only, volatile
+  - Noise (type: int32)
+      Attributes: read_only, volatile
+  - NoiseByChain (type: string)
+      Attributes: read_only, volatile
+  - Inactive (type: uint32)
+      Attributes: read_only, volatile
+  - RxPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - RxUnicastPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxUnicastPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - RxMulticastPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxMulticastPacketCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxBytes (type: uint64)
+      Attributes: read_only, volatile
+  - RxBytes (type: uint64)
+      Attributes: read_only, volatile
+  - UplinkMCS (type: uint32)
+      Attributes: read_only, volatile
+  - UplinkBandwidth (type: uint32)
+      Attributes: read_only, volatile
+  - UplinkShortGuard (type: bool)
+      Attributes: read_only, volatile
+  - DownlinkMCS (type: uint32)
+      Attributes: read_only, volatile
+  - DownlinkBandwidth (type: uint32)
+      Attributes: read_only, volatile
+  - DownlinkShortGuard (type: bool)
+      Attributes: read_only, volatile
+  - MaxDownlinkRateSupported (type: uint32)
+      Attributes: read_only
+  - MaxDownlinkRateReached (type: uint32)
+      Attributes: read_only, volatile
+  - MaxUplinkRateSupported (type: uint32)
+      Attributes: read_only
+  - MaxUplinkRateReached (type: uint32)
+      Attributes: read_only, volatile
+  - MaxBandwidthSupported (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Unknown']
+  - Mode (type: string)
+      Attributes: read_only
+  - OperatingStandard (type: string)
+      Attributes: read_only
+      Validator: ['a', 'b', 'g', 'n', 'ac', 'ax', 'Unknown']
+  - DeviceType (type: string)
+      Validator: ['Video', 'Data', 'Guest']
+  - DevicePriority (type: int32)
+  - AssociationTime (type: date_time)
+      Attributes: read_only
+  - SupportedMCS (type: string)
+      Attributes: read_only
+  - SupportedHtMCS (type: string)
+      Attributes: read_only
+  - RxSupportedVhtMCS (type: string)
+      Attributes: read_only
+  - TxSupportedVhtMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - TxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe80x80MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe80x80MCS (type: string)
+      Attributes: read_only
+  - VendorOUI (type: string)
+      Attributes: read_only
+  - SecurityModeEnabled (type: string)
+      Attributes: read_only
+      Validator: ['None', 'OWE', 'WEP-64', 'WEP-128', 'WEP-128iv', 'WPA-Personal', 'WPA2-Personal', 'WPA-WPA2-Personal', 'WPA3-Personal', 'WPA2-WPA3-Personal', 'E-None', 'WPA-Enterprise', 'WPA2-Enterprise', 'WPA-WPA2-Enterprise', 'WPA3-Enterprise', 'WPA2-WPA3-Enterprise']
+  - LinkBandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'None']
+  - MaxRxSpatialStreamsSupported (type: uint16)
+      Attributes: read_only
+  - MaxTxSpatialStreamsSupported (type: uint16)
+      Attributes: read_only
+  - EncryptionMode (type: string)
+      Attributes: read_only
+      Validator: ['Default', 'AES', 'TKIP', 'TKIP-AES']
+  - HtCapabilities (type: string)
+      Attributes: read_only
+  - VhtCapabilities (type: string)
+      Attributes: read_only
+  - HeCapabilities (type: string)
+      Attributes: read_only
+  - Capabilities (type: string)
+      Attributes: read_only
+  - UNIIBandsCapabilities (type: string)
+      Attributes: read_only
+  - FrequencyCapabilities (type: string)
+      Attributes: read_only
+  - AssociationType (type: string)
+      Attributes: read_only
+      Validator: ['Default', 'Assoc', 'Reassoc', 'FtAssoc']
+  - ProbeTime (type: date_time)
+      Attributes: read_only
+  - AssociationStartTime (type: date_time)
+      Attributes: read_only
+  - AssociationSetupTime (type: uint32)
+      Attributes: read_only
+  - ProbeRssi (type: int32)
+      Attributes: read_only
+  - MCSConsistencyFlags (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.AssociatedDevice.ProbeReqCaps - Name: NeMo.Intf.45.AssociatedDevice.ProbeReqCaps
+ == PARAMETERS:
+  - SupportedMCS (type: string)
+      Attributes: read_only
+  - VendorOUI (type: string)
+      Attributes: read_only
+  - SecurityModeEnabled (type: string)
+      Attributes: read_only
+      Validator: ['None', 'OWE', 'WEP-64', 'WEP-128', 'WEP-128iv', 'WPA-Personal', 'WPA2-Personal', 'WPA-WPA2-Personal', 'WPA3-Personal', 'WPA2-WPA3-Personal', 'E-None', 'WPA-Enterprise', 'WPA2-Enterprise', 'WPA-WPA2-Enterprise', 'WPA3-Enterprise', 'WPA2-WPA3-Enterprise']
+  - LinkBandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'None']
+  - EncryptionMode (type: string)
+      Attributes: read_only
+      Validator: ['Default', 'AES', 'TKIP', 'TKIP-AES']
+  - HtCapabilities (type: string)
+      Attributes: read_only
+  - VhtCapabilities (type: string)
+      Attributes: read_only
+  - HeCapabilities (type: string)
+      Attributes: read_only
+  - FrequencyCapabilities (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.AssociationCount - Name: NeMo.Intf.45.AssociationCount
+ == PARAMETERS:
+  - Success (type: uint32)
+      Attributes: read_only
+  - Fail (type: uint32)
+      Attributes: read_only
+  - FailSecurity (type: uint32)
+      Attributes: read_only
+  - Disconnect (type: uint32)
+      Attributes: read_only
+  - FastReconnects (type: uint32)
+      Attributes: read_only
+  - ResetCounters (type: bool)
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.AssociationCount.FastReconnectTypes - Name: NeMo.Intf.45.AssociationCount.FastReconnectTypes
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only
+  - Count (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.MgtStats - Name: NeMo.Intf.45.MgtStats
+ == PARAMETERS:
+  - NumberOfToggles (type: uint32)
+      Attributes: read_only
+  - NumberOfToggleDisconnects (type: uint32)
+      Attributes: read_only
+  - NumberOfErrorToggles (type: uint32)
+      Attributes: read_only
+  - NumberOfErrorToggleDisconnects (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ErrorToggleConfig - Name: NeMo.Intf.45.ErrorToggleConfig
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - MaxNrToggles (type: uint32)
+      Attributes: persistent
+  - ToggleDelay (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ErrorToggleStats - Name: NeMo.Intf.45.ErrorToggleStats
+ == PARAMETERS:
+  - NrTogglesRequested (type: uint32)
+      Attributes: read_only
+  - NrTogglesExecuted (type: uint32)
+      Attributes: read_only
+  - LastToggleExecuted (type: date_time)
+      Attributes: read_only
+  - LastToggleReason (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void resetStats()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.Neighbour - Name: NeMo.Intf.45.Neighbour
+ == PARAMETERS:
+  - BSSID (type: string)
+  - SSID (type: string)
+  - Information (type: int32)
+  - OperatingClass (type: int32)
+  - Channel (type: int32)
+  - PhyType (type: int32)
+  - NASIdentifier (type: string)
+  - R0KHKey (type: string)
+  - ColocatedAP (type: bool)
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.RssiEventing - Name: NeMo.Intf.45.RssiEventing
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - RssiInterval (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - AveragingFactor (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1', 'max': '1000'}
+  - Interval (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '100'}
+  - HistoryEnable (type: bool)
+      Attributes: persistent
+  - HistoryLen (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - HistoryIntervalCoeff (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - SendPeriodicEvent (type: bool)
+      Attributes: persistent
+  - SendEventOnAssoc (type: bool)
+      Attributes: persistent
+  - SendEventOnDisassoc (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getShortHistoryStats()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StaKickOnError - Name: NeMo.Intf.45.StaKickOnError
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - EnableAllTests (type: bool)
+      Attributes: persistent
+  - MaxNrToggles (type: uint32)
+      Attributes: persistent
+  - ToggleDelay (type: uint32)
+      Attributes: persistent
+  - NumberOfKickActions (type: uint32)
+      Attributes: read_only
+  - NumberOfStationsKicked (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void debug()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StaKickOnError.GenericTests - Name: NeMo.Intf.45.StaKickOnError.GenericTests
+ == PARAMETERS:
+  - TestsSupported (type: string)
+      Attributes: read_only
+  - TestsEnabled (type: string)
+      Attributes: persistent
+  - KickActions (type: uint32)
+      Attributes: read_only
+  - IgnoredErrorsDetected (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StaKickOnError.VendorTests - Name: NeMo.Intf.45.StaKickOnError.VendorTests
+ == PARAMETERS:
+  - TestsSupported (type: string)
+      Attributes: read_only
+  - TestsEnabled (type: string)
+      Attributes: persistent
+  - KickActions (type: uint32)
+      Attributes: read_only
+  - IgnoredErrorsDetected (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.DriverConfig - Name: NeMo.Intf.45.DriverConfig
+ == PARAMETERS:
+  - BssMaxIdlePeriod (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '65535'}
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StaHistogram - Name: NeMo.Intf.45.StaHistogram
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - SendPeriodicNotification (type: bool)
+      Attributes: persistent
+  - SendNotificationOnDisassoc (type: bool)
+      Attributes: persistent
+  - NrReadingsPerWindow (type: uint32)
+      Attributes: persistent
+  - NrWindows (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getCurrentStaHistograms()
+  - void getAllStaHistograms()
+  - void clearStaHistograms()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ApMonitorConfig - Name: NeMo.Intf.45.ApMonitorConfig
+ == PARAMETERS:
+  - InfoEventEnable (type: bool)
+      Attributes: persistent
+  - InfoEventBootDelay (type: uint32)
+      Attributes: persistent
+  - InfoEventInterval (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IPv4Addr - Name: NeMo.Intf.45.IPv4Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IPv6Addr - Name: NeMo.Intf.45.IPv6Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+  - PreferredLifetime (type: uint32)
+      Attributes: persistent
+  - ValidLifetime (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IPv4Route - Name: NeMo.Intf.45.IPv4Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.IPv6Route - Name: NeMo.Intf.45.IPv6Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StatMon - Name: NeMo.Intf.45.StatMon
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Interval (type: uint32)
+  - Type (type: string)
+      Validator: ['unknown', 'netdev', 'wlansta', 'dslline']
+

@@ -1,0 +1,26 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .OrangeRemoteAccess - Name: .OrangeRemoteAccess
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Activate (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void addUser(string username, string cookie)
+  - void removeUser(string username)
+  - void listUsers((list listOfUsers))
+  - variant get()
+  - bool set((variant parameters))
+
+=======================================================================
+OBJECT: OrangeRemoteAccess.OnDemand - Name: OrangeRemoteAccess.OnDemand
+ == PARAMETERS:
+  - Enable (type: bool)
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
+

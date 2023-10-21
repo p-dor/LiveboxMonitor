@@ -1,0 +1,13 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .SpeedTest - Name: .SpeedTest
+ == PARAMETERS:
+  - ServerConfigNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - DiagnosticNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getWANResults()
+  - void getLinkInfo((string iface))
+

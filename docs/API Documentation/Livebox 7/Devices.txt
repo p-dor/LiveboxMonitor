@@ -1,0 +1,197 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Devices - Name: .Devices
+ == FUNCTIONS:
+  - bool destroyDevice(string key)
+  - list find((variant expression), (string flags))
+  - list get((variant expression), (string flags))
+  - list findByIPAddress(string ipaddress, (string ipstatus), (string flags))
+  - device_t fetchDevice(string key, (string flags))
+
+=======================================================================
+OBJECT: Devices.Config - Name: Devices.Config
+ == FUNCTIONS:
+  - void set(string module, string option, variant value)
+  - variant get(string module, string option)
+  - bool load(string module)
+  - bool save(string module)
+
+=======================================================================
+OBJECT: Devices.Config.global - Name: Devices.Config.global
+ == PARAMETERS:
+  - MaxLanDevices (type: string)
+      Attributes: persistent
+  - MaxLanDevicesAccept (type: string)
+      Attributes: persistent
+  - MaxLanDevicesDeleteActive (type: string)
+      Attributes: persistent
+  - MaxInactiveAge (type: string)
+      Attributes: persistent
+  - DeviceTypeOrder (type: string)
+      Attributes: persistent
+  - NameOrder (type: string)
+      Attributes: persistent
+  - MDNSDisable (type: string)
+      Attributes: persistent
+  - KeepLink (type: string)
+      Attributes: persistent
+  - AcceptIntfs (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.Priority - Name: Devices.Config.Priority
+
+=======================================================================
+OBJECT: Devices.Config.WANAccess - Name: Devices.Config.WANAccess
+ == PARAMETERS:
+  - BlockedReasons (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.selfphysical - Name: Devices.Config.selfphysical
+ == PARAMETERS:
+  - Blocked (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.selflan - Name: Devices.Config.selflan
+ == PARAMETERS:
+  - Interfaces (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.eth - Name: Devices.Config.eth
+ == PARAMETERS:
+  - DHCPPools (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.events - Name: Devices.Config.events
+ == PARAMETERS:
+  - CPUInterval (type: string)
+      Attributes: persistent
+  - SysInfoInterval (type: string)
+      Attributes: persistent
+  - Log (type: string)
+      Attributes: persistent
+  - LogType (type: string)
+      Attributes: persistent
+  - LogSize (type: string)
+      Attributes: persistent
+  - LogEntries (type: string)
+      Attributes: persistent
+  - LogPath (type: string)
+      Attributes: persistent
+  - DevicesInterval (type: string)
+      Attributes: persistent
+  - WANInterfaces (type: string)
+      Attributes: persistent
+  - MaxWlanStatMonStations (type: string)
+      Attributes: persistent
+  - WlanPersistentLogsInterval (type: string)
+      Attributes: persistent
+  - WlanPersistentAggregationInterval (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Config.ieee1905_gmap - Name: Devices.Config.ieee1905_gmap
+
+=======================================================================
+OBJECT: Devices.Config.mqtt - Name: Devices.Config.mqtt
+ == PARAMETERS:
+  - Server (type: string)
+      Attributes: persistent
+  - AlarmTopic (type: string)
+      Attributes: persistent
+  - AddedTopic (type: string)
+      Attributes: persistent
+  - InfoChangedTopic (type: string)
+      Attributes: persistent
+  - DataChangedTopic (type: string)
+      Attributes: persistent
+  - DeleteTopic (type: string)
+      Attributes: persistent
+  - EventsEnable (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: Devices.Device - Name: Devices.Device
+ == PARAMETERS:
+  - Key (type: string)
+      Attributes: read_only, persistent
+  - DiscoverySource (type: string)
+      Attributes: read_only, persistent
+  - Name (type: string)
+      Attributes: read_only, persistent
+  - DeviceType (type: string)
+      Attributes: read_only, persistent
+  - Active (type: bool)
+      Attributes: read_only
+  - Tags (type: string)
+      Attributes: persistent
+  - FirstSeen (type: date_time)
+      Attributes: read_only, persistent
+  - LastConnection (type: date_time)
+      Attributes: persistent, volatile
+  - LastChanged (type: date_time)
+      Attributes: persistent, volatile
+  - Master (type: string)
+      Attributes: read_only, persistent
+ == FUNCTIONS:
+  - device_t get((string flags))
+  - bool set(device_t parameters)
+  - bool remove(string path)
+  - bool hasTag(string tag, (string expression), (string traverse))
+  - void setTag(string tag, (string expression), (string traverse))
+  - void clearTag(string tag, (string expression), (string traverse))
+  - variant getFirstParameter(string parameter, (string expression), (string traverse))
+  - list getParameters(string parameter, (string expression), (string traverse))
+  - variant topology((string expression), (string traverse), (string flags))
+  - bool isLinkedTo(string device, (string traverse))
+  - bool setName(string name, (string source))
+  - bool addName(string name, (string source))
+  - bool removeName(string source)
+  - bool delName(string name, (string source))
+  - bool setType(string type, (string source))
+  - bool removeType(string source)
+  - bool isImplemented(string function, (string subObject))
+  - bool setAlternative(string alternative)
+  - bool removeAlternative(string alternative)
+  - bool isAlternative(string alternative)
+  - bool setAlternativeRules(list rules)
+  - bool removeAlternativeRules()
+
+=======================================================================
+OBJECT: Devices.Device.Alternative - Name: Devices.Device.Alternative
+
+=======================================================================
+OBJECT: Devices.Device.Names - Name: Devices.Device.Names
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only, persistent
+  - Source (type: string)
+      Attributes: read_only, persistent
+  - Suffix (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: Devices.Device.DeviceTypes - Name: Devices.Device.DeviceTypes
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only, persistent
+  - Source (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: Devices.Device.UDevice - Name: Devices.Device.UDevice
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Devices.Device.LDevice - Name: Devices.Device.LDevice
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only
+

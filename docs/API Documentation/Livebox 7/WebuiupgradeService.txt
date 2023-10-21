@@ -1,0 +1,67 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
+ == PARAMETERS:
+  - SOPMinimumVersion (type: string)
+      Attributes: persistent
+  - URL (type: string)
+      Attributes: persistent
+  - ReleaseNotesURL (type: string)
+      Attributes: persistent
+  - ReleaseNotesTypes (type: string)
+      Attributes: persistent
+  - MinimumDelay (type: uint32)
+      Attributes: persistent
+  - LastSyncTime (type: date_time)
+      Attributes: read_only
+  - MaxCachedVersionAge (type: uint32)
+      Attributes: persistent
+  - NewVersion (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - openfile_return_t openfile((filemap_t filemap))
+  - bool verifyRUIVersion((string filetype), (string version))
+  - void getReleaseNotes((string version), (string language), (string releaseNotes))
+  - bool isCustomFileTypeSupported((string filetype))
+
+=======================================================================
+OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorConfigFile
+ == PARAMETERS:
+  - FileType (type: string)
+      Attributes: read_only
+  - URL (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: WebuiupgradeService.AutoCheck - Name: WebuiupgradeService.AutoCheck
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - CheckAtBoot (type: bool)
+      Attributes: persistent
+  - Interval (type: uint32)
+      Attributes: persistent
+  - TimeReference (type: date_time)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: WebuiupgradeService.Authentication - Name: WebuiupgradeService.Authentication
+ == PARAMETERS:
+  - Username (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+  - CACert (type: string)
+      Attributes: persistent
+  - ClientCert (type: string)
+      Attributes: persistent
+  - PrivateKey (type: string)
+      Attributes: persistent
+

@@ -1,0 +1,9 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Screen - Name: .Screen
+ == FUNCTIONS:
+  - void setAnonymousDisplay(string name)
+  - void setShowWifiPassword(bool Enable)
+  - bool getShowWifiPassword()
+

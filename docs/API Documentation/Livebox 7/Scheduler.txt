@@ -1,0 +1,20 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Scheduler - Name: .Scheduler
+ == PARAMETERS:
+  - TypesNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool addSchedule(string type, schedule_t info)
+  - bool updateScheduleEntries(string type, string ID, list entries, (string device))
+  - bool enableSchedule(string type, string ID, (bool enable), (string device))
+  - bool enableAllSchedule(string type, bool enable)
+  - bool overrideSchedule(string type, string ID, string override, (string device))
+  - bool overrideState(string type, string ID, string state, (string device))
+  - bool removeSchedules(string type, (list ID), (list device))
+  - bool getScheduleTypes((list types))
+  - bool getSchedules(string type, (list scheduleInfo), (list target))
+  - bool getCompleteSchedules(string type, (list scheduleInfo), (list target))
+  - bool getSchedule(string type, string ID, (schedule_t info), (string device))
+

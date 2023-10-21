@@ -1,0 +1,34 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .History - Name: .History
+
+=======================================================================
+OBJECT: History.Backup - Name: History.Backup
+ == PARAMETERS:
+  - Count (type: uint32)
+      Attributes: read_only
+  - MaxHistSize (type: uint32)
+      Attributes: read_only
+  - AmountOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void updateHistory()
+  - void cleanHistory()
+  - void getSimpleHistory()
+  - void rotate((string source))
+
+=======================================================================
+OBJECT: History.Backup.Entry - Name: History.Backup.Entry
+ == PARAMETERS:
+  - Filenames (type: string)
+      Attributes: read_only
+  - RotationIndex (type: uint32)
+      Attributes: read_only
+  - CreationDate (type: date_time)
+      Attributes: read_only
+  - SoftwareVersion (type: string)
+      Attributes: read_only
+  - Source (type: string)
+      Attributes: read_only
+

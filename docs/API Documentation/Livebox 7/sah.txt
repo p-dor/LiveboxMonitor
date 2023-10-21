@@ -1,0 +1,49 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .sah - Name: .sah
+
+=======================================================================
+OBJECT: sah.Device - Name: sah.Device
+
+=======================================================================
+OBJECT: sah.Device.Information - Name: sah.Device.Information
+ == FUNCTIONS:
+  - int32 getSummary((string deviceID), (string deviceType), (string friendlyName), (string manufacturer), (string manufacturerURL), (string modelDescription), (string modelName), (string modelNumber), (string modelURL), (string serialNumber), (string UDN), (string UPC))
+  - int32 getVersion((string deviceID), (string softwareDate), (string softwareVersion), (string hardwareVersion))
+
+=======================================================================
+OBJECT: sah.Device.PowerManagement - Name: sah.Device.PowerManagement
+ == FUNCTIONS:
+  - int32 restart()
+
+=======================================================================
+OBJECT: sah.Device.AttachedDevices - Name: sah.Device.AttachedDevices
+ == FUNCTIONS:
+  - int32 listAll(string deviceType, (list deviceList))
+
+=======================================================================
+OBJECT: sah.Device.LocalStorage - Name: sah.Device.LocalStorage
+ == FUNCTIONS:
+  - int32 eject(string USBMassStorageID)
+
+=======================================================================
+OBJECT: sah.AccessManagement - Name: sah.AccessManagement
+
+=======================================================================
+OBJECT: sah.HomeNetworkManagement - Name: sah.HomeNetworkManagement
+
+=======================================================================
+OBJECT: sah.Voice - Name: sah.Voice
+
+=======================================================================
+OBJECT: sah.hgw - Name: sah.hgw
+
+=======================================================================
+OBJECT: sah.hgw.models - Name: sah.hgw.models
+
+=======================================================================
+OBJECT: sah.hgw.models.DeviceManager - Name: sah.hgw.models.DeviceManager
+ == FUNCTIONS:
+  - void getDevices()
+

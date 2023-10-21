@@ -1,0 +1,24 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .Manifests - Name: .Manifests
+ == PARAMETERS:
+  - ManifestDirs (type: string)
+  - Categories (type: string)
+ == FUNCTIONS:
+  - list get((string user))
+  - list categories()
+  - void store(string user, string option, variant data)
+  - variant retrieve(string user, string option)
+  - bool export()
+  - bool import()
+
+=======================================================================
+OBJECT: Manifests.UserData - Name: Manifests.UserData
+
+=======================================================================
+OBJECT: Manifests.UserData.Data - Name: Manifests.UserData.Data
+ == PARAMETERS:
+  - Content (type: string)
+      Attributes: persistent
+

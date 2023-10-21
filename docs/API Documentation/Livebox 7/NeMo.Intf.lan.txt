@@ -1,0 +1,64 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: NeMo.Intf.lan - Name: NeMo.Intf.28
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber))
+  - void closeQuery((string subscriber))
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id))
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void setWLANConfig((string mibs))
+
+=======================================================================
+OBJECT: NeMo.Intf.lan.ULIntf - Name: NeMo.Intf.28.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.lan.LLIntf - Name: NeMo.Intf.28.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.lan.Query - Name: NeMo.Intf.28.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+

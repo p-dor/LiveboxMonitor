@@ -1,0 +1,44 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .SAHPairing - Name: .SAHPairing
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Unconfigured', 'MasterIdle', 'MasterPairing', 'SlaveUnpaired', 'SlaveConnecting', 'SlavePairing', 'SlavePaired']
+  - Interface (type: string)
+      Attributes: persistent
+  - DevicesNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void startPairing()
+  - void startAutoPairing()
+  - void stopAutoPairing()
+  - void setMaster()
+  - void setSlave()
+  - void export()
+  - void import()
+  - bool addAclEntry(string topic, (string deviceClass), (string accessType), (string device))
+  - void removeAclTopic(string topic, (string device))
+
+=======================================================================
+OBJECT: SAHPairing.Debug - Name: SAHPairing.Debug
+ == PARAMETERS:
+  - LastEvent (type: string)
+      Attributes: read_only
+  - LastError (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void inject(string eventName, (variant eventArg))
+  - void injectError(string errorName)
+
+=======================================================================
+OBJECT: SAHPairing.ACL - Name: SAHPairing.ACL
+ == PARAMETERS:
+  - Topic (type: string)
+  - AccessGroup (type: string)
+      Validator: ['Everyone', 'PairedDevices', 'SpecificDevice']
+  - SpecificDevice (type: string)
+  - AccessType (type: string)
+      Validator: ['Publish', 'Subscribe', 'PublishAndSubscribe']
+

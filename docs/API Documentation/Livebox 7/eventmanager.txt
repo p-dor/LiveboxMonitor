@@ -1,0 +1,23 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .eventmanager - Name: .eventmanager
+ == PARAMETERS:
+  - longpolling_timeout (type: uint32)
+      Attributes: read_only
+  - channelinactivity_timeout (type: uint32)
+      Attributes: read_only
+  - dosprotection_timeout (type: uint32)
+      Attributes: read_only
+  - dosprotection_maxchannels (type: uint32)
+      Attributes: read_only
+  - max_subscriptions (type: uint32)
+      Attributes: read_only
+  - message_servers (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - notification get_events((uint32 channelid), (list events))
+  - notification open_channel((list events))
+  - void subscribe((uint32 channelid), (list events))
+  - void unsubscribe((uint32 channelid), (list events))
+

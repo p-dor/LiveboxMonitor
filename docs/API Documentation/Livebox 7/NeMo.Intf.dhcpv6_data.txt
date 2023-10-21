@@ -1,0 +1,116 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data - Name: NeMo.Intf.27
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - DHCPStatus (type: string)
+      Validator: ['Idle', 'Init', 'Selecting', 'Requesting', 'Bound', 'BoundCheck', 'Release', 'Decline', 'Renew', 'Rebind', 'Release', 'InformationRequest', 'InformationBound', 'Error']
+  - Uptime (type: uint32)
+      Attributes: read_only, volatile
+  - DSCPMark (type: uint8)
+      Attributes: persistent
+  - DUID (type: string)
+      Attributes: persistent
+  - RequestAddresses (type: bool)
+      Attributes: persistent
+  - RequestPrefixes (type: bool)
+      Attributes: persistent
+  - RapidCommit (type: bool)
+      Attributes: persistent
+  - IAID (type: uint32)
+      Attributes: persistent
+  - SuggestedT1 (type: int32)
+      Attributes: persistent
+  - SuggestedT2 (type: int32)
+      Attributes: persistent
+  - SupportedOptions (type: string)
+      Attributes: persistent
+  - RequestedOptions (type: string)
+      Attributes: persistent
+  - Renew (type: bool)
+  - ResetOnPhysDownTimeout (type: int32)
+      Attributes: persistent
+  - CheckAuthentication (type: bool)
+      Attributes: persistent
+  - AuthenticationInfo (type: string)
+      Attributes: persistent
+  - RetryOnFailedAuth (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber))
+  - void closeQuery((string subscriber))
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id))
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void renew()
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data.ULIntf - Name: NeMo.Intf.27.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data.LLIntf - Name: NeMo.Intf.27.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data.Query - Name: NeMo.Intf.27.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data.SentOption - Name: NeMo.Intf.27.SentOption
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Alias (type: string)
+      Attributes: persistent
+  - Tag (type: uint16)
+      Attributes: persistent
+  - Value (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.dhcpv6_data.ReceivedOption - Name: NeMo.Intf.27.ReceivedOption
+ == PARAMETERS:
+  - Tag (type: uint16)
+  - Alias (type: string)
+  - Value (type: string)
+

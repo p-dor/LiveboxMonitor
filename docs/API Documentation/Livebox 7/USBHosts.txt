@@ -1,0 +1,13 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+
+=======================================================================
+OBJECT: .USBHosts - Name: .USBHosts
+ == PARAMETERS:
+  - PortNameNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getDevices((list deviceClass))
+  - void import()
+  - void export()
+  - bool enableUSB3(bool enable)
+
