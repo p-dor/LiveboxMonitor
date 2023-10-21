@@ -118,6 +118,22 @@ NET_INTF_LB6 = [
 	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
+# LB7 Interfaces
+NET_INTF_LB7 = [
+	{ 'Key': 'veip0',        'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'bridge',       'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'ETH1',         'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH2',         'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH3',         'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH4',         'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH0',         'Name': 'Ether 10G',    'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv0',  'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv0',  'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap6g0priv0',  'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap2g0guest0', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+]
+
 # Interface name mapping
 INTF_NAME_MAP = []
 
@@ -136,6 +152,12 @@ INTF_NAME_MAP_LB5 = {
 # LB6 Interface name mapping
 INTF_NAME_MAP_LB6 = {
 	"Livebox":  {"eth0":"Eth4", "eth1":"Eth3", "eth2":"Eth2", "eth3":"Eth1", "eth4":"Eth 2.5G"},
+	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
+}
+
+# LB7 Interface name mapping
+INTF_NAME_MAP_LB7 = {
+	"Livebox":  {"eth0":"Eth4", "eth1":"Eth3", "eth2":"Eth2", "eth3":"Eth1", "eth4":"Eth 10G"},
 	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
 }
 
@@ -394,7 +416,10 @@ def SetLiveboxModel(iModel):
 	global NET_INTF
 	global INTF_NAME_MAP
 
-	if iModel == 6:
+	if iModel == 7:
+		NET_INTF = NET_INTF_LB7
+		INTF_NAME_MAP = INTF_NAME_MAP_LB7
+	elif iModel == 6:
 		NET_INTF = NET_INTF_LB6
 		INTF_NAME_MAP = INTF_NAME_MAP_LB6
 	elif iModel == 5:
