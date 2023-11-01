@@ -12,7 +12,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
 
-**AVERTISSEMENT** : le programme a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4 et 6**, des tests supplémentaires avec une Livebox 4 ou 6 seraient bienvenus. Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
+**AVERTISSEMENT** : le programme a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4, 6 et 7**, des tests supplémentaires avec une Livebox 4, 6 ou 7 seraient bienvenus. Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -25,7 +25,7 @@ L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et 
 
 Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
-**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5 & 6. Le support des événements a aussi été rajouté.
+**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5,6 & 7. Le support des événements a aussi été rajouté.
 
 ### Téléchargement - version 1.2 (25/06/2023)
 
