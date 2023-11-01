@@ -1,5 +1,20 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
+## v1.3 - 01/22/2023
+
+- Support des plages de port dans les règles NAT/PAT pour IPv4 et IPv6.
+- Nouveau bouton "Générer documentation APIs..." dans l'onglet "Actions" permettant de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration.
+- Les documentations (filtrées) générées pour les Livebox 5, 6, 6 Pro et 7 sont disponibles dans le repo.
+- Correction du séparateur des en-têtes dans les exports CVS des graphes.
+- Redirection d'URL par ligne de commande (par @jfgiorgi).
+- En cas de connexion wifi, la colonne "Accès" dans la liste des appareils affiche s'il s'agit du réseau wifi invité.
+- Le dernier niveau de signal wifi connu est maintenant masqué pour les appareils non actifs, pour plus de clarté.
+- Correction d'un problème mineur lors de l'assignation d'un nom à un appareil.
+- Nouvelle méthode plus robuste pour désactiver/activer le planificateur wifi. Il s'agit de la même méthode que celle utilisée par l'app "MaLivebox".
+- Amélioration de la gestion des erreurs de chargement des icônes.
+- Support de la Livebox 7.
+
+
 ## v1.2 - 25/06/2023
 
 - Nouvel onglet NAT/PAT permettant de régler finement les règles de redirection de port et de protocole, d'exporter et d'importer les règles, etc.
@@ -22,6 +37,7 @@
 - S'il y a des appareils dans la liste de l'onglet Graphe, leur nom est maintenant automatiquement mis à jour s'il est changé.
 - Correction d'un bug dans le décodage des informations de topologie qui pouvait amener à afficher des noms de point d'accès erronés dans certains cas (colonne "Accès").
 
+
 ## v1.1 - 02/15/2023
 
 - Correction d'un problème de crash en mode no-console si les logs étaient activées.
@@ -39,6 +55,7 @@
 - La fenêtre principale dispose maintenant d'une barre de statut. Elle affiche les tâches en cours (qui apparaissaient dans le titre de la fenêtre dans les versions précédentes), et le nom du profil en cours. Un clic sur le nom du profil affiche le dialogue pour changer de profil.
 - Les onglets peuvent maintenant être déplacés à la souris y compris les onglets des répéteurs pour être mis dans n'importe quel ordre. Cet ordre est sauvé dans la configuration pour être restauré au lancement du programme.
 
+
 ## v1.0 - 26/02/2023
 
 - L'alerte intempestive sur le "Wrong or inexistant MacAddrTable.txt file" a été fixée.
@@ -52,6 +69,7 @@
 - Une traduction française est maintenant disponible. Cette traduction est néanmoins partielle car elle concerne l'ensemble des labels de l'interface et pas les messages d'alerte, mais c'est déjà largement suffisant. Du coup une option est disponible dans les préférences pour choisir la langue entre français et anglais. Si quelqu'un veut faire une autre langue c'est très simple grâce au fichier template LmLanguage_XX.py.
 - Des tooltips sont maintenant disponibles à peu près partout dans le but de pouvoir se passer de la documentation. Tous les tooltips français sont là, seuls quelques uns dans la version anglaises. D'ailleurs si une bonne âme se sent de faire la version anglaise complète c'est très simple (fichier LmLanguage_EN.py, en recopiant les textes depuis la version française LmLanguage_FX.py). Les tooltips sont activés par défaut mais une option dans les préférences permet de les désactiver.
 - Nouveau paramêtre controlant la fréquence de rafraîchissement des statistiques temps réel, avec 3 secondes par défaut.
+
 
 ### v0.9.7 - 22/01/2023
 
