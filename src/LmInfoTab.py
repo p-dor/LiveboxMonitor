@@ -131,7 +131,7 @@ class LmInfo:
 
 		aOntInfoButton = QtWidgets.QPushButton(lx('ONT Infos'), objectName = 'ontInfo')
 		aOntInfoButton.clicked.connect(self.ontInfoButtonClick)
-		if self._liveboxModel >= 5:
+		if self._fiberLink:
 			aButtonsBox.addWidget(aOntInfoButton)
 
 		aVoiPInfoButton = QtWidgets.QPushButton(lx('VoIP Infos'), objectName = 'voipInfo')
@@ -688,9 +688,9 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Connection'), 'NMC:get query error', LmTools.ValQual.Error)
 		else:
 			aAccessType = d.get('WanMode')
-			if (aAccessType is not None) and (len(aAccessType) >=4):
-				if aAccessType[0:4] == 'GPON':
-					i = self.addInfoLine(self._liveboxAList, i, lx('Access Type'), 'ONT Fiber (' + aAccessType + ')')
+			if aAccessType is not None:
+				if self._fiberLink:
+					i = self.addInfoLine(self._liveboxAList, i, lx('Access Type'), 'Fiber (' + aAccessType + ')')
 				else:
 					i = self.addInfoLine(self._liveboxAList, i, lx('Access Type'), 'ADSL (' + aAccessType + ')')
 			
@@ -1067,6 +1067,35 @@ class LmInfo:
 	def loadOntInfo(self, iIndex = 0):
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('ONT Information'))
 
+		# Call SFP module for LB4
+		if self._liveboxModel == 4:
+			try:
+				d = self._session.request('SFP:get')
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				d = None
+			if d is not None:
+				d = d.get('status')
+			if d is None:
+				i = self.addInfoLine(self._liveboxAList, i, lx('ONT'), 'SFP:get query error', LmTools.ValQual.Error)
+			else:
+				i = self.addInfoLine(self._liveboxAList, i, lx('Status'), d.get('Status'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Registration ID'), d.get('RegistrationID'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Local Registration ID'), d.get('LocalRegistrationID'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Model Name'), d.get('ModelName'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Orange'), LmTools.FmtBool(d.get('Orange')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 0'), d.get('Software1Version'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 1'), d.get('Software2Version'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer'), d.get('Manufacturer'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), d.get('SerialNumber'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Ready'), LmTools.FmtBool(d.get('ONTReady')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Operating State'), LmTools.FmtInt(d.get('OperatingState')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Optical Signal Level'), LmTools.FmtInt(d.get('OpticalSignalLevel')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Transmit Optical Level'), LmTools.FmtInt(d.get('TransmitOpticalLevel')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Temperature'), LmTools.FmtInt(d.get('ChipsetTemperature')) + '°')
+			return i
+
 		aOntIntf = None
 		for s in LmConfig.NET_INTF:
 			if s['Type'] == 'ont':
@@ -1093,7 +1122,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('OMCI Is Tm Owner'), LmTools.FmtBool(d.get('OmciIsTmOwner')))
 			v = d.get('MaxBitRateSupported')
 			if v is not None:
-				i = self.addInfoLine(self._liveboxAList, i, lx('Max Bit Rate Supported'), str(v / 1000) + ' mW')
+				i = self.addInfoLine(self._liveboxAList, i, lx('Max Bit Rate Supported'), str(v / 1000) + ' Gbps')
 
 			v = d.get('SignalRxPower')
 			if v is not None:
