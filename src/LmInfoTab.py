@@ -758,11 +758,11 @@ class LmInfo:
 				i = self.addInfoLine(self._liveboxAList, i, lx('Firewall Level'), d.get('FirewallLevel'))
 				aRate = d.get('DownstreamMaxBitRate')
 				if aRate is not None:
-					aRate *= 1024
+					aRate *= 1048576
 					i = self.addInfoLine(self._liveboxAList, i, lx('Max Down Bit Rate'), LmTools.FmtBytes(aRate))
 				aRate = d.get('UpstreamMaxBitRate')
 				if aRate is not None:
-					aRate *= 1024
+					aRate *= 1048576
 					i = self.addInfoLine(self._liveboxAList, i, lx('Max Up Bit Rate'), LmTools.FmtBytes(aRate))
 
 		try:
