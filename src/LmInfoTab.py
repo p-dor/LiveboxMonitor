@@ -1080,20 +1080,29 @@ class LmInfo:
 				i = self.addInfoLine(self._liveboxAList, i, lx('ONT'), 'SFP:get query error', LmTools.ValQual.Error)
 			else:
 				i = self.addInfoLine(self._liveboxAList, i, lx('Status'), d.get('Status'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Connection Status'), LmTools.FmtBool(d.get('ONTReady')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('SFP Status'), LmTools.FmtInt(d.get('DeviceState')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Operating State'), LmTools.FmtInt(d.get('OperatingState')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Orange'), LmTools.FmtBool(d.get('Orange')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), d.get('SerialNumber'))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Registration ID'), d.get('RegistrationID'))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Local Registration ID'), d.get('LocalRegistrationID'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Model Name'), d.get('ModelName'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Orange'), LmTools.FmtBool(d.get('Orange')))
-				i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 0'), d.get('Software1Version'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('ONT Software Version 1'), d.get('Software2Version'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer'), d.get('Manufacturer'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Serial Number'), d.get('SerialNumber'))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Ready'), LmTools.FmtBool(d.get('ONTReady')))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Operating State'), LmTools.FmtInt(d.get('OperatingState')))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Optical Signal Level'), LmTools.FmtInt(d.get('OpticalSignalLevel')))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Transmit Optical Level'), LmTools.FmtInt(d.get('TransmitOpticalLevel')))
+				v = d.get('OpticalSignalLevel')
+				if v is not None:
+					v /= 1000
+					i = self.addInfoLine(self._liveboxAList, i, lx('Signal RxPower'), str(v) + ' dBm')
+				v = d.get('TransmitOpticalLevel')
+				if v is not None:
+					v /= 1000
+					i = self.addInfoLine(self._liveboxAList, i, lx('Signal TxPower'), str(v) + ' dBm')
 				i = self.addInfoLine(self._liveboxAList, i, lx('Temperature'), LmTools.FmtInt(d.get('ChipsetTemperature')) + '°')
+				i = self.addInfoLine(self._liveboxAList, i, lx('Model Name'), d.get('ModelName'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Manufacturer'), d.get('Manufacturer'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Hardware Version'), d.get('HardwareVersion'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firmware 1 Version'), d.get('Software1Version'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firmware 1 State'), LmTools.FmtInt(d.get('Software1Status')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firmware 2 Version'), d.get('Software2Version'))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Firmware 2 State'), LmTools.FmtInt(d.get('Software2Status')))
 			return i
 
 		aOntIntf = None
