@@ -139,7 +139,7 @@ INTF_NAME_MAP = []
 
 # LB4 Interface name mapping
 INTF_NAME_MAP_LB4 = {
-	"Livebox":  {"eth0":"Eth1", "eth1":"Eth2", "eth2":"Eth3", "eth3":"Eth4"},
+	"Livebox":  {"eth1":"Eth1", "eth2":"Eth2", "eth3":"Eth3", "eth4":"Eth4"},
 	"Repeater": {"eth0":"Eth1", "eth1":"Eth2"}
 }
 
