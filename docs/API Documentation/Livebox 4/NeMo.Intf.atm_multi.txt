@@ -1,0 +1,255 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi - Name: NeMo.Intf.25
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - DSLPlugin (type: string)
+      Attributes: read_only
+  - XTMPlugin (type: string)
+      Attributes: read_only
+  - DSLIPC (type: string)
+      Attributes: read_only
+  - LastChangeTime (type: uint32)
+      Attributes: read_only
+  - LastChange (type: uint32)
+      Attributes: read_only, volatile
+  - LinkType (type: string)
+      Attributes: persistent
+      Validator: ['EoA', 'IPoA', 'PPPoA']
+  - LinkStatus (type: string)
+      Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - DestinationAddress (type: string)
+      Attributes: persistent
+  - Encapsulation (type: string)
+      Attributes: persistent
+      Validator: ['LLC', 'VCMUX']
+  - FCSPreserved (type: bool)
+      Attributes: persistent
+  - QoSClass (type: string)
+      Attributes: persistent
+      Validator: ['UBR', 'CBR', 'GFR', 'VBR-nrt', 'VBR-rt', 'UBR+', 'ABR']
+  - PeakCellRate (type: uint32)
+      Attributes: persistent
+  - MaximumBurstSize (type: uint32)
+      Attributes: persistent
+  - SustainableCellRate (type: uint32)
+      Attributes: persistent
+  - NATEnabled (type: bool)
+  - NetDevIndex (type: int32)
+  - NetDevType (type: string)
+      Attributes: read_only
+  - NetDevFlags (type: string)
+  - NetDevName (type: string)
+  - LLAddress (type: string)
+  - TxQueueLen (type: uint32)
+  - MTU (type: uint32)
+  - NetDevState (type: string)
+      Attributes: read_only
+  - IPv4Forwarding (type: bool)
+  - IPv4ForceIGMPVersion (type: uint32)
+      Validator: {'min': '0', 'max': '3'}
+  - IPv4AcceptSourceRoute (type: bool)
+  - IPv4AcceptLocal (type: bool)
+  - IPv4AcceptRedirects (type: bool)
+  - IPv4ArpFilter (type: bool)
+  - IPv6AcceptRA (type: bool)
+  - IPv6ActAsRouter (type: bool)
+  - IPv6AutoConf (type: bool)
+  - IPv6MaxRtrSolicitations (type: uint32)
+  - IPv6RtrSolicitationInterval (type: uint32)
+  - IPv6AcceptSourceRoute (type: bool)
+  - IPv6AcceptRedirects (type: bool)
+  - IPv6OptimisticDAD (type: bool)
+  - IPv6Disable (type: bool)
+  - IPv6HostPart (type: string)
+  - RtTable (type: int32)
+      Validator: {'max': '256'}
+  - RtPriority (type: uint32)
+  - IPv6AddrDelegate (type: string)
+  - IPv6RouterDownTimeout (type: int32)
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void closeQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id), (string state), (string returnValue), (list errors))
+      Attributes: variadic
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - bool oamPing()
+  - void refreshNetDev()
+  - void getNetDevStats()
+  - void setNetDevFlag(string flags)
+  - void clearNetDevFlag(string flags)
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.ULIntf - Name: NeMo.Intf.25.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.LLIntf - Name: NeMo.Intf.25.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.Query - Name: NeMo.Intf.25.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv4Addr - Name: NeMo.Intf.25.IPv4Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv6Addr - Name: NeMo.Intf.25.IPv6Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+  - PreferredLifetime (type: uint32)
+      Attributes: persistent
+  - ValidLifetime (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv4Route - Name: NeMo.Intf.25.IPv4Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv6Route - Name: NeMo.Intf.25.IPv6Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv6Router - Name: NeMo.Intf.25.IPv6Router
+ == PARAMETERS:
+  - Address (type: string)
+  - LastAdvertisement (type: uint32)
+  - CurHopLimit (type: uint8)
+  - Managed (type: bool)
+  - Other (type: bool)
+  - HomeAgent (type: bool)
+  - Preference (type: int8)
+  - RouterLifetime (type: uint16)
+  - ReachableTime (type: uint32)
+  - RetransTimer (type: uint32)
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.IPv6Router.Option - Name: NeMo.Intf.25.IPv6Router.Option
+ == PARAMETERS:
+  - Tag (type: uint8)
+  - Value (type: string)
+
+=======================================================================
+OBJECT: NeMo.Intf.atm_multi.StatMon - Name: NeMo.Intf.25.StatMon
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Interval (type: uint32)
+  - Type (type: string)
+      Validator: ['unknown', 'netdev', 'wlansta', 'dslline']
+

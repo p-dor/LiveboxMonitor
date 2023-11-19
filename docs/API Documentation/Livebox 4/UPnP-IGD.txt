@@ -1,0 +1,44 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .UPnP-IGD - Name: .UPnP-IGD
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - WANAccessProvider (type: string)
+      Attributes: persistent
+  - ModelNumber (type: string)
+      Attributes: persistent
+  - ModelName (type: string)
+      Attributes: persistent
+  - FriendlyName (type: string)
+      Attributes: persistent
+  - AllowedHostHeader (type: string)
+      Attributes: persistent
+  - AlwaysStartIgdDaemon (type: bool)
+      Attributes: persistent
+  - TR064ServiceURL (type: string)
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
+
+=======================================================================
+OBJECT: UPnP-IGD.PnP-X - Name: UPnP-IGD.PnP-X
+ == PARAMETERS:
+  - HardwareId-VID (type: string)
+      Attributes: persistent
+  - HardwareId-DID (type: string)
+      Attributes: persistent
+  - HardwareId-SID (type: string)
+      Attributes: persistent
+  - HardwareId-RID (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: UPnP-IGD.UDN - Name: UPnP-IGD.UDN
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: read_only
+  - Value (type: string)
+      Attributes: read_only
+

@@ -1,0 +1,177 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: NeMo.Intf.dsl0 - Name: NeMo.Intf.7
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - DSLPlugin (type: string)
+      Attributes: read_only
+  - XTMPlugin (type: string)
+      Attributes: read_only
+  - DSLIPC (type: string)
+      Attributes: read_only
+  - LastChangeTime (type: uint32)
+      Attributes: read_only
+  - LastChange (type: uint32)
+      Attributes: read_only, volatile
+  - UpstreamCurrRate (type: uint32)
+  - DownstreamCurrRate (type: uint32)
+  - LinkStatus (type: string)
+      Validator: ['Up', 'Down', 'Unknown', 'NotPresent', 'LowerLayerDown', 'Error']
+  - UpstreamMaxRate (type: uint32)
+  - DownstreamMaxRate (type: uint32)
+  - UpstreamAttenuation (type: int32)
+  - DownstreamAttenuation (type: int32)
+  - DownstreamLineAttenuation (type: int32)
+  - UpstreamLineAttenuation (type: int32)
+  - UpstreamNoiseMargin (type: int32)
+  - DownstreamNoiseMargin (type: int32)
+  - UpstreamPower (type: int32)
+  - DownstreamPower (type: int32)
+  - FirmwareVersion (type: string)
+      Validator: {'max': '64'}
+  - StandardsSupported (type: string)
+  - StandardUsed (type: string)
+      Validator: ['G.992.1_Annex_A', 'G.992.1_Annex_B', 'G.992.1_Annex_C', 'T1.413', 'T1.413i2', 'ETSI_101_388', 'G.992.2', 'G.992.3_Annex_A', 'G.992.3_Annex_B', 'G.992.3_Annex_C', 'G.992.3_Annex_I', 'G.992.3_Annex_J', 'G.992.3_Annex_L', 'G.992.3_Annex_M', 'G.992.4', 'G.992.5_Annex_A', 'G.992.5_Annex_B', 'G.992.5_Annex_C', 'G.992.5_Annex_I', 'G.992.5_Annex_J', 'G.992.5_Annex_M', 'G.993.1', 'G.993.1_Annex_A', 'G.993.2_Annex_A', 'G.993.2_Annex_B', 'G.993.2_Annex_C', 'G.9701', '']
+  - DataPath (type: string)
+      Validator: ['Interleaved', 'Fast', 'None']
+  - InterleaveDepth (type: uint32)
+  - ModulationType (type: string)
+      Validator: ['ADSL', 'ADSL_G.dmt', 'ADSL_G.lite', 'ADSL_G.dmt.bis', 'ADSL_re-adsl', 'ADSL_2plus', 'ADLS_four', 'ADSL_ANSI_T1.413', 'G.shdsl', 'IDSL', 'HDSL', 'SDSL', 'VDSL', 'G.Fast', '', 'Bonding_ADSL', 'Bonding_VDSL']
+  - ChannelEncapsulationType (type: string)
+      Validator: ['', 'G.992.3_Annex_K_ATM', 'G.992.3_Annex_K_PTM', 'G.993.2_Annex_K_ATM', 'G.993.2_Annex_K_PTM', 'G.994.1', 'G.9701_PTM']
+  - ModulationHint (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'ADSL', 'VDSL']
+  - AllowedProfiles (type: string)
+  - CurrentProfile (type: string)
+      Validator: ['', '8a', '8b', '8c', '8d', '12a', '12b', '17a', '17b', '30a', '35b', '106a', '212a', '106b']
+  - UPBOKLE (type: uint32)
+      Validator: {'min': '0', 'max': '1280'}
+  - Line_LastChangeTime (type: uint32)
+      Attributes: read_only
+  - Line_LastChange (type: uint32)
+      Attributes: read_only, volatile
+  - LineStatus (type: string)
+      Validator: ['Up', 'Initializing', 'EstablishingLink', 'NoSignal', 'Disabled', 'Error']
+  - Line_UpstreamCurrRate (type: uint32)
+  - Line_DownstreamCurrRate (type: uint32)
+  - Line_UpstreamMaxRate (type: uint32)
+  - Line_DownstreamMaxRate (type: uint32)
+  - Line_UpstreamNoiseMargin (type: int32)
+  - Line_DownstreamNoiseMargin (type: int32)
+  - Line_UpstreamAttenuation (type: int32)
+  - Line_DownstreamLineAttenuation (type: int32)
+  - Line_UpstreamLineAttenuation (type: int32)
+  - Line_DownstreamAttenuation (type: int32)
+  - Line_UpstreamPower (type: int32)
+  - Line_DownstreamPower (type: int32)
+  - Line_DataPath (type: string)
+      Validator: ['Interleaved', 'Fast', 'None']
+  - Line_InterleaveDepth (type: uint32)
+  - Line_ActualInterleavingDelay (type: uint32)
+  - Line_ACTINP (type: int32)
+  - Line_INPREPORT (type: bool)
+  - Line_ModulationType (type: string)
+      Validator: ['ADSL', 'ADSL_G.dmt', 'ADSL_G.lite', 'ADSL_G.dmt.bis', 'ADSL_re-adsl', 'ADSL_2plus', 'ADLS_four', 'ADSL_ANSI_T1.413', 'G.shdsl', 'IDSL', 'HDSL', 'SDSL', 'VDSL', 'G.Fast', '', 'Bonding_ADSL', 'Bonding_VDSL']
+  - Line_ModulationHint (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'ADSL', 'VDSL']
+  - Line_FirmwareVersion (type: string)
+      Validator: {'max': '64'}
+  - Line_StandardsSupported (type: string)
+  - Line_StandardUsed (type: string)
+      Validator: ['G.992.1_Annex_A', 'G.992.1_Annex_B', 'G.992.1_Annex_C', 'T1.413', 'T1.413i2', 'ETSI_101_388', 'G.992.2', 'G.992.3_Annex_A', 'G.992.3_Annex_B', 'G.992.3_Annex_C', 'G.992.3_Annex_I', 'G.992.3_Annex_J', 'G.992.3_Annex_L', 'G.992.3_Annex_M', 'G.992.4', 'G.992.5_Annex_A', 'G.992.5_Annex_B', 'G.992.5_Annex_C', 'G.992.5_Annex_I', 'G.992.5_Annex_J', 'G.992.5_Annex_M', 'G.993.1', 'G.993.1_Annex_A', 'G.993.2_Annex_A', 'G.993.2_Annex_B', 'G.993.2_Annex_C', '']
+  - Line_AllowedProfiles (type: string)
+  - Line_CurrentProfile (type: string)
+      Validator: ['', '8a', '8b', '8c', '8d', '12a', '12b', '17a', '17b', '30a', '35b', '106a', '212a', '106b']
+  - Line_UPBOKLE (type: uint32)
+      Validator: {'min': '0', 'max': '1280'}
+  - Line_TRELLISds (type: bool)
+  - Line_TRELLISus (type: bool)
+  - Line_ATN70 (type: string)
+  - Line_CO_Manufacturer (type: string)
+  - Line_FsmVectoring (type: string)
+      Validator: ['WAIT_FOR_CONFIG', 'FULL', 'WAIT_FOR_TRIGGER', 'RUNNING', 'DISABLED', 'UNCONFIGURED', '']
+  - Line_VCE_MAC (type: string)
+  - Line_LATNpbds (type: string)
+  - Line_LATNpbus (type: string)
+  - Line_SATNpbds (type: string)
+  - Line_SATNpbus (type: string)
+  - Line_SNRMpbds (type: string)
+  - Line_SNRMpbus (type: string)
+  - Line_XTURVendor (type: string)
+  - Line_XTUCVendor (type: string)
+  - PhysicalInterface (type: string)
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void closeQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id), (string state), (string returnValue), (list errors))
+      Attributes: variadic
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void getDSLLineStats()
+  - void getDSLStats()
+  - void getXDSLNoiseMeasure(string typeMeasure)
+  - void getDSLChannelStats()
+
+=======================================================================
+OBJECT: NeMo.Intf.dsl0.ULIntf - Name: NeMo.Intf.7.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dsl0.LLIntf - Name: NeMo.Intf.7.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dsl0.Query - Name: NeMo.Intf.7.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.dsl0.StatMon - Name: NeMo.Intf.7.StatMon
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Interval (type: uint32)
+  - Type (type: string)
+      Validator: ['unknown', 'netdev', 'wlansta', 'dslline']
+

@@ -1,0 +1,19 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .Profiles - Name: .Profiles
+
+=======================================================================
+OBJECT: Profiles.Profile - Name: Profiles.Profile
+ == PARAMETERS:
+  - Current (type: string)
+      Attributes: persistent
+  - Profiles (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - variant getData()
+  - variant setData(variant data, (string profileName))
+  - void setCurrent(string profileName)
+  - list getNames()
+

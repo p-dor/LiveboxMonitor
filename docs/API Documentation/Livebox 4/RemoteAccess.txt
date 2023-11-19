@@ -1,0 +1,43 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .RemoteAccess - Name: .RemoteAccess
+ == PARAMETERS:
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - SourcePrefixNonEmpty (type: bool)
+  - PortMode (type: string)
+      Attributes: persistent
+      Validator: ['RANDOM', 'DEFAULT']
+  - AllowedPorts (type: string)
+      Attributes: persistent
+  - Port (type: uint16)
+      Attributes: persistent
+  - SupportedProtocols (type: string)
+      Attributes: read_only
+  - Protocol (type: string)
+      Attributes: persistent
+      Validator: ['HTTP', 'HTTPS']
+  - Timeout (type: uint32)
+      Attributes: persistent
+  - TimeLeft (type: uint32)
+      Attributes: read_only
+  - Interface (type: string)
+      Attributes: persistent
+  - EnableTime (type: date_time)
+      Attributes: read_only, persistent
+  - DisabledAtStartup (type: bool)
+      Attributes: read_only, persistent
+  - ForcePortFailure (type: uint16)
+  - EmulateHTTPService (type: bool)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
+  - uint16 enable((uint16 port), (bool secure), (uint32 timeout), (string sourcePrefix))
+  - bool disable()
+  - uint32 getTimeLeft()
+  - bool restartTimer()
+

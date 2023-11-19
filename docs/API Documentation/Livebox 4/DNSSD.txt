@@ -1,0 +1,85 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .DNSSD - Name: .DNSSD
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - PID (type: int32)
+      Attributes: read_only
+  - ScanNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - AdvertiseNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void enableAvahi(bool enable)
+  - void startScanning(string key, string type, (uint32 duration), (string protocol))
+  - void stopScanning(string key)
+  - void deleteScan(string key)
+  - void startAdvertise(string name, uint16 port, string type, (string protocol), (list text))
+  - void stopAdvertise(string name)
+  - void lookup(string type, (string protocol))
+  - bool resolve(string type, string protocol, int interfaceIndex, string name)
+
+=======================================================================
+OBJECT: DNSSD.Config - Name: DNSSD.Config
+ == PARAMETERS:
+  - AdvertisedName (type: string)
+  - UseAdvertisedName (type: bool)
+  - Domain (type: string)
+  - UseIPv4 (type: bool)
+      Attributes: persistent
+  - UseIPv6 (type: bool)
+      Attributes: persistent
+  - AllowedInterfaces (type: string)
+      Attributes: persistent
+  - BlacklistDefaultAddress (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DNSSD.Scan - Name: DNSSD.Scan
+ == PARAMETERS:
+  - Status (type: string)
+      Validator: ['init', 'scanning', 'done', 'error']
+  - Service (type: string)
+  - Protocol (type: string)
+  - ResultNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: DNSSD.Scan.Result - Name: DNSSD.Scan.Result
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Removed (type: bool)
+      Attributes: read_only
+  - InterfaceIndex (type: string)
+      Attributes: read_only
+  - Domain (type: string)
+      Attributes: read_only
+  - IPAddress (type: string)
+      Attributes: read_only
+  - Hostname (type: string)
+      Attributes: read_only
+  - Port (type: uint16)
+      Attributes: read_only
+  - Time (type: date_time)
+      Attributes: read_only
+  - Text (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: DNSSD.Advertise - Name: DNSSD.Advertise
+ == PARAMETERS:
+  - Name (type: string)
+  - Port (type: uint16)
+  - Type (type: string)
+  - Protocol (type: string)
+  - Enable (type: bool)
+
+=======================================================================
+OBJECT: DNSSD.Advertise.Text - Name: DNSSD.Advertise.Text
+ == PARAMETERS:
+  - Key (type: string)
+  - Value (type: string)
+

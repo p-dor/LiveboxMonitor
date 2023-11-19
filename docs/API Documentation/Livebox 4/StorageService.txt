@@ -1,0 +1,193 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .StorageService - Name: .StorageService
+ == FUNCTIONS:
+  - logicalVolume_t getLogicalVolume(string uri)
+  - list getPhysicalMediums()
+  - bool ejectLogicalVolume(string uri)
+  - bool getDiskUri((string uri))
+  - bool getDiskInfo((string uri), (variant diskinfo))
+
+=======================================================================
+OBJECT: StorageService.Rules - Name: StorageService.Rules
+ == PARAMETERS:
+  - Condition (type: string)
+      Attributes: read_only, persistent
+  - TargetNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: StorageService.Rules.Target - Name: StorageService.Rules.Target
+ == PARAMETERS:
+  - Path (type: string)
+      Attributes: read_only, persistent
+  - Value (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: StorageService.Capabilities - Name: StorageService.Capabilities
+ == PARAMETERS:
+  - FTPCapable (type: bool)
+      Attributes: read_only
+  - SFTPCapable (type: bool)
+      Attributes: read_only
+  - HTTPCapable (type: bool)
+      Attributes: read_only
+  - SHTTPCapable (type: bool)
+      Attributes: read_only
+  - HTTPWritable (type: bool)
+      Attributes: read_only
+  - SupportedNetworkProtocols (type: string)
+      Attributes: read_only
+  - SupportedFileSystemTypes (type: string)
+      Attributes: read_only
+  - VolumeEncryptionCapable (type: bool)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: StorageService.PhysicalMedium - Name: StorageService.PhysicalMedium
+ == PARAMETERS:
+  - URI (type: string)
+      Attributes: read_only, persistent
+  - Name (type: string)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Vendor (type: string)
+      Attributes: read_only, persistent
+  - Model (type: string)
+      Attributes: read_only, persistent
+  - SerialNumber (type: string)
+      Attributes: read_only, persistent
+  - FirmwareVersion (type: string)
+      Attributes: read_only, persistent
+  - ConnectionType (type: string)
+      Attributes: read_only, persistent
+      Validator: ['USB 1.1', 'USB 2.0', 'USB 3.0', 'IEEE1394', 'IEEE1394b', 'IDE', 'EIDE', 'ATA/33', 'ATA/66', 'ATA/100', 'ATA/133', 'SATA/150', 'SATA/300', 'SCSI-1', 'Fast SCSI', 'Fast-Wide SCSI', 'Ultra SCSI', 'Ultra Wide SCSI', 'Ultra2 SCSI', 'Ultra2 Wide SCSI', 'Ultra3 SCSI', 'Ultra-320 SCSI', 'Ultra-640 SCSI', 'SSA', 'SSA-40', 'Fibre Channel']
+  - Removable (type: bool)
+      Attributes: read_only, persistent
+  - Capacity (type: uint64)
+      Attributes: read_only, persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Online', 'Standby', 'Offline', 'Disconnected', 'Restoring']
+  - Uptime (type: uint32)
+      Attributes: read_only, persistent
+  - SMARTCapable (type: bool)
+      Attributes: read_only, persistent
+  - Temperature (type: uint32)
+      Attributes: read_only
+  - Health (type: string)
+      Attributes: read_only, persistent
+      Validator: ['OK', 'Failing', 'Error']
+  - HotSwappable (type: bool)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: StorageService.PhysicalMedium.Kernel - Name: StorageService.PhysicalMedium.Kernel
+ == PARAMETERS:
+  - SysfsPath (type: string)
+      Attributes: read_only, persistent
+  - DevfsPath (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume - Name: StorageService.LogicalVolume
+ == PARAMETERS:
+  - URI (type: string)
+      Attributes: read_only, persistent
+  - Name (type: string)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Offline', 'Online', 'Error', 'Disconnected']
+  - Enable (type: bool)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - PhysicalReference (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '256'}
+  - PhysicalURI (type: string)
+      Attributes: read_only, persistent
+  - FileSystem (type: string)
+      Attributes: read_only, persistent
+      Validator: ['Unknown', 'FAT16', 'FAT32', 'NTFS', 'HFS', 'HFS+', 'HFSJ', 'ext2', 'ext3', 'ext4', 'XFS', 'REISER', 'WebDAV', 'NFS', 'PTP']
+  - FileSystemStatus (type: uint32)
+      Attributes: read_only, persistent
+      Validator: ['0', '1', '2', '4', '8', '16', '32', '128']
+  - FileSystemCheck (type: bool)
+  - LastFileSystemCheck (type: date_time)
+      Attributes: persistent
+  - FileSystemCheckNeeded (type: bool)
+      Attributes: persistent
+  - FileSystemCheckDateNeeded (type: bool)
+      Attributes: persistent
+  - Capacity (type: uint64)
+      Attributes: persistent
+  - CapacityKb (type: uint64)
+      Attributes: persistent
+  - UsedSpace (type: uint64)
+      Attributes: read_only, persistent
+  - UsedSpaceKb (type: uint64)
+      Attributes: read_only, persistent
+  - Encrypted (type: bool)
+      Attributes: read_only, persistent
+  - FolderNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - PreferredMountPoint (type: string)
+      Attributes: persistent
+  - AutoMount (type: bool)
+      Attributes: persistent
+  - MountPoint (type: string)
+      Attributes: read_only
+  - LastError (type: string)
+      Attributes: read_only
+  - MountOptions (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume.Kernel - Name: StorageService.LogicalVolume.Kernel
+ == PARAMETERS:
+  - UUID (type: string)
+      Attributes: read_only, persistent
+  - Label (type: string)
+      Attributes: read_only, persistent
+  - SysfsPath (type: string)
+      Attributes: read_only, persistent
+  - DevfsPath (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume.Process - Name: StorageService.LogicalVolume.Process
+ == PARAMETERS:
+  - ProcessID (type: int32)
+  - ApplicationName (type: string)
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume.Folder - Name: StorageService.LogicalVolume.Folder
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+  - UserAccountAccess (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume.Folder.UserAccess - Name: StorageService.LogicalVolume.Folder.UserAccess
+ == PARAMETERS:
+  - UserReference (type: string)
+      Attributes: persistent
+  - Permissions (type: uint8)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: StorageService.LogicalVolume.Folder.GroupAccess - Name: StorageService.LogicalVolume.Folder.GroupAccess
+ == PARAMETERS:
+  - GroupReference (type: string)
+      Attributes: persistent
+  - Permissions (type: uint8)
+      Attributes: persistent
+

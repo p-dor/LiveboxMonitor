@@ -1,0 +1,17 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .UplinkMonitor - Name: .UplinkMonitor
+
+=======================================================================
+OBJECT: UplinkMonitor.DefaultGateway - Name: UplinkMonitor.DefaultGateway
+ == PARAMETERS:
+  - IPv4Address (type: string)
+      Attributes: read_only
+  - MACAddress (type: string)
+      Attributes: read_only
+  - NetDevIndex (type: int32)
+      Attributes: read_only
+  - NeMoIntfName (type: string)
+      Attributes: read_only
+

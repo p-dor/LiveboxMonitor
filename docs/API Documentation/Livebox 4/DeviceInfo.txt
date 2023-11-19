@@ -1,0 +1,144 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .DeviceInfo - Name: .DeviceInfo
+ == PARAMETERS:
+  - Manufacturer (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - ManufacturerOUI (type: string)
+      Attributes: read_only
+      Validator: {'max': '6'}
+  - ModelName (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - Description (type: string)
+      Attributes: read_only
+      Validator: {'max': '256'}
+  - ProductClass (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - SerialNumber (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - HardwareVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - SoftwareVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - RescueVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - ModemFirmwareVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - EnabledOptions (type: string)
+      Attributes: read_only
+      Validator: {'max': '1024'}
+  - AdditionalHardwareVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - AdditionalSoftwareVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - SpecVersion (type: string)
+      Attributes: read_only
+      Validator: {'max': '16'}
+  - ProvisioningCode (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - UpTime (type: uint32)
+      Attributes: read_only
+  - FirstUseDate (type: date_time)
+      Attributes: read_only
+  - DeviceLog (type: string)
+      Attributes: read_only
+      Validator: {'max': '32768'}
+  - VendorConfigFileNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ManufacturerURL (type: string)
+      Attributes: read_only
+  - Country (type: string)
+      Attributes: persistent
+      Validator: {'max': '8'}
+  - ExternalIPAddress (type: string)
+      Attributes: read_only
+  - DeviceStatus (type: string)
+      Validator: ['Initializing', 'Up', 'Synchronized', 'Error', 'Disabled']
+  - NumberOfReboots (type: uint32)
+      Attributes: read_only, persistent
+  - UpgradeOccurred (type: bool)
+      Attributes: read_only
+  - ResetOccurred (type: bool)
+      Attributes: read_only
+  - RestoreOccurred (type: bool)
+      Attributes: read_only
+  - StandbyOccurred (type: bool)
+      Attributes: read_only
+  - X_SOFTATHOME-COM_AdditionalSoftwareVersions (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '4096'}
+  - BaseMAC (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - variant get()
+  - variant getPairingInfo()
+  - bool update()
+  - variant getDebugInformation((bool filedesc), (debug_options_t options))
+  - bool export((string fileName))
+
+=======================================================================
+OBJECT: DeviceInfo.VendorConfigFile - Name: DeviceInfo.VendorConfigFile
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '64'}
+  - Alias (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '64'}
+  - Version (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '16'}
+  - UseForBackupRestore (type: bool)
+      Attributes: read_only, persistent
+  - Date (type: date_time)
+      Attributes: read_only, persistent
+  - Description (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '256'}
+  - Affected (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+ == FUNCTIONS:
+  - void Restore(string URL, string Username, string Password, (uint32 FileSize), (string TargetFileName), (string CheckSumAlgorithm), (string CheckSum))
+  - void RestoreExtended(string URL, string Username, string Password, (string CACert), (string ClientCert), (string PrivateKey), (uint32 FileSize), (string TargetFileName), (string CheckSumAlgorithm), (string CheckSum))
+
+=======================================================================
+OBJECT: DeviceInfo.MemoryStatus - Name: DeviceInfo.MemoryStatus
+ == PARAMETERS:
+  - Total (type: uint32)
+      Attributes: read_only
+  - Free (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: DeviceInfo.MessageServer - Name: DeviceInfo.MessageServer
+ == PARAMETERS:
+  - ClientCertificate (type: string)
+      Attributes: read_only
+      Validator: {'max': '2048'}
+
+=======================================================================
+OBJECT: DeviceInfo.GatewayInfo - Name: DeviceInfo.GatewayInfo
+ == PARAMETERS:
+  - ManufacturerOUI (type: string)
+      Attributes: read_only
+      Validator: {'max': '6'}
+  - ProductClass (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+  - SerialNumber (type: string)
+      Attributes: read_only
+      Validator: {'max': '64'}
+

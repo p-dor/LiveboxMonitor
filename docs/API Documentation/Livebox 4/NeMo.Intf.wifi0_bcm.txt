@@ -1,0 +1,1333 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm - Name: NeMo.Intf.48
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - RadioStatus (type: string)
+      Attributes: read_only
+      Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
+  - LastChangeTime (type: uint32)
+      Attributes: read_only
+  - LastChange (type: uint32)
+      Attributes: read_only
+  - KickRoamingStation (type: bool)
+      Attributes: persistent
+  - VendorName (type: string)
+      Attributes: persistent
+  - VendorRadioName (type: string)
+      Attributes: persistent
+  - MaxBitRate (type: uint32)
+      Attributes: read_only
+  - AP_Mode (type: bool)
+      Attributes: persistent
+  - STA_Mode (type: bool)
+      Attributes: persistent
+  - WDS_Mode (type: bool)
+      Attributes: persistent
+  - WET_Mode (type: bool)
+      Attributes: persistent
+  - STASupported_Mode (type: bool)
+      Attributes: persistent
+  - WPS_Enrollee_Mode (type: bool)
+      Attributes: persistent
+  - SupportedFrequencyBands (type: string)
+      Attributes: read_only
+  - OperatingFrequencyBand (type: string)
+      Attributes: persistent
+      Validator: ['', 'AUTO', '2.4GHz', '5GHz', '6GHz']
+  - CurrentOperatingChannelBandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz']
+  - ChannelBandwidthChangeReason (type: string)
+      Attributes: read_only
+  - MaxChannelBandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz']
+  - AutoBandwidthSelectMode (type: string)
+      Validator: ['MaxAvailable', 'MaxCleared', 'Default']
+  - SupportedStandards (type: string)
+      Attributes: read_only
+  - OperatingStandards (type: string)
+      Attributes: persistent
+  - OperatingStandardsFormat (type: string)
+      Attributes: persistent
+      Validator: ['Legacy', 'Standard']
+  - PossibleChannels (type: string)
+      Attributes: read_only
+  - OperatingClass (type: uint32)
+      Attributes: read_only
+  - ChannelsInUse (type: string)
+      Attributes: read_only
+  - Channel (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '255'}
+  - TargetedChannel (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '255'}
+  - AutoChannelSupported (type: bool)
+      Attributes: read_only
+  - AutoChannelEnable (type: bool)
+      Attributes: persistent
+  - AutoBandwidthEnable (type: bool)
+      Attributes: persistent
+  - AutoChannelRefreshPeriod (type: uint32)
+      Attributes: persistent
+  - AutoChannelSelecting (type: bool)
+      Attributes: read_only
+  - ActiveAntennaCtrl (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '255'}
+  - RxChainCtrl (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '255'}
+  - TxChainCtrl (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '255'}
+  - OperatingChannelBandwidth (type: string)
+      Attributes: persistent
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Auto']
+  - ExtensionChannel (type: string)
+      Attributes: persistent
+      Validator: ['AboveControlChannel', 'BelowControlChannel', 'Auto']
+  - ObssCoexistenceEnable (type: bool)
+      Attributes: persistent
+  - GuardInterval (type: string)
+      Attributes: persistent
+      Validator: ['400nsec', '800nsec', 'Auto']
+  - MCS (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '31'}
+  - TransmitPowerSupported (type: string)
+      Attributes: read_only
+  - TransmitPower (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '100'}
+  - RetryLimit (type: uint8)
+      Attributes: persistent
+  - LongRetryLimit (type: uint8)
+      Attributes: persistent
+  - BeaconPeriod (type: uint32)
+      Attributes: persistent
+  - DTIMPeriod (type: uint32)
+      Attributes: persistent
+  - OfdmaEnable (type: bool)
+      Attributes: persistent
+  - HeCapsSupported (type: string)
+      Attributes: read_only
+  - HeCapsEnabled (type: string)
+      Attributes: persistent
+  - TargetWakeTimeEnable (type: bool)
+      Attributes: persistent
+  - IEEE80211hSupported (type: bool)
+      Attributes: read_only
+  - IEEE80211hEnabled (type: bool)
+      Attributes: read_only
+  - IEEE80211rSupported (type: bool)
+      Attributes: read_only
+  - IEEE80211kSupported (type: bool)
+      Attributes: read_only
+  - MultiAPTypesSupported (type: string)
+      Attributes: read_only
+  - RegulatoryDomain (type: string)
+      Attributes: persistent
+  - ImplicitBeamFormingSupported (type: bool)
+      Attributes: read_only
+  - ImplicitBeamFormingEnabled (type: bool)
+      Attributes: persistent
+  - ExplicitBeamFormingSupported (type: bool)
+      Attributes: read_only
+  - ExplicitBeamFormingEnabled (type: bool)
+      Attributes: persistent
+  - RxBeamformingCapsAvailable (type: string)
+      Attributes: read_only
+  - RxBeamformingCapsEnabled (type: string)
+  - TxBeamformingCapsAvailable (type: string)
+      Attributes: read_only
+  - TxBeamformingCapsEnabled (type: string)
+  - AirtimeFairnessEnabled (type: bool)
+      Attributes: persistent
+  - RxPowerSaveEnabled (type: bool)
+  - RxPowerSaveRepeaterEnable (type: bool)
+  - MultiUserMIMOEnabled (type: bool)
+      Attributes: persistent
+  - IntelligentAirtimeSchedulingEnable (type: bool)
+      Attributes: persistent
+  - DFSChannelChangeEventCounter (type: uint32)
+      Attributes: read_only
+  - DFSChannelChangeEventTimestamp (type: date_time)
+      Attributes: read_only
+  - ChannelChangeReason (type: string)
+      Attributes: read_only
+  - MaxAssociatedDevices (type: uint32)
+      Attributes: persistent
+  - ActiveAssociatedDevices (type: uint32)
+      Attributes: read_only
+  - BandwidthAdjustmentFactor (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '5'}
+  - SNRAdjustmentValue (type: int32)
+      Attributes: persistent
+  - DelayApUpPeriod (type: uint32)
+      Attributes: persistent
+  - ChannelLoad (type: uint16)
+      Attributes: read_only
+  - Interference (type: uint16)
+      Attributes: read_only
+  - Noise (type: int32)
+      Attributes: read_only
+  - AntennaDefect (type: bool)
+      Attributes: read_only
+  - ProbeRequestNotify (type: string)
+      Attributes: persistent
+      Validator: ['NoUpdate', 'First', 'FirstRSSI', 'Always', 'AlwaysRSSI']
+  - ProbeRequestAggregationTimer (type: int32)
+      Attributes: persistent
+  - RIFSEnabled (type: string)
+      Validator: ['Default', 'Auto', 'Off', 'On']
+  - PersistentEnable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void closeQuery((string subscriber), (string class))
+      Attributes: variadic
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id), (string state), (string returnValue), (list errors))
+      Attributes: variadic
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void setWLANConfig((string mibs))
+  - void setChanspec((uint16 channel), (string bandwidth), (string frequency), (string reason), (bool direct), (string reasonDetails))
+  - void apDelayUpDone()
+  - void startAutoChannelSelection()
+  - void getSpectrumInfo((bool update))
+  - void startScan((string SSID), (string channels), (string scanReason), (bool forceFast))
+  - void stopScan()
+  - list scan((string SSID), (string channels), (string scanReason), (bool forceFast))
+  - list getScanResults((variant results))
+  - int32 DFS_drvdbg((string dbg_action))
+  - void getProbeRequests((datetime fromTime))
+  - void getRadioAirStats()
+  - void getRadioStats()
+  - void getPerAntennaRssi()
+  - variant getLatestPower()
+  - variant getStatusHistogram()
+  - void startDFSclear()
+  - void stopDFSclear()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ULIntf - Name: NeMo.Intf.48.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.LLIntf - Name: NeMo.Intf.48.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Query - Name: NeMo.Intf.48.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.DFS - Name: NeMo.Intf.48.DFS
+ == PARAMETERS:
+  - FileLogLimit (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '20'}
+  - EventLogLimit (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '20'}
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.DFS.Event - Name: NeMo.Intf.48.DFS.Event
+ == PARAMETERS:
+  - TimeStamp (type: date_time)
+      Attributes: read_only
+  - Channel (type: uint32)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Auto']
+  - RadarZone (type: string)
+      Attributes: read_only
+      Validator: ['NONE', 'ETSI', 'STG', 'UNCLASSIFIED', 'FCC', 'JP']
+  - RadarIndex (type: uint8)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanResults - Name: NeMo.Intf.48.ScanResults
+ == PARAMETERS:
+  - NrCoChannelAP (type: uint16)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanResults.SurroundingChannels - Name: NeMo.Intf.48.ScanResults.SurroundingChannels
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanResults.SurroundingChannels.Accesspoint - Name: NeMo.Intf.48.ScanResults.SurroundingChannels.Accesspoint
+ == PARAMETERS:
+  - BSSID (type: string)
+      Attributes: read_only
+  - RSSI (type: int16)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanResults.SurroundingChannels.Accesspoint.SSID - Name: NeMo.Intf.48.ScanResults.SurroundingChannels.Accesspoint.SSID
+ == PARAMETERS:
+  - SSID (type: string)
+      Attributes: read_only
+  - Bandwidth (type: uint16)
+      Attributes: read_only
+  - BSSID (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.RadCaps - Name: NeMo.Intf.48.RadCaps
+ == PARAMETERS:
+  - Available (type: string)
+      Attributes: read_only
+  - Enabled (type: string)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void Enable((string Capability))
+  - void Disable((string Capability))
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt - Name: NeMo.Intf.48.ChannelMgt
+ == PARAMETERS:
+  - ACSVendorEnabled (type: bool)
+      Attributes: persistent
+  - CSAEnabled (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1', 'max': '1'}
+  - ACSVendorSupported (type: bool)
+      Attributes: read_only
+  - ChanspecShowing (type: string)
+      Attributes: read_only
+      Validator: ['Current', 'Target', 'Sync']
+  - ClearedDfsChannels (type: string)
+      Attributes: read_only
+  - RadarTriggeredDfsChannels (type: string)
+      Attributes: read_only
+  - RadioStatus (type: string)
+      Attributes: read_only
+      Validator: ['Unknown', 'Down', 'Up', 'FG_CAC', 'BG_CAC', 'BG_CAC_EXT', 'BG_CAC_NS', 'BG_CAC_EXT_NS', 'Configuring', 'Error', 'DeepPowerDown']
+  - Status (type: bool)
+      Attributes: read_only
+  - ChangeLogSize (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void performSelection()
+  - void retrievePerformanceLog((bool reset))
+  - void getLatestChannelMeasurement()
+  - void getAverageChannelMeasurement()
+  - void getBandScores()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.TargetChanspec - Name: NeMo.Intf.48.ChannelMgt.TargetChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.CurrentChanspec - Name: NeMo.Intf.48.ChannelMgt.CurrentChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.BgDfs - Name: NeMo.Intf.48.ChannelMgt.BgDfs
+ == PARAMETERS:
+  - Available (type: bool)
+      Attributes: read_only
+  - PreclearEnable (type: bool)
+      Attributes: persistent
+  - AllowProvider (type: bool)
+      Attributes: persistent
+  - Channel (type: int32)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Auto']
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Off', 'Idle', 'Clearing', 'ExtClearing']
+  - NrClearSuccess (type: uint32)
+      Attributes: read_only
+  - NrClearFailRadar (type: uint32)
+      Attributes: read_only
+  - NrClearFailOther (type: uint32)
+      Attributes: read_only
+  - NrClearSuccessExt (type: uint32)
+      Attributes: read_only
+  - NrClearFailRadarExt (type: uint32)
+      Attributes: read_only
+  - NrClearFailOtherExt (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void startBgDfsClear((int channel), (int bandwidth))
+  - void stopBgDfsClear()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.ChannelSelectParams - Name: NeMo.Intf.48.ChannelMgt.ChannelSelectParams
+ == PARAMETERS:
+  - DfsWeight (type: int32)
+      Attributes: persistent
+  - HighPowerWeight (type: int32)
+      Attributes: persistent
+  - ApCountPenalty (type: int32)
+      Attributes: persistent
+  - ApCountMaxPenalty (type: int32)
+      Attributes: persistent
+  - AdjacentApPenalty (type: int32)
+      Attributes: persistent
+  - AdjacentApMaxPenalty (type: int32)
+      Attributes: persistent
+  - AvailabilityWeight (type: int32)
+      Attributes: persistent
+  - MinAvailabilityWeight (type: int32)
+      Attributes: persistent
+  - PrimaryAvailabilityWeight (type: int32)
+      Attributes: persistent
+  - NoiseBonus (type: int32)
+      Attributes: persistent
+  - MaxNoiseBonus (type: int32)
+      Attributes: persistent
+  - PrimaryNoiseBonus (type: int32)
+      Attributes: persistent
+  - WeightDifference (type: int32)
+      Attributes: persistent
+  - LongWaitPenalty (type: int32)
+      Attributes: persistent
+  - LowPowerPenaltyOnFarSta (type: int32)
+      Attributes: persistent
+  - CurrBonusStaConnected (type: int32)
+      Attributes: persistent
+  - AvailCheckCutoff (type: int32)
+      Attributes: persistent
+  - AvailCheckMinPenalty (type: int32)
+      Attributes: persistent
+  - AvailCheckMaxPenalty (type: int32)
+      Attributes: persistent
+  - DfsTriggerPenalty (type: int32)
+      Attributes: persistent
+  - DfsTriggerMaxPenalty (type: int32)
+      Attributes: persistent
+  - DfsClearPenalty (type: int32)
+      Attributes: persistent
+  - ChannelIssuesPenalty (type: int32)
+      Attributes: persistent
+  - ChannelIssuesMaxPenalty (type: int32)
+      Attributes: persistent
+  - ChannelIssuesThreshold (type: int32)
+      Attributes: persistent
+  - ChannelIssuesTriggerThreshold (type: int32)
+      Attributes: persistent
+  - ChannelIssuesTriggerCooldown (type: int32)
+      Attributes: persistent
+  - BwBonus (type: uint32)
+      Attributes: persistent
+  - MoveUpThresholdVid (type: uint32)
+      Attributes: persistent
+  - MoveUpThresholdSta (type: uint32)
+      Attributes: persistent
+  - MoveUpThresholdNoSta (type: uint32)
+      Attributes: persistent
+  - BandwidthDowngradePenalty (type: uint32)
+      Attributes: persistent
+  - InterferenceUtilizationCost (type: uint32)
+      Attributes: persistent
+  - InterferenceSNRLevelCost (type: uint32)
+      Attributes: persistent
+  - InterferenceCostDivider (type: uint32)
+      Attributes: persistent
+  - InterferenceMaxPenalty (type: uint32)
+      Attributes: persistent
+  - ObssCoexFallbackApsThreshold (type: uint16)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.48.ChannelMgt.ChannelSelectConfig
+ == PARAMETERS:
+  - DynamicChannelSelection (type: bool)
+      Attributes: persistent
+  - BannedChannelList (type: string)
+      Attributes: persistent
+  - BannedChanspecList (type: string)
+      Attributes: persistent
+  - ChannelBonusList (type: string)
+      Attributes: persistent
+  - ChanSpecBonusList (type: string)
+      Attributes: persistent
+  - EnableDFSChannels (type: bool)
+      Attributes: persistent
+  - EnableLongWaitChannels (type: bool)
+      Attributes: persistent
+  - LongWaitOnlyWhenCleared (type: bool)
+      Attributes: persistent
+  - LongWaitAsComplement (type: bool)
+      Attributes: persistent
+  - Band160OnlyWhenCleared (type: bool)
+      Attributes: persistent
+  - BootChannel (type: int32)
+      Attributes: persistent
+  - DfsDoneTriggerProtection (type: uint32)
+      Attributes: persistent
+  - RelevantApRssiThreshold (type: int32)
+      Attributes: persistent
+  - RequireMaxCycle (type: bool)
+      Attributes: persistent
+  - PreferredChannels (type: bool)
+      Attributes: persistent
+  - NrMeasurements (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - TimeBetweenScans (type: uint32)
+      Attributes: persistent
+  - TimeBetweenUpdates (type: int32)
+      Attributes: persistent
+      Validator: {'min': '0'}
+  - FarStaRssiThreshold (type: int32)
+      Attributes: persistent
+  - DecayFactor (type: int32)
+      Attributes: persistent
+      Validator: {'max': '99'}
+  - BonusDecayFactor (type: int32)
+      Attributes: persistent
+      Validator: {'max': '99'}
+  - SwitchModeVideo (type: string)
+      Attributes: persistent
+      Validator: ['BOOT', 'S_DFS_R', 'DFS_R', 'SEAMLESS', 'ALWAYS']
+  - SwitchModeSta (type: string)
+      Attributes: persistent
+      Validator: ['BOOT', 'S_DFS_R', 'DFS_R', 'SEAMLESS', 'ALWAYS']
+  - SwitchModeSilent (type: string)
+      Attributes: persistent
+      Validator: ['BOOT', 'S_DFS_R', 'DFS_R', 'SEAMLESS', 'ALWAYS']
+  - SwitchModeNoSta (type: string)
+      Attributes: persistent
+      Validator: ['BOOT', 'S_DFS_R', 'DFS_R', 'SEAMLESS', 'ALWAYS']
+  - SwitchDelayVideo (type: int32)
+      Attributes: persistent
+  - SwitchDelaySta (type: int32)
+      Attributes: persistent
+  - SwitchDelayNoSta (type: int32)
+      Attributes: persistent
+  - AddCurrBonusAtBoot (type: string)
+      Attributes: persistent
+      Validator: ['NEVER', 'DFS_ONLY', 'ALWAYS']
+  - TxOpScanLimit (type: int32)
+      Attributes: persistent
+  - UsageScanLimit (type: int32)
+      Attributes: persistent
+  - NoiseThreshold (type: int32)
+      Attributes: persistent
+  - InterferenceThreshold (type: int32)
+      Attributes: persistent
+  - MoveUpEnable (type: bool)
+      Attributes: persistent
+  - MoveUpSwitchMode (type: string)
+      Attributes: persistent
+      Validator: ['NO_STA', 'STA', 'STA_SEAMLESS', 'SEAMLESS', 'ALWAYS']
+  - AlignChannelSwitchMode (type: string)
+      Attributes: persistent
+      Validator: ['NEVER', 'NO_STA', 'STA', 'ALWAYS']
+  - PerformPreclear (type: bool)
+      Attributes: persistent
+  - PreclearNormalMaxBusyLevel (type: uint32)
+      Attributes: persistent
+  - PreclearPrioMaxBusyLevel (type: uint32)
+      Attributes: persistent
+  - BandwidthDowngradeEnable (type: bool)
+      Attributes: persistent
+  - OnlyScanRelevantChannels (type: bool)
+      Attributes: persistent
+  - ScanDelayWhenBusy (type: uint32)
+      Attributes: persistent
+  - MaxNrDelaysNormalTraffic (type: int32)
+      Attributes: persistent
+  - MaxNrDelaysPrioTraffic (type: int32)
+      Attributes: persistent
+  - StaActiveMode (type: string)
+      Attributes: persistent
+      Validator: ['Presence', 'TrafficBusy']
+  - MaxScanDelayTime (type: uint32)
+      Attributes: persistent
+  - RequireLikelyTargetChannel (type: bool)
+      Attributes: persistent
+  - ObssCoexFallbackEnable (type: bool)
+      Attributes: persistent
+  - ObssCoexFallbackTimeout (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.Stats - Name: NeMo.Intf.48.ChannelMgt.Stats
+ == PARAMETERS:
+  - InitScan (type: uint32)
+      Attributes: read_only
+  - ManualScan (type: uint32)
+      Attributes: read_only
+  - CycleScan (type: uint32)
+      Attributes: read_only
+  - CycleSkipScans (type: uint32)
+      Attributes: read_only
+  - TriggeredScans (type: uint32)
+      Attributes: read_only
+  - LastScan (type: date_time)
+      Attributes: read_only
+  - ScanStarts (type: uint32)
+      Attributes: read_only
+  - ScanAborts (type: uint32)
+      Attributes: read_only
+  - InitScanAborts (type: uint32)
+      Attributes: read_only
+  - ScanFailures (type: uint32)
+      Attributes: read_only
+  - Evaluations (type: uint32)
+      Attributes: read_only
+  - CycleSkipEvaluations (type: uint32)
+      Attributes: read_only
+  - BlockedChannelChanges (type: uint32)
+      Attributes: read_only
+  - ChannelChanges (type: uint32)
+      Attributes: read_only
+  - LastChange (type: date_time)
+      Attributes: read_only
+  - ChannelChangesNoSta (type: uint32)
+      Attributes: read_only
+  - ChannelChangesSta (type: uint32)
+      Attributes: read_only
+  - ChannelChangesVideo (type: uint32)
+      Attributes: read_only
+  - LastChannelIssueTrigger (type: date_time)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void resetCsmStats()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.Band - Name: NeMo.Intf.48.ChannelMgt.Band
+ == PARAMETERS:
+  - Channel (type: uint32)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+      Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Auto']
+  - Noise (type: int32)
+      Attributes: read_only
+  - Availability (type: uint32)
+      Attributes: read_only
+  - NrAccessPoints (type: uint32)
+      Attributes: read_only
+  - NrAdjacentAccessPoints (type: uint32)
+      Attributes: read_only
+  - Bonus (type: uint32)
+      Attributes: read_only
+  - DfsCount (type: uint32)
+      Attributes: read_only
+  - State (type: string)
+      Attributes: read_only
+      Validator: ['OK', 'ERR_RADAR', 'ERR_DFS', 'ERR_LW', 'ERR_BLOCK']
+  - IsCurrent (type: bool)
+      Attributes: read_only
+  - Score (type: int32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ChannelMgt.ChannelChanges - Name: NeMo.Intf.48.ChannelMgt.ChannelChanges
+ == PARAMETERS:
+  - TimeStamp (type: date_time)
+      Attributes: read_only
+  - OldChannel (type: uint32)
+      Attributes: read_only
+  - OldBandwidth (type: string)
+      Attributes: read_only
+  - OldAvailability (type: uint32)
+      Attributes: read_only
+  - OldScore (type: uint32)
+      Attributes: read_only
+  - NewChannel (type: uint32)
+      Attributes: read_only
+  - NewBandwidth (type: string)
+      Attributes: read_only
+  - ChannelChangeReason (type: string)
+      Attributes: read_only
+  - ChannelBandwidthChangeReason (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats - Name: NeMo.Intf.48.Stats
+ == PARAMETERS:
+  - BytesSent (type: uint64)
+      Attributes: read_only
+  - BytesReceived (type: uint64)
+      Attributes: read_only
+  - PacketsSent (type: uint64)
+      Attributes: read_only
+  - PacketsReceived (type: uint64)
+      Attributes: read_only
+  - ErrorsSent (type: uint32)
+      Attributes: read_only
+  - RetransCount (type: uint32)
+      Attributes: read_only
+  - ErrorsReceived (type: uint32)
+      Attributes: read_only
+  - DiscardPacketsSent (type: uint32)
+      Attributes: read_only
+  - DiscardPacketsReceived (type: uint32)
+      Attributes: read_only
+  - UnicastPacketsSent (type: uint32)
+      Attributes: read_only
+  - UnicastPacketsReceived (type: uint32)
+      Attributes: read_only
+  - MulticastPacketsSent (type: uint32)
+      Attributes: read_only
+  - MulticastPacketsReceived (type: uint32)
+      Attributes: read_only
+  - BroadcastPacketsSent (type: uint32)
+      Attributes: read_only
+  - BroadcastPacketsReceived (type: uint32)
+      Attributes: read_only
+  - FailedRetransCount (type: uint32)
+      Attributes: read_only
+  - RetryCount (type: uint32)
+      Attributes: read_only
+  - MultipleRetryCount (type: uint32)
+      Attributes: read_only
+  - Temperature (type: int32)
+      Attributes: read_only
+      Validator: {'min': '-274'}
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmPacketsSent - Name: NeMo.Intf.48.Stats.WmmPacketsSent
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmFailedSent - Name: NeMo.Intf.48.Stats.WmmFailedSent
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmPacketsReceived - Name: NeMo.Intf.48.Stats.WmmPacketsReceived
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmFailedReceived - Name: NeMo.Intf.48.Stats.WmmFailedReceived
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmBytesSent - Name: NeMo.Intf.48.Stats.WmmBytesSent
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmFailedbytesSent - Name: NeMo.Intf.48.Stats.WmmFailedbytesSent
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmBytesReceived - Name: NeMo.Intf.48.Stats.WmmBytesReceived
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Stats.WmmFailedBytesReceived - Name: NeMo.Intf.48.Stats.WmmFailedBytesReceived
+ == PARAMETERS:
+  - AC_BE (type: uint32)
+      Attributes: read_only
+  - AC_BK (type: uint32)
+      Attributes: read_only
+  - AC_VO (type: uint32)
+      Attributes: read_only
+  - AC_VI (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.NaStaMonitor - Name: NeMo.Intf.48.NaStaMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getNaStationStats()
+  - void createNonAssociatedDevice((string macaddress))
+  - void deleteNonAssociatedDevice((string macaddress))
+  - void clearNonAssociatedDevices()
+  - void createMonitorDevice((string macaddress))
+  - void deleteMonitorDevice((string macaddress))
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.NaStaMonitor.RssiEventing - Name: NeMo.Intf.48.NaStaMonitor.RssiEventing
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - RssiInterval (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - AveragingFactor (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1', 'max': '1000'}
+  - Interval (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '100'}
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.NaStaMonitor.NonAssociatedDevice - Name: NeMo.Intf.48.NaStaMonitor.NonAssociatedDevice
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: read_only
+  - SignalStrength (type: int32)
+      Attributes: read_only
+      Validator: {'min': '-200', 'max': '0'}
+  - TimeStamp (type: date_time)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.NaStaMonitor.MonitorDevice - Name: NeMo.Intf.48.NaStaMonitor.MonitorDevice
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: read_only
+  - SignalStrength (type: int32)
+      Attributes: read_only
+      Validator: {'min': '-200', 'max': '0'}
+  - TimeStamp (type: date_time)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.EventCounter - Name: NeMo.Intf.48.EventCounter
+ == PARAMETERS:
+  - Key (type: string)
+      Attributes: read_only
+  - Value (type: int32)
+      Attributes: read_only
+  - LastOccurrence (type: date_time)
+      Attributes: read_only
+  - Info (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.InterferenceMonitor - Name: NeMo.Intf.48.InterferenceMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Supported (type: bool)
+      Attributes: read_only
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Down', 'Error', 'Up']
+  - MaxNumberOfEvents (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1', 'max': '100'}
+  - ChannelHistoryLength (type: uint32)
+      Attributes: persistent
+  - ChannelHistoryInterval (type: uint32)
+      Attributes: persistent
+  - EventNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getInterferenceInfo()
+  - void getInterferenceHistory()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.InterferenceMonitor.Event - Name: NeMo.Intf.48.InterferenceMonitor.Event
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only
+      Validator: ['UNKNOWN', 'MICROWAVE_OVEN', 'INVERTER_MICROWAVE_OVEN', 'ANALOG_CORDLESS_PHONE', 'BLUETOOTH', 'DSSS_CORDLESS_PHONE', 'WIRELESS_VIDEO_CAMERA', 'FHSS_CORDLESS_PHONE', 'DIGITAL_BABY_MONITOR_SINGLE_CARRIER', 'DIGITAL_BABY_MONITOR_FHSS', 'WIRELESS_GAME_CONTROLLER_PS2', 'POSSIBLE_INTERFERER', 'WIDEBAND_JAMMER', 'S_BAND_MOTION_DETECTOR', 'DIGITAL_BABY_MONITOR_DSSS', 'NARROWBAND_JAMMING_DEVICE', 'ZIGBEE_DEVICE', 'NANO_WIRELESS_MOUSE', 'AIRHORN_WIFI_SIGNAL_GENERATOR', 'WIRELESS_GAME_CONTROLLER_XBOX', 'WLAN_FH', 'CANOPY', 'WIRELESS_BRIDGE', 'LTEU_CLASSIFICATION']
+  - MaxStrength (type: int32)
+      Attributes: read_only
+      Validator: {'min': '-100', 'max': '-10'}
+  - AvgStrength (type: int32)
+      Attributes: read_only
+      Validator: {'min': '-100', 'max': '-10'}
+  - Frequency (type: uint32)
+      Attributes: read_only
+  - StartTime (type: date_time)
+      Attributes: read_only
+  - LastUpdate (type: date_time)
+      Attributes: read_only
+  - Duration (type: uint32)
+      Attributes: read_only
+  - ImpactedChannels (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.InterferenceMonitor.FullStats - Name: NeMo.Intf.48.InterferenceMonitor.FullStats
+ == PARAMETERS:
+  - NumberOfObservations (type: uint32)
+      Attributes: read_only
+  - Duration (type: uint32)
+      Attributes: read_only
+  - ObservationList (type: string)
+      Attributes: read_only
+  - DurationList (type: string)
+      Attributes: read_only
+  - AverageSNR (type: string)
+      Attributes: read_only
+  - Utilization (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.InterferenceMonitor.LastIntervalStats - Name: NeMo.Intf.48.InterferenceMonitor.LastIntervalStats
+ == PARAMETERS:
+  - NumberOfObservations (type: uint32)
+      Attributes: read_only
+  - Duration (type: uint32)
+      Attributes: read_only
+  - ObservationList (type: string)
+      Attributes: read_only
+  - DurationList (type: string)
+      Attributes: read_only
+  - AverageSNR (type: string)
+      Attributes: read_only
+  - Utilization (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.HealthMonitor - Name: NeMo.Intf.48.HealthMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Supported (type: bool)
+      Attributes: read_only
+  - Status (type: bool)
+      Attributes: read_only
+  - Interval (type: uint32)
+      Attributes: persistent
+  - EventsDetected (type: uint32)
+      Attributes: read_only
+  - EventsActive (type: uint32)
+      Attributes: read_only
+  - MaxNumberOfEvents (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '100'}
+  - EventNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.HealthMonitor.Event - Name: NeMo.Intf.48.HealthMonitor.Event
+ == PARAMETERS:
+  - StartTime (type: date_time)
+      Attributes: read_only
+  - StopTime (type: date_time)
+      Attributes: read_only
+  - NrObservations (type: uint32)
+      Attributes: read_only
+  - Type (type: string)
+      Attributes: read_only
+  - Description (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.HealthMonitor.EventType - Name: NeMo.Intf.48.HealthMonitor.EventType
+ == PARAMETERS:
+  - Type (type: string)
+      Attributes: read_only
+  - NrEvents (type: uint32)
+      Attributes: read_only
+  - NrObservations (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.HealthMonitor.Config - Name: NeMo.Intf.48.HealthMonitor.Config
+ == PARAMETERS:
+  - IdleStaCheckEnable (type: bool)
+  - IdleStaCheckTimeout (type: uint32)
+  - AntennaCheckEnable (type: bool)
+      Attributes: persistent
+  - AntennaCheckRequireSta (type: bool)
+  - AntennaCheckPowerLimit (type: string)
+  - AntennaCheckMaxFailNum (type: uint32)
+  - FastStaReconnectTimeout (type: int32)
+  - FastStaReconnectEventTimeout (type: int32)
+  - FastStaReconnectUserTime (type: uint32)
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.TrafficMonitor - Name: NeMo.Intf.48.TrafficMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - PrintMode (type: string)
+      Attributes: persistent
+      Validator: ['Off', 'Window', 'History']
+  - MonitorInterval (type: uint32)
+      Attributes: persistent
+  - ObsPerWindow (type: uint32)
+      Attributes: persistent
+  - NrWindows (type: uint32)
+      Attributes: persistent
+  - HistogramSize (type: uint32)
+      Attributes: persistent
+  - BusyLevelWindow (type: uint32)
+      Attributes: persistent
+  - TrafficBusyLevelList (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant getThroughputInfo()
+  - variant getTrafficInformation()
+  - variant getHistogram()
+  - variant getBusyStatus()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.AirstatsMonitor - Name: NeMo.Intf.48.AirstatsMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - PrintMode (type: string)
+      Attributes: persistent
+      Validator: ['Off', 'Window', 'History']
+  - PrintMask (type: string)
+      Attributes: persistent
+  - MonitorInterval (type: uint32)
+      Attributes: persistent
+  - ObsPerWindow (type: uint32)
+      Attributes: persistent
+  - NrWindows (type: uint32)
+      Attributes: persistent
+  - HistoryLength (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant getHistograms()
+  - variant getBucketHistory()
+  - variant getAvgHistory()
+  - variant getHistory()
+  - variant getRecentAverage()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.BackgroundScanner - Name: NeMo.Intf.48.BackgroundScanner
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - ScanInterval (type: uint32)
+      Attributes: persistent
+  - AveragingFactor (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getAirtimeResults()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.DriverConfig - Name: NeMo.Intf.48.DriverConfig
+ == PARAMETERS:
+  - RadioDownIfUnused (type: bool)
+      Attributes: persistent
+  - TxBurst (type: int32)
+      Attributes: persistent
+  - Amsdu (type: int32)
+      Attributes: persistent
+  - Ampdu (type: int32)
+      Attributes: persistent
+  - FragmentationThreshold (type: int32)
+      Attributes: persistent
+  - RtsThreshold (type: int32)
+      Attributes: persistent
+  - TxBeamforming (type: int32)
+      Attributes: persistent
+  - VhtOmnEnabled (type: int32)
+      Attributes: persistent
+  - BroadcastMaxBwCapability (type: int32)
+      Attributes: persistent
+  - TPCMode (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'Off', 'Ap', 'Sta', 'ApSta']
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.MACConfig - Name: NeMo.Intf.48.MACConfig
+ == PARAMETERS:
+  - NrBssRequired (type: uint32)
+      Attributes: persistent
+  - UseBaseMacOffset (type: bool)
+      Attributes: persistent
+  - BaseMacOffset (type: int64)
+      Attributes: persistent
+  - UseLocalBitForGuest (type: bool)
+      Attributes: persistent
+  - LocalGuestMacOffset (type: int64)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.DriverStatus - Name: NeMo.Intf.48.DriverStatus
+ == PARAMETERS:
+  - DriverEnable (type: bool)
+      Attributes: read_only
+  - NrTxAntenna (type: int32)
+      Attributes: read_only
+  - NrRxAntenna (type: int32)
+      Attributes: read_only
+  - NrActiveTxAntenna (type: int32)
+      Attributes: read_only
+  - NrActiveRxAntenna (type: int32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanConfig - Name: NeMo.Intf.48.ScanConfig
+ == PARAMETERS:
+  - MaxChannelsPerScan (type: int32)
+      Attributes: persistent
+  - ScanChannelCount (type: int32)
+      Attributes: persistent
+  - ScanRequestInterval (type: int32)
+      Attributes: persistent
+  - HomeTime (type: int32)
+      Attributes: persistent
+  - ActiveChannelTime (type: int32)
+      Attributes: persistent
+  - PassiveChannelTime (type: int32)
+      Attributes: persistent
+  - BlockScanMode (type: string)
+      Attributes: persistent
+      Validator: ['Disable', 'Prio', 'All']
+  - FastScanReasons (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanStats - Name: NeMo.Intf.48.ScanStats
+ == PARAMETERS:
+  - NrScanRequested (type: uint32)
+      Attributes: read_only
+  - NrScanDone (type: uint32)
+      Attributes: read_only
+  - NrScanError (type: uint32)
+      Attributes: read_only
+  - NrScanBlocked (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.ScanStats.ScanReason - Name: NeMo.Intf.48.ScanStats.ScanReason
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - NrScanRequested (type: uint32)
+      Attributes: read_only
+  - NrScanDone (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor - Name: NeMo.Intf.48.Vendor
+ == PARAMETERS:
+  - Interference (type: int32)
+      Attributes: persistent
+  - SupportedFrequencyBands (type: string)
+  - RegulatoryDomain (type: string)
+  - LesiEnabled (type: bool)
+  - SupportedVAPs (type: uint32)
+  - Diversity11b (type: int32)
+  - McastRegenBssEnable (type: int32)
+  - MaxNumberfOfMsdu (type: int32)
+  - SSW_MeshSync_TO (type: uint32)
+  - PsPretendRetryLimit (type: uint32)
+      Attributes: persistent
+  - ErrorState (type: bool)
+  - BgDfsUsageThreshold (type: uint32)
+      Attributes: persistent
+  - NaStaMonInterval (type: uint32)
+      Validator: {'min': '100'}
+  - FilterBcmEvents (type: bool)
+  - DhdPollTime (type: int32)
+      Attributes: persistent
+  - LogOnFlowringStuck (type: bool)
+      Attributes: persistent
+  - DhdFreeMemThreshold (type: uint32)
+      Attributes: persistent
+  - PhyEDThreshold (type: int32)
+      Attributes: persistent
+  - PhyTxShaper (type: int8)
+  - SignalStrengthPolicy (type: string)
+      Validator: ['MaxChains', 'AvgChains']
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.WlMsgLevel - Name: NeMo.Intf.48.Vendor.WlMsgLevel
+ == PARAMETERS:
+  - Supported (type: string)
+      Attributes: read_only
+  - Enabled (type: string)
+  - HexBitMask (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.DhdMsgLevel - Name: NeMo.Intf.48.Vendor.DhdMsgLevel
+ == PARAMETERS:
+  - Supported (type: string)
+      Attributes: read_only
+  - Enabled (type: string)
+  - HexBitMask (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.Trap - Name: NeMo.Intf.48.Vendor.Trap
+ == PARAMETERS:
+  - LastTimeStamp (type: string)
+      Attributes: persistent
+  - Count (type: uint32)
+  - MaxDongleReloadCount (type: uint32)
+      Attributes: persistent
+  - MinDongleReloadInterval (type: uint32)
+      Attributes: persistent
+  - LogTrap (type: bool)
+      Attributes: persistent
+  - OverWriteLog (type: bool)
+      Attributes: persistent
+  - LogTrapToExt (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool reportTrap()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.Trap.MacDbgDumpLevel - Name: NeMo.Intf.48.Vendor.Trap.MacDbgDumpLevel
+ == PARAMETERS:
+  - Supported (type: string)
+      Attributes: read_only
+  - Enabled (type: string)
+  - HexBitMask (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.Logging - Name: NeMo.Intf.48.Vendor.Logging
+ == PARAMETERS:
+  - MaxStateLogs (type: uint32)
+      Attributes: persistent
+  - OverwriteStateLogs (type: bool)
+      Attributes: persistent
+  - NumberOfStateLogs (type: uint32)
+  - AddSocramToStateLog (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void logState()
+  - void doneLog()
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.DhdMemUse - Name: NeMo.Intf.48.Vendor.DhdMemUse
+ == PARAMETERS:
+  - HeapSize (type: uint32)
+      Attributes: read_only
+  - HeapFree (type: uint32)
+      Attributes: read_only
+  - AllocFailCount (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.AirIQScanner - Name: NeMo.Intf.48.Vendor.AirIQScanner
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Error', 'Stopped', 'Running']
+  - SupportedFrequencyBands (type: string)
+      Attributes: read_only
+  - ScanDwellTime (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_bcm.Vendor.HealthMonitor - Name: NeMo.Intf.48.Vendor.HealthMonitor
+ == PARAMETERS:
+  - CounterIssueMinTime (type: uint32)
+  - CounterIssueEndDelay (type: uint32)
+

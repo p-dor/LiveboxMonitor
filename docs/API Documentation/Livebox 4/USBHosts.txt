@@ -1,0 +1,13 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .USBHosts - Name: .USBHosts
+ == PARAMETERS:
+  - PortNameNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getDevices((list deviceClass))
+  - void import()
+  - void export()
+  - bool enableUSB3(bool enable)
+

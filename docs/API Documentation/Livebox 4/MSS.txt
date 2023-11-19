@@ -1,0 +1,106 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .MSS - Name: .MSS
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Mode (type: string)
+      Attributes: persistent
+      Validator: ['Unconfigured', 'Master', 'Slave', 'Autoconfigure']
+  - PreviousMode (type: string)
+      Attributes: read_only, persistent
+      Validator: ['None', 'Master', 'Slave']
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'MasterStarting', 'MasterDisconnected', 'Master', 'SlaveScanning', 'SlaveStarting', 'SlaveWaiting', 'Slave', 'Error', 'Selecting', 'WaitingForNetwork']
+  - NetworkId (type: string)
+      Attributes: read_only, persistent
+ == FUNCTIONS:
+  - void enableMSS(bool enable)
+  - void setMaster()
+  - void setSlave()
+  - void setAutoconfiguration()
+  - void export()
+  - void import()
+
+=======================================================================
+OBJECT: MSS.Config - Name: MSS.Config
+ == PARAMETERS:
+  - AdvertisedName (type: string)
+      Attributes: read_only, persistent
+  - MasterElectionTimeout (type: uint32)
+      Attributes: read_only, persistent
+      Validator: {'min': '5', 'max': '1000'}
+  - SlaveElectionTimeout (type: uint32)
+      Attributes: read_only, persistent
+      Validator: {'min': '5', 'max': '1000'}
+  - DefaultElectionTimeout (type: uint32)
+      Attributes: read_only, persistent
+      Validator: {'min': '5', 'max': '1000'}
+  - ConnectionTimeout (type: uint32)
+      Attributes: read_only, persistent
+      Validator: {'min': '5', 'max': '1000'}
+  - AllowMasterNoUplink (type: bool)
+      Attributes: read_only, persistent
+  - AllowMasterOnWiFi (type: bool)
+      Attributes: read_only, persistent
+  - StartPairingImmediately (type: bool)
+      Attributes: read_only, persistent
+  - AutoPairingEnable (type: bool)
+      Attributes: persistent
+  - EnableReelection (type: bool)
+      Attributes: read_only, persistent
+  - MasterIPAddress (type: string)
+      Attributes: read_only
+  - MasterDNSSDName (type: string)
+      Attributes: read_only
+  - ConnectPort (type: uint16)
+      Attributes: read_only
+  - Interface (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: MSS.Certificates - Name: MSS.Certificates
+ == PARAMETERS:
+  - RootCACert (type: string)
+      Attributes: read_only
+  - ClientCert (type: string)
+      Attributes: read_only
+  - ClientKey (type: string)
+      Attributes: read_only
+  - CAPath (type: string)
+      Attributes: read_only
+  - ClientCertPath (type: string)
+      Attributes: read_only
+  - ClientKeyPath (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: MSS.Debug - Name: MSS.Debug
+ == PARAMETERS:
+  - LastEvent (type: string)
+      Attributes: read_only
+  - ErrorLogMaxNumberOfEntries (type: uint32)
+      Attributes: persistent
+  - ErrorLogNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void inject(string event, (variant data))
+
+=======================================================================
+OBJECT: MSS.Debug.ErrorLog - Name: MSS.Debug.ErrorLog
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only, persistent
+  - ErrorMessage (type: string)
+      Attributes: read_only, persistent
+  - State (type: string)
+      Attributes: read_only, persistent
+  - LastEvent (type: string)
+      Attributes: read_only, persistent
+  - TimeOccurred (type: date_time)
+      Attributes: read_only, persistent
+  - MACAddress (type: string)
+      Attributes: read_only, persistent
+

@@ -1,0 +1,24 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .Locations - Name: .Locations
+ == FUNCTIONS:
+  - void addLocation(string key, string name, (string description))
+  - void removeLocation(string key)
+  - void setSection(string location, string section)
+  - void removeSection(string location, string section)
+  - list getComposition(string location, (string flags))
+  - list getLocations(string location)
+
+=======================================================================
+OBJECT: Locations.Location - Name: Locations.Location
+ == PARAMETERS:
+  - Key (type: string)
+      Attributes: read_only, persistent
+  - Name (type: string)
+      Attributes: read_only, persistent
+  - Description (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get((string flags))
+

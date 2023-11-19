@@ -1,0 +1,16 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .IoTService - Name: .IoTService
+ == PARAMETERS:
+  - MaximumConnectionTime (type: uint32)
+      Attributes: persistent
+  - ScheduledConnectionTime (type: date_time)
+      Attributes: persistent
+  - Reset (type: bool)
+      Attributes: volatile
+ == FUNCTIONS:
+  - int32 setStatus(string status)
+  - int32 getStatus((status_t status))
+  - int32 getUUID((string uniqueIdentifier))
+

@@ -1,0 +1,15 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .OrangeServices - Name: .OrangeServices
+ == FUNCTIONS:
+  - string getSubscriptionStatus(bool refresh)
+
+=======================================================================
+OBJECT: OrangeServices.Services - Name: OrangeServices.Services
+ == PARAMETERS:
+  - Name (type: string)
+  - SubscriptionStatus (type: string)
+      Validator: ['Subscribed', 'Unknown', 'NotSubscribed']
+  - Option (type: bool)
+

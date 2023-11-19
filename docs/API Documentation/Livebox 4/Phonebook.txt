@@ -1,0 +1,29 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .Phonebook - Name: .Phonebook
+ == FUNCTIONS:
+  - string addContactAndGenUUID(contact_t contact)
+  - bool addContact(contact_t contact)
+  - bool addContacts(list contacts, (list result))
+  - bool removeContactByUniqueID(string uniqueID)
+  - bool removeContactByVref(string vref)
+  - bool removeContactByFormattedName(string formattedName)
+  - bool removeContact(string formattedName)
+  - bool removeAllContacts()
+  - contact_t getContactByUniqueID(string uniqueID)
+  - contact_t getContactByFormattedName(string formattedName)
+  - contact_t getContactByVref(string vref)
+  - contact_t getContact(string formattedName)
+  - contact_t getContactByNumber(string number)
+  - contact_t getContactByUsername(string username)
+  - list getAllContacts()
+  - uint32 getNumberOfContacts()
+  - uint32 getAvailableNumberOfContacts()
+  - uint32 getMaxNumberOfContacts()
+  - bool checkContactExistsWithUniqueID(string uniqueID)
+  - bool modifyContactByUniqueID(string uniqueID, contact_t contact)
+  - bool modifyContactByFormattedName(string formattedName, contact_t contact)
+  - bool modifyContact((string formattedName), (contact_t contact))
+  - bool disableCardDavAndCleanupEntries()
+

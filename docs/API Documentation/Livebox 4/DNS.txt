@@ -1,0 +1,31 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .DNS - Name: .DNS
+ == FUNCTIONS:
+  - list getDNSServers(string flag)
+
+=======================================================================
+OBJECT: DNS.Server - Name: DNS.Server
+
+=======================================================================
+OBJECT: DNS.Server.Route - Name: DNS.Server.Route
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabled', 'Error']
+  - DNS (type: string)
+      Attributes: persistent
+  - SRC (type: string)
+      Attributes: persistent
+  - Srcmask (type: uint8)
+      Attributes: persistent
+  - Domain (type: string)
+      Attributes: persistent
+  - Metric (type: uint8)
+      Attributes: persistent
+  - Intf (type: string)
+      Attributes: persistent
+  - Flags (type: uint32)
+      Attributes: persistent
+

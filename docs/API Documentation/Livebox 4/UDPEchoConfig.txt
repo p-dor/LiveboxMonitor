@@ -1,0 +1,11 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+{
+    "errors": [
+        {
+            "error": 13,
+            "description": "Permission denied",
+            "info": "UDPEchoConfig"
+        }
+    ]
+}

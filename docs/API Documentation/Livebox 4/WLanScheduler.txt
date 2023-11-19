@@ -1,0 +1,35 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .WLanScheduler - Name: .WLanScheduler
+ == FUNCTIONS:
+  - bool setState((string ID), (string state))
+      Attributes: message
+
+=======================================================================
+OBJECT: WLanScheduler.Schedules - Name: WLanScheduler.Schedules
+ == PARAMETERS:
+  - ID (type: string)
+      Attributes: read_only, persistent
+  - Name (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+  - Base (type: string)
+      Attributes: persistent
+      Validator: ['Once', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly']
+  - Default (type: string)
+      Attributes: persistent
+  - Override (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: WLanScheduler.Schedules.Entry - Name: WLanScheduler.Schedules.Entry
+ == PARAMETERS:
+  - State (type: string)
+      Attributes: persistent
+  - Begin (type: uint32)
+      Attributes: persistent
+  - End (type: uint32)
+      Attributes: persistent
+

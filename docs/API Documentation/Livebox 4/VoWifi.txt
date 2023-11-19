@@ -1,0 +1,54 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .VoWifi - Name: .VoWifi
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error']
+ == FUNCTIONS:
+  - void configureBusyCall((uint8 pollingInterval), (uint8 pollingMultiple), (uint8 busyThreshold))
+  - void export()
+  - void import()
+
+=======================================================================
+OBJECT: VoWifi.VPNServer - Name: VoWifi.VPNServer
+ == PARAMETERS:
+  - FQDN (type: string)
+      Attributes: persistent
+      Validator: {'max': '256'}
+  - ResolvedIPs (type: string)
+      Attributes: read_only
+  - IPResolveInterval (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: VoWifi.BusyCall - Name: VoWifi.BusyCall
+ == PARAMETERS:
+  - PollingInterval (type: uint8)
+      Attributes: persistent
+  - PollingMultiple (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - BusyThreshold (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '1'}
+
+=======================================================================
+OBJECT: VoWifi.Devices - Name: VoWifi.Devices
+ == PARAMETERS:
+  - DeviceID (type: string)
+      Attributes: persistent
+  - TunnelIsActive (type: bool)
+      Attributes: read_only
+  - CallIsBusy (type: bool)
+      Attributes: read_only
+  - NbrOfCalls (type: uint32)
+      Attributes: read_only, persistent
+  - NbrOfSuccessfullTunnelAttempts (type: uint32)
+      Attributes: read_only, persistent
+  - NbrOfFailedTunnelAttempts (type: uint32)
+      Attributes: read_only, persistent
+

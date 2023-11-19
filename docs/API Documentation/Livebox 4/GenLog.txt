@@ -1,0 +1,9 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .GenLog - Name: .GenLog
+ == FUNCTIONS:
+  - variant readLogs(int32 nrecords, (string source), (string topic), (datetime since), (datetime until))
+  - variant nextLogs(variant iterator, int32 nrecords)
+  - void clearLogs(string topic, (string source))
+

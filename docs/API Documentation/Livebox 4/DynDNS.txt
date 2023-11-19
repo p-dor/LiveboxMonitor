@@ -1,0 +1,21 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .DynDNS - Name: .DynDNS
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - EnableOnCgnat (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getServices()
+  - list getHosts()
+  - bool addHost((string service), (string hostname), (string username), (string password), (bool enable))
+  - bool delHost((string hostname))
+  - void setGlobalEnable((bool enable))
+  - bool getGlobalEnable()
+  - void setEnableOnCgnat((bool value))
+  - bool getEnableOnCgnat()
+

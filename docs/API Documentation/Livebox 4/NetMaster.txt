@@ -1,0 +1,154 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .NetMaster - Name: .NetMaster
+ == PARAMETERS:
+  - EnableInterfaces (type: bool)
+      Attributes: persistent
+  - EnableIPv6 (type: bool)
+      Attributes: persistent
+  - IPv6PrefixMode (type: string)
+      Attributes: persistent
+      Validator: ['DHCPv6', 'RA', 'RAandDHCPv6']
+  - DisablePhysicalInterfaces (type: bool)
+      Attributes: persistent
+  - WANMode (type: string)
+ == FUNCTIONS:
+  - map getInterfaceConfig(string name)
+  - void addWANMode(string wanmode)
+  - void delWANMode(string wanmode)
+  - void renameWANMode(string wanmode, (string new_wanmode))
+  - void export((string filename))
+  - void import()
+
+=======================================================================
+OBJECT: NetMaster.LANConfig - Name: NetMaster.LANConfig
+ == PARAMETERS:
+  - LANMode (type: string)
+      Attributes: persistent
+  - ValidSubnets (type: string)
+      Attributes: persistent
+  - InvalidSubnets (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void setLANMode(string lanmode)
+  - bool import()
+  - bool export()
+  - bool enableIPv6((bool IPv6Enable))
+  - string setIPv6PrefixMode((string IPv6PrefixMode))
+
+=======================================================================
+OBJECT: NetMaster.LAN - Name: NetMaster.LAN
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void addBridge(string Name)
+  - void removeBridge(string Name)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge - Name: NetMaster.LAN.Bridge
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - NemoName (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void setIPv4(string Address, uint8 PrefixLength, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
+  - void getIPv4((string Address), (uint8 PrefixLength), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
+  - void setIPv4Configuration(string Name, string Address, uint8 PrefixLength, (bool Enable), (bool AllowPublic), (bool NATEnable))
+  - void setIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
+  - void getIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
+  - void addIntf(string Intf)
+  - void removeIntf(string Intf)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.LLIntf - Name: NetMaster.LAN.Bridge.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.IPv4 - Name: NetMaster.LAN.Bridge.IPv4
+ == PARAMETERS:
+  - Enable (type: bool)
+  - NemoName (type: string)
+      Attributes: read_only
+  - Address (type: string)
+  - PrefixLength (type: uint8)
+      Validator: {'min': '0', 'max': '30'}
+  - NATEnable (type: bool)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.DHCPv4 - Name: NetMaster.LAN.Bridge.DHCPv4
+ == PARAMETERS:
+  - Pool (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - MinAddress (type: string)
+  - MaxAddress (type: string)
+  - DNSServers (type: string)
+  - NTPServers (type: string)
+  - DomainSearchList (type: string)
+  - LeaseTime (type: uint32)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.IPv6 - Name: NetMaster.LAN.Bridge.IPv6
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Address (type: string)
+  - PrefixLength (type: string)
+  - Intf (type: string)
+  - SubnetOffset (type: uint8)
+  - DNSServers (type: string)
+  - NTPServers (type: string)
+  - DNSMode (type: string)
+      Validator: ['GUA', 'LLA', 'GUA_LLA']
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.IPv6.DHCPv6 - Name: NetMaster.LAN.Bridge.IPv6.DHCPv6
+ == PARAMETERS:
+  - Pool (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - IAPDEnable (type: bool)
+  - IAPDPrefixLength (type: uint32)
+      Validator: {'min': '0', 'max': '62'}
+  - IAPDPrefixMask (type: string)
+  - IAPDLeasePrefixLength (type: uint32)
+      Validator: {'min': '0', 'max': '64'}
+  - IANAEnable (type: bool)
+  - DefaultValidLifetime (type: int32)
+      Attributes: persistent
+  - DefaultPreferredLifetime (type: int32)
+      Attributes: persistent
+  - DeprecatedTimeout (type: int32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NetMaster.DR - Name: NetMaster.DR
+ == PARAMETERS:
+  - DefaultLifetime (type: uint32)
+      Attributes: persistent
+  - DNSSLLifetime (type: uint32)
+      Attributes: persistent
+  - RDNSSLifetime (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NetMaster.IPv4 - Name: NetMaster.IPv4
+
+=======================================================================
+OBJECT: NetMaster.IPv4.DSLite - Name: NetMaster.IPv4.DSLite
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - InterfaceSettingNumberOfEntries (type: uint32)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: NetMaster.IPv4.DSLite.InterfaceSetting - Name: NetMaster.IPv4.DSLite.InterfaceSetting
+ == PARAMETERS:
+  - EndpointName (type: string)
+  - Enable (type: bool)
+      Attributes: persistent
+

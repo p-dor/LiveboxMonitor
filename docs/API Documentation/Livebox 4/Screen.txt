@@ -1,0 +1,8 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .Screen - Name: .Screen
+ == FUNCTIONS:
+  - void setShowWifiPassword((bool Enable))
+  - bool getShowWifiPassword()
+

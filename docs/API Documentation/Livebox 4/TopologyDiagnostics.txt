@@ -1,0 +1,55 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
+ == PARAMETERS:
+  - DiagnosticsState (type: string)
+  - DiscoveryMode (type: string)
+      Attributes: persistent
+      Validator: ['Relative', 'Absolute']
+  - Timeout (type: uint32)
+      Attributes: persistent
+  - LLTDIcon (type: bool)
+      Attributes: persistent
+  - PeriodicEnable (type: bool)
+      Attributes: persistent
+  - PeriodicInterval (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '30'}
+  - LastUpdate (type: date_time)
+      Attributes: read_only, persistent
+  - AutomaticUpload (type: string)
+      Attributes: persistent
+      Validator: ['Local', 'Remote', 'Both', 'None']
+  - BootTimer (type: uint32)
+      Attributes: persistent
+  - CustomerAuthorization (type: bool)
+      Attributes: persistent
+  - APIVersion (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant data))
+  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile))
+  - bool uploadTopology()
+  - bool enableAutomaticUpload((bool enable))
+  - bool isAutomaticUploadEnabled()
+  - bool setCustomerAuthorization(bool allowed)
+  - void export()
+  - void import()
+
+=======================================================================
+OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Uploaded', 'Error', 'Complete']
+  - LastUploadTime (type: date_time)
+      Attributes: read_only
+  - DiagnosticMode (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool setState(string state)
+

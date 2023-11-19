@@ -1,0 +1,22 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .PnP - Name: .PnP
+ == PARAMETERS:
+  - Status (type: string)
+      Validator: ['Idle', 'Disabled', 'Running', 'Error', 'OK', 'Timeout']
+  - LastName (type: string)
+      Attributes: persistent
+  - FirstName (type: string)
+      Attributes: persistent
+  - MobilePhoneNumber (type: string)
+      Attributes: persistent
+      Validator: {'max': '10'}
+  - ValidationDomain (type: string)
+  - ConnectionMode (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - list get()
+

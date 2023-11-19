@@ -1,0 +1,7 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .WOL - Name: .WOL
+ == FUNCTIONS:
+  - void sendWakeOnLan(string hostID, (string intf), (string password), (bool broadcast), (uint32 retries), (uint32 interval))
+

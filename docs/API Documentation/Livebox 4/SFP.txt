@@ -1,0 +1,56 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .SFP - Name: .SFP
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['No_detected', 'Detected', 'OrangeSFP', 'No_OrangeSFP', 'Optical_NOK', 'Optical_OK', 'RequestID', 'ONT_Ready', 'ONT_NOK', 'Unknown']
+  - LocalRegistrationID (type: string)
+      Attributes: read_only, persistent
+  - DeviceState (type: uint8)
+      Attributes: read_only
+  - FirmwareUpgrade (type: uint8)
+      Attributes: read_only
+  - ModelName (type: string)
+      Attributes: read_only
+  - HardwareVersion (type: string)
+      Attributes: read_only
+  - ProductClass (type: uint8)
+      Attributes: read_only
+  - Orange (type: bool)
+      Attributes: read_only
+  - Software1Version (type: string)
+      Attributes: read_only
+  - Software1Status (type: uint8)
+      Attributes: read_only
+  - Software2Version (type: string)
+      Attributes: read_only
+  - Software2Status (type: uint8)
+      Attributes: read_only
+  - Manufacturer (type: string)
+      Attributes: read_only
+  - SerialNumber (type: string)
+      Attributes: read_only
+  - ONTReady (type: bool)
+      Attributes: read_only
+  - OperatingState (type: uint8)
+      Attributes: read_only
+  - HostCommunication (type: uint8)
+      Attributes: read_only
+  - PonID (type: string)
+      Attributes: read_only
+  - RegistrationID (type: string)
+      Attributes: read_only
+  - OpticalSignalLevel (type: int16)
+      Attributes: read_only
+  - TransmitOpticalLevel (type: int16)
+      Attributes: read_only
+  - ChipsetTemperature (type: int16)
+      Attributes: read_only
+  - Timer (type: uint8)
+  - Retry (type: uint8)
+ == FUNCTIONS:
+  - bool setRegistrationID(string RegistrationID)
+  - variant get()
+

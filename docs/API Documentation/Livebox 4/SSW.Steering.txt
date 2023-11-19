@@ -1,0 +1,135 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: SSW.Steering - Name: SSW.Steering
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Down', 'Up']
+ == FUNCTIONS:
+  - void getNodeBackhaul((string MAC))
+  - void getUplinkInfo((string MAC))
+  - void getRoamInfo((string MAC))
+  - stationInfo getStationStats((string MAC))
+  - void getAllStationsCompactInfo()
+  - void getStationAssocLog((string MAC))
+  - list getAllStations((string ap))
+  - stationsStandards getAllStationsStandards((string ap))
+  - bool deleteStationInfo((string MAC))
+  - void setModeConfig((string mode), (string targetBroker))
+  - void getTopologyScoreInfo()
+
+=======================================================================
+OBJECT: SSW.Steering.MasterConfig - Name: SSW.Steering.MasterConfig
+ == PARAMETERS:
+  - SyncEnableField (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: SSW.Steering.ExceptionList - Name: SSW.Steering.ExceptionList
+ == PARAMETERS:
+  - MaxNumberOfExceptions (type: uint32)
+      Attributes: persistent
+  - DeployExceptions (type: bool)
+      Attributes: persistent
+  - VideoAutoExceptType (type: string)
+      Attributes: persistent
+      Validator: ['Legacy', 'Auto', 'Force', 'ForceNoSteer']
+  - SlaveAutoExceptType (type: string)
+      Attributes: persistent
+      Validator: ['Legacy', 'Auto', 'Force', 'ForceNoSteer']
+ == FUNCTIONS:
+  - void createGmapAutoException(string query, (string target), (string type), (bool persistent), (string key))
+  - void deleteGmapAutoExceptionByKey(string key)
+  - void deleteGmapAutoExceptionByQuery(string query)
+  - void createException((string MAC), (uint8 mask), (string target), (string type))
+  - void deleteException((string MAC), (uint8 mask))
+
+=======================================================================
+OBJECT: SSW.Steering.ExceptionList.Station - Name: SSW.Steering.ExceptionList.Station
+ == PARAMETERS:
+  - MAC (type: string)
+      Attributes: persistent
+  - Mask (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '6'}
+  - Type (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'Force', 'ForceNoSteer']
+  - Target (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: SSW.Steering.QoSUpgrade - Name: SSW.Steering.QoSUpgrade
+ == PARAMETERS:
+  - Target (type: string)
+      Attributes: persistent
+      Validator: ['ftos', 'wmm-mark']
+ == FUNCTIONS:
+  - void createRule(string mac, (uint8 tid))
+  - void deleteRule(string mac)
+
+=======================================================================
+OBJECT: SSW.Steering.QoSUpgrade.Rules - Name: SSW.Steering.QoSUpgrade.Rules
+ == PARAMETERS:
+  - Query (type: string)
+      Attributes: persistent
+  - TID (type: uint8)
+      Attributes: persistent
+      Validator: {'min': '0', 'max': '7'}
+
+=======================================================================
+OBJECT: SSW.Steering.QoSUpgrade.Rules.Station - Name: SSW.Steering.QoSUpgrade.Rules.Station
+ == PARAMETERS:
+  - MACAddress (type: string)
+  - IPv4Address (type: string)
+  - IPv6Address (type: string)
+
+=======================================================================
+OBJECT: SSW.Steering.Policy - Name: SSW.Steering.Policy
+ == PARAMETERS:
+  - BandSteeringStatus (type: bool)
+      Attributes: read_only
+  - ClientSteeringStatus (type: bool)
+      Attributes: read_only
+  - NrHandovers (type: uint32)
+      Attributes: read_only
+  - NrHandbacks (type: uint32)
+      Attributes: read_only
+  - NrFalseHandovers (type: uint32)
+      Attributes: read_only
+  - NrTriggers (type: uint32)
+      Attributes: read_only
+  - NrSuccess (type: uint32)
+      Attributes: read_only
+  - NrFail (type: uint32)
+      Attributes: read_only
+  - NrAbort (type: uint32)
+      Attributes: read_only
+  - NrFastFail (type: uint32)
+      Attributes: read_only
+  - AvgReconnectTime (type: uint32)
+      Attributes: read_only
+  - AvgSteeringTime (type: uint32)
+      Attributes: read_only
+  - NrReconnectMeasurements (type: uint32)
+      Attributes: read_only
+  - AvgFailReconnectTime (type: uint32)
+      Attributes: read_only
+  - MaxSteerReached (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: SSW.Steering.ExternalDevice - Name: SSW.Steering.ExternalDevice
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: SSW.Steering.ExternalDevice.Station - Name: SSW.Steering.ExternalDevice.Station
+ == PARAMETERS:
+  - MACAddress (type: string)
+      Attributes: read_only
+

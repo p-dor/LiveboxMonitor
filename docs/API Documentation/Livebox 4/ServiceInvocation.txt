@@ -1,0 +1,32 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .ServiceInvocation - Name: .ServiceInvocation
+ == PARAMETERS:
+  - Status (type: bool)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool reloadAclScript()
+  - bool export((string fileName))
+  - bool import((string fileName))
+
+=======================================================================
+OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - WakeUpURL (type: string)
+      Attributes: read_only
+  - Port (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void updateWakeUpURL((string host), (uint32 port))
+  - bool activate()
+  - variant get()
+  - bool set((variant parameters))
+
+=======================================================================
+OBJECT: ServiceInvocation.ACLConfigFile - Name: ServiceInvocation.ACLConfigFile
+ == PARAMETERS:
+  - Version (type: string)
+

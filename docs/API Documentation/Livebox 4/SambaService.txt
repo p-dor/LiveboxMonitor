@@ -1,0 +1,10 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .SambaService - Name: .SambaService
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+

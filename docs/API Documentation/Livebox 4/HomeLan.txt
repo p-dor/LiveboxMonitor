@@ -1,0 +1,48 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .HomeLan - Name: .HomeLan
+ == FUNCTIONS:
+  - bool getResults((uint32 Seconds), (uint32 NumberOfReadings), (list InterfaceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
+  - bool getDeviceResults((uint32 Seconds), (uint32 NumberOfReadings), (string DeviceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
+  - bool getSaturationResults()
+  - bool getWANCounters()
+  - bool getInterfacesNames()
+  - bool getDevicesNames()
+  - bool getStatus()
+  - bool getMaxNumberOfRecords()
+  - bool getReadingInterval()
+  - bool getDevicesStatus()
+  - bool getDevicesReadingInterval()
+  - bool import()
+  - bool export()
+  - bool addDevice((string macaddress))
+  - bool deleteDevice((string macaddress))
+  - void startDeviceMonitoringTest((uint32 duration), (uint32 interval))
+  - void stopDeviceMonitoringTest()
+  - void startInterfaceMonitoringTest((uint32 duration), (uint32 interval))
+  - void stopInterfaceMonitoringTest()
+  - bool getSaturationMeasures()
+
+=======================================================================
+OBJECT: HomeLan.Interface - Name: HomeLan.Interface
+ == PARAMETERS:
+  - FriendlyName (type: string)
+  - Name (type: string)
+  - Alias (type: string)
+  - NumberOfStoredMeasures (type: uint32)
+
+=======================================================================
+OBJECT: HomeLan.Interface.Stats - Name: HomeLan.Interface.Stats
+ == PARAMETERS:
+  - BytesSent (type: uint64)
+      Attributes: read_only
+  - BytesReceived (type: uint64)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: HomeLan.Device - Name: HomeLan.Device
+ == PARAMETERS:
+  - MacAddress (type: string)
+  - NumberOfStoredMeasures (type: uint32)
+

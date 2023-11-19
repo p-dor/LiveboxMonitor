@@ -1,0 +1,86 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .URLMon - Name: .URLMon
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+  - ModeCurrent (type: string)
+      Attributes: read_only
+  - ModeAfterReboot (type: string)
+      Attributes: persistent
+      Validator: ['Internal']
+  - PatternNum (type: uint32)
+      Attributes: read_only
+  - PatternLength (type: uint32)
+      Attributes: read_only
+  - BackupHostBroadcast (type: bool)
+      Attributes: persistent
+  - NumberOfHost (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool getRedirectDecision(httpconnprop_t connproperties, (string redirect_url), (string decision_mode))
+  - list classify(string url)
+  - list categories()
+  - void getDevices((list devices))
+  - void enableDevice(string mac, bool enable)
+  - void deleteDevice(string mac)
+  - void getListMode(string mac, (string mode))
+  - void setListMode(string mac, string mode)
+  - void getList(string mac, (list patterns))
+  - void setList(string mac, (list patterns), (bool clean))
+  - void copyList(string mac_src, string mac_dst)
+  - void getModeCurrent((string mode))
+  - void getModeAfterReboot((string mode))
+  - void setModeAfterReboot(string mode)
+  - void getPatternLimits((uint32 patternNum), (uint32 patternLength))
+  - bool export((string fileName))
+  - bool import((string fileName))
+
+=======================================================================
+OBJECT: URLMon.Config - Name: URLMon.Config
+ == PARAMETERS:
+  - BlockedCategories (type: string)
+      Attributes: persistent
+  - ParentalControlActive (type: bool)
+      Attributes: persistent
+  - RedirectURL (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: URLMon.Host - Name: URLMon.Host
+ == PARAMETERS:
+  - Detected (type: bool)
+      Attributes: read_only
+  - Persistent (type: bool)
+      Attributes: read_only
+  - Hostname (type: string)
+      Attributes: read_only, persistent
+  - ParentalControlActive (type: bool)
+      Attributes: persistent
+  - BlockedCategories (type: string)
+      Attributes: persistent
+  - WhiteBlackListMode (type: string)
+      Attributes: persistent
+      Validator: ['Disabled', 'WhiteList', 'BlackList']
+  - NumberOfList (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: URLMon.Host.List - Name: URLMon.Host.List
+ == PARAMETERS:
+  - Pattern (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: URLMon.UrlClassifier - Name: URLMon.UrlClassifier
+ == PARAMETERS:
+  - PrimaryServer (type: string)
+      Attributes: persistent
+  - SecondaryServer (type: string)
+      Attributes: persistent
+  - MaxPendingHttpRequests (type: uint32)
+      Attributes: persistent
+  - MaxCacheEntries (type: uint32)
+      Attributes: persistent
+

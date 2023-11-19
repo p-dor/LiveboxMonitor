@@ -1,0 +1,134 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: SSW.FeatureConfig - Name: SSW.FeatureConfig
+ == FUNCTIONS:
+  - void startEventing((string MAC))
+  - void stopEventing((string MAC))
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.MultiBackhaul - Name: SSW.FeatureConfig.MultiBackhaul
+ == FUNCTIONS:
+  - void debugMultiBackhaul()
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.MultiBackhaul.Rules - Name: SSW.FeatureConfig.MultiBackhaul.Rules
+ == PARAMETERS:
+  - Query (type: string)
+      Attributes: persistent
+  - PrioBand (type: string)
+      Attributes: persistent
+      Validator: ['2.4GHz', '5GHz', '6GHz']
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.MultiBackhaul.Rules.Station - Name: SSW.FeatureConfig.MultiBackhaul.Rules.Station
+ == PARAMETERS:
+  - MACAddress (type: string)
+  - CurrentBackhaulFrequency (type: string)
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.MultiBackhaul.Config - Name: SSW.FeatureConfig.MultiBackhaul.Config
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - PrioBand (type: string)
+      Attributes: persistent
+      Validator: ['2.4GHz', '5GHz', '6GHz']
+  - PrioTargets (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.MultiBackhaul.Config.Station - Name: SSW.FeatureConfig.MultiBackhaul.Config.Station
+ == PARAMETERS:
+  - MACAddress (type: string)
+  - CurrentBackhaulFrequency (type: string)
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.EnergySaving - Name: SSW.FeatureConfig.EnergySaving
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - FeaturesRunning (type: string)
+      Attributes: read_only
+  - MaxStatsLength (type: uint32)
+      Attributes: persistent
+  - RssiThreshold (type: int32)
+      Attributes: persistent
+  - DeltaThreshold (type: uint8)
+      Attributes: persistent
+  - AirtimeThreshold (type: uint32)
+      Attributes: persistent
+  - ModesEnabled (type: string)
+      Attributes: persistent
+  - AntennaConfiguration (type: string)
+      Attributes: persistent
+      Validator: ['Divided', 'Minimum']
+ == FUNCTIONS:
+  - void getStats()
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.EnergySaving.Stats - Name: SSW.FeatureConfig.EnergySaving.Stats
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - NrActivations (type: uint32)
+      Attributes: read_only
+  - LastUpTime (type: uint32)
+      Attributes: read_only
+  - CurrentState (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.BackhaulRecovery - Name: SSW.FeatureConfig.BackhaulRecovery
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - AttemptTimeout (type: uint32)
+      Attributes: persistent
+  - SlaveCertsFolder (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.BackhaulRecovery.Stats - Name: SSW.FeatureConfig.BackhaulRecovery.Stats
+ == PARAMETERS:
+  - NrTrigger (type: uint32)
+      Attributes: read_only
+  - NrSuccess (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.AddOnMode - Name: SSW.FeatureConfig.AddOnMode
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - CurrentState (type: string)
+      Attributes: read_only, persistent
+      Validator: ['Invalid', 'Disabled', 'Enabled', 'Active', 'ActiveNotConnected']
+  - LastStateChange (type: date_time)
+      Attributes: read_only, persistent
+  - Active (type: bool)
+      Attributes: read_only
+  - AddonMACAddress (type: string)
+      Attributes: read_only
+  - ActiveTimeout (type: int32)
+      Attributes: persistent
+      Validator: {'min': '-1'}
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.LongStats - Name: SSW.FeatureConfig.LongStats
+ == PARAMETERS:
+  - HistoryEnable (type: bool)
+      Attributes: persistent
+  - SendPeriodicEvent (type: bool)
+      Attributes: persistent
+  - SendEventOnAssoc (type: bool)
+      Attributes: persistent
+  - SendEventOnDisassoc (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getLongHistoryStats()
+

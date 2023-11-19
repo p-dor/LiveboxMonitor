@@ -1,0 +1,367 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .NMC - Name: .NMC
+ == PARAMETERS:
+  - WanModeList (type: string)
+      Attributes: read_only
+  - WanMode (type: string)
+      Attributes: persistent
+  - Username (type: string)
+      Attributes: persistent
+  - FactoryResetScheduled (type: bool)
+      Attributes: read_only
+  - ConnectionError (type: bool)
+  - DefaultsLoaded (type: bool)
+  - ProvisioningState (type: string)
+      Attributes: persistent
+      Validator: ['reset', 'upgrade', 'restore', 'done']
+  - OfferType (type: string)
+      Attributes: read_only, persistent
+      Validator: ['Res', 'Pro']
+  - OfferName (type: string)
+      Attributes: persistent
+  - IPTVMode (type: string)
+      Attributes: persistent
+      Validator: ['Dedicated', 'Internet']
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
+  - bool setWanMode(string WanMode, (string Username), (string Password))
+  - string getWanModeList()
+  - bool getWANStatus((string LinkType), (string LinkState), (string WanState), (string MACAddress), (string Protocol), (string ConnectionState), (string LastConnectionError), (string IPAddress), (string RemoteGateway), (string DNSServers))
+  - void reset((string reason))
+  - void reboot((string reason))
+  - void setLANIP(string Address, string Netmask, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime))
+  - void getLANIP((string Address), (string Netmask), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime))
+  - void shutdown((string reason))
+  - uint32 enableRemoteAccess((string username), (string password), (uint32 port), (uint32 timeout), (string sourcePrefix), (string accessType), (bool secure))
+  - remoteaccess_t getRemoteAccess((string username), (string usertype))
+  - uint32 disableRemoteAccess((string accessType))
+  - void updateVersionInfo()
+  - bool checkForUpgrades()
+  - list getVoIPConfig()
+
+=======================================================================
+OBJECT: NMC.Error - Name: NMC.Error
+ == FUNCTIONS:
+  - string getPrimaryErrorCode()
+
+=======================================================================
+OBJECT: NMC.DataTracking - Name: NMC.DataTracking
+
+=======================================================================
+OBJECT: NMC.Gpon - Name: NMC.Gpon
+ == PARAMETERS:
+  - RxPowerLowThreshold (type: int32)
+      Attributes: persistent
+  - RxPowerHighThreshold (type: int32)
+      Attributes: persistent
+  - PoolInterval (type: uint32)
+      Attributes: persistent
+  - RxSignalSampleNum (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - RxPowerSignalQuality (type: bool)
+
+=======================================================================
+OBJECT: NMC.IPv6 - Name: NMC.IPv6
+ == FUNCTIONS:
+  - void set((bool Enable), (bool UserRequested), (bool IPv4UserRequested))
+  - void get((bool Enable), (string IPv6Address))
+
+=======================================================================
+OBJECT: NMC.Container - Name: NMC.Container
+ == PARAMETERS:
+  - Address (type: string)
+  - Netmask (type: string)
+  - DHCPEnable (type: bool)
+  - DHCPMinAddress (type: string)
+  - DHCPMaxAddress (type: string)
+  - LeaseTime (type: uint32)
+ == FUNCTIONS:
+  - void set((string Address), (string Netmask), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime))
+  - void get((string Status), (string Address), (string Netmask), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime))
+
+=======================================================================
+OBJECT: NMC.LED - Name: NMC.LED
+ == PARAMETERS:
+  - Suspend (type: bool)
+ == FUNCTIONS:
+  - void getLedStatus(string name, (string state), (string color))
+  - bool setLed(string name, string state, string color)
+
+=======================================================================
+OBJECT: NMC.NetworkConfig - Name: NMC.NetworkConfig
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - ConfigDate (type: date_time)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: persistent
+      Validator: ['Enabled', 'Disabled', 'Triggered', 'Instant', 'Saving', 'Available', 'Loading', 'Uploading', 'Downloading', 'Reset', 'Error']
+ == FUNCTIONS:
+  - void enableNetworkBR((bool state))
+  - void launchNetworkBackup((bool delay))
+  - void launchNetworkRestore()
+  - void get()
+
+=======================================================================
+OBJECT: NMC.OrangeTV - Name: NMC.OrangeTV
+ == FUNCTIONS:
+  - void getIPTVStatus((string IPTVStatus))
+  - void setIPTVMultiScreens((bool Enable))
+  - void getIPTVMultiScreens((bool Enable))
+  - list getIPTVConfig()
+
+=======================================================================
+OBJECT: NMC.Wifi - Name: NMC.Wifi
+ == PARAMETERS:
+  - RegulatoryAuthorization6GHz (type: bool)
+      Attributes: persistent
+  - EnableTarget (type: string)
+      Attributes: read_only
+      Validator: ['AccessPoint', 'Radio']
+  - Enable (type: bool)
+      Attributes: persistent
+  - TempEnable (type: bool)
+  - Status (type: bool)
+      Attributes: read_only
+  - ReadOnlyStatus (type: bool)
+      Attributes: persistent
+  - PairingStatus (type: string)
+      Validator: ['Idle', 'Pairing', '']
+  - Scheduler (type: bool)
+      Attributes: read_only
+  - SchedulingOverride (type: bool)
+      Attributes: persistent
+  - SchedulingEnabled (type: bool)
+  - SchedulingActivationTimeSlots (type: string)
+  - ConfigurationMode (type: bool)
+      Attributes: persistent
+  - TriggerAutoChannelSelection (type: bool)
+  - WPSMode (type: string)
+      Attributes: read_only
+      Validator: ['Registrar', 'Enrollee']
+  - CurrentState (type: string)
+      Attributes: read_only
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - VAPsEnabled (type: bool)
+      Attributes: read_only
+  - CurrentBackhaul (type: string)
+      Attributes: read_only
+      Validator: ['None', 'Ethernet', 'Wifi']
+  - AddOnModeState (type: string)
+  - PINCode (type: string)
+  - AllowButtonDisable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void setEnable(bool value, (bool temporary), (string source))
+  - void toggleEnable((bool temporary), (string source))
+  - void startPairing((string clientPIN))
+  - void stopPairing()
+  - void startAutoChannelSelection()
+  - void getStats((uint32_t RxBytes), (uint32_t TxBytes))
+  - void set((bool Enable), (bool Status), (bool ConfigurationMode), (bool TriggerAutoChannelSelection))
+  - variant get()
+  - void setInternal((string EnableTarget))
+  - void setStatus((bool Status))
+  - void debug()
+
+=======================================================================
+OBJECT: NMC.Wifi.WPS - Name: NMC.Wifi.WPS
+ == PARAMETERS:
+  - UsePersistentPin (type: bool)
+      Attributes: persistent
+  - PersistentPin (type: string)
+      Attributes: persistent
+  - CurrentPinCode (type: string)
+ == FUNCTIONS:
+  - void generateSelfPIN()
+
+=======================================================================
+OBJECT: NMC.Wifi.Config - Name: NMC.Wifi.Config
+ == PARAMETERS:
+  - ForwardWPSCredentials (type: bool)
+      Attributes: persistent
+  - EpWpsUseBackhaulCredentials (type: bool)
+      Attributes: persistent
+  - EnableStateChange (type: bool)
+      Attributes: persistent
+  - EnableVapStateChange (type: bool)
+      Attributes: persistent
+  - EpEnableStateChange (type: bool)
+      Attributes: persistent
+  - DelayApDownTime (type: uint32)
+      Attributes: persistent
+  - DelayEpUpTime (type: uint32)
+      Attributes: persistent
+  - SlaveEnableRegistrarOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - SlaveEnableVapOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - MasterEnableVapOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp']
+  - CredentialsSet (type: bool)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostEnable (type: bool)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostTimeout (type: uint32)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostMaxNrToggle (type: uint32)
+      Attributes: persistent
+  - SlaveRadiosOnWhenCredentialsSet (type: bool)
+      Attributes: persistent
+  - SlaveWifiClientModeEnable (type: bool)
+      Attributes: persistent
+  - CallSSWOnWPS (type: string)
+      Attributes: persistent
+      Validator: ['Never', 'Addon', 'Always']
+  - EpWpsScanForSecMode (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NMC.Wifi.Config.EnableConfig - Name: NMC.Wifi.Config.EnableConfig
+ == PARAMETERS:
+  - DefaultTarget (type: string)
+      Attributes: persistent
+      Validator: ['AccessPoint', 'Radio', 'Auto']
+
+=======================================================================
+OBJECT: NMC.Wifi.Config.EnableConfig.Custom - Name: NMC.Wifi.Config.EnableConfig.Custom
+ == PARAMETERS:
+  - Source (type: string)
+      Attributes: persistent
+  - Target (type: string)
+      Attributes: persistent
+      Validator: ['AccessPoint', 'Radio', 'Auto']
+
+=======================================================================
+OBJECT: NMC.Wifi.Vendor - Name: NMC.Wifi.Vendor
+
+=======================================================================
+OBJECT: NMC.Wifi.Vendor.BCM - Name: NMC.Wifi.Vendor.BCM
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DebugModeEnable (type: bool)
+      Attributes: persistent
+  - DebugModeStatus (type: bool)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Wifi.Stats - Name: NMC.Wifi.Stats
+ == PARAMETERS:
+  - TogglesOnBackhaulLost (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Profiles - Name: NMC.Profiles
+ == PARAMETERS:
+  - Operator (type: string)
+      Attributes: persistent
+  - CurrentProfile (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NMC.Reboot - Name: NMC.Reboot
+ == PARAMETERS:
+  - Flush (type: bool)
+  - BootCounter (type: uint32)
+      Attributes: read_only, persistent
+  - WatchdogRebootCounter (type: uint32)
+      Attributes: read_only, persistent
+  - ForceRebootDuration (type: uint16)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void flush()
+
+=======================================================================
+OBJECT: NMC.Reboot.Reboot - Name: NMC.Reboot.Reboot
+ == PARAMETERS:
+  - BootDate (type: date_time)
+      Attributes: read_only, persistent
+  - BootReason (type: string)
+      Attributes: read_only, persistent
+      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset']
+  - ShutdownDate (type: date_time)
+      Attributes: read_only, persistent
+  - ShutdownReason (type: string)
+      Attributes: read_only, persistent
+
+=======================================================================
+OBJECT: NMC.Autodetect - Name: NMC.Autodetect
+ == PARAMETERS:
+  - FirstBoot (type: bool)
+      Attributes: persistent
+  - LastConnectionError (type: string)
+ == FUNCTIONS:
+  - variant get()
+
+=======================================================================
+OBJECT: NMC.TPPP - Name: NMC.TPPP
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Timeout (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - ExtraTimeout (type: uint32)
+      Attributes: persistent
+      Validator: {'min': '1'}
+  - ExtensionDelay (type: uint32)
+      Attributes: persistent
+  - RefreshDelay (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool force()
+
+=======================================================================
+OBJECT: NMC.Voip - Name: NMC.Voip
+
+=======================================================================
+OBJECT: NMC.VPN - Name: NMC.VPN
+
+=======================================================================
+OBJECT: NMC.VPN.FWServices - Name: NMC.VPN.FWServices
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.WlanClear - Name: NMC.WlanClear
+ == FUNCTIONS:
+  - bool setState((string ID), (string state))
+      Attributes: message
+
+=======================================================================
+OBJECT: NMC.WlanTimer - Name: NMC.WlanTimer
+ == FUNCTIONS:
+  - void setActivationTimer((string InterfaceName), (uint32 Timeout))
+  - uint32 getActivationTimer((string InterfaceName))
+  - bool disableActivationTimer((string InterfaceName))
+
+=======================================================================
+OBJECT: NMC.Guest - Name: NMC.Guest
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - WifiGuestKeyConfig (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Enabled']
+  - ActivationTimeout (type: uint64)
+      Attributes: read_only, persistent
+  - StartTime (type: date_time)
+      Attributes: read_only, persistent
+  - ValidTime (type: date_time)
+      Attributes: read_only, persistent
+ == FUNCTIONS:
+  - void set((bool Enable))
+  - void get()
+

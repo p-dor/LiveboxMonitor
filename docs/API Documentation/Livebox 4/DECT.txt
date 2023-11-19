@@ -1,0 +1,51 @@
+=== LIVEBOX SOFTWARE VERSION: SR40-fr-G06.R01.C05_02
+
+=======================================================================
+OBJECT: .DECT - Name: .DECT
+ == PARAMETERS:
+  - PairingStatus (type: string)
+      Attributes: read_only
+      Validator: ['Idle', 'Pairing']
+ == FUNCTIONS:
+  - string getPairingStatus()
+  - void startPairing()
+  - void stopPairing()
+  - void reset((bool reboot))
+  - string getRFPI()
+  - string getStandardVersion()
+  - string getPIN()
+  - void setPIN((string pin))
+  - string getVersion()
+  - string getName()
+  - bool getRadioState()
+  - void setRadioState((bool state))
+  - int8 getRSSI((string name), (bool synchronous))
+  - void setHandsetDebugMode((bool enable))
+
+=======================================================================
+OBJECT: DECT.Repeater - Name: DECT.Repeater
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Disabled', 'Init', 'Ready']
+ == FUNCTIONS:
+  - void getRepeaters()
+  - void removeAllRepeaters()
+
+=======================================================================
+OBJECT: DECT.Repeater.Device - Name: DECT.Repeater.Device
+ == PARAMETERS:
+  - Id (type: uint16)
+      Attributes: read_only, persistent
+  - SoftwareVersion (type: string)
+      Attributes: read_only, persistent
+  - HardwareVersion (type: string)
+      Attributes: read_only, persistent
+  - IPUI (type: string)
+      Attributes: read_only, persistent
+      Validator: {'max': '11'}
+  - Active (type: bool)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void deregister()
+
