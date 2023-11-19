@@ -1136,9 +1136,9 @@ class LmInfo:
 			v = d.get('SignalRxPower')
 			if v is not None:
 				v /= 1000
-				if (v < -27.0) or (v > -8.0):
+				if (v < -27.0) or (v > -2.0):
 					aQual = LmTools.ValQual.Error
-				elif (v < -22.0) or (v > -2.0):
+				elif (v < -22.0) or (v > -8.0):
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
