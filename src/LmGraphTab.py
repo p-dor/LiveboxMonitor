@@ -35,9 +35,10 @@ DCFG_OBJECT_COLOR = [ '#E26043',		# (226, 96, 67)
 DCFG_STAT_FREQUENCY = 30	# In case the service doesn't work, 30 secs is the normal value
 
 # Constants
-TYPE_INTERFACE = 'inf'	# must be 3 chars
-TYPE_DEVICE = 'dvc'		# must be 3 chars
-UNIT_DIVIDER = 1048576	# To convert bytes in megabytes
+TYPE_INTERFACE = 'inf'		# Must be 3 chars
+TYPE_DEVICE = 'dvc'			# Must be 3 chars
+UNIT_DIVIDER = 1048576		# To convert bytes in megabytes
+WIND_UPDATE_FREQ = 60000	# 1mn - frequency of the window update task, cutting old values
 
 # List columns
 class GraphCol(IntEnum):
@@ -199,6 +200,7 @@ class LmGraph:
 		self._graphValidInterfaces = []		# Array of [Key, MeasureNb, ID]	- ID is the FriendlyName
 		self._graphValidDevices = []		# Arrray of [Key, MeasureNb, ID] - ID is the Key
 		self._graphData = []
+		self._graphWindowTimer = None
 
 
 	### Click on graph tab
@@ -206,6 +208,7 @@ class LmGraph:
 		if not self._graphDataLoaded:
 			self._graphDataLoaded = True	# Must be first to avoid reentrency during tab drag&drop
 
+			# Load config & data
 			self.startTask(lx('Loading configuration...'))
 			self.loadStatParams()
 			self.loadHomeLanInterfaces()
@@ -213,9 +216,15 @@ class LmGraph:
 			self.loadGraphConfig()
 			self.endTask()
 
+			# Plot data
 			self.startTask(lx('Plotting graphes...'))
 			self.plotGraph()
 			self.endTask()
+
+			# Start graph time window update timer, to cut regularly old values
+			self._graphWindowTimer = QtCore.QTimer()
+			self._graphWindowTimer.timeout.connect(self.graphWindowUpdate)
+			self._graphWindowTimer.start(WIND_UPDATE_FREQ)
 
 
 	### Click on add graph button
@@ -556,15 +565,11 @@ class LmGraph:
 		if iDownBytes is not None:
 			# Update timestamp array
 			dt = iObject['DownTime']
-			dt = dt[1:]
 			dt.append(iTimestamp)
-			iObject['DownTime'] = dt
 
 			# Update data
 			d = iObject['Down']
-			d = d[1:]
 			d.append(iDownBytes / UNIT_DIVIDER)		# Convert to MBs
-			iObject['Down'] = d
 
 			# Update graph
 			iObject['DownLine'].setData(dt, d)
@@ -573,18 +578,43 @@ class LmGraph:
 		if iUpBytes is not None:
 			# Update timestamp array
 			ut = iObject['UpTime']
-			ut = ut[1:]
 			ut.append(iTimestamp)
-			iObject['UpTime'] = ut
 
 			# Update data
 			u = iObject['Up']
-			u = u[1:]
 			u.append(iUpBytes / UNIT_DIVIDER)		# Convert to MBs
-			iObject['Up'] = u
 
 			# Update graph
 			iObject['UpLine'].setData(ut, u)
+
+
+	# Cut old values to match graph time window
+	def graphWindowUpdate(self):
+		# Determine older allowed timestamp
+		if self._graphWindow:
+			aWindow = self._graphWindow
+		else:
+			# If no window cut after 5 days
+			aWindow = 5 * 24
+		aMaxOlderValue = int(time.time()) - (aWindow * 3600)
+
+		# Loop on each drawn object
+		for o in self._graphData:
+			self.graphWindowUpdateLine(o['DownLine'], o['DownTime'], o['Down'], aMaxOlderValue)
+			self.graphWindowUpdateLine(o['UpLine'], o['UpTime'], o['Up'], aMaxOlderValue)
+
+
+	# Cut old values to match graph time window
+	def graphWindowUpdateLine(self, iLine, iTimeArray, iDataArray, iMaxOlderValue):
+		aNeedRefresh = False
+
+		while(len(iTimeArray) and (iTimeArray[0] <= iMaxOlderValue)):
+			aNeedRefresh = True
+			iTimeArray.pop(0)
+			iDataArray.pop(0)
+
+		if aNeedRefresh:
+			iLine.setData(iTimeArray, iDataArray)
 
 
 	### Update graph list with new device name
