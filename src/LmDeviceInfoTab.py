@@ -253,6 +253,7 @@ class LmDeviceInfo:
 					aReply = self._session.request('Devices.Device.' + aKey + ':setType', { 'type': aType })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self.infoDeviceListClick()
+						self._currentDeviceType = aType		# LB device type update is async and refresh screen might be too fast
 					else:
 						self.displayError('Set type query failed.')
 				except BaseException as e:
