@@ -13,6 +13,9 @@ experiments/
 exports/
 png/
 tools/
+custom_icons/
+lbcache*/
+
 
 # from here, it's : https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files

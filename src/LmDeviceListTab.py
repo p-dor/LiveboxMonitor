@@ -399,7 +399,7 @@ class LmDeviceList:
 	### Update device line
 	def updateDeviceLine(self, iLine, iDevice):
 		aDeviceType = iDevice.get('DeviceType', '')
-		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType)
+		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType, self._liveboxSoftwareVersion)
 		self._deviceList.setItem(iLine, DevCol.Type, aDeviceTypeIcon)
 
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))
@@ -477,13 +477,13 @@ class LmDeviceList:
 
 	### Format device type cell
 	@staticmethod
-	def formatDeviceTypeTableWidget(iDeviceType):
+	def formatDeviceTypeTableWidget(iDeviceType, iLBSoftVersion):
 		aDeviceTypeIcon = LmTools.NumericSortItem()
 
 		i = 0
 		for d in LmConfig.DEVICE_TYPES:
 			if iDeviceType == d['Key']:
-				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.getDeviceIcon(d)))
+				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.getDeviceIcon(d, iLBSoftVersion)))
 				break
 			i += 1
 

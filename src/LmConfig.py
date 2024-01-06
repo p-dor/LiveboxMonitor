@@ -30,6 +30,9 @@ from __init__ import __url__, __version__, __build__
 
 # Config file name
 CONFIG_FILE = 'Config.txt'
+LIVEBOX_CACHE_DIR = 'lbcache_'
+LIVEBOX_ICON_CACHE_DIR = 'icons'
+CUSTOM_ICON_DIR = 'custom_icons'
 
 # Config default
 DCFG_LIVEBOX_URL = 'http://livebox.home/'
@@ -791,7 +794,7 @@ class LmConf:
 		aConfigPath = LmConf.getConfigDirectory()
 
 		# Create config directory if doesn't exist
-		if not os.path.exists(aConfigPath):
+		if not os.path.isdir(aConfigPath):
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
@@ -972,41 +975,130 @@ class LmConf:
 			return '.'
 
 
+	### Get a device icon from cache file
+	@staticmethod
+	def getDeviceIconCache(iDevice, iLBSoftVersion):
+		aIconPixMap = None
+		aIconDirPath = os.path.join(LmConf.getConfigDirectory(), LIVEBOX_CACHE_DIR + iLBSoftVersion, LIVEBOX_ICON_CACHE_DIR)
+		aIconFilePath = os.path.join(aIconDirPath, iDevice['Icon'])
+		if os.path.isfile(aIconFilePath):
+			aIconPixMap = QtGui.QPixmap()
+			if not aIconPixMap.load(aIconFilePath):
+				aIconPixMap = None
+				LmTools.Error('Cannot load device icon cache file {}. Cache file will be recreated.'.format(aIconFilePath))
+		return aIconPixMap
+
+
+	### Set a device icon to cache file
+	@staticmethod
+	def setDeviceIconCache(iDevice, iLBSoftVersion, iContent):
+		aIconDirPath = os.path.join(LmConf.getConfigDirectory(), LIVEBOX_CACHE_DIR + iLBSoftVersion, LIVEBOX_ICON_CACHE_DIR)
+		aIconFilePath = os.path.join(aIconDirPath, iDevice['Icon'])
+
+		# Create icon cache directory if doesn't exist
+		if not os.path.isdir(aIconDirPath):
+			try:
+				os.makedirs(aIconDirPath)
+			except BaseException as e:
+				LmTools.Error('Cannot create icon cache folder {}. Error: {}'.format(aIconDirPath, e))
+				return
+
+		# Create and save icon cache file
+		try:
+			with open(aIconFilePath, 'wb') as aIconFile:
+				aIconFile.write(iContent)
+		except BaseException as e:
+			LmTools.Error('Cannot save icon cache file {}. Error: {}'.format(aIconFilePath, e))
+
+
 	### Get a device icon
 	@staticmethod
-	def getDeviceIcon(iDevice):
+	def getDeviceIcon(iDevice, iLBSoftVersion):
 		if LmConf.AllDeviceIconsLoaded:
 			return iDevice['PixMap']
 		else:
 			aIconPixMap = iDevice.get('PixMap', None)
+
+			# First try to get icon from local cache
+			if aIconPixMap is None:
+				aIconPixMap = LmConf.getDeviceIconCache(iDevice, iLBSoftVersion)
+
+			# Ultimately load the icon from Livebox URL
 			if aIconPixMap is None:
 				aIconPixMap = QtGui.QPixmap()
-
+				aStoreInCache = False
 				try:
 					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'],
 											 timeout = DEFAULT_TIMEOUT,
 											 verify = LmConf.LiveboxURL.startswith('http://'))
-					if not aIconPixMap.loadFromData(aIconData.content):
-						LmTools.Error('Cannot load device icon {}.'.format(e, iDevice['Icon']))
+					if aIconPixMap.loadFromData(aIconData.content):
+						aStoreInCache = True
+					else:
+						LmTools.Error('Cannot load device icon {}.'.format(iDevice['Icon']))
 				except requests.exceptions.Timeout as e:
 					LmTools.Error('Device icon {} request timeout error: {}.'.format(iDevice['Icon'], e))
 				except BaseException as e:
 					LmTools.Error('Error: {}. Cannot request device icon {}.'.format(e, iDevice['Icon']))
 
-				iDevice['PixMap'] = aIconPixMap
+				# If successfully loaded, try to store in local cache file for faster further loads
+				if aStoreInCache:
+					LmConf.setDeviceIconCache(iDevice, iLBSoftVersion, aIconData.content)
 
+			iDevice['PixMap'] = aIconPixMap
 			return aIconPixMap
 
 
 	### Load all device icons
 	@staticmethod
-	def loadDeviceIcons():
+	def loadDeviceIcons(iLBSoftVersion):
 		if not LmConf.AllDeviceIconsLoaded:
 			for d in DEVICE_TYPES:
-				LmConf.getDeviceIcon(d)
+				LmConf.getDeviceIcon(d, iLBSoftVersion)
 
 			LmConf.AllDeviceIconsLoaded = True
 
+
+	### Load custom device icons
+	@staticmethod
+	def loadCustomDeviceIcons():
+		global DEVICE_TYPES
+
+		# Get custom icon directory path
+		aCustomIconDirPath = os.path.join(LmConf.getConfigDirectory(), CUSTOM_ICON_DIR)
+		if not os.path.isdir(aCustomIconDirPath):
+			return
+
+		# Iterate over all files in the custom icon directory
+		aSortDeviceTypes = False
+		for f in os.listdir(aCustomIconDirPath):
+			aIconFileName = os.fsdecode(f)
+			if aIconFileName.endswith('.png'):
+				aIconFilePath = os.path.join(aCustomIconDirPath, aIconFileName)
+				aIconPixMap = QtGui.QPixmap()
+				if aIconPixMap.load(aIconFilePath):
+					# Search if device icon is already referenced
+					aCreateDeviceEntry = True
+					for d in DEVICE_TYPES:
+						if aIconFileName == d['Icon']:
+							aCreateDeviceEntry = False
+							d['PixMap'] = aIconPixMap
+
+					# If doesn't exit, create it
+					if aCreateDeviceEntry:
+						aDevice = {}
+						aDeviceName = os.path.splitext(aIconFileName)[0]
+						aDevice['Key'] = aDeviceName
+						aDevice['Name'] = aDeviceName
+						aDevice['Icon'] = aIconFileName
+						aDevice['PixMap'] = aIconPixMap
+						DEVICE_TYPES.append(aDevice)
+						aSortDeviceTypes = True
+				else:
+					LmTools.Error('Cannot load custom device icon {}.'.format(aIconFilePath))
+
+		# Resort device type list if required
+		if aSortDeviceTypes:
+			DEVICE_TYPES = sorted(DEVICE_TYPES, key = lambda x: x['Name'])
 
 
 # ################################ Livebox connection dialog ################################

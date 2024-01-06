@@ -243,7 +243,7 @@ class LmDeviceInfo:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 
 			self.startTask(lx('Loading device icons...'))
-			LmConf.loadDeviceIcons()
+			LmConf.loadDeviceIcons(self._liveboxSoftwareVersion)
 			self.endTask()
 
 			aSetDeviceTypeDialog = SetDeviceTypeDialog(aKey, self._currentDeviceType, self)

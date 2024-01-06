@@ -567,6 +567,7 @@ if __name__ == '__main__':
 	sys.excepthook = exceptHook
 	if LmConf.load():
 		LmIcon.load()
+		LmConf.loadCustomDeviceIcons()
 		ReleaseCheck()
 
 		# Command line parameters
