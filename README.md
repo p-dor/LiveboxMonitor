@@ -19,7 +19,30 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceList.png)
 
 
-## Installation
+## Sections de cette documentation
+1. [Installation](#install)
+2. [Configuration minimale](#minimalconfig)
+3. [À propos de l'auteur](#author)
+4. [Discussion](#discussion)
+5. [Prise en main](#handling)
+6. [Profils](#profiles)
+7. [Options de ligne de commande](#commandline)
+8. [Accès à distance](#remoteaccess)
+9. [Configuration](#configuration)
+10. [Linux](#linux)
+11. [Appareils - Liste des appareils connectés](#devicelist)
+12. [Stats/Infos Livebox - Statistiques de trafic et infos avancées de la Livebox](#infos)
+13. [Graphes - Courbes de trafic par interface et par appareil](#graphs)
+14. [Infos Appareil - Informations détaillées pour chaque appareil connu](#deviceinfos)
+15. [Événements - Liste des événements reçus pour chaque appareil connu](#events)
+16. [DHCP - Contrôle fin du serveur DHCP](#dhcp)
+17. [NAT/PAT - Règles de redirection de port et de protocole](#natpat)
+18. [Téléphone - Liste des appels téléphoniques / liste des contacts](#phone)
+19. [Actions - Boutons d'actions et de contrôle](#actions)
+20. [Onglets répéteurs Wifi](#repeaters)
+
+
+## Installation <a id="install"></a>
 
 L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique et sur [PyQtGraph](https://www.pyqtgraph.org/) pour les graphes statistiques.
 
@@ -74,25 +97,25 @@ Lancement :
 ```
 
 
-## Configuration minimale
+## Configuration minimale <a id="minimalconfig"></a>
 
 Étant donné les dépendances documentées de [Python 3.9](https://www.python.org/downloads/release/python-390/), [PyInstaller](https://pyinstaller.org/en/stable/requirements.html) et de [PyQt6](https://www.qt.io/product/qt6/technical-specifications) la configuration minimale requise pour faire tourner cette application est :
 - Windows : **Windows 10** ou plus récent.
 - MacOS : **10.15 (Catalina)** ou plus récent.
 
 
-## À propos de l'auteur
+## À propos de l'auteur <a id="author"></a>
 
 L'auteur de ce logiciel est un professionnel de l'informatique n'ayant aucun lien avec Orange. Ce logiciel n'est donc en rien un produit d'Orange.  
 Aucune documentation officielle des APIs de la Livebox n'étant disponible, l'élaboration a été effectuée à partir de techniques classiques de rétro-ingénierie (reverse engineering), et l'ensemble du projet sur le temps libre de l'auteur.
 
 
-## Discussion
+## Discussion <a id="discussion"></a>
 
 Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
 
 
-## Prise en main
+## Prise en main <a id="handling"></a>
 
 L'interface se veut intuitive mais il vaut mieux se reporter à la documentation pour comprendre certains comportements ou représentations.
 Les points importants à comprendre avant de commencer :
@@ -106,7 +129,7 @@ Les points importants à comprendre avant de commencer :
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
 
-## Profils
+## Profils <a id="profiles"></a>
 Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents. Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement, mais il est possible d'en créer d'autres soit au démarrage du programme dans la fenêtre de sélection de profils soit dans les préférences du programme.  
 Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.  
 Plusieurs informations sont associées à chaque profil, telle que l'URL de la Livebox, son mot de passe, etc. Le programme associe aussi automatiquement l'adresse physique (MAC) de la Livebox sur laquelle la connexion s'est effectuée.
@@ -120,7 +143,7 @@ Que se passe-t-il au lancement du programme ?
 Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un profil pour une Livebox différente de celle avec lequel il est normalement associé. Si vous validez le dialogue, le profil sera mis à jour pour être associé à cette nouvelle Livebox. Le dialogue de sélection de profils vous permet aussi de créer un nouveau profil si aucun dans la liste ne convient.
 
 
-## Options de ligne de commande
+## Options de ligne de commande <a id="commandline"></a>
 
 - `--redir` `-r`  
 Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
@@ -130,7 +153,7 @@ Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' po
 Cette option peut être utilisée plusieurs fois sur la même ligne.
 
 
-## Accès à distance
+## Accès à distance <a id="remoteaccess"></a>
 Il est possible d'utiliser le programme à distance si l'accès à distance de la Livebox est activé.
 Dans la configuration de la Livebox, cliquez sur la tuile "Mon accès à distance". Activez l'accès, configurez un nom, un mot de passe, et un numéro de port personnalisé. Vous pouvez aussi en profiter pour activer un DynDNS pour éviter de changer l'URL à chaque fois que votre IP internet change.  
 
@@ -139,7 +162,7 @@ Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort
 Évidement configurez aussi le nom et le mot de passe de connexion en fonction.
 
 
-## Configuration
+## Configuration <a id="configuration"></a>
 
 Le programme créé automatiquement dans son répertoire deux fichiers de configuration au format JSON :
 - `Config.txt` : contient tous les paramètres de l'application.
@@ -168,7 +191,7 @@ Pourquoi utiliser une base de noms locale alors que la Livebox stocke aussi des 
 Un fichier de noms local offre la garantie de savoir si un appareil est vraiment inconnu.
 
 
-## Linux
+## Linux <a id="linux"></a>
 En cas d'utilisation d'un virtualenv, si des erreurs de plugin Qt apparaissent, rajoutez ces commandes pour l'installation :
 
 ```
@@ -182,7 +205,7 @@ Par exemple : `QT_QPA_PLATFORM=xcb python3 LiveboxMonitor.py` permet d'utiliser 
 Une autre méthode consiste à supprimer la variable d’environnement `WAYLAND_DISPLAY` uniquement pour l’exécution du programme et pas de façon globale, pour ce faire : `env -u WAYLAND_DISPLAY python3 LiveboxMonitor.py`.
 
 
-## Appareils - Liste des appareils connectés
+## Appareils - Liste des appareils connectés <a id="devicelist"></a>
 
 ### Liste
 La liste des appareils affiche les colonnes suivantes :
@@ -215,7 +238,7 @@ L'onglet `Appareils` propose les boutons suivants :
 - **`DNS...`** : permet d'avoir la liste des noms DNS assignés aux appareils. Ces noms DNS peuvent être attribués, changés ou supprimés via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 
 
-## Stats/Infos Livebox - Statistiques de trafic et infos avancées de la Livebox
+## Stats/Infos Livebox - Statistiques de trafic et infos avancées de la Livebox <a id="infos"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos.png)
 
@@ -249,7 +272,7 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
 
 
-## Graphe - Courbes de trafic par interface et par appareil
+## Graphes - Courbes de trafic par interface et par appareil <a id="graphs"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph.png)
 
@@ -276,7 +299,7 @@ Le bouton **`Appliquer`** permet de charger toutes les informations relatives au
 Le bouton **`Export...`** permet d'exporter au format CSV (avec le point-virgule comme séparateur) les dernières données chargées par le bouton `Appliquer` ainsi que celles reçues entre temps via des événements.
 
 
-## Infos Appareil - Informations détaillées pour chaque appareil connu
+## Infos Appareil - Informations détaillées pour chaque appareil connu <a id="deviceinfos"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos.png)
 
@@ -315,7 +338,7 @@ L'onglet `Infos Appareil` propose les boutons suivants :
 - **`Débloquer`** : permet de débloquer la connexion de l'appareil sélectionné. L'état bloqué ou non s'affiche dans les informations de l'appareil, champs "Bloqué".
 
 
-## Événements - Liste des événements reçus pour chaque appareil connu
+## Événements - Liste des événements reçus pour chaque appareil connu <a id="events"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events.png)
 
@@ -337,7 +360,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
 
 
-## DHCP - Contrôle fin du serveur DHCP
+## DHCP - Contrôle fin du serveur DHCP <a id="dhcp"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP.png)
 
@@ -378,7 +401,7 @@ Les boutons suivants sont proposés pour gérer la liste des baux :
     Permet d'activer ou de désactiver le serveur, de changer l'adresse IP de la Livebox, de changer le masque de sous-réseau du serveur DHCP ainsi que la plage d'adresse IP pour le domaine `Home`.
 
 
-## NAT/PAT - Règles de redirection de port et de protocole
+## NAT/PAT - Règles de redirection de port et de protocole <a id="natpat"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat.png)
 
@@ -439,7 +462,7 @@ Les boutons suivants sont proposés pour gérer la liste des règles :
 - **`Import...`** : permet de réimporter des règles de redirection de protocole précédemment exportées dans un fichier. Si des règles de même nom existent déjà elles seront écrasées par celles importées.
 
 
-## Téléphone - Liste des appels téléphoniques / liste des contacts
+## Téléphone - Liste des appels téléphoniques / liste des contacts <a id="phone"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone.png)
 
@@ -489,7 +512,7 @@ Les boutons suivants sont proposés pour gérer la liste des contacts :
 - **`Import...`** : permet d'importer un ou plusieurs fichiers au [format VCF](https://en.wikipedia.org/wiki/VCard). Attention aucun test de doublon n'est effectué. Si la limite du nombre de contacts maximum supporté (255) est atteint l'import est interrompu.
 
 
-## Actions - Boutons d'actions et de contrôle
+## Actions - Boutons d'actions et de contrôle <a id="actions"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions.png)
 
@@ -568,7 +591,7 @@ Autres actions :
 - Un clic sur le lien GitHub de l'application ouvrira la page correspondante sur votre navigateur.
 
 
-## Onglets répéteurs Wifi
+## Onglets répéteurs Wifi <a id="repeaters"></a>
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater.png)
 
