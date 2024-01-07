@@ -1076,17 +1076,25 @@ class LmConf:
 				aIconFilePath = os.path.join(aCustomIconDirPath, aIconFileName)
 				aIconPixMap = QtGui.QPixmap()
 				if aIconPixMap.load(aIconFilePath):
-					# Search if device icon is already referenced
+					# Search if device icon name is already referenced
 					aCreateDeviceEntry = True
 					for d in DEVICE_TYPES:
-						if aIconFileName == d['Icon']:
+						if d['Icon'] == aIconFileName:
 							aCreateDeviceEntry = False
 							d['PixMap'] = aIconPixMap
+
+					# Search if device name is already referenced as key
+					aDeviceName = os.path.splitext(aIconFileName)[0]
+					if aCreateDeviceEntry:
+						for d in DEVICE_TYPES:
+							if d['Key'] == aDeviceName:
+								aCreateDeviceEntry = False
+								d['Icon'] = aIconFileName
+								d['PixMap'] = aIconPixMap
 
 					# If doesn't exit, create it
 					if aCreateDeviceEntry:
 						aDevice = {}
-						aDeviceName = os.path.splitext(aIconFileName)[0]
 						aDevice['Key'] = aDeviceName
 						aDevice['Name'] = aDeviceName
 						aDevice['Icon'] = aIconFileName
