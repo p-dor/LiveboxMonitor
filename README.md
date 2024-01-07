@@ -40,6 +40,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 18. [Téléphone - Liste des appels téléphoniques / liste des contacts](#phone)
 19. [Actions - Boutons d'actions et de contrôle](#actions)
 20. [Onglets répéteurs Wifi](#repeaters)
+21. [Gestion et personnalisation des icônes d'appareil](#icons)
 
 
 ## Installation <a id="install"></a>
@@ -164,13 +165,16 @@ Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort
 
 ## Configuration <a id="configuration"></a>
 
-Le programme créé automatiquement dans son répertoire deux fichiers de configuration au format JSON :
+### Répertoire de configuration
+- Si le programme est lancé par son code source le répertoire de configuration est le même que celui contenant le fichier source de lancement `LiveboxMonitor.py`.
+
+- Si les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, le répertoire de configuration se trouve dans les répertoires standards du système :
+    - Windows : `%APPDATA%\LiveboxMonitor`
+    - MacOS : `~/Library/Application Support/LiveboxMonitor`
+
+Le programme créé automatiquement dans son répertoire de configuration deux fichiers au format JSON :
 - `Config.txt` : contient tous les paramètres de l'application.
 - `MacAddrTable.txt` : contient la correspondance entre les adresses MAC et les noms d'appareil.
-
-**Note** : lorsque les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, les fichiers de configurations se trouvent dans les répertoires standards du système :
-- Windows : `%APPDATA%\LiveboxMonitor`
-- MacOS : `~/Library/Application Support/LiveboxMonitor`
 
 ### Le fichier Config.txt
 
@@ -650,3 +654,14 @@ Les onglets de répéteur Wifi proposent les boutons suivants :
 - **`Informations Wifi`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
 - **`Informations LAN`** : affiche les informations générales sur la connectivité LAN. Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
+
+
+## Gestion et personnalisation des icônes d'appareil <a id="icons"></a>
+
+Toutes les icônes d'appareil sont initialement stockées par la Livebox et le programme va les chercher une à une, ce qui peut provoquer une certaine latence (par exemple lorsque l'on clique une première fois sur le bouton `Assigner Type...` pour changer le type d'un appareil).
+Pour éviter cette latence, le programme stocke dans un cache local toutes les icônes téléchargées de la Livebox pour pouvoir les retrouver plus rapidement au prochain lancement. Ce cache est contenu dans un répertoire appelé `lbcache_` suivie de la version du firmware de la Livebox (ce qui fait que plusieurs caches peuvent être maintenu si vous accédez à plusieurs Livebox de versions différentes).
+Ce répertoire est créé automatiquement dans [le répertoire de configuration du programme](#configuration).
+
+Il est aussi possible de modifier ces icônes, et aussi de créer de nouveaux types d'appareils avec leur propre icône.
+Une page d'explication dédiée à ces possibilités est disponible [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/CustomIcons.md).
+
