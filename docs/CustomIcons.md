@@ -26,7 +26,7 @@ Les types d'appareils existants supportés par la Livebox sont caractérisés pa
 
 Il est possible de personnaliser une icône de deux façons différentes :
 1. En mettant dans le répertoire `custom_icons` un fichier PNG ayant exactement le même nom qu'une icône utilisée par la Livebox. Par exemple un fichier `e_ordibureau_windows.png` remplacera les icônes utilisées pour les clefs `Desktop Windows` et `Computer`, car toutes les deux référencent cette icône.
-2. En mettant dans le répertoire `custom_icons` un fichier PNG ayant le même nom que la clef dont on veut modifier l'icône. Par exemple un fichier `Desktop Windows.png` remplacement icône uniquement pour la clef `Desktop Windows`.
+2. En mettant dans le répertoire `custom_icons` un fichier PNG ayant le même nom que la clef dont on veut modifier l'icône. Par exemple un fichier `Desktop Windows.png` remplacera l'icône uniquement pour la clef `Desktop Windows`.
 
 La table ci-dessous donne l'ensemble des clefs disponibles, les noms affichés dans la version anglaise de l'interface ainsi que les noms d'icône associés. On peut aussi retrouver cette table au format JSON dans le fichier `LmConfig.py` (voir la variable `DEVICE_TYPES`).
 
