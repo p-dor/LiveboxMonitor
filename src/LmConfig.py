@@ -1091,6 +1091,7 @@ class LmConf:
 								aCreateDeviceEntry = False
 								d['Icon'] = aIconFileName
 								d['PixMap'] = aIconPixMap
+								break
 
 					# If doesn't exit, create it
 					if aCreateDeviceEntry:
