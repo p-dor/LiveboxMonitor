@@ -1138,6 +1138,7 @@ TOOLTIPS = {
 		'intPortEdit': 'Port interne sur lequel le trafic doit être redirigé.\n'
 					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
 		'extPortEdit': 'Port externe à rediriger.\n'
+					   'Ne fonctionne pas en IPv6.\n'
 					   'Laisser ce champs vide s\'il s\'agit du même port que le port interne.\n'
 					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
 		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',

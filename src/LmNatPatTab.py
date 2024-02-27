@@ -21,6 +21,7 @@ from __init__ import __build__
 
 # Tab name
 TAB_NAME = 'natPatTab'
+IPV6_SOURCE_PORT_WORKING = False		# SourcePort is available in the API but not working, at least for a LB5
 
 # List columns
 class PatCol(IntEnum):
@@ -1027,8 +1028,10 @@ class LmNatPat:
 		r['origin'] = 'webui'
 		r['sourceInterface'] = 'data'
 		p = iRule['ExtPort']
-		if p is not None:
+		if IPV6_SOURCE_PORT_WORKING and (p is not None):
 			r['sourcePort'] = p
+		else:
+			r['sourcePort'] = ''
 		r['destinationPort'] = iRule['IntPort']
 		r['destinationIPAddress'] = iRule['IP']
 		r['sourcePrefix'] = iRule['ExtIPs']
@@ -1771,8 +1774,13 @@ class PatRuleDialog(QtWidgets.QDialog):
 		# Adjust IP field validator
 		if self.getType() == RULE_TYPE_IPv6:
 			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6_RS + '$')
+			if not IPV6_SOURCE_PORT_WORKING:
+				self._extPortEdit.setEnabled(False)
+				self._extPortEdit.setText('')
 		else:
 			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
+			if not IPV6_SOURCE_PORT_WORKING:
+				self._extPortEdit.setEnabled(True)
 		aIPValidator = QtGui.QRegularExpressionValidator(aIPRegExp)
 		self._ipEdit.setValidator(aIPValidator)
 
