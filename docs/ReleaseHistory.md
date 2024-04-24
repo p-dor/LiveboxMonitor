@@ -1,6 +1,21 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
-## v1.3 - 01/22/2023
+## v1.4 - 24/04/2024
+
+- Support des icônes personnalisées pour les appareils / possibilité de créer de nouveaux types d'appareils avec leurs icônes.
+- Les icônes d'appareils sont maintenant stockées en cache local pour améliorer les performances.
+- Les valeurs de bande passante dans "Internet Infos" ont été corrigées pour être exprimées en GB au lieu de MB.
+- Les LB4 connectées en Fibre via un module SFP externe sont maintenant reconnues comme telle.
+- Le bouton "ONT infos" est disponible pour les LB4 connectées en Fibre.
+- ONT Max Bit Rate Suppported: valeur corrigée pour être exprimée en Gbps au lieu de mW.
+- Correction du calcul de la couleur du champ SignalTxPower dans "ONT infos".
+- Amélioration de la gestion du défilement automatique des valeurs des graphes de trafic, corrigeant quelques cas qui ne fonctionnaient pas correctement.
+- Correction mineure dans la gestion de l'événement notifiant du changement de type d'un appareil.
+- Suppression de la possibilité d'indiquer un port externe pour les règles NAT IPv6 car non supporté par la Livebox.
+- Rajout de l'unité dBm dans les valeurs de force de signal Wifi.
+
+
+## v1.3 - 01/11/2023
 
 - Support des plages de port dans les règles NAT/PAT pour IPv4 et IPv6.
 - Nouveau bouton "Générer documentation APIs..." dans l'onglet "Actions" permettant de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration.
@@ -38,7 +53,7 @@
 - Correction d'un bug dans le décodage des informations de topologie qui pouvait amener à afficher des noms de point d'accès erronés dans certains cas (colonne "Accès").
 
 
-## v1.1 - 02/15/2023
+## v1.1 - 01/05/2023
 
 - Correction d'un problème de crash en mode no-console si les logs étaient activées.
 - Correction d'un problème d'export des infos Livebox pour les LB4.
