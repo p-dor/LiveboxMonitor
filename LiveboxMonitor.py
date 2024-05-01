@@ -413,7 +413,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			QtCore.QCoreApplication.sendPostedEvents()
 			QtCore.QCoreApplication.processEvents()
 
-		LmTools.LogDebug(2, 'TASK STARTING stack={} task={}'.format(self._taskNb, iTask))
+		LmTools.LogDebug(1, 'TASK STARTING stack={} task={}'.format(self._taskNb, iTask))
 
 
 	### Suspend a potential running task
@@ -439,7 +439,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				QtCore.QCoreApplication.sendPostedEvents()
 				QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(2, 'TASK UPDATE stack={} - task={} - status={}'.format(self._taskNb, aTask, iStatus))
+			LmTools.LogDebug(1, 'TASK UPDATE stack={} - task={} - status={}'.format(self._taskNb, aTask, iStatus))
 
 
 	### End a long (nested) task
@@ -465,7 +465,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self._statusBar.clearMessage()
 					QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(2, 'TASK ENDING stack={} - restoring={}'.format(self._taskNb, aTask))
+			LmTools.LogDebug(1, 'TASK ENDING stack={} - restoring={}'.format(self._taskNb, aTask))
 
 
 	# Display an error popup
