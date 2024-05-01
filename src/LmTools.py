@@ -64,6 +64,11 @@ def SetVerbosity(iLevel):
 	gVerbosity = iLevel
 
 
+# Get verbosity
+def GetVerbosity():
+	return gVerbosity
+
+
 # Debug logging according to level
 def LogDebug(iLevel, *iArgs):
 	if gVerbosity >= iLevel:
