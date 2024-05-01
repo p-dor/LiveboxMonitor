@@ -64,7 +64,7 @@ class LmSession:
 				if aUrlFrom in URL_REDIRECTIONS:
 					raise Exception("URL source de redirection déjà présent.")
 				URL_REDIRECTIONS[aUrlFrom] = aUrlTo
-				LmTools.LogDebug(2, 'Added redirection', aUrlFrom, 'to', aUrlTo)
+				LmTools.LogDebug(1, 'Added redirection', aUrlFrom, 'to', aUrlTo)
 		except BaseException as e:
 			print(f"Erreur de traitement de '{i}':", e)
 
@@ -74,7 +74,7 @@ class LmSession:
 		# Set cookie & contextID file path
 		aStateFilePath = os.path.join(tempfile.gettempdir(), self._name + '_state')
 
-		LmTools.LogDebug(3, 'State file', aStateFilePath)
+		LmTools.LogDebug(1, 'State file', aStateFilePath)
 
 		# Close current session if any
 		self.close()
@@ -98,7 +98,7 @@ class LmSession:
 				self._session = requests.Session()
 				self._channelID = 0
 
-				LmTools.LogDebug(2, 'Authentication')
+				LmTools.LogDebug(1, 'Authentication')
 	 
 				aAuth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, iUser, iPassword)
 
@@ -185,7 +185,7 @@ class LmSession:
 			else:
 				c += '?_restDepth=' + str(iArgs)
 
-			LmTools.LogDebug(1, 'Request: %s' % (c))
+			LmTools.LogDebug(2, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
 			try:
 				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
@@ -221,7 +221,7 @@ class LmSession:
 			c = 'ws'
 
 			# Send request & headers
-			LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
+			LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
 			aTimeStamp = datetime.datetime.now()
 			try:
 				t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
@@ -229,7 +229,7 @@ class LmSession:
 				t = t.content
 			except requests.exceptions.Timeout as e:
 				if not iSilent:
-					LmTools.LogDebug(1, 'Request timeout error: {}'.format(e))
+					LmTools.Error('Request timeout error: {}'.format(e))
 				return None
 			except BaseException as e:
 				if not iSilent:
@@ -249,7 +249,7 @@ class LmSession:
 		aOverview = str(r)
 		if len(aOverview) > 128:
 			aOverview = aOverview[:128] + '...'
-		LmTools.LogDebug(1, 'Reply:', aOverview)
+		LmTools.LogDebug(2, 'Reply:', aOverview)
 
 		if not iGet and 'result' in r:
 			r = r['result']
@@ -258,7 +258,7 @@ class LmSession:
 					LmTools.Error('Error:', t)
 				return None
 
-		LmTools.LogDebug(1, '-------------------------')
+		LmTools.LogDebug(2, '-------------------------')
 		return r
 
 
@@ -276,10 +276,10 @@ class LmSession:
 			aData['channelid'] = str(self._channelID)
 		c = 'ws'
 
-		LmTools.LogDebug(1, 'JSON DUMP: %s' % (str(json.dumps(aData))))
+		LmTools.LogDebug(2, 'JSON DUMP: %s' % (str(json.dumps(aData))))
 
 		# Send request & headers
-		LmTools.LogDebug(1, 'Request: %s with %s' % (c, str(aData)))
+		LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
 		aTimeStamp = datetime.datetime.now()
 		try:
 			t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahEventHeaders, timeout = iTimeout, verify = self._verify)
@@ -287,7 +287,7 @@ class LmSession:
 			t = t.content
 		except requests.exceptions.Timeout as e:
 			if not iSilent:
-				LmTools.LogDebug(1, 'Event request timeout error: {}'.format(e))
+				LmTools.LogDebug(2, 'Event request timeout error: {}'.format(e))
 			return None
 		except BaseException as e:
 			if not iSilent:
@@ -311,7 +311,7 @@ class LmSession:
 		aOverview = str(r)
 		if len(aOverview) > 50:
 			aOverview = aOverview[:50] + '...'
-		LmTools.LogDebug(1, 'Reply:', aOverview)
+		LmTools.LogDebug(2, 'Reply:', aOverview)
 
 		if 'result' in r:
 			r = r['result']
@@ -320,7 +320,7 @@ class LmSession:
 					LmTools.Error('Error:', t)
 				return None
 
-		LmTools.LogDebug(1, '-------------------------')
+		LmTools.LogDebug(2, '-------------------------')
 		self._channelID = r.get('channelid', 0)
 		return r
 
