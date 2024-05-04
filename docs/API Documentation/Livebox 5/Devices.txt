@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.66.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
 
 =======================================================================
 OBJECT: .Devices - Name: .Devices
@@ -55,6 +55,12 @@ OBJECT: Devices.Config.selflan - Name: Devices.Config.selflan
       Attributes: persistent
 
 =======================================================================
+OBJECT: Devices.Config.selfphysical - Name: Devices.Config.selfphysical
+ == PARAMETERS:
+  - Blocked (type: string)
+      Attributes: persistent
+
+=======================================================================
 OBJECT: Devices.Config.eth - Name: Devices.Config.eth
  == PARAMETERS:
   - DHCPPools (type: string)
@@ -107,12 +113,6 @@ OBJECT: Devices.Config.mqtt - Name: Devices.Config.mqtt
   - DeleteTopic (type: string)
       Attributes: persistent
   - EventsEnable (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.selfphysical - Name: Devices.Config.selfphysical
- == PARAMETERS:
-  - Blocked (type: string)
       Attributes: persistent
 
 =======================================================================
