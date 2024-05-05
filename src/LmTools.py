@@ -55,7 +55,7 @@ class ValQual(IntEnum):
 # ################################ Tools ################################
 
 # Lambda function to output on stderr
-Error = functools.partial(print, file = sys.stderr)
+Error = functools.partial(print, '###ERROR:', file = sys.stderr)
 
 
 # Set verbosity
