@@ -18,7 +18,7 @@ from src.LmLanguages import GetToolsLabel as lx
 # ################################ VARS & DEFS ################################
 
 # Debug verbosity
-gVerbosity = 0
+gVerbosity = 1
 
 # Regular expressions - https://ihateregex.io/
 MAC_RS = r'(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})'
