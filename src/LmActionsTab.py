@@ -9,7 +9,7 @@ from src import LmGenApiDocumentation
 from src import LmTools
 from src.LmIcons import LmIcon
 from src import LmConfig
-from src.LmConfig import LmConf, PrefsDialog, SetApplicationStyle
+from src.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
 from src.LmLanguages import (GetActionsLabel as lx,
 							 GetActionsRHistoryDialogLabel as lrx,
 							 GetActionsWGlobalDialogLabel as lwx,
@@ -203,7 +203,7 @@ class LmActions:
 		# Setup box
 		aSetupButtons = QtWidgets.QVBoxLayout()
 		aSetupButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-		aSetupButtons.setSpacing(20)
+		aSetupButtons.setSpacing(15)
 
 		aPrefsButton = QtWidgets.QPushButton(lx('Preferences...'), objectName = 'prefs')
 		aPrefsButton.clicked.connect(self.prefsButtonClick)
@@ -213,6 +213,10 @@ class LmActions:
 		aChangeProfileButton.clicked.connect(self.changeProfileButtonClick)
 		aSetupButtons.addWidget(aChangeProfileButton)
 
+		aEmailSetupButton = QtWidgets.QPushButton(lx('Email Setup...'), objectName = 'emailSetup')
+		aEmailSetupButton.clicked.connect(self.emailSetupButtonClick)
+		aSetupButtons.addWidget(aEmailSetupButton)
+
 		aSetupGroupBox = QtWidgets.QGroupBox(lx('Setup'), objectName = 'setupGroup')
 		aSetupGroupBox.setLayout(aSetupButtons)
 
@@ -221,7 +225,7 @@ class LmActions:
 		# Debug box
 		aDebugButtons = QtWidgets.QVBoxLayout()
 		aDebugButtons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-		aDebugButtons.setSpacing(20)
+		aDebugButtons.setSpacing(10)
 
 		aShowRawDeviceListButton = QtWidgets.QPushButton(lx('Raw Device List...'), objectName = 'showRawDeviceList')
 		aShowRawDeviceListButton.clicked.connect(self.showRawDeviceListButtonClick)
@@ -641,6 +645,14 @@ class LmActions:
 			self.resetUI()
 		elif r == 2:
 			self.prefsButtonClick()
+
+
+	### Click on email setup button
+	def emailSetupButtonClick(self):
+		aEmailSetupDialog = EmailSetupDialog(self)
+		if aEmailSetupDialog.exec():
+			LmConf.setEmailSetup(aEmailSetupDialog.getSetup())
+			LmConf.save()
 
 
 	### Click on show raw device list button
