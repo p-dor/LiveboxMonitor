@@ -3,11 +3,12 @@
 import sys
 import functools
 import re
-import datetime
-import time
+import datetime, time 
+import smtplib, ssl
 
 from enum import IntEnum
 from dateutil import tz
+from email.message import EmailMessage
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -34,12 +35,14 @@ IPv6_RS = (r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
 PORTS_RS = (r'^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})$|'
 			r'^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})-(6553[0-5]|'
 			r'655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})$')
+EMAIL_RS = r'[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
 
 # Useful objects
 MAC_RE = re.compile(MAC_RS)
 IPv4_RE = re.compile('^' + IPv4_RS + '$')
 IPv6_RE = re.compile('^' + IPv6_RS + '$')
 PORTS_RE = re.compile(PORTS_RS)
+EMAIL_RE = re.compile(EMAIL_RS)
 BOLD_FONT = QtGui.QFont()
 BOLD_FONT.setBold(True)
 
@@ -54,28 +57,28 @@ class ValQual(IntEnum):
 
 # ################################ Tools ################################
 
-# Lambda function to output on stderr
+### Lambda function to output on stderr
 Error = functools.partial(print, '###ERROR:', file = sys.stderr)
 
 
-# Set verbosity
+### Set verbosity
 def SetVerbosity(iLevel):
 	global gVerbosity
 	gVerbosity = iLevel
 
 
-# Get verbosity
+### Get verbosity
 def GetVerbosity():
 	return gVerbosity
 
 
-# Debug logging according to level
+### Debug logging according to level
 def LogDebug(iLevel, *iArgs):
 	if gVerbosity >= iLevel:
 		sys.stderr.write('###DEBUG-L' + str(iLevel) + ': ' + ' '.join(iArgs) + '\n')
 
 
-# Display an error popup
+### Display an error popup
 def DisplayError(iErrorMsg):
 	aMsgBox = QtWidgets.QMessageBox()
 	aMsgBox.setWindowTitle(lx('Error'))
@@ -84,7 +87,7 @@ def DisplayError(iErrorMsg):
 	aMsgBox.exec()
 
 
-# Display a status popup
+### Display a status popup
 def DisplayStatus(iStatusMsg):
 	aMsgBox = QtWidgets.QMessageBox()
 	aMsgBox.setWindowTitle(lx('Status'))
@@ -93,7 +96,7 @@ def DisplayStatus(iStatusMsg):
 	aMsgBox.exec()
 
 
-# Ask a question and return True if OK clicked
+### Ask a question and return True if OK clicked
 def AskQuestion(iQuestionMsg):
 	aMsgBox = QtWidgets.QMessageBox()
 	aMsgBox.setWindowTitle(lx('Please confirm'))
@@ -103,34 +106,34 @@ def AskQuestion(iQuestionMsg):
 	return aMsgBox.exec() == QtWidgets.QMessageBox.StandardButton.Ok
 
 
-# Display an info text popup
+### Display an info text popup
 def DisplayInfos(iTitle, iInfoMsg, iInfoDoc = None):
 	aTextDialog = TextDialog()
 	aTextDialog.display(iTitle, iInfoMsg, iInfoDoc)
 	aTextDialog.exec()
 
 
-# Set mouse cursor to busy - Stack mode
+### Set mouse cursor to busy - Stack mode
 def MouseCursor_Busy():
 	QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
 
 
-# Restore mouse cursor to previous state - Stack mode
+### Restore mouse cursor to previous state - Stack mode
 def MouseCursor_Normal():
 	QtWidgets.QApplication.restoreOverrideCursor()
 
 
-# Force mouse cursor to busy
+### Force mouse cursor to busy
 def MouseCursor_ForceBusy():
 	QtWidgets.QApplication.changeOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
 
 
-# Force mouse cursor to normal arrow
+### Force mouse cursor to normal arrow
 def MouseCursor_ForceNormal():
 	QtWidgets.QApplication.changeOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
 
 
-# Extract a valid MAC Addr from any string
+### Extract a valid MAC Addr from any string
 def ExtractMacAddrFromString(iString):
 	aMatch = re.search(MAC_RE, iString) 
 	if (aMatch is None):
@@ -138,22 +141,27 @@ def ExtractMacAddrFromString(iString):
 	return aMatch.group(0)
 
 
-# Check if valid IPv4 address
+### Check if valid MAC address
+def IsMACAddr(iString):
+	return re.fullmatch(MAC_RE, iString) is not None
+
+
+### Check if valid IPv4 address
 def IsIPv4(iString):
 	return re.fullmatch(IPv4_RE, iString) is not None
 
 
-# Check if valid IPv6 address
+### Check if valid IPv6 address
 def IsIPv6(iString):
 	return re.fullmatch(IPv6_RE, iString) is not None
 
 
-# Check if valid TCP/UDP port or ports range
+### Check if valid TCP/UDP port or ports range
 def isTcpUdpPort(iString):
 	return re.fullmatch(PORTS_RE, iString) is not None
 
 
-# Cleanup URL
+### Cleanup URL
 def CleanURL(iURL):
 	n = len(iURL)
 	if n:
@@ -164,7 +172,7 @@ def CleanURL(iURL):
 	return iURL
 
 
-# Collect error descriptions from Livebox replies
+### Collect error descriptions from Livebox replies
 def GetErrorsFromLiveboxReply(iReply):
 	d = ''
 	if iReply is not None:
@@ -184,7 +192,7 @@ def GetErrorsFromLiveboxReply(iReply):
 	return d
 
 
-# Determine device IPv4 address info from IPv4 list, return the struct, none if nothing found
+### Determine device IPv4 address info from IPv4 list, return the struct, none if nothing found
 def DetermineIP(iDevice):
 	if iDevice is not None:
 		# Retrieve the list
@@ -224,10 +232,61 @@ def DetermineIP(iDevice):
 	return None
 
 
+### Send an email, returns true if successful
+def SendEmail(iEmailSetup, iSubject, iMessage):
+	# Create a text/plain message
+	m = EmailMessage()
+	m['From'] = iEmailSetup['From']
+	m['To'] = iEmailSetup['To']
+	m['Subject'] = iEmailSetup['Prefix'] + iSubject
+
+	# Message body
+	try:
+		m.set_content(iMessage)
+	except BaseException as e:
+		Error('Cannot set email content. Error: {}'.format(e))
+		return False
+
+	# Create a session
+	s = None
+	try:
+		if iEmailSetup['TLS']:
+			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3)
+			s.starttls(context = ssl.create_default_context())
+		elif iEmailSetup['SSL']:
+			s = smtplib.SMTP_SSL(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3, context = ssl.create_default_context())
+		else:
+			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3)
+	except BaseException as e:
+		Error('Cannot setup email session. Error: {}'.format(e))
+		if s is not None:
+			s.quit()
+		return False
+
+	# Authenticate if necessary
+	if iEmailSetup['Authentication']:
+		try:
+			s.login(iEmailSetup['User'], iEmailSetup['Password'])
+		except BaseException as e:
+			Error('Authentication to SMTP server failed. Error: {}'.format(e))
+			s.quit()
+			return False
+
+	# Send the message
+	try:
+		s.send_message(m)
+	except BaseException as e:
+		Error('Cannot send email. Error: {}'.format(e))
+		s.quit()
+		return False
+
+	s.quit()
+	return True
+
 
 # ################################ Formatting Tools ################################
 
-# Format bytes
+### Format bytes
 def FmtBytes(iBytes, iSuffix = 'B'):
 	for aUnit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
 		if abs(iBytes) < 1024.0:
@@ -236,7 +295,7 @@ def FmtBytes(iBytes, iSuffix = 'B'):
 	return f'{iBytes:.1f} Y{iSuffix}'
 
 
-# Format boolean
+### Format boolean
 def FmtBool(iBool):
 	if iBool is None:
 		return ''
@@ -245,28 +304,28 @@ def FmtBool(iBool):
 	return lx('False')
 
 
-# Format integer
+### Format integer
 def FmtInt(iInt):
 	if iInt is None:
 		return ''
 	return str(iInt)
 
 
-# Format a string with capitalize
+### Format a string with capitalize
 def FmtStrCapitalize(iString):
 	if iString is None:
 		return ''
 	return iString.capitalize()
 
 
-# Format a string in upper string
+### Format a string in upper string
 def FmtStrUpper(iString):
 	if iString is None:
 		return ''
 	return iString.upper()
 
 
-# Format time
+### Format time
 def FmtTime(iSeconds, iNoZero = False):
 	if iSeconds is None:
 		return ''
@@ -293,7 +352,7 @@ def FmtTime(iSeconds, iNoZero = False):
 		return '{:02d}d {:02d}h {:02d}m {:02d}s'.format(aDays, aHours, aMinutes, aSeconds)
 
 
-# Format Livebox timestamps
+### Format Livebox timestamps
 def FmtLiveboxTimestamp(iTimestamp):
 	if iTimestamp is None:
 		return ''
@@ -303,7 +362,7 @@ def FmtLiveboxTimestamp(iTimestamp):
 	return aDateTime.strftime('%Y-%m-%d %H:%M:%S')
 
 
-# Parse Livebox timestamp (UTC time)
+### Parse Livebox timestamp (UTC time)
 def LiveboxTimestamp(iTimestamp):
 	try:
 		return datetime.datetime.fromisoformat(iTimestamp.replace('Z','+00:00')).replace(tzinfo = tz.tzutc()).astimezone(tz.tzlocal())
@@ -314,7 +373,7 @@ def LiveboxTimestamp(iTimestamp):
 
 # ############# Column sort classes #############
 
-# Sorting columns by numeric
+### Sorting columns by numeric
 class NumericSortItem(QtWidgets.QTableWidgetItem):
 	def __lt__(self, iOther):
 		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
@@ -326,7 +385,7 @@ class NumericSortItem(QtWidgets.QTableWidgetItem):
 		return x < y
 
 
-# Drawing centered icons
+### Drawing centered icons
 class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
 	def __init__(self, iParent, iColumnList):
 		super(CenteredIconsDelegate, self).__init__(iParent)
@@ -339,6 +398,27 @@ class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
 				aIcon.paint(iPainter, iOption.rect)
 		else:
 			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
+
+
+### Drawing centered icons in QHeaderView
+class CenteredIconHeaderView(QtWidgets.QHeaderView):
+	def __init__(self, iParent, iColumnList):
+		super(CenteredIconHeaderView, self).__init__(QtCore.Qt.Orientation.Horizontal, iParent)
+		self._columnList = iColumnList
+
+	def paintSection(self, iPainter, iRect, iIndex):
+		if iIndex in self._columnList:
+			# If icon, first draw the column's normally - ensure title is an empty string
+			iPainter.save()
+			super(CenteredIconHeaderView, self).paintSection(iPainter, iRect, iIndex)
+			iPainter.restore()
+
+			# Then draw the icon stored in DisplayRole on top
+			aIcon = self.model().headerData(iIndex, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.DisplayRole)
+			if aIcon is not None:
+				aIcon.paint(iPainter, iRect)
+		else:
+			super(CenteredIconHeaderView, self).paintSection(iPainter, iRect, iIndex)
 
 
 
@@ -430,14 +510,14 @@ class ColorButton(QtWidgets.QPushButton):
 # ############# Multi lines edit #############
 # Custom QtWidget to type a text on multilines without carriage return.
 class MultiLinesEdit(QtWidgets.QPlainTextEdit):
-	# Prevent carriage return, e.g. in plain text fields
+	### Prevent carriage return, e.g. in plain text fields
 	def keyPressEvent(self, iEvent):
 		if iEvent.key() in (QtCore.Qt.Key.Key_Return, QtCore.Qt.Key.Key_Enter):
 			return
 		super().keyPressEvent(iEvent)
 
 
-	# Set the maximum height to a given nb of lines
+	### Set the maximum height to a given nb of lines
 	def setLineNumber(self, iLines):
 		f = QtGui.QFontMetrics(self.font())
 		m = self.contentsMargins()
