@@ -1,5 +1,6 @@
 ### Livebox Monitor events tab module ###
 
+import os
 import json
 import datetime
 import time
@@ -10,8 +11,10 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from src import LmTools, LmConfig
 from src.LmConfig import LmConf
+from src.LmIcons import LmIcon
 from src.LmDeviceListTab import DSelCol
-from src.LmLanguages import GetEventsLabel as lx
+from src.LmLanguages import (GetEventsLabel as lx,
+							 GetNotificationRulesLabel as lnx)
 
 
 # ################################ VARS & DEFS ################################
@@ -22,6 +25,26 @@ TAB_NAME = 'eventsTab'
 # Static Config
 MAX_EVENT_BUFFER_PER_DEVICE = 100
 
+NOTIF_EVENT_DEVICE_ALL = 'ALL'
+NOTIF_EVENT_DEVICE_UNKNOWN = 'UNK'
+
+NOTIF_EVENT_TYPE_ADD = 'ADD'
+NOTIF_EVENT_TYPE_DELETE = 'DEL'
+NOTIF_EVENT_TYPE_ACTIVE = 'ACT'
+NOTIF_EVENT_TYPE_INACTIVE = 'INA'
+NOTIF_EVENT_TYPE_LINK_CHANGE = 'LNK'
+NOTIF_EVENT_HUMAN_TYPE = {
+	NOTIF_EVENT_TYPE_ADD: 			'Added',
+	NOTIF_EVENT_TYPE_DELETE:		'Deleted',
+	NOTIF_EVENT_TYPE_ACTIVE:		'Connected',
+	NOTIF_EVENT_TYPE_INACTIVE:		'Disconnected',
+	NOTIF_EVENT_TYPE_LINK_CHANGE:	'Access change'
+}
+
+NOTIF_EVENT_RULE_FILE = 'FIL'
+NOTIF_EVENT_RULE_EMAIL = 'EMA'
+
+
 # List columns
 class EventCol(IntEnum):
 	Key = 0
@@ -29,6 +52,19 @@ class EventCol(IntEnum):
 	Reason = 2
 	Attribute = 3
 	Count = 4
+
+class RuleCol(IntEnum):
+	Key = 0
+	Add = 1
+	Delete = 2
+	Active = 3
+	Inactive = 4
+	Link = 5
+	File = 6
+	Email = 7
+	Count = 8
+ICON_COLUMNS = [RuleCol.Add, RuleCol.Delete, RuleCol.Active, RuleCol.Inactive, RuleCol.Link, RuleCol.File, RuleCol.Email]
+
 
 
 # ################################ LmEvents class ################################
@@ -96,7 +132,10 @@ class LmEvents:
 		# Button bar
 		aButtonsBox = QtWidgets.QHBoxLayout()
 		aButtonsBox.setSpacing(30)
-		aDisplayEventButton = QtWidgets.QPushButton(lx('Display Event'), objectName = 'displayEvent')
+		aNotificationsButton = QtWidgets.QPushButton(lx('Notifications...'), objectName = 'notifications')
+		aNotificationsButton.clicked.connect(self.notificationsButtonClick)
+		aButtonsBox.addWidget(aNotificationsButton)
+		aDisplayEventButton = QtWidgets.QPushButton(lx('Display Event...'), objectName = 'displayEvent')
 		aDisplayEventButton.clicked.connect(self.displayEventButtonClick)
 		aButtonsBox.addWidget(aDisplayEventButton)
 
@@ -118,6 +157,9 @@ class LmEvents:
 		self._eventBuffer = {}
 		self._liveboxEventThread = None
 		self._liveboxEventLoop = None
+		self._notifyRawEventLog = []
+		self._notificationTimer = QtCore.QTimer()
+		self._notificationTimer.timeout.connect(self.notifyFlushEvents)
 
 
 	### Start the Livebox event collector thread
@@ -129,20 +171,23 @@ class LmEvents:
 		self._liveboxEventLoop._eventReceived.connect(self.processLiveboxEvent)
 		self._liveboxEventLoop._resume.connect(self._liveboxEventLoop.resume)
 		self._liveboxEventThread.start()
+		self.startNotificationTimer()
 
 
-	### Suspend the Livebox stats collector thread
+	### Suspend the Livebox event collector thread
 	def suspendEventLoop(self):
 		if self._liveboxEventThread is not None:
 			self._liveboxEventLoop.stop()
+		self.stopNotificationTimer()
 
 
-	### Resume the Livebox stats collector thread
+	### Resume the Livebox event collector thread
 	def resumeEventLoop(self):
 		if self._liveboxEventThread is None:
 			self.startEventLoop()
 		else:
 			self._liveboxEventLoop._resume.emit()
+		self.startNotificationTimer()
 
 
 	### Stop the Livebox event collector thread
@@ -152,6 +197,18 @@ class LmEvents:
 			self._liveboxEventThread.wait()
 			self._liveboxEventThread = None
 			self._liveboxEventLoop = None
+		self.stopNotificationTimer()
+
+
+	### Start the regular notification collector tasks
+	def startNotificationTimer(self):
+		if LmConf.NotificationRules is not None:
+			self._notificationTimer.start(LmConf.NotificationFlushFrequency * 1000)
+
+
+	### Stop the regular notification collector tasks
+	def stopNotificationTimer(self):
+		self._notificationTimer.stop()
 
 
 	### Click on event device list
@@ -165,6 +222,20 @@ class LmEvents:
 			self._eventList.setSortingEnabled(False)
 			self.updateEventList(aKey)
 			self._eventList.setSortingEnabled(True)
+
+
+	### Click on notifications button
+	def notificationsButtonClick(self):
+		aNotificationSetupDialog = NotificationSetupDialog(self)
+		if aNotificationSetupDialog.exec():
+			LmConf.save()
+			self.stopNotificationTimer()
+			self.startNotificationTimer()
+			if LmEvents.notifyHasEmailRule() and (LmConf.Email is None):
+				if LmTools.AskQuestion('You have configured at least one rule with sending emails as an action but '
+									   'you have not configured how to send emails. '
+									   'Do you want to configure how to send emails?'):
+					self.emailSetupButtonClick()
 
 
 	### Click on display event button
@@ -186,12 +257,7 @@ class LmEvents:
 		aEventArray = aDeviceEventDict.get('Events', [])
 
 		# Retrieve event entry in the array
-		e = None
-		for aEvent in aEventArray:
-			if aEvent['Key'] == aEventKey:
-				e = aEvent
-				break
-
+		e = next((e for e in aEventArray if e['Key'] == aEventKey), None)
 		if e is None:
 			self.displayError('Event entry not found.')
 			return
@@ -371,6 +437,932 @@ class LmEvents:
 			if aSelectedDeviceKey == iDeviceKey:
 				self._eventList.insertRow(0)
 				self.setEventListLine(0, aEntry)
+
+
+	### Notify about a device added event
+	def notifyDeviceAddedEvent(self, iMac):
+		self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': NOTIF_EVENT_TYPE_ADD})
+
+
+	### Notify about a device deleted event
+	def notifyDeviceDeletedEvent(self, iMac):
+		self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': NOTIF_EVENT_TYPE_DELETE})
+
+
+	### Notify about a device active event
+	def notifyDeviceActiveEvent(self, iMac, iLink):
+		self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': NOTIF_EVENT_TYPE_ACTIVE,
+							     'Link': iLink})
+
+
+	### Notify about a device inactive event
+	def notifyDeviceInactiveEvent(self, iMac):
+		self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': NOTIF_EVENT_TYPE_INACTIVE})
+
+
+	### Notify about a device access link change event
+	def notifyDeviceAccessLinkEvent(self, iMac, iOldLink, iNewLink):
+		self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': NOTIF_EVENT_TYPE_LINK_CHANGE,
+								 'OldLink': iOldLink, 'NewLink': iNewLink})
+
+
+	### Add a raw event notification in cache log
+	def notifyAddRawEvent(self, iEvent):
+		t = iEvent['Type']
+
+		### Debug logs
+		if LmTools.GetVerbosity() >= 1:
+			ts = iEvent['Timestamp'].strftime('%d/%m/%Y - %H:%M:%S')
+			k = iEvent['Key']
+			if t == NOTIF_EVENT_TYPE_ACTIVE:
+				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {} -> {}.'.format(ts, k, t, iEvent['Link']))
+			elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
+				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {} -> from {} to {}.'.format(ts, k, t, iEvent['OldLink'], iEvent['NewLink']))
+			else:
+				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {}.'.format(ts, k, t))
+
+		# If DELETE event look for a recent DELETE event, if too close (duplicates) don't add
+		if t == NOTIF_EVENT_TYPE_DELETE:
+			if not self.notifyMergeDeleteEvent(iEvent):
+				self._notifyRawEventLog.append(iEvent)
+
+		# If ACTIVE event look for a recent INACTIVE event, if too close (micro-cuts) remove both
+		elif t == NOTIF_EVENT_TYPE_ACTIVE:
+			if not self.notifyMergeActiveEvent(iEvent):
+				self._notifyRawEventLog.append(iEvent)
+
+		# If LINK_CHANGE event look for a match with a recent LINK_CHANGE event, if too close (micro-changes) remove both or merge them
+		elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
+			if not self.notifyMergeLinkChangeEvent(iEvent):
+				self._notifyRawEventLog.append(iEvent)
+
+		# Add any other event straight
+		else:
+			self._notifyRawEventLog.append(iEvent)
+
+
+	### Find recent DELETE event matching DELETE event on input, returns true if found
+	def notifyMergeDeleteEvent(self, iEvent):
+		k = iEvent['Key']
+		ts = iEvent['Timestamp']
+		for e in reversed(self._notifyRawEventLog):
+			ets = e['Timestamp']
+			if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
+				return False
+			if (e['Key'] == k) and (e['Type'] == NOTIF_EVENT_TYPE_DELETE):
+				return True
+		return False
+
+
+	### Find and remove a recent INACTIVE event matching ACTIVE event on input, returns true if found
+	def notifyMergeActiveEvent(self, iEvent):
+		k = iEvent['Key']
+		ts = iEvent['Timestamp']
+		for e in reversed(self._notifyRawEventLog):
+			ets = e['Timestamp']
+			if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
+				return False
+			if (e['Key'] == k) and (e['Type'] == NOTIF_EVENT_TYPE_INACTIVE):
+				self._notifyRawEventLog.remove(e)
+				return True
+		return False
+
+
+	### Find a matching recent LINK_CHANGE and either remove it or merge it, returns true if no need to add new event
+	def notifyMergeLinkChangeEvent(self, ioEvent):
+		k = ioEvent['Key']
+		ts = ioEvent['Timestamp']
+		ol = ioEvent['OldLink']
+		nl = ioEvent['NewLink']
+
+		for e in reversed(self._notifyRawEventLog):
+			ets = e['Timestamp']
+			if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
+				# Reach time limit -> Add
+				return False
+			if (e['Key'] == k) and (e['Type'] == NOTIF_EVENT_TYPE_LINK_CHANGE):
+				# Match found
+				if (e['OldLink'] == nl):
+					# Item old link matches new link -> Merge means cancel both
+					self._notifyRawEventLog.remove(e)
+					return True
+				if (e['NewLink'] == ol):
+					# Item new link matches old link -> Remove item, merge old
+					ioEvent['OldLink'] = e['OldLink']
+					self._notifyRawEventLog.remove(e)
+					return False
+		# No match -> Add
+		return False
+
+
+	### Flush events in the frequency window, triggering user notifications when matching configured rules
+	def notifyFlushEvents(self):
+		n = datetime.datetime.now()
+		for e in self._notifyRawEventLog:
+
+			# Always keep the most recent events that are within the frequency window
+			ets = e['Timestamp']
+			if (n - ets).total_seconds() <= LmConf.NotificationFlushFrequency:
+				break
+
+			# User notifications matching configured rules
+			r = LmEvents.notifyGetMatchingRule(e)
+			if (type(r).__name__ == 'list'):
+				if NOTIF_EVENT_RULE_FILE in r:
+					self.notifyUserFile(e)
+				if NOTIF_EVENT_RULE_EMAIL in r:
+					self.notifyUserEmail(e)
+
+			self._notifyRawEventLog.remove(e)
+
+
+	### Generate a user notification for an event in a CSV file
+	def notifyUserFile(self, iEvent):
+		LmTools.LogDebug(1, 'Logging event in file:', str(iEvent))
+
+		k = iEvent['Key']
+		n = LmConf.MacAddrTable.get(k, lx('### UNKNOWN ###'))
+		ts = iEvent['Timestamp']
+		t = iEvent['Type']
+
+		if LmConf.NotificationFilePath is None:
+			aPath = LmConf.getConfigDirectory()
+		else:
+			aPath = LmConf.NotificationFilePath
+		aFileName = 'LiveboxMonitor_Events_{}.csv'.format(ts.strftime('%Y-%m-%d'))
+		aFilePath = os.path.join(aPath, aFileName)
+
+		try:
+			with open(aFilePath, 'a') as f:
+				aType = lx(NOTIF_EVENT_HUMAN_TYPE[t])
+
+				f.write('{}; {}; {}; {}'.format(ts.strftime('%H:%M:%S'), k, n, aType))
+
+				if t == NOTIF_EVENT_TYPE_ACTIVE:
+					f.write('; {}'.format(iEvent['Link']))
+				elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
+					f.write('; {}; {}'.format(iEvent['OldLink'], iEvent['NewLink']))
+				f.write('\n')
+		except BaseException as e:
+			LmTools.Error('Cannot log event. Error: {}'.format(e))
+
+
+	### Generate a user notification for an event via configured email
+	def notifyUserEmail(self, iEvent):
+		LmTools.LogDebug(1, 'Emailing event:', str(iEvent))
+
+		c = LmConf.loadEmailSetup()
+		if c is None:
+			LmTools.Error('No email setup to notify event by email.')
+			return
+
+		k = iEvent['Key']
+		n = LmConf.MacAddrTable.get(k, lx('### UNKNOWN ###'))
+		ts = iEvent['Timestamp']
+		t = iEvent['Type']
+
+		aType = lx(NOTIF_EVENT_HUMAN_TYPE[t])
+		aSubject = n + ' - ' + aType
+
+		m = lx('Date:') + ' ' + ts.strftime('%d/%m/%Y') + '\n'
+		m += lx('Time:') + ' ' + ts.strftime('%H:%M:%S') + '\n'
+		m += lx('Device:') + ' ' + n + '\n'
+		m += lx('MAC:') + ' ' + k + '\n'
+		m += lx('Event:') + ' ' + aType + '\n'
+
+		if t == NOTIF_EVENT_TYPE_ACTIVE:
+			m += lx('Access link:') + ' ' + iEvent['Link'] + '\n'
+		elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
+			m += lx('Old access link:') + ' ' + iEvent['OldLink'] + '\n'
+			m += lx('New access link:') + ' ' + iEvent['NewLink'] + '\n'
+
+		if not LmTools.SendEmail(c, aSubject, m):
+			LmTools.Error('Email notification send failure. Check your email setup.')
+
+
+	### Check if a notification event match any configured notification rules
+	@staticmethod
+	def notifyGetMatchingRule(iEvent):
+		rr = []
+		t = iEvent['Type']
+
+		# Find a matching general rule for ALL
+		for r in LmConf.NotificationRules:
+			if r.get('Key') == NOTIF_EVENT_DEVICE_ALL:
+				e = r.get('Events')
+				if (type(e).__name__ == 'list') and (t in e):
+					rr += r.get('Rules')
+
+		# Find a matching rule for unknown devices in case device is unknown
+		k = iEvent['Key']
+		n = LmConf.MacAddrTable.get(k)
+		if n is None:
+			for r in LmConf.NotificationRules:
+				if r.get('Key') == NOTIF_EVENT_DEVICE_UNKNOWN:
+					e = r.get('Events')
+					if (type(e).__name__ == 'list') and (t in e):
+						rr += r.get('Rules')
+
+		# Find a matching specific rule for this device
+		for r in LmConf.NotificationRules:
+			if r.get('Key') == k:
+				e = r.get('Events')
+				if (type(e).__name__ == 'list') and (t in e):
+					rr += r.get('Rules')
+
+		return rr
+
+
+	### Check if a notification rule uses email action, returns True if yes
+	@staticmethod
+	def notifyHasEmailRule():
+		if LmConf.NotificationRules is not None:
+			r = next((r for r in LmConf.NotificationRules if NOTIF_EVENT_RULE_EMAIL in r['Rules']), None)
+			return r is not None
+		return False
+
+
+
+# ################################ Notification rules setup dialog ################################
+###TODO### -> put email sending in separate thread + try to provide an option to prevent PC sleep mode
+class NotificationSetupDialog(QtWidgets.QDialog):
+	DeviceComboSeparatorIndex = 2
+
+	### Constructor
+	def __init__(self, iParent = None):
+		super(NotificationSetupDialog, self).__init__(iParent)
+		self.resize(720, 400)
+
+		self._ruleSelection = -1
+		self._ignoreSignal = False
+		self._init = True
+
+		# Rule box
+		aRuleLayout = QtWidgets.QHBoxLayout()
+		aRuleLayout.setSpacing(30)
+
+		aRuleListLayout = QtWidgets.QVBoxLayout()
+		aRuleListLayout.setSpacing(5)
+
+		# Device list columns
+		self._ruleList = QtWidgets.QTableWidget(objectName = 'ruleList')
+		self._ruleList.setHorizontalHeader(LmTools.CenteredIconHeaderView(self, ICON_COLUMNS))
+		self._ruleList.setColumnCount(RuleCol.Count)
+
+		# Set columns - need to set to empty strings for icons
+		self._ruleList.setHorizontalHeaderLabels((lnx('Device'), '', '', '', '', '', '', ''))
+
+		aHeader = self._ruleList.horizontalHeader()
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(RuleCol.Key, QtWidgets.QHeaderView.ResizeMode.Stretch)
+
+		aModel = aHeader.model()
+
+		# Assign icon headers - will be drawn by LmTools.CenteredIconHeaderView
+		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+
+		# Assign tags for tooltips
+		aModel.setHeaderData(RuleCol.Key, QtCore.Qt.Orientation.Horizontal, 'rlist_Key', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, 'rlist_Add', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, 'rlist_Delete', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, 'rlist_Active', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, 'rlist_Inactive', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, 'rlist_Link', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, 'rlist_File', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, 'rlist_Email', QtCore.Qt.ItemDataRole.UserRole)
+
+		self._ruleList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self._ruleList.setColumnWidth(RuleCol.Key, 390)
+		self._ruleList.setColumnWidth(RuleCol.Add, 10)
+		self._ruleList.setColumnWidth(RuleCol.Delete, 10)
+		self._ruleList.setColumnWidth(RuleCol.Active, 10)
+		self._ruleList.setColumnWidth(RuleCol.Inactive, 10)
+		self._ruleList.setColumnWidth(RuleCol.Link, 10)
+		self._ruleList.setColumnWidth(RuleCol.File, 10)
+		self._ruleList.setColumnWidth(RuleCol.Email, 10)
+		self._ruleList.verticalHeader().hide()
+		self._ruleList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._ruleList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+		self._ruleList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._ruleList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
+		self._ruleList.setMinimumWidth(460)
+		self._ruleList.itemSelectionChanged.connect(self.ruleListClick)
+		LmConfig.SetTableStyle(self._ruleList)
+
+		aRuleListLayout.addWidget(self._ruleList, 1)
+
+		aRuleButtonBox = QtWidgets.QHBoxLayout()
+		aRuleButtonBox.setSpacing(5)
+
+		aAddRuleButton = QtWidgets.QPushButton(lnx('Add'), objectName = 'addRule')
+		aAddRuleButton.clicked.connect(self.addRuleButtonClick)
+		aRuleButtonBox.addWidget(aAddRuleButton)
+		self._delRuleButton = QtWidgets.QPushButton(lnx('Delete'), objectName = 'delRule')
+		self._delRuleButton.clicked.connect(self.delRuleButtonClick)
+		aRuleButtonBox.addWidget(self._delRuleButton)
+		aRuleListLayout.addLayout(aRuleButtonBox, 0)
+		aRuleLayout.addLayout(aRuleListLayout, 0)
+
+		aDeviceLabel = QtWidgets.QLabel(lnx('Device'), objectName = 'deviceLabel')
+		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
+		self.loadDeviceList()
+		self._deviceCombo.addItem(lnx('Any device'))
+		self._deviceCombo.addItem(lnx('Any unknown device'))
+		self._deviceCombo.insertSeparator(NotificationSetupDialog.DeviceComboSeparatorIndex)
+		for d in self._comboDeviceList:
+			self._deviceCombo.addItem(d['Name'])
+		self._deviceCombo.currentIndexChanged.connect(self.deviceSelected)
+
+		aMacLabel = QtWidgets.QLabel(lnx('MAC address'), objectName = 'macLabel')
+		self._macEdit = QtWidgets.QLineEdit(objectName = 'macEdit')
+		aMacRegExp = QtCore.QRegularExpression('^' + LmTools.MAC_RS + '$')
+		aMacValidator = QtGui.QRegularExpressionValidator(aMacRegExp)
+		self._macEdit.setValidator(aMacValidator)
+		self._macEdit.textChanged.connect(self.macTyped)
+
+		aEventsLabel = QtWidgets.QLabel(lnx('Events:'), objectName = 'eventsLabel')
+		self._addEvent = QtWidgets.QCheckBox(lnx('Device Added'), objectName = 'addEvent')
+		self._addEvent.stateChanged.connect(self.addEventChanged)
+		self._delEvent = QtWidgets.QCheckBox(lnx('Device Deleted'), objectName = 'delEvent')
+		self._delEvent.stateChanged.connect(self.delEventChanged)
+		self._actEvent = QtWidgets.QCheckBox(lnx('Device Connected'), objectName = 'actEvent')
+		self._actEvent.stateChanged.connect(self.actEventChanged)
+		self._inaEvent = QtWidgets.QCheckBox(lnx('Device Disconnected'), objectName = 'inaEvent')
+		self._inaEvent.stateChanged.connect(self.inaEventChanged)
+		self._lnkEvent = QtWidgets.QCheckBox(lnx('Device Access Link Changed'), objectName = 'lnkEvent')
+		self._lnkEvent.stateChanged.connect(self.lnkEventChanged)
+
+		aActionsLabel = QtWidgets.QLabel(lnx('Actions:'), objectName = 'actionsLabel')
+		self._fileAction = QtWidgets.QCheckBox(lnx('Log in CSV file'), objectName = 'fileAction')
+		self._fileAction.stateChanged.connect(self.fileActionChanged)
+		self._emailAction = QtWidgets.QCheckBox(lnx('Send Email'), objectName = 'emailAction')
+		self._emailAction.stateChanged.connect(self.emailActionChanged)
+
+		aRuleEditGrid = QtWidgets.QGridLayout()
+		aRuleEditGrid.setSpacing(10)
+		aRuleEditGrid.addWidget(aDeviceLabel, 0, 0)
+		aRuleEditGrid.addWidget(self._deviceCombo, 0, 1, 1, 2)
+		aRuleEditGrid.addWidget(aMacLabel, 1, 0)
+		aRuleEditGrid.addWidget(self._macEdit, 1, 1, 1, 2)
+		aRuleEditGrid.addWidget(aEventsLabel, 2, 0)
+		aRuleEditGrid.addWidget(self._addEvent, 2, 1)
+		aRuleEditGrid.addWidget(self._delEvent, 2, 2)
+		aRuleEditGrid.addWidget(self._actEvent, 3, 1)
+		aRuleEditGrid.addWidget(self._inaEvent, 3, 2)
+		aRuleEditGrid.addWidget(self._lnkEvent, 4, 1, 1, 2)
+		aRuleEditGrid.addWidget(aActionsLabel, 5, 0)
+		aRuleEditGrid.addWidget(self._fileAction, 5, 1, 1, 2)
+		aRuleEditGrid.addWidget(self._emailAction, 6, 1, 1, 2)
+
+		aRuleLayout.addLayout(aRuleEditGrid, 0)
+
+		aRuleGroupBox = QtWidgets.QGroupBox(lnx('Rules'), objectName = 'ruleGroup')
+		aRuleGroupBox.setLayout(aRuleLayout)
+
+		# General preferences box
+		aIntValidator = QtGui.QIntValidator()
+		aIntValidator.setRange(1, 99)
+
+		aFlushFrequencyLabel = QtWidgets.QLabel(lnx('Event Resolution Frequency'), objectName = 'flushFrequencyLabel')
+		self._flushFrequency = QtWidgets.QLineEdit(objectName = 'flushFrequencyEdit')
+		self._flushFrequency.setValidator(aIntValidator)
+		self._flushFrequency.setMaximumWidth(60)
+		aFlushFrequencySecLabel = QtWidgets.QLabel(lnx('seconds'), objectName = 'flushFrequencySecLabel')
+
+		aEventFilePathLabel = QtWidgets.QLabel(lnx('CSV Files Path'), objectName = 'eventFilePathLabel')
+		self._eventFilePath = QtWidgets.QLineEdit(objectName = 'eventFilePathEdit')
+		self._eventFilePath.textChanged.connect(self.eventFilePathTyped)
+		self._eventFilePathSelectButton = QtWidgets.QPushButton(lnx('Select'), objectName = 'eventFilePathSelectButton')
+		self._eventFilePathSelectButton.clicked.connect(self.eventFilePathSelectButtonClic)
+		self._defaultFilePath = QtWidgets.QCheckBox(lnx('Default'), objectName = 'defaultFilePath')
+		self._defaultFilePath.stateChanged.connect(self.defaultFilePathChanged)
+
+		aPrefsEditGrid = QtWidgets.QGridLayout()
+		aPrefsEditGrid.setSpacing(10)
+
+		aPrefsEditGrid.addWidget(aFlushFrequencyLabel, 0, 0)
+		aPrefsEditGrid.addWidget(self._flushFrequency, 0, 1, 1, 1)
+		aPrefsEditGrid.addWidget(aFlushFrequencySecLabel, 0, 2)
+		aPrefsEditGrid.addWidget(aEventFilePathLabel, 1, 0)
+		aPrefsEditGrid.addWidget(self._eventFilePath, 1, 1, 1, 5)
+		aPrefsEditGrid.addWidget(self._eventFilePathSelectButton, 1, 7)
+		aPrefsEditGrid.addWidget(self._defaultFilePath, 1, 8)
+
+		aPrefsGroupBox = QtWidgets.QGroupBox(lnx('Preferences'), objectName = 'prefsGroup')
+		aPrefsGroupBox.setLayout(aPrefsEditGrid)
+
+		# Button bar
+		aButtonBar = QtWidgets.QHBoxLayout()
+		self._okButton = QtWidgets.QPushButton(lnx('OK'), objectName = 'ok')
+		self._okButton.clicked.connect(self.okButtonClick)
+		self._okButton.setDefault(True)
+		aButtonBar.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aCancelButton = QtWidgets.QPushButton(lnx('Cancel'), objectName = 'cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.setSpacing(10)
+
+		# Final layout
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
+		aVBox.addWidget(aRuleGroupBox, 1)
+		aVBox.addWidget(aPrefsGroupBox, 0)
+		aVBox.addLayout(aButtonBar, 0)
+
+		self._flushFrequency.setFocus()
+
+		LmConfig.SetToolTips(self, 'evnrules')
+
+		self.setWindowTitle(lnx('Notification Rules Setup'))
+		self.setModal(True)
+		self.loadPrefs()
+		self.show()
+
+		self._init = False
+
+
+	### Load preferences data
+	def loadPrefs(self):
+		self._rules = []
+
+		# Load rule list
+		if LmConf.NotificationRules is not None:
+			i = 0
+			for r in LmConf.NotificationRules:
+				self._rules.append(r.copy())
+				self._ruleList.insertRow(i)
+				self.setRuleRow(i, r)
+				i += 1
+		self.ruleListClick()
+
+		# Load paramaters
+		self._flushFrequency.setText(str(int(LmConf.NotificationFlushFrequency)))
+		if LmConf.NotificationFilePath is None:
+			self._defaultFilePath.setCheckState(QtCore.Qt.CheckState.Checked)
+			self._eventFilePath.setText(LmConf.getConfigDirectory())
+			self._eventFilePath.setDisabled(True)
+			self._eventFilePathSelectButton.setDisabled(True)
+		else:
+			self._defaultFilePath.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._eventFilePath.setText(LmConf.NotificationFilePath)
+
+
+	### Set a row rule to a rule item
+	def setRuleRow(self, iRow, iRule):
+		# Set rule device name
+		k = iRule['Key']
+		if k == NOTIF_EVENT_DEVICE_ALL:
+			aName = lnx('Any device')
+		elif k == NOTIF_EVENT_DEVICE_UNKNOWN:
+		 	aName = lnx('Any unknown device')
+		else:
+			aName = None
+			for d in self._comboDeviceList:
+				if d['MAC'] == k:
+					aName = d['Name']
+					break
+			if aName is None:
+				aName = k
+		self._ruleList.setItem(iRow, RuleCol.Key, QtWidgets.QTableWidgetItem(aName))
+
+		# Set event flags
+		e = iRule['Events']
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_TYPE_ADD in e:
+			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Add, i)
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_TYPE_DELETE in e:
+			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Delete, i)
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_TYPE_ACTIVE in e:
+			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Active, i)
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_TYPE_INACTIVE in e:
+			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Inactive, i)
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_TYPE_LINK_CHANGE in e:
+			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Link, i)
+
+		# Set rule action flags
+		r = iRule['Rules']
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_RULE_FILE in r:
+			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.File, i)
+		i = QtWidgets.QTableWidgetItem()
+		if NOTIF_EVENT_RULE_EMAIL in r:
+			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+		self._ruleList.setItem(iRow, RuleCol.Email, i)
+
+
+	### Save preferences data
+	def savePrefs(self):
+		# Save rule data
+		if len(self._rules):
+			LmConf.NotificationRules = self._rules
+		else:
+			LmConf.NotificationRules = None
+
+		# Save parameters
+		LmConf.NotificationFlushFrequency = int(self._flushFrequency.text())
+		if self._defaultFilePath.isChecked():
+			LmConf.NotificationFilePath = None
+		else:
+			LmConf.NotificationFilePath = self._eventFilePath.text()
+
+
+	### Click on rule list item
+	def ruleListClick(self):
+		aNewSelection = self._ruleList.currentRow()
+
+		# Check of selection really changed
+		if not self._init and self._ruleSelection == aNewSelection:
+			return
+
+		# Check if current rule is OK
+		if not self.checkRule():
+			self._ruleList.selectRow(self._ruleSelection)
+			return
+
+		aWithinDialogInit = self._init
+		if not aWithinDialogInit:
+			self._init = True
+
+		self._ruleSelection = aNewSelection
+
+		# Load new values
+		if aNewSelection >= 0:
+			self._delRuleButton.setDisabled(False)
+
+			r = self._rules[aNewSelection]
+
+			# Device data
+			k = r['Key']
+			self._deviceCombo.setDisabled(False)
+			if k == NOTIF_EVENT_DEVICE_ALL:
+				self._deviceCombo.setCurrentIndex(0)
+			elif k == NOTIF_EVENT_DEVICE_UNKNOWN:
+				self._deviceCombo.setCurrentIndex(1)
+			else:
+				self._macEdit.setDisabled(False)
+				self._macEdit.setText(k)
+
+			# Event data
+			e = r['Events']
+			self._addEvent.setDisabled(False)
+			if NOTIF_EVENT_TYPE_ADD in e:
+				self._addEvent.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._addEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._delEvent.setDisabled(False)
+			if NOTIF_EVENT_TYPE_DELETE in e:
+				self._delEvent.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._delEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._actEvent.setDisabled(False)
+			if NOTIF_EVENT_TYPE_ACTIVE in e:
+				self._actEvent.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._actEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._inaEvent.setDisabled(False)
+			if NOTIF_EVENT_TYPE_INACTIVE in e:
+				self._inaEvent.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._inaEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._lnkEvent.setDisabled(False)
+			if NOTIF_EVENT_TYPE_LINK_CHANGE in e:
+				self._lnkEvent.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._lnkEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+			# Set rule action flags
+			a = r['Rules']
+			self._fileAction.setDisabled(False)
+			if NOTIF_EVENT_RULE_FILE in a:
+				self._fileAction.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._fileAction.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._emailAction.setDisabled(False)
+			if NOTIF_EVENT_RULE_EMAIL in a:
+				self._emailAction.setCheckState(QtCore.Qt.CheckState.Checked)
+			else:
+				self._emailAction.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		else:
+			self._delRuleButton.setDisabled(True)
+			self._deviceCombo.setCurrentIndex(0)
+			self._deviceCombo.setDisabled(True)
+			self._macEdit.setText('')
+			self._macEdit.setDisabled(True)
+			self._addEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._addEvent.setDisabled(True)
+			self._delEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._delEvent.setDisabled(True)
+			self._actEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._actEvent.setDisabled(True)
+			self._inaEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._inaEvent.setDisabled(True)
+			self._lnkEvent.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._lnkEvent.setDisabled(True)
+			self._fileAction.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._fileAction.setDisabled(True)
+			self._emailAction.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			self._emailAction.setDisabled(True)
+
+		if not aWithinDialogInit:
+			self._init = False
+
+
+	def loadDeviceList(self):
+		aDeviceList = self.parent().getDeviceList()
+		self._comboDeviceList = []
+
+		# Load from MacAddrTable file
+		for d in LmConf.MacAddrTable:
+			aDevice = {}
+			aDevice['Name'] = LmConf.MacAddrTable[d]
+			aDevice['MAC'] = d
+			self._comboDeviceList.append(aDevice)
+
+		# Load from device list if not already loaded
+		for d in aDeviceList:
+			if (len(d['MAC'])) and (not any(e['MAC'] == d['MAC'] for e in self._comboDeviceList)):
+				aDevice = {}
+				aDevice['Name'] = d['LBName']
+				aDevice['MAC'] = d['MAC']
+				self._comboDeviceList.append(aDevice)
+
+		# Sort by name
+		self._comboDeviceList = sorted(self._comboDeviceList, key = lambda x: x['Name'])
+
+		# Insert unknown device at the beginning
+		aDevice = {}
+		aDevice['Name'] = lnx('-Unknown-')
+		aDevice['MAC'] = ''
+		self._comboDeviceList.insert(0, aDevice)
+
+
+	def deviceSelected(self, iIndex):
+		if not self._ignoreSignal:
+			if iIndex == 0:
+				self._ignoreSignal = True
+				self._macEdit.setText('')
+				self._ignoreSignal = False
+				self._macEdit.setDisabled(True)
+			elif iIndex == 1:
+				self._ignoreSignal = True
+				self._macEdit.setText('')
+				self._ignoreSignal = False
+				self._macEdit.setDisabled(True)
+			elif iIndex > NotificationSetupDialog.DeviceComboSeparatorIndex:
+				self._macEdit.setDisabled(False)
+				self._ignoreSignal = True
+				self._macEdit.setText(self._comboDeviceList[iIndex - (NotificationSetupDialog.DeviceComboSeparatorIndex + 1)]['MAC'])
+				self._ignoreSignal = False
+
+			if not self._init:
+				self.saveRule()
+
+
+	def macTyped(self, iMac):
+		if not self._ignoreSignal:
+			self._ignoreSignal = True
+
+			aIndex = 0
+			i = 0
+			for d in self._comboDeviceList:
+				if d['MAC'] == iMac:
+					aIndex = i
+					break
+				i += 1
+
+			self._deviceCombo.setCurrentIndex(aIndex + (NotificationSetupDialog.DeviceComboSeparatorIndex + 1))
+			self._ignoreSignal = False
+
+			if not self._init:
+				self.saveRule()
+
+
+	### Add event checkbox option changed
+	def addEventChanged(self, iState):
+		self.eventOptionChanged(self._addEvent)
+
+
+	### Delete event checkbox option changed
+	def delEventChanged(self, iState):
+		self.eventOptionChanged(self._delEvent)
+
+
+	### Active event checkbox option changed
+	def actEventChanged(self, iState):
+		self.eventOptionChanged(self._actEvent)
+
+
+	### Inactive event checkbox option changed
+	def inaEventChanged(self, iState):
+		self.eventOptionChanged(self._inaEvent)
+
+
+	### Link change event checkbox option changed
+	def lnkEventChanged(self, iState):
+		self.eventOptionChanged(self._lnkEvent)
+
+
+	### An event checkbox option changed
+	def eventOptionChanged(self, iCheckbox):
+		if not self._init:
+			# Check if at least one event is checked
+			if (not self._addEvent.isChecked() and
+				not self._delEvent.isChecked() and
+				not self._actEvent.isChecked() and
+				not self._inaEvent.isChecked() and
+				not self._lnkEvent.isChecked()):
+				self._init = True
+				iCheckbox.setCheckState(QtCore.Qt.CheckState.Checked)
+				self._init = False
+			else:
+				self.saveRule()
+
+
+	### File action checkbox option changed
+	def fileActionChanged(self, iState):
+		self.actionOptionChanged(self._fileAction)
+
+
+	### Email action checkbox option changed
+	def emailActionChanged(self, iState):
+		self.actionOptionChanged(self._emailAction)
+
+
+	### An action checkbox option changed
+	def actionOptionChanged(self, iCheckbox):
+		if not self._init:
+			# Check if at least one action is checked
+			if (not self._fileAction.isChecked() and
+				not self._emailAction.isChecked()):
+				self._init = True
+				iCheckbox.setCheckState(QtCore.Qt.CheckState.Checked)
+				self._init = False
+			else:
+				self.saveRule()
+
+
+	### Notification event file path changed
+	def eventFilePathTyped(self, iPath):
+		self._okButton.setDisabled(len(iPath) == 0)
+
+
+	### Check if current rule is OK, returns True if yes
+	def checkRule(self):
+		if self._ruleSelection >= 0:
+			r = self._rules[self._ruleSelection]
+			k = r['Key']
+			if k != NOTIF_EVENT_DEVICE_ALL and k != NOTIF_EVENT_DEVICE_UNKNOWN:
+				m = self._macEdit.text()
+				if not LmTools.IsMACAddr(m):
+						self.parent().displayError('{} is not a valid MAC address.'.format(m))
+						self._macEdit.setFocus()
+						return False
+		return True
+
+
+	### Save current rule in rules buffer
+	def saveRule(self):
+		r = self._rules[self._ruleSelection]
+
+		# Key
+		i = self._deviceCombo.currentIndex()
+		if i == 0:
+			r['Key'] = NOTIF_EVENT_DEVICE_ALL
+		elif i == 1:
+			r['Key'] = NOTIF_EVENT_DEVICE_UNKNOWN
+		else:
+			aMac = self._macEdit.text()
+			if not len(aMac):
+				r['Key'] = NOTIF_EVENT_DEVICE_UNKNOWN
+			else:
+				r['Key'] = self._macEdit.text()
+
+		# Events
+		e = []
+		if self._addEvent.isChecked():
+			e.append(NOTIF_EVENT_TYPE_ADD)
+		if self._delEvent.isChecked():
+			e.append(NOTIF_EVENT_TYPE_DELETE)
+		if self._actEvent.isChecked():
+			e.append(NOTIF_EVENT_TYPE_ACTIVE)
+		if self._inaEvent.isChecked():
+			e.append(NOTIF_EVENT_TYPE_INACTIVE)
+		if self._lnkEvent.isChecked():
+			e.append(NOTIF_EVENT_TYPE_LINK_CHANGE)
+		r['Events'] = e
+
+		# Rule action flags
+		a = []
+		if self._fileAction.isChecked():
+			a.append(NOTIF_EVENT_RULE_FILE)
+		if self._emailAction.isChecked():
+			a.append(NOTIF_EVENT_RULE_EMAIL)
+		r['Rules'] = a
+
+		# Display rule
+		self.setRuleRow(self._ruleSelection, r)
+
+
+	### Click on add rule button
+	def addRuleButtonClick(self):
+		# Add new default rule in buffer
+		r = {}
+		r['Key'] = NOTIF_EVENT_DEVICE_ALL
+		r['Events'] = [ NOTIF_EVENT_TYPE_ACTIVE, NOTIF_EVENT_TYPE_INACTIVE]
+		r['Rules'] = [ NOTIF_EVENT_RULE_FILE ]
+		self._rules.append(r)
+
+		# Add new item in list and select it
+		i = self._ruleList.rowCount()
+		self._ruleList.insertRow(i)
+		self.setRuleRow(i, r)
+		self._ruleList.selectRow(i)
+
+
+	### Click on delete rule button
+	def delRuleButtonClick(self):
+		i = self._ruleSelection
+
+		# Delete the list line
+		self._ruleSelection = -1
+		self._init = True
+		self._ruleList.removeRow(i)
+		self._init = False
+
+		# Remove the rule from rules buffer
+		self._rules.pop(i)
+
+		# Update selection
+		self._ruleSelection = self._ruleList.currentRow()
+
+
+	### Select event file path button click
+	def eventFilePathSelectButtonClic(self):
+		aFolder = QtWidgets.QFileDialog.getExistingDirectory(self, lnx('Select Folder'))
+		if len(aFolder):
+			self._eventFilePath.setText(aFolder)
+
+
+	### Default file path checkbox changed
+	def defaultFilePathChanged(self, iState):
+		if not self._init:
+			if self._defaultFilePath.isChecked():
+				self._eventFilePath.setText(LmConf.getConfigDirectory())
+				self._eventFilePath.setDisabled(True)
+				self._eventFilePathSelectButton.setDisabled(True)
+			else:
+				if LmConf.NotificationFilePath is None:
+					self._eventFilePath.setText(LmConf.getConfigDirectory())
+				else:
+					self._eventFilePath.setText(LmConf.NotificationFilePath)
+				self._eventFilePath.setDisabled(False)
+				self._eventFilePathSelectButton.setDisabled(False)
+
+
+	### Check if file path is OK, return True if yes
+	def checkFilePath(self):
+		if self._defaultFilePath.isChecked():
+			return True
+
+		# Create directory if doesn't exist
+		p = self._eventFilePath.text()
+		if not os.path.isdir(p):
+			if LmTools.AskQuestion('Configured log file directory does not exist. Do you want to create it?'):
+				try:
+					os.makedirs(p)
+				except BaseException as e:
+					LmTools.Error('Cannot create log file directory. Error: {}'.format(e))
+					LmTools.DisplayError('Cannot create log file directory.\nError: {}.'.format(e))
+					return False
+			else:
+				return False
+		return True
+
+
+	### Click on OK button
+	def okButtonClick(self):
+		# Accept only if current rule & file path are OK
+		if self.checkRule() and self.checkFilePath():
+			self.savePrefs()
+			self.accept()
 
 
 
