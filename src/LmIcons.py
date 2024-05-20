@@ -200,6 +200,113 @@ class LmIcon:
 		AXRSTlMAQObYZgAAACxJREFUCNdjgIFVDXDmVGQmXBrOnIrKhErDmVPRmWBpOHMqJhMoDWdOxcYE
 		AGqZMRs0hralAAAAAElFTkSuQmCC'''
 
+	AddCirclePixmap = None
+	AddCircleData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA0lBMVEUAAABN2l4PxB4ApBMAdwkA
+		cwcInhRZ42sR1CEuyEENryADiA0AqhUAlhAAkg8AXQIHrRsGpxkCdAgAmhEAjQ4AqhUAXQIAiQ0A
+		XQIAqBQApRQAqRUAoRMbqiwXrihF0lcXwCcPvB9Ay1ErvTsjsDQRryEsvz0luTYTqCIDig8CiQ0R
+		viI+xk8RpyLh4eH////o6Ojk5ORGz1cR0SIRyCLs7OzU1NRCy1M4wEkstT0TnyTc3NzX19dR2mJO
+		1l8zu0QkrzUSmyMRtiIRtSIRtCL4+PiP7/pgAAAAK3RSTlMA9vZsTRrj/f3jzc3ExMTEv7+/p6em
+		pmxsTU0aGv399vb29fX19ePj47+/GaKqWgAAALtJREFUGNNtytcSgjAURVEDgr0r3d5N6B2l4///
+		kpdhfOM8JLPX3E7rZHozHm9o+d/ifIB6PTSYi01LQxQnhCQxGkp1KwtkWYGuB5a1XygA9M0nJNX1
+		lBD/TgOsTkEYZq4W5Xl0WQFM/PCreZ+3ZhrRdgIwJZnXtKvupgDrc6WqqmbCU13XAPwDY1yaRgkf
+		ywMwz4PjYMPFjnN8MR1Yd0TZdlHYNjXqQtayZKl+n2KX0M0YgZvNOAHuW/YDtm4XtkWWEkMAAAAA
+		SUVORK5CYII='''
+
+	DelCirclePixmap = None
+	DelCircleData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA0lBMVEUAAADEDw+nAAClAADpW1uo
+		CAjRSUnORUXzaWm1JibjV1edCAixDw+IAwOWAACSAABdAACsBQV0AgKaAACNAACqAABdAACqAACe
+		AACJAABdAAB/AABvAACFAABgAACsHR2vGBjcT0/BGBi8Dw/TR0fALi6vEhLQNzfPNjbGMjK9Kiqh
+		CQmqFhanBweKAwOJAgK/ERGoERHYT0/KQkLSERHIERHu7u7jW1vd3d3R0dG/NzegFBTo6OjNzc3n
+		X1+7MjKcEhK0ERH4+PiwJyemHBzIEhK9Qr1LAAAAMHRSTlMA9k0a9r/+/v369uPNzcTExMK/p6em
+		pmxsbGxNTRoa/f329vb19fXj4+Pj4+K/v78oAQ+yAAAAn0lEQVQY023L1RaCUBRF0YuASXfbnRhI
+		KGH8/y95hKtPzLe9xtioFqmroqjq5G836DnVblMLuoE3Q6VXkHaZspB094gNt9+XsWyesNbKgCBP
+		4jjOnq8kz5OODIFrZo/wHoW3IEj6HAS+1YmqHfgDHoIyLXysmCkQzM3hb21CcHej96Uy3rsI2Cxx
+		LhGsjUqO1CNg9iQHYZ6lCYJmeajOB7kGGLv2+7XfAAAAAElFTkSuQmCC'''
+
+	ActiveCirclePixmap = None
+	ActiveCircleData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA51BMVEUAAABN2l4PxB4AlA8ApRQa
+		qysInhRZ42sNryADiA0AqhUAXQIHrRsGpxkCdAgAmhEAjQ4AqhUAXQIAqhUAnhIAiQ0AXQIAqBQA
+		pRQAfwsAbwcAhQwAYANF0lcXwCcPvB9Ay1ErvTsjsDQRryEvyEIux0Esvz0luTYTqCIDig8CiQ0R
+		0iHn5+fj4+MRtCLe3t5GzldBylI9xU5O1l8RyCIRviI3v0gRriIRoiLV1dUxukIRqiIRpyIRnyL/
+		///4+Pjr6+ui16me4qdS2mNR2WJHz1gttT4rszwmrzccpC0VwCYVniYSyCNbA1xzAAAAK3RSTlMA
+		9vbEGv7j/c3NxMS/v7+np6ambGxsbE1NTU0aGvb29vX19fXj4+Pj47+/AarJhwAAALFJREFUGNNt
+		y9UWgkAUhWEGFTvpsFtgEIPGbn3/5/EwLu/47v69zqFSZdlmqdRks/8WKyOUz6NxRfy1VEDnNbig
+		gkTuq+i6TDh2u5p8cRN7lQh2J3vKwVDvOTcneDxN03gP6jBk7Ps+58WWacReLkOGo3+IoL0wJEOj
+		7/oWdIQxHjZg4GcvF9rdAoaHQZ13PtjAG9BdqBSQi7SOdUAXZYpQagwNydQUCEITWuVyS9CoNF+w
+		UhgX3khsvgAAAABJRU5ErkJggg=='''
+
+	InactiveCirclePixmap = None
+	InactiveCircleData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA21BMVEUAAADEDw9zAADpW1usICDz
+		aWm1JibjV1edCAixDw+IAwOqAACWAACSAABdAACuCQmoBwd0AgKaAACNAACqAABdAACqAACeAACJ
+		AABdAACoAAClAAB/AABvAACpAAChAACvGBjcT0/BGBi8Dw/TR0fALi6vEhLQNzfPNjbGMjK9Kiqh
+		CQmqFhaKAwOJAgL////d3d2rERHSERG1ERHR0dHW1tbjW1vXT0+gEhKyERHu7u7RSEjLQkLq6urn
+		5+fi4uLnX1+6MDDAExPIERGdERH39/fZUVHYUFC/NzeKi/ywAAAAL3RSTlMA9hr2/v369uPNzcTE
+		xMS/v7+np6ambGxsbE1NTU0aGv329vb19fXj4+Pj4+K/v7D5oYgAAAC4SURBVBjTbY9HEoJAFAUF
+		zDknkjnrMAwqWYLp/ifyURY7evGruutvXi4TZdiv1fpDJfVpaysUCsKuNf27WBGCGwhKFTFxtV16
+		kzsgn3lbRRjtHUKI6+I4hxFCd/XNk5evadrTLHYR6k4YmoZxhZv5OkLDLVIKf1BKZw2E3pqxxH2P
+		sU0PYXyK4JR6th0dxwj8eWFpVhxbtrW88DkgVTmmA8ZVJSiQO2VO17lyR07H8JNBszmY4D+DH5c8
+		GZRRf1EmAAAAAElFTkSuQmCC'''
+
+	LocChangePixmap = None
+	LocChangeData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAvVBMVEUAAAAuh9IYarWVAADlAQHl
+		AQHfAQGuAAD9hob8hIT8iYnwaGj2c3PlUlK9HBzyT0/eNTU4lN8NXKfMIyPxSkqfAADFAgKyAADi
+		AQHVAQHNAQGVAAC8AQEyjNcKV6PlAQHFAQHlAQE3ZaNIQ3JZVIMjecM+nOcGUZw+nOcZbLeMIzaq
+		AAD6bW3+dXX1YmJd0f/4aWnwWFiV5P9u1///gYH6dHT8cXGoY2ObVVVXS0s4xf//kJBhVlZISEhK
+		Pz/xJFURAAAALHRSTlMAzczKn3KqC/3z8vHt7dDPzczMzMvHsa+jn2dmYVxcGRQT9OrozJmZXFxa
+		Wv2CKdQAAAChSURBVBjTPczXDsIwDEDRQAd0711oyx5J92T9/2cRJNz7YMlHltGvjGN5lssQlLC2
+		+BRtNgHgtJYQ0mocgC+Q4TUQwQfg1/30nvo1DxDIePyMWA4AQr3DGHd6CJC6UlmWkpsiKLZwjq0Y
+		za08JVe8FTpdQO5qrt4QMowNnDj5YUGrFyBOtauboiia4x+Yar+kPZbXGRg6TXMLXyMmovNM9y89
+		NA8T2JpwAgAAAABJRU5ErkJggg=='''
+
+	ExcelDocPixmap = None
+	ExcelDocData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAApVBMVEUAAAALKipVf38yV1clSUk+
+		ZWVIcXFSfHxTfX0XODgMLCyHqmVJiidVf3/////8/v35/PyHqmVIiib2+/vx9/ft9fXi8/P0+fno
+		+OjV5uZ6o1hyn1Bflj3s++xpmkdWkTTn8fHf7OzZ6OjO4MaTpKSewo36/v7v+fn4/fjq9/f0/PTl
+		9PTv+u/Y5c+auoOCp2BOjSyxwsLH3b+ltraTtnqCrWhzplviWV3bAAAADnRSTlMAh2Z2e3FsZySC
+		ZcDATY/2reYAAACkSURBVBjTPchXFoIwAETRKCiCGlASEBIIIL1b9780U4Q358zHBQCct/8OQGW4
+		VdN5nvcwpBwvqjF4QSkTVE1Bnuc6h9AOw2HknwWBt+dAajIQ8q5JmimI23vM18ZJmkmg/YfSJ+0p
+		TtJux4FFRVEwFjGMk0bAHN1E0YwwrgScrqovQtjXgEiDtu04ro/QCou4CnS4iKtLMKEUu3RKU4K1
+		WbMA+AEaBhF5P7HRSAAAAABJRU5ErkJggg=='''
+
+	MailSendPixmap = None
+	MailSendData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABAlBMVEUAAABUf382XFxFbGxNdnYY
+		arUNXKcvVFQ+ZWUTZK9Vf39bzvtYx/JUvucic7ZOsthIpcZAlLIYarU3gpooZowtboAYarUGUZwi
+		WWUYREsYarUQMjMfQkIYarUZbLcGUZwPMDAYarUYarUYarUYarX////7/f33/Pzu9vba6enc5eXz
+		+Pji7u7s8fHo8fHl7Oze6+vh6end6elWot3I2dnB0tJd0f/z+vrv+fno9vbp7++ey+jW4eFysuDS
+		3t7N29u4ycm0xcWvwMCqu7ultrahsrKdrq6Z5f+A3f9OzP/M5u+/3e2hz+3S5+yv1eqOweTU4+N/
+		uOFjp9xSndlLldG8zs5E3CI9AAAAJXRSTlMAZ3RuasrMeHFjTfry5+DbzcC1srKlo5mZkI6Ifnhm
+		ZmRKNCAQ/OaO6QAAALtJREFUGNNlz9XSglAABOClrD/tbgU8HhBF7O5u3/9VRIdxhvG72N3bxQcP
+		Y+MBM1KKb8qIAa+MO6KlM1Z48GJlUpFezCHy4KRydVotm54lceCaskxmxIomB1dLVakx7/XmBlXV
+		lgusTGv12mCxGJhFZRZsm9SJpg2Hmkb63TYLJzVOJYuu75xI3Peb7aF7PPcv+nV5CyATj0aCfu//
+		38/3V6Ox+gVQyOey7mQs5BOEtZCyHXU43LAJp4EH6Ikfv0pcilsAAAAASUVORK5CYII='''
+
+	GreenLightPixmap = None
+	GreenLightData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAe1BMVEUAAABApkAVexUVfBVHrUdA
+		pkAfhR8YfhhEqkQymDIjiSMRdxFEqkQ2nDYfhR8RdxFEqkQ7oTt33Xd84nxVu1VSuVJEqkQ6oTqG
+		7IaB54FHrUczmTNu1W5nzmdPtU9Ns01KsUoulS5y2HJhx2FexF48ojwojigjiSMRdxHv6MSoAAAA
+		EnRSTlMAZWUq5+fn587Ozs6CgoKCKipZck9nAAAAjUlEQVQY023LVw7EIAxFUdJ7HZtkGGAgff8r
+		jIVQvnK+/K5k9qqvc87zumdeEK/jPI9rHPhtltlZjCtDIr+eTAYKDXwe0FAo1PhQBQWLAjclpdro
+		sBQOPf28SR8UShCTJ6Ck0O4ouCNwbylEqUH9JxpNGjESngIAEUCcIXPCzHIAbjO/6aurrqvqIvbm
+		Bn4GDkNe+slZAAAAAElFTkSuQmCC'''
+
+	BlueLightPixmap = None
+	BlueLightData = '''
+		iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAABilcg3ap5om85hlMc/
+		cqU4a55mmcxUh7pFeKszZplmmcxYi75BdKczZpk5bJ81aJtmmcxdkMOHuu1LfrGNwPNjlslDd6qX
+		yv2SxfhmmcxZjL9Vibxgk8ZdkMR7r+JvotVqntGAs+Z5rN9PgrUzZpmGNHqIAAAAE3RSTlMAZSrn
+		5+fnzs7OzoKCgoJlZSoq8f8qLgAAAIpJREFUGNNtyEkShSAMRVHEvm/A6E9UwGb/W/wpinLkmeTl
+		ik9jnSPm9SiCKDbzus4mjsLv1Oop58uUqF+gkolDY+eXbTgURr1MweEGAnud52V53Bz0rpeAJ4fS
+		kQ7IlRzaDWjzCLaWg0x32A/GJ5WC9cuBCIB4LL3whkwTIulsEIHsquepOim+/AF2/A5LptNA+AAA
+		AABJRU5ErkJggg=='''
+
 
 	### Load all icons from base64 data
 	@staticmethod
@@ -248,3 +355,31 @@ class LmIcon:
 
 		LmIcon.WifiSignal5Pixmap = QtGui.QPixmap()
 		LmIcon.WifiSignal5Pixmap.loadFromData(base64.b64decode(LmIcon.WifiSignal5Data))
+
+		LmIcon.AddCirclePixmap = QtGui.QPixmap()
+		LmIcon.AddCirclePixmap.loadFromData(base64.b64decode(LmIcon.AddCircleData))
+
+		LmIcon.DelCirclePixmap = QtGui.QPixmap()
+		LmIcon.DelCirclePixmap.loadFromData(base64.b64decode(LmIcon.DelCircleData))
+
+		LmIcon.ActiveCirclePixmap = QtGui.QPixmap()
+		LmIcon.ActiveCirclePixmap.loadFromData(base64.b64decode(LmIcon.ActiveCircleData))
+
+		LmIcon.InactiveCirclePixmap = QtGui.QPixmap()
+		LmIcon.InactiveCirclePixmap.loadFromData(base64.b64decode(LmIcon.InactiveCircleData))
+
+		LmIcon.LocChangePixmap = QtGui.QPixmap()
+		LmIcon.LocChangePixmap.loadFromData(base64.b64decode(LmIcon.LocChangeData))
+
+		LmIcon.ExcelDocPixmap = QtGui.QPixmap()
+		LmIcon.ExcelDocPixmap.loadFromData(base64.b64decode(LmIcon.ExcelDocData))
+
+		LmIcon.MailSendPixmap = QtGui.QPixmap()
+		LmIcon.MailSendPixmap.loadFromData(base64.b64decode(LmIcon.MailSendData))
+
+		LmIcon.GreenLightPixmap = QtGui.QPixmap()
+		LmIcon.GreenLightPixmap.loadFromData(base64.b64decode(LmIcon.GreenLightData))
+
+		LmIcon.BlueLightPixmap = QtGui.QPixmap()
+		LmIcon.BlueLightPixmap.loadFromData(base64.b64decode(LmIcon.BlueLightData))
+
