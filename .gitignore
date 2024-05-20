@@ -1,5 +1,6 @@
 # Application specific 
 Config.txt
+Key.txt
 LiveboxMonitor.bat
 LiveboxMonitor.sublime-project
 LiveboxMonitor.sublime-workspace
