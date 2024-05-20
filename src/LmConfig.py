@@ -6,6 +6,7 @@ import platform
 import requests
 import json
 import base64
+import hashlib
 import webbrowser
 
 from enum import IntEnum
@@ -20,6 +21,7 @@ from src import LmLanguages
 from src.LmLanguages import (GetConfigPrefsDialogLabel as lx,
 							 GetConfigCnxDialogLabel as lcx,
 							 GetConfigSigninDialogLabel as lsx,
+							 GetConfigEmailDialogLabel as lex,
 							 GetSelectProfileDialogLabel as lpx,
 							 GetReleaseWarningDialogLabel as lrx)
 
@@ -30,6 +32,7 @@ from __init__ import __url__, __version__, __build__
 
 # Config file name
 CONFIG_FILE = 'Config.txt'
+KEY_FILE = 'Key.txt'
 LIVEBOX_CACHE_DIR = 'lbcache_'
 LIVEBOX_ICON_CACHE_DIR = 'icons'
 CUSTOM_ICON_DIR = 'custom_icons'
@@ -56,12 +59,15 @@ DCFG_NO_RELEASE_WARNING = 0
 DCFG_REPEATERS = None
 DCFG_GRAPH = None
 DCFG_TABS = None
+DCFG_NOTIFICATION_RULES = None
+DCFG_NOTIFICATION_FLUSH_FREQUENCY = 30	# Consolidated notifs flush + time diff between events to merge - in seconds
+DCFG_NOTIFICATION_FILE_PATH = None
+DCFG_EMAIL = None
 
 # Static config
 GIT_REPO = 'p-dor/LiveboxMonitor'
 GITRELEASE_URL = 'https://api.github.com/repos/{}/releases/latest'
 ICON_URL = 'assets/common/images/app_conf/'
-SECRET = 'mIohg_8Q0pkQCA7x3dOqNTeADYPfcMhJZ4ujomNLNro='
 
 # Graphical config
 WIND_HEIGHT_ADJUST = 0		# Space to add to a window height to respect a table wished height inside
@@ -247,7 +253,7 @@ DEVICE_TYPES = [
 
 # ################################ Tools ################################
 
-# Setting up application style depending on platform
+### Setting up application style depending on platform
 def SetApplicationStyle():
 	global WIND_HEIGHT_ADJUST
 	global DIAG_HEIGHT_ADJUST
@@ -354,7 +360,7 @@ def SetApplicationStyle():
 		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
 
 
-# Setting up table style depending on platform
+### Setting up table style depending on platform
 def SetTableStyle(iTable):
 	iTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
 	iTable.setStyleSheet(LIST_STYLESHEET)
@@ -370,22 +376,22 @@ def SetTableStyle(iTable):
 	aHeader.setDefaultSectionSize(LmConf.ListLineHeight)
 
 
-# Compute table height based on nb of rows
+### Compute table height based on nb of rows
 def TableHeight(iRowNb):
 	return LmConf.ListHeaderHeight + (LmConf.ListLineHeight * iRowNb) + TABLE_ADJUST
 
 
-# Compute base height of a window based on nb of rows of a single table
+### Compute base height of a window based on nb of rows of a single table
 def WindowHeight(iRowNb):
 	return TableHeight(iRowNb) + WIND_HEIGHT_ADJUST
 
 
-# Compute base height of a dialog based on nb of rows of a single table
+### Compute base height of a dialog based on nb of rows of a single table
 def DialogHeight(iRowNb):
 	return TableHeight(iRowNb) + DIAG_HEIGHT_ADJUST
 
 
-# Assign Tooltips to all QWidgets in a window/dialog/tab
+### Assign Tooltips to all QWidgets in a window/dialog/tab
 def SetToolTips(iQtObject, iKey):
 	if LmConf.Tooltips:
 		aItemList = iQtObject.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly)
@@ -414,7 +420,7 @@ def SetToolTips(iQtObject, iKey):
 					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
 
 
-# Setup configuration according to Livebox model
+### Setup configuration according to Livebox model
 def SetLiveboxModel(iModel):
 	global NET_INTF
 	global INTF_NAME_MAP
@@ -433,7 +439,7 @@ def SetLiveboxModel(iModel):
 		INTF_NAME_MAP = INTF_NAME_MAP_LB4
 
 
-# Check if latest release
+### Check if latest release
 def ReleaseCheck():
 	# Call GitHub API to fetch latest release infos
 	try:
@@ -472,9 +478,22 @@ def ReleaseCheck():
 		LmConf.save()
 
 
-# ################################ Config Class ################################
+### Get a cross platform 32 bytes unique hardware key as base64 string
+def GetHardwareKey():
+	# Use platform calls to get a unique string
+	aHardwareID = platform.system() + platform.machine() + platform.node() + platform.processor()
 
+	# Hashing to 32 bytes array
+	aHardwareHash = hashlib.md5(aHardwareID.encode('utf-8')).hexdigest()
+
+	# Return as base64 string
+	return base64.urlsafe_b64encode(str.encode(aHardwareHash)).decode()
+
+
+
+# ################################ Config Class ################################
 class LmConf:
+	Secret = None
 	Profiles = None
 	CurrProfile = None
 	LiveboxURL = DCFG_LIVEBOX_URL
@@ -502,14 +521,23 @@ class LmConf:
 	Graph = DCFG_GRAPH
 	Tabs = DCFG_TABS
 	AllDeviceIconsLoaded = False
+	NotificationRules = DCFG_NOTIFICATION_RULES
+	NotificationFlushFrequency = DCFG_NOTIFICATION_FLUSH_FREQUENCY
+	NotificationFilePath = DCFG_NOTIFICATION_FILE_PATH
+	Email = DCFG_EMAIL
 
 
-	### Load configuration, if returns False the program aborts starting
+	### Load configuration, returns False the program aborts starting
 	@staticmethod
 	def load():
+		# First load secret key
+		if not LmConf.loadKey():
+			return False
+
 		aConfigFile = None
 		aDirtyConfig = False
 		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
+		LmTools.LogDebug(1, 'Reading configuration in', aConfigFilePath)
 		try:
 			aConfigFile = open(aConfigFilePath)
 			aConfig = json.load(aConfigFile)
@@ -605,6 +633,18 @@ class LmConf:
 			p = aConfig.get('Tabs')
 			if p is not None:
 				LmConf.Tabs = p
+			p = aConfig.get('NotificationRules')
+			if p is not None:
+				LmConf.NotificationRules = p
+			p = aConfig.get('NotificationFlushFrequency')
+			if p is not None:
+				LmConf.NotificationFlushFrequency = int(p)
+			p = aConfig.get('NotificationFilePath')
+			if p is not None:
+				LmConf.NotificationFilePath = p
+			p = aConfig.get('email')
+			if p is not None:
+				LmConf.Email = p
 
 		if aConfigFile is not None:
 			aConfigFile.close()
@@ -613,6 +653,64 @@ class LmConf:
 			LmConf.save()
 
 		LmConf.apply()
+
+		return True
+
+
+	### Load key file, creating one if not present, returns False if fails
+	@staticmethod
+	def loadKey():
+		aConfigPath = LmConf.getConfigDirectory()
+		aKeyFile = None
+		aKey = None
+		aKeyFilePath = os.path.join(aConfigPath, KEY_FILE)
+
+		# Get unique hardware key
+		aHWKey = GetHardwareKey()
+
+		# Read file if it exists
+		LmTools.LogDebug(1, 'Reading key file in', aKeyFilePath)
+		try:
+			aKeyFile = open(aKeyFilePath)
+			aKey = aKeyFile.read()
+			aKeyFile.close()
+		except OSError:
+			LmTools.Error('No key file, creating one.')
+			aKey = None
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			LmTools.DisplayError('Cannot read key file.')
+			if aKeyFile is not None:
+				aKeyFile.close()
+				return False
+		else:
+			# Decrypt key to get secret
+			try:
+				LmConf.Secret = Fernet(aHWKey.encode('utf-8')).decrypt(aKey.encode('utf-8')).decode('utf-8')
+			except:
+				LmTools.Error('Invalid key file, you should delete it.')
+				return False
+			return True
+
+		# Create config directory if doesn't exist
+		if not os.path.isdir(aConfigPath):
+			LmTools.LogDebug(1, 'Creating config directory', aConfigPath)
+			try:
+				os.makedirs(aConfigPath)
+			except BaseException as e:
+				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				LmTools.DisplayError('Cannot create configuration folder.')
+				return False
+
+		# Create key file
+		LmConf.Secret = Fernet.generate_key().decode()
+		aKey = Fernet(aHWKey.encode('utf-8')).encrypt(LmConf.Secret.encode('utf-8')).decode('utf-8')
+		LmTools.LogDebug(1, 'Creating key file', aKeyFilePath)
+		try:
+			with open(aKeyFilePath, 'w') as aKeyFile:
+				aKeyFile.write(aKey)
+		except BaseException as e:
+			LmTools.Error('Cannot save key file. Error: {}'.format(e))
 
 		return True
 
@@ -739,8 +837,9 @@ class LmConf:
 		p = LmConf.CurrProfile.get('Livebox Password')
 		if p is not None:
 			try:
-				LmConf.LiveboxPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+				LmConf.LiveboxPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 			except:
+				LmTools.Error('Cannot decrypt Livebox password.')
 				LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
 		else:
 			LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
@@ -795,6 +894,7 @@ class LmConf:
 
 		# Create config directory if doesn't exist
 		if not os.path.isdir(aConfigPath):
+			LmTools.LogDebug(1, 'Creating config directory', aConfigPath)
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
@@ -802,6 +902,7 @@ class LmConf:
 				return
 
 		aConfigFilePath = os.path.join(aConfigPath, CONFIG_FILE)
+		LmTools.LogDebug(1, 'Saving configuration in', aConfigFilePath)
 		try:
 			with open(aConfigFilePath, 'w') as aConfigFile:
 				aConfig = {}
@@ -812,7 +913,7 @@ class LmConf:
 					LmConf.CurrProfile['Default'] = True
 				LmConf.CurrProfile['Livebox URL'] = LmConf.LiveboxURL
 				LmConf.CurrProfile['Livebox User'] = LmConf.LiveboxUser
-				LmConf.CurrProfile['Livebox Password'] = Fernet(SECRET.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
+				LmConf.CurrProfile['Livebox Password'] = Fernet(LmConf.Secret.encode('utf-8')).encrypt(LmConf.LiveboxPassword.encode('utf-8')).decode('utf-8')
 				LmConf.CurrProfile['Livebox MacAddr'] = LmConf.LiveboxMAC
 				LmConf.CurrProfile['Filter Devices'] = LmConf.FilterDevices
 				LmConf.CurrProfile['MacAddr Table File'] = LmConf.MacAddrTableFile
@@ -836,6 +937,10 @@ class LmConf:
 				aConfig['Repeaters'] = LmConf.Repeaters
 				aConfig['Graph'] = LmConf.Graph
 				aConfig['Tabs'] = LmConf.Tabs
+				aConfig['NotificationRules'] = LmConf.NotificationRules
+				aConfig['NotificationFlushFrequency'] = LmConf.NotificationFlushFrequency
+				aConfig['NotificationFilePath'] = LmConf.NotificationFilePath
+				aConfig['email'] = LmConf.Email
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))
@@ -889,8 +994,9 @@ class LmConf:
 					aPassword = LmConf.LiveboxPassword
 				else:
 					try:
-						aPassword = Fernet(SECRET.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+						aPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 					except:
+						LmTools.Error('Cannot decrypt repeater password.')
 						aPassword = LmConf.LiveboxPassword
 				return aUser, aPassword
 
@@ -917,7 +1023,7 @@ class LmConf:
 			aRepeaterConf['User'] = LmConf.LiveboxUser
 
 		# Setup password
-		aRepeaterConf['Password'] = Fernet(SECRET.encode('utf-8')).encrypt(iPassword.encode('utf-8')).decode('utf-8')
+		aRepeaterConf['Password'] = Fernet(LmConf.Secret.encode('utf-8')).encrypt(iPassword.encode('utf-8')).decode('utf-8')
 
 		# Save to config file
 		LmConf.save()
@@ -1110,6 +1216,50 @@ class LmConf:
 			DEVICE_TYPES = sorted(DEVICE_TYPES, key = lambda x: x['Name'])
 
 
+	### Load, check and return email configuration
+	@staticmethod
+	def loadEmailSetup():
+		if LmConf.Email is None:
+			return None
+
+		c = LmConf.Email
+		e = {}
+
+		e['From'] = c.get('From', '')
+		e['To'] = c.get('To', '')
+		e['Prefix'] = c.get('Prefix', '[LiveboxMonitor] ')
+		e['Server'] = c.get('Server', '')
+		e['Port'] = c.get('Port', 587)
+		e['TLS'] = c.get('TLS', True)
+		e['SSL'] = c.get('SSL', False)
+		e['Authentication'] = c.get('Authentication', True)
+		e['User'] = c.get('User', '')
+
+		aPassword = ''
+		p = c.get('Password')
+		if p is not None:
+			try:
+				aPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
+			except:
+				LmTools.Error('Cannot decrypt email password.')
+		e['Password'] = aPassword
+
+		return e
+
+
+	### Set email configuration
+	@staticmethod
+	def setEmailSetup(iEmailSetup):
+		p = iEmailSetup['Password']
+		try:
+			iEmailSetup['Password'] = Fernet(LmConf.Secret.encode('utf-8')).encrypt(p.encode('utf-8')).decode('utf-8')
+		except:
+			LmTools.Error('Cannot encrypt email password.')
+			iEmailSetup['Password'] = ''
+		LmConf.Email = iEmailSetup
+
+
+
 # ################################ Livebox connection dialog ################################
 class LiveboxCnxDialog(QtWidgets.QDialog):
 	def __init__(self, iURL, iParent = None):
@@ -1279,9 +1429,10 @@ class SelectProfileDialog(QtWidgets.QDialog):
 		aGrid.addWidget(self._assMac, 2, 1)
 		aGrid.addWidget(aDetectedMacLabel, 3, 0)
 		aGrid.addWidget(self._detMac, 3, 1)
-		aGrid.addWidget(self._warning, 4, 0, 4, 2)
+		aGrid.addWidget(self._warning, 4, 0, 1, 2)
 
 		aCreateProfileButton = QtWidgets.QPushButton(lpx('New Profile...'), objectName = 'createProfile')
+		aCreateProfileButton.setStyleSheet('padding-left: 15px; padding-right: 15px; padding-top: 3px; padding-bottom: 3px;')
 		aCreateProfileButton.clicked.connect(self.createProfile)
 		aOkButton = QtWidgets.QPushButton(lpx('OK'), objectName = 'ok')
 		aOkButton.clicked.connect(self.accept)
@@ -1367,7 +1518,6 @@ class SelectProfileDialog(QtWidgets.QDialog):
 
 
 # ################################ Prefs dialog ################################
-
 class PrefsDialog(QtWidgets.QDialog):
 	def __init__(self, iParent = None):
 		super(PrefsDialog, self).__init__(iParent)
@@ -1424,10 +1574,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		aProfileEditGrid.addWidget(self._liveboxUrl, 1, 1)
 		aProfileEditGrid.addWidget(aLiveboxUserLabel, 2, 0)
 		aProfileEditGrid.addWidget(self._liveboxUser, 2, 1)
-		aProfileEditGrid.addWidget(self._filterDevices, 3, 0)
+		aProfileEditGrid.addWidget(self._filterDevices, 3, 0, 1, 2)
 		aProfileEditGrid.addWidget(aMacAddrTableFileLabel, 4, 0)
 		aProfileEditGrid.addWidget(self._macAddrTableFile, 4, 1)
-		aProfileEditGrid.addWidget(self._defaultProfile, 5, 0)
+		aProfileEditGrid.addWidget(self._defaultProfile, 5, 0, 1, 2)
 		aProfileLayout.addLayout(aProfileEditGrid, 1)
 
 		aProfileGroupBox = QtWidgets.QGroupBox(lx('Profiles'), objectName = 'profileGroup')
@@ -1496,8 +1646,8 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(self._listLineHeight, 4, 1)
 		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
 		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
-		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 5, 0, 5, 2)
-		aPrefsEditGrid.addWidget(self._nativeUIStyle, 6, 0, 6, 2)
+		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 5, 0, 1, 3)
+		aPrefsEditGrid.addWidget(self._nativeUIStyle, 6, 0, 1, 3)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1585,7 +1735,7 @@ class PrefsDialog(QtWidgets.QDialog):
 
 		# Save parameters
 		LmConf.Language = LmLanguages.LANGUAGES_KEY[self._languageCombo.currentIndex()]
-		LmConf.Tooltips = self._tooltips.checkState() == QtCore.Qt.CheckState.Checked
+		LmConf.Tooltips = self._tooltips.isChecked()
 		LmConf.StatsFrequency = int(self._statsFrequency.text()) * 1000
 		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
 		LmConf.PhoneCode = self._phoneCode.text()
@@ -1593,8 +1743,8 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
 		LmConf.ListLineHeight = int(self._listLineHeight.text())
 		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
-		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.checkState() == QtCore.Qt.CheckState.Checked
-		LmConf.NativeUIStyle = self._nativeUIStyle.checkState() == QtCore.Qt.CheckState.Checked
+		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.isChecked()
+		LmConf.NativeUIStyle = self._nativeUIStyle.isChecked()
 
 
 	### Click on profile list item
@@ -1643,7 +1793,7 @@ class PrefsDialog(QtWidgets.QDialog):
 			return False
 
 		# If default profile is selected, set all others to false
-		aDefault = self._defaultProfile.checkState() == QtCore.Qt.CheckState.Checked
+		aDefault = self._defaultProfile.isChecked()
 		if aDefault:
 			for p in self._profiles:
 				p['Default'] = False
@@ -1653,7 +1803,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		p['Name'] = self._profileName.text()
 		p['Livebox URL'] = LmTools.CleanURL(self._liveboxUrl.text())
 		p['Livebox User'] = self._liveboxUser.text()
-		p['Filter Devices'] = self._filterDevices.checkState() == QtCore.Qt.CheckState.Checked
+		p['Filter Devices'] = self._filterDevices.isChecked()
 		p['MacAddr Table File'] = self._macAddrTableFile.text()
 		p['Default'] = aDefault
 		return True
@@ -1718,6 +1868,208 @@ class PrefsDialog(QtWidgets.QDialog):
 		if self.saveProfile():
 			self.savePrefs()
 			self.accept()
+
+
+
+
+# ################################ Email setup dialog ################################
+class EmailSetupDialog(QtWidgets.QDialog):
+	def __init__(self, iParent = None):
+		super(EmailSetupDialog, self).__init__(iParent)
+		self.resize(420, 310)
+
+		self._init = True
+
+		aEmailRegExp = QtCore.QRegularExpression(LmTools.EMAIL_RS)
+		aEmailValidator = QtGui.QRegularExpressionValidator(aEmailRegExp)
+
+		aFromAddrLabel = QtWidgets.QLabel(lex('From Address'), objectName = 'fromAddrLabel')
+		self._fromAddress = QtWidgets.QLineEdit(objectName = 'fromAddrEdit')
+		self._fromAddress.textChanged.connect(self.setupChanged)
+		self._fromAddress.setValidator(aEmailValidator)
+
+		aToAddrLabel = QtWidgets.QLabel(lex('To Address'), objectName = 'toAddrLabel')
+		self._toAddress = QtWidgets.QLineEdit(objectName = 'toAddrEdit')
+		self._toAddress.textChanged.connect(self.setupChanged)
+		self._toAddress.setValidator(aEmailValidator)
+
+		aSubjectPrefixLabel = QtWidgets.QLabel(lex('Subject Prefix'), objectName = 'subjectPrefixLabel')
+		self._subjectPrefix = QtWidgets.QLineEdit(objectName = 'subjectPrefixEdit')
+
+		aSMTPServerLabel = QtWidgets.QLabel(lex('SMTP Server'), objectName = 'smtpServerLabel')
+		self._smtpServer = QtWidgets.QLineEdit(objectName = 'smtpServerEdit')
+		self._smtpServer.textChanged.connect(self.setupChanged)
+
+		aPortRegExp = QtCore.QRegularExpression(LmTools.PORTS_RS)
+		aPortValidator = QtGui.QRegularExpressionValidator(aPortRegExp)
+		aSMTPPortLabel = QtWidgets.QLabel(lex('Port'), objectName = 'smtpPortLabel')
+		self._smtpPort = QtWidgets.QLineEdit(objectName = 'smtpPortEdit')
+		self._smtpPort.setValidator(aPortValidator)
+
+		self._useTLS = QtWidgets.QCheckBox(lex('Use TLS'), objectName = 'useTLS')
+		self._useTLS.stateChanged.connect(self.tlsChanged)
+
+		self._useSSL = QtWidgets.QCheckBox(lex('Use SSL'), objectName = 'useSSL')
+		self._useSSL.stateChanged.connect(self.sslChanged)
+
+		self._authentication = QtWidgets.QCheckBox(lex('Authentication'), objectName = 'authentication')
+		self._authentication.stateChanged.connect(self.setupChanged)
+
+		aUserLabel = QtWidgets.QLabel(lex('User'), objectName = 'userLabel')
+		self._user = QtWidgets.QLineEdit(objectName = 'userEdit')
+		self._user.textChanged.connect(self.setupChanged)
+
+		aPasswordLabel = QtWidgets.QLabel(lex('Password'), objectName = 'passwordLabel')
+		self._password = QtWidgets.QLineEdit(objectName = 'passwordEdit')
+		self._password.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+		self._password.textChanged.connect(self.setupChanged)
+
+		aEditGrid = QtWidgets.QGridLayout()
+		aEditGrid.setSpacing(10)
+		aEditGrid.addWidget(aFromAddrLabel, 0, 0)
+		aEditGrid.addWidget(self._fromAddress, 0, 1, 1, 10)
+		aEditGrid.addWidget(aToAddrLabel, 1, 0)
+		aEditGrid.addWidget(self._toAddress, 1, 1, 1, 10)
+		aEditGrid.addWidget(aSubjectPrefixLabel, 2, 0)
+		aEditGrid.addWidget(self._subjectPrefix, 2, 1, 1, 10)
+		aEditGrid.addWidget(aSMTPServerLabel, 3, 0)
+		aEditGrid.addWidget(self._smtpServer, 3, 1, 1, 8)
+		aEditGrid.addWidget(aSMTPPortLabel, 3, 9)
+		aEditGrid.addWidget(self._smtpPort, 3, 10)
+		aEditGrid.addWidget(self._useTLS, 4, 0)
+		aEditGrid.addWidget(self._useSSL, 4, 2)
+		aEditGrid.addWidget(self._authentication, 4, 4)
+		aEditGrid.addWidget(aUserLabel, 5, 0)
+		aEditGrid.addWidget(self._user, 5, 1, 1, 10)
+		aEditGrid.addWidget(aPasswordLabel, 6, 0)
+		aEditGrid.addWidget(self._password, 6, 1, 1, 10)
+
+		# Button bar
+		self._testButton = QtWidgets.QPushButton(lex('Test Sending'), objectName = 'test')
+		self._testButton.setStyleSheet('padding-left: 15px; padding-right: 15px; padding-top: 3px; padding-bottom: 3px;')
+		self._testButton.clicked.connect(self.testButtonClick)
+		self._okButton = QtWidgets.QPushButton(lex('OK'), objectName = 'ok')
+		self._okButton.clicked.connect(self.accept)
+		self._okButton.setDefault(True)
+		aCancelButton = QtWidgets.QPushButton(lex('Cancel'), objectName = 'cancel')
+		aCancelButton.clicked.connect(self.reject)
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(self._testButton, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+		aOkButtonBar = QtWidgets.QHBoxLayout()
+		aOkButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+		aOkButtonBar.setSpacing(10)
+		aOkButtonBar.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aOkButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+		aButtonBar.addLayout(aOkButtonBar)
+
+		# Final layout
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
+		aVBox.addLayout(aEditGrid, 0)
+		aVBox.addLayout(aButtonBar, 1)
+
+		self._fromAddress.setFocus()
+
+		SetToolTips(self, 'email')
+
+		self.setWindowTitle(lex('Email Setup'))
+		self.setModal(True)
+		self.loadSetup()
+		self.show()
+
+		self._init = False
+
+
+	### Load preferences data
+	def loadSetup(self):
+		# If no config set to default values
+		c = LmConf.loadEmailSetup()
+		if c is None:
+			c = {}
+
+		self._fromAddress.setText(c.get('From', ''))
+		self._toAddress.setText(c.get('To', ''))
+		self._subjectPrefix.setText(c.get('Prefix', '[LiveboxMonitor] '))
+		self._smtpServer.setText(c.get('Server', ''))
+		self._smtpPort.setText(str(int(c.get('Port', 587))))
+		aTLS = c.get('TLS', True)
+		if aTLS:
+			self._useTLS.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._useTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if c.get('SSL', False) and not aTLS:
+			self._useSSL.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._useSSL.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if c.get('Authentication', True):
+			self._authentication.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._authentication.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		self._user.setText(c.get('User', ''))
+		self._password.setText(c.get('Password', ''))
+
+		self.setupChanged(None)
+
+
+	### Return current setup in dialog
+	def getSetup(self):
+		c = {}
+		c['From'] = self._fromAddress.text()
+		c['To'] = self._toAddress.text()
+		c['Prefix'] = self._subjectPrefix.text()
+		c['Server'] = self._smtpServer.text()
+		try:
+			c['Port'] = int(self._smtpPort.text())
+		except:
+			c['Port'] = 0
+		c['TLS'] = self._useTLS.isChecked()
+		c['SSL'] = self._useSSL.isChecked()
+		c['Authentication'] = self._authentication.isChecked()
+		c['User'] = self._user.text()
+		c['Password'] = self._password.text()
+		return c
+
+
+	### Click on test button
+	def testButtonClick(self):
+		a = self.parentWidget()
+		a.startTask(lex('Sending test email...'))
+		c = self.getSetup()
+		if LmTools.SendEmail(c, lex('Test Message'), lex('This is a test email from LiveboxMonitor.')):
+			a.displayStatus('Message sent successfully.')
+		else:
+			a.displayError('Message send failure. Check your setup.')
+		a.endTask()
+
+
+	def tlsChanged(self, iState):
+		if not self._init and self._useTLS.isChecked():
+			self._useSSL.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+
+	def sslChanged(self, iState):
+		if not self._init:
+			if self._useSSL.isChecked():
+				self._useTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
+				self._smtpPort.setText('465')
+			else:
+				self._smtpPort.setText('587')
+
+
+	def setupChanged(self, iSetup):
+		c = self.getSetup()
+		m = len(c['From']) and len(c['To']) and len(c['Server'])
+		if c['Authentication']:
+			self._user.setDisabled(False)
+			self._password.setDisabled(False)
+			m = m and len(c['User']) and len (c['Password'])
+		else:
+			self._user.setDisabled(True)
+			self._password.setDisabled(True)
+
+		self._testButton.setDisabled(not m)
+		self._okButton.setDisabled(not m)
 
 
 
