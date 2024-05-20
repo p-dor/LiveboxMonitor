@@ -98,6 +98,7 @@ def GetDeviceTypeDialogLabel(iString): return GetLabel('dtype', iString)
 
 # Events
 def GetEventsLabel(iString): return GetLabel('events', iString)
+def GetNotificationRulesLabel(iString): return GetLabel('evnrules', iString)
 
 # DHCP
 def GetDhcpLabel(iString): return GetLabel('dhcp', iString)
@@ -128,6 +129,7 @@ def GetRepeaterLabel(iString): return GetLabel('repeater', iString)
 def GetConfigPrefsDialogLabel(iString): return GetLabel('prefs', iString)
 def GetConfigCnxDialogLabel(iString): return GetLabel('cnx', iString)
 def GetConfigSigninDialogLabel(iString): return GetLabel('signin', iString)
+def GetConfigEmailDialogLabel(iString): return GetLabel('email', iString)
 def GetSelectProfileDialogLabel(iString): return GetLabel('sprofile', iString)
 def GetReleaseWarningDialogLabel(iString): return GetLabel('rwarn', iString)
 

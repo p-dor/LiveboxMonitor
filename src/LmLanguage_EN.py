@@ -53,6 +53,9 @@ TOOLTIPS = {
 	# Events
 	'events': {},
 
+	# Event Notification Rules
+	'evnrules' : {},
+
 	# DHCP
 	'dhcp': {},
 
@@ -115,6 +118,9 @@ TOOLTIPS = {
 						'your Wifi card (corresponds to the first 8 characters, without spaces, of the security key visible\n'
 						'on the sticker at the back of your Livebox).'
 	},
+
+	# Config - email
+	'email': {},
 
 	# Config - Select profile
 	'sprofile': {},

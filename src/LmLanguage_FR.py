@@ -359,9 +359,53 @@ LABELS = {
 		'Time': 'Heure',
 		'Reason': 'Raison',
 		'Attributes': 'Attributs',
-		'Display Event': 'Afficher Événement',
+		'Display Event...': 'Afficher Événement...',
 		'Events': 'Événements',
-		'Event Entry': 'Entrée Événement'
+		'Event Entry': 'Entrée Événement',
+		'### UNKNOWN ###': '### INCONNU ###',
+		'Added': 'Ajouté',
+		'Deleted': 'Supprimé',
+		'Connected': 'Connecté',
+		"Disconnected": 'Déconnecté',
+		'Access change': 'Changement d\'accès',
+		'Date:': 'Date :',
+		'Time:': 'Heure :',
+		'Device:': 'Appareil :',
+		'MAC:': 'MAC :',
+		'Event:': 'Événement :',
+		'Access link:': 'Accès :',
+		'Old access link:': 'Ancien accès :',
+		'New access link:': 'Nouvel accès :'
+	},
+
+	# Event Notification Rules
+	'evnrules' : {
+		'Device': 'Appareil',
+		'Add': 'Ajouter',
+		'Delete': 'Supprimer',
+		'Any device': 'Tout appareil',
+		'Any unknown device': 'Tout appareil inconnu',
+		'MAC address': 'Adresse MAC',
+		'Events:': 'Événements :',
+		'Device Added': 'Appareil Ajouté',
+		'Device Deleted': 'Appareil Supprimé',
+		'Device Connected': 'Appareil Connecté',
+		'Device Disconnected': 'Appareil Déconnecté',
+		'Device Access Link Changed': 'Changement Point d\'Accès',
+		'Actions:': 'Actions :',
+		'Log in CSV file': 'Logger dans Fichier CSV',
+		'Send Email': 'Envoyer Email',
+		'Rules': 'Règles',
+		'Event Resolution Frequency': 'Fréquence Résolution des Événements',
+		'seconds': 'secondes',
+		'CSV Files Path': 'Répertoire des Fichiers CSV',
+		'Select': 'Sélectionner',
+		'Default': 'Défaut',
+		'Preferences': 'Préférences',
+		'Cancel': 'Annuler',
+		'Notification Rules Setup': 'Configuration des Règles de Notification',
+		'-Unknown-': '-Inconnu-',
+		'Select Folder': 'Sélectionnez le répertoire'
 	},
 
 	# DHCP
@@ -554,6 +598,7 @@ LABELS = {
 		'About': 'À propos',
 		'Preferences...': 'Préférences...',
 		'Change Profile...': 'Changer de profil...',
+		'Email Setup...': 'Réglages Email...',
 		'Setup': 'Réglages',
 		'Raw Device List...': 'JSON Liste Appareils...',
 		'Raw Topology...': 'JSON Topologie...',
@@ -760,6 +805,25 @@ LABELS = {
 		'Password': 'Mot de passe',
 		'Cancel': 'Annuler',
 		'Wrong password': 'Mauvais mot de passe'
+	},
+
+	# Config - email
+	'email': {
+		'From Address': 'Adresse Origine',
+		'To Address': 'Adresse Destination',
+		'Subject Prefix': 'Préfixe Sujet',
+		'SMTP Server': 'Serveur SMTP',
+		'Use TLS': 'Utiliser TLS',
+		'Use SSL': 'Utiliser SSL',
+		'Authentication': 'Authentification',
+		'User': 'Utilisateur',
+		'Password': 'Mot de passe',
+		'Test Sending': 'Test Envoi',
+		'Cancel': 'Annuler',
+		'Email Setup': 'Réglages Email',
+		'Sending test email...': 'Envoi email de test...',
+		'Test Message': 'Message de test',
+		'This is a test email from LiveboxMonitor.': 'Ceci est un email de test envoyé par LiveboxMonitor.'		
 	},
 
 	# Config - Select profile
@@ -1042,7 +1106,50 @@ TOOLTIPS = {
 		'elist_Time': 'Heure de réception de l\'événement.',
 		'elist_Reason': 'Le type d\'événement généré par la Livebox.',
 		'elist_Attribute': 'Aperçu des données brutes de l\'événement lui-même, au format JSON.',
+		'notifications': 'Affiche la fenêtre de configuration des notifications automatiques à générer (par exemple par email)\n'
+						 'à la détection de certains événements.',
 		'displayEvent': 'Affiche un dialogue contenant les informations complètes pour l\'événement sélectionné.'
+	},
+
+	# Event Notification Rules
+	'evnrules' : {
+		'rlist_Key': 'Désignation des appareils pour lesquels recevoir des notifications.',
+		'rlist_Add': 'Option de notification à l\'ajout d\'appareil.',
+		'rlist_Delete': 'Option de notification à la suppression d\'appareil.',
+		'rlist_Active': 'Option de notification à la connexion d\'appareil.',
+		'rlist_Inactive': 'Option de notification à la déconnexion d\'appareil.',
+		'rlist_Link': 'Option de notification au changement de point d\'accès de l\'appareil.',
+		'rlist_File': 'Option de notification dans un fichier CSV.',
+		'rlist_Email': 'Option de notification par l\'envoi d\'un email.',
+		'addRule': 'Permet de rajouter une nouvelle règle de notification.',
+		'delRule': 'Permet de supprimer la règle de notification sélectionnée.',
+		'deviceCombo': 'Permet de sélectionner le ou les appareils pour lesquels recevoir une notification.\n'
+					   '"Tout appareil" appliquera la règle pour l\'ensemble des appareils.\n'
+					   '"Tout appareil inconnu" appliquera la règle à n\'importe quel appareil inconnu.',
+		'macEdit': 'Adresse physique de l\'appareil sélectionné.',
+		'eventsLabel': 'Sélection des événements pour lesquels recevoir une notification.',
+		'addEvent': 'Recevoir une notification à l\'ajout d\'un appareil correspondant.',
+		'delEvent': 'Recevoir une notification à la suppression d\'un appareil correspondant.',
+		'actEvent': 'Recevoir une notification à la connexion d\'un appareil correspondant.',
+		'inaEvent': 'Recevoir une notification à la déconnexion d\'un appareil correspondant.',
+		'lnkEvent': 'Recevoir une notification au changement de point d\'accès (par exemple répéteur Wifi)\n'
+					'd\'un appareil correspondant.',
+		'actionsLabel': 'Sélection des actions à réaliser pour notifier.',
+		'fileAction': 'Reporter les événements dans un fichier CSV journalier.',
+		'emailAction': 'Envoyer les informations de chaque événement par email instantané.\n'
+					   'Cette option nécessite le réglage de l\'envoi d\'email via l\'onglet "Actions".',
+		'flushFrequencyEdit': 'Les événements sont détectés instantanément, cependant certains événements peuvent\n'
+							  's\'annuler lorsque générés dans une courte fenêtre de temps, tels que la déconnexion\n'
+							  'suivie d\'une reconnexion dans les 15 secondes d\'un appareil donné (arrive fréquemment).\n'
+							  'Pour éviter des notifications intempestives un temps d\'attente de 30 secondes est\n'
+							  'fortement recommandé pour laisser le programme identifier ces situations.\n'
+							  'Un temps inférieur à 5 secondes est fortement déconseillé pour éviter que le programme\n'
+							  'ne consomme trop de ressources.',
+		'eventFilePathEdit': 'Répertoire dans lequel générer les fichiers CSV journaliers.',
+		'eventFilePathSelectButton': 'Permet de sélectionner le répertoire dans lequel générer\n'
+									 'les fichiers CSV journaliers.',
+		'defaultFilePath': 'Cocher pour générer les fichiers CSV journaliers dans le répertoire par défaut\n'
+						   'qui est le même que le répertoire de configuration.'
 	},
 
 	# DHCP
@@ -1239,6 +1346,7 @@ TOOLTIPS = {
 		'openSourceURL': 'Un clic ouvrira la page web de l\'application sur votre navigateur.',
 		'prefs': 'Permet d\'afficher l\'écran des préférences du programme.',
 		'changeProfile': 'Permet de changer le profil en cours et de relancer le programme.',
+		'emailSetup': 'Permet de configurer l\'envoi d\'emails automatique, par exemple pour les notifications.',
 		'showRawDeviceList': 'Permet d\'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus.\n'
 							 'Utile pour avoir plus d\'informations ou pour le débogage.',
 		'showRawTopology': 'Permet d\'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus.\n'
@@ -1385,6 +1493,21 @@ TOOLTIPS = {
 						'se trouve sur la carte Wifi. Il est constitué des 8 premiers caractères (sans espace) de la clé de\n'
 						'sécurité visible sur l\'étiquette située sous votre Livebox.\n'
 						'Lisez la documentation pour plus de détails.'
+	},
+
+	# Config - email
+	'email': {
+		'fromAddrEdit': 'Addresse email d\'origine des messages.',
+		'toAddrEdit': 'Addresse email de destination des messages.',
+		'subjectPrefixEdit': 'Préfixe rajouté aux sujets des messages envoyés.',
+		'smtpServerEdit': 'Serveur SMTP de votre fournisseur de messagerie.',
+		'smtpPortEdit': 'Port SMTP à utiliser. 465 est recommandé pour SSL,\n'
+						'587 pour tout autre protocole.',
+		'useTLS': 'Utilisation du protocole d\'encryption TLS (recommandé).',
+		'useSSL': 'Utilisation du protocole d\'encryption SSL.',
+		'authentication': 'À sélectionner si le serveur nécessite de s\'authentifier.',
+		'test': 'Permet d\'envoyer un message de test avec les règlages\n'
+				'courants sans les sauvegarder.'
 	},
 
 	# Config - Select profile
