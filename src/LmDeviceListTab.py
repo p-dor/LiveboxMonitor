@@ -337,7 +337,7 @@ class LmDeviceList:
 				if self.displayableDevice(d):
 					self.identifyRepeater(d)
 					self.addDeviceLine(i, d)
-					self.updateDeviceLine(i, d)
+					self.updateDeviceLine(i, d, False)
 					i += 1
 
 		self._deviceList.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
@@ -397,7 +397,7 @@ class LmDeviceList:
 
 
 	### Update device line
-	def updateDeviceLine(self, iLine, iDevice):
+	def updateDeviceLine(self, iLine, iDevice, iNotify):
 		aDeviceType = iDevice.get('DeviceType', '')
 		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType, self._liveboxSoftwareVersion)
 		self._deviceList.setItem(iLine, DevCol.Type, aDeviceTypeIcon)
@@ -424,8 +424,19 @@ class LmDeviceList:
 		else:
 			aLinkName = aLinkIntf['Name']
 			aLinkType = aLinkIntf['Type']
+		aCurrLink = self._deviceList.item(iLine, DevCol.Link)
+		if aCurrLink is None:
+			aCurrLinkName = ''
+		else:
+			aCurrLinkName = aCurrLink.text()
 		aLink = QtWidgets.QTableWidgetItem(aLinkName)
 		self._deviceList.setItem(iLine, DevCol.Link, aLink)
+
+		# Notify
+		if iNotify and (aLinkName != aCurrLinkName):
+			aMacAddr = iDevice.get('PhysAddress', None)
+			if aMacAddr is not None:
+				self.notifyDeviceAccessLinkEvent(aMacAddr, aCurrLinkName, aLinkName)
 
 		aActiveStatus = iDevice.get('Active', False)
 		aActiveIcon = self.formatActiveTableWidget(aActiveStatus)
@@ -870,6 +881,21 @@ class LmDeviceList:
 			if aActiveStatus is not None:
 				self._deviceIpNameMapDirty = True
 				aIsActive = aActiveStatus != '0'
+				aCurrActive = self._deviceList.item(aListLine, DevCol.Active)
+				if aCurrActive is not None:
+					aIsCurrentlyActive = aCurrActive.data(QtCore.Qt.ItemDataRole.UserRole) == 1
+				else:
+					aIsCurrentlyActive = False
+				if aIsActive != aIsCurrentlyActive:
+					if aIsActive:
+						aCurrLink = self._deviceList.item(aListLine, DevCol.Link)
+						if aCurrLink is None:
+							aCurrLinkName = ''
+						else:
+							aCurrLinkName = aCurrLink.text()
+						self.notifyDeviceActiveEvent(iDeviceKey, aCurrLinkName)
+					else:
+						self.notifyDeviceInactiveEvent(iDeviceKey)
 				aActiveIcon = self.formatActiveTableWidget(aIsActive)
 				self._deviceList.setItem(aListLine, DevCol.Active, aActiveIcon)
 				self.repeaterActiveEvent(iDeviceKey, aIsActive)
@@ -949,7 +975,7 @@ class LmDeviceList:
 				self.updateDeviceLinkInterface(iDeviceKey, aLink[0])
 
 			# Update the device line
-			self.updateDeviceLine(aListLine, iEvent)
+			self.updateDeviceLine(aListLine, iEvent, True)
 
 			# Update potential repeater infos
 			self.repeaterDeviceUpdatedEvent(iDeviceKey, iEvent)
@@ -1007,6 +1033,9 @@ class LmDeviceList:
 		if ('physical' in aTags) and (not 'self' in aTags) and (not 'voice' in aTags) and self.displayableDevice(iEvent):
 			self._deviceIpNameMapDirty = True
 
+			# Notify
+			self.notifyDeviceAddedEvent(iDeviceKey)
+
 			# Prevent device lines to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 			self._infoDList.setSortingEnabled(False)
@@ -1020,7 +1049,7 @@ class LmDeviceList:
 
 			# Update UI
 			self.addDeviceLine(0, iEvent)
-			self.updateDeviceLine(0, iEvent)
+			self.updateDeviceLine(0, iEvent, True)
 
 			# Add as repeater if it is one
 			self.addPotentialRepeater(iEvent)
@@ -1034,6 +1063,9 @@ class LmDeviceList:
 	### Process a new device_deleted, eth_device_deleted or wifi_device_deleted event
 	def processDeviceDeletedEvent(self, iDeviceKey):
 		self._deviceIpNameMapDirty = True
+
+		# Notify
+		self.notifyDeviceDeletedEvent(iDeviceKey)
 
 		# Remove from all UI lists
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
