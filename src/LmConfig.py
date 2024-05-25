@@ -853,38 +853,63 @@ class LmConf:
 
 	### Adapt config format to latest version, returns True is changes were done
 	@staticmethod
-	def convert(iConfig):
+	def convert(ioConfig):
 		aDirtyConfig = False
-		aVersion = iConfig.get('Version')
+		aVersion = ioConfig.get('Version')
 
 		if aVersion is None:
-			aVersion = LmConf.convertFor096(iConfig)
+			aVersion = LmConf.convertFor096(ioConfig)
 			aDirtyConfig = True
+
+		if aVersion <= 0x010400:
+			aVersion = LmConf.convertfor150(ioConfig)
 
 		return aDirtyConfig
 
 
 	### Adapt config format to 0.9.6 version, return corresponding version number
 	@staticmethod
-	def convertFor096(iConfig):
-		iConfig['Version'] = 0x000906
+	def convertFor096(ioConfig):
+		v = 0x000906
+		ioConfig['Version'] = v
 
 		# Convert Livebox parameters into main profile
 		aProfiles = []
 		aMainProfile = {}
 
 		aMainProfile['Name'] = lx('Main')
-		aMainProfile['Livebox URL'] = iConfig.get('Livebox URL', DCFG_LIVEBOX_URL)
-		aMainProfile['Livebox User'] = iConfig.get('Livebox User', DCFG_LIVEBOX_USER)
-		aMainProfile['Livebox Password'] = iConfig.get('Livebox Password', DCFG_LIVEBOX_PASSWORD)
-		aMainProfile['Filter Devices'] = iConfig.get('Filter Devices', DCFG_FILTER_DEVICES)
-		aMainProfile['MacAddr Table File'] = iConfig.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
+		aMainProfile['Livebox URL'] = ioConfig.get('Livebox URL', DCFG_LIVEBOX_URL)
+		aMainProfile['Livebox User'] = ioConfig.get('Livebox User', DCFG_LIVEBOX_USER)
+		aMainProfile['Livebox Password'] = ioConfig.get('Livebox Password', DCFG_LIVEBOX_PASSWORD)
+		aMainProfile['Filter Devices'] = ioConfig.get('Filter Devices', DCFG_FILTER_DEVICES)
+		aMainProfile['MacAddr Table File'] = ioConfig.get('MacAddr Table File', DCFG_MACADDR_TABLE_FILE)
 		aMainProfile['Default'] = True
 		aProfiles.append(aMainProfile)
 
-		iConfig['Profiles'] = aProfiles
+		ioConfig['Profiles'] = aProfiles
 
-		return 0x000906
+		return v
+
+
+	### Adapt config format to 1.5.0 version, return corresponding version number
+	@staticmethod
+	def convertfor150(ioConfig):
+		v = 0x010500
+		ioConfig['Version'] = v
+
+		# Remove all profile passwords following security key management evolution
+		aProfiles = ioConfig.get('Profiles')
+		if aProfiles is not None:
+			for p in aProfiles:
+				p['Livebox Password'] = None
+
+		# Remove all repeaters passwords following security key management evolution
+		aRepeaters = ioConfig.get('Repeaters')
+		if aRepeaters is not None:
+			for r in aRepeaters:
+				aRepeaters[r]['Password'] = None
+
+		return v
 
 
 	### Save configuration file
