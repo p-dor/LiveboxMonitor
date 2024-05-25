@@ -636,8 +636,7 @@ class LmEvents:
 			m += lx('Old access link:') + ' ' + iEvent['OldLink'] + '\n'
 			m += lx('New access link:') + ' ' + iEvent['NewLink'] + '\n'
 
-		if not LmTools.SendEmail(c, aSubject, m):
-			LmTools.Error('Email notification send failure. Check your email setup.')
+		LmTools.SendEmailAsync(c, aSubject, m)
 
 
 	### Check if a notification event match any configured notification rules
@@ -684,7 +683,6 @@ class LmEvents:
 
 
 # ################################ Notification rules setup dialog ################################
-###TODO### -> put email sending in separate thread + try to provide an option to prevent PC sleep mode
 class NotificationSetupDialog(QtWidgets.QDialog):
 	DeviceComboSeparatorIndex = 2
 
