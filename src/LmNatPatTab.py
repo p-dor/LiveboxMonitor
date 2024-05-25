@@ -176,9 +176,9 @@ class LmNatPat:
 		aAddRuleButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addPat')
 		aAddRuleButton.clicked.connect(self.addPatRuleButtonClick)
 		aPatButtonsBox.addWidget(aAddRuleButton)
-		aEditRuleButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editPat')
-		aEditRuleButton.clicked.connect(self.editPatRuleButtonClick)
-		aPatButtonsBox.addWidget(aEditRuleButton)
+		self._patEditRuleButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editPat')
+		self._patEditRuleButton.clicked.connect(self.editPatRuleButtonClick)
+		aPatButtonsBox.addWidget(self._patEditRuleButton)
 		self._patDelRuleButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deletePat')
 		self._patDelRuleButton.clicked.connect(self.delPatRuleButtonClick)
 		aPatButtonsBox.addWidget(self._patDelRuleButton)
@@ -250,9 +250,9 @@ class LmNatPat:
 		aAddRuleButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addPtf')
 		aAddRuleButton.clicked.connect(self.addPtfRuleButtonClick)
 		aPtfButtonsBox.addWidget(aAddRuleButton)
-		aEditRuleButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editPtf')
-		aEditRuleButton.clicked.connect(self.editPtfRuleButtonClick)
-		aPtfButtonsBox.addWidget(aEditRuleButton)
+		self._ptfEditRuleButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editPtf')
+		self._ptfEditRuleButton.clicked.connect(self.editPtfRuleButtonClick)
+		aPtfButtonsBox.addWidget(self._ptfEditRuleButton)
 		self._ptfDelRuleButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deletePtf')
 		self._ptfDelRuleButton.clicked.connect(self.delPtfRuleButtonClick)
 		aPtfButtonsBox.addWidget(self._ptfDelRuleButton)
@@ -310,6 +310,7 @@ class LmNatPat:
 		aCurrentSelection = self._patList.currentRow()
 		if aCurrentSelection >= 0:
 			self._patEnableButton.setEnabled(True)
+			self._patEditRuleButton.setEnabled(True)
 			self._patDelRuleButton.setEnabled(True)
 			aEnable = self._patList.item(aCurrentSelection, PatCol.Enabled).data(QtCore.Qt.ItemDataRole.UserRole)
 			if aEnable:
@@ -318,6 +319,7 @@ class LmNatPat:
 				self._patEnableButton.setText(lx('Enable'))
 		else:
 			self._patEnableButton.setEnabled(False)
+			self._patEditRuleButton.setEnabled(False)
 			self._patDelRuleButton.setEnabled(False)
 
 
@@ -518,6 +520,7 @@ class LmNatPat:
 		aCurrentSelection = self._ptfList.currentRow()
 		if aCurrentSelection >= 0:
 			self._ptfEnableButton.setEnabled(True)
+			self._ptfEditRuleButton.setEnabled(True)
 			self._ptfDelRuleButton.setEnabled(True)
 			aEnable = self._ptfList.item(aCurrentSelection, PtfCol.Enabled).data(QtCore.Qt.ItemDataRole.UserRole)
 			if aEnable:
@@ -526,6 +529,7 @@ class LmNatPat:
 				self._ptfEnableButton.setText(lx('Enable'))
 		else:
 			self._ptfEnableButton.setEnabled(False)
+			self._ptfEditRuleButton.setEnabled(False)
 			self._ptfDelRuleButton.setEnabled(False)
 
 
