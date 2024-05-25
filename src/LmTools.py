@@ -284,6 +284,29 @@ def SendEmail(iEmailSetup, iSubject, iMessage):
 	return True
 
 
+### Async email sending task
+class AsyncEmail(QtCore.QRunnable):
+	def __init__(self, iEmailSetup, iSubject, iMessage):
+		super().__init__()
+		self.emailSetup = iEmailSetup
+		self.subject = iSubject
+		self.message = iMessage
+
+	def run(self):
+		if not SendEmail(self.emailSetup, self.subject, self.message):
+			Error('Email send failure. Check your email setup.')
+
+
+### Send an email asynchronously
+def SendEmailAsync(iEmailSetup, iSubject, iMessage):
+	try:
+		if not QtCore.QThreadPool.globalInstance().tryStart(AsyncEmail(iEmailSetup, iSubject, iMessage)):
+			Error('Cannot send email. No free thread in the pool.')
+	except BaseException as e:
+		Error('Cannot send email. Error: {}'.format(e))
+
+
+
 # ################################ Formatting Tools ################################
 
 ### Format bytes
