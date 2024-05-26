@@ -1901,7 +1901,7 @@ class PrefsDialog(QtWidgets.QDialog):
 class EmailSetupDialog(QtWidgets.QDialog):
 	def __init__(self, iParent = None):
 		super(EmailSetupDialog, self).__init__(iParent)
-		self.resize(420, 310)
+		self.resize(515, 310)
 
 		self._init = True
 
