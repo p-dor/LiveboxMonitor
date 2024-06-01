@@ -297,6 +297,7 @@ class LmGraph:
 		if len(self._graphData):
 			aFolder = QtWidgets.QFileDialog.getExistingDirectory(self, lx('Select Export Folder'))
 			if len(aFolder):
+				aFolder = QtCore.QDir.toNativeSeparators(aFolder)
 				for o in self._graphData:
 					self.exportGraphObject(aFolder, o)
 		else:

@@ -683,6 +683,8 @@ class LmActions:
 
 		aFolder = QtWidgets.QFileDialog.getExistingDirectory(self, lx('Select Export Folder'))
 		if len(aFolder):
+			aFolder = QtCore.QDir.toNativeSeparators(aFolder)
+
 			# Check Ctlr key again to possibly switch to filtering mode
 			if not aFilterValues:
 				aModifiers = QtGui.QGuiApplication.queryKeyboardModifiers()

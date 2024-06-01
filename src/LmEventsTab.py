@@ -1316,6 +1316,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 	def eventFilePathSelectButtonClic(self):
 		aFolder = QtWidgets.QFileDialog.getExistingDirectory(self, lnx('Select Folder'))
 		if len(aFolder):
+			aFolder = QtCore.QDir.toNativeSeparators(aFolder)
 			self._eventFilePath.setText(aFolder)
 
 
