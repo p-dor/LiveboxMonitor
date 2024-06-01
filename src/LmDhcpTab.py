@@ -580,26 +580,26 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 		self._guestIpSuggest = iGuestIpSuggest
 		self._ignoreSignal = False
 
-		aDeviceLabel = QtWidgets.QLabel(lbx('Device:'), objectName = 'deviceLabel')
+		aDeviceLabel = QtWidgets.QLabel(lbx('Device'), objectName = 'deviceLabel')
 		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
 		self.loadDeviceList()
 		for d in self._comboDeviceList:
 			self._deviceCombo.addItem(d['Name'])
 		self._deviceCombo.activated.connect(self.deviceSelected)
 
-		aMacLabel = QtWidgets.QLabel(lbx('MAC address:'), objectName = 'macLabel')
+		aMacLabel = QtWidgets.QLabel(lbx('MAC address'), objectName = 'macLabel')
 		self._macEdit = QtWidgets.QLineEdit(objectName = 'macEdit')
 		aMacRegExp = QtCore.QRegularExpression('^' + LmTools.MAC_RS + '$')
 		aMacValidator = QtGui.QRegularExpressionValidator(aMacRegExp)
 		self._macEdit.setValidator(aMacValidator)
 		self._macEdit.textChanged.connect(self.macTyped)
 
-		aDomainLabel = QtWidgets.QLabel(lbx('Domain:'), objectName = 'domainLabel')
+		aDomainLabel = QtWidgets.QLabel(lbx('Domain'), objectName = 'domainLabel')
 		self._domainCombo = QtWidgets.QComboBox(objectName = 'domainCombo')
 		self._domainCombo.addItems(['Home', 'Guest'])
 		self._domainCombo.activated.connect(self.domainSelected)
 
-		aIPLabel = QtWidgets.QLabel(lbx('IP address:'), objectName = 'ipLabel')
+		aIPLabel = QtWidgets.QLabel(lbx('IP address'), objectName = 'ipLabel')
 		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
 		aIpRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
@@ -763,25 +763,25 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aIpRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
 		aIpValidator = QtGui.QRegularExpressionValidator(aIpRegExp)
 
-		aLiveboxIpLabel = QtWidgets.QLabel(lsx('Livebox IP address:'), objectName = 'liveboxIpLabel')
+		aLiveboxIpLabel = QtWidgets.QLabel(lsx('Livebox IP address'), objectName = 'liveboxIpLabel')
 		self._liveboxIpEdit = QtWidgets.QLineEdit(objectName = 'liveboxIpEdit')
 		self._liveboxIpEdit.setValidator(aIpValidator)
 		self._liveboxIpEdit.setText(iAddress)
 		self._liveboxIpEdit.textChanged.connect(self.textTyped)
 
-		aMaskLabel = QtWidgets.QLabel(lsx('Subnet mask:'), objectName = 'maskLabel')
+		aMaskLabel = QtWidgets.QLabel(lsx('Subnet mask'), objectName = 'maskLabel')
 		self._maskEdit = QtWidgets.QLineEdit(objectName = 'maskEdit')
 		self._maskEdit.setValidator(aIpValidator)
 		self._maskEdit.setText(iMask)
 		self._maskEdit.textChanged.connect(self.textTyped)
 
-		aMinIpLabel = QtWidgets.QLabel(lsx('DHCP start IP:'), objectName = 'minLabel')
+		aMinIpLabel = QtWidgets.QLabel(lsx('DHCP start IP'), objectName = 'minLabel')
 		self._minEdit = QtWidgets.QLineEdit(objectName = 'minEdit')
 		self._minEdit.setValidator(aIpValidator)
 		self._minEdit.setText(iMin)
 		self._minEdit.textChanged.connect(self.textTyped)
 
-		aMaxIpLabel = QtWidgets.QLabel(lsx('DHCP end IP:'), objectName = 'maxLabel')
+		aMaxIpLabel = QtWidgets.QLabel(lsx('DHCP end IP'), objectName = 'maxLabel')
 		self._maxEdit = QtWidgets.QLineEdit(objectName = 'maxEdit')
 		self._maxEdit.setValidator(aIpValidator)
 		self._maxEdit.setText(iMax)

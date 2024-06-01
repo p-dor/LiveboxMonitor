@@ -277,10 +277,10 @@ LABELS = {
 
 	# Add graph dialog
 	'addgraph': {
-		'Type:': 'Type :',
+		'Type': 'Type',
 		'Device': 'Appareil',
-		'Object:': 'Objet :',
-		'Color:': 'Couleur :',
+		'Object': 'Objet',
+		'Color': 'Couleur',
 		'ID:': 'ID :',
 		'Measures number:': 'Nombre de mesures :',
 		'History:': 'Historique :',
@@ -448,10 +448,10 @@ LABELS = {
 
 	# DHCP - Binding dialog
 	'dbinding': {
-		'Device:': 'Appareil :',
-		'MAC address:': 'Adresse MAC :',
-		'Domain:': 'Domaine :',
-		'IP address:': 'Adresse IP :',
+		'Device': 'Appareil',
+		'MAC address': 'Adresse MAC',
+		'Domain': 'Domaine',
+		'IP address': 'Adresse IP',
 		'Cancel': 'Annuler',
 		'Add DHCP binding': 'Ajouter un Bail DHCP',
 		'-Unknown-': '-Inconnu-'
@@ -460,10 +460,10 @@ LABELS = {
 	# DHCP - Setup dialog
 	'dsetup': {
 		'DHCP Enabled': 'DHCP Actif',
-		'Livebox IP address:': 'Adresse IP Livebox :',
-		'Subnet mask:': 'Masque sous-réseau :',
-		'DHCP start IP:': 'Début DHCP :',
-		'DHCP end IP:': 'Fin DHCP :',
+		'Livebox IP address': 'Adresse IP Livebox',
+		'Subnet mask': 'Masque sous-réseau',
+		'DHCP start IP': 'Début DHCP',
+		'DHCP end IP': 'Fin DHCP',
 		'Cancel': 'Annuler',
 		'DHCP Setup': 'Réglages DHCP'
 	},
@@ -504,15 +504,15 @@ LABELS = {
 	# NAT/PAT - PAT rule dialog
 	'patrule': {
 		'Enabled': 'Active',
-		'Type:': 'Type :',
-		'Name:': 'Nom :',
-		'Description:': 'Description :',
-		'Protocols:': 'Protocoles :',
-		'Internal Port:': 'Port Interne :',
-		'External Port:': 'Port Externe :',
-		'Device:': 'Appareil :',
-		'IP Address:': 'Adresse IP :',
-		'External IPs:': 'IPs Externes :',
+		'Type': 'Type',
+		'Name': 'Nom',
+		'Description': 'Description',
+		'Protocols': 'Protocoles',
+		'Internal Port': 'Port Interne',
+		'External Port': 'Port Externe',
+		'Device': 'Appareil',
+		'IP Address': 'Adresse IP',
+		'External IPs': 'IPs Externes',
 		'Cancel': 'Annuler',
 		'Port Forwarding Rule': 'Règle de Redirection de Port',
 		'-Unknown-': '-Inconnu-'
@@ -521,13 +521,13 @@ LABELS = {
 	# NAT/PAT - PTF rule dialog
 	'ptfrule': {
 		'Enabled': 'Active',
-		'Type:': 'Type :',
-		'Name:': 'Nom :',
-		'Description:': 'Description :',
-		'Protocols:': 'Protocoles :',
-		'Device:': 'Appareil :',
-		'IP Address:': 'Adresse IP :',
-		'External IPs:': 'IPs Externes :',
+		'Type': 'Type',
+		'Name': 'Nom',
+		'Description': 'Description',
+		'Protocols': 'Protocoles',
+		'Device': 'Appareil',
+		'IP Address': 'Adresse IP',
+		'External IPs': 'IPs Externes',
 		'Cancel': 'Annuler',
 		'Protocol Forwarding Rule': 'Règle de Redirection de Protocole',
 		'-Unknown-': '-Inconnu-'
@@ -650,8 +650,8 @@ LABELS = {
 
 	# Actions - Firewall level
 	'fwlevel': {
-		'IPv4 Firewall Level:': 'Niveau du pare-feu IPv4',
-		'IPv6 Firewall Level:': 'Niveau du pare-feu IPv6',
+		'IPv4 Firewall Level': 'Niveau du pare-feu IPv4',
+		'IPv6 Firewall Level': 'Niveau du pare-feu IPv6',
 		'High': 'Élevé',
 		'Medium': 'Moyen',
 		'Low': 'Faible',

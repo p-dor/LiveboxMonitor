@@ -1597,21 +1597,21 @@ class PatRuleDialog(QtWidgets.QDialog):
 
 		self._enableCheckBox = QtWidgets.QCheckBox(lrx('Enabled'), objectName = 'enableCheckbox')
 
-		aTypeLabel = QtWidgets.QLabel(lrx('Type:'), objectName = 'typeLabel')
+		aTypeLabel = QtWidgets.QLabel(lrx('Type'), objectName = 'typeLabel')
 		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
 		self._typeCombo.addItems(RULE_PAT_TYPES)
 		self._typeCombo.activated.connect(self.typeSelected)
 
-		aNameLabel = QtWidgets.QLabel(lrx('Name:'), objectName = 'nameLabel')
+		aNameLabel = QtWidgets.QLabel(lrx('Name'), objectName = 'nameLabel')
 		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
 		self._nameEdit.textChanged.connect(self.nameTyped)
 
-		aDescLabel = QtWidgets.QLabel(lrx('Description:'), objectName = 'descLabel')
+		aDescLabel = QtWidgets.QLabel(lrx('Description'), objectName = 'descLabel')
 		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
 		self._descEdit.setTabChangesFocus(True)
 		self._descEdit.setLineNumber(2)
 
-		aProtocolsLabel = QtWidgets.QLabel(lrx('Protocols:'), objectName = 'protocolsLabel')
+		aProtocolsLabel = QtWidgets.QLabel(lrx('Protocols'), objectName = 'protocolsLabel')
 		self._tcpCheckBox = QtWidgets.QCheckBox(lrx('TCP'), objectName = 'tcpCheckbox')
 		self._tcpCheckBox.clicked.connect(self.protocolClick)
 		self._udpCheckBox = QtWidgets.QCheckBox(lrx('UDP'), objectName = 'udpCheckbox')
@@ -1624,11 +1624,11 @@ class PatRuleDialog(QtWidgets.QDialog):
 		aPortRegExp = QtCore.QRegularExpression(LmTools.PORTS_RS)
 		aPortValidator = QtGui.QRegularExpressionValidator(aPortRegExp)
 
-		aIntPortLabel = QtWidgets.QLabel(lrx('Internal Port:'), objectName = 'intPortLabel')
+		aIntPortLabel = QtWidgets.QLabel(lrx('Internal Port'), objectName = 'intPortLabel')
 		self._intPortEdit = QtWidgets.QLineEdit(objectName = 'intPortEdit')
 		self._intPortEdit.setValidator(aPortValidator)
 
-		aExtPortLabel = QtWidgets.QLabel(lrx('External Port:'), objectName = 'extPortLabel')
+		aExtPortLabel = QtWidgets.QLabel(lrx('External Port'), objectName = 'extPortLabel')
 		self._extPortEdit = QtWidgets.QLineEdit(objectName = 'extPortEdit')
 		self._extPortEdit.setValidator(aPortValidator)
 
@@ -1637,15 +1637,15 @@ class PatRuleDialog(QtWidgets.QDialog):
 		aPortBox.addWidget(aExtPortLabel, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
 		aPortBox.addWidget(self._extPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-		aDeviceLabel = QtWidgets.QLabel(lrx('Device:'), objectName = 'deviceLabel')
+		aDeviceLabel = QtWidgets.QLabel(lrx('Device'), objectName = 'deviceLabel')
 		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
 		self._deviceCombo.activated.connect(self.deviceSelected)
 
-		aIpLabel = QtWidgets.QLabel(lrx('IP Address:'), objectName = 'ipLabel')
+		aIpLabel = QtWidgets.QLabel(lrx('IP Address'), objectName = 'ipLabel')
 		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
 		self._ipEdit.textChanged.connect(self.ipTyped)
 
-		aExtIPsLabel = QtWidgets.QLabel(lrx('External IPs:'), objectName = 'extIPsLabel')
+		aExtIPsLabel = QtWidgets.QLabel(lrx('External IPs'), objectName = 'extIPsLabel')
 		self._extIPsEdit = LmTools.MultiLinesEdit(objectName = 'extIPsEdit')
 		self._extIPsEdit.setTabChangesFocus(True)
 		self._extIPsEdit.setLineNumber(2)
@@ -1946,21 +1946,21 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 		self._enableCheckBox = QtWidgets.QCheckBox(lfx('Enabled'), objectName = 'enableCheckbox')
 
-		aTypeLabel = QtWidgets.QLabel(lfx('Type:'), objectName = 'typeLabel')
+		aTypeLabel = QtWidgets.QLabel(lfx('Type'), objectName = 'typeLabel')
 		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
 		self._typeCombo.addItems(RULE_PTF_TYPES)
 		self._typeCombo.activated.connect(self.typeSelected)
 
-		aNameLabel = QtWidgets.QLabel(lfx('Name:'), objectName = 'nameLabel')
+		aNameLabel = QtWidgets.QLabel(lfx('Name'), objectName = 'nameLabel')
 		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
 		self._nameEdit.textChanged.connect(self.nameTyped)
 
-		aDescLabel = QtWidgets.QLabel(lfx('Description:'), objectName = 'descLabel')
+		aDescLabel = QtWidgets.QLabel(lfx('Description'), objectName = 'descLabel')
 		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
 		self._descEdit.setTabChangesFocus(True)
 		self._descEdit.setLineNumber(2)
 
-		aProtocolsLabel = QtWidgets.QLabel(lfx('Protocols:'), objectName = 'protocolsLabel')
+		aProtocolsLabel = QtWidgets.QLabel(lfx('Protocols'), objectName = 'protocolsLabel')
 		self._tcpCheckBox = QtWidgets.QCheckBox(lfx('TCP'), objectName = 'tcpCheckbox')
 		self._tcpCheckBox.clicked.connect(self.protocolClick)
 		self._udpCheckBox = QtWidgets.QCheckBox(lfx('UDP'), objectName = 'udpCheckbox')
@@ -1985,15 +1985,15 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		aPortBox = QtWidgets.QHBoxLayout()
 		aPortBox.setSpacing(25)
 
-		aDeviceLabel = QtWidgets.QLabel(lfx('Device:'), objectName = 'deviceLabel')
+		aDeviceLabel = QtWidgets.QLabel(lfx('Device'), objectName = 'deviceLabel')
 		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
 		self._deviceCombo.activated.connect(self.deviceSelected)
 
-		aIpLabel = QtWidgets.QLabel(lfx('IP Address:'), objectName = 'ipLabel')
+		aIpLabel = QtWidgets.QLabel(lfx('IP Address'), objectName = 'ipLabel')
 		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
 		self._ipEdit.textChanged.connect(self.ipTyped)
 
-		aExtIPsLabel = QtWidgets.QLabel(lfx('External IPs:'), objectName = 'extIPsLabel')
+		aExtIPsLabel = QtWidgets.QLabel(lfx('External IPs'), objectName = 'extIPsLabel')
 		self._extIPsEdit = LmTools.MultiLinesEdit(objectName = 'extIPsEdit')
 		self._extIPsEdit.setTabChangesFocus(True)
 		self._extIPsEdit.setLineNumber(2)

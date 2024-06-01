@@ -766,18 +766,18 @@ class AddGraphDialog(QtWidgets.QDialog):
 
 		self._app = iParent
 
-		aTypeLabel = QtWidgets.QLabel(lgx('Type:'), objectName = 'typeLabel')
+		aTypeLabel = QtWidgets.QLabel(lgx('Type'), objectName = 'typeLabel')
 		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
 		self._typeCombo.addItem(lgx('Interface'))
 		self._typeCombo.addItem(lgx('Device'))
 		self._typeCombo.activated.connect(self.typeSelected)
 
-		aObjectLabel = QtWidgets.QLabel(lgx('Object:'), objectName = 'objectLabel')
+		aObjectLabel = QtWidgets.QLabel(lgx('Object'), objectName = 'objectLabel')
 		self._objectCombo = QtWidgets.QComboBox(objectName = 'objectCombo')
 		self._objectCombo.activated.connect(self.objectSelected)
 		self.loadObjectList()
 
-		aColorLabel = QtWidgets.QLabel(lgx('Color:'), objectName = 'colorLabel')
+		aColorLabel = QtWidgets.QLabel(lgx('Color'), objectName = 'colorLabel')
 		self._colorEdit = LmTools.ColorButton(objectName = 'colorEdit')
 		self._colorEdit.setColor(DCFG_OBJECT_COLOR[self._app._graphList.rowCount() % len(DCFG_OBJECT_COLOR)])
 		self._colorEdit._colorChanged.connect(self.colorSelected)

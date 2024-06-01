@@ -874,13 +874,13 @@ class FirewallLevelDialog(QtWidgets.QDialog):
 		self.setMinimumWidth(230)
 		self.resize(300, 150)
 
-		aIpV4LevelLabel = QtWidgets.QLabel(lfx('IPv4 Firewall Level:'), objectName = 'ipV4Label')
+		aIpV4LevelLabel = QtWidgets.QLabel(lfx('IPv4 Firewall Level'), objectName = 'ipV4Label')
 		self._ipV4LevelCombo = QtWidgets.QComboBox(objectName = 'ipV4Combo')
 		for l in FIREWALL_LEVELS:
 			self._ipV4LevelCombo.addItem(lfx(l), userData = l)
 		self._ipV4LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv4Level))
 
-		aIpV6LevelLabel = QtWidgets.QLabel(lfx('IPv6 Firewall Level:'), objectName = 'ipV6Label')
+		aIpV6LevelLabel = QtWidgets.QLabel(lfx('IPv6 Firewall Level'), objectName = 'ipV6Label')
 		self._ipV6LevelCombo = QtWidgets.QComboBox(objectName = 'ipV6Combo')
 		for l in FIREWALL_LEVELS:
 			self._ipV6LevelCombo.addItem(lfx(l), userData = l)

@@ -330,11 +330,11 @@ LABELS = {
 
 	# Add graph dialog
 	'addgraph': {
-		'Type:': '',
+		'Type': '',
 		'Interface': '',
 		'Device': '',
-		'Object:': '',
-		'Color:': '',
+		'Object': '',
+		'Color': '',
 		'ID:': '',
 		'Measures number:': '',
 		'History:': '',
@@ -517,10 +517,10 @@ LABELS = {
 
 	# DHCP - Binding dialog
 	'dbinding': {
-		'Device:': '',
-		'MAC address:': '',
-		'Domain:': '',
-		'IP address:': '',
+		'Device': '',
+		'MAC address': '',
+		'Domain': '',
+		'IP address': '',
 		'OK': '',
 		'Cancel': '',
 		'Add DHCP binding': '',
@@ -530,10 +530,10 @@ LABELS = {
 	# DHCP - Setup dialog
 	'dsetup': {
 		'DHCP Enabled': '',
-		'Livebox IP address:': '',
-		'Subnet mask:': '',
-		'DHCP start IP:': '',
-		'DHCP end IP:': '',
+		'Livebox IP address': '',
+		'Subnet mask': '',
+		'DHCP start IP': '',
+		'DHCP end IP': '',
 		'OK': '',
 		'Cancel': '',
 		'DHCP Setup': ''
@@ -580,17 +580,17 @@ LABELS = {
 	# NAT/PAT - PAT rule dialog
 	'patrule': {
 		'Enabled': '',
-		'Type:': '',
-		'Name:': '',
-		'Description:': '',
-		'Protocols:': '',
+		'Type': '',
+		'Name': '',
+		'Description': '',
+		'Protocols': '',
 		'TCP': '',
 		'UDP': '',
-		'Internal Port:': '',
-		'External Port:': '',
-		'Device:': '',
-		'IP Address:': '',
-		'External IPs:': '',
+		'Internal Port': '',
+		'External Port': '',
+		'Device': '',
+		'IP Address': '',
+		'External IPs': '',
 		'OK': '',
 		'Cancel': '',
 		'Port Forwarding Rule': '',
@@ -600,19 +600,19 @@ LABELS = {
 	# NAT/PAT - PTF rule dialog
 	'ptfrule': {
 		'Enabled': '',
-		'Type:': '',
-		'Name:': '',
-		'Description:': '',
-		'Protocols:': '',
+		'Type': '',
+		'Name': '',
+		'Description': '',
+		'Protocols': '',
 		'TCP': '',
 		'UDP': '',
 		'AH': '',
 		'GRE': '',
 		'ESP': '',
 		'ICMP': '',
-		'Device:': '',
-		'IP Address:': '',
-		'External IPs:': '',
+		'Device': '',
+		'IP Address': '',
+		'External IPs': '',
 		'OK': '',
 		'Cancel': '',
 		'Protocol Forwarding Rule': '',
@@ -750,8 +750,8 @@ LABELS = {
 
 	# Actions - Firewall level
 	'fwlevel': {
-		'IPv4 Firewall Level:': '',
-		'IPv6 Firewall Level:': '',
+		'IPv4 Firewall Level': '',
+		'IPv6 Firewall Level': '',
 		'High': '',
 		'Medium': '',
 		'Low': '',
