@@ -507,8 +507,8 @@ class LmRepHandler:
 
 
 	### Sign in to repeater
-	def signin(self):
-		if not self.isActive():
+	def signin(self, iForce = False):
+		if (not iForce) and (not self.isActive()):
 			return
 
 		self.signout()
@@ -884,13 +884,17 @@ class LmRepHandler:
 
 	### Click on Resign button
 	def resignButtonClick(self):
+		aDoIt = False
+		aForceIt = False
 		if self.isActive():
-			if self._app.askQuestion('Are you sure you want to resign to the Repeater?'):
-				self._app.startTask(lx('Signing in to repeater...'))
-				self.signin()
-				self._app.endTask()
+			aDoIt = self._app.askQuestion('Are you sure you want to resign to the Repeater?')
 		else:
-			self._app.displayError('Repeater is inactive.')
+			aDoIt = self._app.askQuestion('Repeater is inactive. Do you want to force signin?')
+			aForceIt = True
+		if aDoIt:
+			self._app.startTask(lx('Signing in to repeater...'))
+			self.signin(aForceIt)
+			self._app.endTask()
 
 
 	### Click on Debug button
