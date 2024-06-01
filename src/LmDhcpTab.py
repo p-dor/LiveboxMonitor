@@ -394,6 +394,8 @@ class LmDhcp:
 	def findFirstAvailableIp(self, iDomain, iUsedIPs):
 		# Get network
 		aNetwork = self.getDomainNetwork(iDomain)
+		if aNetwork is None:
+			return ''
 
 		# Setup minimum address
 		if iDomain == 'Home':
@@ -409,7 +411,10 @@ class LmDhcp:
 
 	### Find if an IP is in domain network
 	def isIpInNetwork(self, iIP, iDomain):
-		return IPv4Address(iIP) in self.getDomainNetwork(iDomain)
+		aNetwork = self.getDomainNetwork(iDomain)
+		if aNetwork is None:
+			return False
+		return IPv4Address(iIP) in aNetwork
 
 
 	### Get domain network
@@ -423,8 +428,10 @@ class LmDhcp:
 			aMask = self._guestIpMask
 
 		# Set network
-		i = aServer.split('.')
-		return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aMask)
+		if LmTools.IsIPv4(aServer):
+			i = aServer.split('.')
+			return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aMask)
+		return None
 
 
 	### Load DHCP infos list
