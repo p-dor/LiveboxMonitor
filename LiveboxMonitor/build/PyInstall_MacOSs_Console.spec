@@ -35,7 +35,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
@@ -44,7 +44,6 @@ exe = EXE(
 )
 
 app = BUNDLE(exe,
-    name='LiveboxMonitor.app',
-    icon='../ico/LiveboxMonitor.ico',
-    version='1.1')
-
+    name='LiveboxMonitor_Console.app',
+    icon='../../ico/LiveboxMonitor.ico',
+    version='1.4')

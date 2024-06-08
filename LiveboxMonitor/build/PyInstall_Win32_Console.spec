@@ -39,4 +39,4 @@ exe = EXE(pyz,
           target_arch=None,
           codesign_identity=None,
           entitlements_file=None,
-          icon='..\ico\LiveboxMonitor.ico')
+          icon='..\..\ico\LiveboxMonitor.ico')
