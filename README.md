@@ -2,6 +2,7 @@
 
 L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox et détecter rapidement les intrusions,
+- Enregistrer le journal d'activités et recevoir des notifications par email aux connexions ou déconnexions,
 - Obtenir des statistiques détaillées de trafic, par appareil, global,
 - Visualiser graphiquement les statistiques de trafic sur plusieurs jours, par appareil ou par interface,
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
@@ -173,6 +174,7 @@ Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort
     - MacOS : `~/Library/Application Support/LiveboxMonitor`
 
 Le programme créé automatiquement dans son répertoire de configuration deux fichiers au format JSON :
+- `Key.txt` : clef de chiffrement unique générée pour crypter tous les mots de passe. Cette clef est elle-même cryptée avec une clef qui est calculée par le programme à partir des caractéristiques uniques de votre PC (y compris son nom). Si quelque chose de significatif change sur votre PC (le processeur, l'OS, son nom, etc), cette clef sera régénérée automatiquement et tous vos mots de passe devront être ressaisis.
 - `Config.txt` : contient tous les paramètres de l'application.
 - `MacAddrTable.txt` : contient la correspondance entre les adresses MAC et les noms d'appareil.
 
@@ -180,7 +182,7 @@ Le programme créé automatiquement dans son répertoire de configuration deux f
 
 Ce fichier est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer. Les réglages principaux se font via le bouton `Préférences...` de l'onglet `Actions`.  
 À savoir :  
-- Les mots de passe y sont stockés cryptés. La clef de cryptage du mot de passe peut être modifiée, elle est située dans le module `LmConfig.py`, variable `SECRET`.
+- Les mots de passe y sont stockés cryptés grace à la clef de chiffrement du fichier `Key.txt`.
 - La clef `Repeaters` est générée automatiquement par le programme si des mots de passe différents sont utilisés pour le ou les répéteurs Wifi Orange connectés. La structure de ce paramètre est aussi au format JSON, utilise pour clef les adresses MAC des répéteurs, et référence pour chaque répéteur les valeurs 'User' & 'Password'.
 
 ### Le fichier MacAddrTable.txt
@@ -361,8 +363,25 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 - **Raised** : date et heure précise de réception de l'événement.
 - **Handler** : gestionnaire de l'événement, contenant la plupart du temps la clef de l'appareil qui n'est autre que son adresse MAC.
 - **Reason** : le type d'événement.
-- **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.
+- **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.  
 
+### Notifications automatiques
+- Le bouton **`Notifications...`** permet d'accéder à configuration des notifications automatiques à générer (par exemple par email) à la détection de certains événements.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events_Notifications.png)
+
+    Vous pouvez créer autant de règles que nécessaire. Ce n'est pas grave si plusieurs règles concernent le ou les mêmes appareils, le programme ne détecte pas non plus les règles dupliquées. Il suffit qu'au moins une règle soit trouvée qui concerne une notification pour un appareil pour que cette notification soit effectuée.
+    La liste affiche la liste des règles configurées, avec le ou les appareils concernés, les pastilles bleues indiquent les événements sélectionnés pour la notification, les pastilles vertes le ou les types de notifications sélectionnés (email et/ou fichiers CSV journaliers). Les boutons **`Ajouter`** et **`Supprimer`** permettent de créer une règle ou de supprimer la règle sélectionnée.  
+
+    Paramètres d'une règle :
+    - **`Appareil`** : permet de sélectionner le ou les appareils pour lesquels recevoir une notification. `Tout appareil` appliquera la règle pour l'ensemble des appareils. `Tout appareil inconnu` appliquera la règle à n'importe quel appareil inconnu.
+    - **`Adresse MAC`** : adresse physique de l'appareil sélectionné.
+    - **`Événements`** : sélection des événements pour lesquels recevoir une notification. Ajout ou suppression d'appareils, connexion, déconnexion, ou changement de points d'accès (utile si vous disposez d'un ou plusieurs répéteurs Wifi Orange).
+    - **`Actions`** : sélection des actions à réaliser pour notifier. Il est possible de reporter les événements dans un fichier CSV journalier, ou d'envoyer les informations de chaque événement par email instantané.
+
+    Préférences des notifications:
+    - **`Fréquences Résolution des Événements`** : les événements sont détectés instantanément, cependant certains événements peuvent s'annuler lorsque générés dans une courte fenêtre de temps, tels que la déconnexion suivie d'une reconnexion dans les 15 secondes d'un appareil donné (arrive fréquemment). Pour éviter des notifications intempestives un temps d'attente de 30 secondes est fortement recommandé pour laisser le programme identifier ces situations. Un temps inférieur à 5 secondes est fortement déconseillé pour éviter que le programme ne consomme trop de ressources.
+    - **`Répertoire des fichiers CSV`** : répertoire dans lequel générer les fichiers CSV journaliers. Cocher l'option `Défaut` pour générer les fichiers dans le [le répertoire de configuration du programme](#configuration). Sinon cliquer sur le bouton `Sélectionner` pour choisir un répertoire spécifique.
 
 ## DHCP - Contrôle fin du serveur DHCP <a id="dhcp"></a>
 
@@ -584,11 +603,51 @@ Les actions concernant les **Réglages** :
 
 - **`Changer de profil...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
 
+- **`Réglages Email...`** : permet de configurer l'envoi d'emails automatique, par exemple pour les notifications.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_EmailSetup.png)
+ 
+    Il est possible de configurer :
+    - `Adresse Origine` : adresse email d'origine des messages.
+    - `Adresse Destination` : adresse email de destination des messages.
+    - `Préfixe Sujet` : préfixe rajouté aux sujets des messages envoyés.
+    - `Serveur SMTP` : serveur SMTP de votre fournisseur de messagerie.
+    - `Port` : port SMTP à utiliser. 465 est recommandé pour SSL, 587 pour tout autre protocole.
+    - `Utiliser TLS` : utilisation du protocole d'encryption TLS (recommandé).
+    - `Utiliser SSL` : utilisation du protocole d'encryption SSL.
+    - `Authentification` : à sélectionner si le serveur nécessite de s'authentifier.
+    - `Utilisateur` : votre nom d'utilisateur pour s'authentifier.
+    - `Mot de passe` : votre mot de passe pour s'authentifier.  
+
+    Le bouton `Test Envoi` permet d'envoyer un message de test avec les réglages courants sans les sauvegarder.  
+
+    La configuration pour le serveur d'Orange est très simple :
+    - Adresse origine / utilisateur -> mettre votre adresse@orange.fr
+    - Adresse destination -> la destination souhaitée
+    - Serveur SMTP -> smtp.orange.fr
+    - Port -> 587
+    - Cocher "Utiliser TLS" et "Authentification".
+    - Mot de passe -> votre mot de passe Orange.  
+
+    Pour gmail c'est un peu plus compliqué :
+    - Il faut d'abord régler son compte gmail pour créer un mot de passe dédié pour le programme.
+    - Aller sur son compte, onglet "Sécurité" -> [ici](https://myaccount.google.com/security)
+    - Vérifier que la "validation en deux étapes" est activée, si ce n'est pas le cas, il faut le faire.
+    - Cliquer "Validation en deux étapes" et aller sur "Mots de passe d'application" en bas.
+    - Créer un nouveau mot de passe pour l'application 'LiveboxMonitor' et notez le mot de passe (sans les espaces).
+    - Retourner dans LiveboxMonitor, réglage email.
+    - Dans les champs Adresse origine / utilisateur -> mettre votre adresse@gmail.com
+    - Adresse destination -> la destination souhaitée
+    - Serveur SMTP -> smtp.gmail.com
+    - Port -> 587
+    - Cocher "Utiliser TLS" et "Authentification"
+    - Mot de passe -> le mot de passe créé ci dessus.  
+
 Les actions techniques de **Débogage** :
 - **`JSON Liste Appareils...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 - **`JSON Topologie...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 - **`Niveau de log...`** : permet de changer le niveau de logs dans la console. Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement du programme.
-- **`Générer documentation APIs...`** : permet de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Le programme génère un fichier par module connu, un fichier "_ALL_MODULES_" contenant l'ensemble des modules en un seul fichier, et un fichier "_PROCESSES_" qui permet d'avoir la liste des tâches tournant sur la Livebox. Certains fichiers ne contiennent qu'une erreur "Permission denied" : c'est normal, ces modules sont protégés et donc non accessibles (mais qui sait dans une prochaine version du firmeware ?). Les paramètres de fonction indiqués entre parenthèses sont optionnels. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration, cependant avoir la liste des instances reste crucial pour une documentation vraiment complète.
+- **`Générer documentation APIs...`** : permet de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Le programme génère un fichier par module connu, un fichier "_ALL_MODULES_" contenant l'ensemble des modules en un seul fichier, et un fichier "_PROCESSES_" qui permet d'avoir la liste des tâches tournant sur la Livebox. Certains fichiers ne contiennent qu'une erreur "Permission denied" : c'est normal, ces modules sont protégés et donc non accessibles (mais qui sait dans une prochaine version du firmeware ?). Les paramètres de fonction indiqués entre parenthèses sont optionnels. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration, cependant avoir la liste des instances reste crucial pour une documentation vraiment complète.  
 
 Autres actions :
 - **Quitter l'application** : pour quitter l'application. Strictement équivalent à fermer la fenêtre de l'application.
