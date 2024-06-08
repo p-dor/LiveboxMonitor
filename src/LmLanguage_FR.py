@@ -1497,8 +1497,8 @@ TOOLTIPS = {
 
 	# Config - email
 	'email': {
-		'fromAddrEdit': 'Addresse email d\'origine des messages.',
-		'toAddrEdit': 'Addresse email de destination des messages.',
+		'fromAddrEdit': 'Adresse email d\'origine des messages.',
+		'toAddrEdit': 'Adresse email de destination des messages.',
 		'subjectPrefixEdit': 'Préfixe rajouté aux sujets des messages envoyés.',
 		'smtpServerEdit': 'Serveur SMTP de votre fournisseur de messagerie.',
 		'smtpPortEdit': 'Port SMTP à utiliser. 465 est recommandé pour SSL,\n'
@@ -1506,7 +1506,7 @@ TOOLTIPS = {
 		'useTLS': 'Utilisation du protocole d\'encryption TLS (recommandé).',
 		'useSSL': 'Utilisation du protocole d\'encryption SSL.',
 		'authentication': 'À sélectionner si le serveur nécessite de s\'authentifier.',
-		'test': 'Permet d\'envoyer un message de test avec les règlages\n'
+		'test': 'Permet d\'envoyer un message de test avec les réglages\n'
 				'courants sans les sauvegarder.'
 	},
 
