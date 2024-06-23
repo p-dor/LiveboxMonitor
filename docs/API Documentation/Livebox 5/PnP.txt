@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .PnP - Name: .PnP
@@ -12,13 +12,7 @@ OBJECT: .PnP - Name: .PnP
   - MobilePhoneNumber (type: string)
       Attributes: persistent
       Validator: {'max': '10'}
-  - ServerURL (type: string)
-      Attributes: persistent
-  - WakeUpURL (type: string)
-      Attributes: persistent
   - ValidationDomain (type: string)
-  - WakeUpPort (type: uint32)
-      Attributes: persistent
   - ConnectionMode (type: string)
       Attributes: persistent
   - Enable (type: bool)

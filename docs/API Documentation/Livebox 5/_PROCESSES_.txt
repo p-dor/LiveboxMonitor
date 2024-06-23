@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: Process.sysbus - Name: Process.1
@@ -46,25 +46,25 @@ OBJECT: Process.sysbus_deviceinfo_plugin - Name: Process.14
 OBJECT: Process.sysbus_firewall - Name: Process.15
 
 =======================================================================
-OBJECT: Process.sysbus_bcmeth - Name: Process.16
+OBJECT: Process.sysbus_kmcd - Name: Process.16
 
 =======================================================================
-OBJECT: Process.sysbus_nemo-clients - Name: Process.17
+OBJECT: Process.sysbus_bcmeth - Name: Process.17
 
 =======================================================================
-OBJECT: Process.sysbus_raplugin - Name: Process.18
+OBJECT: Process.sysbus_nemo-clients - Name: Process.18
 
 =======================================================================
-OBJECT: Process.sysbus_wld_quan - Name: Process.19
+OBJECT: Process.sysbus_raplugin - Name: Process.19
 
 =======================================================================
-OBJECT: Process.sysbus_dhcp - Name: Process.20
+OBJECT: Process.sysbus_wld_quan - Name: Process.20
 
 =======================================================================
-OBJECT: Process.sysbus_dnsplugin - Name: Process.21
+OBJECT: Process.sysbus_dhcp - Name: Process.21
 
 =======================================================================
-OBJECT: Process.sysbus_kmcd - Name: Process.22
+OBJECT: Process.sysbus_dnsplugin - Name: Process.22
 
 =======================================================================
 OBJECT: Process.sysbus_pppd_plugin - Name: Process.23
@@ -82,325 +82,334 @@ OBJECT: Process.sysbus_gpon-link-monitor - Name: Process.26
 OBJECT: Process.sysbus_dhcpv6d_plugin - Name: Process.27
 
 =======================================================================
-OBJECT: Process.sysbus_ipsec - Name: Process.28
+OBJECT: Process.sysbus_dslite - Name: Process.28
 
 =======================================================================
-OBJECT: Process.sysbus_conntrack_plugin - Name: Process.29
+OBJECT: Process.sysbus_ipsec - Name: Process.29
 
 =======================================================================
-OBJECT: Process.sysbus_flowstats - Name: Process.30
+OBJECT: Process.sysbus_conntrack_plugin - Name: Process.30
 
 =======================================================================
-OBJECT: Process.sysbus_maculan - Name: Process.31
+OBJECT: Process.sysbus_flowstats - Name: Process.31
 
 =======================================================================
-OBJECT: Process.sysbus_vowifi - Name: Process.32
+OBJECT: Process.sysbus_maculan - Name: Process.32
 
 =======================================================================
-OBJECT: Process.sysbus_ssle-server - Name: Process.33
+OBJECT: Process.sysbus_vowifi - Name: Process.33
 
 =======================================================================
-OBJECT: Process.sysbus_devicemngt - Name: Process.34
+OBJECT: Process.sysbus_ssle-server - Name: Process.34
 
 =======================================================================
-OBJECT: Process.sysbus_mqttmessages - Name: Process.35
+OBJECT: Process.sysbus_devicemngt - Name: Process.35
 
 =======================================================================
-OBJECT: Process.sysbus_wld_bcm - Name: Process.36
+OBJECT: Process.sysbus_mqttmessages - Name: Process.36
 
 =======================================================================
-OBJECT: Process.sysbus_dnssd - Name: Process.37
+OBJECT: Process.sysbus_wld_bcm - Name: Process.37
 
 =======================================================================
-OBJECT: Process.sysbus_llmnr - Name: Process.38
+OBJECT: Process.sysbus_dnssd - Name: Process.38
 
 =======================================================================
-OBJECT: Process.sysbus_pnp - Name: Process.39
+OBJECT: Process.sysbus_llmnr - Name: Process.39
 
 =======================================================================
-OBJECT: Process.sysbus_vpn - Name: Process.40
+OBJECT: Process.sysbus_pnp - Name: Process.40
 
 =======================================================================
-OBJECT: Process.sysbus_gmap - Name: Process.41
+OBJECT: Process.sysbus_vpn - Name: Process.41
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_self - Name: Process.42
+OBJECT: Process.sysbus_gmap - Name: Process.42
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_eth - Name: Process.43
+OBJECT: Process.sysbus_gmap_self - Name: Process.43
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_hgw - Name: Process.44
+OBJECT: Process.sysbus_gmap_eth - Name: Process.44
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_devtype - Name: Process.45
+OBJECT: Process.sysbus_gmap_hgw - Name: Process.45
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_dns - Name: Process.46
+OBJECT: Process.sysbus_gmap_devtype - Name: Process.46
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_upnp - Name: Process.47
+OBJECT: Process.sysbus_gmap_dns - Name: Process.47
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_wan - Name: Process.48
+OBJECT: Process.sysbus_gmap_upnp - Name: Process.48
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_usb - Name: Process.49
+OBJECT: Process.sysbus_gmap_wan - Name: Process.49
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_mdns - Name: Process.50
+OBJECT: Process.sysbus_gmap_usb - Name: Process.50
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_events - Name: Process.51
+OBJECT: Process.sysbus_gmap_mdns - Name: Process.51
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_plcav - Name: Process.52
+OBJECT: Process.sysbus_gmap_events - Name: Process.52
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_plcdevolo - Name: Process.53
+OBJECT: Process.sysbus_gmap_plcav - Name: Process.53
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_ieee1905 - Name: Process.54
+OBJECT: Process.sysbus_gmap_plcdevolo - Name: Process.54
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_db - Name: Process.55
+OBJECT: Process.sysbus_gmap_ieee1905 - Name: Process.55
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_owner - Name: Process.56
+OBJECT: Process.sysbus_gmap_db - Name: Process.56
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_location - Name: Process.57
+OBJECT: Process.sysbus_gmap_owner - Name: Process.57
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_lltd - Name: Process.58
+OBJECT: Process.sysbus_gmap_location - Name: Process.58
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_ssw - Name: Process.59
+OBJECT: Process.sysbus_gmap_lltd - Name: Process.59
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_voice - Name: Process.60
+OBJECT: Process.sysbus_gmap_ssw - Name: Process.60
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_mqtt - Name: Process.61
+OBJECT: Process.sysbus_gmap_voice - Name: Process.61
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_dect_ule - Name: Process.62
+OBJECT: Process.sysbus_gmap_mqtt - Name: Process.62
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_hue - Name: Process.63
+OBJECT: Process.sysbus_gmap_dect_ule - Name: Process.63
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_vdev - Name: Process.64
+OBJECT: Process.sysbus_gmap_hue - Name: Process.64
 
 =======================================================================
-OBJECT: Process.sysbus_manifest - Name: Process.65
+OBJECT: Process.sysbus_gmap_vdev - Name: Process.65
 
 =======================================================================
-OBJECT: Process.sysbus_passwordrecovery - Name: Process.66
+OBJECT: Process.sysbus_manifest - Name: Process.66
 
 =======================================================================
-OBJECT: Process.sysbus_eventmanager - Name: Process.67
+OBJECT: Process.sysbus_passwordrecovery - Name: Process.67
 
 =======================================================================
-OBJECT: Process.sysbus_captiveportal - Name: Process.68
+OBJECT: Process.sysbus_wlan-manager - Name: Process.68
 
 =======================================================================
-OBJECT: Process.sysbus_urlmon - Name: Process.69
+OBJECT: Process.sysbus_eventmanager - Name: Process.69
 
 =======================================================================
-OBJECT: Process.sysbus_dyndns_plugin - Name: Process.70
+OBJECT: Process.sysbus_captiveportal - Name: Process.70
 
 =======================================================================
-OBJECT: Process.sysbus_time-plugin - Name: Process.71
+OBJECT: Process.sysbus_urlmon - Name: Process.71
 
 =======================================================================
-OBJECT: Process.sysbus_audiphone_client - Name: Process.72
+OBJECT: Process.sysbus_dyndns_plugin - Name: Process.72
 
 =======================================================================
-OBJECT: Process.sysbus_audiphone_plugin - Name: Process.73
+OBJECT: Process.sysbus_time-plugin - Name: Process.73
 
 =======================================================================
-OBJECT: Process.sysbus_phonebook_plugin - Name: Process.74
+OBJECT: Process.sysbus_audiphone_client - Name: Process.74
 
 =======================================================================
-OBJECT: Process.sysbus_httpd - Name: Process.75
+OBJECT: Process.sysbus_audiphone_plugin - Name: Process.75
 
 =======================================================================
-OBJECT: Process.sysbus_voipapp - Name: Process.76
+OBJECT: Process.sysbus_phonebook_plugin - Name: Process.76
 
 =======================================================================
-OBJECT: Process.sysbus_tr181 - Name: Process.77
+OBJECT: Process.sysbus_httpd - Name: Process.77
 
 =======================================================================
-OBJECT: Process.sysbus_voipaad_plugin - Name: Process.78
+OBJECT: Process.sysbus_voipapp - Name: Process.78
 
 =======================================================================
-OBJECT: Process.sysbus_scheduler-plugin - Name: Process.79
+OBJECT: Process.sysbus_tr181 - Name: Process.79
 
 =======================================================================
-OBJECT: Process.sysbus_udpechoconfig - Name: Process.80
+OBJECT: Process.sysbus_voipaad_plugin - Name: Process.80
 
 =======================================================================
-OBJECT: Process.sysbus_usbhosts - Name: Process.81
+OBJECT: Process.sysbus_scheduler-plugin - Name: Process.81
 
 =======================================================================
-OBJECT: Process.sysbus_dlnadms - Name: Process.82
+OBJECT: Process.sysbus_udpechoconfig - Name: Process.82
 
 =======================================================================
-OBJECT: Process.sysbus_tod-plugin - Name: Process.83
+OBJECT: Process.sysbus_usbhosts - Name: Process.83
 
 =======================================================================
-OBJECT: Process.sysbus_wakeonlan-plugin - Name: Process.84
+OBJECT: Process.sysbus_dlnadms - Name: Process.84
 
 =======================================================================
-OBJECT: Process.sysbus_wlanscheduler-plugin - Name: Process.85
+OBJECT: Process.sysbus_tod-plugin - Name: Process.85
 
 =======================================================================
-OBJECT: Process.sysbus_cups_plugin - Name: Process.86
+OBJECT: Process.sysbus_wakeonlan-plugin - Name: Process.86
 
 =======================================================================
-OBJECT: Process.sysbus_cwmp-plugin - Name: Process.87
+OBJECT: Process.sysbus_wlanscheduler-plugin - Name: Process.87
 
 =======================================================================
-OBJECT: Process.sysbus_launcher - Name: Process.88
+OBJECT: Process.sysbus_cups_plugin - Name: Process.88
 
 =======================================================================
-OBJECT: Process.sysbus_location - Name: Process.89
+OBJECT: Process.sysbus_cwmp-plugin - Name: Process.89
 
 =======================================================================
-OBJECT: Process.sysbus_lxcmanager - Name: Process.90
+OBJECT: Process.sysbus_launcher - Name: Process.90
 
 =======================================================================
-OBJECT: Process.sysbus_mqttbroker - Name: Process.91
+OBJECT: Process.sysbus_location - Name: Process.91
 
 =======================================================================
-OBJECT: Process.sysbus_oui - Name: Process.92
+OBJECT: Process.sysbus_lxcmanager - Name: Process.92
 
 =======================================================================
-OBJECT: Process.sysbus_remoteaccess - Name: Process.93
+OBJECT: Process.sysbus_mqttbroker - Name: Process.93
 
 =======================================================================
-OBJECT: Process.sysbus_sahpairing - Name: Process.94
+OBJECT: Process.sysbus_remoteaccess - Name: Process.94
 
 =======================================================================
-OBJECT: Process.sysbus_srvinterface - Name: Process.95
+OBJECT: Process.sysbus_sahpairing - Name: Process.95
 
 =======================================================================
-OBJECT: Process.sysbus_ssw - Name: Process.96
+OBJECT: Process.sysbus_srvinterface - Name: Process.96
 
 =======================================================================
-OBJECT: Process.sysbus_upgraded_plugin - Name: Process.97
+OBJECT: Process.sysbus_ssw - Name: Process.97
 
 =======================================================================
-OBJECT: Process.sysbus_storage - Name: Process.98
+OBJECT: Process.sysbus_upgraded_plugin - Name: Process.98
 
 =======================================================================
-OBJECT: Process.sysbus_webuiupgrade_plugin - Name: Process.99
+OBJECT: Process.sysbus_storage - Name: Process.99
 
 =======================================================================
-OBJECT: Process.sysbus_bcm_fxs - Name: Process.100
+OBJECT: Process.sysbus_rule-engine - Name: Process.100
 
 =======================================================================
-OBJECT: Process.sysbus_rule-engine - Name: Process.101
+OBJECT: Process.sysbus_bcm_fxs - Name: Process.101
 
 =======================================================================
-OBJECT: Process.sysbus_account-remoteaccess - Name: Process.102
+OBJECT: Process.sysbus_webuiupgrade_plugin - Name: Process.102
 
 =======================================================================
-OBJECT: Process.sysbus_accountmanager - Name: Process.103
+OBJECT: Process.sysbus_account-remoteaccess - Name: Process.103
 
 =======================================================================
-OBJECT: Process.sysbus_autodiag - Name: Process.104
+OBJECT: Process.sysbus_pass - Name: Process.104
 
 =======================================================================
-OBJECT: Process.sysbus_pass - Name: Process.105
+OBJECT: Process.sysbus_accountmanager - Name: Process.105
 
 =======================================================================
-OBJECT: Process.sysbus_bulkdata - Name: Process.106
+OBJECT: Process.sysbus_rule-factory - Name: Process.106
 
 =======================================================================
-OBJECT: Process.sysbus_rule-factory - Name: Process.107
+OBJECT: Process.sysbus_autodiag - Name: Process.107
 
 =======================================================================
-OBJECT: Process.sysbus_cifscl - Name: Process.108
+OBJECT: Process.sysbus_bulkdata - Name: Process.108
 
 =======================================================================
-OBJECT: Process.sysbus_ConMon - Name: Process.109
+OBJECT: Process.sysbus_cifscl - Name: Process.109
 
 =======================================================================
-OBJECT: Process.sysbus_cpu_monitor - Name: Process.110
+OBJECT: Process.sysbus_ConMon - Name: Process.110
 
 =======================================================================
-OBJECT: Process.sysbus_devicelookup - Name: Process.111
+OBJECT: Process.sysbus_cpu_monitor - Name: Process.111
 
 =======================================================================
-OBJECT: Process.sysbus_domino_plugin - Name: Process.112
+OBJECT: Process.sysbus_devicelookup - Name: Process.112
 
 =======================================================================
-OBJECT: Process.sysbus_dummyplugin - Name: Process.113
+OBJECT: Process.sysbus_domino_plugin - Name: Process.113
 
 =======================================================================
-OBJECT: Process.sysbus_genlog - Name: Process.114
+OBJECT: Process.sysbus_dummyplugin - Name: Process.114
 
 =======================================================================
-OBJECT: Process.sysbus_gmap_orange - Name: Process.115
+OBJECT: Process.sysbus_genlog - Name: Process.115
 
 =======================================================================
-OBJECT: Process.sysbus_history - Name: Process.116
+OBJECT: Process.sysbus_gmap_orange - Name: Process.116
 
 =======================================================================
-OBJECT: Process.sysbus_homelan - Name: Process.117
+OBJECT: Process.sysbus_history - Name: Process.117
 
 =======================================================================
-OBJECT: Process.sysbus_ieee1905-registrar - Name: Process.118
+OBJECT: Process.sysbus_homelan - Name: Process.118
 
 =======================================================================
-OBJECT: Process.sysbus_iot-service - Name: Process.119
+OBJECT: Process.sysbus_ieee1905-registrar - Name: Process.119
 
 =======================================================================
-OBJECT: Process.sysbus_ippingdiagnostics - Name: Process.120
+OBJECT: Process.sysbus_iot-service - Name: Process.120
 
 =======================================================================
-OBJECT: Process.sysbus_mss - Name: Process.121
+OBJECT: Process.sysbus_ippingdiagnostics - Name: Process.121
 
 =======================================================================
-OBJECT: Process.sysbus_oopstracker - Name: Process.122
+OBJECT: Process.sysbus_mss - Name: Process.122
 
 =======================================================================
-OBJECT: Process.sysbus_orange-dyndns_plugin - Name: Process.123
+OBJECT: Process.sysbus_oopstracker - Name: Process.123
 
 =======================================================================
-OBJECT: Process.sysbus_probe_plugin - Name: Process.124
+OBJECT: Process.sysbus_orange-dyndns_plugin - Name: Process.124
 
 =======================================================================
-OBJECT: Process.sysbus_probe_client - Name: Process.125
+OBJECT: Process.sysbus_orange-invoc - Name: Process.125
 
 =======================================================================
-OBJECT: Process.sysbus_processmonitor - Name: Process.126
+OBJECT: Process.sysbus_powermanagement - Name: Process.126
 
 =======================================================================
-OBJECT: Process.sysbus_dect - Name: Process.127
+OBJECT: Process.sysbus_probe_plugin - Name: Process.127
 
 =======================================================================
-OBJECT: Process.sysbus_invoc - Name: Process.128
+OBJECT: Process.sysbus_probe_client - Name: Process.128
 
 =======================================================================
-OBJECT: Process.sysbus_speedtest - Name: Process.129
+OBJECT: Process.sysbus_processmonitor - Name: Process.129
 
 =======================================================================
-OBJECT: Process.sysbus_topologydiagnostics - Name: Process.130
+OBJECT: Process.sysbus_dect - Name: Process.130
 
 =======================================================================
-OBJECT: Process.sysbus_upnp-igd_plugin - Name: Process.131
+OBJECT: Process.sysbus_invoc - Name: Process.131
 
 =======================================================================
-OBJECT: Process.sysbus_upnpdiscd_plugin - Name: Process.132
+OBJECT: Process.sysbus_speedtest - Name: Process.132
 
 =======================================================================
-OBJECT: Process.sysbus_WOLProxy - Name: Process.133
+OBJECT: Process.sysbus_topologydiagnostics - Name: Process.133
 
 =======================================================================
-OBJECT: Process.sysbus_wt_plugin - Name: Process.134
+OBJECT: Process.sysbus_upnp-igd_plugin - Name: Process.134
+
+=======================================================================
+OBJECT: Process.sysbus_upnpdiscd_plugin - Name: Process.135
+
+=======================================================================
+OBJECT: Process.sysbus_WOLProxy - Name: Process.136
+
+=======================================================================
+OBJECT: Process.sysbus_wt_plugin - Name: Process.137
 
 =======================================================================
 OBJECT: Firewall.Level - Name: Firewall.Level
@@ -409,8 +418,6 @@ OBJECT: Firewall.Level - Name: Firewall.Level
       Attributes: read_only
       Validator: {'max': '28'}
   - Enable (type: bool)
-      Attributes: persistent
-  - UpnpPortForwardingEnable (type: bool)
       Attributes: persistent
   - Chain (type: string)
       Attributes: read_only
@@ -599,6 +606,80 @@ OBJECT: Firewall.List - Name: Firewall.List
       Attributes: read_only
 
 =======================================================================
+OBJECT: UplinkMonitor.DefaultGateway - Name: UplinkMonitor.DefaultGateway
+ == PARAMETERS:
+  - IPv4Address (type: string)
+      Attributes: read_only
+  - MACAddress (type: string)
+      Attributes: read_only
+  - NetDevIndex (type: int32)
+      Attributes: read_only
+  - NeMoIntfName (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Manifests.UserData - Name: Manifests.UserData
+
+=======================================================================
+OBJECT: Profiles.Profile - Name: Profiles.Profile
+ == PARAMETERS:
+  - Current (type: string)
+      Attributes: persistent
+  - Profiles (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - variant getData()
+  - variant setData(variant data, (string profileName))
+  - void setCurrent(string profileName)
+  - list getNames()
+
+=======================================================================
+OBJECT: sah.Device - Name: sah.Device
+
+=======================================================================
+OBJECT: sah.AccessManagement - Name: sah.AccessManagement
+
+=======================================================================
+OBJECT: sah.HomeNetworkManagement - Name: sah.HomeNetworkManagement
+
+=======================================================================
+OBJECT: sah.Voice - Name: sah.Voice
+
+=======================================================================
+OBJECT: sah.hgw - Name: sah.hgw
+
+=======================================================================
+OBJECT: DeviceManager.Connectivity - Name: DeviceManager.Connectivity
+ == PARAMETERS:
+  - ConnectivitySources (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - variant getStatus((string sources))
+  - bool enableNotifications()
+
+=======================================================================
+OBJECT: DHCPv4.Server - Name: DHCPv4.Server
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - VerifyFirst (type: bool)
+      Attributes: persistent
+  - TrustClient (type: bool)
+      Attributes: persistent
+  - RtBehaviour (type: string)
+      Attributes: persistent
+      Validator: ['traditional', 'standard', 'msft']
+  - AckInform (type: bool)
+      Attributes: persistent
+  - PoolNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void clearStatistics()
+  - void getDHCPServerPool((string id))
+  - void createPool(string name, string interface)
+
+=======================================================================
 OBJECT: DHCPv6.Server - Name: DHCPv6.Server
  == PARAMETERS:
   - Status (type: string)
@@ -653,23 +734,6 @@ OBJECT: VoWifi.Devices - Name: VoWifi.Devices
       Attributes: read_only, persistent
   - NbrOfFailedTunnelAttempts (type: uint32)
       Attributes: read_only, persistent
-
-=======================================================================
-OBJECT: Manifests.UserData - Name: Manifests.UserData
-
-=======================================================================
-OBJECT: Profiles.Profile - Name: Profiles.Profile
- == PARAMETERS:
-  - Current (type: string)
-      Attributes: persistent
-  - Profiles (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - variant get()
-  - variant getData()
-  - variant setData(variant data, (string profileName))
-  - void setCurrent(string profileName)
-  - list getNames()
 
 =======================================================================
 OBJECT: URLMon.Config - Name: URLMon.Config
@@ -787,6 +851,58 @@ OBJECT: WebuiupgradeService.Authentication - Name: WebuiupgradeService.Authentic
       Attributes: persistent
 
 =======================================================================
+OBJECT: History.Backup - Name: History.Backup
+ == PARAMETERS:
+  - Count (type: uint32)
+      Attributes: read_only
+  - MaxHistSize (type: uint32)
+      Attributes: read_only
+  - AmountOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void updateHistory()
+  - void cleanHistory()
+  - void getSimpleHistory()
+  - void rotate((string source))
+
+=======================================================================
+OBJECT: HomeLan.Interface - Name: HomeLan.Interface
+ == PARAMETERS:
+  - FriendlyName (type: string)
+  - Name (type: string)
+  - Alias (type: string)
+  - NumberOfStoredMeasures (type: uint32)
+
+=======================================================================
+OBJECT: HomeLan.Device - Name: HomeLan.Device
+ == PARAMETERS:
+  - MacAddress (type: string)
+  - NumberOfStoredMeasures (type: uint32)
+
+=======================================================================
+OBJECT: PowerManagement.SupportedTriggers - Name: PowerManagement.SupportedTriggers
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Description (type: string)
+      Attributes: read_only
+  - Value (type: bool)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Probe.Configuration - Name: Probe.Configuration
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - URL (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void setConfiguration(string type, string name, uint32 id, uint32 interval)
+  - list getConfiguration(string type)
+  - list getConfigurations()
+  - void removeConfiguration(string type)
+
+=======================================================================
 OBJECT: DECT.Repeater - Name: DECT.Repeater
  == PARAMETERS:
   - Status (type: string)
@@ -795,6 +911,49 @@ OBJECT: DECT.Repeater - Name: DECT.Repeater
  == FUNCTIONS:
   - void getRepeaters()
   - void removeAllRepeaters()
+
+=======================================================================
+OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Uploaded', 'Error', 'Complete']
+  - LastUploadTime (type: date_time)
+      Attributes: read_only
+  - DiagnosticMode (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool setState(string state)
+
+=======================================================================
+OBJECT: UPnP-IGD.PnP-X - Name: UPnP-IGD.PnP-X
+ == PARAMETERS:
+  - HardwareId-VID (type: string)
+      Attributes: persistent
+  - HardwareId-DID (type: string)
+      Attributes: persistent
+  - HardwareId-SID (type: string)
+      Attributes: persistent
+  - HardwareId-RID (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: UPnP-IGD.UDN - Name: UPnP-IGD.UDN
+ == PARAMETERS:
+  - Id (type: string)
+      Attributes: read_only
+  - Value (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: OrangeServices.Services - Name: OrangeServices.Services
+ == PARAMETERS:
+  - Name (type: string)
+  - SubscriptionStatus (type: string)
+      Validator: ['Subscribed', 'Unknown', 'NotSubscribed']
+  - Option (type: bool)
 
 =======================================================================
 OBJECT: NetMaster.LANConfig - Name: NetMaster.LANConfig
@@ -832,28 +991,7 @@ OBJECT: NetMaster.DR - Name: NetMaster.DR
       Attributes: persistent
 
 =======================================================================
-OBJECT: DeviceManager.Connectivity - Name: DeviceManager.Connectivity
- == PARAMETERS:
-  - ConnectivitySources (type: string)
-      Attributes: read_only
- == FUNCTIONS:
-  - variant getStatus((string sources))
-  - bool enableNotifications()
-
-=======================================================================
-OBJECT: sah.Device - Name: sah.Device
-
-=======================================================================
-OBJECT: sah.AccessManagement - Name: sah.AccessManagement
-
-=======================================================================
-OBJECT: sah.HomeNetworkManagement - Name: sah.HomeNetworkManagement
-
-=======================================================================
-OBJECT: sah.Voice - Name: sah.Voice
-
-=======================================================================
-OBJECT: sah.hgw - Name: sah.hgw
+OBJECT: NetMaster.IPv4 - Name: NetMaster.IPv4
 
 =======================================================================
 OBJECT: DeviceInfo.VendorConfigFile - Name: DeviceInfo.VendorConfigFile
@@ -910,39 +1048,6 @@ OBJECT: DeviceInfo.GatewayInfo - Name: DeviceInfo.GatewayInfo
       Validator: {'max': '64'}
 
 =======================================================================
-OBJECT: DHCPv4.Server - Name: DHCPv4.Server
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - VerifyFirst (type: bool)
-      Attributes: persistent
-  - TrustClient (type: bool)
-      Attributes: persistent
-  - RtBehaviour (type: string)
-      Attributes: persistent
-      Validator: ['traditional', 'standard', 'msft']
-  - AckInform (type: bool)
-      Attributes: persistent
-  - PoolNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void clearStatistics()
-  - void getDHCPServerPool((string id))
-  - void createPool(string name, string interface)
-
-=======================================================================
-OBJECT: UplinkMonitor.DefaultGateway - Name: UplinkMonitor.DefaultGateway
- == PARAMETERS:
-  - IPv4Address (type: string)
-      Attributes: read_only
-  - MACAddress (type: string)
-      Attributes: read_only
-  - NetDevIndex (type: int32)
-      Attributes: read_only
-  - NeMoIntfName (type: string)
-      Attributes: read_only
-
-=======================================================================
 OBJECT: DNSSD.Config - Name: DNSSD.Config
  == PARAMETERS:
   - AdvertisedName (type: string)
@@ -977,33 +1082,16 @@ OBJECT: DNSSD.Advertise - Name: DNSSD.Advertise
   - Enable (type: bool)
 
 =======================================================================
-OBJECT: History.Backup - Name: History.Backup
+OBJECT: Locations.Location - Name: Locations.Location
  == PARAMETERS:
-  - Count (type: uint32)
-      Attributes: read_only
-  - MaxHistSize (type: uint32)
-      Attributes: read_only
-  - AmountOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void updateHistory()
-  - void cleanHistory()
-  - void getSimpleHistory()
-  - void rotate((string source))
-
-=======================================================================
-OBJECT: HomeLan.Interface - Name: HomeLan.Interface
- == PARAMETERS:
-  - FriendlyName (type: string)
+  - Key (type: string)
+      Attributes: read_only, persistent
   - Name (type: string)
-  - Alias (type: string)
-  - NumberOfStoredMeasures (type: uint32)
-
-=======================================================================
-OBJECT: HomeLan.Device - Name: HomeLan.Device
- == PARAMETERS:
-  - MacAddress (type: string)
-  - NumberOfStoredMeasures (type: uint32)
+      Attributes: read_only, persistent
+  - Description (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get((string flags))
 
 =======================================================================
 OBJECT: MSS.Config - Name: MSS.Config
@@ -1070,60 +1158,32 @@ OBJECT: MSS.Debug - Name: MSS.Debug
   - void inject(string event, (variant data))
 
 =======================================================================
-OBJECT: Probe.Configuration - Name: Probe.Configuration
+OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
-  - URL (type: string)
+  - WakeUpURL (type: string)
+      Attributes: read_only
+  - Port (type: string)
       Attributes: persistent
  == FUNCTIONS:
-  - void setConfiguration(string type, string name, uint32 id, uint32 interval)
-  - list getConfiguration(string type)
-  - list getConfigurations()
-  - void removeConfiguration(string type)
+  - void updateWakeUpURL((string host), (uint32 port))
+  - bool activate()
+  - variant get()
+  - bool set((variant parameters))
 
 =======================================================================
-OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
+OBJECT: ServiceInvocation.ACLConfigFile - Name: ServiceInvocation.ACLConfigFile
  == PARAMETERS:
-  - Name (type: string)
-      Attributes: read_only
-  - Status (type: string)
-      Attributes: read_only
-      Validator: ['Uploaded', 'Error', 'Complete']
-  - LastUploadTime (type: date_time)
-      Attributes: read_only
-  - DiagnosticMode (type: string)
-      Attributes: read_only
+  - Version (type: string)
+
+=======================================================================
+OBJECT: OrangeRemoteAccess.OnDemand - Name: OrangeRemoteAccess.OnDemand
+ == PARAMETERS:
+  - Enable (type: bool)
  == FUNCTIONS:
-  - bool setState(string state)
-
-=======================================================================
-OBJECT: UPnP-IGD.PnP-X - Name: UPnP-IGD.PnP-X
- == PARAMETERS:
-  - HardwareId-VID (type: string)
-      Attributes: persistent
-  - HardwareId-DID (type: string)
-      Attributes: persistent
-  - HardwareId-SID (type: string)
-      Attributes: persistent
-  - HardwareId-RID (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: UPnP-IGD.UDN - Name: UPnP-IGD.UDN
- == PARAMETERS:
-  - Id (type: string)
-      Attributes: read_only
-  - Value (type: string)
-      Attributes: read_only
-
-=======================================================================
-OBJECT: OrangeServices.Services - Name: OrangeServices.Services
- == PARAMETERS:
-  - Name (type: string)
-  - SubscriptionStatus (type: string)
-      Validator: ['Subscribed', 'Unknown', 'NotSubscribed']
-  - Option (type: bool)
+  - variant get()
+  - bool set((variant parameters))
 
 =======================================================================
 OBJECT: UserManagement.Group - Name: UserManagement.Group
@@ -1158,7 +1218,7 @@ OBJECT: UserManagement.User - Name: UserManagement.User
       Attributes: read_only, persistent
   - PasswordType (type: string)
       Attributes: read_only, persistent
-      Validator: ['MD5', 'SSHA256', 'PREHASHED-SSHA256', 'INVALID', 'PREHASHED-INVALID']
+      Validator: ['MD5', 'SSHA256', 'PREHASHED-SSHA256', 'SSHA512', 'PREHASHED-SSHA512', 'INVALID', 'PREHASHED-INVALID']
   - PasswordState (type: uint8)
       Attributes: read_only
   - Salt (type: string)
@@ -1187,16 +1247,59 @@ OBJECT: UserManagement.User - Name: UserManagement.User
       Attributes: read_only, persistent
 
 =======================================================================
-OBJECT: Locations.Location - Name: Locations.Location
+OBJECT: Devices.Config - Name: Devices.Config
+ == FUNCTIONS:
+  - void set(string module, string option, variant value)
+  - variant get(string module, string option)
+  - bool load(string module)
+  - bool save(string module)
+
+=======================================================================
+OBJECT: Devices.Device - Name: Devices.Device
  == PARAMETERS:
   - Key (type: string)
       Attributes: read_only, persistent
+  - DiscoverySource (type: string)
+      Attributes: read_only, persistent
   - Name (type: string)
       Attributes: read_only, persistent
-  - Description (type: string)
+  - DeviceType (type: string)
+      Attributes: read_only, persistent
+  - Active (type: bool)
+      Attributes: read_only
+  - Tags (type: string)
       Attributes: persistent
+  - FirstSeen (type: date_time)
+      Attributes: read_only, persistent
+  - LastConnection (type: date_time)
+      Attributes: persistent, volatile
+  - LastChanged (type: date_time)
+      Attributes: persistent, volatile
+  - Master (type: string)
+      Attributes: read_only, persistent
  == FUNCTIONS:
-  - variant get((string flags))
+  - device_t get((string flags))
+  - bool set(device_t parameters)
+  - bool remove(string path)
+  - bool hasTag(string tag, (string expression), (string traverse))
+  - void setTag(string tag, (string expression), (string traverse))
+  - void clearTag(string tag, (string expression), (string traverse))
+  - variant getFirstParameter(string parameter, (string expression), (string traverse))
+  - list getParameters(string parameter, (string expression), (string traverse))
+  - variant topology((string expression), (string traverse), (string flags))
+  - bool isLinkedTo(string device, (string traverse))
+  - bool setName(string name, (string source))
+  - bool addName(string name, (string source))
+  - bool removeName(string source)
+  - bool delName(string name, (string source))
+  - bool setType(string type, (string source))
+  - bool removeType(string source)
+  - bool isImplemented(string function, (string subObject))
+  - bool setAlternative(string alternative)
+  - bool removeAlternative(string alternative)
+  - bool isAlternative(string alternative)
+  - bool setAlternativeRules(list rules)
+  - bool removeAlternativeRules()
 
 =======================================================================
 OBJECT: StorageService.Rules - Name: StorageService.Rules
@@ -1321,67 +1424,7 @@ OBJECT: StorageService.LogicalVolume - Name: StorageService.LogicalVolume
       Attributes: read_only
 
 =======================================================================
-OBJECT: OrangeRemoteAccess.OnDemand - Name: OrangeRemoteAccess.OnDemand
- == PARAMETERS:
-  - Enable (type: bool)
- == FUNCTIONS:
-  - variant get()
-  - bool set((variant parameters))
-
-=======================================================================
-OBJECT: Devices.Config - Name: Devices.Config
- == FUNCTIONS:
-  - void set(string module, string option, variant value)
-  - variant get(string module, string option)
-  - bool load(string module)
-  - bool save(string module)
-
-=======================================================================
-OBJECT: Devices.Device - Name: Devices.Device
- == PARAMETERS:
-  - Key (type: string)
-      Attributes: read_only, persistent
-  - DiscoverySource (type: string)
-      Attributes: read_only, persistent
-  - Name (type: string)
-      Attributes: read_only, persistent
-  - DeviceType (type: string)
-      Attributes: read_only, persistent
-  - Active (type: bool)
-      Attributes: read_only
-  - Tags (type: string)
-      Attributes: persistent
-  - FirstSeen (type: date_time)
-      Attributes: read_only, persistent
-  - LastConnection (type: date_time)
-      Attributes: persistent, volatile
-  - LastChanged (type: date_time)
-      Attributes: persistent, volatile
-  - Master (type: string)
-      Attributes: read_only, persistent
- == FUNCTIONS:
-  - device_t get((string flags))
-  - bool set(device_t parameters)
-  - bool remove(string path)
-  - bool hasTag(string tag, (string expression), (string traverse))
-  - void setTag(string tag, (string expression), (string traverse))
-  - void clearTag(string tag, (string expression), (string traverse))
-  - variant getFirstParameter(string parameter, (string expression), (string traverse))
-  - list getParameters(string parameter, (string expression), (string traverse))
-  - variant topology((string expression), (string traverse), (string flags))
-  - bool isLinkedTo(string device, (string traverse))
-  - bool setName(string name, (string source))
-  - bool addName(string name, (string source))
-  - bool removeName(string source)
-  - bool delName(string name, (string source))
-  - bool setType(string type, (string source))
-  - bool removeType(string source)
-  - bool isImplemented(string function, (string subObject))
-  - bool setAlternative(string alternative)
-  - bool removeAlternative(string alternative)
-  - bool isAlternative(string alternative)
-  - bool setAlternativeRules(list rules)
-  - bool removeAlternativeRules()
+OBJECT: DNS.Server - Name: DNS.Server
 
 =======================================================================
 OBJECT: NMC.Error - Name: NMC.Error
@@ -1461,24 +1504,54 @@ OBJECT: NMC.Wifi - Name: NMC.Wifi
  == PARAMETERS:
   - RegulatoryAuthorization6GHz (type: bool)
       Attributes: persistent
+  - EnableTarget (type: string)
+      Attributes: read_only
+      Validator: ['AccessPoint', 'Radio']
   - Enable (type: bool)
       Attributes: persistent
+  - TempEnable (type: bool)
   - Status (type: bool)
-  - AllowButtonDisable (type: bool)
+      Attributes: read_only
+  - ReadOnlyStatus (type: bool)
       Attributes: persistent
+  - PairingStatus (type: string)
+      Validator: ['Idle', 'Pairing', '']
+  - Scheduler (type: bool)
+      Attributes: read_only
+  - SchedulingOverride (type: bool)
+      Attributes: persistent
+  - SchedulingEnabled (type: bool)
+  - SchedulingActivationTimeSlots (type: string)
   - ConfigurationMode (type: bool)
       Attributes: persistent
-  - BGNUserBandwidth (type: string)
-      Attributes: persistent
-      Validator: ['20MHz', '40MHz', 'Auto']
+  - TriggerAutoChannelSelection (type: bool)
+  - WPSMode (type: string)
+      Attributes: read_only
+      Validator: ['Registrar', 'Enrollee']
+  - CurrentState (type: string)
+      Attributes: read_only
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - VAPsEnabled (type: bool)
+      Attributes: read_only
+  - CurrentBackhaul (type: string)
+      Attributes: read_only
+      Validator: ['None', 'Ethernet', 'Wifi']
   - AddOnModeState (type: string)
+  - PINCode (type: string)
+  - AllowButtonDisable (type: bool)
+      Attributes: persistent
  == FUNCTIONS:
+  - void setEnable(bool value, (bool temporary), (string source))
+  - void toggleEnable((bool temporary), (string source))
   - void startPairing((string clientPIN))
   - void stopPairing()
   - void startAutoChannelSelection()
   - void getStats((uint32_t RxBytes), (uint32_t TxBytes))
+  - void set((bool Enable), (bool Status), (bool ConfigurationMode), (bool TriggerAutoChannelSelection))
   - variant get()
-  - bool set((variant parameters))
+  - void setInternal((string EnableTarget))
+  - void setStatus((bool Status))
+  - void debug()
 
 =======================================================================
 OBJECT: NMC.Profiles - Name: NMC.Profiles

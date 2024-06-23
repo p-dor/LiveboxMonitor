@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .NMC - Name: .NMC
@@ -120,24 +120,144 @@ OBJECT: NMC.Wifi - Name: NMC.Wifi
  == PARAMETERS:
   - RegulatoryAuthorization6GHz (type: bool)
       Attributes: persistent
+  - EnableTarget (type: string)
+      Attributes: read_only
+      Validator: ['AccessPoint', 'Radio']
   - Enable (type: bool)
       Attributes: persistent
+  - TempEnable (type: bool)
   - Status (type: bool)
-  - AllowButtonDisable (type: bool)
+      Attributes: read_only
+  - ReadOnlyStatus (type: bool)
       Attributes: persistent
+  - PairingStatus (type: string)
+      Validator: ['Idle', 'Pairing', '']
+  - Scheduler (type: bool)
+      Attributes: read_only
+  - SchedulingOverride (type: bool)
+      Attributes: persistent
+  - SchedulingEnabled (type: bool)
+  - SchedulingActivationTimeSlots (type: string)
   - ConfigurationMode (type: bool)
       Attributes: persistent
-  - BGNUserBandwidth (type: string)
-      Attributes: persistent
-      Validator: ['20MHz', '40MHz', 'Auto']
+  - TriggerAutoChannelSelection (type: bool)
+  - WPSMode (type: string)
+      Attributes: read_only
+      Validator: ['Registrar', 'Enrollee']
+  - CurrentState (type: string)
+      Attributes: read_only
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - VAPsEnabled (type: bool)
+      Attributes: read_only
+  - CurrentBackhaul (type: string)
+      Attributes: read_only
+      Validator: ['None', 'Ethernet', 'Wifi']
   - AddOnModeState (type: string)
+  - PINCode (type: string)
+  - AllowButtonDisable (type: bool)
+      Attributes: persistent
  == FUNCTIONS:
+  - void setEnable(bool value, (bool temporary), (string source))
+  - void toggleEnable((bool temporary), (string source))
   - void startPairing((string clientPIN))
   - void stopPairing()
   - void startAutoChannelSelection()
   - void getStats((uint32_t RxBytes), (uint32_t TxBytes))
+  - void set((bool Enable), (bool Status), (bool ConfigurationMode), (bool TriggerAutoChannelSelection))
   - variant get()
-  - bool set((variant parameters))
+  - void setInternal((string EnableTarget))
+  - void setStatus((bool Status))
+  - void debug()
+
+=======================================================================
+OBJECT: NMC.Wifi.WPS - Name: NMC.Wifi.WPS
+ == PARAMETERS:
+  - UsePersistentPin (type: bool)
+      Attributes: persistent
+  - PersistentPin (type: string)
+      Attributes: persistent
+  - CurrentPinCode (type: string)
+ == FUNCTIONS:
+  - void generateSelfPIN()
+
+=======================================================================
+OBJECT: NMC.Wifi.Config - Name: NMC.Wifi.Config
+ == PARAMETERS:
+  - ForwardWPSCredentials (type: bool)
+      Attributes: persistent
+  - EpWpsUseBackhaulCredentials (type: bool)
+      Attributes: persistent
+  - EnableStateChange (type: bool)
+      Attributes: persistent
+  - EnableVapStateChange (type: bool)
+      Attributes: persistent
+  - EpEnableStateChange (type: bool)
+      Attributes: persistent
+  - DelayApDownTime (type: uint32)
+      Attributes: persistent
+  - DelayEpUpTime (type: uint32)
+      Attributes: persistent
+  - SlaveEnableRegistrarOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - SlaveEnableVapOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp', 'CredentialsSet', 'SswSync']
+  - MasterEnableVapOn (type: string)
+      Attributes: persistent
+      Validator: ['NoBackhaul', 'BackhaulUp']
+  - CredentialsSet (type: bool)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostEnable (type: bool)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostTimeout (type: uint32)
+      Attributes: persistent
+  - ToggleEpOnBackhaulLostMaxNrToggle (type: uint32)
+      Attributes: persistent
+  - SlaveRadiosOnWhenCredentialsSet (type: bool)
+      Attributes: persistent
+  - SlaveWifiClientModeEnable (type: bool)
+      Attributes: persistent
+  - CallSSWOnWPS (type: string)
+      Attributes: persistent
+      Validator: ['Never', 'Addon', 'Always']
+  - EpWpsScanForSecMode (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NMC.Wifi.Config.EnableConfig - Name: NMC.Wifi.Config.EnableConfig
+ == PARAMETERS:
+  - DefaultTarget (type: string)
+      Attributes: persistent
+      Validator: ['AccessPoint', 'Radio', 'Auto']
+
+=======================================================================
+OBJECT: NMC.Wifi.Config.EnableConfig.Custom - Name: NMC.Wifi.Config.EnableConfig.Custom
+ == PARAMETERS:
+  - Source (type: string)
+      Attributes: persistent
+  - Target (type: string)
+      Attributes: persistent
+      Validator: ['AccessPoint', 'Radio', 'Auto']
+
+=======================================================================
+OBJECT: NMC.Wifi.Vendor - Name: NMC.Wifi.Vendor
+
+=======================================================================
+OBJECT: NMC.Wifi.Vendor.BCM - Name: NMC.Wifi.Vendor.BCM
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DebugModeEnable (type: bool)
+      Attributes: persistent
+  - DebugModeStatus (type: bool)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Wifi.Stats - Name: NMC.Wifi.Stats
+ == PARAMETERS:
+  - TogglesOnBackhaulLost (type: uint32)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: NMC.Profiles - Name: NMC.Profiles

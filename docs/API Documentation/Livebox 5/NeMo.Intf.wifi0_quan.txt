@@ -1,7 +1,7 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.39
+OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.40
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
@@ -13,6 +13,8 @@ OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.39
   - RadioStatus (type: string)
       Attributes: read_only
       Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
   - LastChangeTime (type: uint32)
       Attributes: read_only
   - LastChange (type: uint32)
@@ -220,6 +222,7 @@ OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.39
   - void getRAOptions(uint8 tag, (string traverse))
   - void getRARouters((string traverse))
   - void setWLANConfig((string mibs))
+  - void setChanspec((uint16 channel), (string bandwidth), (string frequency), (string reason), (bool direct), (string reasonDetails))
   - void apDelayUpDone()
   - void startAutoChannelSelection()
   - void getSpectrumInfo((bool update))
@@ -233,23 +236,24 @@ OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.39
   - void getRadioStats()
   - void getPerAntennaRssi()
   - variant getLatestPower()
+  - variant getStatusHistogram()
   - void startDFSclear()
   - void stopDFSclear()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ULIntf - Name: NeMo.Intf.39.ULIntf
+OBJECT: NeMo.Intf.wifi0_quan.ULIntf - Name: NeMo.Intf.40.ULIntf
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.LLIntf - Name: NeMo.Intf.39.LLIntf
+OBJECT: NeMo.Intf.wifi0_quan.LLIntf - Name: NeMo.Intf.40.LLIntf
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Query - Name: NeMo.Intf.39.Query
+OBJECT: NeMo.Intf.wifi0_quan.Query - Name: NeMo.Intf.40.Query
  == PARAMETERS:
   - Description (type: string)
       Attributes: read_only
@@ -261,7 +265,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Query - Name: NeMo.Intf.39.Query
   - void getResult()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.DFS - Name: NeMo.Intf.39.DFS
+OBJECT: NeMo.Intf.wifi0_quan.DFS - Name: NeMo.Intf.40.DFS
  == PARAMETERS:
   - FileLogLimit (type: uint8)
       Attributes: persistent
@@ -271,7 +275,7 @@ OBJECT: NeMo.Intf.wifi0_quan.DFS - Name: NeMo.Intf.39.DFS
       Validator: {'min': '0', 'max': '20'}
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.DFS.Event - Name: NeMo.Intf.39.DFS.Event
+OBJECT: NeMo.Intf.wifi0_quan.DFS.Event - Name: NeMo.Intf.40.DFS.Event
  == PARAMETERS:
   - TimeStamp (type: date_time)
       Attributes: read_only
@@ -287,19 +291,19 @@ OBJECT: NeMo.Intf.wifi0_quan.DFS.Event - Name: NeMo.Intf.39.DFS.Event
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanResults - Name: NeMo.Intf.39.ScanResults
+OBJECT: NeMo.Intf.wifi0_quan.ScanResults - Name: NeMo.Intf.40.ScanResults
  == PARAMETERS:
   - NrCoChannelAP (type: uint16)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels - Name: NeMo.Intf.39.ScanResults.SurroundingChannels
+OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels - Name: NeMo.Intf.40.ScanResults.SurroundingChannels
  == PARAMETERS:
   - Channel (type: uint16)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint - Name: NeMo.Intf.39.ScanResults.SurroundingChannels.Accesspoint
+OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint - Name: NeMo.Intf.40.ScanResults.SurroundingChannels.Accesspoint
  == PARAMETERS:
   - BSSID (type: string)
       Attributes: read_only
@@ -307,7 +311,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint - Name:
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint.SSID - Name: NeMo.Intf.39.ScanResults.SurroundingChannels.Accesspoint.SSID
+OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint.SSID - Name: NeMo.Intf.40.ScanResults.SurroundingChannels.Accesspoint.SSID
  == PARAMETERS:
   - SSID (type: string)
       Attributes: read_only
@@ -317,7 +321,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanResults.SurroundingChannels.Accesspoint.SSID - 
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.RadCaps - Name: NeMo.Intf.39.RadCaps
+OBJECT: NeMo.Intf.wifi0_quan.RadCaps - Name: NeMo.Intf.40.RadCaps
  == PARAMETERS:
   - Available (type: string)
       Attributes: read_only
@@ -330,7 +334,7 @@ OBJECT: NeMo.Intf.wifi0_quan.RadCaps - Name: NeMo.Intf.39.RadCaps
   - void Disable((string Capability))
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt - Name: NeMo.Intf.39.ChannelMgt
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt - Name: NeMo.Intf.40.ChannelMgt
  == PARAMETERS:
   - ACSVendorEnabled (type: bool)
       Attributes: persistent
@@ -339,6 +343,9 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt - Name: NeMo.Intf.39.ChannelMgt
       Validator: {'min': '-1', 'max': '1'}
   - ACSVendorSupported (type: bool)
       Attributes: read_only
+  - ChanspecShowing (type: string)
+      Attributes: read_only
+      Validator: ['Current', 'Target', 'Sync']
   - ClearedDfsChannels (type: string)
       Attributes: read_only
   - RadarTriggeredDfsChannels (type: string)
@@ -348,6 +355,8 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt - Name: NeMo.Intf.39.ChannelMgt
       Validator: ['Unknown', 'Down', 'Up', 'FG_CAC', 'BG_CAC', 'BG_CAC_EXT', 'BG_CAC_NS', 'BG_CAC_EXT_NS', 'Configuring', 'Error', 'DeepPowerDown']
   - Status (type: bool)
       Attributes: read_only
+  - ChangeLogSize (type: uint32)
+      Attributes: persistent
  == FUNCTIONS:
   - void performSelection()
   - void retrievePerformanceLog((bool reset))
@@ -356,7 +365,35 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt - Name: NeMo.Intf.39.ChannelMgt
   - void getBandScores()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.BgDfs - Name: NeMo.Intf.39.ChannelMgt.BgDfs
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.TargetChanspec - Name: NeMo.Intf.40.ChannelMgt.TargetChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.CurrentChanspec - Name: NeMo.Intf.40.ChannelMgt.CurrentChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.BgDfs - Name: NeMo.Intf.40.ChannelMgt.BgDfs
  == PARAMETERS:
   - Available (type: bool)
       Attributes: read_only
@@ -384,9 +421,12 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.BgDfs - Name: NeMo.Intf.39.ChannelMgt.Bg
       Attributes: read_only
   - NrClearFailOtherExt (type: uint32)
       Attributes: read_only
+ == FUNCTIONS:
+  - void startBgDfsClear((int channel), (int bandwidth))
+  - void stopBgDfsClear()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectParams - Name: NeMo.Intf.39.ChannelMgt.ChannelSelectParams
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectParams - Name: NeMo.Intf.40.ChannelMgt.ChannelSelectParams
  == PARAMETERS:
   - DfsWeight (type: int32)
       Attributes: persistent
@@ -464,7 +504,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectParams - Name: NeMo.Intf.39
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.39.ChannelMgt.ChannelSelectConfig
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.40.ChannelMgt.ChannelSelectConfig
  == PARAMETERS:
   - DynamicChannelSelection (type: bool)
       Attributes: persistent
@@ -541,8 +581,6 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.39
       Attributes: persistent
   - InterferenceThreshold (type: int32)
       Attributes: persistent
-  - ChangeLogSize (type: uint32)
-      Attributes: persistent
   - MoveUpEnable (type: bool)
       Attributes: persistent
   - MoveUpSwitchMode (type: string)
@@ -552,6 +590,10 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.39
       Attributes: persistent
       Validator: ['NEVER', 'NO_STA', 'STA', 'ALWAYS']
   - PerformPreclear (type: bool)
+      Attributes: persistent
+  - PreclearNormalMaxBusyLevel (type: uint32)
+      Attributes: persistent
+  - PreclearPrioMaxBusyLevel (type: uint32)
       Attributes: persistent
   - BandwidthDowngradeEnable (type: bool)
       Attributes: persistent
@@ -576,7 +618,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.39
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Stats - Name: NeMo.Intf.39.ChannelMgt.Stats
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Stats - Name: NeMo.Intf.40.ChannelMgt.Stats
  == PARAMETERS:
   - InitScan (type: uint32)
       Attributes: read_only
@@ -620,7 +662,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Stats - Name: NeMo.Intf.39.ChannelMgt.St
   - void resetCsmStats()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Band - Name: NeMo.Intf.39.ChannelMgt.Band
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Band - Name: NeMo.Intf.40.ChannelMgt.Band
  == PARAMETERS:
   - Channel (type: uint32)
       Attributes: read_only
@@ -648,7 +690,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.Band - Name: NeMo.Intf.39.ChannelMgt.Ban
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelChanges - Name: NeMo.Intf.39.ChannelMgt.ChannelChanges
+OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelChanges - Name: NeMo.Intf.40.ChannelMgt.ChannelChanges
  == PARAMETERS:
   - TimeStamp (type: date_time)
       Attributes: read_only
@@ -664,17 +706,13 @@ OBJECT: NeMo.Intf.wifi0_quan.ChannelMgt.ChannelChanges - Name: NeMo.Intf.39.Chan
       Attributes: read_only
   - NewBandwidth (type: string)
       Attributes: read_only
-  - NewAvailability (type: uint32)
+  - ChannelChangeReason (type: string)
       Attributes: read_only
-  - NewScore (type: uint32)
-      Attributes: read_only
-  - Stations (type: uint32)
-      Attributes: read_only
-  - VideoStations (type: uint32)
+  - ChannelBandwidthChangeReason (type: string)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats - Name: NeMo.Intf.39.Stats
+OBJECT: NeMo.Intf.wifi0_quan.Stats - Name: NeMo.Intf.40.Stats
  == PARAMETERS:
   - BytesSent (type: uint64)
       Attributes: read_only
@@ -717,7 +755,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats - Name: NeMo.Intf.39.Stats
       Validator: {'min': '-274'}
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsSent - Name: NeMo.Intf.39.Stats.WmmPacketsSent
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsSent - Name: NeMo.Intf.40.Stats.WmmPacketsSent
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -729,7 +767,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsSent - Name: NeMo.Intf.39.Stats.Wmm
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedSent - Name: NeMo.Intf.39.Stats.WmmFailedSent
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedSent - Name: NeMo.Intf.40.Stats.WmmFailedSent
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -741,7 +779,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedSent - Name: NeMo.Intf.39.Stats.WmmF
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsReceived - Name: NeMo.Intf.39.Stats.WmmPacketsReceived
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsReceived - Name: NeMo.Intf.40.Stats.WmmPacketsReceived
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -753,7 +791,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmPacketsReceived - Name: NeMo.Intf.39.Stats
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedReceived - Name: NeMo.Intf.39.Stats.WmmFailedReceived
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedReceived - Name: NeMo.Intf.40.Stats.WmmFailedReceived
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -765,7 +803,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedReceived - Name: NeMo.Intf.39.Stats.
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesSent - Name: NeMo.Intf.39.Stats.WmmBytesSent
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesSent - Name: NeMo.Intf.40.Stats.WmmBytesSent
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -777,7 +815,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesSent - Name: NeMo.Intf.39.Stats.WmmBy
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedbytesSent - Name: NeMo.Intf.39.Stats.WmmFailedbytesSent
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedbytesSent - Name: NeMo.Intf.40.Stats.WmmFailedbytesSent
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -789,7 +827,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedbytesSent - Name: NeMo.Intf.39.Stats
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesReceived - Name: NeMo.Intf.39.Stats.WmmBytesReceived
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesReceived - Name: NeMo.Intf.40.Stats.WmmBytesReceived
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -801,7 +839,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmBytesReceived - Name: NeMo.Intf.39.Stats.W
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedBytesReceived - Name: NeMo.Intf.39.Stats.WmmFailedBytesReceived
+OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedBytesReceived - Name: NeMo.Intf.40.Stats.WmmFailedBytesReceived
  == PARAMETERS:
   - AC_BE (type: uint32)
       Attributes: read_only
@@ -813,7 +851,7 @@ OBJECT: NeMo.Intf.wifi0_quan.Stats.WmmFailedBytesReceived - Name: NeMo.Intf.39.S
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor - Name: NeMo.Intf.39.NaStaMonitor
+OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor - Name: NeMo.Intf.40.NaStaMonitor
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -826,7 +864,7 @@ OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor - Name: NeMo.Intf.39.NaStaMonitor
   - void deleteMonitorDevice((string macaddress))
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.RssiEventing - Name: NeMo.Intf.39.NaStaMonitor.RssiEventing
+OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.RssiEventing - Name: NeMo.Intf.40.NaStaMonitor.RssiEventing
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -834,12 +872,14 @@ OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.RssiEventing - Name: NeMo.Intf.39.NaSt
       Attributes: persistent
       Validator: {'min': '1'}
   - AveragingFactor (type: uint32)
+      Attributes: persistent
       Validator: {'min': '1', 'max': '1000'}
   - Interval (type: uint32)
+      Attributes: persistent
       Validator: {'min': '100'}
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.NonAssociatedDevice - Name: NeMo.Intf.39.NaStaMonitor.NonAssociatedDevice
+OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.NonAssociatedDevice - Name: NeMo.Intf.40.NaStaMonitor.NonAssociatedDevice
  == PARAMETERS:
   - MACAddress (type: string)
       Attributes: read_only
@@ -850,7 +890,7 @@ OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.NonAssociatedDevice - Name: NeMo.Intf.
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.MonitorDevice - Name: NeMo.Intf.39.NaStaMonitor.MonitorDevice
+OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.MonitorDevice - Name: NeMo.Intf.40.NaStaMonitor.MonitorDevice
  == PARAMETERS:
   - MACAddress (type: string)
       Attributes: read_only
@@ -861,7 +901,7 @@ OBJECT: NeMo.Intf.wifi0_quan.NaStaMonitor.MonitorDevice - Name: NeMo.Intf.39.NaS
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.EventCounter - Name: NeMo.Intf.39.EventCounter
+OBJECT: NeMo.Intf.wifi0_quan.EventCounter - Name: NeMo.Intf.40.EventCounter
  == PARAMETERS:
   - Key (type: string)
       Attributes: read_only
@@ -873,7 +913,7 @@ OBJECT: NeMo.Intf.wifi0_quan.EventCounter - Name: NeMo.Intf.39.EventCounter
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor - Name: NeMo.Intf.39.InterferenceMonitor
+OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor - Name: NeMo.Intf.40.InterferenceMonitor
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -896,7 +936,7 @@ OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor - Name: NeMo.Intf.39.Interferen
   - void getInterferenceHistory()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.Event - Name: NeMo.Intf.39.InterferenceMonitor.Event
+OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.Event - Name: NeMo.Intf.40.InterferenceMonitor.Event
  == PARAMETERS:
   - Type (type: string)
       Attributes: read_only
@@ -919,7 +959,7 @@ OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.Event - Name: NeMo.Intf.39.Inte
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.FullStats - Name: NeMo.Intf.39.InterferenceMonitor.FullStats
+OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.FullStats - Name: NeMo.Intf.40.InterferenceMonitor.FullStats
  == PARAMETERS:
   - NumberOfObservations (type: uint32)
       Attributes: read_only
@@ -935,7 +975,7 @@ OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.FullStats - Name: NeMo.Intf.39.
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.LastIntervalStats - Name: NeMo.Intf.39.InterferenceMonitor.LastIntervalStats
+OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.LastIntervalStats - Name: NeMo.Intf.40.InterferenceMonitor.LastIntervalStats
  == PARAMETERS:
   - NumberOfObservations (type: uint32)
       Attributes: read_only
@@ -951,7 +991,7 @@ OBJECT: NeMo.Intf.wifi0_quan.InterferenceMonitor.LastIntervalStats - Name: NeMo.
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor - Name: NeMo.Intf.39.HealthMonitor
+OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor - Name: NeMo.Intf.40.HealthMonitor
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -972,7 +1012,7 @@ OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor - Name: NeMo.Intf.39.HealthMonitor
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Event - Name: NeMo.Intf.39.HealthMonitor.Event
+OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Event - Name: NeMo.Intf.40.HealthMonitor.Event
  == PARAMETERS:
   - StartTime (type: date_time)
       Attributes: read_only
@@ -986,7 +1026,7 @@ OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Event - Name: NeMo.Intf.39.HealthMoni
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.EventType - Name: NeMo.Intf.39.HealthMonitor.EventType
+OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.EventType - Name: NeMo.Intf.40.HealthMonitor.EventType
  == PARAMETERS:
   - Type (type: string)
       Attributes: read_only
@@ -996,7 +1036,7 @@ OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.EventType - Name: NeMo.Intf.39.Health
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Config - Name: NeMo.Intf.39.HealthMonitor.Config
+OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Config - Name: NeMo.Intf.40.HealthMonitor.Config
  == PARAMETERS:
   - IdleStaCheckEnable (type: bool)
   - IdleStaCheckTimeout (type: uint32)
@@ -1007,9 +1047,10 @@ OBJECT: NeMo.Intf.wifi0_quan.HealthMonitor.Config - Name: NeMo.Intf.39.HealthMon
   - AntennaCheckMaxFailNum (type: uint32)
   - FastStaReconnectTimeout (type: int32)
   - FastStaReconnectEventTimeout (type: int32)
+  - FastStaReconnectUserTime (type: uint32)
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.TrafficMonitor - Name: NeMo.Intf.39.TrafficMonitor
+OBJECT: NeMo.Intf.wifi0_quan.TrafficMonitor - Name: NeMo.Intf.40.TrafficMonitor
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -1035,7 +1076,7 @@ OBJECT: NeMo.Intf.wifi0_quan.TrafficMonitor - Name: NeMo.Intf.39.TrafficMonitor
   - variant getBusyStatus()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.AirstatsMonitor - Name: NeMo.Intf.39.AirstatsMonitor
+OBJECT: NeMo.Intf.wifi0_quan.AirstatsMonitor - Name: NeMo.Intf.40.AirstatsMonitor
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -1060,7 +1101,7 @@ OBJECT: NeMo.Intf.wifi0_quan.AirstatsMonitor - Name: NeMo.Intf.39.AirstatsMonito
   - variant getRecentAverage()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.BackgroundScanner - Name: NeMo.Intf.39.BackgroundScanner
+OBJECT: NeMo.Intf.wifi0_quan.BackgroundScanner - Name: NeMo.Intf.40.BackgroundScanner
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -1072,8 +1113,10 @@ OBJECT: NeMo.Intf.wifi0_quan.BackgroundScanner - Name: NeMo.Intf.39.BackgroundSc
   - void getAirtimeResults()
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.DriverConfig - Name: NeMo.Intf.39.DriverConfig
+OBJECT: NeMo.Intf.wifi0_quan.DriverConfig - Name: NeMo.Intf.40.DriverConfig
  == PARAMETERS:
+  - RadioDownIfUnused (type: bool)
+      Attributes: persistent
   - TxBurst (type: int32)
       Attributes: persistent
   - Amsdu (type: int32)
@@ -1095,7 +1138,7 @@ OBJECT: NeMo.Intf.wifi0_quan.DriverConfig - Name: NeMo.Intf.39.DriverConfig
       Validator: ['Auto', 'Off', 'Ap', 'Sta', 'ApSta']
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.MACConfig - Name: NeMo.Intf.39.MACConfig
+OBJECT: NeMo.Intf.wifi0_quan.MACConfig - Name: NeMo.Intf.40.MACConfig
  == PARAMETERS:
   - NrBssRequired (type: uint32)
       Attributes: persistent
@@ -1109,8 +1152,10 @@ OBJECT: NeMo.Intf.wifi0_quan.MACConfig - Name: NeMo.Intf.39.MACConfig
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.DriverStatus - Name: NeMo.Intf.39.DriverStatus
+OBJECT: NeMo.Intf.wifi0_quan.DriverStatus - Name: NeMo.Intf.40.DriverStatus
  == PARAMETERS:
+  - DriverEnable (type: bool)
+      Attributes: read_only
   - NrTxAntenna (type: int32)
       Attributes: read_only
   - NrRxAntenna (type: int32)
@@ -1121,7 +1166,7 @@ OBJECT: NeMo.Intf.wifi0_quan.DriverStatus - Name: NeMo.Intf.39.DriverStatus
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanConfig - Name: NeMo.Intf.39.ScanConfig
+OBJECT: NeMo.Intf.wifi0_quan.ScanConfig - Name: NeMo.Intf.40.ScanConfig
  == PARAMETERS:
   - MaxChannelsPerScan (type: int32)
       Attributes: persistent
@@ -1142,7 +1187,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanConfig - Name: NeMo.Intf.39.ScanConfig
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanStats - Name: NeMo.Intf.39.ScanStats
+OBJECT: NeMo.Intf.wifi0_quan.ScanStats - Name: NeMo.Intf.40.ScanStats
  == PARAMETERS:
   - NrScanRequested (type: uint32)
       Attributes: read_only
@@ -1154,7 +1199,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanStats - Name: NeMo.Intf.39.ScanStats
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.ScanStats.ScanReason - Name: NeMo.Intf.39.ScanStats.ScanReason
+OBJECT: NeMo.Intf.wifi0_quan.ScanStats.ScanReason - Name: NeMo.Intf.40.ScanStats.ScanReason
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
@@ -1164,5 +1209,5 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanStats.ScanReason - Name: NeMo.Intf.39.ScanStats
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.wifi0_quan.Vendor - Name: NeMo.Intf.39.Vendor
+OBJECT: NeMo.Intf.wifi0_quan.Vendor - Name: NeMo.Intf.40.Vendor
 

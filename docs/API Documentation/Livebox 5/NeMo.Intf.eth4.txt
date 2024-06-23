@@ -1,7 +1,7 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4 - Name: NeMo.Intf.41
+OBJECT: NeMo.Intf.eth4 - Name: NeMo.Intf.42
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
@@ -47,7 +47,7 @@ OBJECT: NeMo.Intf.eth4 - Name: NeMo.Intf.41
   - LastChange (type: uint32)
       Attributes: read_only, volatile
   - CurrentBitRate (type: int32)
-      Validator: ['-1', '10', '100', '1000', '2500', '10000']
+      Validator: ['-1', '10', '100', '1000', '2500', '5000', '10000']
   - MaxBitRateSupported (type: int32)
       Validator: ['-1', '10', '100', '1000', '2500', '10000']
   - MaxBitRateEnabled (type: int32)
@@ -64,6 +64,8 @@ OBJECT: NeMo.Intf.eth4 - Name: NeMo.Intf.41
   - VAPStatus (type: string)
       Attributes: read_only
       Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
   - MACAddress (type: string)
       Attributes: persistent
   - BSSID (type: string)
@@ -148,25 +150,27 @@ OBJECT: NeMo.Intf.eth4 - Name: NeMo.Intf.41
   - void kickStationReason((string macaddress), (int32 reason))
   - void cleanStation((string macaddress))
   - bool sendBssTransferRequest((string mac), (string target), (int class), (int channel), (int wait), (int retries), (uint32 bssidInfo), (int transitionReason))
+  - bool sendPublicAction((string mac), (string oui), (uint8 type), (uint8 subtype), (uint8 channel), (string data))
   - bool sendRemoteMeasumentRequest((string mac), (string bssid), (uint32 class), (uint32 channel), (uint32 timeout), (string ssid))
   - void getSSIDStats()
+  - variant getStatusHistogram()
   - void getStationStats()
   - void delNeighbourAP((string BSSID))
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.ULIntf - Name: NeMo.Intf.41.ULIntf
+OBJECT: NeMo.Intf.eth4.ULIntf - Name: NeMo.Intf.42.ULIntf
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.LLIntf - Name: NeMo.Intf.41.LLIntf
+OBJECT: NeMo.Intf.eth4.LLIntf - Name: NeMo.Intf.42.LLIntf
  == PARAMETERS:
   - Name (type: string)
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.Query - Name: NeMo.Intf.41.Query
+OBJECT: NeMo.Intf.eth4.Query - Name: NeMo.Intf.42.Query
  == PARAMETERS:
   - Description (type: string)
       Attributes: read_only
@@ -178,7 +182,7 @@ OBJECT: NeMo.Intf.eth4.Query - Name: NeMo.Intf.41.Query
   - void getResult()
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IPv4Addr - Name: NeMo.Intf.41.IPv4Addr
+OBJECT: NeMo.Intf.eth4.IPv4Addr - Name: NeMo.Intf.42.IPv4Addr
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -198,7 +202,7 @@ OBJECT: NeMo.Intf.eth4.IPv4Addr - Name: NeMo.Intf.41.IPv4Addr
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IPv6Addr - Name: NeMo.Intf.41.IPv6Addr
+OBJECT: NeMo.Intf.eth4.IPv6Addr - Name: NeMo.Intf.42.IPv6Addr
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -222,7 +226,7 @@ OBJECT: NeMo.Intf.eth4.IPv6Addr - Name: NeMo.Intf.41.IPv6Addr
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IPv4Route - Name: NeMo.Intf.41.IPv4Route
+OBJECT: NeMo.Intf.eth4.IPv4Route - Name: NeMo.Intf.42.IPv4Route
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -246,7 +250,7 @@ OBJECT: NeMo.Intf.eth4.IPv4Route - Name: NeMo.Intf.41.IPv4Route
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IPv6Route - Name: NeMo.Intf.41.IPv6Route
+OBJECT: NeMo.Intf.eth4.IPv6Route - Name: NeMo.Intf.42.IPv6Route
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -270,13 +274,13 @@ OBJECT: NeMo.Intf.eth4.IPv6Route - Name: NeMo.Intf.41.IPv6Route
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.Vendor - Name: NeMo.Intf.41.Vendor
+OBJECT: NeMo.Intf.eth4.Vendor - Name: NeMo.Intf.42.Vendor
  == PARAMETERS:
   - PNCheckEnabled (type: bool)
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IEEE80211r - Name: NeMo.Intf.41.IEEE80211r
+OBJECT: NeMo.Intf.eth4.IEEE80211r - Name: NeMo.Intf.42.IEEE80211r
  == PARAMETERS:
   - Enabled (type: bool)
       Attributes: persistent
@@ -289,7 +293,7 @@ OBJECT: NeMo.Intf.eth4.IEEE80211r - Name: NeMo.Intf.41.IEEE80211r
       Validator: {'min': '0', 'max': '65535'}
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.IEEE80211u - Name: NeMo.Intf.41.IEEE80211u
+OBJECT: NeMo.Intf.eth4.IEEE80211u - Name: NeMo.Intf.42.IEEE80211u
  == PARAMETERS:
   - InterworkingEnable (type: bool)
       Attributes: persistent
@@ -297,7 +301,7 @@ OBJECT: NeMo.Intf.eth4.IEEE80211u - Name: NeMo.Intf.41.IEEE80211u
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.Security - Name: NeMo.Intf.41.Security
+OBJECT: NeMo.Intf.eth4.Security - Name: NeMo.Intf.42.Security
  == PARAMETERS:
   - ModesSupported (type: string)
       Attributes: read_only
@@ -340,11 +344,12 @@ OBJECT: NeMo.Intf.eth4.Security - Name: NeMo.Intf.41.Security
   - RadiusChargeableUserId (type: bool)
       Attributes: persistent
   - MFPConfig (type: string)
+      Attributes: persistent
       Validator: ['Disabled', 'Optional', 'Required']
   - SPPAmsdu (type: int32)
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.WPS - Name: NeMo.Intf.41.WPS
+OBJECT: NeMo.Intf.eth4.WPS - Name: NeMo.Intf.42.WPS
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -370,7 +375,7 @@ OBJECT: NeMo.Intf.eth4.WPS - Name: NeMo.Intf.41.WPS
   - void cancelPairing()
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.MACFiltering - Name: NeMo.Intf.41.MACFiltering
+OBJECT: NeMo.Intf.eth4.MACFiltering - Name: NeMo.Intf.42.MACFiltering
  == PARAMETERS:
   - Mode (type: string)
       Attributes: persistent
@@ -384,30 +389,30 @@ OBJECT: NeMo.Intf.eth4.MACFiltering - Name: NeMo.Intf.41.MACFiltering
   - void delTempEntry((string mac))
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.MACFiltering.Entry - Name: NeMo.Intf.41.MACFiltering.Entry
+OBJECT: NeMo.Intf.eth4.MACFiltering.Entry - Name: NeMo.Intf.42.MACFiltering.Entry
  == PARAMETERS:
   - MACAddress (type: string)
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.MACFiltering.TempEntry - Name: NeMo.Intf.41.MACFiltering.TempEntry
+OBJECT: NeMo.Intf.eth4.MACFiltering.TempEntry - Name: NeMo.Intf.42.MACFiltering.TempEntry
  == PARAMETERS:
   - MACAddress (type: string)
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.ProbeFiltering - Name: NeMo.Intf.41.ProbeFiltering
+OBJECT: NeMo.Intf.eth4.ProbeFiltering - Name: NeMo.Intf.42.ProbeFiltering
  == FUNCTIONS:
   - void addTempEntry((string mac))
   - void delTempEntry((string mac))
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.ProbeFiltering.TempEntry - Name: NeMo.Intf.41.ProbeFiltering.TempEntry
+OBJECT: NeMo.Intf.eth4.ProbeFiltering.TempEntry - Name: NeMo.Intf.42.ProbeFiltering.TempEntry
  == PARAMETERS:
   - MACAddress (type: string)
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.VendorIEs - Name: NeMo.Intf.41.VendorIEs
+OBJECT: NeMo.Intf.eth4.VendorIEs - Name: NeMo.Intf.42.VendorIEs
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -416,7 +421,7 @@ OBJECT: NeMo.Intf.eth4.VendorIEs - Name: NeMo.Intf.41.VendorIEs
   - void deleteVendorIE((string oui), (string data))
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.VendorIEs.VendorIE - Name: NeMo.Intf.41.VendorIEs.VendorIE
+OBJECT: NeMo.Intf.eth4.VendorIEs.VendorIE - Name: NeMo.Intf.42.VendorIEs.VendorIE
  == PARAMETERS:
   - OUI (type: string)
       Attributes: persistent
@@ -426,7 +431,7 @@ OBJECT: NeMo.Intf.eth4.VendorIEs.VendorIE - Name: NeMo.Intf.41.VendorIEs.VendorI
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.HotSpot2 - Name: NeMo.Intf.41.HotSpot2
+OBJECT: NeMo.Intf.eth4.HotSpot2 - Name: NeMo.Intf.42.HotSpot2
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -461,7 +466,7 @@ OBJECT: NeMo.Intf.eth4.HotSpot2 - Name: NeMo.Intf.41.HotSpot2
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.AssociatedDevice - Name: NeMo.Intf.41.AssociatedDevice
+OBJECT: NeMo.Intf.eth4.AssociatedDevice - Name: NeMo.Intf.42.AssociatedDevice
  == PARAMETERS:
   - ChargeableUserId (type: string)
   - MACAddress (type: string)
@@ -469,72 +474,82 @@ OBJECT: NeMo.Intf.eth4.AssociatedDevice - Name: NeMo.Intf.41.AssociatedDevice
   - AuthenticationState (type: bool)
       Attributes: read_only
   - LastDataDownlinkRate (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - LastDataUplinkRate (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - SignalStrength (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '-200', 'max': '0'}
   - AvgSignalStrengthByChain (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '-200', 'max': '0'}
   - SignalStrengthByChain (type: string)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - SignalStrengthHistory (type: string)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '0', 'max': '100'}
+  - RxErrors (type: uint32)
+      Attributes: read_only, volatile
+  - TxErrors (type: uint32)
+      Attributes: read_only, volatile
   - Rx_Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Tx_Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
+  - Rx_RetransmissionsFailed (type: uint32)
+      Attributes: read_only, volatile
   - Tx_RetransmissionsFailed (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
+  - RxFrameCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxFrameCount (type: uint32)
+      Attributes: read_only, volatile
   - Active (type: bool)
       Attributes: read_only
   - SignalNoiseRatio (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Noise (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Inactive (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxUnicastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxUnicastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxMulticastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxMulticastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxBytes (type: uint64)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxBytes (type: uint64)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkMCS (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkBandwidth (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkShortGuard (type: bool)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkMCS (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkBandwidth (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkShortGuard (type: bool)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxDownlinkRateSupported (type: uint32)
       Attributes: read_only
   - MaxDownlinkRateReached (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxUplinkRateSupported (type: uint32)
       Attributes: read_only
   - MaxUplinkRateReached (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxBandwidthSupported (type: string)
       Attributes: read_only
       Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Unknown']
@@ -550,11 +565,23 @@ OBJECT: NeMo.Intf.eth4.AssociatedDevice - Name: NeMo.Intf.41.AssociatedDevice
       Attributes: read_only
   - SupportedMCS (type: string)
       Attributes: read_only
-  - SupportedVhtMCS (type: string)
+  - SupportedHtMCS (type: string)
       Attributes: read_only
-  - SupportedHeMCS (type: string)
+  - RxSupportedVhtMCS (type: string)
       Attributes: read_only
-  - SupportedHe160MCS (type: string)
+  - TxSupportedVhtMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - TxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe80x80MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe80x80MCS (type: string)
       Attributes: read_only
   - VendorOUI (type: string)
       Attributes: read_only
@@ -583,9 +610,22 @@ OBJECT: NeMo.Intf.eth4.AssociatedDevice - Name: NeMo.Intf.41.AssociatedDevice
       Attributes: read_only
   - FrequencyCapabilities (type: string)
       Attributes: read_only
+  - AssociationType (type: string)
+      Attributes: read_only
+      Validator: ['Default', 'Assoc', 'Reassoc', 'FtAssoc']
+  - ProbeTime (type: date_time)
+      Attributes: read_only
+  - AssociationStartTime (type: date_time)
+      Attributes: read_only
+  - AssociationSetupTime (type: uint32)
+      Attributes: read_only
+  - ProbeRssi (type: int32)
+      Attributes: read_only
+  - MCSConsistencyFlags (type: string)
+      Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.AssociatedDevice.ProbeReqCaps - Name: NeMo.Intf.41.AssociatedDevice.ProbeReqCaps
+OBJECT: NeMo.Intf.eth4.AssociatedDevice.ProbeReqCaps - Name: NeMo.Intf.42.AssociatedDevice.ProbeReqCaps
  == PARAMETERS:
   - SupportedMCS (type: string)
       Attributes: read_only
@@ -610,7 +650,7 @@ OBJECT: NeMo.Intf.eth4.AssociatedDevice.ProbeReqCaps - Name: NeMo.Intf.41.Associ
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.AssociationCount - Name: NeMo.Intf.41.AssociationCount
+OBJECT: NeMo.Intf.eth4.AssociationCount - Name: NeMo.Intf.42.AssociationCount
  == PARAMETERS:
   - Success (type: uint32)
       Attributes: read_only
@@ -618,12 +658,14 @@ OBJECT: NeMo.Intf.eth4.AssociationCount - Name: NeMo.Intf.41.AssociationCount
       Attributes: read_only
   - FailSecurity (type: uint32)
       Attributes: read_only
+  - Disconnect (type: uint32)
+      Attributes: read_only
   - FastReconnects (type: uint32)
       Attributes: read_only
   - ResetCounters (type: bool)
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.AssociationCount.FastReconnectTypes - Name: NeMo.Intf.41.AssociationCount.FastReconnectTypes
+OBJECT: NeMo.Intf.eth4.AssociationCount.FastReconnectTypes - Name: NeMo.Intf.42.AssociationCount.FastReconnectTypes
  == PARAMETERS:
   - Type (type: string)
       Attributes: read_only
@@ -631,7 +673,7 @@ OBJECT: NeMo.Intf.eth4.AssociationCount.FastReconnectTypes - Name: NeMo.Intf.41.
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.MgtStats - Name: NeMo.Intf.41.MgtStats
+OBJECT: NeMo.Intf.eth4.MgtStats - Name: NeMo.Intf.42.MgtStats
  == PARAMETERS:
   - NumberOfToggles (type: uint32)
       Attributes: read_only
@@ -643,7 +685,7 @@ OBJECT: NeMo.Intf.eth4.MgtStats - Name: NeMo.Intf.41.MgtStats
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.ErrorToggleConfig - Name: NeMo.Intf.41.ErrorToggleConfig
+OBJECT: NeMo.Intf.eth4.ErrorToggleConfig - Name: NeMo.Intf.42.ErrorToggleConfig
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -653,7 +695,7 @@ OBJECT: NeMo.Intf.eth4.ErrorToggleConfig - Name: NeMo.Intf.41.ErrorToggleConfig
       Attributes: persistent
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.ErrorToggleStats - Name: NeMo.Intf.41.ErrorToggleStats
+OBJECT: NeMo.Intf.eth4.ErrorToggleStats - Name: NeMo.Intf.42.ErrorToggleStats
  == PARAMETERS:
   - NrTogglesRequested (type: uint32)
       Attributes: read_only
@@ -667,9 +709,10 @@ OBJECT: NeMo.Intf.eth4.ErrorToggleStats - Name: NeMo.Intf.41.ErrorToggleStats
   - void resetStats()
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.Neighbour - Name: NeMo.Intf.41.Neighbour
+OBJECT: NeMo.Intf.eth4.Neighbour - Name: NeMo.Intf.42.Neighbour
  == PARAMETERS:
   - BSSID (type: string)
+  - SSID (type: string)
   - Information (type: int32)
   - OperatingClass (type: int32)
   - Channel (type: int32)
@@ -678,7 +721,7 @@ OBJECT: NeMo.Intf.eth4.Neighbour - Name: NeMo.Intf.41.Neighbour
   - R0KHKey (type: string)
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.RssiEventing - Name: NeMo.Intf.41.RssiEventing
+OBJECT: NeMo.Intf.eth4.RssiEventing - Name: NeMo.Intf.42.RssiEventing
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -686,8 +729,10 @@ OBJECT: NeMo.Intf.eth4.RssiEventing - Name: NeMo.Intf.41.RssiEventing
       Attributes: persistent
       Validator: {'min': '1'}
   - AveragingFactor (type: uint32)
+      Attributes: persistent
       Validator: {'min': '1', 'max': '1000'}
   - Interval (type: uint32)
+      Attributes: persistent
       Validator: {'min': '100'}
   - HistoryEnable (type: bool)
       Attributes: persistent
@@ -707,7 +752,7 @@ OBJECT: NeMo.Intf.eth4.RssiEventing - Name: NeMo.Intf.41.RssiEventing
   - void getShortHistoryStats()
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.StaKickOnError - Name: NeMo.Intf.41.StaKickOnError
+OBJECT: NeMo.Intf.eth4.StaKickOnError - Name: NeMo.Intf.42.StaKickOnError
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
@@ -725,7 +770,7 @@ OBJECT: NeMo.Intf.eth4.StaKickOnError - Name: NeMo.Intf.41.StaKickOnError
   - void debug()
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.StaKickOnError.GenericTests - Name: NeMo.Intf.41.StaKickOnError.GenericTests
+OBJECT: NeMo.Intf.eth4.StaKickOnError.GenericTests - Name: NeMo.Intf.42.StaKickOnError.GenericTests
  == PARAMETERS:
   - TestsSupported (type: string)
       Attributes: read_only
@@ -737,7 +782,7 @@ OBJECT: NeMo.Intf.eth4.StaKickOnError.GenericTests - Name: NeMo.Intf.41.StaKickO
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.StaKickOnError.VendorTests - Name: NeMo.Intf.41.StaKickOnError.VendorTests
+OBJECT: NeMo.Intf.eth4.StaKickOnError.VendorTests - Name: NeMo.Intf.42.StaKickOnError.VendorTests
  == PARAMETERS:
   - TestsSupported (type: string)
       Attributes: read_only
@@ -749,14 +794,14 @@ OBJECT: NeMo.Intf.eth4.StaKickOnError.VendorTests - Name: NeMo.Intf.41.StaKickOn
       Attributes: read_only
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.DriverConfig - Name: NeMo.Intf.41.DriverConfig
+OBJECT: NeMo.Intf.eth4.DriverConfig - Name: NeMo.Intf.42.DriverConfig
  == PARAMETERS:
   - BssMaxIdlePeriod (type: int32)
       Attributes: persistent
       Validator: {'min': '-1', 'max': '65535'}
 
 =======================================================================
-OBJECT: NeMo.Intf.eth4.StatMon - Name: NeMo.Intf.41.StatMon
+OBJECT: NeMo.Intf.eth4.StatMon - Name: NeMo.Intf.42.StatMon
  == PARAMETERS:
   - Enable (type: bool)
   - Interval (type: uint32)

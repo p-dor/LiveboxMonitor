@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .DeviceInfo - Name: .DeviceInfo
@@ -60,7 +60,8 @@ OBJECT: .DeviceInfo - Name: .DeviceInfo
   - ManufacturerURL (type: string)
       Attributes: read_only
   - Country (type: string)
-      Attributes: read_only
+      Attributes: persistent
+      Validator: {'max': '8'}
   - ExternalIPAddress (type: string)
       Attributes: read_only
   - DeviceStatus (type: string)
@@ -84,7 +85,6 @@ OBJECT: .DeviceInfo - Name: .DeviceInfo
   - variant get()
   - variant getPairingInfo()
   - bool update()
-  - variant getDebugInformation((bool filedesc), (debug_options_t options))
   - bool export((string fileName))
 
 =======================================================================

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .UserManagement - Name: .UserManagement
@@ -54,7 +54,7 @@ OBJECT: UserManagement.User - Name: UserManagement.User
       Attributes: read_only, persistent
   - PasswordType (type: string)
       Attributes: read_only, persistent
-      Validator: ['MD5', 'SSHA256', 'PREHASHED-SSHA256', 'INVALID', 'PREHASHED-INVALID']
+      Validator: ['MD5', 'SSHA256', 'PREHASHED-SSHA256', 'SSHA512', 'PREHASHED-SSHA512', 'INVALID', 'PREHASHED-INVALID']
   - PasswordState (type: uint8)
       Attributes: read_only
   - Salt (type: string)

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
@@ -21,8 +21,6 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
   - AutomaticUpload (type: string)
       Attributes: persistent
       Validator: ['Local', 'Remote', 'Both', 'None']
-  - UploadURL (type: string)
-      Attributes: persistent
   - BootTimer (type: uint32)
       Attributes: persistent
   - CustomerAuthorization (type: bool)

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .AutoDiag - Name: .AutoDiag
@@ -19,12 +19,14 @@ OBJECT: .AutoDiag - Name: .AutoDiag
  == FUNCTIONS:
   - bool executeDiagnostics(string id, (bool usr))
   - bool executeTrigger(string event)
-  - bool cancelDiagnostics()
+  - bool cancelDiagnostics((string id))
   - void getDiagnosticsState()
   - void getOpenLanDiagnosticsList()
   - void getDatamodelWhiteList()
   - void getFunctionWhiteList()
   - void getDiagnosticsList()
   - list listDiagnostics()
+  - list getContext()
+  - bool clearContext()
   - bool setUserInput(string input)
 

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .Firewall - Name: .Firewall
@@ -7,8 +7,10 @@ OBJECT: .Firewall - Name: .Firewall
       Attributes: read_only
   - ExcludedOriginsPCP (type: string)
       Attributes: persistent
-  - UpnpPortForwarding (type: bool)
+  - UpnpPortForwardingStatus (type: bool)
       Attributes: read_only
+  - UpnpPortForwardingEnable (type: bool)
+      Attributes: persistent
   - ChainNumberOfEntries (type: uint32)
       Attributes: read_only
   - ProtocolForwardingNumberOfEntries (type: uint32)
@@ -56,8 +58,6 @@ OBJECT: Firewall.Level - Name: Firewall.Level
       Attributes: read_only
       Validator: {'max': '28'}
   - Enable (type: bool)
-      Attributes: persistent
-  - UpnpPortForwardingEnable (type: bool)
       Attributes: persistent
   - Chain (type: string)
       Attributes: read_only

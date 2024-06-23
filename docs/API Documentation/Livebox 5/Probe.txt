@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-4.72.0.1_10.5.0
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
 
 =======================================================================
 OBJECT: .Probe - Name: .Probe
@@ -20,6 +20,8 @@ OBJECT: .Probe - Name: .Probe
   - Anonymization (type: bool)
       Attributes: persistent
   - ExternalID (type: string)
+      Attributes: persistent
+  - BlacklistMQTT (type: string)
       Attributes: persistent
   - Tags (type: string)
       Attributes: read_only, persistent
