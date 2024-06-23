@@ -6,10 +6,10 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmIcons import LmIcon
-from src.LmConfig import LmConf
-from src.LmLanguages import GetPhoneLabel as lx, GetPhoneContactDialogLabel as lcx
+from app import LmTools, LmConfig
+from app.LmIcons import LmIcon
+from app.LmConfig import LmConf
+from lang.LmLanguages import GetPhoneLabel as lx, GetPhoneContactDialogLabel as lcx
 
 
 # ################################ VARS & DEFS ################################

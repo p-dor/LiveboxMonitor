@@ -7,13 +7,13 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmConfig import LmConf
-from src.LmDeviceListTab import DSelCol
-from src.LmInfoTab import InfoCol
-from src.LmLanguages import (GetDeviceInfoLabel as lx,
-							 GetDeviceNameDialogLabel as lnx,
-							 GetDeviceTypeDialogLabel as ltx)
+from app import LmTools, LmConfig
+from app.LmConfig import LmConf
+from tabs.LmDeviceListTab import DSelCol
+from tabs.LmInfoTab import InfoCol
+from lang.LmLanguages import (GetDeviceInfoLabel as lx,
+							  GetDeviceNameDialogLabel as lnx,
+							  GetDeviceTypeDialogLabel as ltx)
 
 
 # ################################ VARS & DEFS ################################

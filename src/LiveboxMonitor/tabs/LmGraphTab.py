@@ -7,10 +7,10 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pyqtgraph as pg
 
-from src import LmTools, LmConfig
-from src.LmConfig import LmConf
-from src.LmLanguages import (GetGraphLabel as lx,
-							 GetAddGraphDialogLabel as lgx)
+from app import LmTools, LmConfig
+from app.LmConfig import LmConf
+from lang.LmLanguages import (GetGraphLabel as lx,
+							  GetAddGraphDialogLabel as lgx)
 
 
 # ################################ VARS & DEFS ################################

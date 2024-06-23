@@ -14,16 +14,16 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
-from src import LmTools
-from src.LmSession import DEFAULT_TIMEOUT
-from src.LmSession import LmSession
-from src import LmLanguages
-from src.LmLanguages import (GetConfigPrefsDialogLabel as lx,
-							 GetConfigCnxDialogLabel as lcx,
-							 GetConfigSigninDialogLabel as lsx,
-							 GetConfigEmailDialogLabel as lex,
-							 GetSelectProfileDialogLabel as lpx,
-							 GetReleaseWarningDialogLabel as lrx)
+from app import LmTools
+from app.LmSession import DEFAULT_TIMEOUT
+from app.LmSession import LmSession
+from lang import LmLanguages
+from lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
+							  GetConfigCnxDialogLabel as lcx,
+							  GetConfigSigninDialogLabel as lsx,
+							  GetConfigEmailDialogLabel as lex,
+							  GetSelectProfileDialogLabel as lpx,
+							  GetReleaseWarningDialogLabel as lrx)
 
 from __init__ import __url__, __version__, __build__
 

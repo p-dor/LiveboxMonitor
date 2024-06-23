@@ -1,6 +1,6 @@
 ### Livebox Monitor Languages module ###
 
-from src import LmLanguage_EN, LmLanguage_FR
+from lang import LmLanguage_EN, LmLanguage_FR
 
 
 # ################################ Guidelines ################################

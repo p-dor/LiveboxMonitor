@@ -4,7 +4,8 @@ import sys
 import functools
 import re
 import datetime, time 
-import smtplib, ssl
+import smtplib
+import ssl
 
 from enum import IntEnum
 from dateutil import tz
@@ -12,8 +13,8 @@ from email.message import EmailMessage
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmLanguages
-from src.LmLanguages import GetToolsLabel as lx
+from lang import LmLanguages
+from lang.LmLanguages import GetToolsLabel as lx
 
 
 # ################################ VARS & DEFS ################################

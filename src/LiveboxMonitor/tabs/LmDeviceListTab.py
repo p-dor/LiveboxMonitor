@@ -7,13 +7,13 @@ from ipaddress import IPv4Address
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmConfig import LmConf
-from src.LmIcons import LmIcon
-from src.LmDhcpTab import DhcpCol
-from src.LmLanguages import (GetDeviceListLabel as lx,
-							 GetIPv6DialogLabel as lix,
-							 GetDnsDialogLabel as ldx)
+from app import LmTools, LmConfig
+from app.LmConfig import LmConf
+from app.LmIcons import LmIcon
+from tabs.LmDhcpTab import DhcpCol
+from lang.LmLanguages import (GetDeviceListLabel as lx,
+							  GetIPv6DialogLabel as lix,
+							  GetDnsDialogLabel as ldx)
 
 
 # ################################ VARS & DEFS ################################

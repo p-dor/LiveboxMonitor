@@ -6,13 +6,13 @@ from ipaddress import IPv4Address
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmIcons import LmIcon
-from src.LmConfig import LmConf
-from src.LmInfoTab import InfoCol
-from src.LmLanguages import (GetDhcpLabel as lx,
-							 GetDhcpBindingDialogLabel as lbx,
-							 GetDhcpSetupDialogLabel as lsx)
+from app import LmTools, LmConfig
+from app.LmIcons import LmIcon
+from app.LmConfig import LmConf
+from tabs.LmInfoTab import InfoCol
+from lang.LmLanguages import (GetDhcpLabel as lx,
+							  GetDhcpBindingDialogLabel as lbx,
+							  GetDhcpSetupDialogLabel as lsx)
 
 
 # ################################ VARS & DEFS ################################

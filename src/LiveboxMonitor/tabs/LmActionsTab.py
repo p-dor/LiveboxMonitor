@@ -5,16 +5,15 @@ import webbrowser
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmGenApiDocumentation
-from src import LmTools
-from src.LmIcons import LmIcon
-from src import LmConfig
-from src.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
-from src.LmLanguages import (GetActionsLabel as lx,
-							 GetActionsRHistoryDialogLabel as lrx,
-							 GetActionsWGlobalDialogLabel as lwx,
-							 GetActionsFirewallLevelDialogLabel as lfx,
-							 GetActionsPingResponseDialogLabel as lpx)
+from app import LmGenApiDocumentation
+from app import LmTools, LmConfig
+from app.LmIcons import LmIcon
+from app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
+from lang.LmLanguages import (GetActionsLabel as lx,
+							  GetActionsRHistoryDialogLabel as lrx,
+							  GetActionsWGlobalDialogLabel as lwx,
+							  GetActionsFirewallLevelDialogLabel as lfx,
+							  GetActionsPingResponseDialogLabel as lpx)
 
 from __init__ import __url__, __copyright__
 

@@ -6,13 +6,13 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmIcons import LmIcon
-from src.LmConfig import LmConf
-from src.LmLanguages import (GetNatPatLabel as lx,
-							 GetPatRuleDialogLabel as lrx,
-							 GetPtfRuleDialogLabel as lfx,
-							 GetNatPatRuleTypeDialogLabel as ltx)
+from app import LmTools, LmConfig
+from app.LmIcons import LmIcon
+from app.LmConfig import LmConf
+from lang.LmLanguages import (GetNatPatLabel as lx,
+							  GetPatRuleDialogLabel as lrx,
+							  GetPtfRuleDialogLabel as lfx,
+							  GetNatPatRuleTypeDialogLabel as ltx)
 
 from __init__ import __build__
 

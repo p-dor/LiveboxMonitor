@@ -9,12 +9,12 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools, LmConfig
-from src.LmConfig import LmConf
-from src.LmIcons import LmIcon
-from src.LmDeviceListTab import DSelCol
-from src.LmLanguages import (GetEventsLabel as lx,
-							 GetNotificationRulesLabel as lnx)
+from app import LmTools, LmConfig
+from app.LmConfig import LmConf
+from app.LmIcons import LmIcon
+from tabs.LmDeviceListTab import DSelCol
+from lang.LmLanguages import (GetEventsLabel as lx,
+							  GetNotificationRulesLabel as lnx)
 
 
 # ################################ VARS & DEFS ################################

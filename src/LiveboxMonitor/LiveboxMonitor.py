@@ -9,14 +9,14 @@ import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from src import LmTools
-from src.LmIcons import LmIcon
-from src.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
+from app import LmTools, LmConfig
+from app.LmIcons import LmIcon
+from app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 						  ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
-from src.LmSession import LmSession
-from src import (LmConfig, LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
-				 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from src.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
+from app.LmSession import LmSession
+from tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
+				  LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+from lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
 
 from __init__ import __version__
 
