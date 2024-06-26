@@ -7,11 +7,11 @@ from ipaddress import IPv4Address
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from app.LmIcons import LmIcon
-from tabs.LmDhcpTab import DhcpCol
-from lang.LmLanguages import (GetDeviceListLabel as lx,
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
+from LiveboxMonitor.lang.LmLanguages import (GetDeviceListLabel as lx,
 							  GetIPv6DialogLabel as lix,
 							  GetDnsDialogLabel as ldx)
 

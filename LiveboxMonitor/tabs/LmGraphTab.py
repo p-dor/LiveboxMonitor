@@ -7,9 +7,9 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pyqtgraph as pg
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from lang.LmLanguages import (GetGraphLabel as lx,
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.lang.LmLanguages import (GetGraphLabel as lx,
 							  GetAddGraphDialogLabel as lgx)
 
 

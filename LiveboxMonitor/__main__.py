@@ -9,16 +9,16 @@ import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmIcons import LmIcon
-from app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 						  ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
-from app.LmSession import LmSession
-from tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
+from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
 				  LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
+from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
 
-from __init__ import __version__
+from LiveboxMonitor.__init__ import __version__
 
 
 # ################################ VARS & DEFS ################################

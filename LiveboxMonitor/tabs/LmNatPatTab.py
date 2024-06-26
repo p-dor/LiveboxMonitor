@@ -6,15 +6,15 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmIcons import LmIcon
-from app.LmConfig import LmConf
-from lang.LmLanguages import (GetNatPatLabel as lx,
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.lang.LmLanguages import (GetNatPatLabel as lx,
 							  GetPatRuleDialogLabel as lrx,
 							  GetPtfRuleDialogLabel as lfx,
 							  GetNatPatRuleTypeDialogLabel as ltx)
 
-from __init__ import __build__
+from LiveboxMonitor.__init__ import __build__
 
 
 # ################################ VARS & DEFS ################################

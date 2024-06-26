@@ -14,18 +14,18 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
-from app import LmTools
-from app.LmSession import DEFAULT_TIMEOUT
-from app.LmSession import LmSession
-from lang import LmLanguages
-from lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
+from LiveboxMonitor.app import LmTools
+from LiveboxMonitor.app.LmSession import DEFAULT_TIMEOUT
+from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.lang import LmLanguages
+from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
 							  GetConfigCnxDialogLabel as lcx,
 							  GetConfigSigninDialogLabel as lsx,
 							  GetConfigEmailDialogLabel as lex,
 							  GetSelectProfileDialogLabel as lpx,
 							  GetReleaseWarningDialogLabel as lrx)
 
-from __init__ import __url__, __version__, __build__
+from LiveboxMonitor.__init__ import __url__, __version__, __build__
 
 
 # ################################ VARS & DEFS ################################

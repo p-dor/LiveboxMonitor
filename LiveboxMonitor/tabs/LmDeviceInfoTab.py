@@ -7,11 +7,11 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from tabs.LmDeviceListTab import DSelCol
-from tabs.LmInfoTab import InfoCol
-from lang.LmLanguages import (GetDeviceInfoLabel as lx,
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
+from LiveboxMonitor.tabs.LmInfoTab import InfoCol
+from LiveboxMonitor.lang.LmLanguages import (GetDeviceInfoLabel as lx,
 							  GetDeviceNameDialogLabel as lnx,
 							  GetDeviceTypeDialogLabel as ltx)
 

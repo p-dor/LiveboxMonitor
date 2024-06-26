@@ -6,10 +6,10 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from tabs.LmActionsTab import WifiKey, WifiStatus
-from lang.LmLanguages import GetInfoLabel as lx
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.tabs.LmActionsTab import WifiKey, WifiStatus
+from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx
 
 
 # ################################ VARS & DEFS ################################
