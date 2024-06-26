@@ -11,7 +11,7 @@ import LiveboxMonitor.resources.icons
 # ############# Icons #############
 
 class LmIcon:
-	__PIXMAP__: Dict[str, QtGui.QPixmap] = {}
+	Pixmap: Dict[str, QtGui.QPixmap] = {}
 	"""Dictionary containing every Pixmap created from
 	the directory containing all the images.
 
@@ -23,7 +23,7 @@ class LmIcon:
 	"""
 
 	def __getattr__(self, name: str) -> QtGui.QPixmap:
-		return LmIcon.__PIXMAP__[name]
+		return LmIcon.Pixmap[name]
 
 	@staticmethod
 	def load():
@@ -38,5 +38,5 @@ class LmIcon:
 			pixmap.loadFromData(data)
 
 			# Save in dedicated attribute
-			LmIcon.__PIXMAP__[bare_basename] = pixmap
-			LmIcon.__PIXMAP__[bare_basename + 'Pixmap'] = pixmap
+			LmIcon.Pixmap[bare_basename] = pixmap
+			LmIcon.Pixmap[bare_basename + 'Pixmap'] = pixmap

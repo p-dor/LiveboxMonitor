@@ -617,11 +617,11 @@ class LmRepHandler:
 	def setTabIcon(self):
 		if self._tab is not None:
 			if self.isSigned():
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.TickPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.Pixmap['Tick']))
 			elif self.isActive():
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.DenyPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.Pixmap['Deny']))
 			else:
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.CrossPixmap))
+				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.Pixmap['Cross']))
 
 
 	### Find Repeater stats line from stat key

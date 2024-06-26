@@ -175,7 +175,7 @@ class LmActions:
 		aAboutWidgets.setSpacing(15)
 
 		aAppIcon = QtWidgets.QLabel(objectName = 'appIcon')
-		aAppIcon.setPixmap(LmIcon.AppIconPixmap)
+		aAppIcon.setPixmap(LmIcon.Pixmap['AppIcon'])
 		aAppIcon.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 		aAppIcon.setMaximumWidth(64)
 		aAppIcon.setMinimumWidth(64)
@@ -839,12 +839,12 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 			aStatus = s.get(iKey)
 			if aStatus == WifiStatus.Enable:
 				aIconItem = QtWidgets.QLabel()
-				aIconItem.setPixmap(LmIcon.TickPixmap)
+				aIconItem.setPixmap(LmIcon.Pixmap['Tick'])
 				aIconItem.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setCellWidget(iIndex, i, aIconItem)
 			elif aStatus == WifiStatus.Disable:
 				aIconItem = QtWidgets.QLabel()
-				aIconItem.setPixmap(LmIcon.CrossPixmap)
+				aIconItem.setPixmap(LmIcon.Pixmap['Cross'])
 				aIconItem.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setCellWidget(iIndex, i, aIconItem)
 			elif aStatus == WifiStatus.Error:

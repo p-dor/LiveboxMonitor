@@ -447,19 +447,19 @@ class LmDeviceList:
 			if aWifiSignal is not None:
 				aWifiIcon = LmTools.NumericSortItem()
 				if aWifiSignal >= 40:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal5']))
 				elif aWifiSignal >= 32:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal4Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal4']))
 				elif aWifiSignal >= 25:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal3Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal3']))
 				elif aWifiSignal >= 15:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal2']))
 				elif aWifiSignal >= 10:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal1']))
 				elif aWifiSignal == 0:		# Case when system doesn't know, like for Guest interface
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal5']))
 				else:
-					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
+					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['WifiSignal0']))
 				aWifiIcon.setData(QtCore.Qt.ItemDataRole.UserRole, aWifiSignal)
 				self._deviceList.setItem(iLine, DevCol.Wifi, aWifiIcon)
 
@@ -527,10 +527,10 @@ class LmDeviceList:
 	def formatActiveTableWidget(iActiveStatus):
 		aActiveIconItem = LmTools.NumericSortItem()
 		if iActiveStatus:
-			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.TickPixmap))
+			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.Pixmap['Tick']))
 			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 		else:
-			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.CrossPixmap))
+			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.Pixmap['Cross']))
 			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
 		return aActiveIconItem
 
@@ -781,7 +781,7 @@ class LmDeviceList:
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
 			aEventIndicator = LmTools.NumericSortItem()
-			aEventIndicator.setIcon(QtGui.QIcon(LmIcon.NotifPixmap))
+			aEventIndicator.setIcon(QtGui.QIcon(LmIcon.Pixmap['Notif']))
 			aEventIndicator.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 			self._deviceList.setItem(aListLine, DevCol.Event, aEventIndicator)
 
@@ -1184,9 +1184,9 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aIPv6EnabledLabel = QtWidgets.QLabel(lix('IPv6 enabled:'), objectName = 'ipv6EnabledLabel')
 		aIPv6Enabled = QtWidgets.QLabel(objectName = 'ipv6Enabled')
 		if iEnabled:
-			aIPv6Enabled.setPixmap(LmIcon.TickPixmap)
+			aIPv6Enabled.setPixmap(LmIcon.Pixmap['Tick'])
 		else:
-			aIPv6Enabled.setPixmap(LmIcon.CrossPixmap)
+			aIPv6Enabled.setPixmap(LmIcon.Pixmap['Cross'])
 
 		aAddrLabel = QtWidgets.QLabel(lix('IPv6 address:'), objectName = 'addrLabel')
 		aAddr = QtWidgets.QLineEdit(iAddr, objectName = 'addr')

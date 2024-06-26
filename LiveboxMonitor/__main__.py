@@ -67,7 +67,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.initStatsLoop()
 			self.initRepeaterStatsLoop()
 		self._applicationName = 'Livebox Monitor v' + __version__
-		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
+		self.setWindowIcon(QtGui.QIcon(LmIcon.Pixmap['AppIcon']))
 		self.setGeometry(100, 100, 1300, 102 + LmConfig.WindowHeight(21))
 		self.show()
 		QtCore.QCoreApplication.processEvents()

@@ -718,13 +718,13 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		aModel = aHeader.model()
 
 		# Assign icon headers - will be drawn by LmTools.CenteredIconHeaderView
-		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['AddCircle']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['DelCircle']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['ActiveCircle']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['InactiveCircle']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['LocChange']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['ExcelDoc']), QtCore.Qt.ItemDataRole.DisplayRole)
+		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.Pixmap['MailSend']), QtCore.Qt.ItemDataRole.DisplayRole)
 
 		# Assign tags for tooltips
 		aModel.setHeaderData(RuleCol.Key, QtCore.Qt.Orientation.Horizontal, 'rlist_Key', QtCore.Qt.ItemDataRole.UserRole)
@@ -935,34 +935,34 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		e = iRule['Events']
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_ADD in e:
-			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['BlueLight']))
 		self._ruleList.setItem(iRow, RuleCol.Add, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_DELETE in e:
-			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['BlueLight']))
 		self._ruleList.setItem(iRow, RuleCol.Delete, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_ACTIVE in e:
-			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['BlueLight']))
 		self._ruleList.setItem(iRow, RuleCol.Active, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_INACTIVE in e:
-			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['BlueLight']))
 		self._ruleList.setItem(iRow, RuleCol.Inactive, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_LINK_CHANGE in e:
-			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['BlueLight']))
 		self._ruleList.setItem(iRow, RuleCol.Link, i)
 
 		# Set rule action flags
 		r = iRule['Rules']
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_RULE_FILE in r:
-			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['GreenLight']))
 		self._ruleList.setItem(iRow, RuleCol.File, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_RULE_EMAIL in r:
-			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+			i.setIcon(QtGui.QIcon(LmIcon.Pixmap['GreenLight']))
 		self._ruleList.setItem(iRow, RuleCol.Email, i)
 
 

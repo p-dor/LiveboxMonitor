@@ -343,20 +343,20 @@ class LmPhone:
 				aOrigin = c.get('callOrigin', '')
 				if aStatus == 'succeeded':
 					if aOrigin == 'local':
-						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallOutPixmap))
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['CallOut']))
 						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 2)
 						aMissedCall = False
 					else:
-						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallInPixmap))
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['CallIn']))
 						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 3)
 						aMissedCall = False
 				else:
 					if aOrigin == 'local':
-						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallFailedPixmap))
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['CallFailed']))
 						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 4)
 						aMissedCall = False
 					else:
-						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.CallMissedPixmap))
+						aCallTypeIcon.setIcon(QtGui.QIcon(LmIcon.Pixmap['CallMissed']))
 						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 						aMissedCall = True
 
