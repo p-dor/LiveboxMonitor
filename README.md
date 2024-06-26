@@ -52,7 +52,7 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
 **Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5,6 & 7. Le support des événements a aussi été rajouté.
 
-### Téléchargement - version 1.4 (24/04/2023)
+### Téléchargement (exécutables) - version 1.4 (24/04/2023)
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
 - Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.4/LiveboxMonitor.exe)
@@ -64,6 +64,18 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 
 Nouveautés de la version 1.4 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
 
+### Installation du module
+
+Installation :
+
+    pip install git+https://github.com/p-dor/LiveboxMonitor.git
+
+
+Lancement :
+
+    LiveboxMonitor
+
+**Remarque** : Il faudra s'assurer que `LiveboxMonitor` soit présent dans l'environnement `PATH`.
 
 ### Utilisation directe via les sources
 
@@ -76,28 +88,8 @@ Installation :
 
 Lancement : 
 ``` 
-    python3 LiveboxMonitor.py
+    python3 -m LiveboxMonitor
 ```
-
-Ou via un virtualenv.
-
-Installation :  
-```
-    git clone https://github.com/p-dor/LiveboxMonitor.git
-    cd LiveboxMonitor
-    virtualenv -p python3 .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    python3 LiveboxMonitor.py
-``` 
-
-Lancement : 
-``` 
-    cd LiveboxMonitor
-    source .venv/bin/activate
-    python3 LiveboxMonitor.py
-```
-
 
 ## Configuration minimale <a id="minimalconfig"></a>
 
