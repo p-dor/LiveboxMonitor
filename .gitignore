@@ -1,21 +1,21 @@
 # Application specific 
-src/LiveboxMonitor/Config.txt
-src/LiveboxMonitor/Key.txt
-src/LiveboxMonitor/MacAddrTable.txt
+Config.txt
+Key.txt
+MacAddrTable.txt
 LiveboxMonitor.bat
 LiveboxMonitor.sublime-project
 LiveboxMonitor.sublime-workspace
-src/LiveboxMonitor/custom_icons/
-src/LiveboxMonitor/lbcache*/
-src/LiveboxMonitor/exports/
-src/LiveboxMonitor/build/PyInstall_Win32/
-src/LiveboxMonitor/build/PyInstall_Win32_Console/
-src/LiveboxMonitor/dist/
-back/
-pdocs/
-experiments/
-png/
-tools/
+./LiveboxMonitor/custom_icons/
+./LiveboxMonitor/lbcache*/
+./LiveboxMonitor/exports/
+./LiveboxMonitor/build/PyInstall_Win32/
+./LiveboxMonitor/build/PyInstall_Win32_Console/
+./LiveboxMonitor/dist/
+./back/
+./pdocs/
+./experiments/
+./png/
+./tools/
 
 
 # from here, it's : https://github.com/github/gitignore/blob/main/Python.gitignore
