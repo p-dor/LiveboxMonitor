@@ -22,9 +22,6 @@ class LmIcon:
 	
 	"""
 
-	def __getattr__(self, name: str) -> QtGui.QPixmap:
-		return LmIcon.Pixmap[name]
-
 	@staticmethod
 	def load():
 		folder = files(LiveboxMonitor.resources.icons)
