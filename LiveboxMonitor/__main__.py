@@ -554,9 +554,8 @@ def exceptHook(iType, iValue, iTraceBack):
 
 	QtWidgets.QApplication.quit()
 
-
 # ############# Main #############
-if __name__ == '__main__':
+def main():
 	# Prevent logging to fail if running without console
 	if sys.stderr is None:
 		sys.stderr = open(os.devnull, 'w')
@@ -604,3 +603,7 @@ if __name__ == '__main__':
 					break
 			else:
 				break
+
+# ############# Main #############
+if __name__ == '__main__':
+	main()
