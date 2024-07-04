@@ -47,30 +47,30 @@ TOOLTIPS = {}
 
 # Setup according to selected language
 def SetLanguage(iLanguage):
-	global CURRENT_LANGUAGE
-	global LABELS
-	global TOOLTIPS
+    global CURRENT_LANGUAGE
+    global LABELS
+    global TOOLTIPS
 
-	CURRENT_LANGUAGE = iLanguage
-	if iLanguage == 'FR':
-		LABELS = LmLanguage_FR.LABELS
-		TOOLTIPS = LmLanguage_FR.TOOLTIPS
-	elif iLanguage == 'EN':
-		TOOLTIPS = LmLanguage_EN.TOOLTIPS
-	else:
-		TOOLTIPS = LmLanguage_EN.TOOLTIPS
+    CURRENT_LANGUAGE = iLanguage
+    if iLanguage == 'FR':
+        LABELS = LmLanguage_FR.LABELS
+        TOOLTIPS = LmLanguage_FR.TOOLTIPS
+    elif iLanguage == 'EN':
+        TOOLTIPS = LmLanguage_EN.TOOLTIPS
+    else:
+        TOOLTIPS = LmLanguage_EN.TOOLTIPS
 
 
 # Get EN label translation
 def GetLabel(iKey, iString):
-	if CURRENT_LANGUAGE == 'EN':
-		return iString
-	return LABELS[iKey].get(iString, iString)
+    if CURRENT_LANGUAGE == 'EN':
+        return iString
+    return LABELS[iKey].get(iString, iString)
 
 
 # Get item tooltip
 def GetToolTip(iKey, iItemKey):
-	return TOOLTIPS[iKey].get(iItemKey)
+    return TOOLTIPS[iKey].get(iItemKey)
 
 
 
