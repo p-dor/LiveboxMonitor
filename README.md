@@ -65,7 +65,7 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 Nouveautés de la version 1.4 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
 
 
-### PyPI
+### PyPI - [ici](https://pypi.org/project/LiveboxMonitor/)
 
 Installation :  
 ```
