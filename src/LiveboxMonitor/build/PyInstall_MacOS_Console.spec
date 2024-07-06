@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['../LiveboxMonitor.py'],
+a = Analysis(['../__main__.py'],
              pathex=['.'],
              binaries=[],
              datas=[ ('/usr/local/lib/python3.10/site-packages/certifi/cacert.pem', 'certifi') ],
@@ -41,5 +41,5 @@ exe = EXE(pyz,
 
 app = BUNDLE(exe,
         name='LiveboxMonitor_Console.app',
-        icon='../../ico/LiveboxMonitor.ico',
-        version='1.4')
+        icon='../../../ico/LiveboxMonitor.ico',
+        version='1.4.8')

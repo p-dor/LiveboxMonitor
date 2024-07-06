@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['..\LiveboxMonitor.py'],
+a = Analysis(['..\__main__.py'],
              pathex=['.'],
              binaries=[],
              datas=[ ('C:\Program Files\Python311\Lib\site-packages\certifi\cacert.pem', 'certifi') ],
@@ -39,4 +39,4 @@ exe = EXE(pyz,
           target_arch=None,
           codesign_identity=None,
           entitlements_file=None,
-          icon='..\..\ico\LiveboxMonitor.ico')
+          icon='..\..\..\ico\LiveboxMonitor.ico')
