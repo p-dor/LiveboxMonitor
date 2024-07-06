@@ -3,8 +3,8 @@
 __title__ = 'LiveboxMonitor'
 __description__ = 'Graphical user interface to monitor Livebox 4, 5, 6 & 7'
 __url__ = 'https://github.com/p-dor/LiveboxMonitor'
-__version__ = '1.4.5'
-__build__ = 0x010488
+__version__ = '1.4.8'
+__build__ = 0x010491
 __author__ = 'Pierre Dor'
 __author_email__ = 'dorpierre@orange.fr'
 __license__ = 'MIT'
