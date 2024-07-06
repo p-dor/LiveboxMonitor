@@ -590,6 +590,19 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Friendly Name'), d.get('FriendlyName'))
 			i = self.addInfoLine(self._liveboxAList, i, lx('Allowed Host Headers'), d.get('AllowedHostHeader'))
 
+		aTotalReboot = None
+		try:
+			d = self._session.request('NMC.Reboot:get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			i = self.addInfoLine(self._liveboxAList, i, lx('Livebox Infos'), 'NMC.Reboot:get query error', LmTools.ValQual.Error)
+		else:
+			aTotalReboot = d.get('BootCounter')
+
 		try:
 			d = self._session.request('DeviceInfo:get')
 		except BaseException as e:
@@ -618,6 +631,8 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
 			i = self.addInfoLine(self._liveboxAList, i, lx('MAC Address'), aLiveboxMAC)
 			i = self.addInfoLine(self._liveboxAList, i, lx('External IP Address'), d.get('ExternalIPAddress'))
+			if aTotalReboot is not None:
+				i = self.addInfoLine(self._liveboxAList, i, lx('Total Number Of Reboots'), LmTools.FmtInt(aTotalReboot))
 			i = self.addInfoLine(self._liveboxAList, i, lx('Number Of Reboots'), LmTools.FmtInt(d.get('NumberOfReboots')))
 			i = self.addInfoLine(self._liveboxAList, i, lx('Upgrade Occurred'), LmTools.FmtBool(d.get('UpgradeOccurred')))
 			i = self.addInfoLine(self._liveboxAList, i, lx('Reset Occurred'), LmTools.FmtBool(d.get('ResetOccurred')))

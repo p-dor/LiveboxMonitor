@@ -124,6 +124,7 @@ LABELS = {
 		'Country': '',
 		'MAC Address': '',
 		'External IP Address': '',
+		'Total Number Of Reboots': '',
 		'Number Of Reboots': '',
 		'Upgrade Occurred': '',
 		'Reset Occurred': '',

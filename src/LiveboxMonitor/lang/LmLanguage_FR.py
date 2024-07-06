@@ -100,6 +100,7 @@ LABELS = {
 		'Country': 'Pays',
 		'MAC Address': 'Adresse MAC',
 		'External IP Address': 'Adresse IP Externe',
+		'Total Number Of Reboots': 'Nb Total de Redémarrages',
 		'Number Of Reboots': 'Nb de Redémarrages',
 		'Upgrade Occurred': 'Mise-à-jour Effectuée',
 		'Reset Occurred': 'Reset Effectué',
