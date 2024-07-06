@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+### LiveboxMonitor __mail__ wrapper emulating PyPI start & ensuring local modules import ###
+
 import os
 import re
 import sys
