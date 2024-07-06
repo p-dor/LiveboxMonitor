@@ -62,11 +62,11 @@ class LmSession:
 				aUrlFrom = fixTrailingSlash(aUrlFrom)
 				aUrlTo = fixTrailingSlash(aUrlTo)
 				if aUrlFrom in URL_REDIRECTIONS:
-					raise Exception("URL source de redirection déjà présent.")
+					raise Exception('Source redirection URL already declared.')
 				URL_REDIRECTIONS[aUrlFrom] = aUrlTo
 				LmTools.LogDebug(1, 'Added redirection', aUrlFrom, 'to', aUrlTo)
 		except BaseException as e:
-			print(f"Erreur de traitement de '{i}':", e)
+			print(f"Error while processing redirections: '{i}':", e)
 
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
