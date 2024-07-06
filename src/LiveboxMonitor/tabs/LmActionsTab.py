@@ -5,17 +5,17 @@ import webbrowser
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmGenApiDocumentation
-from app import LmTools, LmConfig
-from app.LmIcons import LmIcon
-from app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
-from lang.LmLanguages import (GetActionsLabel as lx,
-							  GetActionsRHistoryDialogLabel as lrx,
-							  GetActionsWGlobalDialogLabel as lwx,
-							  GetActionsFirewallLevelDialogLabel as lfx,
-							  GetActionsPingResponseDialogLabel as lpx)
+from LiveboxMonitor.app import LmGenApiDocumentation
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
+from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
+											 GetActionsRHistoryDialogLabel as lrx,
+											 GetActionsWGlobalDialogLabel as lwx,
+											 GetActionsFirewallLevelDialogLabel as lfx,
+											 GetActionsPingResponseDialogLabel as lpx)
 
-from __init__ import __url__, __copyright__
+from LiveboxMonitor.__init__ import __url__, __copyright__
 
 
 # ################################ VARS & DEFS ################################

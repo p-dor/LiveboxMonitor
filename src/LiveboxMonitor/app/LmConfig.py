@@ -14,18 +14,18 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
-from app import LmTools
-from app.LmSession import DEFAULT_TIMEOUT
-from app.LmSession import LmSession
-from lang import LmLanguages
-from lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
-							  GetConfigCnxDialogLabel as lcx,
-							  GetConfigSigninDialogLabel as lsx,
-							  GetConfigEmailDialogLabel as lex,
-							  GetSelectProfileDialogLabel as lpx,
-							  GetReleaseWarningDialogLabel as lrx)
+from LiveboxMonitor.app import LmTools
+from LiveboxMonitor.app.LmSession import DEFAULT_TIMEOUT
+from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.lang import LmLanguages
+from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
+											 GetConfigCnxDialogLabel as lcx,
+											 GetConfigSigninDialogLabel as lsx,
+											 GetConfigEmailDialogLabel as lex,
+											 GetSelectProfileDialogLabel as lpx,
+											 GetReleaseWarningDialogLabel as lrx)
 
-from __init__ import __url__, __version__, __build__
+from LiveboxMonitor.__init__ import __url__, __version__, __build__
 
 
 # ################################ VARS & DEFS ################################
@@ -525,6 +525,7 @@ class LmConf:
 	NotificationFlushFrequency = DCFG_NOTIFICATION_FLUSH_FREQUENCY
 	NotificationFilePath = DCFG_NOTIFICATION_FILE_PATH
 	Email = DCFG_EMAIL
+	NativeRun = True	# Run mode - Python script (True) / PyPI package (False)
 
 
 	### Load configuration, returns False the program aborts starting
@@ -1089,10 +1090,16 @@ class LmConf:
 			LmTools.Error('Cannot save MacAddress file. Error: {}'.format(e))
 
 
+	### Set native run
+	@staticmethod
+	def setNativeRun(iNativeRun):
+		LmConf.NativeRun = iNativeRun
+
+
 	### Determine config files directory
 	@staticmethod
 	def getConfigDirectory():
-		if hasattr(sys, 'frozen'):
+		if hasattr(sys, 'frozen') or not LmConf.NativeRun:
 			# If program is built with PyInstaller, use standard OS dirs
 			aPlatform =  platform.system()
 			if aPlatform == 'Windows':

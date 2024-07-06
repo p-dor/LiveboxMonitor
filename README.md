@@ -65,6 +65,24 @@ Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) 
 Nouveautés de la version 1.4 et historique des versions : [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/ReleaseHistory.md) ou [ici](https://github.com/p-dor/LiveboxMonitor/releases).
 
 
+### PyPI
+
+Installation :  
+```
+    pip install LiveboxMonitor
+```
+
+Mise à jour :  
+```
+    pip install --upgrade LiveboxMonitor
+```
+
+Lancement :  
+```
+    LiveboxMonitor
+```
+
+
 ### Utilisation directe via les sources
 
 Installation :  
@@ -76,7 +94,8 @@ Installation :
 
 Lancement : 
 ``` 
-    python3 LiveboxMonitor.py
+    cd src\LiveboxMonitor
+    python3 lbm.py
 ```
 
 Ou via un virtualenv.
@@ -88,14 +107,13 @@ Installation :
     virtualenv -p python3 .venv
     source .venv/bin/activate
     pip install -r requirements.txt
-    python3 LiveboxMonitor.py
 ``` 
 
 Lancement : 
 ``` 
-    cd LiveboxMonitor
+    cd src\LiveboxMonitor
     source .venv/bin/activate
-    python3 LiveboxMonitor.py
+    python3 lbm.py
 ```
 
 
@@ -150,7 +168,7 @@ Le dialogue de sélection de profils vous prévient si vous tentez d'utiliser un
 - `--redir` `-r`  
 Permet de rediriger une URL configurée / utilisée par le programme pour se connecter à la Livebox ou à un répéteur Wifi.
 Le format est `url1=url2`.  
-Exemple : `python3 LiveboxMonitor.py --redir http://livebox/=http://myproxy:2080`  
+Exemple : `LiveboxMonitor --redir http://livebox/=http://myproxy:2080`  
 Avec cette option le programme utilisera plutôt l'URL 'http://myproxy:2080/' pour se connecter à 'http://livebox/'.  
 Cette option peut être utilisée plusieurs fois sur la même ligne.
 
@@ -167,9 +185,9 @@ Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort
 ## Configuration <a id="configuration"></a>
 
 ### Répertoire de configuration
-- Si le programme est lancé par son code source le répertoire de configuration est le même que celui contenant le fichier source de lancement `LiveboxMonitor.py`.
+- Si le programme est lancé par son code source le répertoire de configuration est le même que celui contenant le fichier source de lancement `lbm.py`.
 
-- Si les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, le répertoire de configuration se trouve dans les répertoires standards du système :
+- Si le package PyPI (installation avec la commande 'pip') ou les programmes construits avec [PyInstaller](https://pyinstaller.org) sont utilisés, le répertoire de configuration se trouve dans les répertoires standards du système :
     - Windows : `%APPDATA%\LiveboxMonitor`
     - MacOS : `~/Library/Application Support/LiveboxMonitor`
 
@@ -206,9 +224,9 @@ En cas d'utilisation d'un virtualenv, si des erreurs de plugin Qt apparaissent, 
 ```
 
 En cas d'erreurs avec Wayland, il est possible de changer le moteur de rendu de Qt avec la variable d’environnement `QT_QPA_PLATFORM`.  
-Par exemple : `QT_QPA_PLATFORM=xcb python3 LiveboxMonitor.py` permet d'utiliser X Window directement (qui éventuellement sera rendu avec Xwayland mais cela fonctionne).
+Par exemple : `QT_QPA_PLATFORM=xcb python3 lbm.py` permet d'utiliser X Window directement (qui éventuellement sera rendu avec Xwayland mais cela fonctionne).
 
-Une autre méthode consiste à supprimer la variable d’environnement `WAYLAND_DISPLAY` uniquement pour l’exécution du programme et pas de façon globale, pour ce faire : `env -u WAYLAND_DISPLAY python3 LiveboxMonitor.py`.
+Une autre méthode consiste à supprimer la variable d’environnement `WAYLAND_DISPLAY` uniquement pour l’exécution du programme et pas de façon globale, pour ce faire : `env -u WAYLAND_DISPLAY python3 lbm.py`.
 
 
 ## Appareils - Liste des appareils connectés <a id="devicelist"></a>

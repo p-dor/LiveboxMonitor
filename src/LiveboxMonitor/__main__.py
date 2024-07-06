@@ -9,16 +9,16 @@ import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmIcons import LmIcon
-from app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
-						  ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
-from app.LmSession import LmSession
-from tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
-				  LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
+										 ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
+from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
+								 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
 
-from __init__ import __version__
+from LiveboxMonitor.__init__ import __version__
 
 
 # ################################ VARS & DEFS ################################
@@ -556,12 +556,14 @@ def exceptHook(iType, iValue, iTraceBack):
 
 
 # ############# Main #############
-if __name__ == '__main__':
+def main(iNativeRun = False):
 	# Prevent logging to fail if running without console
 	if sys.stderr is None:
 		sys.stderr = open(os.devnull, 'w')
 	if sys.stdout is None:
 		sys.stdout = open(os.devnull, 'w')
+
+	LmConf.setNativeRun(iNativeRun)
 
 	aApp = QtWidgets.QApplication(sys.argv)
 	sys.excepthook = exceptHook
@@ -604,3 +606,7 @@ if __name__ == '__main__':
 					break
 			else:
 				break
+
+
+if __name__ == '__main__':
+	main(True)

@@ -13,8 +13,8 @@ from email.message import EmailMessage
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from lang import LmLanguages
-from lang.LmLanguages import GetToolsLabel as lx
+from LiveboxMonitor.lang import LmLanguages
+from LiveboxMonitor.lang.LmLanguages import GetToolsLabel as lx
 
 
 # ################################ VARS & DEFS ################################

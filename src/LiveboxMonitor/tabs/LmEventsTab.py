@@ -9,12 +9,12 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from app.LmIcons import LmIcon
-from tabs.LmDeviceListTab import DSelCol
-from lang.LmLanguages import (GetEventsLabel as lx,
-							  GetNotificationRulesLabel as lnx)
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
+from LiveboxMonitor.lang.LmLanguages import (GetEventsLabel as lx,
+											 GetNotificationRulesLabel as lnx)
 
 
 # ################################ VARS & DEFS ################################

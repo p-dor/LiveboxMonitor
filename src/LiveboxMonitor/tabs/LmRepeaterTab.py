@@ -8,13 +8,13 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app import LmTools, LmConfig
-from app.LmConfig import LmConf
-from app.LmIcons import LmIcon
-from app.LmSession import LmSession
-from tabs.LmInfoTab import InfoCol, StatsCol
-from tabs.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
-from lang.LmLanguages import GetRepeaterLabel as lx
+from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
+from LiveboxMonitor.tabs.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
+from LiveboxMonitor.lang.LmLanguages import GetRepeaterLabel as lx
 
 
 # ################################ VARS & DEFS ################################
