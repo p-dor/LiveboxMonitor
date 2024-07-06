@@ -1,0 +1,45 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "LiveboxMonitor"
+version = "1.4.8"
+description = "Advanced graphical user interface to control a Livebox 4, 5, 6 or 7"
+readme = "README.md"
+authors = [{ name = "Pierre Dor", email = "dorpierre@orange.fr" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Networking :: Monitoring",
+    "Topic :: Home Automation"
+]
+keywords = ["livebox", "sysbus", "ui", "monitoring", "traffic"]
+dependencies = [
+    "PyQt6",
+    "requests",
+    "python-dateutil",
+    "cryptography",
+    "pyqtgraph"
+]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = []
+
+[project.urls]
+homepage = "https://github.com/p-dor/LiveboxMonitor"
+documentation = "https://p-dor.github.io/LiveboxMonitor"
+source = "https://github.com/p-dor/LiveboxMonitor"
+issues = "https://github.com/p-dor/LiveboxMonitor/issues"
+changelog = "https://github.com/p-dor/LiveboxMonitor/releases"
+
+[project.scripts]
+LiveboxMonitor = "LiveboxMonitor.__main__:main"
