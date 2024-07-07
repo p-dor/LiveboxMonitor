@@ -1182,14 +1182,14 @@ class LmInfo:
 
 			v = d.get('Voltage')
 			if v is not None:
-				v /= 1000
-				if (v < 32.0) or (v > 34.0):
+				v /= 10000
+				if (v < 3.2) or (v > 3.4):
 					aQual = LmTools.ValQual.Error
-				elif (v < 32.5) or (v > 33.5):
+				elif (v < 3.25) or (v > 3.35):
 					aQual = LmTools.ValQual.Warn
 				else:
 					aQual = LmTools.ValQual.Good
-				i = self.addInfoLine(self._liveboxAList, i, lx('Voltage'), str(v) + ' V', aQual)
+				i = self.addInfoLine(self._liveboxAList, i, lx('Voltage'), str(round(v, 2)) + ' V', aQual)
 
 			v = d.get('Bias')
 			if v is not None:
