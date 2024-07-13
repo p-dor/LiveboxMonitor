@@ -63,6 +63,7 @@ DCFG_NOTIFICATION_RULES = None
 DCFG_NOTIFICATION_FLUSH_FREQUENCY = 30	# Consolidated notifs flush + time diff between events to merge - in seconds
 DCFG_NOTIFICATION_FILE_PATH = None
 DCFG_EMAIL = None
+DCFG_CSV_DELIMITER = ';'
 
 # Static config
 GIT_REPO = 'p-dor/LiveboxMonitor'
@@ -526,6 +527,7 @@ class LmConf:
 	NotificationFilePath = DCFG_NOTIFICATION_FILE_PATH
 	Email = DCFG_EMAIL
 	NativeRun = True	# Run mode - Python script (True) / PyPI package (False)
+	CsvDelimiter = DCFG_CSV_DELIMITER
 
 
 	### Load configuration, returns False the program aborts starting
@@ -646,6 +648,13 @@ class LmConf:
 			p = aConfig.get('email')
 			if p is not None:
 				LmConf.Email = p
+			p = aConfig.get('CSV Delimiter')
+			if p is not None:
+				LmConf.CsvDelimiter = str(p)
+				if len(LmConf.CsvDelimiter):
+					LmConf.CsvDelimiter = LmConf.CsvDelimiter[0]
+				else:
+					LmConf.CsvDelimiter = DCFG_CSV_DELIMITER
 
 		if aConfigFile is not None:
 			aConfigFile.close()
@@ -967,6 +976,7 @@ class LmConf:
 				aConfig['NotificationFlushFrequency'] = LmConf.NotificationFlushFrequency
 				aConfig['NotificationFilePath'] = LmConf.NotificationFilePath
 				aConfig['email'] = LmConf.Email
+				aConfig['CSV Delimiter'] = LmConf.CsvDelimiter
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))
@@ -1654,6 +1664,11 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listLineFontSize = QtWidgets.QLineEdit(objectName = 'listLineFontSize')
 		self._listLineFontSize.setValidator(aIntValidator)
 
+		aCsvDelimiterLabel = QtWidgets.QLabel(lx('CSV Delimiter'), objectName = 'csvDelimiterLabel')
+		self._csvDelimiter = QtWidgets.QLineEdit(objectName = 'csvDelimiterEdit')
+		self._csvDelimiter.setMaxLength(1);
+		self._csvDelimiter.setMaximumWidth(25)
+
 		self._realtimeWifiStats = QtWidgets.QCheckBox(lx('Realtime wifi device statistics'), objectName = 'realtimeWifiStats')
 		self._nativeUIStyle = QtWidgets.QCheckBox(lx('Use native graphical interface style'), objectName = 'nativeUIStyle')
 
@@ -1678,8 +1693,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(self._listLineHeight, 4, 1)
 		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
 		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
-		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 5, 0, 1, 3)
-		aPrefsEditGrid.addWidget(self._nativeUIStyle, 6, 0, 1, 3)
+		aPrefsEditGrid.addWidget(aCsvDelimiterLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._csvDelimiter, 5, 1)
+		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 6, 0, 1, 3)
+		aPrefsEditGrid.addWidget(self._nativeUIStyle, 7, 0, 1, 3)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1739,6 +1756,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
 		self._listLineHeight.setText(str(LmConf.ListLineHeight))
 		self._listLineFontSize.setText(str(LmConf.ListLineFontSize))
+		self._csvDelimiter.setText(LmConf.CsvDelimiter)
 		if LmConf.RealtimeWifiStats_save:
 			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
@@ -1775,6 +1793,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
 		LmConf.ListLineHeight = int(self._listLineHeight.text())
 		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
+		LmConf.CsvDelimiter = self._csvDelimiter.text()
 		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.isChecked()
 		LmConf.NativeUIStyle = self._nativeUIStyle.isChecked()
 
