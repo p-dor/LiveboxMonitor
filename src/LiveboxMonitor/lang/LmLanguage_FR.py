@@ -784,6 +784,7 @@ LABELS = {
 		'List Header Font Size': 'Taille Police Entêtes',
 		'List Line Height': 'Hauteur Lignes',
 		'List Line Font Size': 'Taille Police Lignes',
+		'CSV Delimiter': 'Séparateur CSV',
 		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
 		'Use native graphical interface style': 'Utiliser le style d\'interface graphique natif',
 		'Preferences': 'Préférences',
@@ -1469,6 +1470,8 @@ TOOLTIPS = {
 		'listLineFontSize': 'Taille de la police de caractères des lignes de liste.\n'
 							'Une valeur à zéro signifie d\'utiliser la taille système.\n'
 							'Par défaut ce paramètre est à zéro.',
+		'csvDelimiterEdit': 'Séparateur de liste (délimiteur) à utiliser lors de l\'export\n'
+							'de données dans des fichiers au format CSV.',
 		'realtimeWifiStats': 'Active ou non les statistiques en temps réel pour les appareils wifi.\n'
 							 'Celles ci s\'affichent en bleu dans l\'onglet "Appareils" et viennent recouvrir\n'
 							 'les statistiques standards qui s\'affichent en noir toutes les 30 secondes.',
