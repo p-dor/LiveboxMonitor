@@ -2,6 +2,7 @@
 
 import os
 import time
+import csv
 from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
@@ -312,7 +313,7 @@ class LmGraph:
 		while True:
 			aFilePath = os.path.join(iFolder, 'StatExport_' + iObject['Name'] + aSuffix + '.csv')
 			try:
-				aExportFile = open(aFilePath, 'x')
+				aExportFile = open(aFilePath, 'x', newline = '')
 			except FileExistsError:
 				n += 1
 				aSuffix = '_' + str(n)
@@ -326,7 +327,8 @@ class LmGraph:
 		self.startTask(lx('Exporting statistics...'))
 
 		# Write header line
-		aExportFile.write('Download Timestamp; Download Bytes; Upload Timestamp; Upload Bytes\n')
+		aCsvWriter = csv.writer(aExportFile, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
+		aCsvWriter.writerow(['Download Timestamp', 'Download Bytes', 'Upload Timestamp', 'Upload Bytes'])
 
 		dt = iObject['DownTime']
 		d = iObject['Down']
@@ -336,10 +338,8 @@ class LmGraph:
 		n =  min(len(dt), len(ut))
 		i = 0
 		while i < n:
-			aExportFile.write('{}; {}; {}; {}\n'.format(str(dt[i]),
-														str(int(d[i] * UNIT_DIVIDER)),
-														str(ut[i]),
-														str(int(u[i] * UNIT_DIVIDER))))
+			aCsvWriter.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER)),
+								 str(ut[i]), str(int(u[i] * UNIT_DIVIDER))])
 			i += 1
 
 		self.endTask()

@@ -4,6 +4,7 @@ import os
 import json
 import datetime
 import time
+import csv
 
 from enum import IntEnum
 
@@ -593,16 +594,19 @@ class LmEvents:
 		aFilePath = os.path.join(aPath, aFileName)
 
 		try:
-			with open(aFilePath, 'a') as f:
+			with open(aFilePath, 'a', newline = '') as f:
 				aType = lx(NOTIF_EVENT_HUMAN_TYPE[t])
 
-				f.write('{}; {}; {}; {}'.format(ts.strftime('%H:%M:%S'), k, n, aType))
+				r = [ts.strftime('%H:%M:%S'), k, n, aType]
 
 				if t == NOTIF_EVENT_TYPE_ACTIVE:
-					f.write('; {}'.format(iEvent['Link']))
+					r.append(iEvent['Link'])
 				elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
-					f.write('; {}; {}'.format(iEvent['OldLink'], iEvent['NewLink']))
-				f.write('\n')
+					r.append(iEvent['OldLink'])
+					r.append(iEvent['NewLink'])
+
+				aCsvWriter = csv.writer(f, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
+				aCsvWriter.writerow(r)
 		except BaseException as e:
 			LmTools.Error('Cannot log event. Error: {}'.format(e))
 
