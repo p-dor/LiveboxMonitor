@@ -594,7 +594,7 @@ LABELS = {
 		'Reboots': 'Redémarrages',
 		'Firewall Levels...': 'Niveaux de pare-feu...',
 		'Ping Responses...': 'Réponses aux pings...',
-		'Firewall': 'Pare-feu',
+		'Network': 'Réseau',
 		'An Open Source project': 'Un projet Open Source',
 		'About': 'À propos',
 		'Preferences...': 'Préférences...',
@@ -667,6 +667,24 @@ LABELS = {
 		'Respond to IPv6 ping': 'Répondre au ping IPv6',
 		'Cancel': 'Annuler',
 		'Ping Responses': 'Réponses aux pings'
+	},
+
+	# Actions - DynDNS
+	'dyndns': {
+		'Host Name': 'Nom de domaine',
+		'User Email': 'Email utilisateur',
+		'Password': 'Mot de passe',
+		'Last Update': 'Mise à jour',
+		'Refresh': 'Rafraîchir',
+		'Delete': 'Supprimer',
+		'Hosts': 'Domaines',
+		'Add': 'Ajouter',
+		'Add Host': 'Ajouter Domaine',
+		'Loading DynDNS hosts...': 'Chargement des domaines DynDNS...',
+		'Show Passwords': 'Montrer mots de passe',
+		'Hide Passwords': 'Cacher mots de passe',
+		'Disable All': 'Tout Désactiver',
+		'Enable All': 'Tout Activer'
 	},
 
 	# Repeater
@@ -1345,6 +1363,10 @@ TOOLTIPS = {
 						 'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.',
 		'firewallLevel': 'Permet de régler les niveaux des pares-feux IPv4 et IPv6.',
 		'pingResponse': 'Permet de régler les réponses aux requêtes de ping IPv4 et IPv6.',
+		'dynDNS': 'Permet d\'attribuer un nom de domaine et d\'hôte fixe, facile à mémoriser, à une adresse IP statique\n'
+				  'ou dynamique ou à une longue URL.\n'
+				  'Utile, par exemple, si vous hébergez un site web ou un serveur FTP derrière votre Livebox pour le\n'
+				  'retrouver facilement (nom de type monserveur.dydns.org).',
 		'openSourceURL': 'Un clic ouvrira la page web de l\'application sur votre navigateur.',
 		'prefs': 'Permet d\'afficher l\'écran des préférences du programme.',
 		'changeProfile': 'Permet de changer le profil en cours et de relancer le programme.',
@@ -1385,6 +1407,25 @@ TOOLTIPS = {
 	'pingr': {
 		'ipV4Checkbox': 'Sélectionnez pour répondre aux requêtes de ping IPv4.',
 		'ipV6Checkbox': 'Sélectionnez pour répondre aux requêtes de ping IPv6.'
+	},
+
+	# Actions - DynDNS
+	'dyndns': {
+		'hlist_Service': 'Type de service.',
+		'hlist_HostName': 'Nom d\'hôte ou de domaine.',
+		'hlist_UserName': 'Email de l\'utilisateur.',
+		'hlist_Password': 'Mot de passe de l\'utilisateur.',
+		'hlist_LastUpdate': 'Date et heure de la dernière mise à jour.',
+		'refresh': 'Rafraîchit la liste des hôtes/domaines.',
+		'showPassword': 'Affiche ou masque les mots de passe dans la liste.',
+		'delHost': 'Surpprime l\'hôte/domaine sélectionné.',
+		'serviceCombo': 'Sélection du service.',
+		'hostNameEdit': 'Nom d\'hôte ou de domaine.',
+		'userNameEdit': 'Email de l\'utilisateur.',
+		'passwordEdit': 'Mot de passe de l\'utilisateur.',
+		'addHost': 'Ajoute un hôte/domaine.',
+		'disableAll': 'Désactive ou active tous les hôtes/domaines.',
+		'ok': 'Ferme cet écran.'
 	},
 
 	# Repeater

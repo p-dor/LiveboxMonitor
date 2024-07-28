@@ -98,6 +98,9 @@ TOOLTIPS = {
 	# Actions - Ping Response
 	'pingr': {},
 
+	# Actions - DynDNS
+	'dyndns': {},
+
 	# Repeater
 	'repeater': {},
 

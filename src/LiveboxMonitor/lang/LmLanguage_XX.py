@@ -689,7 +689,8 @@ LABELS = {
 		'Reboots': '',
 		'Firewall Levels...': '',
 		'Ping Responses...': '',
-		'Firewall': '',
+		'DynDNS...': '',
+		'Network': '',
 		'An Open Source project': '',
 		'About': '',
 		'Preferences...': '',
@@ -769,6 +770,28 @@ LABELS = {
 		'OK': '',
 		'Cancel': '',
 		'Ping Responses': ''
+	},
+
+	# Actions - DynDNS
+	'dyndns': {
+		'Service': '',
+		'Host Name': '',
+		'User Email': '',
+		'Password': '',
+		'Last Update': '',
+		'Status': '',
+		'Refresh': '',
+		'Delete': '',
+		'Hosts': '',
+		'Add': '',
+		'Add Host': '',
+		'OK': '',
+		'DynDNS': '',
+		'Loading DynDNS hosts...': '',
+		'Show Passwords': '',
+		'Hide Passwords': '',
+		'Disable All': '',
+		'Enable All': ''
 	},
 
 	# Repeater
@@ -1399,7 +1422,8 @@ TOOLTIPS = {
 		'rebootGroup': '',
 		'firewallLevel': '',
 		'pingResponse': '',
-		'firewallGroup': '',
+		'dynDNS': '',
+		'networkGroup': '',
 		'appIcon': '',
 		'appName': '',
 		'openSourceURL': '',
@@ -1446,6 +1470,33 @@ TOOLTIPS = {
 		'ipV6Checkbox': '',
 		'ok': '',
 		'cancel': ''
+	},
+
+	# Actions - DynDNS
+	'dyndns': {
+		'hostList': '',
+		'hlist_Service': '',
+		'hlist_HostName': '',
+		'hlist_UserName': '',
+		'hlist_Password': '',
+		'hlist_LastUpdate': '',
+		'hlist_Status': '',
+		'refresh': '',
+		'showPassword': '',
+		'delHost': '',
+		'hostGroup': '',
+		'serviceLabel': '',
+		'serviceCombo': '',
+		'hostNameLabel': '',
+		'hostNameEdit': '',
+		'userNameLabel': '',
+		'userNameEdit': '',
+		'passwordLabel': '',
+		'passwordEdit': '',
+		'addHost': '',
+		'addHostGroup': '',
+		'disableAll': '',
+		'ok': ''
 	},
 
 	# Repeater
