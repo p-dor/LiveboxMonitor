@@ -1,4 +1,4 @@
-# ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor
+# ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_AppIcon.png) LiveboxMonitor
 
 L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une interface graphique dynamique pour :
 - Contrôler les appareils qui se connectent à la Livebox et détecter rapidement les intrusions,
@@ -17,7 +17,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceList.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceList.png)
 
 
 ## Sections de cette documentation
@@ -241,7 +241,7 @@ La liste des appareils affiche les colonnes suivantes :
 - **Accès** : point d'accès de l'appareil sur le réseau. D'abord le nom de l'appareil, c'est-à-dire la Livebox elle-même ou le nom d'un des répéteurs Wifi Orange connectés, et ensuite l'interface sur cet appareil. `Eth` signifie une des prises Ethernet suivi du numéro de prise. `Wifi` signifie une connexion Wifi suivi par la bande de connexion.
 - **A** : indique par une icône si l'appareil est actif ou non. Par défaut la liste est triée pour montrer d'abord les appareils actifs.
 - **Wifi** : qualité de la connexion Wifi.
-- **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consultés via l'onglet `Événements`.
+- **E** : indique par une icône avec un point d'exclamation ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Exclamation.png) lorsqu'un événement est reçu pour cet appareil. La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes, peuvent être consultés via l'onglet `Événements`.
 - **Rx** : nombre d'octets reçus par l'appareil depuis le dernier démarrage de la Livebox.
 - **Tx** : nombre d'octets envoyés par l'appareil depuis le dernier démarrage de la Livebox.
 - **TauxRx** : taux d'octets reçus par seconde par l'appareil dans les dernières 30 secondes si affiché en noir, dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).
@@ -264,7 +264,7 @@ L'onglet `Appareils` propose les boutons suivants :
 
 ## Stats/Infos Livebox - Statistiques de trafic et infos avancées de la Livebox <a id="infos"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_LiveboxInfos.png)
 
 Les statistiques de trafic par interface sont affichées sous forme de liste en haut à gauche.
 Et toutes les informations sont accessibles par les boutons, chaque bouton remplissant la liste d'attributs sur la droite. Il est aussi possible d'exporter l'ensemble des informations dans un fichier.
@@ -289,7 +289,7 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 - **`Infos Wifi`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès y compris pour les accès invités. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
 - **`Infos LAN`** : affiche les informations générales sur la connectivité LAN. Il s'agit des informations DHCP de base et pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
 - **`Infos ONT`** : affiche les informations importantes concernant la connexion et le module Fibre (ONT), telles que la bande passante, la qualité du signal, le numéro de série et les versions logicielles, etc. Les champs `Puissance Signal Réception`, `Puissance Signal Transmission`, `Température`, `Voltage` et `BIAS` affichent des valeurs vertes si elles correspondent aux normes de qualité acceptables pour la connexion, en rouge si elles représentent un problème. Attention ce bouton n'est **pas disponible pour les Livebox 4**.
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_LiveboxInfos_ONT.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_LiveboxInfos_ONT.png)
 - **`Infos VoIP`** : affiche les informations générales concernant la téléphonie, telles que le protocole, le numéro de téléphone, la version logicielle de l'interface DECT, etc.
 - **`Infos IPTV`** : affiche les informations générales relatives aux services de télévision.
 - **`Infos USB`** : affiche les informations concernant le ou les ports USBs. Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox, ses informations sont affichées.
@@ -298,7 +298,7 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 
 ## Graphes - Courbes de trafic par interface et par appareil <a id="graphs"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Graph.png)
 
 Affiche les graphiques des données reçues et transmises pour chaque interface / appareil sélectionné à partir de données stockées par la Livebox elle-même. Les volumes sont en méga-octets entre deux échantillons, en principe toutes les 30 secondes (l'échantillonnage et sa fréquence sont contrôlés par la Livebox). Les graphes se mettent à jour automatiquement à la réception de nouveaux échantillons sous forme d'événements.  
 Il est possible de naviguer et de zoomer dans les graphiques à la souris, puis de revenir à la vue normale en cliquant dans le coin en bas à gauche. Un clic droit sur un graphe permet d'accéder à d'autres fonctionnalités telles que l'exportation en différents formats. Toute la documentation est accessible [ici](https://pyqtgraph.readthedocs.io/en/latest/user_guide/index.html).
@@ -307,7 +307,7 @@ Il est possible de naviguer et de zoomer dans les graphiques à la souris, puis 
 Il faut commencer par sélectionner les interfaces et/ou les appareils dont on veut obtenir les graphiques, pour cela deux boutons sont disponibles :
 - **`Ajouter...`** : affiche un dialogue permettant de sélectionner une interface ou un appareil.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Graph_Add.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Graph_Add.png)
 
     Commencer par sélectionner le type, interface ou appareil. Puis l'interface ou l'appareil en question, ainsi que la couleur à utiliser sur le graphique pour cet objet. La sélection n'affiche que des objets pour lesquels des mesures sont potentiellement disponibles. Pour les appareils les noms locaux sont utilisés, et par défaut l'adresse physique (MAC). Le dialogue affiche en informations complémentaires l'identifiant interne à la Livebox de l'objet sélectionné, le nombre d'échantillons stockés dans la Livebox pour cet objet (le nombre maximum est fixé à 8680 par la Livebox) et une estimation de la fenêtre de temps correspondante. Cependant cette fenêtre de temps peut être erronée, car si l'interface ou l'appareil sont déconnectés pendant une période de temps aucun échantillon n'est émis durant cette période. Ce qui veut dire que la période de temps totale entre le plus ancien échantillon et le plus récent peut être bien plus longue que cette estimation.
 - **`Supprimer`** : permet de supprimer l'interface ou l'appareil sélectionné.
@@ -325,7 +325,7 @@ Le bouton **`Export...`** permet d'exporter au format CSV (avec le point-virgule
 
 ## Infos Appareil - Informations détaillées pour chaque appareil connu <a id="deviceinfos"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceInfos.png)
 
 La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
 - **Nom** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assigner Nom...`.
@@ -349,12 +349,12 @@ L'onglet `Infos Appareil` propose les boutons suivants :
 - **`Rafraîchir`** : rafraîchit les informations affichées pour l'appareil sélectionné.
 - **`Assigner Nom...`** : permet d'attribuer ou d'effacer le nom local, le nom Livebox et/ou le nom DNS de l'appareil sélectionné.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignName.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceInfos_AssignName.png)
 
     Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
 - **`Assigner Type...`** : permet d'attribuer ou d'effacer le type de l'appareil sélectionné.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DeviceInfos_AssignType.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceInfos_AssignType.png)
 
     Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icône Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
 - **`Oublier...`** : permet de demander à la Livebox d'oublier définitivement cet appareil. Il disparaîtra donc immédiatement de toutes les listes. Attention si l'appareil en question est actif, sa connexion ne sera nullement suspendue, cependant toute son activité restera invisible et ce jusqu'à sa prochaine tentative de connexion.
@@ -364,7 +364,7 @@ L'onglet `Infos Appareil` propose les boutons suivants :
 
 ## Événements - Liste des événements reçus pour chaque appareil connu <a id="events"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Events.png)
 
 La liste des appareils connus, sur la gauche, affiche les colonnes suivantes :
 - **Nom** : nom local de l'appareil. Ce nom peut être attribué, changé ou supprimé via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
@@ -386,7 +386,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 ### Notifications automatiques
 - Le bouton **`Notifications...`** permet d'accéder à configuration des notifications automatiques à générer (par exemple par email) à la détection de certains événements.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Events_Notifications.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Events_Notifications.png)
 
     Vous pouvez créer autant de règles que nécessaire. Ce n'est pas grave si plusieurs règles concernent le ou les mêmes appareils, le programme ne détecte pas non plus les règles dupliquées. Il suffit qu'au moins une règle soit trouvée qui concerne une notification pour un appareil pour que cette notification soit effectuée.
     La liste affiche la liste des règles configurées, avec le ou les appareils concernés, les pastilles bleues indiquent les événements sélectionnés pour la notification, les pastilles vertes le ou les types de notifications sélectionnés (email et/ou fichiers CSV journaliers). Les boutons **`Ajouter`** et **`Supprimer`** permettent de créer une règle ou de supprimer la règle sélectionnée.  
@@ -403,7 +403,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 
 ## DHCP - Contrôle fin du serveur DHCP <a id="dhcp"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DHCP.png)
 
 ### Baux statiques
 La liste des baux statiques configurés est affichée sur la gauche. Les deux domaines de réseau sont gérés :
@@ -421,7 +421,7 @@ Les boutons suivants sont proposés pour gérer la liste des baux :
 - **`Rafraîchir`** : rafraîchit la liste des baux statiques.
 - **`Ajouter...`** : permet d'ajouter un bail.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP_AddBinding.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DHCP_AddBinding.png)
 
     La liste des appareils proposés est triée et est composée d'un mélange des appareils connectés et ceux référencés dans le fichier local des adresses MAC. L'adresse MAC est directement déduite de l'appareil sélectionné mais on peut en taper une totalement à la main. Choisir le domaine réseau entre `Home` ou `Guest`, et une adresse IP libre sera automatiquement proposée mais celle ci reste bien sûr configurable. Attention un même appareil ne peut être configuré que sur un seul domaine, et s'il se connecte sur un domaine alors qu'un bail statique est configuré sur l'autre ce bail sera automatiquement supprimé.
 - **`Supprimer`** : supprime le bail sélectionné.
@@ -437,14 +437,14 @@ Les boutons suivants sont proposés pour gérer la liste des baux :
 - **`Rafraîchir`** : rafraîchit la liste des informations DHCP.
 - **`Réglages DHCP...`** : permet de configurer le serveur DHCP.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_DHCP_Setup.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DHCP_Setup.png)
 
     Permet d'activer ou de désactiver le serveur, de changer l'adresse IP de la Livebox, de changer le masque de sous-réseau du serveur DHCP ainsi que la plage d'adresse IP pour le domaine `Home`.
 
 
 ## NAT/PAT - Règles de redirection de port et de protocole <a id="natpat"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_NatPat.png)
 
 Cet onglet permet de gérer de façon fine les règles de redirection de port et de protocole IPv4, IPv6 et UPnP de la Livebox. De par cette gestion fine il peut arriver que certaines règles, bien que correctement stockées et interprétées par la Livebox, ne s'affichent pas dans l'interface Web de la Livebox. Ceci est normal et ne représente pas vraiment de problème.
 
@@ -469,7 +469,7 @@ Les boutons suivants sont proposés pour gérer la liste des règles :
 - **`Ajouter...`** : permet d'ajouter une règle de redirection de port.
 - **`Modifier...`** : permet de modifier la règle de redirection de port sélectionnée.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat_PortForwarding.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_NatPat_PortForwarding.png)
 
 - **`Supprimer`** : supprime la règle de redirection de port sélectionnée.
 - **`Tout Supprimer...`** : permet de supprimer toutes les règles de redirection de port. Il est possible de supprimer uniquement une sélection de types de règle. Si une ou plusieurs règles posent problème à la Livebox (par exemple lorsque leur nom contient des caractères spéciaux) ce bouton peut permettre de revenir à une situation saine.
@@ -495,7 +495,7 @@ Les boutons suivants sont proposés pour gérer la liste des règles :
 - **`Ajouter...`** : permet d'ajouter une règle de redirection de protocole.
 - **`Modifier...`** : permet de modifier la règle de redirection de protocole sélectionnée.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_NatPat_ProtocolForwarding.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_NatPat_ProtocolForwarding.png)
 
 - **`Supprimer`** : supprime la règle de redirection de protocole sélectionnée.
 - **`Tout Supprimer...`** : permet de supprimer toutes les règles de redirection de protocole. Il est possible de supprimer uniquement une sélection de types de règle. Si une ou plusieurs règles posent problème à la Livebox (par exemple lorsque leur nom contient des caractères spéciaux) ce bouton peut permettre de revenir à une situation saine.
@@ -505,15 +505,15 @@ Les boutons suivants sont proposés pour gérer la liste des règles :
 
 ## Téléphone - Liste des appels téléphoniques / liste des contacts <a id="phone"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Phone.png)
 
 ### Appels téléphoniques
 La liste des appels téléphoniques, sur la gauche, affiche les colonnes suivantes :
 - **T** : icône correspondant au type de l'appel.
-    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_In.png) : appel reçu.
-    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_In_Missed.png) : appel manqué. Dans ce cas toute la ligne est indiquée en couleur rouge.
-    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_Out.png) : appel émis.
-    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Call_Out_Failed.png) : appel émis mais non abouti.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Call_In.png) : appel reçu.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Call_In_Missed.png) : appel manqué. Dans ce cas toute la ligne est indiquée en couleur rouge.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Call_Out.png) : appel émis.
+    - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Call_Out_Failed.png) : appel émis mais non abouti.
 - **Heure** : date et heure de l'appel.
 - **Numéro** : numéro de téléphone concerné.
 - **Contact** : le nom du contact déterminé par la Livebox en fonction de la liste des contacts au moment de l'appel. Si la Livebox n'a mémorisé aucun nom, alors le programme essai d'en trouver un dynamiquement à partir de la liste des contacts enregistrés par correspondance avec le numéro de téléphone.
@@ -543,7 +543,7 @@ Les boutons suivants sont proposés pour gérer la liste des contacts :
 - **`Rafraîchir`** : rafraîchit la liste des contacts.
 - **`Ajouter...`** : permet de rajouter un contact. Attention aucun test de doublon n'est effectué.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Phone_Contact.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Phone_Contact.png)
 
 - **`Modifier...`** : pour éditer le contact sélectionné.
 - **`Supprimer`** : supprime le contact sélectionné.
@@ -555,7 +555,7 @@ Les boutons suivants sont proposés pour gérer la liste des contacts :
 
 ## Actions - Boutons d'actions et de contrôle <a id="actions"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions.png)
 
 Cet onglet permet une liste d'actions par catégorie.
 
@@ -568,13 +568,13 @@ Les actions concernant le **Wifi** :
 - **`Planificateur Wifi OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
 - **`État Global Wifi...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_WifiGlobalStatus.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_WifiGlobalStatus.png)
 
 Les actions concernant les **Redémarrages** :
 - **`Redémarrer la Livebox...`** : permet de forcer un redémarrage de la Livebox.
 - **`Historique Redémarrages...`** : permet d'afficher l'historique des derniers redémarrages.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_RebootHistory.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_RebootHistory.png)
 
     Cet historique est particulièrement utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.
     La liste affiche les colonnes suivantes :
@@ -583,18 +583,21 @@ Les actions concernant les **Redémarrages** :
     - **Date Arrêt** : la date et heure de l'arrêt.
     - **Raison Arrêt** : la raison de cet arrêt. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
 
-Les actions concernant le **Pare-feu** :
+Les actions concernant le **Réseau** :
 - **`Niveaux de pare-feu...`** : permet de régler les niveaux des pare-feux IPv4 et IPv6.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_FirewallLevels.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_FirewallLevels.png)
 - **`Réponses aux pings...`** : permet de régler les réponses aux requêtes de ping IPv4 et IPv6.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_PingResponses.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_PingResponses.png)
+- **`DynDNS...`** : permet de régler les domaines DynDNS.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DynDNS.png)
 
 Les actions concernant les **Réglages** :
 - **`Préférences...`** : permet d'afficher l'écran des préférences du programme.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_Preferences.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_Preferences.png)
 
     Voir la section **Profils*** ci-dessus pour plus de détail sur leur fonctionnement.  
  
@@ -623,7 +626,7 @@ Les actions concernant les **Réglages** :
 
 - **`Réglages Email...`** : permet de configurer l'envoi d'emails automatique, par exemple pour les notifications.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Actions_EmailSetup.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_EmailSetup.png)
  
     Il est possible de configurer :
     - `Adresse Origine` : adresse email d'origine des messages.
@@ -674,15 +677,15 @@ Autres actions :
 
 ## Onglets répéteurs Wifi <a id="repeaters"></a>
 
-![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater.png)
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Repeater.png)
 
 Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
 Les répéteurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Appareils` et leur nom peut être changé via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 
 Une icône dans le nom de l'onglet permet de connaître l'état de la connexion avec le répéteur :
-- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Cross.png) : le répéteur est inactif ou n'a pas d'adresse IP attribuée.
-- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Prohibition.png) : le répéteur est actif mais aucune session n'est ouverte. Si cet état subsiste vous pouvez essayer de forcer la création d'une session en cliquant sur le bouton `Réauthentifier...`.
-- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Icon_Tick.png) : le répéteur est actif et une session a été créée pour communiquer avec lui.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Cross.png) : le répéteur est inactif ou n'a pas d'adresse IP attribuée.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Prohibition.png) : le répéteur est actif mais aucune session n'est ouverte. Si cet état subsiste vous pouvez essayer de forcer la création d'une session en cliquant sur le bouton `Réauthentifier...`.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Tick.png) : le répéteur est actif et une session a été créée pour communiquer avec lui.
 
 Les statistiques de trafic par interface sont affichées sous forme de liste en haut à gauche.
 Et toutes les informations détaillées sont accessibles via la barre de boutons en bas, chaque bouton remplissant la liste d'attributs sur la droite. Il est aussi possible d'exporter l'ensemble des informations dans un fichier. Enfin, une série d'actions est possible via les boutons sur la gauche.
@@ -713,7 +716,7 @@ Les actions concernant les **Redémarrages** :
 - **`Redémarrer le Répéteur...`** : permet de forcer un redémarrage du répéteur.
 - **`Historique Redémarrages...`** : permet d'afficher l'historique des derniers redémarrages.
 
-    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/Doc_Repeater_RebootHistory.png)
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Repeater_RebootHistory.png)
 
     Cet historique est particulièrement utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel du répéteur.
     La liste affiche les colonnes suivantes :
