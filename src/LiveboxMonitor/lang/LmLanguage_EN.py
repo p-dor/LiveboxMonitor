@@ -101,6 +101,9 @@ TOOLTIPS = {
 	# Actions - DynDNS
 	'dyndns': {},
 
+	# Actions - DMZ
+	'dmz': {},
+
 	# Repeater
 	'repeater': {},
 

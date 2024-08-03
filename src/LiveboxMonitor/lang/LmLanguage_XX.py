@@ -690,6 +690,7 @@ LABELS = {
 		'Firewall Levels...': '',
 		'Ping Responses...': '',
 		'DynDNS...': '',
+		'DMZ...': '',
 		'Network': '',
 		'An Open Source project': '',
 		'About': '',
@@ -792,6 +793,24 @@ LABELS = {
 		'Hide Passwords': '',
 		'Disable All': '',
 		'Enable All': ''
+	},
+
+	# Actions - DMZ
+	'dmz': {
+		'ID': '',
+		'IP': '',
+		'Device': '',
+		'External IPs': '',
+		'Refresh': '',
+		'Delete': '',
+		'DMZ Devices': '',
+		'IP Address': '',
+		'Add': '',
+		'Add DMZ': '',
+		'OK': '',
+		'DMZ': '',
+		'Loading DMZ devices...': '',
+		'All': ''
 	},
 
 	# Repeater
@@ -1423,6 +1442,7 @@ TOOLTIPS = {
 		'firewallLevel': '',
 		'pingResponse': '',
 		'dynDNS': '',
+		'dmz': '',
 		'networkGroup': '',
 		'appIcon': '',
 		'appName': '',
@@ -1496,6 +1516,29 @@ TOOLTIPS = {
 		'addHost': '',
 		'addHostGroup': '',
 		'disableAll': '',
+		'ok': ''
+	},
+
+	# Actions - DMZ
+	'dmz': {
+		'dmzList': '',
+		'zlist_ID': '',
+		'zlist_IP': '',
+		'zlist_Device': '',
+		'zlist_ExtIPs': '',
+		'refresh': '',
+		'delDmz': '',
+		'dmzGroup': '',
+		'idLabel': '',
+		'id': '',
+		'deviceLabel': '',
+		'deviceCombo': '',
+		'ipLabel': '',
+		'ipEdit': '',
+		'extIPsLabel': '',
+		'extIPsEdit': '',
+		'addDmz': '',
+		'addDmzGroup': '',
 		'ok': ''
 	},
 

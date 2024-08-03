@@ -16,7 +16,8 @@ from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
 											 GetActionsWGlobalDialogLabel as lwx,
 											 GetActionsFirewallLevelDialogLabel as lfx,
 											 GetActionsPingResponseDialogLabel as lpx,
-											 GetActionsDynDnsDialogLabel as ldx)
+											 GetActionsDynDnsDialogLabel as ldx,
+											 GetActionsDmzDialogLabel as lzx)
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
 
@@ -67,6 +68,14 @@ class HostCol(IntEnum):
 	LastUpdate = 4
 	Status = 5
 	Count = 6
+
+# DMZ device list columns
+class DmzCol(IntEnum):
+	ID = 0
+	IP = 1
+	Device = 2
+	ExtIPs = 3
+	Count = 4
 
 
 # ################################ LmActions class ################################
@@ -178,6 +187,11 @@ class LmActions:
 		aDynDNSButton.clicked.connect(self.dynDNSButtonClick)
 		aDynDNSButton.setMinimumWidth(BUTTON_WIDTH)
 		aNetworkButtons.addWidget(aDynDNSButton)
+
+		aDmzButton = QtWidgets.QPushButton(lx('DMZ...'), objectName = 'dmz')
+		aDmzButton.clicked.connect(self.dmzButtonClick)
+		aDmzButton.setMinimumWidth(BUTTON_WIDTH)
+		aNetworkButtons.addWidget(aDmzButton)
 
 		aNetworkGroupBox = QtWidgets.QGroupBox(lx('Network'), objectName = 'networkGroup')
 		aNetworkGroupBox.setLayout(aNetworkButtons)
@@ -641,6 +655,12 @@ class LmActions:
 	def dynDNSButtonClick(self):
 		aDynDNSSetupDialog = DynDNSSetupDialog(self)
 		aDynDNSSetupDialog.exec()
+
+
+	### Click on DMZ button
+	def dmzButtonClick(self):
+		aDmzSetupDialog = DmzSetupDialog(self)
+		aDmzSetupDialog.exec()
 
 
 	### Open Source project web button
@@ -1187,7 +1207,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 	def hostListClick(self):
 		aNewSelection = self._hostList.currentRow()
 
-		# Check of selection really changed
+		# Check if selection really changed
 		if not self._init and self._hostSelection == aNewSelection:
 			return
 		self._hostSelection = aNewSelection
@@ -1284,7 +1304,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 				return
 			i += 1
 
-		# Map rule to Livebox model
+		# Set parameters
 		h = {}
 		h['service'] = self._serviceCombo.currentText()
 		h['username'] = self._userName.text()
@@ -1309,7 +1329,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 			self._hostName.setText('')
 			self._password.setText('')
 		else:
-			self._app.displayError('Firewall setProtocolForwarding query failed.')
+			self._app.displayError('DynDNS addHost query failed.')
 
 
 	### Get global enable status
@@ -1349,3 +1369,306 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 			return ldx('Disable All')
 		else:
 			return ldx('Enable All')
+
+
+
+# ################################ DMZ setup dialog ################################
+class DmzSetupDialog(QtWidgets.QDialog):
+	### Constructor
+	def __init__(self, iParent = None):
+		super(DmzSetupDialog, self).__init__(iParent)
+		self.resize(720, 400)
+
+		self._app = iParent
+		self._dmzSelection = -1
+		self._init = True
+		self._ignoreSignal = False
+
+		# DMZ box
+		aDmzLayout = QtWidgets.QHBoxLayout()
+		aDmzLayout.setSpacing(30)
+
+		aDmzListLayout = QtWidgets.QVBoxLayout()
+		aDmzListLayout.setSpacing(5)
+
+		# DMZ list columns
+		self._dmzList = QtWidgets.QTableWidget(objectName = 'dmzList')
+		self._dmzList.setColumnCount(DmzCol.Count)
+
+		# Set columns
+		self._dmzList.setHorizontalHeaderLabels((lzx('ID'), lzx('IP'), lzx('Device'), lzx('External IPs')))
+
+		aHeader = self._dmzList.horizontalHeader()
+		aHeader.setSectionsMovable(False)
+		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
+		aHeader.setSectionResizeMode(DmzCol.Device, QtWidgets.QHeaderView.ResizeMode.Stretch)
+		aHeader.setSectionResizeMode(DmzCol.ExtIPs, QtWidgets.QHeaderView.ResizeMode.Stretch)
+
+		# Assign tags for tooltips
+		aModel = aHeader.model()
+		aModel.setHeaderData(DmzCol.ID, QtCore.Qt.Orientation.Horizontal, 'zlist_ID', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DmzCol.IP, QtCore.Qt.Orientation.Horizontal, 'zlist_IP', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DmzCol.Device, QtCore.Qt.Orientation.Horizontal, 'zlist_Device', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(DmzCol.ExtIPs, QtCore.Qt.Orientation.Horizontal, 'zlist_ExtIPs', QtCore.Qt.ItemDataRole.UserRole)
+
+		self._dmzList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self._dmzList.setColumnWidth(DmzCol.ID, 100)
+		self._dmzList.setColumnWidth(DmzCol.IP, 100)
+		self._dmzList.setColumnWidth(DmzCol.Device, 150)
+		self._dmzList.setColumnWidth(DmzCol.ExtIPs, 150)
+		self._dmzList.verticalHeader().hide()
+		self._dmzList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+		self._dmzList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+		self._dmzList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._dmzList.setMinimumWidth(680)
+		self._dmzList.itemSelectionChanged.connect(self.dmzListClick)
+		LmConfig.SetTableStyle(self._dmzList)
+		self._dmzList.setMinimumHeight(LmConfig.TableHeight(4))
+
+		aDmzListLayout.addWidget(self._dmzList, 1)
+
+		aDmzButtonBox = QtWidgets.QHBoxLayout()
+		aDmzButtonBox.setSpacing(5)
+
+		aRefreshButton = QtWidgets.QPushButton(lzx('Refresh'), objectName = 'refresh')
+		aRefreshButton.clicked.connect(self.refreshButtonClick)
+		aDmzButtonBox.addWidget(aRefreshButton)
+		self._delDmzButton = QtWidgets.QPushButton(lzx('Delete'), objectName = 'delDmz')
+		self._delDmzButton.clicked.connect(self.delDmzButtonClick)
+		aDmzButtonBox.addWidget(self._delDmzButton)
+		aDmzListLayout.addLayout(aDmzButtonBox, 0)
+		aDmzLayout.addLayout(aDmzListLayout, 0)
+
+		aDmzGroupBox = QtWidgets.QGroupBox(lzx('DMZ Devices'), objectName = 'dmzGroup')
+		aDmzGroupBox.setLayout(aDmzLayout)
+
+		# Add DMZ box
+		aIdLabel = QtWidgets.QLabel(lzx('ID'), objectName = 'idLabel')
+		self._id = QtWidgets.QLineEdit(objectName = 'id')
+		self._id.setText('webui')
+		self._id.textChanged.connect(self.idTyped)
+		aDeviceLabel = QtWidgets.QLabel(lzx('Device'), objectName = 'deviceLabel')
+		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
+		self._deviceCombo.activated.connect(self.deviceSelected)
+		aIpLabel = QtWidgets.QLabel(lzx('IP Address'), objectName = 'ipLabel')
+		self._ip = QtWidgets.QLineEdit(objectName = 'ipEdit')
+		self._ip.textChanged.connect(self.ipTyped)
+		aIPValidator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$'))
+		self._ip.setValidator(aIPValidator)
+		aExtIPsLabel = QtWidgets.QLabel(lzx('External IPs'), objectName = 'extIPsLabel')
+		self._extIPs = LmTools.MultiLinesEdit(objectName = 'extIPsEdit')
+		self._extIPs.setTabChangesFocus(True)
+		self._extIPs.setLineNumber(2)
+		self._addDmzButton = QtWidgets.QPushButton(lzx('Add'), objectName = 'addDmz')
+		self._addDmzButton.clicked.connect(self.addDmzButtonClick)
+		self._addDmzButton.setDisabled(True)
+
+		aDmzEditGrid = QtWidgets.QGridLayout()
+		aDmzEditGrid.setSpacing(10)
+
+		aDmzEditGrid.addWidget(aIdLabel, 0, 0)
+		aDmzEditGrid.addWidget(self._id, 0, 1)
+		aDmzEditGrid.addWidget(aDeviceLabel, 1, 0)
+		aDmzEditGrid.addWidget(self._deviceCombo, 1, 1)
+		aDmzEditGrid.addWidget(aIpLabel, 2, 0)
+		aDmzEditGrid.addWidget(self._ip, 2, 1)
+		aDmzEditGrid.addWidget(aExtIPsLabel, 0, 2)
+		aDmzEditGrid.addWidget(self._extIPs, 0, 3, 1, 2)
+		aDmzEditGrid.addWidget(self._addDmzButton, 2, 4)
+
+		aDmzEditGroupBox = QtWidgets.QGroupBox(lzx('Add DMZ'), objectName = 'addDmzGroup')
+		aDmzEditGroupBox.setLayout(aDmzEditGrid)
+
+		# Button bar
+		aOkButton = QtWidgets.QPushButton(lzx('OK'), objectName = 'ok')
+		aOkButton.clicked.connect(self.accept)
+		aOkButton.setDefault(True)
+		aButtonBar = QtWidgets.QHBoxLayout()
+		aButtonBar.setSpacing(10)
+		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+		# Final layout
+		aVBox = QtWidgets.QVBoxLayout(self)
+		aVBox.setSpacing(20)
+		aVBox.addWidget(aDmzGroupBox, 1)
+		aVBox.addWidget(aDmzEditGroupBox, 0)
+		aVBox.addLayout(aButtonBar, 0)
+
+		self._ip.setFocus()
+
+		LmConfig.SetToolTips(self, 'dmz')
+
+		self.setWindowTitle(lzx('DMZ'))
+		self.setModal(True)
+		self._app.loadDeviceIpNameMap()
+		self.loadDeviceList()
+		self.loadDMZ()
+		self.show()
+
+		self._init = False
+
+
+	### Load DMZ list
+	def loadDMZ(self):
+		self._app.startTask(lzx('Loading DMZ devices...'))
+
+		try:
+			d = self._app._session.request('Firewall:getDMZ')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			self._app.displayError('Cannot load DMZ device list.')
+			return
+
+		i = 0
+		for k in d:
+			self._dmzList.insertRow(i)
+			self._dmzList.setItem(i, DmzCol.ID, QtWidgets.QTableWidgetItem(k))
+
+			z = d[k]
+			aIP = z.get('DestinationIPAddress', '')
+			self._dmzList.setItem(i, DmzCol.IP, QtWidgets.QTableWidgetItem(aIP))
+			self._dmzList.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.getDeviceNameFromIp(aIP)))
+
+			aExternalIPs = z.get('SourcePrefix', '')
+			if len(aExternalIPs) == 0:
+				aExternalIPs = lzx('All')
+			self._dmzList.setItem(i, DmzCol.ExtIPs, QtWidgets.QTableWidgetItem(aExternalIPs))
+
+			i += 1
+
+		self.dmzListClick()
+		self._app.endTask()
+
+
+	### Click on DMZ list item
+	def dmzListClick(self):
+		aNewSelection = self._dmzList.currentRow()
+
+		# Check if selection really changed
+		if not self._init and self._dmzSelection == aNewSelection:
+			return
+		self._dmzSelection = aNewSelection
+
+		self._delDmzButton.setDisabled(aNewSelection < 0)
+
+
+	### Click on refresh button
+	def refreshButtonClick(self):
+		self._dmzList.clearContents()
+		self._dmzList.setRowCount(0)
+		self._dmzSelection = -1
+		self._init = True
+		self._app.loadDeviceIpNameMap()
+		self.loadDMZ()
+		self._init = False
+
+
+	### Click on delete DMZ button
+	def delDmzButtonClick(self):
+		i = self._dmzSelection
+		if i < 0:
+			return
+
+		# Delete the DMZ entry
+		aID = self._dmzList.item(i, DmzCol.ID).text()
+		try:
+			d = self._app._session.request('Firewall:deleteDMZ', { 'id': aID })
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None or not d:
+			self._app.displayError('Cannot delete DMZ device.')
+			return
+
+		# Delete the list line
+		self._dmzSelection = -1
+		self._init = True
+		self._dmzList.removeRow(i)
+		self._init = False
+
+		# Update selection
+		self._dmzSelection = self._dmzList.currentRow()
+
+
+	### Click on add DMZ button
+	def addDmzButtonClick(self):
+		# Set parameters
+		h = {}
+		h['id'] = self._id.text()
+		h['sourceInterface'] = 'data'
+		h['destinationIPAddress'] = self._ip.text()
+		aExternalIPs = self._extIPs.toPlainText()
+		if len(aExternalIPs):
+			h['sourcePrefix'] = aExternalIPs
+		h['enable'] = True
+
+		# Call Livebox API
+		try:
+			d = self._app._session.request('Firewall:setDMZ', h)
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			self._app.displayError('Firewall setDMZ query error.')
+			return
+
+		if (d is not None) and ('status' in d):
+			aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+			if len(aErrors):
+				self._app.displayError(aErrors)
+				return
+			self.refreshButtonClick()
+			self._id.setText('webui')
+			self._ip.setText('')
+			self._extIPs.setPlainText('')
+		else:
+			self._app.displayError('Firewall setDMZ query failed.')
+
+
+	def loadDeviceList(self):
+		aDeviceMap = self._app._deviceIpNameMap
+		self._deviceCombo.clear()
+
+		# Load IPv4 devices
+		for i in aDeviceMap:
+			if aDeviceMap[i]['IPVers'] == 'IPv4':
+				self._deviceCombo.addItem(self._app.getDeviceNameFromIp(i), userData = i)
+
+		# Sort by name
+		self._deviceCombo.model().sort(0)
+
+		# Insert unknown device at the beginning
+		self._deviceCombo.insertItem(0, lrx('-Unknown-'), userData = '')
+		self._deviceCombo.setCurrentIndex(0)
+
+
+	def idTyped(self, iText):
+		self.setAddButtonState()
+
+
+	def deviceSelected(self, iIndex):
+		if not self._ignoreSignal:
+			self._ignoreSignal = True
+			self._ip.setText(self._deviceCombo.currentData())
+			self._ignoreSignal = False
+
+
+	def ipTyped(self, iText):
+		if not self._ignoreSignal:
+			self._ignoreSignal = True
+			i = self._deviceCombo.findData(iText)
+			if i < 0:
+				i = 0
+			self._deviceCombo.setCurrentIndex(i)
+			self._ignoreSignal = False
+
+		self.setAddButtonState()
+
+
+	def setAddButtonState(self):
+		self._addDmzButton.setDisabled((len(self._id.text()) == 0) or
+									   (len(self._ip.text()) == 0))

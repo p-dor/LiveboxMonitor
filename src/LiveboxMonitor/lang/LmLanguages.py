@@ -122,6 +122,7 @@ def GetActionsWGlobalDialogLabel(iString): return GetLabel('wglobal', iString)
 def GetActionsFirewallLevelDialogLabel(iString): return GetLabel('fwlevel', iString)
 def GetActionsPingResponseDialogLabel(iString): return GetLabel('pingr', iString)
 def GetActionsDynDnsDialogLabel(iString): return GetLabel('dyndns', iString)
+def GetActionsDmzDialogLabel(iString): return GetLabel('dmz', iString)
 
 # Repeater
 def GetRepeaterLabel(iString): return GetLabel('repeater', iString)

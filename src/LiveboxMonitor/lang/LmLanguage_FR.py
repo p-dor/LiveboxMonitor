@@ -687,6 +687,20 @@ LABELS = {
 		'Enable All': 'Tout Activer'
 	},
 
+	# Actions - DMZ
+	'dmz': {
+		'Device': 'Appareil',
+		'External IPs': 'IPs Externes',
+		'Refresh': 'Rafraîchir',
+		'Delete': 'Supprimer',
+		'DMZ Devices': 'Appareils dans la DMZ',
+		'IP Address': 'Adresse IP',
+		'Add': 'Ajouter',
+		'Add DMZ': 'Ajouter dans la DMZ',
+		'Loading DMZ devices...': 'Chargement des appareils dans la DMZ...',
+		'All': 'Toutes'
+	},
+
 	# Repeater
 	'repeater': {
 		'Name': 'Nom',
@@ -1367,6 +1381,9 @@ TOOLTIPS = {
 				  'ou dynamique ou à une longue URL.\n'
 				  'Utile, par exemple, si vous hébergez un site web ou un serveur FTP derrière votre Livebox pour le\n'
 				  'retrouver facilement (nom de type monserveur.dydns.org).',
+		'dmz': 'Permet d\'intégrer un appareil dans la DMZ.\n'
+			   'En intégrant un appareil à la DMZ vous rendez cet équipement accessible depuis Internet.\n'
+			   'Vous devez préalablement associer une adresse IP statique à cet équipement dans l’onglet DHCP.',
 		'openSourceURL': 'Un clic ouvrira la page web de l\'application sur votre navigateur.',
 		'prefs': 'Permet d\'afficher l\'écran des préférences du programme.',
 		'changeProfile': 'Permet de changer le profil en cours et de relancer le programme.',
@@ -1425,6 +1442,27 @@ TOOLTIPS = {
 		'passwordEdit': 'Mot de passe de l\'utilisateur.',
 		'addHost': 'Ajoute un hôte/domaine.',
 		'disableAll': 'Désactive ou active tous les hôtes/domaines.',
+		'ok': 'Ferme cet écran.'
+	},
+
+	# Actions - DMZ
+	'dmz': {
+		'zlist_ID': 'Identifiant unique de la règle DMZ. L\'application Orange n\'utilise qu\'une seule règle\n'
+					'ayant "webui" comme identifiant.',
+		'zlist_IP': 'Adresse IP de l\'appareil présent dans la DMZ.',
+		'zlist_Device': 'Nom de l\'appareil présent dans la DMZ.',
+		'zlist_ExtIPs': 'Liste des adresses IPs externes concernées par la règle.',
+		'refresh': 'Rafraîchit la liste des appareils dans la DMZ.',
+		'delDmz': 'Surpprime la règle sélectionnée.',
+		'id': 'Identifiant unique de la règle DMZ. L\'application Orange n\'utilise qu\'une seule règle\n'
+			  'ayant "webui" comme identifiant.',
+		'deviceCombo': 'Appareil à ajouter dans la DMZ.',
+		'ipEdit': 'Adresse IP de l\'appareil à ajouter dans la DMZ.',
+		'extIPsEdit': 'Liste des adresses IPs externes concernées par la règle.\n'
+					  'Chaque adresse doit être séparée par une virgule.\n'
+					  'Laisser vide si aucun filtrage par IP externe n\'est requis.',
+		'addDmz': 'Ajoute l\'appareil dans la DMZ. Si une règle est déjà présente avec le même identifiant\n'
+				  'celle-ci sera écrasée.',
 		'ok': 'Ferme cet écran.'
 	},
 
