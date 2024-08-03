@@ -8,7 +8,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
 - Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
-- Contrôler de manière fine les réglages du serveur DHCP et des règles NAT/PAT,
+- Contrôler de manière fine les réglages du serveur DHCP, des règles NAT/PAT, du DynDNS et de la DMZ,
 - Contrôler l'état du Wifi,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
@@ -593,6 +593,9 @@ Les actions concernant le **Réseau** :
 - **`DynDNS...`** : permet de régler les domaines DynDNS.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DynDNS.png)
+- **`DMZ...`** : permet de configurer les règles de la DMZ.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DMZ.png)
 
 Les actions concernant les **Réglages** :
 - **`Préférences...`** : permet d'afficher l'écran des préférences du programme.
