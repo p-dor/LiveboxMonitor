@@ -1642,7 +1642,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		self._deviceCombo.model().sort(0)
 
 		# Insert unknown device at the beginning
-		self._deviceCombo.insertItem(0, lrx('-Unknown-'), userData = '')
+		self._deviceCombo.insertItem(0, lzx('-Unknown-'), userData = '')
 		self._deviceCombo.setCurrentIndex(0)
 
 

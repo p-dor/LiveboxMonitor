@@ -698,7 +698,8 @@ LABELS = {
 		'Add': 'Ajouter',
 		'Add DMZ': 'Ajouter dans la DMZ',
 		'Loading DMZ devices...': 'Chargement des appareils dans la DMZ...',
-		'All': 'Toutes'
+		'All': 'Toutes',
+		'-Unknown-': '-Inconnu-'
 	},
 
 	# Repeater

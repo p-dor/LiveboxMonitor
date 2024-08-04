@@ -810,7 +810,8 @@ LABELS = {
 		'OK': '',
 		'DMZ': '',
 		'Loading DMZ devices...': '',
-		'All': ''
+		'All': '',
+		'-Unknown-': ''
 	},
 
 	# Repeater
