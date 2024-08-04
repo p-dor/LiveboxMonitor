@@ -52,7 +52,7 @@ Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
 
 **Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5,6 & 7. Le support des événements a aussi été rajouté.
 
-### Téléchargement - version 1.4 (24/04/2023)
+### Téléchargement - version 1.4 (24/04/2024)
 
 Des programmes autonomes construits avec [PyInstaller](https://pyinstaller.org) sont disponibles pour les plateformes Windows & MacOS :
 - Windows : [Télécharger](https://github.com/p-dor/LiveboxMonitor/releases/download/1.4/LiveboxMonitor.exe)
@@ -593,7 +593,9 @@ Les actions concernant le **Réseau** :
 - **`DynDNS...`** : permet de régler les domaines DynDNS.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DynDNS.png)
-- **`DMZ...`** : permet de configurer les règles de la DMZ.
+- **`DMZ...`** : permet de configurer les règles de la DMZ. Contrairement à l'application d'Orange on peut ici ajouter plusieurs appareils dans la DMZ, avec un filtrage des IP externes comme pour les règles NAT/PAT.
+La règle de l'application d'Orange apparaît avec l'ID `webui`, donc si on veut pouvoir gérer une règle à la fois avec LiveboxMonitor et l'application d'Orange il faut respecter cet identifiant.
+Faute de test il n'est pas garanti que cela fonctionne correctement avec plusieurs règles : **tout retour d'utilisation sera bienvenu**.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DMZ.png)
 
