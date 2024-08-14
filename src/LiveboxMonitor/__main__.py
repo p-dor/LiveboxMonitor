@@ -8,6 +8,7 @@ import locale
 import argparse
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from wakepy import keep, ActivationResult
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
@@ -542,7 +543,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		self._tabWidget.setCurrentWidget(self._actionsTab)
 
 
-# ############# Fatal error handler #############
+# ### wakepy error handler
+def wakePyFailure(iResult):
+	LmTools.Error('Failed to keep system awake mode={} active={} success={} err={}'.format(iResult.mode_name, iResult.active_method, iResult.success, iResult.get_failure_text()))
+
+
+# ### Fatal error handler
 def exceptHook(iType, iValue, iTraceBack):
 	aTraceBack = ''.join(traceback.format_exception(iType, iValue, iTraceBack))
 
@@ -601,7 +607,11 @@ def main(iNativeRun = False):
 			aUI = LiveboxMonitorUI()
 			aApp.aboutToQuit.connect(aUI.appTerminate)
 			if aUI.isSigned():
-				aApp.exec()
+				if LmConf.PreventSleep:
+					with keep.running(on_fail = wakePyFailure):
+						aApp.exec()
+				else:
+					aApp.exec()
 				if not aUI._resetFlag:
 					break
 			else:
