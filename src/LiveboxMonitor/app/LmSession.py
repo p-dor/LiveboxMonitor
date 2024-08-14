@@ -361,7 +361,7 @@ class LmSession:
 				r = requests.Session().post(iLiveboxURL  + 'ws',
 						   data = '{"service":"DeviceInfo", "method":"get", "parameters":{}}',
 						   headers = {'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
-						   timeout = LIVEBOX_SCAN_TIMEOUT)
+						   timeout = LIVEBOX_SCAN_TIMEOUT + LmSession.TimeoutMargin)
 			except:
 				r = None
 			if r is not None:
