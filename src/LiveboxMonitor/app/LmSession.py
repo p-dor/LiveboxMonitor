@@ -20,9 +20,12 @@ LIVEBOX_SCAN_TIMEOUT = 0.4
 URL_REDIRECTIONS = {}
 
 
+
 # ################################ LmSession class ################################
 
 class LmSession:
+	### Setup
+	TimeoutMargin = 0
 
 	### Constructor
 	def __init__(self, iUrl, iSessionName = 'LiveboxMonitor'):
@@ -45,8 +48,8 @@ class LmSession:
 		self._sahEventHeaders = None
 
 
-	### Read a url redirection list and store in it in the global dict URL_REDIRECTIONS
-	### this fails silently 
+	### Read a url redirection list and store it in the global dict URL_REDIRECTIONS
+	### this fails silently
 	@staticmethod
 	def loadUrlRedirections(iRedirections):
 		def fixTrailingSlash(iUrl):
@@ -66,7 +69,13 @@ class LmSession:
 				URL_REDIRECTIONS[aUrlFrom] = aUrlTo
 				LmTools.LogDebug(1, 'Added redirection', aUrlFrom, 'to', aUrlTo)
 		except BaseException as e:
-			print(f"Error while processing redirections: '{i}':", e)
+			LmTools.Error('Error while processing redirections: {}'.format(e))
+
+
+	### Setup timeout margin
+	@staticmethod
+	def setTimeoutMargin(iTimeout):
+		LmSession.TimeoutMargin = iTimeout
 
 
 	### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
@@ -108,7 +117,11 @@ class LmSession:
 
 				LmTools.LogDebug(2, 'Auth with', str(aAuth))
 				try:
-					r = self._session.post(self._url + 'ws', data = aAuth, headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
+					r = self._session.post(self._url + 'ws',
+										   data = aAuth,
+										   headers = self._sahServiceHeaders,
+										   timeout = DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
+										   verify = self._verify)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self._session = None
@@ -141,7 +154,11 @@ class LmSession:
 
 			# Check authentication
 			try:
-				r = self._session.post(self._url + 'ws', data = '{"service":"Time", "method":"getTime", "parameters":{}}', headers = self._sahServiceHeaders, timeout = DEFAULT_TIMEOUT, verify = self._verify)
+				r = self._session.post(self._url + 'ws',
+									   data = '{"service":"Time", "method":"getTime", "parameters":{}}',
+									   headers = self._sahServiceHeaders,
+									   timeout = DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
+									   verify = self._verify)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				LmTools.Error('Authentification check query failed.')
@@ -188,7 +205,10 @@ class LmSession:
 			LmTools.LogDebug(2, 'Request: %s' % (c))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.get(self._url + c, headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
+				t = self._session.get(self._url + c,
+									  headers = self._sahServiceHeaders,
+									  timeout = iTimeout + LmSession.TimeoutMargin,
+									  verify = self._verify)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
 			except requests.exceptions.Timeout as e:
@@ -224,7 +244,11 @@ class LmSession:
 			LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahServiceHeaders, timeout = iTimeout, verify = self._verify)
+				t = self._session.post(self._url + c,
+									   data = json.dumps(aData),
+									   headers = self._sahServiceHeaders,
+									   timeout = iTimeout + LmSession.TimeoutMargin,
+									   verify = self._verify)
 				LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 				t = t.content
 			except requests.exceptions.Timeout as e:
@@ -282,7 +306,11 @@ class LmSession:
 		LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
 		aTimeStamp = datetime.datetime.now()
 		try:
-			t = self._session.post(self._url + c, data = json.dumps(aData), headers = self._sahEventHeaders, timeout = iTimeout, verify = self._verify)
+			t = self._session.post(self._url + c,
+								   data = json.dumps(aData),
+								   headers = self._sahEventHeaders,
+								   timeout = iTimeout,
+								   verify = self._verify)
 			LmTools.LogDebug(2, 'Request duration: %s' % (datetime.datetime.now() - aTimeStamp))
 			t = t.content
 		except requests.exceptions.Timeout as e:
