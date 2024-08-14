@@ -64,6 +64,8 @@ DCFG_NOTIFICATION_FLUSH_FREQUENCY = 30	# Consolidated notifs flush + time diff b
 DCFG_NOTIFICATION_FILE_PATH = None
 DCFG_EMAIL = None
 DCFG_CSV_DELIMITER = ';'
+DCFG_TIMEOUT_MARGIN = 0
+DCFG_PREVENT_SLEEP = True
 
 # Static config
 GIT_REPO = 'p-dor/LiveboxMonitor'
@@ -528,6 +530,8 @@ class LmConf:
 	Email = DCFG_EMAIL
 	NativeRun = True	# Run mode - Python script (True) / PyPI package (False)
 	CsvDelimiter = DCFG_CSV_DELIMITER
+	TimeoutMargin = DCFG_TIMEOUT_MARGIN
+	PreventSleep = DCFG_PREVENT_SLEEP
 
 
 	### Load configuration, returns False the program aborts starting
@@ -655,6 +659,14 @@ class LmConf:
 					LmConf.CsvDelimiter = LmConf.CsvDelimiter[0]
 				else:
 					LmConf.CsvDelimiter = DCFG_CSV_DELIMITER
+			p = aConfig.get('Timeout Margin')
+			if p is not None:
+				LmConf.TimeoutMargin = int(p)
+				if LmConf.TimeoutMargin < 0:
+					LmConf.TimeoutMargin = 0
+			p = aConfig.get('Prevent Sleep')
+			if p is not None:
+				LmConf.PreventSleep = bool(p)
 
 		if aConfigFile is not None:
 			aConfigFile.close()
@@ -729,6 +741,7 @@ class LmConf:
 	@staticmethod
 	def apply():
 		LmLanguages.SetLanguage(LmConf.Language)
+		LmSession.setTimeoutMargin(LmConf.TimeoutMargin)
 
 
 	### Apply decoupled saved values after application auto restarts following pref's change
@@ -977,6 +990,8 @@ class LmConf:
 				aConfig['NotificationFilePath'] = LmConf.NotificationFilePath
 				aConfig['email'] = LmConf.Email
 				aConfig['CSV Delimiter'] = LmConf.CsvDelimiter
+				aConfig['Timeout Margin'] = LmConf.TimeoutMargin
+				aConfig['Prevent Sleep'] = LmConf.PreventSleep
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))
@@ -1177,7 +1192,7 @@ class LmConf:
 				aStoreInCache = False
 				try:
 					aIconData = requests.get(LmConf.LiveboxURL + ICON_URL + iDevice['Icon'],
-											 timeout = DEFAULT_TIMEOUT,
+											 timeout = DEFAULT_TIMEOUT + LmConf.TimeoutMargin,
 											 verify = LmConf.LiveboxURL.startswith('http://'))
 					if aIconPixMap.loadFromData(aIconData.content):
 						aStoreInCache = True
@@ -1664,12 +1679,19 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listLineFontSize = QtWidgets.QLineEdit(objectName = 'listLineFontSize')
 		self._listLineFontSize.setValidator(aIntValidator)
 
+		aTimeoutMarginValidator = QtGui.QIntValidator()
+		aTimeoutMarginValidator.setRange(0, 240)
+		aTimeoutMarginLabel = QtWidgets.QLabel(lx('Timeout Margin'), objectName = 'timeoutMarginLabel')
+		self._timeoutMargin = QtWidgets.QLineEdit(objectName = 'timeoutMarginEdit')
+		self._timeoutMargin.setValidator(aTimeoutMarginValidator)
+
 		aCsvDelimiterLabel = QtWidgets.QLabel(lx('CSV Delimiter'), objectName = 'csvDelimiterLabel')
 		self._csvDelimiter = QtWidgets.QLineEdit(objectName = 'csvDelimiterEdit')
 		self._csvDelimiter.setMaxLength(1);
 		self._csvDelimiter.setMaximumWidth(25)
 
 		self._realtimeWifiStats = QtWidgets.QCheckBox(lx('Realtime wifi device statistics'), objectName = 'realtimeWifiStats')
+		self._preventSleep = QtWidgets.QCheckBox(lx('Prevent sleep mode'), objectName = 'preventSleepMode')
 		self._nativeUIStyle = QtWidgets.QCheckBox(lx('Use native graphical interface style'), objectName = 'nativeUIStyle')
 
 		aPrefsEditGrid = QtWidgets.QGridLayout()
@@ -1693,10 +1715,13 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(self._listLineHeight, 4, 1)
 		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
 		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
-		aPrefsEditGrid.addWidget(aCsvDelimiterLabel, 5, 0)
-		aPrefsEditGrid.addWidget(self._csvDelimiter, 5, 1)
-		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 6, 0, 1, 3)
-		aPrefsEditGrid.addWidget(self._nativeUIStyle, 7, 0, 1, 3)
+		aPrefsEditGrid.addWidget(aTimeoutMarginLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._timeoutMargin, 5, 1)
+		aPrefsEditGrid.addWidget(aCsvDelimiterLabel, 5, 2)
+		aPrefsEditGrid.addWidget(self._csvDelimiter, 5, 3)
+		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 6, 0, 1, 2)
+		aPrefsEditGrid.addWidget(self._preventSleep, 6, 2, 1, 2)
+		aPrefsEditGrid.addWidget(self._nativeUIStyle, 7, 0, 1, 2)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1756,11 +1781,16 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
 		self._listLineHeight.setText(str(LmConf.ListLineHeight))
 		self._listLineFontSize.setText(str(LmConf.ListLineFontSize))
+		self._timeoutMargin.setText(str(LmConf.TimeoutMargin))
 		self._csvDelimiter.setText(LmConf.CsvDelimiter)
 		if LmConf.RealtimeWifiStats_save:
 			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
 			self._realtimeWifiStats.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if LmConf.PreventSleep:
+			self._preventSleep.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._preventSleep.setCheckState(QtCore.Qt.CheckState.Unchecked)
 		if LmConf.NativeUIStyle:
 			self._nativeUIStyle.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
@@ -1793,8 +1823,10 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())
 		LmConf.ListLineHeight = int(self._listLineHeight.text())
 		LmConf.ListLineFontSize = int(self._listLineFontSize.text())
+		LmConf.TimeoutMargin = int(self._timeoutMargin.text())
 		LmConf.CsvDelimiter = self._csvDelimiter.text()
 		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.isChecked()
+		LmConf.PreventSleep = self._preventSleep.isChecked()
 		LmConf.NativeUIStyle = self._nativeUIStyle.isChecked()
 
 

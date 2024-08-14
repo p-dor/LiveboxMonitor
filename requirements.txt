@@ -3,3 +3,4 @@ requests
 python-dateutil
 cryptography
 pyqtgraph
+wakepy

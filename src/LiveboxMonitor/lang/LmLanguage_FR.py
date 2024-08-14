@@ -817,8 +817,10 @@ LABELS = {
 		'List Header Font Size': 'Taille Police Entêtes',
 		'List Line Height': 'Hauteur Lignes',
 		'List Line Font Size': 'Taille Police Lignes',
+		'Timeout Margin': 'Marge Timeout',
 		'CSV Delimiter': 'Séparateur CSV',
 		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
+		'Prevent sleep mode': 'Empêcher la mise en veille',
 		'Use native graphical interface style': 'Utiliser le style d\'interface graphique natif',
 		'Preferences': 'Préférences',
 		'Cancel': 'Annuler'
@@ -1550,11 +1552,16 @@ TOOLTIPS = {
 		'listLineFontSize': 'Taille de la police de caractères des lignes de liste.\n'
 							'Une valeur à zéro signifie d\'utiliser la taille système.\n'
 							'Par défaut ce paramètre est à zéro.',
+		'timeoutMarginEdit': 'Valeur de timeout additionnelle, à utiliser par exemple si vous accédez à une Livebox à\n'
+							 'distance avec une grande latence réseau.',
 		'csvDelimiterEdit': 'Séparateur de liste (délimiteur) à utiliser lors de l\'export\n'
 							'de données dans des fichiers au format CSV.',
 		'realtimeWifiStats': 'Active ou non les statistiques en temps réel pour les appareils wifi.\n'
 							 'Celles ci s\'affichent en bleu dans l\'onglet "Appareils" et viennent recouvrir\n'
 							 'les statistiques standards qui s\'affichent en noir toutes les 30 secondes.',
+		'preventSleepMode': 'Permet d\'empêcher votre ordinateur de se mettre en veille pendant l\'exécution de ce\n'
+							'programme. Utile pour laisser tourner l\'application en permanence, par exemple pour\n'
+							'l\'export des statistiques ou pour la génération de notifications en temps réel.',
 		'nativeUIStyle': 'Par défaut le style "Fusion" est utilisé sur toutes les plateformes.\n'
 						 'Cette option permet sur les plateformes Windows et MacOS d\'utiliser\n'
 						 'un style graphique plus natif.\n'

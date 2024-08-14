@@ -27,7 +27,8 @@ dependencies = [
     "requests",
     "python-dateutil",
     "cryptography",
-    "pyqtgraph"
+    "pyqtgraph",
+    "wakepy"
 ]
 requires-python = ">=3.9"
 

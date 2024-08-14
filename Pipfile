@@ -9,6 +9,7 @@ requests = "*"
 python-dateutil = "*"
 cryptography = "*"
 pyqtgraph = "*"
+wakepy = "*"
 
 [dev-packages]
 pyinstaller = "*"
