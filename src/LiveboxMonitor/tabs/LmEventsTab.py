@@ -595,7 +595,9 @@ class LmEvents:
 
 		try:
 			with open(aFilePath, 'a', newline = '') as f:
-				aType = lx(NOTIF_EVENT_HUMAN_TYPE[t])
+				# No translation to have CSV file readable on any platform without encoding issue
+				# (by default Excel opens CSV files with local charset, not UTF-8)
+				aType = NOTIF_EVENT_HUMAN_TYPE[t]
 
 				r = [ts.strftime('%H:%M:%S'), k, n, aType]
 
