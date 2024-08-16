@@ -962,6 +962,18 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
 
 		try:
+			d = self._session.request('NMC.Reboot:get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			i = self.addInfoLine(i, lx('Repeater Infos'), 'NMC.Reboot:get query error', LmTools.ValQual.Error)
+		else:
+			i = self.addInfoLine(i, lx('Total Number Of Reboots'), LmTools.FmtInt(d.get('BootCounter')))
+
+		try:
 			d = self._session.request('Time:getTime')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
