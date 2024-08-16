@@ -384,7 +384,7 @@ Un double clic sur un événement ou un clic sur le bouton **`Afficher Événeme
 - **Attributes** : données brutes complètes de l'événement lui-même, au format JSON tel que généré par la Livebox.  
 
 ### Notifications automatiques
-- Le bouton **`Notifications...`** permet d'accéder à configuration des notifications automatiques à générer (par exemple par email) à la détection de certains événements.
+- Le bouton **`Notifications...`** permet d'accéder à la configuration des notifications automatiques à générer (par exemple par email) à la détection de certains événements.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Events_Notifications.png)
 
@@ -624,10 +624,10 @@ Les actions concernant les **Réglages** :
     - `Taille Police Entêtes` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
     - `Hauteur Lignes` : hauteur en pixels des lignes de liste, par défaut 30.
     - `Taille Police Lignes` : taille de la police de caractères des lignes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
-    - `Marge Timeout` : Valeur de timeout additionnelle, à utiliser par exemple si vous accédez à une Livebox à distance avec une grande latence réseau.
-    - `Séparateur CSV` : Séparateur de liste (délimiteur) à utiliser lors de l'export de données dans des fichiers au format CSV.
+    - `Marge Timeout` : valeur de timeout additionnelle, à utiliser par exemple si vous accédez à une Livebox à distance avec une grande latence réseau.
+    - `Séparateur CSV` : séparateur de liste (délimiteur) à utiliser lors de l'export de données dans des fichiers au format CSV.
     - `Statistiques temps réel des appareils wifi` : active ou non les statistiques en temps réel pour les appareils wifi. Celles ci s'affichent en bleu dans l'onglet `Appareils` et viennent recouvrir les statistiques standards qui s'affichent en noir toutes les 30 secondes.
-    - `Empêcher la mise en veille` : Permet d'empêcher votre ordinateur de se mettre en veille pendant l'exécution de ce programme. Utile pour laisser tourner l'application en permanence, par exemple pour l'export des statistiques ou pour la génération de notifications en temps réel.
+    - `Empêcher la mise en veille` : permet d'empêcher votre ordinateur de se mettre en veille pendant l'exécution de ce programme. Utile pour laisser tourner l'application en permanence, par exemple pour l'export des statistiques ou pour la génération de notifications en temps réel.
     - `Utiliser le style d'interface graphique natif` : par défaut le style "Fusion" est utilisé sur toutes les plateformes. Cette option permet sur les plateformes Windows et MacOS d'utiliser un style graphique plus natif. Cette option n'a aucun effet sur les plateformes Linux.  
 
 - **`Changer de profil...`** : affiche un dialogue permettant de changer le profil en cours et de relancer le programme.
