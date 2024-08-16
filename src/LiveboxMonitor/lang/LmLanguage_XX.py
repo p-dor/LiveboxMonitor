@@ -852,6 +852,7 @@ LABELS = {
 		'Software Version': '',
 		'Orange Firmware Version': '',
 		'Country': '',
+		'Total Number Of Reboots': '',
 		'Time': '',
 		'Wifi Information': '',
 		'Wifi': '',
