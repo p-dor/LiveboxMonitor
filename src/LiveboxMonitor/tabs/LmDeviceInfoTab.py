@@ -205,7 +205,7 @@ class LmDeviceInfo:
 		else:
 			t = 'Livebox'
 		try:
-			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':setName', p)
+			aReply = self._session.request('Devices.Device.' + iDeviceKey, 'setName', p)
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
@@ -225,7 +225,7 @@ class LmDeviceInfo:
 			s = 'webui'
 			t = 'Livebox'
 		try:
-			aReply = self._session.request('Devices.Device.' + iDeviceKey + ':removeName', { 'source': s })
+			aReply = self._session.request('Devices.Device.' + iDeviceKey, 'removeName', { 'source': s })
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
@@ -250,7 +250,7 @@ class LmDeviceInfo:
 			if (aSetDeviceTypeDialog.exec()):
 				aType = aSetDeviceTypeDialog.getTypeKey()
 				try:
-					aReply = self._session.request('Devices.Device.' + aKey + ':setType', { 'type': aType })
+					aReply = self._session.request('Devices.Device.' + aKey, 'setType', { 'type': aType })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self.infoDeviceListClick()
 						self._currentDeviceType = aType		# LB device type update is async and refresh screen might be too fast
@@ -270,7 +270,7 @@ class LmDeviceInfo:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 			if self.askQuestion('Are you sure you want to forget device [' + aKey + ']?'):
 				try:
-					aReply = self._session.request('Devices:destroyDevice', { 'key': aKey })
+					aReply = self._session.request('Devices', 'destroyDevice', { 'key': aKey })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self._infoDList.setCurrentCell(-1, -1)
 						# Call event handler directly - in some (unknown) cases, the event is not raised
@@ -292,7 +292,7 @@ class LmDeviceInfo:
 
 			# First get current schedule
 			try:
-				aReply = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': aKey })
+				aReply = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': aKey })
 				if (aReply is None) or (aReply.get('status') is None):
 					self.displayError('Scheduler:getSchedule query failed.')
 					return
@@ -305,7 +305,7 @@ class LmDeviceInfo:
 			# If has schedule override it, otherwise add it
 			if aHasSchedule:
 				try:
-					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
+					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self.displayStatus('Device ' + aKey + ' now blocked.')
 					else:
@@ -323,7 +323,7 @@ class LmDeviceInfo:
 					aInfos['schedule'] = []
 					aInfos['enable'] = True
 					aInfos['override'] = 'Disable'
-					aReply = self._session.request('Scheduler:addSchedule', { 'type': 'ToD', 'info': aInfos })
+					aReply = self._session.request('Scheduler', 'addSchedule', { 'type': 'ToD', 'info': aInfos })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self.displayStatus('Device ' + aKey + ' now blocked.')
 					else:
@@ -344,7 +344,7 @@ class LmDeviceInfo:
 
 			# First get current schedule
 			try:
-				aReply = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': aKey })
+				aReply = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': aKey })
 				if (aReply is None) or (aReply.get('status') is None):
 					self.displayError('Scheduler:getSchedule query failed.')
 					return
@@ -357,7 +357,7 @@ class LmDeviceInfo:
 			# If has schedule override it, otherwise no need to unlock
 			if aHasSchedule:
 				try:
-					aReply = self._session.request('Scheduler:overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
+					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
 					if (aReply is not None) and (aReply.get('status', False)):
 						self.displayStatus('Device ' + aKey + ' now unblocked.')
 					else:
@@ -376,7 +376,7 @@ class LmDeviceInfo:
 		self.startTask(lx('Getting device information...'))
 
 		try:
-			d = self._session.request('Devices.Device.' + iDeviceKey + ':get')
+			d = self._session.request('Devices.Device.' + iDeviceKey, 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -393,7 +393,7 @@ class LmDeviceInfo:
 		i = self.addInfoLine(self._infoAList, i, lx('Authenticated'), LmTools.FmtBool(d.get('AuthenticationState')))
 
 		try:
-			aData = self._session.request('Scheduler:getSchedule', { 'type': 'ToD', 'ID': iDeviceKey })
+			aData = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': iDeviceKey })
 			aBlocked = False
 			if (aData is not None):
 				aData = aData.get('data')

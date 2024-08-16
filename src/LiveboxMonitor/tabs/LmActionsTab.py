@@ -298,7 +298,7 @@ class LmActions:
 	def wifiOnButtonClick(self):
 		self.startTask(lx('Activating Wifi...'))
 		try:
-			d = self._session.request('NMC.Wifi:set', { 'Enable': True, 'Status' : True })
+			d = self._session.request('NMC.Wifi', 'set', { 'Enable': True, 'Status' : True })
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
@@ -315,7 +315,7 @@ class LmActions:
 	def wifiOffButtonClick(self):
 		self.startTask(lx('Deactivating Wifi...'))
 		try:
-			d = self._session.request('NMC.Wifi:set', { 'Enable': False, 'Status' : False })
+			d = self._session.request('NMC.Wifi', 'set', { 'Enable': False, 'Status' : False })
 			if d is not None:
 				d = d.get('status')
 			if (d is None) or (not d):
@@ -332,7 +332,7 @@ class LmActions:
 	def guestWifiOnButtonClick(self):
 		self.startTask(lx('Activating Guest Wifi...'))
 		try:
-			d = self._session.request('NMC.Guest:set', { 'Enable': True })
+			d = self._session.request('NMC.Guest', 'set', { 'Enable': True })
 			if d is None:
 				self.displayError('NMC.Guest:set service failed.')
 			else:
@@ -347,7 +347,7 @@ class LmActions:
 	def guestWifiOffButtonClick(self):
 		self.startTask(lx('Deactivating Guest Wifi...'))
 		try:
-			d = self._session.request('NMC.Guest:set', { 'Enable': False })
+			d = self._session.request('NMC.Guest', 'set', { 'Enable': False })
 			if d is None:
 				self.displayError('NMC.Guest:set service failed.')
 			else:
@@ -381,7 +381,7 @@ class LmActions:
 	### Set Wifi Scheduler on or off, returns True if successful, False if failed
 	def schedulerOnOff(self, iEnable):
 		# First save network configuration
-		d = self._session.request('NMC.NetworkConfig:launchNetworkBackup', { 'delay' : True })
+		d = self._session.request('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
 		aFailed = False
 		aRestore = False
 
@@ -390,7 +390,7 @@ class LmActions:
 		for i in LmConfig.NET_INTF:
 			if i['Type'] == 'wif':
 				# Get current schedule info
-				d = self._session.request('Scheduler:getSchedule', { 'type' : 'WLAN', 'ID' : i['Key'] })
+				d = self._session.request('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : i['Key'] })
 				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
 				if d:
 					aStatus = d.get('status')
@@ -421,7 +421,7 @@ class LmActions:
 				p['value'] = aSchedule.get('value')
 				p['ID'] = i['Key']
 				p['schedule'] = aSchedule.get('schedule')
-				d = self._session.request('Scheduler:addSchedule', { 'type' : 'WLAN', 'info' : p })
+				d = self._session.request('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
 				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
 				if d:
 					d = d.get('status')
@@ -437,12 +437,12 @@ class LmActions:
 		# Restore network configuration if failed and try another way
 		if aFailed:
 			if aRestore:
-				self._session.request('NMC.NetworkConfig:launchNetworkRestore')		# Restore config, triggering a Livebox reboot
+				self._session.request('NMC.NetworkConfig', 'launchNetworkRestore')		# Restore config, triggering a Livebox reboot
 			aFailed = False
 
 			for i in LmConfig.NET_INTF:
 				if i['Type'] == 'wif':
-					d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : i['Key'], 'enable': iEnable })
+					d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : i['Key'], 'enable': iEnable })
 					aErrors = LmTools.GetErrorsFromLiveboxReply(d)
 					if d:
 						d = d.get('status')
@@ -477,7 +477,7 @@ class LmActions:
 		if self.askQuestion('Are you sure you want to reboot the Livebox?'):
 			self.startTask(lx('Rebooting Livebox...'))
 			try:
-				r = self._session.request('NMC:reboot', { 'reason': 'GUI_Reboot' })
+				r = self._session.request('NMC', 'reboot', { 'reason': 'GUI_Reboot' })
 				if r is None:
 					self.displayError('NMC:reboot service failed.')
 				else:
@@ -495,7 +495,7 @@ class LmActions:
 		self.startTask(lx('Getting Reboot History...'))
 
 		try:
-			d = self._session.request('NMC.Reboot.Reboot:get')
+			d = self._session.request('NMC.Reboot.Reboot', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -517,7 +517,7 @@ class LmActions:
 	def firewallLevelButtonClick(self):
 		# Get current IPv4 firewall level
 		try:
-			aReply = self._session.request('Firewall:getFirewallLevel')
+			aReply = self._session.request('Firewall', 'getFirewallLevel')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall getFirewallLevel query error.')
@@ -535,7 +535,7 @@ class LmActions:
 
 		# Get current IPv6 firewall level
 		try:
-			aReply = self._session.request('Firewall:getFirewallIPv6Level')
+			aReply = self._session.request('Firewall', 'getFirewallIPv6Level')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall getFirewallIPv6Level query error.')
@@ -559,7 +559,7 @@ class LmActions:
 			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
 			if aNewFirewallIPv4Level != aFirewallIPv4Level:
 				try:
-					aReply = self._session.request('Firewall:setFirewallLevel', { 'level': aNewFirewallIPv4Level })
+					aReply = self._session.request('Firewall', 'setFirewallLevel', { 'level': aNewFirewallIPv4Level })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Firewall setFirewallLevel query error.')
@@ -577,7 +577,7 @@ class LmActions:
 			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
 			if aNewFirewallIPv6Level != aFirewallIPv6Level:
 				try:
-					aReply = self._session.request('Firewall:setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
+					aReply = self._session.request('Firewall', 'setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Firewall setFirewallIPv6Level query error.')
@@ -600,7 +600,7 @@ class LmActions:
 
 		# Get current ping reponses
 		try:
-			aReply = self._session.request('Firewall:getRespondToPing', { 'sourceInterface': 'data' })
+			aReply = self._session.request('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall getRespondToPing query error.')
@@ -634,7 +634,7 @@ class LmActions:
 				p['enableIPv4'] = aNewIPv4Ping
 				p['enableIPv6'] = aNewIPv6Ping
 				try:
-					aReply = self._session.request('Firewall:setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
+					aReply = self._session.request('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Firewall setRespondToPing query error.')
@@ -1174,7 +1174,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		self._app.startTask(ldx('Loading DynDNS hosts...'))
 
 		try:
-			d = self._app._session.request('DynDNS:getHosts')
+			d = self._app._session.request('DynDNS', 'getHosts')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1218,7 +1218,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 	### Load service combo box
 	def loadServiceCombo(self):
 		try:
-			d = self._app._session.request('DynDNS:getServices')
+			d = self._app._session.request('DynDNS', 'getServices')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1270,7 +1270,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		# Delete the host entry
 		aHostName = self._hostList.item(i, HostCol.HostName).text()
 		try:
-			d = self._app._session.request('DynDNS:delHost', { 'hostname': aHostName })
+			d = self._app._session.request('DynDNS', 'delHost', { 'hostname': aHostName })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1313,7 +1313,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 
 		# Call Livebox API
 		try:
-			d = self._app._session.request('DynDNS:addHost', h)
+			d = self._app._session.request('DynDNS', 'addHost', h)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self._app.displayError('DynDNS addHost query error.')
@@ -1335,7 +1335,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 	### Get global enable status
 	def getGlobalEnableStatus(self):
 		try:
-			d = self._app._session.request('DynDNS:getGlobalEnable')
+			d = self._app._session.request('DynDNS', 'getGlobalEnable')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1350,7 +1350,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 	### Click on enable/disable button
 	def disableButtonClick(self):
 		try:
-			d = self._app._session.request('DynDNS:setGlobalEnable', { 'enable': not self.getGlobalEnableStatus() })
+			d = self._app._session.request('DynDNS', 'setGlobalEnable', { 'enable': not self.getGlobalEnableStatus() })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1513,7 +1513,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		self._app.startTask(lzx('Loading DMZ devices...'))
 
 		try:
-			d = self._app._session.request('Firewall:getDMZ')
+			d = self._app._session.request('Firewall', 'getDMZ')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1576,7 +1576,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		# Delete the DMZ entry
 		aID = self._dmzList.item(i, DmzCol.ID).text()
 		try:
-			d = self._app._session.request('Firewall:deleteDMZ', { 'id': aID })
+			d = self._app._session.request('Firewall', 'deleteDMZ', { 'id': aID })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1610,7 +1610,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
 		# Call Livebox API
 		try:
-			d = self._app._session.request('Firewall:setDMZ', h)
+			d = self._app._session.request('Firewall', 'setDMZ', h)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self._app.displayError('Firewall setDMZ query error.')

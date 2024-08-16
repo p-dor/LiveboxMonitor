@@ -766,7 +766,7 @@ class LmRepHandler:
 		if self.isSigned():
 			self._app.startTask(lx('Activating Repeater Wifi...'))
 			try:
-				d = self._session.request('NMC.Wifi:set', { 'Enable': True, 'Status' : True })
+				d = self._session.request('NMC.Wifi', 'set', { 'Enable': True, 'Status' : True })
 				if d is None:
 					self._app.displayError('NMC.Wifi:set service error')
 				else:
@@ -784,7 +784,7 @@ class LmRepHandler:
 		if self.isSigned():
 			self._app.startTask(lx('Deactivating Repeater Wifi...'))
 			try:
-				d = self._session.request('NMC.Wifi:set', { 'Enable': False, 'Status' : False })
+				d = self._session.request('NMC.Wifi', 'set', { 'Enable': False, 'Status' : False })
 				if d is None:
 					self._app.displayError('NMC.Wifi:set service error')
 				else:
@@ -802,7 +802,7 @@ class LmRepHandler:
 		if self.isSigned():
 			self._app.startTask(lx('Activating Repeater Scheduler...'))
 			try:
-				d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
+				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
 				if d is not None:
 					d = d.get('status')
 				if (d is None) or (not d):
@@ -822,7 +822,7 @@ class LmRepHandler:
 		if self.isSigned():
 			self._app.startTask(lx('Deactivating Repeater Scheduler...'))
 			try:
-				d = self._session.request('Scheduler:enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
+				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
 				if d is not None:
 					d = d.get('status')
 				if (d is None) or (not d):
@@ -843,7 +843,7 @@ class LmRepHandler:
 			if self._app.askQuestion('Are you sure you want to reboot the Repeater?'):
 				self._app.startTask(lx('Rebooting Repeater...'))
 				try:
-					d = self._session.request('NMC:reboot', { 'reason': 'WebUI reboot' })
+					d = self._session.request('NMC', 'reboot', { 'reason': 'WebUI reboot' })
 					if (d is not None) and (d.get('status', False)):
 						self._app.displayStatus('Repeater is now restarting.')
 					else:
@@ -862,7 +862,7 @@ class LmRepHandler:
 			self._app.startTask(lx('Getting Reboot History...'))
 
 			try:
-				d = self._session.request('NMC.Reboot.Reboot:get')
+				d = self._session.request('NMC.Reboot.Reboot', 'get')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -902,7 +902,7 @@ class LmRepHandler:
 		if self.isSigned():
 			try:
 				LmTools.MouseCursor_Busy()
-				d = self._session.request('NeMo.Intf.data:getMIBs')
+				d = self._session.request('NeMo.Intf.data', 'getMIBs')
 				LmTools.MouseCursor_Normal()
 				if d is None:
 					self._app.displayError('NeMo.Intf.data:getMIBs service failed')
@@ -915,7 +915,7 @@ class LmRepHandler:
 
 			try:
 				LmTools.MouseCursor_Busy()
-				d = self._session.request('NeMo.Intf.lan:getMIBs')
+				d = self._session.request('NeMo.Intf.lan', 'getMIBs')
 				LmTools.MouseCursor_Normal()
 				if d is None:
 					self._app.displayError('NeMo.Intf.lan:getMIBs service failed')
@@ -944,7 +944,7 @@ class LmRepHandler:
 		i = self.addTitleLine(iIndex, lx('Repeater Information'))
 
 		try:
-			d = self._session.request('DeviceInfo:get')
+			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -962,7 +962,7 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
 
 		try:
-			d = self._session.request('NMC.Reboot:get')
+			d = self._session.request('NMC.Reboot', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -974,7 +974,7 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Total Number Of Reboots'), LmTools.FmtInt(d.get('BootCounter')))
 
 		try:
-			d = self._session.request('Time:getTime')
+			d = self._session.request('Time', 'getTime')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -998,7 +998,7 @@ class LmRepHandler:
 		i = self.addTitleLine(iIndex, lx('Wifi Information'))
 
 		try:
-			d = self._session.request('NMC.Wifi:get')
+			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1015,7 +1015,7 @@ class LmRepHandler:
 
 		if self._version >= 6:		# Scheduler available only starting WR6
 			try:
-				d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -1036,7 +1036,7 @@ class LmRepHandler:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1047,7 +1047,7 @@ class LmRepHandler:
 			w = d.get('wlanradio')
 
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1133,7 +1133,7 @@ class LmRepHandler:
 
 		d = None
 		try:
-			q = self._session.request('NMC:getWANStatus')
+			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			q = None
@@ -1160,7 +1160,7 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('IPv6 Address'), d.get('IPv6Address'))
 
 		try:
-			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'MTU' })
+			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'MTU' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1172,7 +1172,7 @@ class LmRepHandler:
 		i = self.addTitleLine(i, lx('Link to the Livebox'))
 
 		try:
-			d = self._session.request('UplinkMonitor.DefaultGateway:get')
+			d = self._session.request('UplinkMonitor.DefaultGateway', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1187,7 +1187,7 @@ class LmRepHandler:
 
 		b = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base eth' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base eth' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1260,7 +1260,7 @@ class LmRepHandler:
 			return u
 
 		try:
-			d = self._session.request('NMC.Wifi:get')
+			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1275,7 +1275,7 @@ class LmRepHandler:
 
 		if self._version >= 6:		# Scheduler available only starting WR6
 			try:
-				d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -1295,7 +1295,7 @@ class LmRepHandler:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1306,7 +1306,7 @@ class LmRepHandler:
 			w = d.get('wlanradio')
 
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1410,7 +1410,7 @@ class RepeaterStatsThread(QtCore.QObject):
 			if r.isSigned():
 				for s in r._netIntf:
 					if r._session is not None:
-						aResult = r._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats' , {})
+						aResult = r._session.request('NeMo.Intf.' + s['Key'], 'getNetDevStats' , {})
 						if aResult is not None:
 							if aResult.get('errors') is not None:
 								# Session has timed out on Repeater side, resign

@@ -327,7 +327,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	### Adjust configuration to Livebox model
 	def adjustToLiveboxModel(self):
 		try:
-			d = self._session.request('DeviceInfo:get')
+			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -368,7 +368,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self._fiberLink = False
 			d = None
 			try:
-				q = self._session.request('NMC:getWANStatus')
+				q = self._session.request('NMC', 'getWANStatus')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				q = None

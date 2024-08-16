@@ -16,7 +16,7 @@ from LiveboxMonitor.app import LmTools
 # ################################ VARS & DEFS ################################
 APP_NAME = 'so_sdkut'
 DEFAULT_TIMEOUT = 5
-LIVEBOX_SCAN_TIMEOUT = 0.4
+LIVEBOX_SCAN_TIMEOUT = 0.6
 URL_REDIRECTIONS = {}
 
 
@@ -187,16 +187,18 @@ class LmSession:
 
 
 	### Send service request
-	def request(self, iPath, iArgs = None, iGet = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
+	def request(self, iPackage, iMethod = None, iArgs = None, iGet = False, iSilent = False, iTimeout = DEFAULT_TIMEOUT):
 		# Check session is established
 		if self._session is None:
 			if self.signin(self._user, self._password) <= 0:
 				return { 'errors' : 'No session' }
 
-		# Build request path
-		c = 'sysbus/' + iPath.replace('.', '/')
-
 		if iGet:
+			# Build request path
+			c = 'sysbus/' + iPackage.replace('.', '/')
+			if iMethod is not None:
+				c += ':' + iMethod
+
 			if iArgs is None:
 				c += '?_restDepth=-1'
 			else:
@@ -229,22 +231,22 @@ class LmSession:
 				t = '[' + t.replace('}{', '},{') + ']'
 		else:
 			# Setup request parameters
-			aData = { }
+			aData = {}
+			aData['service'] = 'sysbus.' + iPackage
+
+			if iMethod is not None:
+				aData['method'] = iMethod
+
 			if iArgs is not None:
 				aData['parameters'] = iArgs
 			else:
-				aData['parameters'] = { }
-
-			aSep = c.rfind(':')
-			aData['service'] = c[0:aSep].replace('/', '.')
-			aData['method'] = c[aSep + 1:]
-			c = 'ws'
+				aData['parameters'] = {}
 
 			# Send request & headers
-			LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
+			LmTools.LogDebug(2, 'Request: %s' % (str(aData)))
 			aTimeStamp = datetime.datetime.now()
 			try:
-				t = self._session.post(self._url + c,
+				t = self._session.post(self._url + 'ws',
 									   data = json.dumps(aData),
 									   headers = self._sahServiceHeaders,
 									   timeout = iTimeout + LmSession.TimeoutMargin,
@@ -293,20 +295,17 @@ class LmSession:
 			if self.signin(self._user, self._password) <= 0:
 				return { 'errors' : 'No session' }
 
-		aData = { }
+		aData = {}
 
 		aData['events'] = iEvents
 		if self._channelID:
 			aData['channelid'] = str(self._channelID)
-		c = 'ws'
-
-		LmTools.LogDebug(2, 'JSON DUMP: %s' % (str(json.dumps(aData))))
 
 		# Send request & headers
-		LmTools.LogDebug(2, 'Request: %s with %s' % (c, str(aData)))
+		LmTools.LogDebug(2, 'Event Request: %s' % (str(aData)))
 		aTimeStamp = datetime.datetime.now()
 		try:
-			t = self._session.post(self._url + c,
+			t = self._session.post(self._url + 'ws',
 								   data = json.dumps(aData),
 								   headers = self._sahEventHeaders,
 								   timeout = iTimeout,
@@ -359,7 +358,7 @@ class LmSession:
 		if iLiveboxURL is not None:
 			try:
 				r = requests.Session().post(iLiveboxURL  + 'ws',
-						   data = '{"service":"DeviceInfo", "method":"get", "parameters":{}}',
+						   data = '{"service":"sysbus.DeviceInfo", "method":"get", "parameters":{}}',
 						   headers = {'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
 						   timeout = LIVEBOX_SCAN_TIMEOUT + LmSession.TimeoutMargin)
 			except:

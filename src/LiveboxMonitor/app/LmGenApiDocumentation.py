@@ -147,7 +147,7 @@ class LmGenApiDoc:
 
 		# Generate for all interfaces
 		try:
-			d = self._session.request('NeMo.Intf.lo:getIntfs', { "traverse": "all" })
+			d = self._session.request('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None

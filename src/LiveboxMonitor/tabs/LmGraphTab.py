@@ -354,7 +354,7 @@ class LmGraph:
 	### Load stats parameters
 	def loadStatParams(self):
 		try:
-			aReply = self._session.request('HomeLan:getReadingInterval')
+			aReply = self._session.request('HomeLan', 'getReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('HomeLan getReadingInterval query error.')
@@ -366,7 +366,7 @@ class LmGraph:
 				self._statFrequencyInterfaces = int(aReply)
 
 		try:
-			aReply = self._session.request('HomeLan:getDevicesReadingInterval')
+			aReply = self._session.request('HomeLan', 'getDevicesReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('HomeLan getDevicesReadingInterval query error.')
@@ -632,7 +632,7 @@ class LmGraph:
 	### Load the current valid interfaces
 	def loadHomeLanInterfaces(self):
 		try:
-			aReply = self._session.request('HomeLan.Interface:get')
+			aReply = self._session.request('HomeLan.Interface', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('HomeLan interfaces query error.')
@@ -668,7 +668,7 @@ class LmGraph:
 	### Load the current valid devices
 	def loadHomeLanDevices(self):
 		try:
-			aReply = self._session.request('HomeLan.Device:get')
+			aReply = self._session.request('HomeLan.Device', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('HomeLan devices query error.')
@@ -700,11 +700,11 @@ class LmGraph:
 	def loadStatsInterface(self, iID, iStart, iEnd):
 		try:
 			if iStart:
-				aReply = self._session.request('HomeLan:getResults',
+				aReply = self._session.request('HomeLan', 'getResults',
 											   { 'InterfaceName': iID, 'BeginTrafficTimestamp': iStart, 'EndTrafficTimestamp': iEnd },
 											   iTimeout = 15)
 			else:
-				aReply = self._session.request('HomeLan:getResults', { 'InterfaceName': iID }, iTimeout = 15)
+				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, iTimeout = 15)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Interface statistics query error.')
@@ -725,11 +725,11 @@ class LmGraph:
 	def loadStatsDevice(self, iID, iStart, iEnd):
 		try:
 			if iStart:
-				aReply = self._session.request('HomeLan:getDeviceResults',
+				aReply = self._session.request('HomeLan', 'getDeviceResults',
 											   { 'DeviceName': iID, 'BeginTrafficTimestamp': iStart, 'EndTrafficTimestamp': iEnd },
 											   iTimeout = 15)
 			else:
-				aReply = self._session.request('HomeLan:getDeviceResults', { 'DeviceName': iID }, iTimeout = 15)				
+				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, iTimeout = 15)				
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Device statistics query error.')

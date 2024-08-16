@@ -242,7 +242,7 @@ class LmPhone:
 		if aCurrentSelection >= 0:
 			aKey = self._callList.item(aCurrentSelection, CallCol.Key).text()
 			try:
-				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList', { 'callId': aKey })
+				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList', { 'callId': aKey })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				self.displayError('Phone call delete query error.')
@@ -261,7 +261,7 @@ class LmPhone:
 		if self.askQuestion('Are you sure you want to delete all phone calls?'):
 			self.startTask(lx('Deleting phone call list...'))
 			try:
-				aReply = self._session.request('VoiceService.VoiceApplication:clearCallList')
+				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
 			except BaseException as e:
 				self.endTask()
 				LmTools.Error('Error: {}'.format(e))
@@ -326,7 +326,7 @@ class LmPhone:
 
 		self._callList.setSortingEnabled(False)
 
-		aCallList = self._session.request('VoiceService.VoiceApplication:getCallList', [{ 'line': '1' }], iTimeout = 8)
+		aCallList = self._session.request('VoiceService.VoiceApplication', 'getCallList', [{ 'line': '1' }], iTimeout = 8)
 		if aCallList is not None:
 			aCallList = aCallList.get('status')
 		if aCallList is None:
@@ -449,7 +449,7 @@ class LmPhone:
 		if aCurrentSelection >= 0:
 			aKey = self._contactList.item(aCurrentSelection, ContactCol.Key).text()
 			try:
-				aReply = self._session.request('Phonebook:removeContactByUniqueID', { 'uniqueID': aKey })
+				aReply = self._session.request('Phonebook', 'removeContactByUniqueID', { 'uniqueID': aKey })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				self.displayError('Contact delete query error.')
@@ -471,7 +471,7 @@ class LmPhone:
 		if self.askQuestion('Are you sure you want to delete all contacts?'):
 			self.startTask(lx('Deleting contact list...'))
 			try:
-				aReply = self._session.request('Phonebook:removeAllContacts')
+				aReply = self._session.request('Phonebook', 'removeAllContacts')
 			except BaseException as e:
 				self.endTask()
 				LmTools.Error('Error: {}'.format(e))
@@ -495,7 +495,7 @@ class LmPhone:
 
 		LmTools.MouseCursor_Busy()
 		try:
-			d = self._session.request('VoiceService.VoiceApplication:ring', aParams)
+			d = self._session.request('VoiceService.VoiceApplication', 'ring', aParams)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -523,7 +523,7 @@ class LmPhone:
 
 		self.startTask(lx('Exporting all contacts...'))
 
-		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
+		aContactList = self._session.request('Phonebook', 'getAllContacts', iTimeout = 20)
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
@@ -737,7 +737,7 @@ class LmPhone:
 		self._contactList.setSortingEnabled(False)
 
 		self._contactMatching = {}
-		aContactList = self._session.request('Phonebook:getAllContacts', iTimeout = 20)
+		aContactList = self._session.request('Phonebook', 'getAllContacts', iTimeout = 20)
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
@@ -868,7 +868,7 @@ class LmPhone:
 		aData['telephoneNumbers'] = aPhoneNumbers
 
 		try:
-			aReply = self._session.request('Phonebook:addContactAndGenUUID', { 'contact': aData })
+			aReply = self._session.request('Phonebook', 'addContactAndGenUUID', { 'contact': aData })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Contact creation query error.')
@@ -892,7 +892,7 @@ class LmPhone:
 
 		# First retrieve a fresh copy of the contact
 		try:
-			aReply = self._session.request('Phonebook:getContactByUniqueID', { 'uniqueID': aKey })
+			aReply = self._session.request('Phonebook', 'getContactByUniqueID', { 'uniqueID': aKey })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Contact query error.')
@@ -931,7 +931,7 @@ class LmPhone:
 
 			# Perform updates
 			try:
-				aReply = self._session.request('Phonebook:modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
+				aReply = self._session.request('Phonebook', 'modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				self.displayError('Contact update query error.')

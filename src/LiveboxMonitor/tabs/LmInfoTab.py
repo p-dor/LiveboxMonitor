@@ -575,7 +575,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Livebox Information'))
 
 		try:
-			d = self._session.request('UPnP-IGD:get')
+			d = self._session.request('UPnP-IGD', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -592,7 +592,7 @@ class LmInfo:
 
 		aTotalReboot = None
 		try:
-			d = self._session.request('NMC.Reboot:get')
+			d = self._session.request('NMC.Reboot', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -604,7 +604,7 @@ class LmInfo:
 			aTotalReboot = d.get('BootCounter')
 
 		try:
-			d = self._session.request('DeviceInfo:get')
+			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -640,7 +640,7 @@ class LmInfo:
 
 		if len(aLiveboxMAC):
 			try:
-				d = self._session.request('Devices.Device.' + aLiveboxMAC + ':get')
+				d = self._session.request('Devices.Device.' + aLiveboxMAC, 'get')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -659,7 +659,7 @@ class LmInfo:
 				i = self.addInfoLine(self._liveboxAList, i, lx('Telephony Active'), LmTools.FmtBool(d.get('Telephony')))
 
 		try:
-			d = self._session.request('Time:getTime')
+			d = self._session.request('Time', 'getTime')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -672,7 +672,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Time'), d.get('time'))
 
 		try:
-			d = self._session.request('DeviceInfo.MemoryStatus:get')
+			d = self._session.request('DeviceInfo.MemoryStatus', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -693,7 +693,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Internet Information'))
 
 		try:
-			d = self._session.request('NMC:get')
+			d = self._session.request('NMC', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -718,7 +718,7 @@ class LmInfo:
 
 		d = None
 		try:
-			q = self._session.request('NMC:getWANStatus')
+			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			q = None
@@ -747,7 +747,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('IPv6 Prefix'), d.get('IPv6DelegatedPrefix'))
 
 		try:
-			d = self._session.request('DeviceInfo:get')
+			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -760,7 +760,7 @@ class LmInfo:
 
 		if len(aLiveboxMAC):
 			try:
-				d = self._session.request('Devices.Device.' + aLiveboxMAC + ':get')
+				d = self._session.request('Devices.Device.' + aLiveboxMAC, 'get')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -781,7 +781,7 @@ class LmInfo:
 					i = self.addInfoLine(self._liveboxAList, i, lx('Max Up Bit Rate'), LmTools.FmtBytes(aRate))
 
 		try:
-			d = self._session.request('NeMo.Intf.data:getMIBs', { 'mibs': 'dhcp' })
+			d = self._session.request('NeMo.Intf.data', 'getMIBs', { 'mibs': 'dhcp' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -806,7 +806,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Lease Time Remaining'), LmTools.FmtTime(d.get('LeaseTimeRemaining')))
 
 		try:
-			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'VLANID' })
+			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'VLANID' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -816,7 +816,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('VLAN ID'), LmTools.FmtInt(d.get('status')))
 
 		try:
-			d = self._session.request('NeMo.Intf.data:getFirstParameter', { 'name': 'MTU' })
+			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'MTU' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -833,7 +833,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Wifi Information'))
 
 		try:
-			d = self._session.request('NMC.Wifi:get')
+			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -847,7 +847,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('BGN User Bandwidth'), d.get('BGNUserBandwidth'))
 
 		try:
-			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+			d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -868,7 +868,7 @@ class LmInfo:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -879,7 +879,7 @@ class LmInfo:
 			w = d.get('wlanradio')
 
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -957,7 +957,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Antenna Defect'), LmTools.FmtBool(q.get('AntennaDefect')))
 
 		try:
-			d = self._session.request('NeMo.Intf.guest:getMIBs', { 'mibs': 'wlanvap' })
+			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'wlanvap' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1010,7 +1010,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('LAN Information'))
 
 		try:
-			d = self._session.request('DHCPv4.Server:getDHCPServerPool', { 'id': 'default' })
+			d = self._session.request('DHCPv4.Server', 'getDHCPServerPool', { 'id': 'default' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1030,7 +1030,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('DHCPv4 Lease Time'), LmTools.FmtTime(d.get('LeaseTime')))
 
 		try:
-			d = self._session.request('DHCPv6.Server:getDHCPv6ServerStatus')
+			d = self._session.request('DHCPv6.Server', 'getDHCPv6ServerStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1043,7 +1043,7 @@ class LmInfo:
 
 		b = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base eth' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base eth' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1085,7 +1085,7 @@ class LmInfo:
 		# Call SFP module for LB4
 		if self._liveboxModel == 4:
 			try:
-				d = self._session.request('SFP:get')
+				d = self._session.request('SFP', 'get')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -1129,7 +1129,7 @@ class LmInfo:
 			return i
 
 		try:
-			d = self._session.request('NeMo.Intf.' + aOntIntf + ':getMIBs', { 'mibs': 'gpon' })
+			d = self._session.request('NeMo.Intf.' + aOntIntf, 'getMIBs', { 'mibs': 'gpon' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1239,7 +1239,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('VoIP Information'))
 
 		try:
-			d = self._session.request('VoiceService.VoiceApplication:listTrunks')
+			d = self._session.request('VoiceService.VoiceApplication', 'listTrunks')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1267,7 +1267,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, i, lx('DECT Information'))
 
 		try:
-			d = self._session.request('DECT:getName')
+			d = self._session.request('DECT', 'getName')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1279,7 +1279,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Name'), d)
 
 		try:
-			d = self._session.request('DECT:getPIN')
+			d = self._session.request('DECT', 'getPIN')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1291,7 +1291,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('PIN'), d)
 
 		try:
-			d = self._session.request('DECT:getRFPI')
+			d = self._session.request('DECT', 'getRFPI')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1303,7 +1303,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('RFPI'), d)
 
 		try:
-			d = self._session.request('DECT:getVersion')
+			d = self._session.request('DECT', 'getVersion')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1315,7 +1315,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Software Version'), d)
 
 		try:
-			d = self._session.request('DECT:getStandardVersion')
+			d = self._session.request('DECT', 'getStandardVersion')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1327,7 +1327,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('CAT-iq Version'), d)
 
 		try:
-			d = self._session.request('DECT:getPairingStatus')
+			d = self._session.request('DECT', 'getPairingStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1339,7 +1339,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Pairing Status'), d)
 
 		try:
-			d = self._session.request('DECT:getRadioState')
+			d = self._session.request('DECT', 'getRadioState')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1351,7 +1351,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Radio State'), LmTools.FmtBool(d))
 
 		try:
-			d = self._session.request('DECT.Repeater:get')
+			d = self._session.request('DECT.Repeater', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1370,7 +1370,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('IPTV Information'))
 
 		try:
-			d = self._session.request('NMC.OrangeTV:getIPTVStatus')
+			d = self._session.request('NMC.OrangeTV', 'getIPTVStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1384,7 +1384,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('IPTV Status'), d)
 
 		try:
-			d = self._session.request('NMC.OrangeTV:getIPTVMultiScreens')
+			d = self._session.request('NMC.OrangeTV', 'getIPTVMultiScreens')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1398,7 +1398,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Multi Screens Status'), lx('Available') if d else lx('Disabled'))
 
 		try:
-			d = self._session.request('NMC.OrangeTV:getIPTVConfig')
+			d = self._session.request('NMC.OrangeTV', 'getIPTVConfig')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1434,7 +1434,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('USB Information'))
 
 		try:
-			d = self._session.request('Devices:get', { 'expression': 'usb' })
+			d = self._session.request('Devices', 'get', { 'expression': 'usb' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1505,7 +1505,7 @@ class LmInfo:
 
 		# General Wifi status
 		try:
-			d = self._session.request('NMC.Wifi:get')
+			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1520,7 +1520,7 @@ class LmInfo:
 
 		# Wifi scheduler status
 		try:
-			d = self._session.request('Scheduler:getCompleteSchedules', { 'type': 'WLAN' })
+			d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1541,7 +1541,7 @@ class LmInfo:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1552,7 +1552,7 @@ class LmInfo:
 			w = d.get('wlanradio')
 
 		try:
-			d = self._session.request('NeMo.Intf.lan:getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1615,7 +1615,7 @@ class LmInfo:
 
 		# Guest Wifi status
 		try:
-			d = self._session.request('NeMo.Intf.guest:getMIBs', { 'mibs': 'wlanvap' })
+			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'wlanvap' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1684,7 +1684,7 @@ class LiveboxStatsThread(QtCore.QObject):
 	def collectStats(self):
 		# WARNING counters are recycling at 4Gb only:
 		for s in LmConfig.NET_INTF:
-			aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getNetDevStats')
+			aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getNetDevStats')
 			if aResult is not None:
 				aStats = aResult.get('status')
 				if type(aStats).__name__ == 'dict':
@@ -1711,7 +1711,7 @@ class LiveboxStatsThread(QtCore.QObject):
 		# - HomeLan events do not cover all interfaces -> need to keep getNetDevStats()
 		for s in LmConfig.NET_INTF:
 			if s['Type'] == 'wan':	# WARNING -> need to add a 'wan' line in LmConfig.NET_INTF
-				aResult = self._session.request('HomeLan:getWANCounters')	# WARNING: Works but generates wrong HomeLan veip0 stats events
+				aResult = self._session.request('HomeLan', 'getWANCounters')	# WARNING: Works but generates wrong HomeLan veip0 stats events
 				if aResult is not None:
 					aStats = aResult.get('status')
 					if type(aStats).__name__ == 'dict':
@@ -1739,9 +1739,9 @@ class LiveboxStatsThread(QtCore.QObject):
 		# - Counters look 64bits but are recycling chaotically, after 512Gb, or 3Gb, ...
 		for s in LmConfig.NET_INTF:
 			if s['Type'] == 'wan':
-				aResult = self._session.request('HomeLan:getWANCounters')
+				aResult = self._session.request('HomeLan', 'getWANCounters')
 			else:
-				aResult = self._session.request('HomeLan.Interface.' + s['Key'] + '.Stats:get')
+				aResult = self._session.request('HomeLan.Interface.' + s['Key'] + '.Stats', 'get')
 			if aResult is not None:
 				aStats = aResult.get('status')
 				if type(aStats).__name__ == 'dict':

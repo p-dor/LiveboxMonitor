@@ -233,7 +233,7 @@ class LmDeviceList:
 		# Get IPv6 status
 		aIPv6Enabled = None
 		try:
-			d = self._session.request('NMC.IPv6:get')
+			d = self._session.request('NMC.IPv6', 'get')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -250,7 +250,7 @@ class LmDeviceList:
 		aIPv6Addr = None
 		aIPv6Prefix = None
 		try:
-			d = self._session.request('NMC:getWANStatus')
+			d = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -305,7 +305,7 @@ class LmDeviceList:
 
 		# Get device infos from Livebox & build IP -> name map
 		try:
-			self._liveboxDevices = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+			self._liveboxDevices = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self._liveboxDevices = None
@@ -319,7 +319,7 @@ class LmDeviceList:
 
 		# Get topology infos from Livebox & build link & device maps
 		try:
-			self._liveboxTopology = self._session.request('TopologyDiagnostics:buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
+			self._liveboxTopology = self._session.request('TopologyDiagnostics', 'buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self._liveboxTopology = None
@@ -586,7 +586,7 @@ class LmDeviceList:
 
 			d = None
 			try:
-				d = self._session.request('Devices:get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+				d = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				d = None
@@ -1001,7 +1001,7 @@ class LmDeviceList:
 
 				# Get current device IP
 				try:
-					aReply = self._session.request('Devices.Device.' + iDeviceKey + ':getFirstParameter', { 'parameter': 'IPAddress' })
+					aReply = self._session.request('Devices.Device.' + iDeviceKey, 'getFirstParameter', { 'parameter': 'IPAddress' })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					aReply = None
@@ -1491,7 +1491,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 			if s['Type'] != 'wif':
 				continue
 			try:
-				aResult = self._session.request('NeMo.Intf.' + s['Key'] + ':getStationStats')
+				aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getStationStats')
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				aResult = None

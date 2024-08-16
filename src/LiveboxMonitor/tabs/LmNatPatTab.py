@@ -755,7 +755,7 @@ class LmNatPat:
 	### Load IPv4 (webui / upnp / others?) PAT rules
 	def loadIPv4PatRules(self):
 		try:
-			d = self._session.request('Firewall:getPortForwarding')
+			d = self._session.request('Firewall', 'getPortForwarding')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -806,7 +806,7 @@ class LmNatPat:
 	### Load IPv6 PAT rules
 	def loadIPv6PatRules(self):
 		try:
-			d = self._session.request('Firewall:getPinhole')
+			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1004,7 +1004,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:setPortForwarding', r)
+			aReply = self._session.request('Firewall', 'setPortForwarding', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			if not iSilent:
@@ -1048,7 +1048,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:setPinhole', r)
+			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall setPinhole query error.')
@@ -1086,7 +1086,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:deletePortForwarding', r)
+			aReply = self._session.request('Firewall', 'deletePortForwarding', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall deletePortForwarding query error.')
@@ -1112,7 +1112,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:deletePinhole', r)
+			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall deletePinhole query error.')
@@ -1139,7 +1139,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:deletePortForwarding', { 'origin': o })
+			aReply = self._session.request('Firewall', 'deletePortForwarding', { 'origin': o })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall deletePortForwarding query error.')
@@ -1187,7 +1187,7 @@ class LmNatPat:
 	### Load IPv4 PTF rules
 	def loadIPv4PtfRules(self):
 		try:
-			d = self._session.request('Firewall:getProtocolForwarding')
+			d = self._session.request('Firewall', 'getProtocolForwarding')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1236,7 +1236,7 @@ class LmNatPat:
 	### Load IPv6 PTF rules
 	def loadIPv6PtfRules(self):
 		try:
-			d = self._session.request('Firewall:getPinhole')
+			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
@@ -1408,7 +1408,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:setProtocolForwarding', r)
+			aReply = self._session.request('Firewall', 'setProtocolForwarding', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			if not iSilent:
@@ -1448,7 +1448,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:setPinhole', r)
+			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall setPinhole query error.')
@@ -1476,7 +1476,7 @@ class LmNatPat:
 	def delIPv4PtfRule(self, iRule):
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:deleteProtocolForwarding', { 'id': iRule['Name'] })
+			aReply = self._session.request('Firewall', 'deleteProtocolForwarding', { 'id': iRule['Name'] })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall deleteProtocolForwarding query error.')
@@ -1502,7 +1502,7 @@ class LmNatPat:
 
 		# Call Livebox API
 		try:
-			aReply = self._session.request('Firewall:deletePinhole', r)
+			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('Firewall deletePinhole query error.')
@@ -1522,7 +1522,7 @@ class LmNatPat:
 	### Commit Firewall rule changes, return True if successful
 	def commitNatPatRuleChange(self):
 		try:
-			aReply = self._session.request('Firewall:commit')
+			aReply = self._session.request('Firewall', 'commit')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			LmTools.Error('Firewall commit query error.')
