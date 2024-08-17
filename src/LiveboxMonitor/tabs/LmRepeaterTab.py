@@ -1015,6 +1015,9 @@ class LmRepHandler:
 		else:
 			i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(d.get('Enable')))
 			i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(d.get('Status')))
+			i = self.addInfoLine(i, lx('Mode'), d.get('EnableTarget'))
+			i = self.addInfoLine(i, lx('WPS Mode'), d.get('WPSMode'))
+			i = self.addInfoLine(i, lx('Link Type'), d.get('CurrentBackhaul'))
 			i = self.addInfoLine(i, lx('Read Only'), LmTools.FmtBool(d.get('ReadOnlyStatus')))
 			i = self.addInfoLine(i, lx('Pairing Status'), d.get('PairingStatus'))
 			i = self.addInfoLine(i, lx('PIN Code'), d.get('PINCode'))
