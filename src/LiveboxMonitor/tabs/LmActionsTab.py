@@ -404,13 +404,8 @@ class LmActions:
 			LmTools.Error('Error: PowerManagement method failed, trying legacy method.')
 			return self.schedulerOnOff_Legacy(iEnable)
 
-		# Get first Wifi interface name
-		aWifiIntf = next((i for i in LmConfig.NET_INTF if i['Type'] == 'wif'), None)
-		if aWifiIntf:
-			aID = aWifiIntf['Key']
-		else:
-			LmTools.Error('Error: cannot find a Wifi interface key.')
-			return False
+		# ID has to remain 'wl0' - it is NOT corresponding to an intf key
+		aID = 'wl0'
 
 		# Get current schedule info
 		d = self._session.request('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : aID })

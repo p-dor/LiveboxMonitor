@@ -801,14 +801,17 @@ class LmRepHandler:
 	def schedulerOnButtonClick(self):
 		if self.isSigned():
 			self._app.startTask(lx('Activating Repeater Scheduler...'))
+
+			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
 				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
+				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
 				if d is not None:
 					d = d.get('status')
-				if (d is None) or (not d):
-					self._app.displayError('Scheduler:enableSchedule service error')
-				else:
+				if d:
 					self._app.displayStatus('Scheduler activated.')
+				else:
+					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				self._app.displayError('Scheduler:enableSchedule service error')
@@ -821,14 +824,17 @@ class LmRepHandler:
 	def schedulerOffButtonClick(self):
 		if self.isSigned():
 			self._app.startTask(lx('Deactivating Repeater Scheduler...'))
+
+			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
 				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
+				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
 				if d is not None:
 					d = d.get('status')
-				if (d is None) or (not d):
-					self._app.displayError('Scheduler:enableSchedule service error')
-				else:
+				if d:
 					self._app.displayStatus('Scheduler deactivated.')
+				else:
+					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				self._app.displayError('Scheduler:enableSchedule service error')
