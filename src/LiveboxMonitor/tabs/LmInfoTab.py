@@ -1504,6 +1504,7 @@ class LmInfo:
 		u[WifiKey.AccessPoint] = 'Livebox'
 
 		# General Wifi status
+		aWifiSchedulerStatus = None
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
@@ -1517,25 +1518,49 @@ class LmInfo:
 		else:
 			u[WifiKey.Enable] = WifiStatus.Enable if d.get('Enable', False) else WifiStatus.Disable
 			u[WifiKey.Status] = WifiStatus.Enable if d.get('Status', False) else WifiStatus.Disable
+			aWifiSchedulerStatus = d.get('SchedulingEnabled')
 
 		# Wifi scheduler status
+		# First try with PowerManagement services
+		aStatus = None
 		try:
-			d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
+			d = self._session.request('PowerManagement', 'getProfiles')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			d = None
-		if (d is not None) and (d.get('status', False)):
-			d = d.get('data')
+		if d is not None:
+			d = d.get('status')
+		if d is not None:
+			d = d.get('WiFi')
+		if d is not None:
+			aStatus = d.get('Activate')
 		else:
-			d = None
-		if d is None:
-			u[WifiKey.Scheduler] = WifiStatus.Error
-		else:
-			d = d.get('scheduleInfo', [])
-			if len(d):
-				u[WifiKey.Scheduler] = WifiStatus.Enable if d[0].get('enable', False) else WifiStatus.Disable
+			# Try with Scheduler services if PowerManagement failed
+			try:
+				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				d = None
+			if (d is not None) and (d.get('status', False)):
+				d = d.get('data')
 			else:
-				u[WifiKey.Scheduler] = WifiStatus.Disable
+				d = None
+			if d is not None:
+				d = d.get('scheduleInfo', [])
+				if len(d):
+					aStatus = d[0].get('enable')
+
+		# Agregate result
+		if aStatus is None:
+			if aWifiSchedulerStatus is None:
+				u[WifiKey.Scheduler] = WifiStatus.Error
+			else:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if aWifiSchedulerStatus else WifiStatus.Disable
+		else:
+			if aWifiSchedulerStatus is None:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if aStatus else WifiStatus.Disable
+			else:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if (aStatus and aWifiSchedulerStatus) else WifiStatus.Disable
 
 		# Wifi interfaces status
 		b = None

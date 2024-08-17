@@ -380,6 +380,79 @@ class LmActions:
 
 	### Set Wifi Scheduler on or off, returns True if successful, False if failed
 	def schedulerOnOff(self, iEnable):
+		# Set PowerManagement profile
+		if iEnable:
+			p = [{ 'profile': 'WiFi',
+				   'activate': True,
+				   'type': 'Weekly',
+				   'schedules': [{
+                        'Day': 1,
+                        'Hour': 0,
+                        'Minute': 0,
+                        'Second': 0,
+                        'enable': True
+                    }]
+				}]
+			d = self._session.request('PowerManagement', 'setScheduledProfiles', { 'profiles' : p })
+		else:
+			d = self._session.request('PowerManagement', 'setProfiles', { 'profiles' : [{'profile' : 'WiFi', 'activate' : False}] })
+		if d:
+			d = d.get('status')
+		if d and (type(d).__name__ != 'dict'):
+			d = None
+		if not d:
+			LmTools.Error('Error: PowerManagement method failed, trying legacy method.')
+			return self.schedulerOnOff_Legacy(iEnable)
+
+		# Get first Wifi interface name
+		aWifiIntf = next((i for i in LmConfig.NET_INTF if i['Type'] == 'wif'), None)
+		if aWifiIntf:
+			aID = aWifiIntf['Key']
+		else:
+			LmTools.Error('Error: cannot find a Wifi interface key.')
+			return False
+
+		# Get current schedule info
+		d = self._session.request('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : aID })
+		aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+		if d:
+			aStatus = d.get('status')
+		else:
+			aStatus = False
+		if aStatus:
+			d = d.get('data')
+			if d:
+				d = d.get('scheduleInfo')
+		else:
+			d = None
+		if d:
+			aSchedule = d
+		else:
+			self.displayError('Scheduler:getSchedule service failed for {} interface.\n{}'.format(aID, aErrors))
+			return False
+
+		# Add schedule with proper status
+		p = {}
+		p['base'] = aSchedule.get('base')
+		p['def'] = aSchedule.get('def')
+		p['ID'] = aID
+		p['schedule'] = aSchedule.get('schedule')
+		p['enable'] = iEnable
+		p['override'] = ''
+		d = self._session.request('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
+		aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+		if d:
+			d = d.get('status')
+		if not d:
+			self.displayError('Scheduler:addSchedule service failed for {} interface.\n{}'.format(aID, aErrors))
+			return False
+	
+		return True
+
+
+	### Legacy method to set Wifi Scheduler on or off, returns True if successful, False if failed
+	### These calls were used by the deprecated "MaLiveBox" iOS app
+	def schedulerOnOff_Legacy(self, iEnable):
 		# First save network configuration
 		d = self._session.request('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
 		aFailed = False

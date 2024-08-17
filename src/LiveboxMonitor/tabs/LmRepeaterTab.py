@@ -1259,6 +1259,8 @@ class LmRepHandler:
 				u[WifiKey.Wifi6VAP] = WifiStatus.Unsigned
 			return u
 
+		# General Wifi status
+		aWifiSchedulerStatus = None
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
@@ -1272,8 +1274,11 @@ class LmRepHandler:
 		else:
 			u[WifiKey.Enable] = WifiStatus.Enable if d.get('Enable', False) else WifiStatus.Disable
 			u[WifiKey.Status] = WifiStatus.Enable if d.get('Status', False) else WifiStatus.Disable
+			aWifiSchedulerStatus = d.get('SchedulingEnabled')
 
+		# Wifi scheduler status
 		if self._version >= 6:		# Scheduler available only starting WR6
+			aStatus = None
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
@@ -1288,9 +1293,19 @@ class LmRepHandler:
 			else:
 				d = d.get('scheduleInfo', [])
 				if len(d):
-					u[WifiKey.Scheduler] = WifiStatus.Enable if d[0].get('enable', False) else WifiStatus.Disable
+					aStatus = d[0].get('enable')
+
+			# Agregate result
+			if aStatus is None:
+				if aWifiSchedulerStatus is None:
+					u[WifiKey.Scheduler] = WifiStatus.Error
 				else:
-					u[WifiKey.Scheduler] = WifiStatus.Disable
+					u[WifiKey.Scheduler] = WifiStatus.Enable if aWifiSchedulerStatus else WifiStatus.Disable
+			else:
+				if aWifiSchedulerStatus is None:
+					u[WifiKey.Scheduler] = WifiStatus.Enable if aStatus else WifiStatus.Disable
+				else:
+					u[WifiKey.Scheduler] = WifiStatus.Enable if (aStatus and aWifiSchedulerStatus) else WifiStatus.Disable
 
 		b = None
 		w = None
