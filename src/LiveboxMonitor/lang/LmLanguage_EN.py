@@ -134,3 +134,9 @@ TOOLTIPS = {
 	# Config - Release warning
 	'rwarn': {}
 }
+
+
+
+# ################################ MESSAGES ################################
+
+# No need - native application language

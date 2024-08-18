@@ -41,6 +41,7 @@ LANGUAGES_LOCALE = { 'FR': 'fr_FR', 'EN': 'en_US' }
 # Labels & Tooltips - to set according to current language
 LABELS = {}
 TOOLTIPS = {}
+MESSAGES = {}
 
 
 # ################################ Tools ################################
@@ -50,18 +51,20 @@ def SetLanguage(iLanguage):
 	global CURRENT_LANGUAGE
 	global LABELS
 	global TOOLTIPS
+	global MESSAGES
 
 	CURRENT_LANGUAGE = iLanguage
 	if iLanguage == 'FR':
 		LABELS = LmLanguage_FR.LABELS
 		TOOLTIPS = LmLanguage_FR.TOOLTIPS
+		MESSAGES = LmLanguage_FR.MESSAGES
 	elif iLanguage == 'EN':
 		TOOLTIPS = LmLanguage_EN.TOOLTIPS
 	else:
 		TOOLTIPS = LmLanguage_EN.TOOLTIPS
 
 
-# Get EN label translation
+# Get label translation
 def GetLabel(iKey, iString):
 	if CURRENT_LANGUAGE == 'EN':
 		return iString
@@ -71,6 +74,20 @@ def GetLabel(iKey, iString):
 # Get item tooltip
 def GetToolTip(iKey, iItemKey):
 	return TOOLTIPS[iKey].get(iItemKey)
+
+
+# Get message translation from an ID formated as Key:MessageKey
+def GetMessage(iID):
+	print('ID = ' + str(iID))
+	if iID and (CURRENT_LANGUAGE != 'EN'):
+		k = iID.split(':')
+		if len(k) >= 2:
+			print('Keys = ' + str(k))
+			e = MESSAGES.get(k[0])
+			if e:
+				print('Found e')
+				return e.get(k[1])
+	return None
 
 
 

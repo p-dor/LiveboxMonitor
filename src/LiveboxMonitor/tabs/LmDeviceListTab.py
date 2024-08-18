@@ -211,7 +211,8 @@ class LmDeviceList:
 
 	### Click on assign names button
 	def assignNamesButtonClick(self):
-		if self.askQuestion('This will assign the Livebox name as the local name for all unknown devices. Continue?'):
+		if self.askQuestion('This will assign the Livebox name as the local name for all unknown devices. Continue?',
+							'dlist:aName'):
 			self.assignLBNamesToUnkownDevices()
 
 
@@ -321,7 +322,7 @@ class LmDeviceList:
 		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if self._liveboxDevices is None:
-			self.displayError('Error getting device list.')
+			self.displayError('Error getting device list.', 'dlist:dlistErr')
 		else:
 			self.buildDeviceIpNameMap()
 			self._deviceIpNameMapDirty = False
@@ -335,7 +336,7 @@ class LmDeviceList:
 		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		if self._liveboxTopology is None:
-			self.displayError('Error getting device topology.')
+			self.displayError('Error getting device topology.', 'dlist:topoErr')
 		else:
 			self.buildLinkMaps()
 
@@ -592,7 +593,7 @@ class LmDeviceList:
 	def proposeToAssignNamesToUnkownDevices(self):
 		if not LmConf.MacAddrTable:
 			if self.askQuestion('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
-								'You can still do that action later.'):
+								'You can still do that action later.', 'dlist:aNameStartup'):
 				self.assignLBNamesToUnkownDevices()
 
 
@@ -622,7 +623,7 @@ class LmDeviceList:
 				d = d.get('status')
 			if d is None:
 				self.endTask()
-				self.displayError('Error getting device list.')
+				self.displayError('Error getting device list.', 'dlist:dlistErr')
 				return
 			self._liveboxDevices = d
 

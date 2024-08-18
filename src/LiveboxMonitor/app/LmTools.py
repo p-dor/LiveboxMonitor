@@ -14,7 +14,7 @@ from email.message import EmailMessage
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.lang import LmLanguages
-from LiveboxMonitor.lang.LmLanguages import GetToolsLabel as lx
+from LiveboxMonitor.lang.LmLanguages import GetMessage, GetToolsLabel as lx
 
 
 # ################################ VARS & DEFS ################################
@@ -80,30 +80,33 @@ def LogDebug(iLevel, *iArgs):
 
 
 ### Display an error popup
-def DisplayError(iErrorMsg, iParent = None):
+def DisplayError(iErrorMsg, iKey = None, iParent = None):
 	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Error'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-	aMsgBox.setText(iErrorMsg)
+	m = GetMessage(iKey)
+	aMsgBox.setText(m if m else iErrorMsg)
 	aMsgBox.exec()
 
 
 ### Display a status popup
-def DisplayStatus(iStatusMsg, iParent = None):
+def DisplayStatus(iStatusMsg, iKey = None, iParent = None):
 	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Status'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Information)
-	aMsgBox.setText(iStatusMsg)
+	m = GetMessage(iKey)
+	aMsgBox.setText(m if m else iStatusMsg)
 	aMsgBox.exec()
 
 
 ### Ask a question and return True if OK clicked
-def AskQuestion(iQuestionMsg, iParent = None):
+def AskQuestion(iQuestionMsg, iKey = None, iParent = None):
 	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Please confirm'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Question)
 	aMsgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
-	aMsgBox.setText(iQuestionMsg)
+	m = GetMessage(iKey)
+	aMsgBox.setText(m if m else iQuestionMsg)
 	return aMsgBox.exec() == QtWidgets.QMessageBox.StandardButton.Ok
 
 

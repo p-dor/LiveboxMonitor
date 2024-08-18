@@ -300,7 +300,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self.show()
 					continue
 				else:
-					self.displayError('Cannot connect to the Livebox.')
+					self.displayError('Cannot connect to the Livebox.', 'main:cnx')
 					return False
 
 			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, self)
@@ -311,7 +311,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:
-				self.displayError('Livebox authentication failed.')
+				self.displayError('Livebox authentication failed.', 'main:auth')
 				return False
 
 
@@ -473,23 +473,23 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 
 	# Display an error popup
-	def displayError(self, iErrorMsg):
+	def displayError(self, iErrorMsg, iKey = None):
 		self.suspendTask()
-		LmTools.DisplayError(iErrorMsg, self)
+		LmTools.DisplayError(iErrorMsg, iKey, self)
 		self.resumeTask()
 
 
 	# Display a status popup
-	def displayStatus(self, iStatusMsg):
+	def displayStatus(self, iStatusMsg, iKey = None):
 		self.suspendTask()
-		LmTools.DisplayStatus(iStatusMsg, self)
+		LmTools.DisplayStatus(iStatusMsg, iKey, self)
 		self.resumeTask()
 
 
 	# Ask a question and return True if OK clicked
-	def askQuestion(self, iQuestionMsg):
+	def askQuestion(self, iQuestionMsg, iKey = None):
 		self.suspendTask()
-		aAnswer = LmTools.AskQuestion(iQuestionMsg, self)
+		aAnswer = LmTools.AskQuestion(iQuestionMsg, iKey, self)
 		self.resumeTask()
 		return aAnswer
 

@@ -1627,3 +1627,27 @@ TOOLTIPS = {
 		'nowarning': 'Cliquez ici pour ne plus être averti concernant cette version.'
 	}
 }
+
+
+
+
+# ################################ MESSAGES ################################
+
+MESSAGES = {
+	# Main window
+	'main': {
+		'cnx': 'Impossible de se connecter à la Livebox.',
+		'auth': 'L\'authentification à la Livebox a échoué.'
+	},
+
+	# Device list
+	'dlist': {
+		'dlistErr': 'Erreur lors du chargement de la liste des appareils.',
+		'topoErr': 'Erreur lors du chargement de la topologie des appareils.',
+		'aName': 'Cela attribuera à tous les appareils inconnus le même nom local que celui '
+				 'attribué dans la Livebox. Continuer ?',
+		'aNameStartup': 'Faites-vous confiance à tous les appareils connectés et souhaitez-vous '
+						'tous les nommer en fonction de leur nom attribué dans la Livebox ?\n'
+						'Vous pouvez toujours effectuer cette action plus tard.'
+	}
+}
