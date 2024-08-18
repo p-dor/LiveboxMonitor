@@ -19,6 +19,7 @@ LABELS = {
 		'RxRate': 'TauxRx',
 		'TxRate': 'TauxTx',
 		'Refresh': 'Rafraîchir',
+		'Assign Names...': 'Assigner Noms...',
 		'Device Infos': 'Infos Appareil',
 		'Device Events': 'Événements Appareil',
 		'Device List': 'Appareils',
@@ -28,6 +29,8 @@ LABELS = {
 		'<None>': '<Aucun>',
 		'Unknown': 'Inconnu',
 		'UNKNOWN': 'INCONNU',
+		'Assigning names to unknown devices...': 'Attribution de nom aux appareils inconnus...',
+		'Loading devices information...': 'Chargement des informations sur les appareils...',
 		'Guest 2.4GHz': 'Invité 2.4GHz',
 		'Guest 5GHz': 'Invité 5GHz'
 	},
@@ -957,6 +960,7 @@ TOOLTIPS = {
 		'refresh': 'Force le rafraîchissement de la liste des appareils, dans cet onglet mais aussi dans les onglets "Infos Appareil" et "Événements".\n'
 				   'Utile par exemple si le programme est actif alors que l\'ordinateur sort de veille : des événements ayant probablement\n'
 				   'été raté par le programme, un rafraîchissement permettra de retrouver une vue à jour.',
+		'assignNames': 'Assigne à tous les appareils inconnus un nom local équivalent à celui connu de la Livebox.',
 		'deviceInfo': 'Bascule dans l\'onglet "Infos Appareil" pour l\'appareil sélectionné afin de voir directement ses informations.',
 		'deviceEvents': 'Bascule dans l\'onglet "Événements" pour l\'appareil sélectionné afin de voir directement les événements reçus le concernant.',
 		'ipv6': 'Permet d\'avoir le statut d\'activation de l\'IPv6, l\'adresse IPv6 de la Livebox ainsi que son préfixe,\n'

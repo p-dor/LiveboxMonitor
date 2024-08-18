@@ -89,6 +89,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			# Force tag change tasks once app is ready
 			self.tabChangedEvent(self._tabWidget.currentIndex())
 
+			# Propose to assign local names as LB name if no name base setup yet
+			self.proposeToAssignNamesToUnkownDevices()
+
 
 	### Create main window
 	def initUI(self):

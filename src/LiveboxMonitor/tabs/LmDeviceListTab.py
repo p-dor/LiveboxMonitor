@@ -120,6 +120,9 @@ class LmDeviceList:
 		aRefreshDeviceListButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refresh')
 		aRefreshDeviceListButton.clicked.connect(self.refreshDeviceListButtonClick)
 		aHBox.addWidget(aRefreshDeviceListButton)
+		aAssignNamesButton = QtWidgets.QPushButton(lx('Assign Names...'), objectName = 'assignNames')
+		aAssignNamesButton.clicked.connect(self.assignNamesButtonClick)
+		aHBox.addWidget(aAssignNamesButton)
 		aDeviceInfoButton = QtWidgets.QPushButton(lx('Device Infos'), objectName = 'deviceInfo')
 		aDeviceInfoButton.clicked.connect(self.deviceInfoButtonClick)
 		aHBox.addWidget(aDeviceInfoButton)
@@ -204,6 +207,12 @@ class LmDeviceList:
 		self._eventList.setRowCount(0)
 		LmConf.loadMacAddrTable()
 		self.loadDeviceList()
+
+
+	### Click on assign names button
+	def assignNamesButtonClick(self):
+		if self.askQuestion('This will assign the Livebox name as the local name for all unknown devices. Continue?'):
+			self.assignLBNamesToUnkownDevices()
 
 
 	### Click on device infos button
@@ -577,6 +586,25 @@ class LmDeviceList:
 			aList.append(aDevice)
 			i += 1
 		return aList
+
+
+	### Propose to assign LB names to all unknown devices
+	def proposeToAssignNamesToUnkownDevices(self):
+		if not LmConf.MacAddrTable:
+			if self.askQuestion('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
+								'You can still do that action later.'):
+				self.assignLBNamesToUnkownDevices()
+
+
+	### Assign LB names to all unknown devices
+	def assignLBNamesToUnkownDevices(self):
+		self.startTask(lx('Assigning names to unknown devices...'))
+		aDeviceList = self.getDeviceList()
+		for d in aDeviceList:
+			aLocalName = LmConf.MacAddrTable.get(d['MAC'])
+			if not aLocalName:
+				self.setDeviceName(d['MAC'], d['LBName'])
+		self.endTask()
 
 
 	### Load device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map if need to be refreshed

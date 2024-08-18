@@ -146,7 +146,7 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
-			aName = LmConf.MacAddrTable.get(aKey, None)
+			aName = LmConf.MacAddrTable.get(aKey)
 
 			aSetDeviceNameDialog = SetDeviceNameDialog(aKey, aName, self._currentDeviceLiveboxName, self._currentDeviceDnsName, self)
 			if (aSetDeviceNameDialog.exec()):
@@ -177,8 +177,8 @@ class LmDeviceInfo:
 
 	### Set a device name stored in the the MacAddr table
 	def setDeviceName(self, iDeviceKey, iDeviceName):
-		aCurrentName = LmConf.MacAddrTable.get(iDeviceKey, None)
-		if (aCurrentName is None) or (aCurrentName != iDeviceName):
+		aCurrentName = LmConf.MacAddrTable.get(iDeviceKey)
+		if aCurrentName != iDeviceName:
 			LmConf.MacAddrTable[iDeviceKey] = iDeviceName
 			LmConf.saveMacAddrTable()
 			self.updateDeviceName(iDeviceKey)
@@ -411,7 +411,7 @@ class LmDeviceInfo:
 		i = self.addInfoLine(self._infoAList, i, lx('Last changed'), LmTools.FmtLiveboxTimestamp(d.get('LastChanged')))
 		i = self.addInfoLine(self._infoAList, i, lx('Source'), d.get('DiscoverySource'))
 
-		self._currentDeviceLiveboxName = d.get('Name', None)
+		self._currentDeviceLiveboxName = d.get('Name')
 		i = self.addInfoLine(self._infoAList, i, lx('Livebox Name'), self._currentDeviceLiveboxName)
 
 		self._currentDeviceDnsName = None
