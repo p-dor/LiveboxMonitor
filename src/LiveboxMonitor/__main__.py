@@ -475,21 +475,21 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	# Display an error popup
 	def displayError(self, iErrorMsg):
 		self.suspendTask()
-		LmTools.DisplayError(iErrorMsg)
+		LmTools.DisplayError(iErrorMsg, self)
 		self.resumeTask()
 
 
 	# Display a status popup
 	def displayStatus(self, iStatusMsg):
 		self.suspendTask()
-		LmTools.DisplayStatus(iStatusMsg)
+		LmTools.DisplayStatus(iStatusMsg, self)
 		self.resumeTask()
 
 
 	# Ask a question and return True if OK clicked
 	def askQuestion(self, iQuestionMsg):
 		self.suspendTask()
-		aAnswer = LmTools.AskQuestion(iQuestionMsg)
+		aAnswer = LmTools.AskQuestion(iQuestionMsg, self)
 		self.resumeTask()
 		return aAnswer
 
@@ -497,7 +497,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	# Display an info text popup
 	def displayInfos(self, iTitle, iInfoMsg, iInfoDoc = None):
 		self.suspendTask()
-		LmTools.DisplayInfos(iTitle, iInfoMsg, iInfoDoc)
+		LmTools.DisplayInfos(iTitle, iInfoMsg, iInfoDoc, self)
 		self.resumeTask()
 
 

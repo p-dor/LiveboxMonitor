@@ -80,8 +80,8 @@ def LogDebug(iLevel, *iArgs):
 
 
 ### Display an error popup
-def DisplayError(iErrorMsg):
-	aMsgBox = QtWidgets.QMessageBox()
+def DisplayError(iErrorMsg, iParent = None):
+	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Error'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Critical)
 	aMsgBox.setText(iErrorMsg)
@@ -89,8 +89,8 @@ def DisplayError(iErrorMsg):
 
 
 ### Display a status popup
-def DisplayStatus(iStatusMsg):
-	aMsgBox = QtWidgets.QMessageBox()
+def DisplayStatus(iStatusMsg, iParent = None):
+	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Status'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Information)
 	aMsgBox.setText(iStatusMsg)
@@ -98,8 +98,8 @@ def DisplayStatus(iStatusMsg):
 
 
 ### Ask a question and return True if OK clicked
-def AskQuestion(iQuestionMsg):
-	aMsgBox = QtWidgets.QMessageBox()
+def AskQuestion(iQuestionMsg, iParent = None):
+	aMsgBox = QtWidgets.QMessageBox(iParent)
 	aMsgBox.setWindowTitle(lx('Please confirm'))
 	aMsgBox.setIcon(QtWidgets.QMessageBox.Icon.Question)
 	aMsgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
@@ -108,8 +108,8 @@ def AskQuestion(iQuestionMsg):
 
 
 ### Display an info text popup
-def DisplayInfos(iTitle, iInfoMsg, iInfoDoc = None):
-	aTextDialog = TextDialog()
+def DisplayInfos(iTitle, iInfoMsg, iInfoDoc = None, iParent = None):
+	aTextDialog = TextDialog(iParent)
 	aTextDialog.display(iTitle, iInfoMsg, iInfoDoc)
 	aTextDialog.exec()
 
@@ -448,8 +448,8 @@ class CenteredIconHeaderView(QtWidgets.QHeaderView):
 
 # ############# Display text dialog #############
 class TextDialog(QtWidgets.QDialog):
-	def __init__(self, parent = None):
-		super(TextDialog, self).__init__(parent)
+	def __init__(self, iParent = None):
+		super(TextDialog, self).__init__(iParent)
 
 		aVbox = QtWidgets.QVBoxLayout(self)
 
@@ -471,7 +471,7 @@ class TextDialog(QtWidgets.QDialog):
 			self._textBox.setDocument(aTextDoc)
 		else:
 			self._textBox.setDocument(iDoc)
-		self.setGeometry(200, 200, 800, 500)
+		self.resize(800, 500)
 		self.setModal(True)
 		self.show()
 
