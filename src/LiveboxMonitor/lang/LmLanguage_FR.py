@@ -1630,7 +1630,6 @@ TOOLTIPS = {
 
 
 
-
 # ################################ MESSAGES ################################
 
 MESSAGES = {
@@ -1649,5 +1648,144 @@ MESSAGES = {
 		'aNameStartup': 'Faites-vous confiance à tous les appareils connectés et souhaitez-vous '
 						'tous les nommer en fonction de leur nom attribué dans la Livebox ?\n'
 						'Vous pouvez toujours effectuer cette action plus tard.'
+	},
+
+	# Livebox infos
+	'info': {
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.'
+	},
+
+	# Graph
+	'graph': {
+		'lineSelect': 'Vous devez sélectionner une ligne.',
+		'noGraph': 'Aucun graphe à exporter.',
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.'
+	},
+
+	# Device infos
+	'dinfo': {	
+		'devSelect': 'Vous devez sélectionner un appareil.',
+		'devBlocked': 'L\'appareil {} est maintenant bloqué.',
+		'devUnblocked': 'L\'appareil {} est maintenant débloqué.',
+		'devNotBlocked': 'L\'appareil {} n\'est pas bloqué.',
+		'devInfoErr': 'Impossible d\'obtenir les informations sur l\'appareil.'
+	},
+
+	# Events
+	'events': {
+		'devSelect': 'Vous devez sélectionner un appareil.',
+		'evtSelect': 'Vous devez sélectionner un événement.',
+		'evtNotFound': 'Entrée de l\'événement non trouvée.',
+		'email': 'Vous avez configuré au moins une règle avec l\'envoi d\'emails comme action '
+				 'mais vous n\'avez pas configuré comment envoyer des e-mails. '
+				 'Voulez-vous configurer la façon d\'envoyer des emails ?',
+		'macErr': '{} n\'est pas une adresse MAC valide.',
+		'logDirExist': 'Le répertoire des fichiers journaliers configuré n\'existe pas. '
+					   'Voulez-vous le créer ?',
+		'logDirErr': 'Impossible de créer le répertoire des fichiers journaliers. '
+					 'Erreur : {}.'
+	},
+
+	# DHCP
+	'dhcp': {
+		'dhcpSelect': 'Vous devez sélectionner un bail DHCP.',
+		'dhcpLoad': 'Impossible d\'obtenir les informations DHCP.',
+		'deactiv': 'La désactivation du serveur DHCP est susceptible de déconnecter vos appareils '
+				   'domestiques. Continuer ?',
+		'addrChange': 'En modifiant l\'adresse IP de votre Livebox et les autres paramètres du serveur DHCP, '
+					  'vous risquez de perdre tous vos services. Les adresses IP statiques devront être '
+					  'redéfinies selon le nouveau plan d\'adressage et il faudra vous reconnecter. Continuer ?',
+		'dhcpValErr': 'Mauvaises valeurs. Erreur : {}',
+		'bindLoad': 'Impossible de charger les baux DHCP pour le domaine {}.'
+	},
+
+	# NAT/PAT
+	'natpat': {
+		'delAllPat': 'Toutes les règles sélectionnées ont été supprimées.',
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.',
+		'ruleExport': '{} règles ont été exportées.',
+		'openFileErr': 'Impossible d\'ouvrir le fichier.',
+		'fileFormatErr': 'Mauvais format de fichier.',
+		'fileTypeErr': 'Mauvais type de fichier.',
+		'closeFileErr': 'Impossible de fermer le fichier.',
+		'ruleImport': '{} règles ont été importées.',
+		'ruleDel': '{} règles ont été supprimées.',
+		'patLoadErr': 'Impossible de charger les règles de redirection de port IPv4.',
+		'ptfLoadErr': 'Impossible de charger les règles de redirection de protocole IPv4.',
+		'ipv6AddrErr': '{} n\'est pas une adresse IPv6 valide.',
+		'ipv4AddrErr': '{} n\'est pas une adresse IPv4 valide.',
+		'emptyAddr': 'Adresse IP vide'
+	},
+
+	# Phone
+	'phone': {
+		'callSelect': 'Vous devez sélectionner un appel téléphonique.',
+		'delAllCalls': 'Êtes-vous sûr de vouloir supprimer tous les appels téléphoniques ?',
+		'callLoad': 'Impossible de charger la liste des appels téléphoniques.',
+		'contactSelect': 'Vous devez sélectionner un contact.',
+		'delAllContacts': 'Êtes-vous sûr de vouloir supprimer tous les contacts ?',
+		'ring': 'Le téléphone devrait sonner.',
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.',
+		'contactLoad': 'Imposible de charger la liste des contacts.',
+		'contactMax': 'Le nombre maximum de contacts a été atteint.',
+		'contactGet': 'Impossible de charger le contact.'
+	},
+
+	# Actions
+	'actions': {
+		'wifiOn': 'Wifi activé.',
+		'wifiOff': 'Wifi désactivé.',
+		'gwifiOn': 'Wifi invité activé. Réactivez le Planificateur si requis.',
+		'gwifiOff': 'Wifi invité désactivé.',
+		'schedOn': 'Planificateur activé.',
+		'schedOnErr': 'Impossible d\'activer le planificateur.',
+		'schedOff': 'Planificateur désactivé.',
+		'schedOffErr': 'Impossible de désactiver le planificateur.',
+		'lbReboot': 'Etes-vous sûr de vouloir redémarrer la Livebox ?',
+		'appQuit': 'L\'application va maintenant se fermer.',
+		'dynDnsLoadErr': 'Impossible de charger la liste des domaines DynDNS.',
+		'dynDnsSvcErr': 'Impossible de charger la liste des services DynDNS.',
+		'dynDnsDelErr': 'Impossible de supprimer ce domaine DynDNS.',
+		'dynDnsHostName': 'Le nom de domaine {} est déjà utilisé',
+		'dynDnsEnableErr': 'Impossible d\'obtenir l\'état d\'activation global du DynDNS.',
+		'dmzLoadErr': 'Impossible de charger la liste des appareils dans la DMZ.',
+		'dmzDelErr': 'Impossible de supprimer cet appareil de la DMZ.'
+	},
+
+	# Repeater
+	'repeater': {
+		'cnxErr': 'Impossible de se connecter au répéteur {} ({}).',
+		'noSign': 'Non connecté au répéteur.',
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.',
+		'wifiOn': 'Wifi activé (problement seulement 5GHz).',
+		'wifiOff': 'Wifi désactivé (problement seulement 5GHz).',
+		'schedOn': 'Planificateur activé.',
+		'schedOff': 'Planificateur désactivé.',
+		'reboot': 'Etes-vous sûr de vouloir redémarrer le répéteur ?',
+		'rebooting': 'Le répéteur est maintenant en train de redémarrer.',
+		'resign': 'Êtes-vous sûr de vouloir vous reconnecter au répéteur ?',
+		'forceResign': 'Le répéteur est inactif. Voulez-vous forcer la connexion ?'
+	},
+
+	# # Config
+	'prefs': {
+		'wrongFile': 'Le fichier de configuration {} est corrompu. Réinitialiser ?',
+		'configVersion': 'Cette version de l\'application est plus ancienne que le fichier '
+						 'de configuration. Si vous continuez, vous risquez de perdre une '
+						 'partie de la configuration. Êtes-vous sûr de vouloir continuer ?',
+		'keyFileErr': 'Impossible de lire le fichier contenant la clef d\'encryption.',
+		'configFolderErr': 'Impossible de créer le répertoire de configuration.',
+		'profileNameErr': 'Ce nom est déjà utilisé.',
+		'wrongMacFile': 'Le fichier {} est corrompu, impossible de charger les noms d\'appareils.',
+		'profileName': 'Veuillez définir le nom du profil.',
+		'profileDup': 'Ce nom existe déjà.',
+		'profileOne': 'Vous devez avoir au moins un profil.',
+		'emailSuccess': 'Message envoyé avec succès.',
+		'emailFail': 'Échec de l\'envoi du message. Vérifiez votre configuration.'
 	}
 }
