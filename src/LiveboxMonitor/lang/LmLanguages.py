@@ -31,7 +31,7 @@ from LiveboxMonitor.lang import LmLanguage_EN, LmLanguage_FR
 # ################################ VARS & DEFS ################################
 
 # Current language
-CURRENT_LANGUAGE = 'EN'
+CURRENT_LANGUAGE = 'FR'
 
 # Supported languages
 LANGUAGES_KEY = [ 'FR', 'EN' ]
@@ -39,9 +39,9 @@ LANGUAGES_NAME = [ 'Français', 'English']
 LANGUAGES_LOCALE = { 'FR': 'fr_FR', 'EN': 'en_US' }
 
 # Labels & Tooltips - to set according to current language
-LABELS = {}
-TOOLTIPS = {}
-MESSAGES = {}
+LABELS = LmLanguage_FR.LABELS
+TOOLTIPS = LmLanguage_FR.TOOLTIPS
+MESSAGES = LmLanguage_FR.MESSAGES
 
 
 # ################################ Tools ################################
@@ -76,18 +76,12 @@ def GetToolTip(iKey, iItemKey):
 	return TOOLTIPS[iKey].get(iItemKey)
 
 
-# Get message translation from an ID formated as Key:MessageKey
-def GetMessage(iID):
-	print('ID = ' + str(iID))
-	if iID and (CURRENT_LANGUAGE != 'EN'):
-		k = iID.split(':')
-		if len(k) >= 2:
-			print('Keys = ' + str(k))
-			e = MESSAGES.get(k[0])
-			if e:
-				print('Found e')
-				return e.get(k[1])
-	return None
+# Get message translation
+def GetMessage(iKey, iString, iItemKey):
+	if CURRENT_LANGUAGE == 'EN':
+		return iString
+	m = MESSAGES[iKey].get(iItemKey)
+	return m if m else iString
 
 
 
@@ -95,45 +89,55 @@ def GetMessage(iID):
 
 # Main
 def GetMainLabel(iString): return GetLabel('main', iString)
+def GetMainMessage(iString, iKey): return GetMessage('main', iString, iKey)
 
 # Device list
 def GetDeviceListLabel(iString): return GetLabel('dlist', iString)
+def GetDeviceListMessage(iString, iKey): return GetMessage('dlist', iString, iKey)
 def GetIPv6DialogLabel(iString): return GetLabel('ipv6', iString)
 def GetDnsDialogLabel(iString): return GetLabel('dns', iString)
 
 # Livebox infos
 def GetInfoLabel(iString): return GetLabel('info', iString)
+def GetInfoMessage(iString, iKey): return GetMessage('info', iString, iKey)
 
 # Graph
 def GetGraphLabel(iString): return GetLabel('graph', iString)
+def GetGraphMessage(iString, iKey): return GetMessage('graph', iString, iKey)
 def GetAddGraphDialogLabel(iString): return GetLabel('addgraph', iString)
 
 # Device infos
 def GetDeviceInfoLabel(iString): return GetLabel('dinfo', iString)
+def GetDeviceInfoMessage(iString, iKey): return GetMessage('dinfo', iString, iKey)
 def GetDeviceNameDialogLabel(iString): return GetLabel('dname', iString)
 def GetDeviceTypeDialogLabel(iString): return GetLabel('dtype', iString)
 
 # Events
 def GetEventsLabel(iString): return GetLabel('events', iString)
+def GetEventsMessage(iString, iKey): return GetMessage('events', iString, iKey)
 def GetNotificationRulesLabel(iString): return GetLabel('evnrules', iString)
 
 # DHCP
 def GetDhcpLabel(iString): return GetLabel('dhcp', iString)
+def GetDhcpMessage(iString, iKey): return GetMessage('dhcp', iString, iKey)
 def GetDhcpBindingDialogLabel(iString): return GetLabel('dbinding', iString)
 def GetDhcpSetupDialogLabel(iString): return GetLabel('dsetup', iString)
 
 # NAT/PAT
 def GetNatPatLabel(iString): return GetLabel('natpat', iString)
+def GetNatPatMessage(iString, iKey): return GetMessage('natpat', iString, iKey)
 def GetPatRuleDialogLabel(iString): return GetLabel('patrule', iString)
 def GetPtfRuleDialogLabel(iString): return GetLabel('ptfrule', iString)
 def GetNatPatRuleTypeDialogLabel(iString): return GetLabel('nprtype', iString)
 
 # Phone
 def GetPhoneLabel(iString): return GetLabel('phone', iString)
+def GetPhoneMessage(iString, iKey): return GetMessage('phone', iString, iKey)
 def GetPhoneContactDialogLabel(iString): return GetLabel('pcontact', iString)
 
 # Actions
 def GetActionsLabel(iString): return GetLabel('actions', iString)
+def GetActionsMessage(iString, iKey): return GetMessage('actions', iString, iKey)
 def GetActionsRHistoryDialogLabel(iString): return GetLabel('rhistory', iString)
 def GetActionsWGlobalDialogLabel(iString): return GetLabel('wglobal', iString)
 def GetActionsFirewallLevelDialogLabel(iString): return GetLabel('fwlevel', iString)
@@ -143,9 +147,11 @@ def GetActionsDmzDialogLabel(iString): return GetLabel('dmz', iString)
 
 # Repeater
 def GetRepeaterLabel(iString): return GetLabel('repeater', iString)
+def GetRepeaterMessage(iString, iKey): return GetMessage('repeater', iString, iKey)
 
 # Config
 def GetConfigPrefsDialogLabel(iString): return GetLabel('prefs', iString)
+def GetConfigMessage(iString, iKey): return GetMessage('prefs', iString, iKey)
 def GetConfigCnxDialogLabel(iString): return GetLabel('cnx', iString)
 def GetConfigSigninDialogLabel(iString): return GetLabel('signin', iString)
 def GetConfigEmailDialogLabel(iString): return GetLabel('email', iString)
