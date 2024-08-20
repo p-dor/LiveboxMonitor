@@ -11,6 +11,7 @@ import pyqtgraph as pg
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import (GetGraphLabel as lx,
+											 GetGraphMessage as mx,
 											 GetAddGraphDialogLabel as lgx)
 
 
@@ -267,7 +268,7 @@ class LmGraph:
 		if aCurrentSelection >= 0:
 			self._graphList.removeRow(aCurrentSelection)
 		else:
-			self.displayError('Please select a line.')
+			self.displayError(mx('Please select a line.', 'lineSelect'))
 
 
 	### Click on apply button
@@ -302,7 +303,7 @@ class LmGraph:
 				for o in self._graphData:
 					self.exportGraphObject(aFolder, o)
 		else:
-			self.displayError('No graph to export.')
+			self.displayError(mx('No graph to export.', 'noGraph'))
 
 
 	### Export a graph object to a file
@@ -320,7 +321,7 @@ class LmGraph:
 				continue
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
-				self.displayError('Cannot create the file.')
+				self.displayError(mx('Cannot create the file.', 'createFileErr'))
 				return
 			break
 
@@ -348,7 +349,7 @@ class LmGraph:
 			aExportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Cannot save the file.')
+			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 
 	### Load stats parameters
@@ -357,7 +358,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan', 'getReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('HomeLan getReadingInterval query error.')
+			self.displayError('HomeLan:getReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:
@@ -369,7 +370,7 @@ class LmGraph:
 			aReply = self._session.request('HomeLan', 'getDevicesReadingInterval')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('HomeLan getDevicesReadingInterval query error.')
+			self.displayError('HomeLan:getDevicesReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:

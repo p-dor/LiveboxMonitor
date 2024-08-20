@@ -9,7 +9,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf
-from LiveboxMonitor.lang.LmLanguages import GetPhoneLabel as lx, GetPhoneContactDialogLabel as lcx
+from LiveboxMonitor.lang.LmLanguages import (GetPhoneLabel as lx,
+											 GetPhoneMessage as mx,
+											 GetPhoneContactDialogLabel as lcx)
 
 
 # ################################ VARS & DEFS ################################
@@ -253,12 +255,12 @@ class LmPhone:
 			else:
 				self.displayError('Phone call delete query failed.')
 		else:
-			self.displayError('Please select a phone call.')
+			self.displayError(mx('Please select a phone call.', 'callSelect'))
 
 
 	### Click on delete all calls button
 	def deleteAllCallsButtonClick(self):
-		if self.askQuestion('Are you sure you want to delete all phone calls?'):
+		if self.askQuestion(mx('Are you sure you want to delete all phone calls?', 'delAllCalls')):
 			self.startTask(lx('Deleting phone call list...'))
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
@@ -330,7 +332,7 @@ class LmPhone:
 		if aCallList is not None:
 			aCallList = aCallList.get('status')
 		if aCallList is None:
-			self.displayError('Error getting phone call list.')
+			self.displayError(mx('Error getting phone call list.', 'callLoad'))
 		else:
 			i = 0
 			for c in aCallList:
@@ -440,7 +442,7 @@ class LmPhone:
 		if aCurrentSelection >= 0:
 			self.editContactDialog(aCurrentSelection)
 		else:
-			self.displayError('Please select a contact.')
+			self.displayError(mx('Please select a contact.', 'contactSelect'))
 
 
 	### Click on delete contact button
@@ -463,12 +465,12 @@ class LmPhone:
 			else:
 				self.displayError('Contact delete query failed.')
 		else:
-			self.displayError('Please select a contact.')
+			self.displayError(mx('Please select a contact.', 'contactSelect'))
 
 
 	### Click on delete all contacts button
 	def deleteAllContactsButtonClick(self):
-		if self.askQuestion('Are you sure you want to delete all contacts?'):
+		if self.askQuestion(mx('Are you sure you want to delete all contacts?', 'delAllContacts')):
 			self.startTask(lx('Deleting contact list...'))
 			try:
 				aReply = self._session.request('Phonebook', 'removeAllContacts')
@@ -504,7 +506,7 @@ class LmPhone:
 		if d is None:
 			self.displayError('Ring service error.')
 		else:
-			self.displayStatus('Phone should be ringing.')
+			self.displayStatus(mx('Phone should be ringing.', 'ring'))
 
 
 	### Click on export contacts button
@@ -518,7 +520,7 @@ class LmPhone:
 			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Cannot create the file.')
+			self.displayError(mx('Cannot create the file.', 'createFileErr'))
 			return
 
 		self.startTask(lx('Exporting all contacts...'))
@@ -527,7 +529,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			self.displayError('Error getting contact list.')
+			self.displayError(mx('Error getting contact list.', 'contactLoad'))
 		else:
 			for c in aContactList:
 				aContact = self.decodeLiveboxContact(c)
@@ -548,7 +550,7 @@ class LmPhone:
 			aExportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Cannot save the file.')
+			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 
 	### Click on import contacts button
@@ -741,7 +743,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			self.displayError('Error getting contact list.')
+			self.displayError(mx('Error getting contact list.', 'contactLoad'))
 		else:
 			i = 0
 			for c in aContactList:
@@ -877,7 +879,7 @@ class LmPhone:
 		if (aReply is not None) and ('status' in aReply):
 			aKey = aReply['status']
 			if aKey is None:
-				self.displayError('Max number of contacts reached.')
+				self.displayError(mx('Max number of contacts reached.', 'contactMax'))
 				return False
 			iContact['key'] = aReply['status']
 			return True
@@ -898,7 +900,7 @@ class LmPhone:
 			self.displayError('Contact query error.')
 			return
 		if (aReply is None) or ('status' not in aReply):
-			self.displayError('Cannot retrieve contact from Livebox.')
+			self.displayError(mx('Cannot retrieve contact.', 'contactGet'))
 			return
 		aLBContact = aReply['status']
 		aContact = self.decodeLiveboxContact(aLBContact)

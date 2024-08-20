@@ -12,6 +12,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
 from LiveboxMonitor.lang.LmLanguages import (GetDeviceListLabel as lx,
+											 GetDeviceListMessage as mx,
 											 GetIPv6DialogLabel as lix,
 											 GetDnsDialogLabel as ldx)
 
@@ -211,8 +212,7 @@ class LmDeviceList:
 
 	### Click on assign names button
 	def assignNamesButtonClick(self):
-		if self.askQuestion('This will assign the Livebox name as the local name for all unknown devices. Continue?',
-							'dlist:aName'):
+		if self.askQuestion(mx('This will assign the Livebox name as the local name for all unknown devices. Continue?', 'aName')):
 			self.assignLBNamesToUnkownDevices()
 
 
@@ -322,7 +322,7 @@ class LmDeviceList:
 		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if self._liveboxDevices is None:
-			self.displayError('Error getting device list.', 'dlist:dlistErr')
+			self.displayError(mx('Error getting device list.', 'dlistErr'))
 		else:
 			self.buildDeviceIpNameMap()
 			self._deviceIpNameMapDirty = False
@@ -336,7 +336,7 @@ class LmDeviceList:
 		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		if self._liveboxTopology is None:
-			self.displayError('Error getting device topology.', 'dlist:topoErr')
+			self.displayError(mx('Error getting device topology.', 'topoErr'))
 		else:
 			self.buildLinkMaps()
 
@@ -592,8 +592,8 @@ class LmDeviceList:
 	### Propose to assign LB names to all unknown devices
 	def proposeToAssignNamesToUnkownDevices(self):
 		if not LmConf.MacAddrTable:
-			if self.askQuestion('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
-								'You can still do that action later.', 'dlist:aNameStartup'):
+			if self.askQuestion(mx('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
+								   'You can still do that action later.', 'aNameStartup')):
 				self.assignLBNamesToUnkownDevices()
 
 
@@ -623,7 +623,7 @@ class LmDeviceList:
 				d = d.get('status')
 			if d is None:
 				self.endTask()
-				self.displayError('Error getting device list.', 'dlist:dlistErr')
+				self.displayError(mx('Error getting device list.', 'dlistErr'))
 				return
 			self._liveboxDevices = d
 

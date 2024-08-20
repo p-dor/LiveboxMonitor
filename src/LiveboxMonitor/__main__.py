@@ -17,7 +17,7 @@ from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLivebox
 from LiveboxMonitor.app.LmSession import LmSession
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
 								 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx
+from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx, GetMainMessage as mx
 
 from LiveboxMonitor.__init__ import __version__
 
@@ -300,7 +300,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self.show()
 					continue
 				else:
-					self.displayError('Cannot connect to the Livebox.', 'main:cnx')
+					self.displayError(mx('Cannot connect to the Livebox.', 'cnx'))
 					return False
 
 			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, self)
@@ -311,7 +311,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:
-				self.displayError('Livebox authentication failed.', 'main:auth')
+				self.displayError(mx('Livebox authentication failed.', 'auth'))
 				return False
 
 
@@ -473,23 +473,23 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 
 	# Display an error popup
-	def displayError(self, iErrorMsg, iKey = None):
+	def displayError(self, iErrorMsg):
 		self.suspendTask()
-		LmTools.DisplayError(iErrorMsg, iKey, self)
+		LmTools.DisplayError(iErrorMsg, self)
 		self.resumeTask()
 
 
 	# Display a status popup
-	def displayStatus(self, iStatusMsg, iKey = None):
+	def displayStatus(self, iStatusMsg):
 		self.suspendTask()
-		LmTools.DisplayStatus(iStatusMsg, iKey, self)
+		LmTools.DisplayStatus(iStatusMsg, self)
 		self.resumeTask()
 
 
 	# Ask a question and return True if OK clicked
-	def askQuestion(self, iQuestionMsg, iKey = None):
+	def askQuestion(self, iQuestionMsg):
 		self.suspendTask()
-		aAnswer = LmTools.AskQuestion(iQuestionMsg, iKey, self)
+		aAnswer = LmTools.AskQuestion(iQuestionMsg, self)
 		self.resumeTask()
 		return aAnswer
 

@@ -12,6 +12,7 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
 from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
+											 GetActionsMessage as mx,
 											 GetActionsRHistoryDialogLabel as lrx,
 											 GetActionsWGlobalDialogLabel as lwx,
 											 GetActionsFirewallLevelDialogLabel as lfx,
@@ -304,7 +305,7 @@ class LmActions:
 			if (d is None) or (not d):
 				self.displayError('NMC.Wifi:set service failed.')
 			else:
-				self.displayStatus('Wifi activated.')
+				self.displayStatus(mx('Wifi activated.', 'wifiOn'))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('NMC.Wifi:set service error.')
@@ -321,7 +322,7 @@ class LmActions:
 			if (d is None) or (not d):
 				self.displayError('NMC.Wifi:set service failed.')
 			else:
-				self.displayStatus('Wifi deactivated.')
+				self.displayStatus(mx('Wifi deactivated.', 'wifiOff'))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('NMC.Wifi:set service error.')
@@ -336,7 +337,7 @@ class LmActions:
 			if d is None:
 				self.displayError('NMC.Guest:set service failed.')
 			else:
-				self.displayStatus('Guest Wifi activated. Reactivate Scheduler if required.')
+				self.displayStatus(mx('Guest Wifi activated. Reactivate Scheduler if required.', 'gwifiOn'))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('NMC.Guest:set service error.')
@@ -351,7 +352,7 @@ class LmActions:
 			if d is None:
 				self.displayError('NMC.Guest:set service failed.')
 			else:
-				self.displayStatus('Guest Wifi deactivated.')
+				self.displayStatus(mx('Guest Wifi deactivated.', 'gwifiOff'))
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
 			self.displayError('NMC.Guest:set service error.')
@@ -362,9 +363,9 @@ class LmActions:
 	def schedulerOnButtonClick(self):
 		self.startTask(lx('Activating Wifi Scheduler...'))
 		if self.schedulerOnOff(True):
-			self.displayStatus('Scheduler activated.')
+			self.displayStatus(mx('Scheduler activated.', 'schedOn'))
 		else:
-			self.displayStatus('Something failed while trying to activate the scheduler.')
+			self.displayStatus(mx('Something failed while trying to activate the scheduler.', 'schedOnErr'))
 		self.endTask()
 
 
@@ -372,9 +373,9 @@ class LmActions:
 	def schedulerOffButtonClick(self):
 		self.startTask(lx('Deactivating Wifi Scheduler...'))
 		if self.schedulerOnOff(False):
-			self.displayStatus('Scheduler deactivated.')
+			self.displayStatus(mx('Scheduler deactivated.', 'schedOff'))
 		else:
-			self.displayError('Something failed while trying to deactivate the scheduler.')
+			self.displayError(mx('Something failed while trying to deactivate the scheduler.', 'schedOffErr'))
 		self.endTask()
 
 
@@ -542,7 +543,7 @@ class LmActions:
 
 	### Click on Reboot Livebox button
 	def rebootLiveboxButtonClick(self):
-		if self.askQuestion('Are you sure you want to reboot the Livebox?'):
+		if self.askQuestion(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
 			self.startTask(lx('Rebooting Livebox...'))
 			try:
 				r = self._session.request('NMC', 'reboot', { 'reason': 'GUI_Reboot' })
@@ -550,7 +551,7 @@ class LmActions:
 					self.displayError('NMC:reboot service failed.')
 				else:
 					self.endTask()
-					self.displayStatus('Application will now quit.')
+					self.displayStatus(mx('Application will now quit.', 'appQuit'))
 					self.close()
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
@@ -588,7 +589,7 @@ class LmActions:
 			aReply = self._session.request('Firewall', 'getFirewallLevel')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Firewall getFirewallLevel query error.')
+			self.displayError('Firewall:getFirewallLevel query error.')
 			return
 
 		if (aReply is not None) and ('status' in aReply):
@@ -598,7 +599,7 @@ class LmActions:
 				return
 			aFirewallIPv4Level = aReply['status']
 		else:
-			self.displayError('Firewall getFirewallLevel query failed.')
+			self.displayError('Firewall:getFirewallLevel query failed.')
 			return
 
 		# Get current IPv6 firewall level
@@ -606,7 +607,7 @@ class LmActions:
 			aReply = self._session.request('Firewall', 'getFirewallIPv6Level')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Firewall getFirewallIPv6Level query error.')
+			self.displayError('Firewall:getFirewallIPv6Level query error.')
 			return
 
 		if (aReply is not None) and ('status' in aReply):
@@ -616,7 +617,7 @@ class LmActions:
 				return
 			aFirewallIPv6Level = aReply['status']
 		else:
-			self.displayError('Firewall getFirewallIPv6Level query failed.')
+			self.displayError('Firewall:getFirewallIPv6Level query failed.')
 			return
 
 		aFirewallLevelDialog = FirewallLevelDialog(aFirewallIPv4Level, aFirewallIPv6Level, self)
@@ -630,16 +631,16 @@ class LmActions:
 					aReply = self._session.request('Firewall', 'setFirewallLevel', { 'level': aNewFirewallIPv4Level })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					self.displayError('Firewall setFirewallLevel query error.')
+					self.displayError('Firewall:setFirewallLevel query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
 						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 						if len(aErrors):
 							self.displayError(aErrors)
 						elif not aReply['status']:
-							self.displayError('Firewall setFirewallLevel query failed.')
+							self.displayError('Firewall:setFirewallLevel query failed.')
 					else:
-						self.displayError('Firewall setFirewallLevel query failed.')
+						self.displayError('Firewall:setFirewallLevel query failed.')
 
 			# Set new IPv6 firewall level if changed
 			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
@@ -648,16 +649,16 @@ class LmActions:
 					aReply = self._session.request('Firewall', 'setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					self.displayError('Firewall setFirewallIPv6Level query error.')
+					self.displayError('Firewall:setFirewallIPv6Level query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
 						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 						if len(aErrors):
 							self.displayError(aErrors)
 						elif not aReply['status']:
-							self.displayError('Firewall setFirewallIPv6Level query failed.')
+							self.displayError('Firewall:setFirewallIPv6Level query failed.')
 					else:
-						self.displayError('Firewall setFirewallIPv6Level query failed.')
+						self.displayError('Firewall:setFirewallIPv6Level query failed.')
 
 			self.endTask()
 
@@ -671,7 +672,7 @@ class LmActions:
 			aReply = self._session.request('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Firewall getRespondToPing query error.')
+			self.displayError('Firewall:getRespondToPing query error.')
 			return
 
 		if (aReply is not None) and ('status' in aReply):
@@ -684,10 +685,10 @@ class LmActions:
 			aIPv4Ping = aReply.get('enableIPv4')
 			aIPv6Ping = aReply.get('enableIPv6')
 			if (aIPv4Ping is None) or (aIPv6Ping is None):
-				self.displayError('Firewall getRespondToPing query failed.')
+				self.displayError('Firewall:getRespondToPing query failed.')
 				return
 		else:
-			self.displayError('Firewall getRespondToPing query failed.')
+			self.displayError('Firewall:getRespondToPing query failed.')
 			return
 
 		aPingResponseDialog = PingResponseDialog(aIPv4Ping, aIPv6Ping, self)
@@ -705,16 +706,16 @@ class LmActions:
 					aReply = self._session.request('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					self.displayError('Firewall setRespondToPing query error.')
+					self.displayError('Firewall:setRespondToPing query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
 						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 						if len(aErrors):
 							self.displayError(aErrors)
 						elif not aReply['status']:
-							self.displayError('Firewall setRespondToPing query failed.')
+							self.displayError('Firewall:setRespondToPing query failed.')
 					else:
-						self.displayError('Firewall setRespondToPing query failed.')
+						self.displayError('Firewall:setRespondToPing query failed.')
 
 				self.endTask()
 
@@ -1249,7 +1250,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			self._app.displayError('Cannot load DynDNS host list.')
+			self._app.displayError(mx('Cannot load DynDNS host list.', 'dynDnsLoadErr'))
 			return
 
 		i = 0
@@ -1293,7 +1294,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None or not len(d):
-			self._app.displayError('Cannot load DynDNS services.')
+			self._app.displayError(mx('Cannot load DynDNS services.', 'dynDnsSvcErr'))
 			return
 
 		for s in d:
@@ -1345,7 +1346,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None or not d:
-			self._app.displayError('Cannot delete DynDNS host.')
+			self._app.displayError(mx('Cannot delete DynDNS host.', 'dynDnsDelErr'))
 			return
 
 		# Delete the list line
@@ -1368,7 +1369,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		n = self._hostList.rowCount()
 		while (i < n):
 			if self._hostList.item(i, HostCol.HostName).text() == aHostName:
-				self._app.displayError('Host name {} is already used.'.format(aHostName))
+				self._app.displayError(mx('Host name {} is already used.', 'dynDnsHostName').format(aHostName))
 				return
 			i += 1
 
@@ -1384,7 +1385,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 			d = self._app._session.request('DynDNS', 'addHost', h)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self._app.displayError('DynDNS addHost query error.')
+			self._app.displayError('DynDNS:addHost query error.')
 			return
 
 		if (d is not None) and ('status' in d):
@@ -1397,7 +1398,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 			self._hostName.setText('')
 			self._password.setText('')
 		else:
-			self._app.displayError('DynDNS addHost query failed.')
+			self._app.displayError('DynDNS:addHost query failed.')
 
 
 	### Get global enable status
@@ -1410,7 +1411,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			LmTools.Error('Cannot get DynDNS global enable status.')
+			LmTools.Error(mx('Cannot get DynDNS global enable status.', 'dynDnsEnableErr'))
 			return False
 		return d
 
@@ -1588,7 +1589,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			self._app.displayError('Cannot load DMZ device list.')
+			self._app.displayError(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
 			return
 
 		i = 0
@@ -1651,7 +1652,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		if d is not None:
 			d = d.get('status')
 		if d is None or not d:
-			self._app.displayError('Cannot delete DMZ device.')
+			self._app.displayError(mx('Cannot delete DMZ device.', 'dmzDelErr'))
 			return
 
 		# Delete the list line
@@ -1681,7 +1682,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 			d = self._app._session.request('Firewall', 'setDMZ', h)
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self._app.displayError('Firewall setDMZ query error.')
+			self._app.displayError('Firewall:setDMZ query error.')
 			return
 
 		if (d is not None) and ('status' in d):
@@ -1694,7 +1695,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 			self._ip.setText('')
 			self._extIPs.setPlainText('')
 		else:
-			self._app.displayError('Firewall setDMZ query failed.')
+			self._app.displayError('Firewall:setDMZ query failed.')
 
 
 	def loadDeviceList(self):

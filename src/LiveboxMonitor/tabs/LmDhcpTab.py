@@ -11,6 +11,7 @@ from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
 from LiveboxMonitor.lang.LmLanguages import (GetDhcpLabel as lx,
+											 GetDhcpMessage as mx,
 											 GetDhcpBindingDialogLabel as lbx,
 											 GetDhcpSetupDialogLabel as lsx)
 
@@ -235,7 +236,7 @@ class LmDhcp:
 			else:
 				self.displayError('DHCP binding delete query failed.')
 		else:
-			self.displayError('Please select a DHCP binding.')
+			self.displayError(mx('Please select a DHCP binding.', 'dhcpSelect'))
 
 
 	### Click on refresh DHCP attributes button
@@ -270,7 +271,7 @@ class LmDhcp:
 			(aDHCPMask is None) or
 			(aDHCPMinAddress is None) or
 			(aDHCPMaxAddress is None)):
-			self.displayError('Cannot retrieve DHCP information.')
+			self.displayError(mx('Cannot retrieve DHCP information.', 'dhcpLoad'))
 			return
 
 		# Ask user
@@ -287,7 +288,8 @@ class LmDhcp:
 			# Warn in case of DHCP disabling
 			if (not aNewDHCPEnabled) and (aDHCPEnabled):
 				aChange = True
-				if not self.askQuestion('Deactivating the DHCP server is likely to disconnect your home devices. Continue?'):
+				if not self.askQuestion(mx('Deactivating the DHCP server is likely to disconnect your home devices. Continue?',
+										   'deactiv')):
 					return
 
 			# Warn in case of address changes
@@ -296,9 +298,9 @@ class LmDhcp:
 				(aNewDHCPMinAddress != aDHCPMinAddress) or
 				(aNewDHCPMaxAddress != aDHCPMaxAddress)):
 				aChange = True
-				if not self.askQuestion('Modifying the IP address of your Livebox and the other settings of the DHCP server, ' \
-										'may interrupt all your services. You will need to redefine the static IP addresses ' \
-										'according to the new addressing plan. Continue?'):
+				if not self.askQuestion(mx('Modifying the IP address of your Livebox and the other settings of the DHCP server, ' \
+										   'may interrupt all your services. You will need to redefine the static IP addresses ' \
+										   'according to the new addressing plan. Continue?', 'addrChange')):
 					return
 
 			if aChange:
@@ -308,7 +310,7 @@ class LmDhcp:
 					aNetwork = IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aNewDHCPMask)
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
-					self.displayError('Wrong values. Error: {}'.format(e))
+					self.displayError(mx('Wrong values. Error: {}', 'dhcpValErr').format(e))
 					return
 				aNewDHCPPrefixLen = aNetwork.prefixlen
 
@@ -369,7 +371,7 @@ class LmDhcp:
 	### Load DHCP bindings in the list
 	def loadDhcpBindingsInList(self, iBindings, iDomain):
 		if iBindings is None:
-			self.displayError('Cannot load ' + iDomain + ' DHCP bindings.')
+			self.displayError(mx('Cannot load {} DHCP bindings.', 'bindLoad').format(iDomain))
 			return
 
 		i = self._dhcpDList.rowCount()

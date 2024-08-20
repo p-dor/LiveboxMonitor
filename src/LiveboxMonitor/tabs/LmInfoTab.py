@@ -9,7 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.tabs.LmActionsTab import WifiKey, WifiStatus
-from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx
+from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx, GetInfoMessage as mx
 
 
 # ################################ VARS & DEFS ################################
@@ -542,7 +542,7 @@ class LmInfo:
 			self._exportFile = open(aFileName, 'w')
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Cannot create the file.')
+			self.displayError(mx('Cannot create the file.', 'createFileErr'))
 			return
 
 		self.startTask(lx('Exporting all information...'))
@@ -564,7 +564,7 @@ class LmInfo:
 			self._exportFile.close()
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			self.displayError('Cannot save the file.')
+			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 		self._exportFile = None
 

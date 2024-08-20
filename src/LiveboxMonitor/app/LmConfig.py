@@ -19,6 +19,7 @@ from LiveboxMonitor.app.LmSession import DEFAULT_TIMEOUT
 from LiveboxMonitor.app.LmSession import LmSession
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
+											 GetConfigMessage as mx,
 											 GetConfigCnxDialogLabel as lcx,
 											 GetConfigSigninDialogLabel as lsx,
 											 GetConfigEmailDialogLabel as lex,
@@ -553,31 +554,33 @@ class LmConf:
 			aDirtyConfig = True
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			if LmTools.AskQuestion('Wrong {} file, fully reset it?'.format(CONFIG_FILE)):
+			if LmTools.AskQuestion(mx('Wrong {} file, fully reset it?', 'wrongFile').format(CONFIG_FILE)):
 				aDirtyConfig = True
 			else:
 				if aConfigFile is not None:
 					aConfigFile.close()
 				return False
 		else:
-			# Check if config version is more recent than the application
-			aConfigVersion = aConfig.get('Version', 0)
-			if aConfigVersion > __build__:
-				if not LmTools.AskQuestion('This version of the application is older than the configuration file.\n'
-										   'If you continue you might lose some setup.\n'
-										   'Are you sure you want to continue?'):
-					return False
-
-			# Potentially convert the format to newer version
-			aDirtyConfig = LmConf.convert(aConfig)
-
-			# Load all configs
+			# Try to load language as soon as possible
 			p = aConfig.get('Language')
 			if p is not None:
 				LmConf.Language = str(p)
 				if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
 					LmConf.Language = DCFG_LANGUAGE
 			LmLanguages.SetLanguage(LmConf.Language)
+
+			# Check if config version is more recent than the application
+			aConfigVersion = aConfig.get('Version', 0)
+			if aConfigVersion > __build__:
+				if not LmTools.AskQuestion(mx('This version of the application is older than the configuration file.\n'
+											  'If you continue you might lose some setup.\n'
+											  'Are you sure you want to continue?', 'configVersion')):
+					return False
+
+			# Potentially convert the format to newer version
+			aDirtyConfig = LmConf.convert(aConfig)
+
+			# Load all configs
 			p = aConfig.get('Profiles')
 			if p is not None:
 				LmConf.Profiles = p
@@ -701,7 +704,7 @@ class LmConf:
 			aKey = None
 		except BaseException as e:
 			LmTools.Error('Error: {}'.format(e))
-			LmTools.DisplayError('Cannot read key file.')
+			LmTools.DisplayError(mx('Cannot read key file.', 'keyFileErr'))
 			if aKeyFile is not None:
 				aKeyFile.close()
 				return False
@@ -721,7 +724,7 @@ class LmConf:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
 				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
-				LmTools.DisplayError('Cannot create configuration folder.')
+				LmTools.DisplayError(mx('Cannot create configuration folder.', 'configFolderErr'))
 				return False
 
 		# Create key file
@@ -833,7 +836,7 @@ class LmConf:
 				if q is None:
 					break
 				else:
-					LmTools.DisplayError('This name is already used.')
+					LmTools.DisplayError(mx('This name is already used.', 'profileNameErr'))
 			else:
 				return False
 
@@ -1090,7 +1093,7 @@ class LmConf:
 		except OSError:		# No file
 			LmConf.MacAddrTable = {}
 		except BaseException as e:
-			LmTools.DisplayError('Wrong {} file format, cannot use.'.format(LmConf.MacAddrTableFile))
+			LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongMacFile').format(LmConf.MacAddrTableFile))
 			LmConf.MacAddrTable = {}
 
 
@@ -1868,11 +1871,11 @@ class PrefsDialog(QtWidgets.QDialog):
 		# Check if name is not duplicated
 		aProfileName = self._profileName.text()
 		if len(aProfileName) == 0:
-			LmTools.DisplayError('Please set profile name.')
+			LmTools.DisplayError(mx('Please set profile name.', 'profileName'))
 			return False
 
 		if self.countProfileName(aProfileName) > 1:
-			LmTools.DisplayError('Duplicated name.')
+			LmTools.DisplayError(mx('Duplicated name.', 'profileDup'))
 			return False
 
 		# If default profile is selected, set all others to false
@@ -1930,7 +1933,7 @@ class PrefsDialog(QtWidgets.QDialog):
 	### Click on delete profile button
 	def delProfileButtonClick(self):
 		if len(self._profiles) == 1:
-			LmTools.DisplayError('You must have at least one profile.')
+			LmTools.DisplayError(mx('You must have at least one profile.', 'profileOne'))
 			return
 
 		# Delete the list line
@@ -2120,9 +2123,9 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		a.startTask(lex('Sending test email...'))
 		c = self.getSetup()
 		if LmTools.SendEmail(c, lex('Test Message'), lex('This is a test email from LiveboxMonitor.')):
-			a.displayStatus('Message sent successfully.')
+			a.displayStatus(mx('Message sent successfully.', 'emailSuccess'))
 		else:
-			a.displayError('Message send failure. Check your setup.')
+			a.displayError(mx('Message send failure. Check your setup.', 'emailFail'))
 		a.endTask()
 
 

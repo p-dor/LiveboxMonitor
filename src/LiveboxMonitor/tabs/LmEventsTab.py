@@ -15,6 +15,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.lang.LmLanguages import (GetEventsLabel as lx,
+											 GetEventsMessage as mx,
 											 GetNotificationRulesLabel as lnx)
 
 
@@ -233,9 +234,9 @@ class LmEvents:
 			self.stopNotificationTimer()
 			self.startNotificationTimer()
 			if LmEvents.notifyHasEmailRule() and (LmConf.Email is None):
-				if LmTools.AskQuestion('You have configured at least one rule with sending emails as an action but '
-									   'you have not configured how to send emails. '
-									   'Do you want to configure how to send emails?'):
+				if LmTools.AskQuestion(mx('You have configured at least one rule with sending emails as an action but '
+										  'you have not configured how to send emails. '
+										  'Do you want to configure how to send emails?', 'email')):
 					self.emailSetupButtonClick()
 
 
@@ -243,14 +244,14 @@ class LmEvents:
 	def displayEventButtonClick(self):
 		aCurrDeviceSelection = self._eventDList.currentRow()
 		if aCurrDeviceSelection < 0:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 			return
 
 		aDeviceKey = self._eventDList.item(aCurrDeviceSelection, DSelCol.Key).text()
 
 		aCurrEventSelection = self._eventList.currentRow()
 		if aCurrEventSelection < 0:
-			self.displayError('No event selected.')
+			self.displayError(mx('No event selected.', 'evtSelect'))
 			return
 
 		aEventKey = int(self._eventList.item(aCurrEventSelection, EventCol.Key).text())
@@ -260,7 +261,7 @@ class LmEvents:
 		# Retrieve event entry in the array
 		e = next((e for e in aEventArray if e['Key'] == aEventKey), None)
 		if e is None:
-			self.displayError('Event entry not found.')
+			self.displayError(mx('Event entry not found.', 'evtNotFound'))
 			return
 
 		# Display event entry
@@ -1236,7 +1237,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 			if k != NOTIF_EVENT_DEVICE_ALL and k != NOTIF_EVENT_DEVICE_UNKNOWN:
 				m = self._macEdit.text()
 				if not LmTools.IsMACAddr(m):
-						self.parent().displayError('{} is not a valid MAC address.'.format(m))
+						self.parent().displayError(mx('{} is not a valid MAC address.', 'macErr').format(m))
 						self._macEdit.setFocus()
 						return False
 		return True
@@ -1350,12 +1351,12 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		# Create directory if doesn't exist
 		p = self._eventFilePath.text()
 		if not os.path.isdir(p):
-			if LmTools.AskQuestion('Configured log file directory does not exist. Do you want to create it?'):
+			if LmTools.AskQuestion(mx('Configured log file directory does not exist. Do you want to create it?', 'logDirExist')):
 				try:
 					os.makedirs(p)
 				except BaseException as e:
 					LmTools.Error('Cannot create log file directory. Error: {}'.format(e))
-					LmTools.DisplayError('Cannot create log file directory.\nError: {}.'.format(e))
+					LmTools.DisplayError(mx('Cannot create log file directory.\nError: {}.', 'logDirErr').format(e))
 					return False
 			else:
 				return False

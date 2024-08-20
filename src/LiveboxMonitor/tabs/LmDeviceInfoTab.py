@@ -12,6 +12,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
 from LiveboxMonitor.lang.LmLanguages import (GetDeviceInfoLabel as lx,
+											 GetDeviceInfoMessage as mx,
 											 GetDeviceNameDialogLabel as lnx,
 											 GetDeviceTypeDialogLabel as ltx)
 
@@ -172,7 +173,7 @@ class LmDeviceInfo:
 				if aLbSuccess or aDnsSuccess:
 					self.infoDeviceListClick()
 		else:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 
 
 	### Set a device name stored in the the MacAddr table
@@ -260,7 +261,7 @@ class LmDeviceInfo:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Set type query error.')
 		else:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on forget device button
@@ -281,7 +282,7 @@ class LmDeviceInfo:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Destroy device query error.')
 		else:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on block device button
@@ -307,7 +308,7 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus('Device ' + aKey + ' now blocked.')
+						self.displayStatus(mx('Device {} now blocked.', 'devBlocked').format(aKey))
 					else:
 						LmTools.Error('Error: {}'.format(aReply))
 						self.displayError('Block query failed.')
@@ -325,7 +326,7 @@ class LmDeviceInfo:
 					aInfos['override'] = 'Disable'
 					aReply = self._session.request('Scheduler', 'addSchedule', { 'type': 'ToD', 'info': aInfos })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus('Device ' + aKey + ' now blocked.')
+						self.displayStatus(mx('Device {} now blocked.', 'devBlocked').format(aKey))
 					else:
 						LmTools.Error('Error: {}'.format(aReply))
 						self.displayError('Block query failed.')
@@ -333,7 +334,7 @@ class LmDeviceInfo:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Block query error.')
 		else:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on unblock device button
@@ -359,16 +360,16 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus('Device ' + aKey + ' now unblocked.')
+						self.displayStatus(mx('Device {} now unblocked.', 'devUnblocked').format(aKey))
 					else:
 						self.displayError('Unblock query failed.')
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Unblock query error.')
 			else:
-				self.displayStatus('Device ' + aKey + ' is not blocked.')
+				self.displayStatus(mx('Device {} is not blocked.', 'devNotBlocked').format(aKey))
 		else:
-			self.displayError('Please select a device.')
+			self.displayError(mx('Please select a device.', 'devSelect'))
 
 
 	### Update device infos list
@@ -384,7 +385,7 @@ class LmDeviceInfo:
 			d = d.get('status')
 		if (d is None):
 			self.endTask()
-			self.displayError('Error getting device information.')
+			self.displayError(mx('Error getting device information.', 'devInfoErr'))
 			return
 
 		i = 0
