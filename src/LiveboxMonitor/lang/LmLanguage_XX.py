@@ -1688,3 +1688,153 @@ TOOLTIPS = {
 		'nowarning': ''
 	}
 }
+
+
+
+# ################################ MESSAGES ################################
+
+MESSAGES = {
+	# Main window
+	'main': {
+		'cnx': '',
+		'auth': '',
+	},
+
+	# Device list
+	'dlist': {
+		'dlistErr': '',
+		'topoErr': '',
+		'aName': '',
+		'aNameStartup':  ''
+	},
+
+	# Livebox infos
+	'info': {
+		'createFileErr':  '',
+		'saveFileErr':  ''
+	},
+
+	# Graph
+	'graph': {
+		'lineSelect':  '',
+		'noGraph':  '',
+		'createFileErr':  '',
+		'saveFileErr':  ''
+	},
+
+	# Device infos
+	'dinfo': {	
+		'devSelect':  '',
+		'devBlocked':  '',
+		'devUnblocked':  '',
+		'devNotBlocked':  '',
+		'devInfoErr':  ''
+	},
+
+	# Events
+	'events': {
+		'devSelect':  '',
+		'evtSelect':  '',
+		'evtNotFound':  '',
+		'email':  '',
+		'macErr':  '',
+		'logDirExist':  '',
+		'logDirErr':  ''
+	},
+
+	# DHCP
+	'dhcp': {
+		'dhcpSelect':  '',
+		'dhcpLoad':  '',
+		'deactiv':  '',
+		'addrChange':  '',
+		'dhcpValErr':  '',
+		'bindLoad':  ''
+	},
+
+	# NAT/PAT
+	'natpat': {
+		'delAllPat':  '',
+		'createFileErr':  '',
+		'saveFileErr':  '',
+		'ruleExport':  '',
+		'openFileErr':  '',
+		'fileFormatErr':  '',
+		'fileTypeErr':  '',
+		'closeFileErr':  '',
+		'ruleImport':  '',
+		'ruleDel':  '',
+		'patLoadErr':  '',
+		'ptfLoadErr':  '',
+		'ipv6AddrErr':  '',
+		'ipv4AddrErr':  '',
+		'emptyAddr':  ''
+	},
+
+	# Phone
+	'phone': {
+		'callSelect':  '',
+		'delAllCalls':  '',
+		'callLoad':  '',
+		'contactSelect':  '',
+		'delAllContacts':  '',
+		'ring':  '',
+		'createFileErr':  '',
+		'saveFileErr':  '',
+		'contactLoad':  '',
+		'contactMax':  '',
+		'contactGet':  ''
+	},
+
+	# Actions
+	'actions': {
+		'wifiOn':  '',
+		'wifiOff':  '',
+		'gwifiOn':  '',
+		'gwifiOff':  '',
+		'schedOn':  '',
+		'schedOnErr':  '',
+		'schedOff':  '',
+		'schedOffErr':  '',
+		'lbReboot':  '',
+		'appQuit':  '',
+		'dynDnsLoadErr':  '',
+		'dynDnsSvcErr':  '',
+		'dynDnsDelErr':  '',
+		'dynDnsHostName':  '',
+		'dynDnsEnableErr':  '',
+		'dmzLoadErr':  '',
+		'dmzDelErr':  ''
+	},
+
+	# Repeater
+	'repeater': {
+		'cnxErr':  '',
+		'noSign':  '',
+		'createFileErr': '',
+		'saveFileErr':  '',
+		'wifiOn':  '',
+		'wifiOff':  '',
+		'schedOn':  '',
+		'schedOff':  '',
+		'reboot':  '',
+		'rebooting':  '',
+		'resign':  '',
+		'forceResign':  ''
+	},
+
+	# # Config
+	'prefs': {
+		'wrongFile':  '',
+		'configVersion':  '',
+		'keyFileErr':  '',
+		'configFolderErr':  '',
+		'profileNameErr':  '',
+		'wrongMacFile':  '',
+		'profileName':  '',
+		'profileDup':  '',
+		'profileOne':  '',
+		'emailSuccess':  '',
+		'emailFail':  ''
+	}
+}
