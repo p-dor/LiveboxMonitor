@@ -1119,6 +1119,7 @@ TOOLTIPS = {
 				  'Il disparaîtra donc immédiatement de toutes les listes.\n'
 				  'Attention si l\'appareil en question est actif, sa connexion ne sera nullement suspendue,\n'
 				  'cependant toute son activité restera invisible et ce jusqu\'à sa prochaine tentative de connexion.',
+		'wol': 'Permet d\'envoyer un signal de réveil sur réseau (WOL) à l\'appareil sélectionné.',
 		'block': 'Permet de bloquer la connexion de l\'appareil sélectionné.',
 		'unblock': 'Permet de débloquer la connexion de l\'appareil sélectionné.\n'
 				   'L\'état bloqué ou non s\'affiche dans les informations de l\'appareil, champs "Bloqué".'
@@ -1667,6 +1668,7 @@ MESSAGES = {
 	# Device infos
 	'dinfo': {	
 		'devSelect': 'Vous devez sélectionner un appareil.',
+		'devWOL': 'Signal de réveil sur réseau envoyé à l\'appareil {}.',
 		'devBlocked': 'L\'appareil {} est maintenant bloqué.',
 		'devUnblocked': 'L\'appareil {} est maintenant débloqué.',
 		'devNotBlocked': 'L\'appareil {} n\'est pas bloqué.',

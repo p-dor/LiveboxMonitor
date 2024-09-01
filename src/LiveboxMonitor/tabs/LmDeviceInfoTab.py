@@ -98,6 +98,9 @@ class LmDeviceInfo:
 		aForgetButton = QtWidgets.QPushButton(lx('Forget...'), objectName = 'forget')
 		aForgetButton.clicked.connect(self.forgetButtonClick)
 		aButtonsBox.addWidget(aForgetButton)
+		aWolButton = QtWidgets.QPushButton(lx('WakeOnLAN'), objectName = 'wol')
+		aWolButton.clicked.connect(self.wolButtonClick)
+		aButtonsBox.addWidget(aWolButton)
 		aBlockDeviceButton = QtWidgets.QPushButton(lx('Block'), objectName = 'block')
 		aBlockDeviceButton.clicked.connect(self.blockDeviceButtonClick)
 		aButtonsBox.addWidget(aBlockDeviceButton)
@@ -260,6 +263,24 @@ class LmDeviceInfo:
 				except BaseException as e:
 					LmTools.Error('Error: {}'.format(e))
 					self.displayError('Set type query error.')
+		else:
+			self.displayError(mx('Please select a device.', 'devSelect'))
+
+
+	### Click on WakeOnLAN button
+	def wolButtonClick(self):
+		aCurrentSelection = self._infoDList.currentRow()
+		if aCurrentSelection >= 0:
+			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+			try:
+				aReply = self._session.request('WOL', 'sendWakeOnLan', { 'hostID': aKey, 'broadcast': True })
+				if (aReply is not None) and ('status' in aReply):
+					self.displayStatus(mx('Wake on LAN signal sent to device {}.', 'devWOL').format(aKey))
+				else:
+					self.displayError('WOL query failed.')
+			except BaseException as e:
+				LmTools.Error('Error: {}'.format(e))
+				self.displayError('WOL query error.')
 		else:
 			self.displayError(mx('Please select a device.', 'devSelect'))
 

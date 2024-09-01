@@ -359,6 +359,7 @@ L'onglet `Infos Appareil` propose les boutons suivants :
 
     Il est possible de sélectionner un des types standards connus par la Livebox dans le menu, chaque type étant affiché avec son icône Livebox correspondante. Lorsqu'un type standard est sélectionné, son nom connu par la Livebox est automatiquement rempli dans la zone de texte et on peut valider le dialogue. Il reste possible d'assigner manuellement un type non connu par la Livebox en le tapant directement dans la zone de texte. Note : bien que le type "Djingo Speaker" soit référencé comme standard par la Livebox 5, ce type ne semble pas (encore ?) supporté par l'interface graphique de la Livebox.
 - **`Oublier...`** : permet de demander à la Livebox d'oublier définitivement cet appareil. Il disparaîtra donc immédiatement de toutes les listes. Attention si l'appareil en question est actif, sa connexion ne sera nullement suspendue, cependant toute son activité restera invisible et ce jusqu'à sa prochaine tentative de connexion.
+- **`WakeOnLAN`** : permet d\'envoyer un signal de réveil sur réseau à l'appareil sélectionné. Celui-ci doit être configuré pour s'allumer à la réception de ce signal (option WOL) pour que cela fonctionne.
 - **`Bloquer`** : permet de bloquer la connexion de l'appareil sélectionné.
 - **`Débloquer`** : permet de débloquer la connexion de l'appareil sélectionné. L'état bloqué ou non s'affiche dans les informations de l'appareil, champs "Bloqué".
 

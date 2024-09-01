@@ -358,6 +358,7 @@ LABELS = {
 		'Assign Name...': '',
 		'Assign Type...': '',
 		'Forget...': '',
+		'WakeOnLAN': '',
 		'Block': '',
 		'Unblock': '',
 		'Device Infos': '',
@@ -1174,6 +1175,7 @@ TOOLTIPS = {
 		'assignName': '',
 		'assignType': '',
 		'forget': '',
+		'wol': '',
 		'block': '',
 		'unblock': ''
 	},
@@ -1725,6 +1727,7 @@ MESSAGES = {
 	# Device infos
 	'dinfo': {	
 		'devSelect':  '',
+		'devWOL': '',
 		'devBlocked':  '',
 		'devUnblocked':  '',
 		'devNotBlocked':  '',
