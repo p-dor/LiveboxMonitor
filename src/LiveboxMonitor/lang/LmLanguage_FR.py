@@ -548,6 +548,7 @@ LABELS = {
 		'Time': 'Heure',
 		'Number': 'Numéro',
 		'Duration': 'Durée',
+		'SpamCheck': 'Spam ?',
 		'Refresh': 'Rafraîchir',
 		'Delete': 'Supprimer',
 		'Delete All...': 'Tout Supprimer...',
@@ -827,6 +828,7 @@ LABELS = {
 		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
 		'Prevent sleep mode': 'Empêcher la mise en veille',
 		'Use native graphical interface style': 'Utiliser le style d\'interface graphique natif',
+		'Autorize the phone number to be checked with callfilter.app': 'Autoriser à vérifier le numéro avec callfilter.app',
 		'Preferences': 'Préférences',
 		'Cancel': 'Annuler'
 	},
@@ -865,7 +867,7 @@ LABELS = {
 		'Email Setup': 'Réglages Email',
 		'Sending test email...': 'Envoi email de test...',
 		'Test Message': 'Message de test',
-		'This is a test email from LiveboxMonitor.': 'Ceci est un email de test envoyé par LiveboxMonitor.'		
+		'This is a test email from LiveboxMonitor.': 'Ceci est un email de test envoyé par LiveboxMonitor.'
 	},
 
 	# Config - Select profile
@@ -919,11 +921,11 @@ TOOLTIPS = {
 		'phoneTab': 'Gérer les appels téléphoniques et la liste des contacts.',
 		'actionTab': 'Actions variées, préférences et informations sur l\'application.',
 		'repeaterTab': 'Informations détaillées sur le répéteur Wifi et statistiques de trafic.\n'
-					   'État de la connexion avec le répéteur :\n'
-					   '- Croix rouge : le répéteur est inactif ou n\'a pas d\'adresse IP attribuée.\n'
-					   '- Rouge barré : le répéteur est actif mais aucune session n\'est ouverte.\n'
-					   'Si cet état subsiste vous pouvez essayer de forcer la création d\'une session en cliquant sur le bouton "Réauthentifier...".\n'
-					   '- Vert : le répéteur est actif et une session a été créée pour communiquer avec lui.'
+						'État de la connexion avec le répéteur :\n'
+						'- Croix rouge : le répéteur est inactif ou n\'a pas d\'adresse IP attribuée.\n'
+						'- Rouge barré : le répéteur est actif mais aucune session n\'est ouverte.\n'
+						'Si cet état subsiste vous pouvez essayer de forcer la création d\'une session en cliquant sur le bouton "Réauthentifier...".\n'
+						'- Vert : le répéteur est actif et une session a été créée pour communiquer avec lui.'
 	},
 
 	# Device list
@@ -949,8 +951,8 @@ TOOLTIPS = {
 						'Par défaut la liste est triée pour montrer d\'abord les appareils actifs.',
 		'dlist_Wifi': 'Qualité de la connexion Wifi.',
 		'dlist_Event': 'Indique par une icône lorsqu\'un événement est reçu pour cet appareil.\n'
-					   'La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes,\n'
-					   'peuvent être consultés via l\'onglet "Événements".',
+						'La liste détaillée des événements, ainsi que le contenu des événements eux-mêmes,\n'
+						'peuvent être consultés via l\'onglet "Événements".',
 		'dlist_Rx': 'Nombre d\'octets reçus par l\'appareil depuis le dernier démarrage de la Livebox.',
 		'dlist_Tx': 'Nombre d\'octets envoyés par l\'appareil depuis le dernier démarrage de la Livebox.',
 		'dlist_RxRate': 'Taux d\'octets reçus par seconde par l\'appareil dans les dernières 30 secondes si affiché en noir,\n'
@@ -958,8 +960,8 @@ TOOLTIPS = {
 		'dlist_TxRate': 'Taux d\'octets envoyés par seconde par l\'appareil dans les dernières 30 secondes si affiché en noir,\n'
 						'dans les trois dernières secondes si affiché en bleu (fréquence réglable dans les préférences).',
 		'refresh': 'Force le rafraîchissement de la liste des appareils, dans cet onglet mais aussi dans les onglets "Infos Appareil" et "Événements".\n'
-				   'Utile par exemple si le programme est actif alors que l\'ordinateur sort de veille : des événements ayant probablement\n'
-				   'été raté par le programme, un rafraîchissement permettra de retrouver une vue à jour.',
+					'Utile par exemple si le programme est actif alors que l\'ordinateur sort de veille : des événements ayant probablement\n'
+					'été raté par le programme, un rafraîchissement permettra de retrouver une vue à jour.',
 		'assignNames': 'Assigne à tous les appareils inconnus un nom local équivalent à celui connu de la Livebox.',
 		'deviceInfo': 'Bascule dans l\'onglet "Infos Appareil" pour l\'appareil sélectionné afin de voir directement ses informations.',
 		'deviceEvents': 'Bascule dans l\'onglet "Événements" pour l\'appareil sélectionné afin de voir directement les événements reçus le concernant.',
@@ -974,7 +976,7 @@ TOOLTIPS = {
 		'ipv6_Name': 'Nom local de l\'appareil.\n'
 					 'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
 		'ipv6_LBName': 'Nom de l\'appareil tel que paramétré dans la Livebox et visible dans l\'interface Web de la Livebox.\n'
-					   'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
+						'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".',
 		'ipv6_MAC': 'Adresse MAC, aussi appelée adresse physique de l\'appareil.',
 		'ipv6_Active': 'Indique par une icône si l\'appareil est actif ou non.',
 		'ipv6_IPv4': 'Adresse IPv4 de l\'appareil sur le LAN.\n'
@@ -1002,7 +1004,7 @@ TOOLTIPS = {
 				  'Et elle s\'affiche en rouge si l\'adresse n\'est pas atteignable sur le réseau (unreacheable),\n'
 				  'typiquement lorsque l\'appareil n\'est pas actif.',
 		'dns_DNS': 'Nom DNS de l\'appareil.\n'
-				   'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".'
+					'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom..." de l\'onglet "Infos Appareil".'
 	},
 
 	# Livebox infos
@@ -1027,26 +1029,26 @@ TOOLTIPS = {
 						'La fréquence réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
 		'liveboxInfo': 'Affiche les informations principales concernant la Livebox, telles que les versions de logiciels,\n'
-					   'l\'adresse IP WAN, les services actifs, l\'état de la mémoire, etc.',
+						'l\'adresse IP WAN, les services actifs, l\'état de la mémoire, etc.',
 		'internetInfo': 'Affiche le type d\'accès internet, les identifiants de connexion, les adresses IPs v4 & v6,\n'
 						'la date et heure de la dernière connexion, la bande passante de la connexion, la MTU, etc',
 		'wifiInfo': 'Affiche les informations générales sur la connectivité Wifi, et l\'état de chaque accès y compris pour les accès invités.\n'
 					'Pour chaque accès on dispose d\'informations détaillées telles que le canal, le standard, la bande passante,\n'
 					'la qualité, la bande, le nombre d\'appareils connectés, etc.',
 		'lanInfo': 'Affiche les informations générales sur la connectivité LAN.\n'
-				   'Il s\'agit des informations DHCP de base et pour chaque interface Ethernet\n'
-				   'on peut identifier si elle est active ou non, la bande passante, etc.',
+					'Il s\'agit des informations DHCP de base et pour chaque interface Ethernet\n'
+					'on peut identifier si elle est active ou non, la bande passante, etc.',
 		'ontInfo': 'Affiche les informations importantes concernant la connexion et le module Fibre (ONT), telles que la bande passante,\n'
-				   'la qualité du signal, le numéro de série et les versions logicielles, etc.\n'
-				   'Les champs "Puissance Signal Réception", "Puissance Signal Transmission", "Température", "Voltage" et "BIAS"\n'
-				   'affichent des valeurs vertes si elles correspondent aux normes de qualité acceptables pour la connexion,\n'
-				   'en rouge si elles représentent un problème.',
+					'la qualité du signal, le numéro de série et les versions logicielles, etc.\n'
+					'Les champs "Puissance Signal Réception", "Puissance Signal Transmission", "Température", "Voltage" et "BIAS"\n'
+					'affichent des valeurs vertes si elles correspondent aux normes de qualité acceptables pour la connexion,\n'
+					'en rouge si elles représentent un problème.',
 		'voipInfo': 'Affiche les informations générales concernant la téléphonie, telles que le protocole,\n'
 					'le numéro de téléphone, la version logicielle de l\'interface DECT, etc.',
 		'iptvInfo': 'Affiche les informations générales relatives aux services de télévision.',
 		'usbInfo': 'Affiche les informations concernant le ou les ports USBs.\n'
-				   'Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox,\n'
-				   'ses informations sont affichées.',
+					'Si une clef USB est insérée, ou a été insérée depuis le dernier démarrage de la Livebox,\n'
+					'ses informations sont affichées.',
 		'exportInfo': 'Permet d\'exporter l\'ensemble des informations affichées par chacun des boutons dans un fichier texte.\n'
 					  'Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.'
 	},
@@ -1079,9 +1081,9 @@ TOOLTIPS = {
 					 'Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n'
 					 'vue normale en cliquant dans le coin en bas à gauche.',
 		'upGraph': 'Graphique des données émises pour chaque interface / appareil sélectionné.\n'
-				   'Les volumes sont en méga-octets transmis entre deux échantillons, typiquement\n'
-				   'toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n'
-				   'de nouveaux échantillons.\n'
+					'Les volumes sont en méga-octets transmis entre deux échantillons, typiquement\n'
+					'toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n'
+					'de nouveaux échantillons.\n'
 					'Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n'
 					'vue normale en cliquant dans le coin en bas à gauche.'
 	},
@@ -1090,12 +1092,12 @@ TOOLTIPS = {
 	'addgraph': {
 		'typeCombo': 'Sélection du type d\'objet à rajouter.',
 		'objectCombo': 'Sélection de l\'interface ou de l\'appareil à rajouter.\n'
-					   'Pour les appareils il s\'agit du nom local (fichier table MacAddr), si aucun\n'
-					   'nom local n\'a été assigné l\'adresse physique (MAC) sera utilisée.',
+						'Pour les appareils il s\'agit du nom local (fichier table MacAddr), si aucun\n'
+						'nom local n\'a été assigné l\'adresse physique (MAC) sera utilisée.',
 		'colorEdit': 'Couleur à utiliser pour afficher le graphique correspondant.',
 		'IDValue': 'Identificateur interne de l\'interface ou de l\'appareil.\n'
-				   'Pour les interfaces il s\'agit du nom interne utilisé par la Livebox.\n'
-				   'Pour les appareils il s\'agit de l\'adresse physique (MAC).',
+					'Pour les interfaces il s\'agit du nom interne utilisé par la Livebox.\n'
+					'Pour les appareils il s\'agit de l\'adresse physique (MAC).',
 		'measureValue': 'Nombre de mesures de statistique actuellement stockées par la Livebox pour\n'
 						'l\'interface ou l\'appareil. Généralement la fréquence d\'échantillonnage est\n'
 						'de 30 secondes et le nombre maximum de mesures stockées est de 8680.',
@@ -1109,9 +1111,9 @@ TOOLTIPS = {
 					  'Ce nom peut être attribué, changé ou supprimé via le bouton "Assigner Nom...".',
 		'dlist_MAC': 'Adresse MAC, aussi appelée adresse physique de l\'appareil.',
 		'alist_Attribute': 'Le fabricant de cet appareil peut s\'afficher, déduit à partir de son adresse MAC.\n'
-						   'Le programme utilise l\'API du site macaddress.io pour le déterminer.\n'
-						   'C\'est un service gratuit, mais il faut créer un compte et indiquer l\'API Key correspondante\n'
-						   'dans les préférences pour bénéficier de cette fonctionnalité.',
+							'Le programme utilise l\'API du site macaddress.io pour le déterminer.\n'
+							'C\'est un service gratuit, mais il faut créer un compte et indiquer l\'API Key correspondante\n'
+							'dans les préférences pour bénéficier de cette fonctionnalité.',
 		'refresh': 'Rafraîchit les informations affichées pour l\'appareil sélectionné.',
 		'assignName': 'Permet d\'attribuer ou d\'effacer le nom local et/ou le nom Livebox de l\'appareil sélectionné.',
 		'assignType': 'Permet d\'attribuer ou d\'effacer le type de l\'appareil sélectionné.',
@@ -1122,7 +1124,7 @@ TOOLTIPS = {
 		'wol': 'Permet d\'envoyer un signal de réveil sur réseau (WOL) à l\'appareil sélectionné.',
 		'block': 'Permet de bloquer la connexion de l\'appareil sélectionné.',
 		'unblock': 'Permet de débloquer la connexion de l\'appareil sélectionné.\n'
-				   'L\'état bloqué ou non s\'affiche dans les informations de l\'appareil, champs "Bloqué".'
+					'L\'état bloqué ou non s\'affiche dans les informations de l\'appareil, champs "Bloqué".'
 	},
 
 	# Device infos - Assign name dialog
@@ -1168,8 +1170,8 @@ TOOLTIPS = {
 		'addRule': 'Permet de rajouter une nouvelle règle de notification.',
 		'delRule': 'Permet de supprimer la règle de notification sélectionnée.',
 		'deviceCombo': 'Permet de sélectionner le ou les appareils pour lesquels recevoir une notification.\n'
-					   '"Tout appareil" appliquera la règle pour l\'ensemble des appareils.\n'
-					   '"Tout appareil inconnu" appliquera la règle à n\'importe quel appareil inconnu.',
+						'"Tout appareil" appliquera la règle pour l\'ensemble des appareils.\n'
+						'"Tout appareil inconnu" appliquera la règle à n\'importe quel appareil inconnu.',
 		'macEdit': 'Adresse physique de l\'appareil sélectionné.',
 		'eventsLabel': 'Sélection des événements pour lesquels recevoir une notification.',
 		'addEvent': 'Recevoir une notification à l\'ajout d\'un appareil correspondant.',
@@ -1181,7 +1183,7 @@ TOOLTIPS = {
 		'actionsLabel': 'Sélection des actions à réaliser pour notifier.',
 		'fileAction': 'Reporter les événements dans un fichier CSV journalier.',
 		'emailAction': 'Envoyer les informations de chaque événement par email instantané.\n'
-					   'Cette option nécessite le réglage de l\'envoi d\'email via l\'onglet "Actions".',
+						'Cette option nécessite le réglage de l\'envoi d\'email via l\'onglet "Actions".',
 		'flushFrequencyEdit': 'Les événements sont détectés instantanément, cependant certains événements peuvent\n'
 							  's\'annuler lorsque générés dans une courte fenêtre de temps, tels que la déconnexion\n'
 							  'suivie d\'une reconnexion dans les 15 secondes d\'un appareil donné (arrive fréquemment).\n'
@@ -1193,7 +1195,7 @@ TOOLTIPS = {
 		'eventFilePathSelectButton': 'Permet de sélectionner le répertoire dans lequel générer\n'
 									 'les fichiers CSV journaliers.',
 		'defaultFilePath': 'Cocher pour générer les fichiers CSV journaliers dans le répertoire par défaut\n'
-						   'qui est le même que le répertoire de configuration.'
+							'qui est le même que le répertoire de configuration.'
 	},
 
 	# DHCP
@@ -1213,11 +1215,11 @@ TOOLTIPS = {
 	# DHCP - Binding dialog
 	'dbinding': {
 		'deviceCombo': 'La liste des appareils proposés est triée et est composée d\'un mélange des appareils\n'
-					   'connectés et ceux référencés dans le fichier local des adresses MAC.',
+						'connectés et ceux référencés dans le fichier local des adresses MAC.',
 		'macEdit': 'L\'adresse MAC est directement déduite de l\'appareil sélectionné\n'
-				   'mais on peut en taper une manuellement.',
+					'mais on peut en taper une manuellement.',
 		'domainCombo': 'Choisir le domaine réseau entre "Home" ou "Guest" (invité).\n'
-					   'Une adresse IP libre est automatiquement proposée.',
+						'Une adresse IP libre est automatiquement proposée.',
 		'ipEdit': 'L\'adresse reste configurable.\n'
 				  'Attention un même appareil ne peut être configuré que sur un seul domaine,\n'
 				  'et s\'il se connecte sur un domaine alors qu\'un bail statique est configuré\n'
@@ -1287,11 +1289,11 @@ TOOLTIPS = {
 		'tcpCheckbox': 'Redirige ou pas le trafic TCP.',
 		'udpCheckbox': 'Redirige ou pas le trafic UDP.',
 		'intPortEdit': 'Port interne sur lequel le trafic doit être redirigé.\n'
-					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
+						'Utiliser le caractère - entre deux ports pour spécifier une plage.',
 		'extPortEdit': 'Port externe à rediriger.\n'
-					   'Ne fonctionne pas en IPv6.\n'
-					   'Laisser ce champs vide s\'il s\'agit du même port que le port interne.\n'
-					   'Utiliser le caractère - entre deux ports pour spécifier une plage.',
+						'Ne fonctionne pas en IPv6.\n'
+						'Laisser ce champs vide s\'il s\'agit du même port que le port interne.\n'
+						'Utiliser le caractère - entre deux ports pour spécifier une plage.',
 		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',
 		'ipEdit': 'Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n'
 				  'être redirigé.',
@@ -1331,10 +1333,10 @@ TOOLTIPS = {
 	# Phone
 	'phone': {
 		'calist_Type': 'Icône correspondant au type de l\'appel.\n'
-					   '- Appel reçu.\n'
-					   '- Appel manqué. Dans ce cas toute la ligne est indiquée en rouge.\n'
-					   '- Appel émis.\n'
-					   '- Appel émis mais non abouti.',
+						'- Appel reçu.\n'
+						'- Appel manqué. Dans ce cas toute la ligne est indiquée en rouge.\n'
+						'- Appel émis.\n'
+						'- Appel émis mais non abouti.',
 		'calist_Time': 'Date et heure de l\'appel.',
 		'calist_Number': 'Numéro de téléphone concerné.\n'
 						 'Un double clic sur un appel permet de facilement créer ou éditer le contact correspondant.',
@@ -1342,6 +1344,7 @@ TOOLTIPS = {
 						  'Si la Livebox n\'a mémorisé aucun nom, alors le programme essai d\'en trouver un dynamiquement à partir de\n'
 						  'la liste des contacts enregistrés par correspondance avec le numéro de téléphone.',
 		'calist_Duration': 'Durée de l\'appel.',
+		'calist_SpamCheck': 'Spam ?',
 		'colist_Name': 'Nom du contact, au format nom + prénom.',
 		'colist_Cell': 'Numéro de téléphone portable.',
 		'colist_Home': 'Numéro de téléphone fixe.',
@@ -1378,7 +1381,7 @@ TOOLTIPS = {
 		'guestWifiOn': 'Permet d\'activer l\'interface Wifi invité de la Livebox.',
 		'guestWifiOff': 'Permet de désactiver l\'interface Wifi invité de la Livebox.',
 		'schedulerOn': 'Permet d\'activer le planificateur Wifi de la Livebox.\n'
-					   'Ce planificateur doit être configuré depuis l\'interface Web de la Livebox.',
+						'Ce planificateur doit être configuré depuis l\'interface Web de la Livebox.',
 		'schedulerOff': 'Permet de désactiver le planificateur Wifi de la Livebox.',
 		'wifiGlobalStatus': 'Permet d\'afficher l\'état global du Wifi, en incluant l\'état Wifi de tous\n'
 							'les répéteurs Wifi Orange potentiellement connectés.',
@@ -1392,8 +1395,8 @@ TOOLTIPS = {
 				  'Utile, par exemple, si vous hébergez un site web ou un serveur FTP derrière votre Livebox pour le\n'
 				  'retrouver facilement (nom de type monserveur.dydns.org).',
 		'dmz': 'Permet d\'intégrer un appareil dans la DMZ.\n'
-			   'En intégrant un appareil à la DMZ vous rendez cet équipement accessible depuis Internet.\n'
-			   'Vous devez préalablement associer une adresse IP statique à cet équipement dans l’onglet DHCP.',
+				'En intégrant un appareil à la DMZ vous rendez cet équipement accessible depuis Internet.\n'
+				'Vous devez préalablement associer une adresse IP statique à cet équipement dans l’onglet DHCP.',
 		'openSourceURL': 'Un clic ouvrira la page web de l\'application sur votre navigateur.',
 		'prefs': 'Permet d\'afficher l\'écran des préférences du programme.',
 		'changeProfile': 'Permet de changer le profil en cours et de relancer le programme.',
@@ -1401,9 +1404,9 @@ TOOLTIPS = {
 		'showRawDeviceList': 'Permet d\'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus.\n'
 							 'Utile pour avoir plus d\'informations ou pour le débogage.',
 		'showRawTopology': 'Permet d\'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus.\n'
-						   'Utile pour avoir plus d\'informations ou pour le débogage.',
+							'Utile pour avoir plus d\'informations ou pour le débogage.',
 		'setLogLevel': 'Permet de changer le niveau de logs dans la console.\n'
-					   'Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.',
+						'Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.',
 		'getApiDoc': 'Permet d\'exporter dans un ensemble de fichiers la documentation disponible\n'
 					 'sur les API REST/JSON de la Livebox.',
 		'quit': 'Pour quitter l\'application. Strictement équivalent à fermer la fenêtre de l\'application.'
@@ -1496,7 +1499,7 @@ TOOLTIPS = {
 		'wifiOn': 'Permet d\'activer l\'interface Wifi du répéteur.',
 		'wifiOff': 'Permet de désactiver l\'interface Wifi du répéteur.',
 		'schedulerOn': 'Permet d\'activer le planificateur Wifi du répéteur.\n'
-					   'Ce planificateur doit être configuré depuis l\'interface Web du répéteur.',
+						'Ce planificateur doit être configuré depuis l\'interface Web du répéteur.',
 		'schedulerOff': 'Permet de désactiver le planificateur Wifi du répéteur.',
 		'rebootRepeater': 'Permet de forcer un redémarrage du répéteur.',
 		'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
@@ -1512,7 +1515,7 @@ TOOLTIPS = {
 					'Pour chaque accès on dispose d\'informations détaillées telles que le canal, le standard, la bande passante,\n'
 					'la qualité, la bande, le nombre d\'appareils connectés, etc.',
 		'lanInfo': 'Affiche les informations générales sur la connectivité LAN.\n'
-				   'Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.',
+					'Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.',
 		'exportInfo': 'Permet d\'exporter l\'ensemble des informations affichées par chacun des boutons dans un fichier texte.\n'
 					  'Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.'
 	},
@@ -1520,18 +1523,18 @@ TOOLTIPS = {
 	# Config - Preferences
 	'prefs': {
 		'profileList': 'Le programme supporte de pouvoir gérer plusieurs Livebox à l\'aide de profils différents.\n'
-					   'Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement.\n'
-					   'Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.\n'
-					   'Au lancement du programme, le profil par défaut est utilisé, mais si aucun profil par défaut n\'est configuré ou\n'
-					   'si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.',
+						'Chaque profil doit avoir un nom unique. Par défaut un profil principal est créé automatiquement.\n'
+						'Si plusieurs profils sont configurés le nom du profil en cours est affiché dans le titre de la fenêtre principale entre crochets.\n'
+						'Au lancement du programme, le profil par défaut est utilisé, mais si aucun profil par défaut n\'est configuré ou\n'
+						'si la touche `Ctrl` est enfoncée le programme affiche un dialogue pour sélectionner le profil à utiliser.',
 		'addProfile': 'Permet d\'ajouter un profil.',
 		'delProfile': 'Supprimer le profil sélectionné.',
 		'profileNameEdit': 'Nom du profil.',
 		'liveboxUrlEdit': 'Adresse de la Livebox. La valeur par défaut est "http://livebox.home/".',
 		'liveboxUserEdit': 'Login pour l\'ouverture de session.\n'
-						   'Par défaut "admin".\n'
-						   'Le mot de passe est demandé automatiquement lors de l\'utilisation du profil\n'
-						   's\'il n\'est pas renseigné ou s\'il est erroné.',
+							'Par défaut "admin".\n'
+							'Le mot de passe est demandé automatiquement lors de l\'utilisation du profil\n'
+							's\'il n\'est pas renseigné ou s\'il est erroné.',
 		'filterDevices': 'Active le filtrage des appareils afin de ne pas montrer certains appareils "fantômes" détectés par la Livebox.\n'
 						 'Quand ce paramètre est activé le programme affiche les mêmes appareils que l\'interface Web de la Livebox.\n'
 						 'Ce paramètre est activé par défaut.',
@@ -1572,14 +1575,16 @@ TOOLTIPS = {
 		'nativeUIStyle': 'Par défaut le style "Fusion" est utilisé sur toutes les plateformes.\n'
 						 'Cette option permet sur les plateformes Windows et MacOS d\'utiliser\n'
 						 'un style graphique plus natif.\n'
-						 'Elle n\'a aucun effet sur les plateformes Linux.'
+						 'Elle n\'a aucun effet sur les plateformes Linux.',
+		'checkPhoneNumber': 'Autorise a vérifier les numéros qui ne font pas partie du carnet d\'adresse\n'
+						 'a être vérifés par callfilter.app',
 	},
 
 	# Config - Connection
 	'cnx': {
 		'urlEdit': 'La connexion s\'établit avec exactement les mêmes informations que pour accéder à l\'interface Web\n'
-				   'de configuration de la Livebox.\n'
-				   'Pour l\'URL il faut essayer http://livebox.home/, http://livebox/ ou http://192.168.1.1/.'
+					'de configuration de la Livebox.\n'
+					'Pour l\'URL il faut essayer http://livebox.home/, http://livebox/ ou http://192.168.1.1/.'
 	},
 
 	# Config - Signin
@@ -1611,20 +1616,20 @@ TOOLTIPS = {
 	# Config - Select profile
 	'sprofile': {
 		'assMacValue': 'Adresse physique de la Livebox associée au profil sélectionné.\n'
-					   'Si aucune adresse n\'est associée le profil n\'a jamais été utilisé et peut être associé\n'
-					   'à n\'importe quelle Livebox sur le réseau.',
+						'Si aucune adresse n\'est associée le profil n\'a jamais été utilisé et peut être associé\n'
+						'à n\'importe quelle Livebox sur le réseau.',
 		'detMacValue': 'Adresse physique de la Livebox détectée via l\'URL du profil sélectionné.\n'
-					   'Si aucune Livebox n\'est détectée cela veut dire que la connexion va échouer et qu\'une autre\n'
-					   'URL sera demandée.\n'
-					   'Si l\'adresse physique est différente de celle associée au profil sélectionné l\'ancienne adresse\n'
-					   'sera remplacée par la nouvelle.',
+						'Si aucune Livebox n\'est détectée cela veut dire que la connexion va échouer et qu\'une autre\n'
+						'URL sera demandée.\n'
+						'Si l\'adresse physique est différente de celle associée au profil sélectionné l\'ancienne adresse\n'
+						'sera remplacée par la nouvelle.',
 		'createProfile': 'Permet de créer un nouveau profil et de l\'utiliser directement.'
 	},
 
 	# Config - Release warning
 	'rwarn': {
 		'downloadURL': 'Cliquez ici pour ouvrir la page web de l\'application sur votre navigateur.\n'
-					   'Vous pourrez y télécharger la nouvelle version.',
+						'Vous pourrez y télécharger la nouvelle version.',
 		'nowarning': 'Cliquez ici pour ne plus être averti concernant cette version.'
 	}
 }
@@ -1666,7 +1671,7 @@ MESSAGES = {
 	},
 
 	# Device infos
-	'dinfo': {	
+	'dinfo': {
 		'devSelect': 'Vous devez sélectionner un appareil.',
 		'devWOL': 'Signal de réveil sur réseau envoyé à l\'appareil {}.',
 		'devBlocked': 'L\'appareil {} est maintenant bloqué.',
@@ -1685,7 +1690,7 @@ MESSAGES = {
 				 'Voulez-vous configurer la façon d\'envoyer des emails ?',
 		'macErr': '{} n\'est pas une adresse MAC valide.',
 		'logDirExist': 'Le répertoire des fichiers journaliers configuré n\'existe pas. '
-					   'Voulez-vous le créer ?',
+						'Voulez-vous le créer ?',
 		'logDirErr': 'Impossible de créer le répertoire des fichiers journaliers. '
 					 'Erreur : {}.'
 	},
@@ -1695,7 +1700,7 @@ MESSAGES = {
 		'dhcpSelect': 'Vous devez sélectionner un bail DHCP.',
 		'dhcpLoad': 'Impossible d\'obtenir les informations DHCP.',
 		'deactiv': 'La désactivation du serveur DHCP est susceptible de déconnecter vos appareils '
-				   'domestiques. Continuer ?',
+					'domestiques. Continuer ?',
 		'addrChange': 'En modifiant l\'adresse IP de votre Livebox et les autres paramètres du serveur DHCP, '
 					  'vous risquez de perdre tous vos services. Les adresses IP statiques devront être '
 					  'redéfinies selon le nouveau plan d\'adressage et il faudra vous reconnecter. Continuer ?',
@@ -1734,7 +1739,9 @@ MESSAGES = {
 		'saveFileErr': 'Impossible d\'enregistrer le fichier.',
 		'contactLoad': 'Imposible de charger la liste des contacts.',
 		'contactMax': 'Le nombre maximum de contacts a été atteint.',
-		'contactGet': 'Impossible de charger le contact.'
+		'contactGet': 'Impossible de charger le contact.',
+		'noData': 'Pas de données',
+		'noCheck': 'Pas de vérification'
 	},
 
 	# Actions

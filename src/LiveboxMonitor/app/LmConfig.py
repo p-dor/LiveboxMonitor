@@ -55,6 +55,7 @@ DCFG_LIST_LINE_HEIGHT = 30
 DCFG_LIST_LINE_FONT_SIZE = 0
 DCFG_REALTIME_WIFI_STATS = False
 DCFG_NATIVE_UI_STYLE = False
+DCFG_CHECK_PHONE_NUMBER = False
 DCFG_LOG_LEVEL = 0
 DCFG_NO_RELEASE_WARNING = 0
 DCFG_REPEATERS = None
@@ -519,6 +520,7 @@ class LmConf:
 	RealtimeWifiStats = DCFG_REALTIME_WIFI_STATS
 	RealtimeWifiStats_save = RealtimeWifiStats	# Need to decouple saving as master value must not be changed live
 	NativeUIStyle = DCFG_NATIVE_UI_STYLE
+	CheckPhoneNumber = DCFG_CHECK_PHONE_NUMBER
 	LogLevel = DCFG_LOG_LEVEL
 	NoReleaseWarning = DCFG_NO_RELEASE_WARNING
 	Repeaters = DCFG_REPEATERS
@@ -623,6 +625,9 @@ class LmConf:
 			p = aConfig.get('Native UI Style')
 			if p is not None:
 				LmConf.NativeUIStyle = bool(p)
+			p = aConfig.get('Check Phone Number')
+			if p is not None:
+				LmConf.CheckPhoneNumber = bool(p)
 			p = aConfig.get('Log Level')
 			if p is not None:
 				LmConf.LogLevel = int(p)
@@ -983,6 +988,7 @@ class LmConf:
 				aConfig['List Line Font Size'] = LmConf.ListLineFontSize
 				aConfig['Realtime Wifi Stats'] = LmConf.RealtimeWifiStats_save
 				aConfig['Native UI Style'] = LmConf.NativeUIStyle
+				aConfig['Check Phone Number'] = LmConf.CheckPhoneNumber
 				aConfig['Log Level'] = LmConf.LogLevel
 				aConfig['No Release Warning'] = LmConf.NoReleaseWarning
 				aConfig['Repeaters'] = LmConf.Repeaters
@@ -1696,6 +1702,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		self._realtimeWifiStats = QtWidgets.QCheckBox(lx('Realtime wifi device statistics'), objectName = 'realtimeWifiStats')
 		self._preventSleep = QtWidgets.QCheckBox(lx('Prevent sleep mode'), objectName = 'preventSleepMode')
 		self._nativeUIStyle = QtWidgets.QCheckBox(lx('Use native graphical interface style'), objectName = 'nativeUIStyle')
+		self._checkPhoneNumber = QtWidgets.QCheckBox(lx('Autorize the phone number to be checked with callfilter.app'), objectName = 'checkPhoneNumber')
 
 		aPrefsEditGrid = QtWidgets.QGridLayout()
 		aPrefsEditGrid.setSpacing(10)
@@ -1725,6 +1732,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 6, 0, 1, 2)
 		aPrefsEditGrid.addWidget(self._preventSleep, 6, 2, 1, 2)
 		aPrefsEditGrid.addWidget(self._nativeUIStyle, 7, 0, 1, 2)
+		aPrefsEditGrid.addWidget(self._checkPhoneNumber, 8, 0, 1, 2)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1798,6 +1806,10 @@ class PrefsDialog(QtWidgets.QDialog):
 			self._nativeUIStyle.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
 			self._nativeUIStyle.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if LmConf.CheckPhoneNumber:
+			self._checkPhoneNumber.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._checkPhoneNumber.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 	### Save preferences data
@@ -1831,6 +1843,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.RealtimeWifiStats_save = self._realtimeWifiStats.isChecked()
 		LmConf.PreventSleep = self._preventSleep.isChecked()
 		LmConf.NativeUIStyle = self._nativeUIStyle.isChecked()
+		LmConf.CheckPhoneNumber = self._checkPhoneNumber.isChecked()
 
 
 	### Click on profile list item

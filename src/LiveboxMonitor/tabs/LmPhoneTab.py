@@ -1,6 +1,9 @@
 ### Livebox Monitor phone tab module ###
 
 import os
+import requests
+import time
+from bs4 import BeautifulSoup
 
 from enum import IntEnum
 
@@ -19,6 +22,9 @@ from LiveboxMonitor.lang.LmLanguages import (GetPhoneLabel as lx,
 # Tab name
 TAB_NAME = 'phoneTab'
 
+# Static Config
+CALL_FILTER_ADDR_URL = 'https://callfilter.app/{0}'
+
 # List columns
 class CallCol(IntEnum):
 	Key = 0
@@ -28,7 +34,8 @@ class CallCol(IntEnum):
 	ContactSource = 4	# N=None, L=Livebox, D=Dynamic guess
 	Contact = 5
 	Duration = 6
-	Count = 7
+	SpamCheck = 7
+	Count = 8
 ICON_COLUMNS = [CallCol.Type]
 
 class ContactCol(IntEnum):
@@ -41,7 +48,6 @@ class ContactCol(IntEnum):
 	Count = 6
 
 
-
 # ################################ LmPhone class ################################
 class LmPhone:
 
@@ -52,7 +58,7 @@ class LmPhone:
 		# Call list
 		self._callList = QtWidgets.QTableWidget(objectName = 'callList')
 		self._callList.setColumnCount(CallCol.Count)
-		self._callList.setHorizontalHeaderLabels(('Key', lx('T'), lx('Time'), lx('Number'), 'CS', lx('Contact'), lx('Duration')))
+		self._callList.setHorizontalHeaderLabels(('Key', lx('T'), lx('Time'), lx('Number'), 'CS', lx('Contact'), lx('Duration'), lx('SpamCheck')))
 		self._callList.setColumnHidden(CallCol.Key, True)
 		self._callList.setColumnHidden(CallCol.ContactSource, True)
 		aHeader = self._callList.horizontalHeader()
@@ -65,12 +71,14 @@ class LmPhone:
 		aModel.setHeaderData(CallCol.Number, QtCore.Qt.Orientation.Horizontal, 'calist_Number', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(CallCol.Contact, QtCore.Qt.Orientation.Horizontal, 'calist_Contact', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(CallCol.Duration, QtCore.Qt.Orientation.Horizontal, 'calist_Duration', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(CallCol.SpamCheck, QtCore.Qt.Orientation.Horizontal, 'calist_SpamCheck', QtCore.Qt.ItemDataRole.UserRole)
 		self._callList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._callList.setColumnWidth(CallCol.Type, 30)
 		self._callList.setColumnWidth(CallCol.Time, 130)
 		self._callList.setColumnWidth(CallCol.Number, 110)
 		self._callList.setColumnWidth(CallCol.Contact, 250)
 		self._callList.setColumnWidth(CallCol.Duration, 80)
+		self._callList.setColumnWidth(CallCol.SpamCheck, 110)
 		self._callList.verticalHeader().hide()
 		self._callList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
 		self._callList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
@@ -78,7 +86,7 @@ class LmPhone:
 		self._callList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
 		self._callList.setMinimumWidth(480)
-		self._callList.setMaximumWidth(540)
+		self._callList.setMaximumWidth(650)
 		self._callList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
 		LmConfig.SetTableStyle(self._callList)
 
@@ -384,6 +392,38 @@ class LmPhone:
 					aContact.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 					aDuration.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 
+				spamCheckText = ''
+				if len(c.get('remoteName')) == 0:
+					if LmConf.CheckPhoneNumber:
+						try:
+							url = LmConf.PhoneCode + c.get('remoteNumber')[1:]
+							aData = requests.get(CALL_FILTER_ADDR_URL.format(url), timeout = 2)
+							# wait 350ms the full response from the request
+							time.sleep(0.35)
+							parsedHtml = BeautifulSoup(aData.content, 'html.parser')
+							article = parsedHtml.body.article
+
+							if article:
+								number = article.find(class_="number")
+								for span in number.find_all('span', recursive=False):
+									textStriped = span.text.lstrip(' \t\n\r')
+									textStriped = textStriped.rstrip(' \t\n\r')
+									textStriped = textStriped.replace('Chargement...', '')
+									if textStriped != '':
+										spamCheckText += ' ' + textStriped
+							else:
+								spamCheckText = mx('No data', 'noData')
+
+						except BaseException as e:
+							LmTools.Error('Error: {}'.format(e))
+							spamCheckText = mx('No data', 'noData')
+					else:
+						spamCheckText = mx('No check', 'noCheck')
+
+				aSpamCheck = QtWidgets.QTableWidgetItem(spamCheckText)
+				aSpamCheck.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				aSpamCheck.setToolTip(spamCheckText)
+
 				self._callList.setItem(i, CallCol.Key, aKey)
 				self._callList.setItem(i, CallCol.Type, aCallTypeIcon)
 				self._callList.setItem(i, CallCol.Time, aTime)
@@ -391,6 +431,7 @@ class LmPhone:
 				self._callList.setItem(i, CallCol.ContactSource, aContactSource)
 				self._callList.setItem(i, CallCol.Contact, aContact)
 				self._callList.setItem(i, CallCol.Duration, aDuration)
+				self._callList.setItem(i, CallCol.SpamCheck, aSpamCheck)
 
 				i += 1
 			self.assignContactToCalls()

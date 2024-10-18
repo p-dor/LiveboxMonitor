@@ -4,3 +4,4 @@ python-dateutil
 cryptography
 pyqtgraph
 wakepy
+beautifulsoup4

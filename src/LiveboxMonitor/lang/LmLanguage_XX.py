@@ -638,6 +638,7 @@ LABELS = {
 		'Number': '',
 		'Contact': '',
 		'Duration': '',
+		'SpamCheck': '',
 		'Refresh': '',
 		'Delete': '',
 		'Delete All...': '',
@@ -953,6 +954,7 @@ LABELS = {
 		'Realtime wifi device statistics': '',
 		'Prevent sleep mode': '',
 		'Use native graphical interface style': '',
+		'Autorize the phone number to be checked with callfilter.app': '',
 		'Preferences': '',
 		'OK': '',
 		'Cancel': ''
@@ -1401,6 +1403,7 @@ TOOLTIPS = {
 		'calist_Number': '',
 		'calist_Contact': '',
 		'calist_Duration': '',
+		'calist_SpamCheck': '',
 		'colist_Name': '',
 		'colist_Cell': '',
 		'colist_Home': '',
@@ -1617,6 +1620,7 @@ TOOLTIPS = {
 		'realtimeWifiStats': '',
 		'preventSleepMode': '',
 		'nativeUIStyle': '',
+		'checkPhoneNumber': '',
 		'prefsGroup': '',
 		'ok': '',
 		'cancel': ''
@@ -1725,7 +1729,7 @@ MESSAGES = {
 	},
 
 	# Device infos
-	'dinfo': {	
+	'dinfo': {
 		'devSelect':  '',
 		'devWOL': '',
 		'devBlocked':  '',
@@ -1786,7 +1790,9 @@ MESSAGES = {
 		'saveFileErr':  '',
 		'contactLoad':  '',
 		'contactMax':  '',
-		'contactGet':  ''
+		'contactGet':  '',
+		'noData':  '',
+		'noCheck':  ''
 	},
 
 	# Actions
