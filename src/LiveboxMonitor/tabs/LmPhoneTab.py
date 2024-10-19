@@ -284,16 +284,7 @@ class LmPhone:
 			aName = self._callList.item(aCurrentSelection, CallCol.Contact).text()
 			n = self._contactList.rowCount()
 
-			# Try first to find the contact by name
-			if len(aName):
-				i = 0
-				while (i < n):
-					if self._contactList.item(i, ContactCol.Name).text() == aName:
-						self.editContactDialog(i)
-						return
-					i += 1
-
-			# Then try to find the contact by phone number
+			# Try first to find the contact by phone number
 			aRawPhoneNb = self._callList.item(aCurrentSelection, CallCol.Number).text()
 			aPhoneNb  = LmPhone.intlPhoneNumber(aRawPhoneNb)
 			if len(aPhoneNb):
@@ -302,6 +293,15 @@ class LmPhone:
 					if ((LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Cell).text()) == aPhoneNb) or
 						(LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Home).text()) == aPhoneNb) or
 						(LmPhone.intlPhoneNumber(self._contactList.item(i, ContactCol.Work).text()) == aPhoneNb)):
+						self.editContactDialog(i)
+						return
+					i += 1
+
+			# Then try to find the contact by name
+			if len(aName):
+				i = 0
+				while (i < n):
+					if self._contactList.item(i, ContactCol.Name).text() == aName:
 						self.editContactDialog(i)
 						return
 					i += 1
