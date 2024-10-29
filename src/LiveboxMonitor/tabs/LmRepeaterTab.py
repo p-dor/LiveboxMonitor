@@ -23,6 +23,7 @@ from LiveboxMonitor.lang.LmLanguages import GetRepeaterLabel as lx, GetRepeaterM
 TAB_NAME = 'repeaterTab'	# 'Key' dynamic property indicates the MAC addr
 
 # Static Config
+WIFI_REPEATER_TYPES = {'repeteurwifi', 'repeteurwifi6', 'sah ap'}
 WIFI_REPEATER_5 = 'WIFIREPARCFR'
 WIFI_REPEATER_6 = 'WIFI6REPSERCOMM'
 WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
@@ -247,8 +248,10 @@ class LmRepeater:
 
 	### Itentify potential Wifi Repeater device & add it to the list
 	def identifyRepeater(self, iDevice):
-		aProdClass = iDevice.get('ProductClass', '' )
-		if aProdClass in WIFI_REPEATER_PRODUCT_CLASSES:
+		aDeviceType = iDevice.get('DeviceType', '')
+		aProdClass = iDevice.get('ProductClass', '')
+
+		if (aDeviceType.lower() in WIFI_REPEATER_TYPES) or (aProdClass in WIFI_REPEATER_PRODUCT_CLASSES):
 			aKey = iDevice.get('Key', '')
 
 			# Check if not already there
@@ -264,7 +267,17 @@ class LmRepeater:
 			except:
 				aName = DEFAULT_REPEATER_NAME + str(aIndex + 1)
 
-			aVersion = WIFI_REPEATER_VERSION_MAP[aProdClass]
+			# Determine version
+			aModelName = None
+			aSSW = iDevice.get('SSW')
+			if type(aSSW).__name__ == 'dict':
+				aModelName = aSSW.get('ModelName')
+			if aModelName is None:
+				aModelName = aProdClass		# In some cases the model name is indicated in product class
+			try:
+				aVersion = WIFI_REPEATER_VERSION_MAP[aModelName]
+			except:
+				aVersion = 5	# Default to version 5
 
 			aIPStruct = LmTools.DetermineIP(iDevice)
 			if aIPStruct is None:
