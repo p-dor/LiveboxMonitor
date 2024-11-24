@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .Firewall - Name: .Firewall
@@ -294,4 +294,72 @@ OBJECT: Firewall.List.Entry - Name: Firewall.List.Entry
   - Protocol (type: string)
   - DestinationPrefix (type: string)
   - SourcePrefix (type: string)
+
+=======================================================================
+OBJECT: Firewall.PCP - Name: Firewall.PCP
+ == PARAMETERS:
+  - PCPVersion (type: uint32)
+      Attributes: persistent
+      Validator: {'max': '2'}
+  - PCPServer (type: string)
+      Attributes: persistent
+  - Interface (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+  - WANIPAddress (type: string)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['PCP_DISABLED', 'PCP_INIT', 'PCP_SUCCESS', 'PCP_TIMEOUT', 'PCP_ERROR']
+  - PCPServerMaxlifetime (type: uint32)
+      Attributes: persistent
+  - PCPServerMinlifetime (type: uint32)
+      Attributes: persistent
+  - MAPNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - PeerNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.PCP.MAP - Name: Firewall.PCP.MAP
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Status (type: bool)
+  - PCPStatus (type: string)
+      Validator: ['INIT', 'STARTED', 'SUCCESS', 'UNSUPP_VERSION', 'NOT_AUTHORIZED', 'MALFORMED_REQUEST', 'UNSUPP_OPCODE', 'UNSUPP_OPTION', 'MALFORMED_OPTION', 'NETWORK_FAILURE', 'NO_RESOURCES', 'UNSUPP_PROTOCOL', 'USER_EX_QUOTA', 'CANNOT_PROVIDE_EXTERNAL_PORT', 'ADDRESS_MISMATCH', 'EXCESSIVE_REMOTE_PEERS', 'ERROR']
+  - Nonce (type: string)
+      Attributes: persistent
+  - Protocol (type: uint8)
+      Attributes: persistent
+  - InternalPort (type: uint16)
+      Attributes: persistent
+  - InternalIPAddress (type: string)
+      Attributes: persistent
+  - ProposedExternalPort (type: uint16)
+      Attributes: persistent
+  - ProposedExternalIPAddress (type: string)
+      Attributes: persistent
+  - ExternalPort (type: uint16)
+      Attributes: persistent
+  - ExternalIPAddress (type: string)
+      Attributes: persistent
+  - Lifetime (type: uint32)
+      Attributes: persistent
+  - AssignedLifetime (type: uint32)
+  - ActiveLifetime (type: uint32)
+      Attributes: read_only
+  - UPnPv1Compat (type: bool)
+  - FilterNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.PCP.MAP.Filter - Name: Firewall.PCP.MAP.Filter
+ == PARAMETERS:
+  - Prefix (type: uint32)
+      Attributes: persistent
+      Validator: {'max': '32'}
+  - RemotePort (type: uint16)
+      Attributes: persistent
+  - IPAddress (type: string)
+      Attributes: persistent
 

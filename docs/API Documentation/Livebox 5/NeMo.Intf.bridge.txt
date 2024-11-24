@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: NeMo.Intf.bridge - Name: NeMo.Intf.7
@@ -48,6 +48,7 @@ OBJECT: NeMo.Intf.bridge - Name: NeMo.Intf.7
   - IPv6AcceptSourceRoute (type: bool)
   - IPv6AcceptRedirects (type: bool)
   - IPv6OptimisticDAD (type: bool)
+  - IPv6AcceptDAD (type: uint32)
   - IPv6Disable (type: bool)
   - IPv6HostPart (type: string)
   - RtTable (type: int32)
@@ -175,6 +176,9 @@ OBJECT: NeMo.Intf.bridge.IPv4Route - Name: NeMo.Intf.7.IPv4Route
       Attributes: persistent
   - Priority (type: int32)
       Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv4', 'OSPF', 'IPCP', 'RIP', 'Static']
   - Gateway (type: string)
       Attributes: persistent
 
@@ -199,6 +203,9 @@ OBJECT: NeMo.Intf.bridge.IPv6Route - Name: NeMo.Intf.7.IPv6Route
       Attributes: persistent
   - Priority (type: int32)
       Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv6', 'OSPF', 'RA', 'RIPng', 'Static']
   - Gateway (type: string)
       Attributes: persistent
 
@@ -215,6 +222,7 @@ OBJECT: NeMo.Intf.bridge.IPv6Router - Name: NeMo.Intf.7.IPv6Router
   - RouterLifetime (type: uint16)
   - ReachableTime (type: uint32)
   - RetransTimer (type: uint32)
+  - Status (type: string)
 
 =======================================================================
 OBJECT: NeMo.Intf.bridge.IPv6Router.Option - Name: NeMo.Intf.7.IPv6Router.Option

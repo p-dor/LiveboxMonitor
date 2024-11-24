@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .NMC - Name: .NMC
@@ -65,6 +65,20 @@ OBJECT: NMC.Gpon - Name: NMC.Gpon
   - RxPowerSignalQuality (type: bool)
 
 =======================================================================
+OBJECT: NMC.Gpon.Laser - Name: NMC.Gpon.Laser
+ == PARAMETERS:
+  - FilePath (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Gpon.Laser.Attribute - Name: NMC.Gpon.Laser.Attribute
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Value (type: int32)
+      Attributes: read_only
+
+=======================================================================
 OBJECT: NMC.IPv6 - Name: NMC.IPv6
  == FUNCTIONS:
   - void set((bool Enable), (bool UserRequested), (bool IPv4UserRequested))
@@ -127,7 +141,6 @@ OBJECT: NMC.Wifi - Name: NMC.Wifi
       Attributes: persistent
   - TempEnable (type: bool)
   - Status (type: bool)
-      Attributes: read_only
   - ReadOnlyStatus (type: bool)
       Attributes: persistent
   - PairingStatus (type: string)
@@ -287,7 +300,7 @@ OBJECT: NMC.Reboot.Reboot - Name: NMC.Reboot.Reboot
       Attributes: read_only, persistent
   - BootReason (type: string)
       Attributes: read_only, persistent
-      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset']
+      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset', 'Oops']
   - ShutdownDate (type: date_time)
       Attributes: read_only, persistent
   - ShutdownReason (type: string)
@@ -299,8 +312,37 @@ OBJECT: NMC.Autodetect - Name: NMC.Autodetect
   - FirstBoot (type: bool)
       Attributes: persistent
   - LastConnectionError (type: string)
+  - IPv6SwitchEnable (type: bool)
+      Attributes: persistent
+  - IPv6Mode (type: string)
+      Attributes: persistent
+      Validator: ['DualStack', 'Dslite', 'Switching_To_DualStack', 'Switching_To_Dslite']
  == FUNCTIONS:
   - variant get()
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility - Name: NMC.ServiceEligibility
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.Criteria - Name: NMC.ServiceEligibility.Criteria
+ == PARAMETERS:
+  - Value (type: bool)
+  - LastUpdate (type: date_time)
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.CgnOption - Name: NMC.ServiceEligibility.CgnOption
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.CgnOption.SentOption - Name: NMC.ServiceEligibility.CgnOption.SentOption
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Intfname (type: string)
+      Attributes: persistent
+  - Tag (type: uint8)
+      Attributes: persistent
+  - Value (type: string)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: NMC.TPPP - Name: NMC.TPPP

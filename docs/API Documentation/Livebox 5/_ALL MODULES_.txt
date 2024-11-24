@@ -1,95 +1,7 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: . - Name: .
-
-=======================================================================
-OBJECT: .UserInterface - Name: .UserInterface
- == PARAMETERS:
-  - AvailableLanguages (type: string)
-      Attributes: read_only
-  - CurrentLanguage (type: string)
-      Attributes: persistent
-      Validator: ['en', 'fr']
-  - BackupFileName (type: string)
-      Attributes: persistent
-  - CurrentState (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - string getLanguage((string availableLanguages))
-  - bool setLanguage(string currentLanguage)
-  - string setState(string currentState)
-  - string getState()
-  - bool export((string fileName))
-  - bool import((string fileName))
-  - variant getDebugInformation()
-
-=======================================================================
-OBJECT: .DeviceManager - Name: .DeviceManager
- == PARAMETERS:
-  - DeviceSources (type: string)
-      Attributes: read_only
-  - DeviceTypes (type: string)
-      Attributes: read_only
- == FUNCTIONS:
-  - list getDevices((string sources), (string types))
-  - bool enableNotifications()
-
-=======================================================================
-OBJECT: DeviceManager.Connectivity - Name: DeviceManager.Connectivity
- == PARAMETERS:
-  - ConnectivitySources (type: string)
-      Attributes: read_only
- == FUNCTIONS:
-  - variant getStatus((string sources))
-  - bool enableNotifications()
-
-=======================================================================
-OBJECT: .sah - Name: .sah
-
-=======================================================================
-OBJECT: sah.Device - Name: sah.Device
-
-=======================================================================
-OBJECT: sah.Device.Information - Name: sah.Device.Information
- == FUNCTIONS:
-  - int32 getSummary((string deviceID), (string deviceType), (string friendlyName), (string manufacturer), (string manufacturerURL), (string modelDescription), (string modelName), (string modelNumber), (string modelURL), (string serialNumber), (string UDN), (string UPC))
-  - int32 getVersion((string deviceID), (string softwareDate), (string softwareVersion), (string hardwareVersion))
-
-=======================================================================
-OBJECT: sah.Device.PowerManagement - Name: sah.Device.PowerManagement
- == FUNCTIONS:
-  - int32 restart()
-
-=======================================================================
-OBJECT: sah.Device.AttachedDevices - Name: sah.Device.AttachedDevices
- == FUNCTIONS:
-  - int32 listAll(string deviceType, (list deviceList))
-
-=======================================================================
-OBJECT: sah.Device.LocalStorage - Name: sah.Device.LocalStorage
- == FUNCTIONS:
-  - int32 eject(string USBMassStorageID)
-
-=======================================================================
-OBJECT: sah.AccessManagement - Name: sah.AccessManagement
-
-=======================================================================
-OBJECT: sah.HomeNetworkManagement - Name: sah.HomeNetworkManagement
-
-=======================================================================
-OBJECT: sah.Voice - Name: sah.Voice
-
-=======================================================================
-OBJECT: sah.hgw - Name: sah.hgw
-
-=======================================================================
-OBJECT: sah.hgw.models - Name: sah.hgw.models
-
-=======================================================================
-OBJECT: sah.hgw.models.DeviceManager - Name: sah.hgw.models.DeviceManager
- == FUNCTIONS:
-  - void getDevices()
 
 =======================================================================
 OBJECT: .UplinkMonitor - Name: .UplinkMonitor
@@ -105,57 +17,6 @@ OBJECT: UplinkMonitor.DefaultGateway - Name: UplinkMonitor.DefaultGateway
       Attributes: read_only
   - NeMoIntfName (type: string)
       Attributes: read_only
-
-=======================================================================
-OBJECT: .DHCPv6 - Name: .DHCPv6
-
-=======================================================================
-OBJECT: DHCPv6.Server - Name: DHCPv6.Server
- == PARAMETERS:
-  - Status (type: string)
-      Attributes: read_only
-      Validator: ['Enabled', 'Disabled', 'Error']
-  - Enable (type: bool)
-      Attributes: persistent
-  - PoolNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - list getPDPrefixLeases()
-  - list getPDPrefixInformation()
-  - void enableDHCPv6Server(bool enable)
-  - string getDHCPv6ServerStatus()
-  - void createPool(string name, string interface)
-
-=======================================================================
-OBJECT: .Maculan - Name: .Maculan
-
-=======================================================================
-OBJECT: .PasswordRecovery - Name: .PasswordRecovery
- == FUNCTIONS:
-  - void start()
-  - void stop()
-  - int setPassword((string password))
-
-=======================================================================
-OBJECT: .eventmanager - Name: .eventmanager
- == PARAMETERS:
-  - longpolling_timeout (type: uint32)
-      Attributes: read_only
-  - channelinactivity_timeout (type: uint32)
-      Attributes: read_only
-  - dosprotection_timeout (type: uint32)
-      Attributes: read_only
-  - dosprotection_maxchannels (type: uint32)
-      Attributes: read_only
-  - max_subscriptions (type: uint32)
-      Attributes: read_only
-  - message_servers (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - notification get_events((uint32 channelid), (list events))
-  - notification open_channel((list events))
-  - void subscribe((uint32 channelid), (list events))
-  - void unsubscribe((uint32 channelid), (list events))
 
 =======================================================================
 OBJECT: .Phonebook - Name: .Phonebook
@@ -185,53 +46,9 @@ OBJECT: .Phonebook - Name: .Phonebook
   - bool disableCardDavAndCleanupEntries()
 
 =======================================================================
-OBJECT: .USBHosts - Name: .USBHosts
- == PARAMETERS:
-  - PortNameNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - list getDevices((list deviceClass))
-  - void import()
-  - void export()
-  - bool enableUSB3(bool enable)
-
-=======================================================================
 OBJECT: .WOL - Name: .WOL
  == FUNCTIONS:
   - void sendWakeOnLan(string hostID, (string intf), (string password), (bool broadcast), (uint32 retries), (uint32 interval))
-
-=======================================================================
-OBJECT: .WLanScheduler - Name: .WLanScheduler
- == FUNCTIONS:
-  - bool setState((string ID), (string state))
-      Attributes: message
-
-=======================================================================
-OBJECT: WLanScheduler.Schedules - Name: WLanScheduler.Schedules
- == PARAMETERS:
-  - ID (type: string)
-      Attributes: read_only, persistent
-  - Name (type: string)
-      Attributes: persistent
-  - Enable (type: bool)
-      Attributes: persistent
-  - Base (type: string)
-      Attributes: persistent
-      Validator: ['Once', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly']
-  - Default (type: string)
-      Attributes: persistent
-  - Override (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: WLanScheduler.Schedules.Entry - Name: WLanScheduler.Schedules.Entry
- == PARAMETERS:
-  - State (type: string)
-      Attributes: persistent
-  - Begin (type: uint32)
-      Attributes: persistent
-  - End (type: uint32)
-      Attributes: persistent
 
 =======================================================================
 OBJECT: .DECT - Name: .DECT
@@ -283,6 +100,27 @@ OBJECT: DECT.Repeater.Device - Name: DECT.Repeater.Device
   - void deregister()
 
 =======================================================================
+OBJECT: .eventmanager - Name: .eventmanager
+ == PARAMETERS:
+  - longpolling_timeout (type: uint32)
+      Attributes: read_only
+  - channelinactivity_timeout (type: uint32)
+      Attributes: read_only
+  - dosprotection_timeout (type: uint32)
+      Attributes: read_only
+  - dosprotection_maxchannels (type: uint32)
+      Attributes: read_only
+  - max_subscriptions (type: uint32)
+      Attributes: read_only
+  - message_servers (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - notification get_events((uint32 channelid), (list events))
+  - notification open_channel((list events))
+  - void subscribe((uint32 channelid), (list events))
+  - void unsubscribe((uint32 channelid), (list events))
+
+=======================================================================
 OBJECT: .DynDNS - Name: .DynDNS
  == PARAMETERS:
   - Enable (type: bool)
@@ -302,77 +140,37 @@ OBJECT: .DynDNS - Name: .DynDNS
   - bool getEnableOnCgnat()
 
 =======================================================================
-OBJECT: .RemoteAccess - Name: .RemoteAccess
+OBJECT: .WLanScheduler - Name: .WLanScheduler
+ == FUNCTIONS:
+  - bool setState((string ID), (string state))
+      Attributes: message
+
+=======================================================================
+OBJECT: WLanScheduler.Schedules - Name: WLanScheduler.Schedules
  == PARAMETERS:
-  - SourcePrefix (type: string)
-      Attributes: persistent
-  - SourcePrefixNonEmpty (type: bool)
-  - PortMode (type: string)
-      Attributes: persistent
-      Validator: ['RANDOM', 'DEFAULT']
-  - AllowedPorts (type: string)
-      Attributes: persistent
-  - Port (type: uint16)
-      Attributes: persistent
-  - SupportedProtocols (type: string)
-      Attributes: read_only
-  - Protocol (type: string)
-      Attributes: persistent
-      Validator: ['HTTP', 'HTTPS']
-  - Timeout (type: uint32)
-      Attributes: persistent
-  - TimeLeft (type: uint32)
-      Attributes: read_only
-  - Interface (type: string)
-      Attributes: persistent
-  - EnableTime (type: date_time)
+  - ID (type: string)
       Attributes: read_only, persistent
-  - DisabledAtStartup (type: bool)
-      Attributes: read_only, persistent
-  - ForcePortFailure (type: uint16)
-  - EmulateHTTPService (type: bool)
+  - Name (type: string)
       Attributes: persistent
   - Enable (type: bool)
       Attributes: persistent
- == FUNCTIONS:
-  - variant get()
-  - bool set((variant parameters))
-  - uint16 enable((uint16 port), (bool secure), (uint32 timeout), (string sourcePrefix))
-  - bool disable()
-  - uint32 getTimeLeft()
-  - bool restartTimer()
+  - Base (type: string)
+      Attributes: persistent
+      Validator: ['Once', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly']
+  - Default (type: string)
+      Attributes: persistent
+  - Override (type: string)
+      Attributes: persistent
 
 =======================================================================
-OBJECT: .History - Name: .History
-
-=======================================================================
-OBJECT: History.Backup - Name: History.Backup
+OBJECT: WLanScheduler.Schedules.Entry - Name: WLanScheduler.Schedules.Entry
  == PARAMETERS:
-  - Count (type: uint32)
-      Attributes: read_only
-  - MaxHistSize (type: uint32)
-      Attributes: read_only
-  - AmountOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void updateHistory()
-  - void cleanHistory()
-  - void getSimpleHistory()
-  - void rotate((string source))
-
-=======================================================================
-OBJECT: History.Backup.Entry - Name: History.Backup.Entry
- == PARAMETERS:
-  - Filenames (type: string)
-      Attributes: read_only
-  - RotationIndex (type: uint32)
-      Attributes: read_only
-  - CreationDate (type: date_time)
-      Attributes: read_only
-  - SoftwareVersion (type: string)
-      Attributes: read_only
-  - Source (type: string)
-      Attributes: read_only
+  - State (type: string)
+      Attributes: persistent
+  - Begin (type: uint32)
+      Attributes: persistent
+  - End (type: uint32)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: .VoWifi - Name: .VoWifi
@@ -382,6 +180,8 @@ OBJECT: .VoWifi - Name: .VoWifi
   - Status (type: string)
       Attributes: read_only
       Validator: ['Enabled', 'Disabled', 'Error']
+  - CallIsBusy (type: bool)
+      Attributes: read_only
  == FUNCTIONS:
   - void configureBusyCall((uint8 pollingInterval), (uint8 pollingMultiple), (uint8 busyThreshold))
   - void export()
@@ -427,26 +227,6 @@ OBJECT: VoWifi.Devices - Name: VoWifi.Devices
       Attributes: read_only, persistent
 
 =======================================================================
-OBJECT: .PnP - Name: .PnP
- == PARAMETERS:
-  - Status (type: string)
-      Validator: ['Idle', 'Disabled', 'Running', 'Error', 'OK', 'Timeout']
-  - LastName (type: string)
-      Attributes: persistent
-  - FirstName (type: string)
-      Attributes: persistent
-  - MobilePhoneNumber (type: string)
-      Attributes: persistent
-      Validator: {'max': '10'}
-  - ValidationDomain (type: string)
-  - ConnectionMode (type: string)
-      Attributes: persistent
-  - Enable (type: bool)
-      Attributes: persistent
- == FUNCTIONS:
-  - list get()
-
-=======================================================================
 OBJECT: .Scheduler - Name: .Scheduler
  == PARAMETERS:
   - TypesNumberOfEntries (type: uint32)
@@ -465,63 +245,124 @@ OBJECT: .Scheduler - Name: .Scheduler
   - bool getSchedule(string type, string ID, (schedule_t info), (string device))
 
 =======================================================================
-OBJECT: .Locations - Name: .Locations
- == FUNCTIONS:
-  - void addLocation(string key, string name, (string description))
-  - void removeLocation(string key)
-  - void setSection(string location, string section)
-  - void removeSection(string location, string section)
-  - list getComposition(string location, (string flags))
-  - list getLocations(string location)
-
-=======================================================================
-OBJECT: Locations.Location - Name: Locations.Location
+OBJECT: .ServiceInvocation - Name: .ServiceInvocation
  == PARAMETERS:
-  - Key (type: string)
-      Attributes: read_only, persistent
-  - Name (type: string)
-      Attributes: read_only, persistent
-  - Description (type: string)
-      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
  == FUNCTIONS:
-  - variant get((string flags))
+  - bool reloadAclScript()
+  - bool export((string fileName))
+  - bool import((string fileName))
 
 =======================================================================
-OBJECT: .PowerManagement - Name: .PowerManagement
+OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
-  - Status (type: bool)
+  - WakeUpURL (type: string)
       Attributes: read_only
-  - ConfigurationMode (type: string)
-      Attributes: read_only
-      Validator: ['Dynamic', 'Static']
-  - Power (type: uint32)
-      Attributes: read_only
-  - InformRandomDelay (type: uint32)
+  - Port (type: string)
       Attributes: persistent
+  - Duration (type: uint32)
+      Attributes: persistent
+  - ActivationDate (type: date_time)
+      Attributes: read_only, persistent
  == FUNCTIONS:
-  - variant getSupportedModes()
-  - variant getSupportedTriggers()
-  - variant setProfiles(list profiles)
-  - variant setScheduledProfiles(list profiles)
-  - variant setScheduledProfilesOverride(list overrides)
-  - variant setTriggeredProfiles(list profiles)
-  - variant getProfiles((list profiles))
-  - void removeProfiles((list profiles))
-  - void setState(string ID, string state)
-  - bool import()
-  - bool export()
+  - void updateWakeUpURL((string host), (uint32 port))
+  - bool activate()
+  - variant get()
+  - bool set((variant parameters))
 
 =======================================================================
-OBJECT: PowerManagement.SupportedTriggers - Name: PowerManagement.SupportedTriggers
+OBJECT: ServiceInvocation.OnDemand.Server - Name: ServiceInvocation.OnDemand.Server
  == PARAMETERS:
-  - Name (type: string)
+  - CommonName (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: ServiceInvocation.ACLConfigFile - Name: ServiceInvocation.ACLConfigFile
+ == PARAMETERS:
+  - Version (type: string)
+
+=======================================================================
+OBJECT: .UserInterface - Name: .UserInterface
+ == PARAMETERS:
+  - AvailableLanguages (type: string)
       Attributes: read_only
-  - Description (type: string)
+  - CurrentLanguage (type: string)
+      Attributes: persistent
+      Validator: ['en', 'fr']
+  - BackupFileName (type: string)
+      Attributes: persistent
+  - CurrentState (type: string)
+      Attributes: persistent
+      Validator: ['installed', 'connected', '']
+ == FUNCTIONS:
+  - string getLanguage((string availableLanguages))
+  - bool setLanguage(string currentLanguage)
+  - string setState(string currentState)
+  - string getState()
+  - bool export((string fileName))
+  - bool import((string fileName))
+  - variant getDebugInformation()
+
+=======================================================================
+OBJECT: .RemoteAccess - Name: .RemoteAccess
+ == PARAMETERS:
+  - SourcePrefix (type: string)
+      Attributes: persistent
+  - SourcePrefixNonEmpty (type: bool)
+  - PortMode (type: string)
+      Attributes: persistent
+      Validator: ['RANDOM', 'DEFAULT']
+  - AllowedPorts (type: string)
+      Attributes: persistent
+  - Port (type: uint16)
+      Attributes: persistent
+  - SupportedProtocols (type: string)
       Attributes: read_only
-  - Value (type: bool)
+  - Protocol (type: string)
+      Attributes: persistent
+      Validator: ['HTTP', 'HTTPS']
+  - Timeout (type: uint32)
+      Attributes: persistent
+  - TimeLeft (type: uint32)
       Attributes: read_only
+  - Interface (type: string)
+      Attributes: persistent
+  - EnableTime (type: date_time)
+      Attributes: read_only, persistent
+  - DisabledAtStartup (type: bool)
+      Attributes: read_only, persistent
+  - ForcePortFailure (type: uint16)
+  - EmulateHTTPService (type: bool)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
+  - uint16 enable((uint16 port), (bool secure), (uint32 timeout), (string sourcePrefix))
+  - bool disable()
+  - uint32 getTimeLeft()
+  - bool restartTimer()
+
+=======================================================================
+OBJECT: .Profiles - Name: .Profiles
+
+=======================================================================
+OBJECT: Profiles.Profile - Name: Profiles.Profile
+ == PARAMETERS:
+  - Current (type: string)
+      Attributes: persistent
+  - Profiles (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant get()
+  - variant getData()
+  - variant setData(variant data, (string profileName))
+  - void setCurrent(string profileName)
+  - list getNames()
 
 =======================================================================
 OBJECT: .Manifests - Name: .Manifests
@@ -544,53 +385,6 @@ OBJECT: Manifests.UserData.Data - Name: Manifests.UserData.Data
  == PARAMETERS:
   - Content (type: string)
       Attributes: persistent
-
-=======================================================================
-OBJECT: .Profiles - Name: .Profiles
-
-=======================================================================
-OBJECT: Profiles.Profile - Name: Profiles.Profile
- == PARAMETERS:
-  - Current (type: string)
-      Attributes: persistent
-  - Profiles (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - variant get()
-  - variant getData()
-  - variant setData(variant data, (string profileName))
-  - void setCurrent(string profileName)
-  - list getNames()
-
-=======================================================================
-OBJECT: .ServiceInvocation - Name: .ServiceInvocation
- == PARAMETERS:
-  - Status (type: bool)
-      Attributes: read_only
- == FUNCTIONS:
-  - bool reloadAclScript()
-  - bool export((string fileName))
-  - bool import((string fileName))
-
-=======================================================================
-OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - WakeUpURL (type: string)
-      Attributes: read_only
-  - Port (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - void updateWakeUpURL((string host), (uint32 port))
-  - bool activate()
-  - variant get()
-  - bool set((variant parameters))
-
-=======================================================================
-OBJECT: ServiceInvocation.ACLConfigFile - Name: ServiceInvocation.ACLConfigFile
- == PARAMETERS:
-  - Version (type: string)
 
 =======================================================================
 OBJECT: .UPnP-IGD - Name: .UPnP-IGD
@@ -633,6 +427,58 @@ OBJECT: UPnP-IGD.UDN - Name: UPnP-IGD.UDN
       Attributes: read_only
   - Value (type: string)
       Attributes: read_only
+
+=======================================================================
+OBJECT: .DeviceManager - Name: .DeviceManager
+ == PARAMETERS:
+  - DeviceSources (type: string)
+      Attributes: read_only
+  - DeviceTypes (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getDevices((string sources), (string types))
+  - bool enableNotifications()
+
+=======================================================================
+OBJECT: DeviceManager.Connectivity - Name: DeviceManager.Connectivity
+ == PARAMETERS:
+  - ConnectivitySources (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - variant getStatus((string sources))
+  - bool enableNotifications()
+
+=======================================================================
+OBJECT: .PowerManagement - Name: .PowerManagement
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+  - ConfigurationMode (type: string)
+      Attributes: read_only
+      Validator: ['Dynamic', 'Static']
+  - Power (type: uint32)
+      Attributes: read_only
+  - InformRandomDelay (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - variant getSupportedModes()
+  - variant setElements(list elements)
+  - variant getElements((list elements))
+  - void removeElements((list elements))
+  - variant setProfiles(list profiles)
+  - variant setScheduledProfiles(list profiles)
+  - variant setScheduledProfilesOverride(list overrides)
+  - variant setTriggeredProfiles(list profiles)
+  - variant setExpressions(list expressions)
+  - variant getExpressions((list expressions))
+  - void removeExpressions((list expressions))
+  - variant getProfiles((list profiles))
+  - void removeProfiles((list profiles))
+  - void setState(string ID, string state)
+  - bool import()
+  - bool export()
 
 =======================================================================
 OBJECT: .Firewall - Name: .Firewall
@@ -930,6 +776,250 @@ OBJECT: Firewall.List.Entry - Name: Firewall.List.Entry
   - SourcePrefix (type: string)
 
 =======================================================================
+OBJECT: Firewall.PCP - Name: Firewall.PCP
+ == PARAMETERS:
+  - PCPVersion (type: uint32)
+      Attributes: persistent
+      Validator: {'max': '2'}
+  - PCPServer (type: string)
+      Attributes: persistent
+  - Interface (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+  - WANIPAddress (type: string)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['PCP_DISABLED', 'PCP_INIT', 'PCP_SUCCESS', 'PCP_TIMEOUT', 'PCP_ERROR']
+  - PCPServerMaxlifetime (type: uint32)
+      Attributes: persistent
+  - PCPServerMinlifetime (type: uint32)
+      Attributes: persistent
+  - MAPNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - PeerNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.PCP.MAP - Name: Firewall.PCP.MAP
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Status (type: bool)
+  - PCPStatus (type: string)
+      Validator: ['INIT', 'STARTED', 'SUCCESS', 'UNSUPP_VERSION', 'NOT_AUTHORIZED', 'MALFORMED_REQUEST', 'UNSUPP_OPCODE', 'UNSUPP_OPTION', 'MALFORMED_OPTION', 'NETWORK_FAILURE', 'NO_RESOURCES', 'UNSUPP_PROTOCOL', 'USER_EX_QUOTA', 'CANNOT_PROVIDE_EXTERNAL_PORT', 'ADDRESS_MISMATCH', 'EXCESSIVE_REMOTE_PEERS', 'ERROR']
+  - Nonce (type: string)
+      Attributes: persistent
+  - Protocol (type: uint8)
+      Attributes: persistent
+  - InternalPort (type: uint16)
+      Attributes: persistent
+  - InternalIPAddress (type: string)
+      Attributes: persistent
+  - ProposedExternalPort (type: uint16)
+      Attributes: persistent
+  - ProposedExternalIPAddress (type: string)
+      Attributes: persistent
+  - ExternalPort (type: uint16)
+      Attributes: persistent
+  - ExternalIPAddress (type: string)
+      Attributes: persistent
+  - Lifetime (type: uint32)
+      Attributes: persistent
+  - AssignedLifetime (type: uint32)
+  - ActiveLifetime (type: uint32)
+      Attributes: read_only
+  - UPnPv1Compat (type: bool)
+  - FilterNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.PCP.MAP.Filter - Name: Firewall.PCP.MAP.Filter
+ == PARAMETERS:
+  - Prefix (type: uint32)
+      Attributes: persistent
+      Validator: {'max': '32'}
+  - RemotePort (type: uint16)
+      Attributes: persistent
+  - IPAddress (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: .History - Name: .History
+
+=======================================================================
+OBJECT: History.Backup - Name: History.Backup
+ == PARAMETERS:
+  - Count (type: uint32)
+      Attributes: read_only
+  - MaxHistSize (type: uint32)
+      Attributes: read_only
+  - AmountOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void updateHistory()
+  - void cleanHistory()
+  - void getSimpleHistory()
+  - void rotate((string source))
+
+=======================================================================
+OBJECT: History.Backup.Entry - Name: History.Backup.Entry
+ == PARAMETERS:
+  - Filenames (type: string)
+      Attributes: read_only
+  - RotationIndex (type: uint32)
+      Attributes: read_only
+  - CreationDate (type: date_time)
+      Attributes: read_only
+  - SoftwareVersion (type: string)
+      Attributes: read_only
+  - Source (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: .sah - Name: .sah
+
+=======================================================================
+OBJECT: sah.Device - Name: sah.Device
+
+=======================================================================
+OBJECT: sah.Device.Information - Name: sah.Device.Information
+ == FUNCTIONS:
+  - int32 getSummary((string deviceID), (string deviceType), (string friendlyName), (string manufacturer), (string manufacturerURL), (string modelDescription), (string modelName), (string modelNumber), (string modelURL), (string serialNumber), (string UDN), (string UPC))
+  - int32 getVersion((string deviceID), (string softwareDate), (string softwareVersion), (string hardwareVersion))
+
+=======================================================================
+OBJECT: sah.Device.PowerManagement - Name: sah.Device.PowerManagement
+ == FUNCTIONS:
+  - int32 restart()
+
+=======================================================================
+OBJECT: sah.Device.AttachedDevices - Name: sah.Device.AttachedDevices
+ == FUNCTIONS:
+  - int32 listAll(string deviceType, (list deviceList))
+
+=======================================================================
+OBJECT: sah.Device.LocalStorage - Name: sah.Device.LocalStorage
+ == FUNCTIONS:
+  - int32 eject(string USBMassStorageID)
+
+=======================================================================
+OBJECT: sah.AccessManagement - Name: sah.AccessManagement
+
+=======================================================================
+OBJECT: sah.HomeNetworkManagement - Name: sah.HomeNetworkManagement
+
+=======================================================================
+OBJECT: sah.Voice - Name: sah.Voice
+
+=======================================================================
+OBJECT: sah.hgw - Name: sah.hgw
+
+=======================================================================
+OBJECT: sah.hgw.models - Name: sah.hgw.models
+
+=======================================================================
+OBJECT: sah.hgw.models.DeviceManager - Name: sah.hgw.models.DeviceManager
+ == FUNCTIONS:
+  - void getDevices()
+
+=======================================================================
+OBJECT: .Maculan - Name: .Maculan
+
+=======================================================================
+OBJECT: .DNSSD - Name: .DNSSD
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - PID (type: int32)
+      Attributes: read_only
+  - ScanNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - AdvertiseNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void enableAvahi(bool enable)
+  - void startScanning(string key, string type, (uint32 duration), (string protocol))
+  - void stopScanning(string key)
+  - void deleteScan(string key)
+  - void startAdvertise(string name, uint16 port, string type, (string protocol), (list text))
+  - void stopAdvertise(string name)
+  - void lookup(string type, (string protocol))
+  - bool resolve(string type, string protocol, int interfaceIndex, string name)
+
+=======================================================================
+OBJECT: DNSSD.Config - Name: DNSSD.Config
+ == PARAMETERS:
+  - AdvertisedName (type: string)
+  - UseAdvertisedName (type: bool)
+  - Domain (type: string)
+  - UseIPv4 (type: bool)
+      Attributes: persistent
+  - UseIPv6 (type: bool)
+      Attributes: persistent
+  - AllowedInterfaces (type: string)
+      Attributes: persistent
+  - BlacklistDefaultAddress (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DNSSD.Scan - Name: DNSSD.Scan
+ == PARAMETERS:
+  - Status (type: string)
+      Validator: ['init', 'scanning', 'done', 'error']
+  - Service (type: string)
+  - Protocol (type: string)
+  - ResultNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: DNSSD.Scan.Result - Name: DNSSD.Scan.Result
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Removed (type: bool)
+      Attributes: read_only
+  - InterfaceIndex (type: string)
+      Attributes: read_only
+  - Domain (type: string)
+      Attributes: read_only
+  - IPAddress (type: string)
+      Attributes: read_only
+  - Hostname (type: string)
+      Attributes: read_only
+  - Port (type: uint16)
+      Attributes: read_only
+  - Time (type: date_time)
+      Attributes: read_only
+  - Text (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: DNSSD.Advertise - Name: DNSSD.Advertise
+ == PARAMETERS:
+  - Name (type: string)
+  - Port (type: uint16)
+  - Type (type: string)
+  - Protocol (type: string)
+  - Enable (type: bool)
+
+=======================================================================
+OBJECT: DNSSD.Advertise.Text - Name: DNSSD.Advertise.Text
+ == PARAMETERS:
+  - Key (type: string)
+  - Value (type: string)
+
+=======================================================================
+OBJECT: .USBHosts - Name: .USBHosts
+ == PARAMETERS:
+  - PortNameNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getDevices((list deviceClass))
+  - void import()
+  - void export()
+  - bool enableUSB3(bool enable)
+
+=======================================================================
 OBJECT: .MSS - Name: .MSS
  == PARAMETERS:
   - Enable (type: bool)
@@ -1034,89 +1124,6 @@ OBJECT: MSS.Debug.ErrorLog - Name: MSS.Debug.ErrorLog
       Attributes: read_only, persistent
 
 =======================================================================
-OBJECT: .DNSSD - Name: .DNSSD
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - PID (type: int32)
-      Attributes: read_only
-  - ScanNumberOfEntries (type: uint32)
-      Attributes: read_only
-  - AdvertiseNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void enableAvahi(bool enable)
-  - void startScanning(string key, string type, (uint32 duration), (string protocol))
-  - void stopScanning(string key)
-  - void deleteScan(string key)
-  - void startAdvertise(string name, uint16 port, string type, (string protocol), (list text))
-  - void stopAdvertise(string name)
-  - void lookup(string type, (string protocol))
-  - bool resolve(string type, string protocol, int interfaceIndex, string name)
-
-=======================================================================
-OBJECT: DNSSD.Config - Name: DNSSD.Config
- == PARAMETERS:
-  - AdvertisedName (type: string)
-  - UseAdvertisedName (type: bool)
-  - Domain (type: string)
-  - UseIPv4 (type: bool)
-      Attributes: persistent
-  - UseIPv6 (type: bool)
-      Attributes: persistent
-  - AllowedInterfaces (type: string)
-      Attributes: persistent
-  - BlacklistDefaultAddress (type: bool)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: DNSSD.Scan - Name: DNSSD.Scan
- == PARAMETERS:
-  - Status (type: string)
-      Validator: ['init', 'scanning', 'done', 'error']
-  - Service (type: string)
-  - Protocol (type: string)
-  - ResultNumberOfEntries (type: uint32)
-      Attributes: read_only
-
-=======================================================================
-OBJECT: DNSSD.Scan.Result - Name: DNSSD.Scan.Result
- == PARAMETERS:
-  - Name (type: string)
-      Attributes: read_only
-  - Removed (type: bool)
-      Attributes: read_only
-  - InterfaceIndex (type: string)
-      Attributes: read_only
-  - Domain (type: string)
-      Attributes: read_only
-  - IPAddress (type: string)
-      Attributes: read_only
-  - Hostname (type: string)
-      Attributes: read_only
-  - Port (type: uint16)
-      Attributes: read_only
-  - Time (type: date_time)
-      Attributes: read_only
-  - Text (type: string)
-      Attributes: read_only
-
-=======================================================================
-OBJECT: DNSSD.Advertise - Name: DNSSD.Advertise
- == PARAMETERS:
-  - Name (type: string)
-  - Port (type: uint16)
-  - Type (type: string)
-  - Protocol (type: string)
-  - Enable (type: bool)
-
-=======================================================================
-OBJECT: DNSSD.Advertise.Text - Name: DNSSD.Advertise.Text
- == PARAMETERS:
-  - Key (type: string)
-  - Value (type: string)
-
-=======================================================================
 OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
  == PARAMETERS:
   - DiagnosticsState (type: string)
@@ -1132,6 +1139,10 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
   - PeriodicInterval (type: uint32)
       Attributes: persistent
       Validator: {'min': '30'}
+  - UploadXML (type: bool)
+      Attributes: persistent
+  - UploadJSON (type: bool)
+      Attributes: persistent
   - LastUpdate (type: date_time)
       Attributes: read_only, persistent
   - AutomaticUpload (type: string)
@@ -1146,7 +1157,7 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
  == FUNCTIONS:
   - variant get()
   - bool set((variant data))
-  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile))
+  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile), (bool SendJson))
   - bool uploadTopology()
   - bool enableAutomaticUpload((bool enable))
   - bool isAutomaticUploadEnabled()
@@ -1157,6 +1168,9 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
 =======================================================================
 OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
  == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+      Validator: ['XML', 'JSON']
   - Name (type: string)
       Attributes: read_only
   - Status (type: string)
@@ -1168,6 +1182,13 @@ OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
       Attributes: read_only
  == FUNCTIONS:
   - bool setState(string state)
+
+=======================================================================
+OBJECT: .PasswordRecovery - Name: .PasswordRecovery
+ == FUNCTIONS:
+  - void start()
+  - void stop()
+  - int setPassword((string password))
 
 =======================================================================
 OBJECT: .DeviceInfo - Name: .DeviceInfo
@@ -1289,6 +1310,10 @@ OBJECT: DeviceInfo.MemoryStatus - Name: DeviceInfo.MemoryStatus
       Attributes: read_only
   - Free (type: uint32)
       Attributes: read_only
+  - Buffered (type: uint32)
+      Attributes: read_only
+  - Cached (type: uint32)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: DeviceInfo.MessageServer - Name: DeviceInfo.MessageServer
@@ -1309,6 +1334,167 @@ OBJECT: DeviceInfo.GatewayInfo - Name: DeviceInfo.GatewayInfo
   - SerialNumber (type: string)
       Attributes: read_only
       Validator: {'max': '64'}
+
+=======================================================================
+OBJECT: .SpeedTest - Name: .SpeedTest
+ == PARAMETERS:
+  - ServerConfigNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - DiagnosticNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getWANResults()
+  - void getLinkInfo((string iface))
+
+=======================================================================
+OBJECT: .PnP - Name: .PnP
+ == PARAMETERS:
+  - Status (type: string)
+      Validator: ['Idle', 'Disabled', 'Running', 'Error', 'OK', 'Timeout']
+  - LastName (type: string)
+      Attributes: persistent
+  - FirstName (type: string)
+      Attributes: persistent
+  - MobilePhoneNumber (type: string)
+      Attributes: persistent
+      Validator: {'max': '10'}
+  - ValidationDomain (type: string)
+  - ConnectionMode (type: string)
+      Attributes: persistent
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - list get()
+
+=======================================================================
+OBJECT: .SAHPairing - Name: .SAHPairing
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Unconfigured', 'MasterIdle', 'MasterPairing', 'SlaveUnpaired', 'SlaveConnecting', 'SlavePairing', 'SlavePaired']
+  - Interface (type: string)
+      Attributes: persistent
+  - DevicesNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void startPairing()
+  - void startAutoPairing()
+  - void stopAutoPairing()
+  - void setMaster()
+  - void setSlave()
+  - void export()
+  - void import()
+  - bool addAclEntry(string topic, (string deviceClass), (string accessType), (string device))
+  - void removeAclTopic(string topic, (string device))
+
+=======================================================================
+OBJECT: SAHPairing.Debug - Name: SAHPairing.Debug
+ == PARAMETERS:
+  - LastEvent (type: string)
+      Attributes: read_only
+  - LastError (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void inject(string eventName, (variant eventArg))
+  - void injectError(string errorName)
+
+=======================================================================
+OBJECT: SAHPairing.ACL - Name: SAHPairing.ACL
+ == PARAMETERS:
+  - Topic (type: string)
+  - AccessGroup (type: string)
+      Validator: ['Everyone', 'PairedDevices', 'SpecificDevice']
+  - SpecificDevice (type: string)
+  - AccessType (type: string)
+      Validator: ['Publish', 'Subscribe', 'PublishAndSubscribe']
+
+=======================================================================
+OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
+ == PARAMETERS:
+  - SOPMinimumVersion (type: string)
+      Attributes: persistent
+  - URL (type: string)
+      Attributes: persistent
+  - ReleaseNotesURL (type: string)
+      Attributes: persistent
+  - ReleaseNotesTypes (type: string)
+      Attributes: persistent
+  - MinimumDelay (type: uint32)
+      Attributes: persistent
+  - LastSyncTime (type: date_time)
+      Attributes: read_only
+  - MaxCachedVersionAge (type: uint32)
+      Attributes: persistent
+  - NewVersion (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - openfile_return_t openfile((filemap_t filemap), (bool cert))
+  - bool verifyRUIVersion((string filetype), (string version))
+  - void getReleaseNotes((string version), (string language), (string releaseNotes))
+  - bool isCustomFileTypeSupported((string filetype), (bool cert))
+
+=======================================================================
+OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorConfigFile
+ == PARAMETERS:
+  - FileType (type: string)
+      Attributes: read_only
+  - URL (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - AlwaysAllowTLSAuthentication (type: bool)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: WebuiupgradeService.AutoCheck - Name: WebuiupgradeService.AutoCheck
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - CheckAtBoot (type: bool)
+      Attributes: persistent
+  - Interval (type: uint32)
+      Attributes: persistent
+  - TimeReference (type: date_time)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: WebuiupgradeService.Authentication - Name: WebuiupgradeService.Authentication
+ == PARAMETERS:
+  - Username (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+  - CACert (type: string)
+      Attributes: persistent
+  - ClientCert (type: string)
+      Attributes: persistent
+  - PrivateKey (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: .SambaService - Name: .SambaService
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: .OrangeServices - Name: .OrangeServices
+ == FUNCTIONS:
+  - string getSubscriptionStatus(bool refresh)
+
+=======================================================================
+OBJECT: OrangeServices.Services - Name: OrangeServices.Services
+ == PARAMETERS:
+  - Name (type: string)
+  - SubscriptionStatus (type: string)
+      Validator: ['Subscribed', 'Unknown', 'NotSubscribed']
+  - Option (type: bool)
 
 =======================================================================
 OBJECT: .URLMon - Name: .URLMon
@@ -1395,198 +1581,11 @@ OBJECT: URLMon.UrlClassifier - Name: URLMon.UrlClassifier
       Attributes: persistent
 
 =======================================================================
-OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
- == PARAMETERS:
-  - SOPMinimumVersion (type: string)
-      Attributes: persistent
-  - URL (type: string)
-      Attributes: persistent
-  - ReleaseNotesURL (type: string)
-      Attributes: persistent
-  - ReleaseNotesTypes (type: string)
-      Attributes: persistent
-  - MinimumDelay (type: uint32)
-      Attributes: persistent
-  - LastSyncTime (type: date_time)
-      Attributes: read_only
-  - MaxCachedVersionAge (type: uint32)
-      Attributes: persistent
-  - NewVersion (type: string)
-      Attributes: read_only
-  - Enable (type: bool)
-      Attributes: persistent
-  - Status (type: string)
-      Attributes: read_only
- == FUNCTIONS:
-  - openfile_return_t openfile((filemap_t filemap))
-  - bool verifyRUIVersion((string filetype), (string version))
-  - void getReleaseNotes((string version), (string language), (string releaseNotes))
-  - bool isCustomFileTypeSupported((string filetype))
-
-=======================================================================
-OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorConfigFile
- == PARAMETERS:
-  - FileType (type: string)
-      Attributes: read_only
-  - URL (type: string)
-      Attributes: read_only
-  - Enable (type: bool)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: WebuiupgradeService.AutoCheck - Name: WebuiupgradeService.AutoCheck
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - CheckAtBoot (type: bool)
-      Attributes: persistent
-  - Interval (type: uint32)
-      Attributes: persistent
-  - TimeReference (type: date_time)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: WebuiupgradeService.Authentication - Name: WebuiupgradeService.Authentication
- == PARAMETERS:
-  - Username (type: string)
-      Attributes: persistent
-  - Password (type: string)
-      Attributes: persistent
-  - CACert (type: string)
-      Attributes: persistent
-  - ClientCert (type: string)
-      Attributes: persistent
-  - PrivateKey (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: .SambaService - Name: .SambaService
- == PARAMETERS:
-  - Status (type: string)
-      Attributes: read_only
-  - Enable (type: bool)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: .SAHPairing - Name: .SAHPairing
- == PARAMETERS:
-  - Status (type: string)
-      Attributes: read_only
-      Validator: ['Unconfigured', 'MasterIdle', 'MasterPairing', 'SlaveUnpaired', 'SlaveConnecting', 'SlavePairing', 'SlavePaired']
-  - Interface (type: string)
-      Attributes: persistent
-  - DevicesNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void startPairing()
-  - void startAutoPairing()
-  - void stopAutoPairing()
-  - void setMaster()
-  - void setSlave()
-  - void export()
-  - void import()
-  - bool addAclEntry(string topic, (string deviceClass), (string accessType), (string device))
-  - void removeAclTopic(string topic, (string device))
-
-=======================================================================
-OBJECT: SAHPairing.Debug - Name: SAHPairing.Debug
- == PARAMETERS:
-  - LastEvent (type: string)
-      Attributes: read_only
-  - LastError (type: string)
-      Attributes: read_only
- == FUNCTIONS:
-  - void inject(string eventName, (variant eventArg))
-  - void injectError(string errorName)
-
-=======================================================================
-OBJECT: SAHPairing.ACL - Name: SAHPairing.ACL
- == PARAMETERS:
-  - Topic (type: string)
-  - AccessGroup (type: string)
-      Validator: ['Everyone', 'PairedDevices', 'SpecificDevice']
-  - SpecificDevice (type: string)
-  - AccessType (type: string)
-      Validator: ['Publish', 'Subscribe', 'PublishAndSubscribe']
-
-=======================================================================
-OBJECT: .Probe - Name: .Probe
- == PARAMETERS:
-  - Version (type: string)
-      Attributes: read_only
-  - FileSizeCritical (type: bool)
-  - firstXferMaxTimer (type: uint32)
-      Attributes: persistent
-      Validator: {'min': '0'}
-  - xferTimeVariation (type: uint32)
-      Attributes: persistent
-      Validator: {'min': '0'}
-  - CustomerAuthorization (type: bool)
-      Attributes: persistent
-  - MaxSize (type: uint32)
-      Attributes: persistent
-      Validator: {'min': '50000'}
-  - Anonymization (type: bool)
-      Attributes: persistent
-  - ExternalID (type: string)
-      Attributes: persistent
-  - BlacklistMQTT (type: string)
-      Attributes: persistent
-  - Tags (type: string)
-      Attributes: read_only, persistent
- == FUNCTIONS:
-  - void logEvents(plib_event_list_t events)
-  - bool addTag(string tag)
-  - bool removeTag(string tag)
-  - bool clearTags()
-
-=======================================================================
-OBJECT: Probe.Configuration - Name: Probe.Configuration
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - URL (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - void setConfiguration(string type, string name, uint32 id, uint32 interval)
-  - list getConfiguration(string type)
-  - list getConfigurations()
-  - void removeConfiguration(string type)
-
-=======================================================================
-OBJECT: Probe.Configuration.Type - Name: Probe.Configuration.Type
- == PARAMETERS:
-  - Type (type: string)
-      Attributes: read_only, persistent
-  - Name (type: string)
-      Attributes: read_only, persistent
-  - Status (type: string)
-      Attributes: read_only, persistent
-  - ID (type: int32)
-      Attributes: read_only, persistent
-  - Timestamp (type: date_time)
-      Attributes: read_only, persistent
-  - Interval (type: int32)
-      Attributes: read_only, persistent
-
-=======================================================================
-OBJECT: .SpeedTest - Name: .SpeedTest
- == PARAMETERS:
-  - ServerConfigNumberOfEntries (type: uint32)
-      Attributes: read_only
-  - DiagnosticNumberOfEntries (type: uint32)
-      Attributes: read_only
- == FUNCTIONS:
-  - void getWANResults()
-  - void getLinkInfo((string iface))
-
-=======================================================================
 OBJECT: .UserManagement - Name: .UserManagement
  == FUNCTIONS:
   - bool addUser((string name), (string password), (list groups), (bool enable), (string usertype), (string salt), (uint32 uid), (bool linux_user), (string friendlyname))
   - bool changeUser((string name), (string password), (list groups), (bool enable), (string usertype), (string friendlyname))
   - bool changePassword((string name), (string password))
-  - bool changePasswordSec((string name), (string password), (string old_password))
   - bool removeUser((string name))
   - bool removeUsers((string name), (string type))
   - bool addGroup((string name), (bool enable), (bool linux_group))
@@ -1661,63 +1660,6 @@ OBJECT: UserManagement.User - Name: UserManagement.User
       Attributes: read_only, persistent
   - PreviousLoginIP (type: string)
       Attributes: read_only, persistent
-
-=======================================================================
-OBJECT: .IoTService - Name: .IoTService
- == PARAMETERS:
-  - MaximumConnectionTime (type: uint32)
-      Attributes: persistent
-  - ScheduledConnectionTime (type: date_time)
-      Attributes: persistent
-  - Reset (type: bool)
-      Attributes: volatile
- == FUNCTIONS:
-  - int32 setStatus(string status)
-  - int32 getStatus((status_t status))
-  - int32 getUUID((string uniqueIdentifier))
-
-=======================================================================
-OBJECT: .OrangeServices - Name: .OrangeServices
- == FUNCTIONS:
-  - string getSubscriptionStatus(bool refresh)
-
-=======================================================================
-OBJECT: OrangeServices.Services - Name: OrangeServices.Services
- == PARAMETERS:
-  - Name (type: string)
-  - SubscriptionStatus (type: string)
-      Validator: ['Subscribed', 'Unknown', 'NotSubscribed']
-  - Option (type: bool)
-
-=======================================================================
-OBJECT: .AutoDiag - Name: .AutoDiag
- == PARAMETERS:
-  - DiagnosticsScriptFile (type: string)
-      Attributes: read_only
-  - DiagnosticsState (type: string)
-      Validator: ['None', 'Requested', 'Cancel', 'Complete', 'Error_Internal', 'Error_Other']
-  - Results (type: string)
-      Attributes: read_only
-  - InternalGetProperty (type: bool)
-      Attributes: read_only, persistent
-  - HeaderFieldNumberOfEntries (type: uint32)
-      Attributes: read_only
-  - ScriptReflashMethod (type: string)
-      Attributes: persistent
-      Validator: ['Local', 'Remote', 'Firmware', '']
- == FUNCTIONS:
-  - bool executeDiagnostics(string id, (bool usr))
-  - bool executeTrigger(string event)
-  - bool cancelDiagnostics((string id))
-  - void getDiagnosticsState()
-  - void getOpenLanDiagnosticsList()
-  - void getDatamodelWhiteList()
-  - void getFunctionWhiteList()
-  - void getDiagnosticsList()
-  - list listDiagnostics()
-  - list getContext()
-  - bool clearContext()
-  - bool setUserInput(string input)
 
 =======================================================================
 OBJECT: .StorageService - Name: .StorageService
@@ -1909,40 +1851,97 @@ OBJECT: StorageService.LogicalVolume.Folder.GroupAccess - Name: StorageService.L
       Attributes: persistent
 
 =======================================================================
-OBJECT: .Time - Name: .Time
- == FUNCTIONS:
-  - bool getTime((string time))
-  - void getUTCTime((string time))
-  - void getStatus((string status))
-  - void getNTPServers((variant servers))
-  - bool getLocalTimeZoneName((string timezone))
-  - bool setLocalTimeZoneName(string timezone)
-  - bool listLocalTimeZoneNames((list timezones))
-
-=======================================================================
-OBJECT: .OrangeRemoteAccess - Name: .OrangeRemoteAccess
+OBJECT: .AutoDiag - Name: .AutoDiag
  == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - Activate (type: bool)
-      Attributes: persistent
-  - Status (type: bool)
+  - DiagnosticsScriptFile (type: string)
       Attributes: read_only
-  - Plugins (type: string)
+  - DiagnosticsState (type: string)
+      Validator: ['None', 'Requested', 'Cancel', 'Complete', 'Error_Internal', 'Error_Other']
+  - Results (type: string)
+      Attributes: read_only
+  - InternalGetProperty (type: bool)
+      Attributes: read_only, persistent
+  - HeaderFieldNumberOfEntries (type: uint32)
+      Attributes: read_only
+  - ScriptReflashMethod (type: string)
+      Attributes: persistent
+      Validator: ['Local', 'Remote', 'Firmware', '']
  == FUNCTIONS:
-  - void addUser(string username, string cookie)
-  - void removeUser(string username)
-  - void listUsers((list listOfUsers))
-  - variant get()
-  - bool set((variant parameters))
+  - bool executeDiagnostics(string id, (bool usr))
+  - bool executeTrigger(string event)
+  - bool cancelDiagnostics((string id))
+  - void getDiagnosticsState()
+  - void getOpenLanDiagnosticsList()
+  - void getDatamodelWhiteList()
+  - void getFunctionWhiteList()
+  - void getDiagnosticsList()
+  - list listDiagnostics()
+  - list getContext()
+  - bool clearContext()
+  - bool setUserInput(string input)
 
 =======================================================================
-OBJECT: OrangeRemoteAccess.OnDemand - Name: OrangeRemoteAccess.OnDemand
+OBJECT: .Probe - Name: .Probe
  == PARAMETERS:
-  - Enable (type: bool)
+  - LicenseStatus (type: bool)
+      Attributes: persistent
  == FUNCTIONS:
-  - variant get()
-  - bool set((variant parameters))
+  - void logEvents(plib_event_list_t events)
+
+=======================================================================
+OBJECT: .HTTPService - Name: .HTTPService
+ == PARAMETERS:
+  - EnableWebServiceStatistics (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool getAuthenticationModes()
+  - bool getCurrentUser()
+
+=======================================================================
+OBJECT: .HomeLan - Name: .HomeLan
+ == FUNCTIONS:
+  - bool getResults((uint32 Seconds), (uint32 NumberOfReadings), (list InterfaceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
+  - bool getDeviceResults((uint32 Seconds), (uint32 NumberOfReadings), (string DeviceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
+  - bool getSaturationResults()
+  - bool getWANCounters()
+  - bool getInterfacesNames()
+  - bool getDevicesNames()
+  - bool getStatus()
+  - bool getMaxNumberOfRecords()
+  - bool getReadingInterval()
+  - bool getDevicesStatus()
+  - bool getDevicesReadingInterval()
+  - bool import()
+  - bool export()
+  - bool addDevice((string macaddress))
+  - bool deleteDevice((string macaddress))
+  - void startDeviceMonitoringTest((uint32 duration), (uint32 interval))
+  - void stopDeviceMonitoringTest()
+  - void startInterfaceMonitoringTest((uint32 duration), (uint32 interval))
+  - void stopInterfaceMonitoringTest()
+  - bool getSaturationMeasures()
+
+=======================================================================
+OBJECT: HomeLan.Interface - Name: HomeLan.Interface
+ == PARAMETERS:
+  - FriendlyName (type: string)
+  - Name (type: string)
+  - Alias (type: string)
+  - NumberOfStoredMeasures (type: uint32)
+
+=======================================================================
+OBJECT: HomeLan.Interface.Stats - Name: HomeLan.Interface.Stats
+ == PARAMETERS:
+  - BytesSent (type: uint64)
+      Attributes: read_only
+  - BytesReceived (type: uint64)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: HomeLan.Device - Name: HomeLan.Device
+ == PARAMETERS:
+  - MacAddress (type: string)
+  - NumberOfStoredMeasures (type: uint32)
 
 =======================================================================
 OBJECT: .DNS - Name: .DNS
@@ -1972,6 +1971,41 @@ OBJECT: DNS.Server.Route - Name: DNS.Server.Route
       Attributes: persistent
   - Flags (type: uint32)
       Attributes: persistent
+
+=======================================================================
+OBJECT: .Time - Name: .Time
+ == FUNCTIONS:
+  - bool getTime((string time))
+  - void getUTCTime((string time))
+  - void getStatus((string status))
+  - void getNTPServers((variant servers))
+  - bool getLocalTimeZoneName((string timezone))
+  - bool setLocalTimeZoneName(string timezone)
+  - bool listLocalTimeZoneNames((list timezones))
+
+=======================================================================
+OBJECT: .OrangeRemoteAccess - Name: .OrangeRemoteAccess
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Activate (type: bool)
+      Attributes: persistent
+  - Status (type: bool)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void addUser(string username, string cookie)
+  - void removeUser(string username)
+  - void listUsers((list listOfUsers))
+  - variant get()
+  - bool set((variant parameters))
+
+=======================================================================
+OBJECT: OrangeRemoteAccess.OnDemand - Name: OrangeRemoteAccess.OnDemand
+ == PARAMETERS:
+  - Enable (type: bool)
+ == FUNCTIONS:
+  - variant get()
+  - bool set((variant parameters))
 
 =======================================================================
 OBJECT: .NetMaster - Name: .NetMaster
@@ -2026,14 +2060,23 @@ OBJECT: NetMaster.LAN.Bridge - Name: NetMaster.LAN.Bridge
       Attributes: read_only
   - NemoName (type: string)
       Attributes: read_only
+  - DomainName (type: string)
  == FUNCTIONS:
-  - void setIPv4(string Address, uint8 PrefixLength, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
-  - void getIPv4((string Address), (uint8 PrefixLength), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
+  - void setIPv4(string Address, uint8 PrefixLength, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable), (bool DHCPAuthoritative))
+  - void getIPv4((string Address), (uint8 PrefixLength), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable), (bool DHCPAuthoritative))
   - void setIPv4Configuration(string Name, string Address, uint8 PrefixLength, (bool Enable), (bool AllowPublic), (bool NATEnable))
   - void setIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
   - void getIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
   - void addIntf(string Intf)
   - void removeIntf(string Intf)
+  - void setHostName(string Key, string HostName, (uint8 IpVersion))
+  - void removeHostName(string Key)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.HostName - Name: NetMaster.LAN.Bridge.HostName
+ == PARAMETERS:
+  - Name (type: string)
+  - IPVersion (type: uint8)
 
 =======================================================================
 OBJECT: NetMaster.LAN.Bridge.LLIntf - Name: NetMaster.LAN.Bridge.LLIntf
@@ -2057,6 +2100,7 @@ OBJECT: NetMaster.LAN.Bridge.DHCPv4 - Name: NetMaster.LAN.Bridge.DHCPv4
   - Pool (type: string)
       Attributes: read_only
   - Enable (type: bool)
+  - Authoritative (type: bool)
   - MinAddress (type: string)
   - MaxAddress (type: string)
   - DNSServers (type: string)
@@ -2115,6 +2159,7 @@ OBJECT: NetMaster.IPv4.DSLite - Name: NetMaster.IPv4.DSLite
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
+  - TTLEnable (type: bool)
   - InterfaceSettingNumberOfEntries (type: uint32)
       Attributes: read_only, persistent
 
@@ -2122,63 +2167,9 @@ OBJECT: NetMaster.IPv4.DSLite - Name: NetMaster.IPv4.DSLite
 OBJECT: NetMaster.IPv4.DSLite.InterfaceSetting - Name: NetMaster.IPv4.DSLite.InterfaceSetting
  == PARAMETERS:
   - EndpointName (type: string)
+      Attributes: persistent
   - Enable (type: bool)
       Attributes: persistent
-
-=======================================================================
-OBJECT: .HomeLan - Name: .HomeLan
- == FUNCTIONS:
-  - bool getResults((uint32 Seconds), (uint32 NumberOfReadings), (list InterfaceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
-  - bool getDeviceResults((uint32 Seconds), (uint32 NumberOfReadings), (string DeviceName), (uint32 BeginTrafficTimestamp), (uint32 EndTrafficTimestamp))
-  - bool getSaturationResults()
-  - bool getWANCounters()
-  - bool getInterfacesNames()
-  - bool getDevicesNames()
-  - bool getStatus()
-  - bool getMaxNumberOfRecords()
-  - bool getReadingInterval()
-  - bool getDevicesStatus()
-  - bool getDevicesReadingInterval()
-  - bool import()
-  - bool export()
-  - bool addDevice((string macaddress))
-  - bool deleteDevice((string macaddress))
-  - void startDeviceMonitoringTest((uint32 duration), (uint32 interval))
-  - void stopDeviceMonitoringTest()
-  - void startInterfaceMonitoringTest((uint32 duration), (uint32 interval))
-  - void stopInterfaceMonitoringTest()
-  - bool getSaturationMeasures()
-
-=======================================================================
-OBJECT: HomeLan.Interface - Name: HomeLan.Interface
- == PARAMETERS:
-  - FriendlyName (type: string)
-  - Name (type: string)
-  - Alias (type: string)
-  - NumberOfStoredMeasures (type: uint32)
-
-=======================================================================
-OBJECT: HomeLan.Interface.Stats - Name: HomeLan.Interface.Stats
- == PARAMETERS:
-  - BytesSent (type: uint64)
-      Attributes: read_only
-  - BytesReceived (type: uint64)
-      Attributes: read_only
-
-=======================================================================
-OBJECT: HomeLan.Device - Name: HomeLan.Device
- == PARAMETERS:
-  - MacAddress (type: string)
-  - NumberOfStoredMeasures (type: uint32)
-
-=======================================================================
-OBJECT: .HTTPService - Name: .HTTPService
- == PARAMETERS:
-  - EnableWebServiceStatistics (type: bool)
-      Attributes: persistent
- == FUNCTIONS:
-  - bool getAuthenticationModes()
-  - bool getCurrentUser()
 
 =======================================================================
 OBJECT: .DHCPv4 - Name: .DHCPv4
@@ -2209,6 +2200,8 @@ OBJECT: DHCPv4.Server.Pool - Name: DHCPv4.Server.Pool
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
+  - Authoritative (type: bool)
+      Attributes: persistent
   - Name (type: string)
       Attributes: persistent
       Validator: {'max': '32'}
@@ -2227,6 +2220,8 @@ OBJECT: DHCPv4.Server.Pool - Name: DHCPv4.Server.Pool
   - Interface (type: string)
       Attributes: persistent
       Validator: {'max': '255'}
+  - DSCPMark (type: int8)
+      Attributes: persistent
   - MinAddress (type: string)
       Attributes: persistent
   - MaxAddress (type: string)
@@ -2459,6 +2454,43 @@ OBJECT: DHCPv4.Server.Stats - Name: DHCPv4.Server.Stats
   - list getDoraCyclesDetails()
 
 =======================================================================
+OBJECT: .DHCPv6 - Name: .DHCPv6
+
+=======================================================================
+OBJECT: DHCPv6.Server - Name: DHCPv6.Server
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Enabled', 'Disabled', 'Error']
+  - Enable (type: bool)
+      Attributes: persistent
+  - PoolNumberOfEntries (type: uint32)
+      Attributes: read_only
+ == FUNCTIONS:
+  - list getPDPrefixLeases()
+  - list getPDPrefixInformation()
+  - void enableDHCPv6Server(bool enable)
+  - string getDHCPv6ServerStatus()
+  - void createPool(string name, string interface)
+
+=======================================================================
+OBJECT: DHCPv6.Server.Pool - Name: DHCPv6.Server.Pool
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DNSServers (type: string)
+      Attributes: persistent
+  - SNTPServers (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DHCPv6.Server.Pool.Prefix - Name: DHCPv6.Server.Pool.Prefix
+ == PARAMETERS:
+  - Prefix (type: string)
+  - PrefixLength (type: int32)
+      Validator: {'max': '128'}
+
+=======================================================================
 OBJECT: .NMC - Name: .NMC
  == PARAMETERS:
   - WanModeList (type: string)
@@ -2523,6 +2555,20 @@ OBJECT: NMC.Gpon - Name: NMC.Gpon
   - RxPowerSignalQuality (type: bool)
 
 =======================================================================
+OBJECT: NMC.Gpon.Laser - Name: NMC.Gpon.Laser
+ == PARAMETERS:
+  - FilePath (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Gpon.Laser.Attribute - Name: NMC.Gpon.Laser.Attribute
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Value (type: int32)
+      Attributes: read_only
+
+=======================================================================
 OBJECT: NMC.IPv6 - Name: NMC.IPv6
  == FUNCTIONS:
   - void set((bool Enable), (bool UserRequested), (bool IPv4UserRequested))
@@ -2585,7 +2631,6 @@ OBJECT: NMC.Wifi - Name: NMC.Wifi
       Attributes: persistent
   - TempEnable (type: bool)
   - Status (type: bool)
-      Attributes: read_only
   - ReadOnlyStatus (type: bool)
       Attributes: persistent
   - PairingStatus (type: string)
@@ -2745,7 +2790,7 @@ OBJECT: NMC.Reboot.Reboot - Name: NMC.Reboot.Reboot
       Attributes: read_only, persistent
   - BootReason (type: string)
       Attributes: read_only, persistent
-      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset']
+      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset', 'Oops']
   - ShutdownDate (type: date_time)
       Attributes: read_only, persistent
   - ShutdownReason (type: string)
@@ -2757,8 +2802,37 @@ OBJECT: NMC.Autodetect - Name: NMC.Autodetect
   - FirstBoot (type: bool)
       Attributes: persistent
   - LastConnectionError (type: string)
+  - IPv6SwitchEnable (type: bool)
+      Attributes: persistent
+  - IPv6Mode (type: string)
+      Attributes: persistent
+      Validator: ['DualStack', 'Dslite', 'Switching_To_DualStack', 'Switching_To_Dslite']
  == FUNCTIONS:
   - variant get()
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility - Name: NMC.ServiceEligibility
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.Criteria - Name: NMC.ServiceEligibility.Criteria
+ == PARAMETERS:
+  - Value (type: bool)
+  - LastUpdate (type: date_time)
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.CgnOption - Name: NMC.ServiceEligibility.CgnOption
+
+=======================================================================
+OBJECT: NMC.ServiceEligibility.CgnOption.SentOption - Name: NMC.ServiceEligibility.CgnOption.SentOption
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Intfname (type: string)
+      Attributes: persistent
+  - Tag (type: uint8)
+      Attributes: persistent
+  - Value (type: string)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: NMC.TPPP - Name: NMC.TPPP
@@ -2831,117 +2905,6 @@ OBJECT: .Devices - Name: .Devices
   - list get((variant expression), (string flags))
   - list findByIPAddress(string ipaddress, (string ipstatus), (string flags))
   - device_t fetchDevice(string key, (string flags))
-
-=======================================================================
-OBJECT: Devices.Config - Name: Devices.Config
- == FUNCTIONS:
-  - void set(string module, string option, variant value)
-  - variant get(string module, string option)
-  - bool load(string module)
-  - bool save(string module)
-
-=======================================================================
-OBJECT: Devices.Config.global - Name: Devices.Config.global
- == PARAMETERS:
-  - MaxLanDevices (type: string)
-      Attributes: persistent
-  - MaxLanDevicesAccept (type: string)
-      Attributes: persistent
-  - MaxLanDevicesDeleteActive (type: string)
-      Attributes: persistent
-  - MaxInactiveAge (type: string)
-      Attributes: persistent
-  - DeviceTypeOrder (type: string)
-      Attributes: persistent
-  - NameOrder (type: string)
-      Attributes: persistent
-  - MDNSDisable (type: string)
-      Attributes: persistent
-  - KeepLink (type: string)
-      Attributes: persistent
-  - AcceptIntfs (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.Priority - Name: Devices.Config.Priority
- == PARAMETERS:
-  - Types (type: string)
-      Attributes: persistent
-  - Configurations (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.WANAccess - Name: Devices.Config.WANAccess
- == PARAMETERS:
-  - BlockedReasons (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.selflan - Name: Devices.Config.selflan
- == PARAMETERS:
-  - Interfaces (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.eth - Name: Devices.Config.eth
- == PARAMETERS:
-  - DHCPPools (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.selfphysical - Name: Devices.Config.selfphysical
- == PARAMETERS:
-  - Blocked (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.events - Name: Devices.Config.events
- == PARAMETERS:
-  - CPUInterval (type: string)
-      Attributes: persistent
-  - SysInfoInterval (type: string)
-      Attributes: persistent
-  - Log (type: string)
-      Attributes: persistent
-  - LogType (type: string)
-      Attributes: persistent
-  - LogSize (type: string)
-      Attributes: persistent
-  - LogEntries (type: string)
-      Attributes: persistent
-  - LogPath (type: string)
-      Attributes: persistent
-  - DevicesInterval (type: string)
-      Attributes: persistent
-  - WANInterfaces (type: string)
-      Attributes: persistent
-  - MaxWlanStatMonStations (type: string)
-      Attributes: persistent
-  - WlanPersistentLogsInterval (type: string)
-      Attributes: persistent
-  - WlanPersistentAggregationInterval (type: string)
-      Attributes: persistent
-
-=======================================================================
-OBJECT: Devices.Config.ieee1905_gmap - Name: Devices.Config.ieee1905_gmap
-
-=======================================================================
-OBJECT: Devices.Config.mqtt - Name: Devices.Config.mqtt
- == PARAMETERS:
-  - Server (type: string)
-      Attributes: persistent
-  - AlarmTopic (type: string)
-      Attributes: persistent
-  - AddedTopic (type: string)
-      Attributes: persistent
-  - InfoChangedTopic (type: string)
-      Attributes: persistent
-  - DataChangedTopic (type: string)
-      Attributes: persistent
-  - DeleteTopic (type: string)
-      Attributes: persistent
-  - EventsEnable (type: string)
-      Attributes: persistent
 
 =======================================================================
 OBJECT: Devices.Device - Name: Devices.Device

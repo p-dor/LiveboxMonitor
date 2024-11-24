@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .NetMaster - Name: .NetMaster
@@ -53,14 +53,23 @@ OBJECT: NetMaster.LAN.Bridge - Name: NetMaster.LAN.Bridge
       Attributes: read_only
   - NemoName (type: string)
       Attributes: read_only
+  - DomainName (type: string)
  == FUNCTIONS:
-  - void setIPv4(string Address, uint8 PrefixLength, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
-  - void getIPv4((string Address), (uint8 PrefixLength), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable))
+  - void setIPv4(string Address, uint8 PrefixLength, bool DHCPEnable, string DHCPMinAddress, string DHCPMaxAddress, (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable), (bool DHCPAuthoritative))
+  - void getIPv4((string Address), (uint8 PrefixLength), (bool DHCPEnable), (string DHCPMinAddress), (string DHCPMaxAddress), (uint32 LeaseTime), (string DNSServers), (string NTPServers), (string DomainSearchList), (bool Enable), (bool AllowPublic), (bool NATEnable), (bool DHCPAuthoritative))
   - void setIPv4Configuration(string Name, string Address, uint8 PrefixLength, (bool Enable), (bool AllowPublic), (bool NATEnable))
   - void setIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
   - void getIPv6Configuration(string Name, (string Address), (uint8 PrefixLength), (string Intf), (uint8 SubnetOffset), (bool DHCPEnable), (bool DHCPIAPDEnable), (bool DHCPIANAEnable), (string DNSServers), (string NTPServers), (bool Enable))
   - void addIntf(string Intf)
   - void removeIntf(string Intf)
+  - void setHostName(string Key, string HostName, (uint8 IpVersion))
+  - void removeHostName(string Key)
+
+=======================================================================
+OBJECT: NetMaster.LAN.Bridge.HostName - Name: NetMaster.LAN.Bridge.HostName
+ == PARAMETERS:
+  - Name (type: string)
+  - IPVersion (type: uint8)
 
 =======================================================================
 OBJECT: NetMaster.LAN.Bridge.LLIntf - Name: NetMaster.LAN.Bridge.LLIntf
@@ -84,6 +93,7 @@ OBJECT: NetMaster.LAN.Bridge.DHCPv4 - Name: NetMaster.LAN.Bridge.DHCPv4
   - Pool (type: string)
       Attributes: read_only
   - Enable (type: bool)
+  - Authoritative (type: bool)
   - MinAddress (type: string)
   - MaxAddress (type: string)
   - DNSServers (type: string)
@@ -142,6 +152,7 @@ OBJECT: NetMaster.IPv4.DSLite - Name: NetMaster.IPv4.DSLite
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
+  - TTLEnable (type: bool)
   - InterfaceSettingNumberOfEntries (type: uint32)
       Attributes: read_only, persistent
 
@@ -149,6 +160,7 @@ OBJECT: NetMaster.IPv4.DSLite - Name: NetMaster.IPv4.DSLite
 OBJECT: NetMaster.IPv4.DSLite.InterfaceSetting - Name: NetMaster.IPv4.DSLite.InterfaceSetting
  == PARAMETERS:
   - EndpointName (type: string)
+      Attributes: persistent
   - Enable (type: bool)
       Attributes: persistent
 

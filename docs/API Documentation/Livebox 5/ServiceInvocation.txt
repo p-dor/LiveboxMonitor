@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .ServiceInvocation - Name: .ServiceInvocation
@@ -19,11 +19,21 @@ OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
       Attributes: read_only
   - Port (type: string)
       Attributes: persistent
+  - Duration (type: uint32)
+      Attributes: persistent
+  - ActivationDate (type: date_time)
+      Attributes: read_only, persistent
  == FUNCTIONS:
   - void updateWakeUpURL((string host), (uint32 port))
   - bool activate()
   - variant get()
   - bool set((variant parameters))
+
+=======================================================================
+OBJECT: ServiceInvocation.OnDemand.Server - Name: ServiceInvocation.OnDemand.Server
+ == PARAMETERS:
+  - CommonName (type: string)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: ServiceInvocation.ACLConfigFile - Name: ServiceInvocation.ACLConfigFile

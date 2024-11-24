@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: NeMo.Intf.dhcp_data - Name: NeMo.Intf.25
@@ -13,6 +13,8 @@ OBJECT: NeMo.Intf.dhcp_data - Name: NeMo.Intf.25
   - DHCPStatus (type: string)
       Attributes: read_only
   - LastConnectionError (type: string)
+      Attributes: read_only
+  - Reason (type: string)
       Attributes: read_only
   - Renew (type: bool)
   - IPAddress (type: string)
@@ -76,8 +78,9 @@ OBJECT: NeMo.Intf.dhcp_data - Name: NeMo.Intf.25
   - string luckyAddrAddress((string flag), (string traverse))
   - void getRAOptions(uint8 tag, (string traverse))
   - void getRARouters((string traverse))
-  - void renew((int32 numberOfRenew), (int32 delay))
-  - void rebind((int32 numberOfRebind), (int32 delay))
+  - void renew((int32 numberOfRenew), (int32 delay), (string reason))
+  - void rebind((int32 numberOfRebind), (int32 delay), (string reason))
+  - void restart((string reason))
 
 =======================================================================
 OBJECT: NeMo.Intf.dhcp_data.ULIntf - Name: NeMo.Intf.25.ULIntf

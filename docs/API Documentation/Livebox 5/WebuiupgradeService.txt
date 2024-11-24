@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
@@ -24,10 +24,10 @@ OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
   - Status (type: string)
       Attributes: read_only
  == FUNCTIONS:
-  - openfile_return_t openfile((filemap_t filemap))
+  - openfile_return_t openfile((filemap_t filemap), (bool cert))
   - bool verifyRUIVersion((string filetype), (string version))
   - void getReleaseNotes((string version), (string language), (string releaseNotes))
-  - bool isCustomFileTypeSupported((string filetype))
+  - bool isCustomFileTypeSupported((string filetype), (bool cert))
 
 =======================================================================
 OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorConfigFile
@@ -38,6 +38,8 @@ OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorC
       Attributes: read_only
   - Enable (type: bool)
       Attributes: persistent
+  - AlwaysAllowTLSAuthentication (type: bool)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: WebuiupgradeService.AutoCheck - Name: WebuiupgradeService.AutoCheck

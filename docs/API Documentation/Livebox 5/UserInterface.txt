@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .UserInterface - Name: .UserInterface
@@ -12,6 +12,7 @@ OBJECT: .UserInterface - Name: .UserInterface
       Attributes: persistent
   - CurrentState (type: string)
       Attributes: persistent
+      Validator: ['installed', 'connected', '']
  == FUNCTIONS:
   - string getLanguage((string availableLanguages))
   - bool setLanguage(string currentLanguage)

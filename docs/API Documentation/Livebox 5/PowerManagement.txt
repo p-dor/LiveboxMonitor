@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .PowerManagement - Name: .PowerManagement
@@ -16,24 +16,19 @@ OBJECT: .PowerManagement - Name: .PowerManagement
       Attributes: persistent
  == FUNCTIONS:
   - variant getSupportedModes()
-  - variant getSupportedTriggers()
+  - variant setElements(list elements)
+  - variant getElements((list elements))
+  - void removeElements((list elements))
   - variant setProfiles(list profiles)
   - variant setScheduledProfiles(list profiles)
   - variant setScheduledProfilesOverride(list overrides)
   - variant setTriggeredProfiles(list profiles)
+  - variant setExpressions(list expressions)
+  - variant getExpressions((list expressions))
+  - void removeExpressions((list expressions))
   - variant getProfiles((list profiles))
   - void removeProfiles((list profiles))
   - void setState(string ID, string state)
   - bool import()
   - bool export()
-
-=======================================================================
-OBJECT: PowerManagement.SupportedTriggers - Name: PowerManagement.SupportedTriggers
- == PARAMETERS:
-  - Name (type: string)
-      Attributes: read_only
-  - Description (type: string)
-      Attributes: read_only
-  - Value (type: bool)
-      Attributes: read_only
 

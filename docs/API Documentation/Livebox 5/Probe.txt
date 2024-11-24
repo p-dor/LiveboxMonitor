@@ -1,62 +1,10 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .Probe - Name: .Probe
  == PARAMETERS:
-  - Version (type: string)
-      Attributes: read_only
-  - FileSizeCritical (type: bool)
-  - firstXferMaxTimer (type: uint32)
+  - LicenseStatus (type: bool)
       Attributes: persistent
-      Validator: {'min': '0'}
-  - xferTimeVariation (type: uint32)
-      Attributes: persistent
-      Validator: {'min': '0'}
-  - CustomerAuthorization (type: bool)
-      Attributes: persistent
-  - MaxSize (type: uint32)
-      Attributes: persistent
-      Validator: {'min': '50000'}
-  - Anonymization (type: bool)
-      Attributes: persistent
-  - ExternalID (type: string)
-      Attributes: persistent
-  - BlacklistMQTT (type: string)
-      Attributes: persistent
-  - Tags (type: string)
-      Attributes: read_only, persistent
  == FUNCTIONS:
   - void logEvents(plib_event_list_t events)
-  - bool addTag(string tag)
-  - bool removeTag(string tag)
-  - bool clearTags()
-
-=======================================================================
-OBJECT: Probe.Configuration - Name: Probe.Configuration
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - URL (type: string)
-      Attributes: persistent
- == FUNCTIONS:
-  - void setConfiguration(string type, string name, uint32 id, uint32 interval)
-  - list getConfiguration(string type)
-  - list getConfigurations()
-  - void removeConfiguration(string type)
-
-=======================================================================
-OBJECT: Probe.Configuration.Type - Name: Probe.Configuration.Type
- == PARAMETERS:
-  - Type (type: string)
-      Attributes: read_only, persistent
-  - Name (type: string)
-      Attributes: read_only, persistent
-  - Status (type: string)
-      Attributes: read_only, persistent
-  - ID (type: int32)
-      Attributes: read_only, persistent
-  - Timestamp (type: date_time)
-      Attributes: read_only, persistent
-  - Interval (type: int32)
-      Attributes: read_only, persistent
 

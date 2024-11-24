@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .UserManagement - Name: .UserManagement
@@ -6,7 +6,6 @@ OBJECT: .UserManagement - Name: .UserManagement
   - bool addUser((string name), (string password), (list groups), (bool enable), (string usertype), (string salt), (uint32 uid), (bool linux_user), (string friendlyname))
   - bool changeUser((string name), (string password), (list groups), (bool enable), (string usertype), (string friendlyname))
   - bool changePassword((string name), (string password))
-  - bool changePasswordSec((string name), (string password), (string old_password))
   - bool removeUser((string name))
   - bool removeUsers((string name), (string type))
   - bool addGroup((string name), (bool enable), (bool linux_group))

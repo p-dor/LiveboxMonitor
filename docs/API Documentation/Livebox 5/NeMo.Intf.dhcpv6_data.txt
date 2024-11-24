@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: NeMo.Intf.dhcpv6_data - Name: NeMo.Intf.26
@@ -12,6 +12,8 @@ OBJECT: NeMo.Intf.dhcpv6_data - Name: NeMo.Intf.26
       Attributes: persistent
   - DHCPStatus (type: string)
       Validator: ['Idle', 'Init', 'Selecting', 'Requesting', 'Bound', 'BoundCheck', 'Release', 'Decline', 'Renew', 'Rebind', 'Release', 'InformationRequest', 'InformationBound', 'Error']
+  - LastConnectionError (type: string)
+      Attributes: read_only
   - Uptime (type: uint32)
       Attributes: read_only, volatile
   - DSCPMark (type: uint8)
@@ -34,6 +36,8 @@ OBJECT: NeMo.Intf.dhcpv6_data - Name: NeMo.Intf.26
       Attributes: persistent
   - RequestedOptions (type: string)
       Attributes: persistent
+  - Reason (type: string)
+      Attributes: read_only
   - Renew (type: bool)
   - ResetOnPhysDownTimeout (type: int32)
       Attributes: persistent
@@ -70,6 +74,7 @@ OBJECT: NeMo.Intf.dhcpv6_data - Name: NeMo.Intf.26
   - void getRAOptions(uint8 tag, (string traverse))
   - void getRARouters((string traverse))
   - void renew()
+  - void restart((string reason))
 
 =======================================================================
 OBJECT: NeMo.Intf.dhcpv6_data.ULIntf - Name: NeMo.Intf.26.ULIntf

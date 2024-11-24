@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .DHCPv6 - Name: .DHCPv6
@@ -19,4 +19,21 @@ OBJECT: DHCPv6.Server - Name: DHCPv6.Server
   - void enableDHCPv6Server(bool enable)
   - string getDHCPv6ServerStatus()
   - void createPool(string name, string interface)
+
+=======================================================================
+OBJECT: DHCPv6.Server.Pool - Name: DHCPv6.Server.Pool
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - DNSServers (type: string)
+      Attributes: persistent
+  - SNTPServers (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: DHCPv6.Server.Pool.Prefix - Name: DHCPv6.Server.Pool.Prefix
+ == PARAMETERS:
+  - Prefix (type: string)
+  - PrefixLength (type: int32)
+      Validator: {'max': '128'}
 

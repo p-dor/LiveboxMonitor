@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: NeMo.Intf.gvlan_multi - Name: NeMo.Intf.16
@@ -46,6 +46,7 @@ OBJECT: NeMo.Intf.gvlan_multi - Name: NeMo.Intf.16
   - IPv6AcceptSourceRoute (type: bool)
   - IPv6AcceptRedirects (type: bool)
   - IPv6OptimisticDAD (type: bool)
+  - IPv6AcceptDAD (type: uint32)
   - IPv6Disable (type: bool)
   - IPv6HostPart (type: string)
   - RtTable (type: int32)
@@ -174,6 +175,9 @@ OBJECT: NeMo.Intf.gvlan_multi.IPv4Route - Name: NeMo.Intf.16.IPv4Route
       Attributes: persistent
   - Priority (type: int32)
       Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv4', 'OSPF', 'IPCP', 'RIP', 'Static']
   - Gateway (type: string)
       Attributes: persistent
 
@@ -198,6 +202,9 @@ OBJECT: NeMo.Intf.gvlan_multi.IPv6Route - Name: NeMo.Intf.16.IPv6Route
       Attributes: persistent
   - Priority (type: int32)
       Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv6', 'OSPF', 'RA', 'RIPng', 'Static']
   - Gateway (type: string)
       Attributes: persistent
 

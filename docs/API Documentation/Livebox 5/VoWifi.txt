@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .VoWifi - Name: .VoWifi
@@ -8,6 +8,8 @@ OBJECT: .VoWifi - Name: .VoWifi
   - Status (type: string)
       Attributes: read_only
       Validator: ['Enabled', 'Disabled', 'Error']
+  - CallIsBusy (type: bool)
+      Attributes: read_only
  == FUNCTIONS:
   - void configureBusyCall((uint8 pollingInterval), (uint8 pollingMultiple), (uint8 busyThreshold))
   - void export()

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .DeviceInfo - Name: .DeviceInfo
@@ -119,6 +119,10 @@ OBJECT: DeviceInfo.MemoryStatus - Name: DeviceInfo.MemoryStatus
   - Total (type: uint32)
       Attributes: read_only
   - Free (type: uint32)
+      Attributes: read_only
+  - Buffered (type: uint32)
+      Attributes: read_only
+  - Cached (type: uint32)
       Attributes: read_only
 
 =======================================================================

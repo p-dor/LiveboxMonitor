@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
 =======================================================================
 OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
@@ -16,6 +16,10 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
   - PeriodicInterval (type: uint32)
       Attributes: persistent
       Validator: {'min': '30'}
+  - UploadXML (type: bool)
+      Attributes: persistent
+  - UploadJSON (type: bool)
+      Attributes: persistent
   - LastUpdate (type: date_time)
       Attributes: read_only, persistent
   - AutomaticUpload (type: string)
@@ -30,7 +34,7 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
  == FUNCTIONS:
   - variant get()
   - bool set((variant data))
-  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile))
+  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile), (bool SendJson))
   - bool uploadTopology()
   - bool enableAutomaticUpload((bool enable))
   - bool isAutomaticUploadEnabled()
@@ -41,6 +45,9 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
 =======================================================================
 OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
  == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+      Validator: ['XML', 'JSON']
   - Name (type: string)
       Attributes: read_only
   - Status (type: string)

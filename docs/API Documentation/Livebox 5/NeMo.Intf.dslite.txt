@@ -1,11 +1,208 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R01.C08_06
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
 
-{
-    "errors": [
-        {
-            "error": 13,
-            "description": "Permission denied",
-            "info": "NeMo/Intf/dslite"
-        }
-    ]
-}
+=======================================================================
+OBJECT: NeMo.Intf.dslite - Name: NeMo.Intf.38
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+  - Status (type: bool)
+  - Flags (type: string)
+  - Alias (type: string)
+      Attributes: persistent
+  - LocalEndpointAddress (type: string)
+  - RemoteEndpointAddress (type: string)
+  - NATEnabled (type: bool)
+  - NetDevIndex (type: int32)
+  - NetDevType (type: string)
+      Attributes: read_only
+  - NetDevFlags (type: string)
+  - NetDevName (type: string)
+  - LLAddress (type: string)
+  - TxQueueLen (type: uint32)
+  - MTU (type: uint32)
+  - NetDevState (type: string)
+      Attributes: read_only
+  - IPv4Forwarding (type: bool)
+  - IPv4ForceIGMPVersion (type: uint32)
+      Validator: {'min': '0', 'max': '3'}
+  - IPv4AcceptSourceRoute (type: bool)
+  - IPv4AcceptLocal (type: bool)
+  - IPv4AcceptRedirects (type: bool)
+  - IPv4ArpFilter (type: bool)
+  - IPv6AcceptRA (type: bool)
+  - IPv6ActAsRouter (type: bool)
+  - IPv6AutoConf (type: bool)
+  - IPv6MaxRtrSolicitations (type: uint32)
+  - IPv6RtrSolicitationInterval (type: uint32)
+  - IPv6AcceptSourceRoute (type: bool)
+  - IPv6AcceptRedirects (type: bool)
+  - IPv6OptimisticDAD (type: bool)
+  - IPv6AcceptDAD (type: uint32)
+  - IPv6Disable (type: bool)
+  - IPv6HostPart (type: string)
+  - RtTable (type: int32)
+      Validator: {'max': '256'}
+  - RtPriority (type: uint32)
+  - IPv6AddrDelegate (type: string)
+ == FUNCTIONS:
+  - bool isUp((string flag), (string traverse))
+  - bool hasFlag((string flag), (string condition), (string traverse))
+  - void setFlag((string flag), (string condition), (string traverse))
+  - void clearFlag((string flag), (string condition), (string traverse))
+  - bool isLinkedTo((string target), (string traverse))
+  - list getIntfs((string flag), (string traverse))
+  - string luckyIntf((string flag), (string traverse))
+  - string getFirstParameter((string name), (string flag), (string traverse))
+  - void setFirstParameter((string name), (string value), (string flag), (string traverse))
+  - string getParameters((string name), (string flag), (string traverse))
+  - void setParameters((string name), (string value), (string flag), (string traverse))
+  - void getMIBs((string mibs), (string flag), (string traverse))
+  - void setMIBs((string mibs))
+  - uint32 openQuery((string subscriber))
+  - void closeQuery((string subscriber))
+  - void csiRegister((string func))
+  - void csiUnregister((string func))
+  - void csiFinish((uint32 id))
+  - void copy(string name)
+  - variant getDHCPOption((string type), (uint8 tag), (string traverse))
+  - list getAddrs((string flag), (string traverse))
+  - void luckyAddr((string flag), (string traverse))
+  - string luckyAddrAddress((string flag), (string traverse))
+  - void getRAOptions(uint8 tag, (string traverse))
+  - void getRARouters((string traverse))
+  - void refreshNetDev()
+  - void getNetDevStats()
+  - void setNetDevFlag(string flags)
+  - void clearNetDevFlag(string flags)
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.ULIntf - Name: NeMo.Intf.38.ULIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.LLIntf - Name: NeMo.Intf.38.LLIntf
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.Query - Name: NeMo.Intf.38.Query
+ == PARAMETERS:
+  - Description (type: string)
+      Attributes: read_only
+  - Subscribers (type: string)
+      Attributes: read_only
+  - ResultString (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - void getResult()
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.IPv4Addr - Name: NeMo.Intf.38.IPv4Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.IPv6Addr - Name: NeMo.Intf.38.IPv6Addr
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - Address (type: string)
+      Attributes: persistent
+  - Peer (type: string)
+      Attributes: persistent
+  - PrefixLen (type: uint8)
+      Attributes: persistent
+  - Flags (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - NeMoFlags (type: string)
+      Attributes: persistent
+  - PreferredLifetime (type: uint32)
+      Attributes: persistent
+  - ValidLifetime (type: uint32)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.IPv4Route - Name: NeMo.Intf.38.IPv4Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv4', 'OSPF', 'IPCP', 'RIP', 'Static']
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.IPv6Route - Name: NeMo.Intf.38.IPv6Route
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+  - DstLen (type: uint8)
+      Attributes: persistent
+  - Table (type: string)
+      Attributes: persistent
+  - Scope (type: string)
+      Attributes: persistent
+  - Protocol (type: string)
+      Attributes: persistent
+  - Type (type: string)
+      Attributes: persistent
+  - Dst (type: string)
+      Attributes: persistent
+  - Priority (type: int32)
+      Attributes: persistent
+  - Origin (type: string)
+      Attributes: persistent
+      Validator: ['System', 'DHCPv6', 'OSPF', 'RA', 'RIPng', 'Static']
+  - Gateway (type: string)
+      Attributes: persistent
+
+=======================================================================
+OBJECT: NeMo.Intf.dslite.StatMon - Name: NeMo.Intf.38.StatMon
+ == PARAMETERS:
+  - Enable (type: bool)
+  - Interval (type: uint32)
+  - Type (type: string)
+      Validator: ['unknown', 'netdev', 'wlansta', 'dslline']
+
