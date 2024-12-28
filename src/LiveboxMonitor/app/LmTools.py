@@ -47,6 +47,9 @@ EMAIL_RE = re.compile(EMAIL_RS)
 BOLD_FONT = QtGui.QFont()
 BOLD_FONT.setBold(True)
 
+# SMTP Timeout
+SMTP_TIMEOUT = 5
+
 # Value qualifiers
 class ValQual(IntEnum):
 	Default = 0
@@ -252,12 +255,12 @@ def SendEmail(iEmailSetup, iSubject, iMessage):
 	s = None
 	try:
 		if iEmailSetup['TLS']:
-			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3)
+			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = SMTP_TIMEOUT)
 			s.starttls(context = ssl.create_default_context())
 		elif iEmailSetup['SSL']:
-			s = smtplib.SMTP_SSL(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3, context = ssl.create_default_context())
+			s = smtplib.SMTP_SSL(iEmailSetup['Server'], iEmailSetup['Port'], timeout = SMTP_TIMEOUT, context = ssl.create_default_context())
 		else:
-			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = 3)
+			s = smtplib.SMTP(iEmailSetup['Server'], iEmailSetup['Port'], timeout = SMTP_TIMEOUT)
 	except BaseException as e:
 		Error('Cannot setup email session. Error: {}'.format(e))
 		if s is not None:
