@@ -246,7 +246,9 @@ class LmRepeater:
 		iRepeater.setTabIcon()
 
 
-	### Itentify potential Wifi Repeater device & add it to the list
+	### Identify potential Wifi Repeater device & add it to the list
+	# PowerManagement:getElements() method returns a "REPEATER_DEVICES" entry that suggests that a generic way to
+	# identify repeaters could be to check the tags with the expression "ssw and (wifi or eth)"
 	def identifyRepeater(self, iDevice):
 		aDeviceType = iDevice.get('DeviceType', '')
 		aProdClass = iDevice.get('ProductClass', '')
