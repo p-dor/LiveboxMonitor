@@ -8,4 +8,4 @@ __build__ = 0x010491
 __author__ = 'Pierre Dor'
 __author_email__ = 'dorpierre@orange.fr'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2022-24 Pierre Dor'
+__copyright__ = 'Copyright 2022-25 Pierre Dor'
