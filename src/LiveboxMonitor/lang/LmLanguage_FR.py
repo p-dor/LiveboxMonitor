@@ -592,6 +592,8 @@ LABELS = {
 		'Wifi Scheduler ON': 'Planificateur Wifi ON',
 		'Wifi Scheduler OFF': 'Planificateur Wifi OFF',
 		'Show Global Status...': 'État Global Wifi...',
+		'Backup and Restore...': 'Sauvegarde et Restauration...',
+		'Miscellaneous': 'Divers',
 		'Reboot Livebox...': 'Redémarrer la Livebox...',
 		'Reboot History...': 'Historique Redémarrages...',
 		'Reboots': 'Redémarrages',
@@ -650,6 +652,19 @@ LABELS = {
 		'Error': 'Erreur',
 		'Inactive': 'Inactif',
 		'Not signed': 'Non authentifié'
+	},
+
+	# Actions - Backup & Restore
+	'backrest': {
+		'Auto backup enabled:': 'Sauvegarde automatique activée :',
+		'Status:': 'Statut :',
+		'Last Backup:': 'Dernière Sauvegarde :',
+		'Refresh': 'Rafraîchir',
+		'Enable Auto Backup': 'Activer Sauvegarde Automatique',
+		'Disable Auto Backup': 'Désactiver Sauvegarde Automatique',
+		'Force Backup': 'Forcer Sauvegarde',
+		'Force Restore': 'Forcer Restauration',
+		'Backup and Restore Setup': 'Réglages Sauvegarde et Restauration'
 	},
 
 	# Actions - Firewall level
@@ -1382,6 +1397,8 @@ TOOLTIPS = {
 		'schedulerOff': 'Permet de désactiver le planificateur Wifi de la Livebox.',
 		'wifiGlobalStatus': 'Permet d\'afficher l\'état global du Wifi, en incluant l\'état Wifi de tous\n'
 							'les répéteurs Wifi Orange potentiellement connectés.',
+		'backupRestore': 'Permet de régler la sauvegarde automatique de la configuration de la Livebox,\n'
+						 'de déclencher une sauvegarde ou de demander une restauration de la configuration.',
 		'rebootLivebox': 'Permet de forcer un redémarrage de la Livebox.',
 		'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
 						 'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.',
@@ -1423,6 +1440,19 @@ TOOLTIPS = {
 
 	# Actions - Wifi global status
 	'wglobal': {},
+
+	# Actions - Backup & Restore
+	'backrest': {
+		'autoBackEnabled': 'Indique si la sauvegarde automatique est activée ou non.',
+		'status': 'Indique le statut actuel de la sauvegarde.',
+		'lastBackup': 'Date et heure de la dernière sauvegarde.',
+		'refresh': 'Permet de rafraîchir les informations ci-dessus.',
+		'enaAutoBack': 'Permet d\'activer la sauvegarde automatique de la configuration de la Livebox.',
+		'disAutoBack': 'Permet de désactiver la sauvegarde automatique de la configuration de la Livebox.',
+		'forceBackup': 'Permet de forcer une sauvegarde de la configuration de la Livebox.',
+		'forceRestore': 'Permet de forcer une restauration de la configuration de la Livebox à partir\n'
+						'de la dernière sauvegarde. Un redémarrage de la Livebox est déclenché.'
+	},
 
 	# Actions - Firewall level
 	'fwlevel': {

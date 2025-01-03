@@ -688,6 +688,8 @@ LABELS = {
 		'Wifi Scheduler OFF': '',
 		'Show Global Status...': '',
 		'Wifi': '',
+		'Backup and Restore...': '',
+		'Miscellaneous': '',
 		'Reboot Livebox...': '',
 		'Reboot History...': '',
 		'Reboots': '',
@@ -753,6 +755,20 @@ LABELS = {
 		'Error': '',
 		'Inactive': '',
 		'Not signed': ''
+	},
+
+	# Actions - Backup & Restore
+	'backrest': {
+		'Auto backup enabled:': '',
+		'Status:': '',
+		'Last Backup:': '',
+		'Refresh': '',
+		'Enable Auto Backup': '',
+		'Disable Auto Backup': '',
+		'Force Backup': '',
+		'Force Restore': '',
+		'OK': '',
+		'Backup and Restore Setup': ''
 	},
 
 	# Actions - Firewall level
@@ -1448,6 +1464,8 @@ TOOLTIPS = {
 		'schedulerOff': '',
 		'wifiGlobalStatus': '',
 		'wifiGroup': '',
+		'backupRestore': '',
+		'miscGroup': '',
 		'rebootLivebox': '',
 		'rebootHistory': '',
 		'rebootGroup': '',
@@ -1483,6 +1501,22 @@ TOOLTIPS = {
 
 	# Actions - Wifi global status
 	'wglobal': {
+		'ok': ''
+	},
+
+	# Actions - Backup & Restore
+	'backrest': {
+		'autoBackEnabledLabel': '',
+		'autoBackEnabled': '',
+		'statusLabel': '',
+		'status': '',
+		'lastBackupLabel': '',
+		'lastBackup': '',
+		'refresh': '',
+		'enaAutoBack': '',
+		'disAutoBack': '',
+		'forceBackup': '',
+		'forceRestore': '',
 		'ok': ''
 	},
 

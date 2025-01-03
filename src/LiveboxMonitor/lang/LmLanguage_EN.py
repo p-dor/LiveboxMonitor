@@ -92,6 +92,9 @@ TOOLTIPS = {
 	# Actions - Wifi global status
 	'wglobal': {},
 
+	# Actions - Backup & Restore
+	'backrest': {},
+
 	# Actions - Firewall level
 	'fwlevel': {},
 
