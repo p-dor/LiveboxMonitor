@@ -1363,6 +1363,8 @@ TOOLTIPS = {
 		'colist_Work': 'Numéro de téléphone professionnel.',
 		'colist_Ring': 'Type de sonnerie sélectionné parmi les 7 supportés par la Livebox.',
 		'refreshCall': 'Rafraîchit la liste des appels.',
+		'spamCall': 'Ouvre un site web sur votre navigateur permettant de vérifier l\'origine\n'
+					'de l\'appel sélectionné.',
 		'deleteCall': 'Supprime l\'appel sélectionné.',
 		'deleteAllCalls': 'Supprime tous les appels.',
 		'refreshContact': 'Rafraîchit la liste des contacts.',
