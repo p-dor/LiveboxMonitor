@@ -572,6 +572,11 @@ Les actions concernant le **Wifi** :
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_WifiGlobalStatus.png)
 
+Les actions **Diverses** :
+- **`Sauvegarde et Restauration...`** : permet de régler la sauvegarde automatique de la configuration de la Livebox, de déclencher une sauvegarde ou de demander une restauration de la configuration.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_BackupRestore.png)
+
 Les actions concernant les **Redémarrages** :
 - **`Redémarrer la Livebox...`** : permet de forcer un redémarrage de la Livebox.
 - **`Historique Redémarrages...`** : permet d'afficher l'historique des derniers redémarrages.
