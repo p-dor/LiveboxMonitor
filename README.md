@@ -526,6 +526,7 @@ Un **double clic** sur un appel permet de facilement créer ou éditer le contac
 ### Boutons
 Les boutons suivants sont proposés pour gérer la liste des appels :
 - **`Rafraîchir`** : rafraîchit la liste des appels.
+- **`Spam`** : Ouvre un site web ([numeroinconnu.fr](https://www.numeroinconnu.fr/)) sur votre navigateur permettant de vérifier l'origine de l'appel sélectionné.
 - **`Supprimer`** : supprime l'appel sélectionné.
 - **`Tout Supprimer...`** : supprime tous les appels.
 
