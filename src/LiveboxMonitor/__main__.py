@@ -280,7 +280,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.startTask(lx('Signing in...'))
 			self._session = LmSession(LmConf.LiveboxURL, 'LiveboxMonitor_' + LmConf.CurrProfile['Name'])
 			try:
-				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword)
+				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
 			except BaseException as e:
 				LmTools.Error('Error: {}'.format(e))
 				r = -1
@@ -303,11 +303,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self.displayError(mx('Cannot connect to the Livebox.', 'cnx'))
 					return False
 
-			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, self)
+			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, LmConf.SavePasswords, self)
 			if aDialog.exec():
 				# Remove unwanted characters (can be set via Paste action)
 				aUser = re.sub('[\n\t]', '', aDialog.getUser())
 				aPassword = re.sub('[\n\t]', '', aDialog.getPassword())
+				LmConf.SavePasswords = aDialog.getSavePasswords()
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:

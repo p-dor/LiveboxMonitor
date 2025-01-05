@@ -842,6 +842,7 @@ LABELS = {
 		'Realtime wifi device statistics': 'Statistiques temps réel des appareils wifi',
 		'Prevent sleep mode': 'Empêcher la mise en veille',
 		'Use native graphical interface style': 'Utiliser le style d\'interface graphique natif',
+		'Save passwords': 'Sauver les mots de passe',
 		'Preferences': 'Préférences',
 		'Cancel': 'Annuler'
 	},
@@ -860,8 +861,9 @@ LABELS = {
 	'signin': {
 		'User': 'Utilisateur',
 		'Password': 'Mot de passe',
+		'Save passwords' : 'Sauver les mots de passe',
 		'Cancel': 'Annuler',
-		'Wrong password': 'Mauvais mot de passe'
+		'Enter password': 'Entrez le mot de passe'
 	},
 
 	# Config - email
@@ -1604,7 +1606,9 @@ TOOLTIPS = {
 		'nativeUIStyle': 'Par défaut le style "Fusion" est utilisé sur toutes les plateformes.\n'
 						 'Cette option permet sur les plateformes Windows et MacOS d\'utiliser\n'
 						 'un style graphique plus natif.\n'
-						 'Elle n\'a aucun effet sur les plateformes Linux.'
+						 'Elle n\'a aucun effet sur les plateformes Linux.',
+		'savePasswords': 'Permet de sauver les mots de passe dans la configuration (encryptés) pour éviter\n'
+						 'd\'avoir à les retaper à chaque lancement.'
 	},
 
 	# Config - Connection
@@ -1622,7 +1626,9 @@ TOOLTIPS = {
 		'passwordEdit': 'Le mot de passe est soit ce que vous avez indiqué vous-même soit le mot de passe d\'origine qui\n'
 						'se trouve sur la carte Wifi. Il est constitué des 8 premiers caractères (sans espace) de la clé de\n'
 						'sécurité visible sur l\'étiquette située sous votre Livebox.\n'
-						'Lisez la documentation pour plus de détails.'
+						'Lisez la documentation pour plus de détails.',
+		'savePasswords': 'Permet de sauver les mots de passe dans la configuration (encryptés) pour éviter\n'
+						 'd\'avoir à les retaper à chaque lancement.'
 	},
 
 	# Config - email

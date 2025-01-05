@@ -970,6 +970,7 @@ LABELS = {
 		'Realtime wifi device statistics': '',
 		'Prevent sleep mode': '',
 		'Use native graphical interface style': '',
+		'Save passwords': '',
 		'Preferences': '',
 		'OK': '',
 		'Cancel': ''
@@ -990,9 +991,10 @@ LABELS = {
 	'signin': {
 		'User': '',
 		'Password': '',
+		'Save passwords' : '',
 		'OK': '',
 		'Cancel': '',
-		'Wrong password': ''
+		'Enter password': ''
 	},
 
 	# Config - email
@@ -1653,6 +1655,7 @@ TOOLTIPS = {
 		'realtimeWifiStats': '',
 		'preventSleepMode': '',
 		'nativeUIStyle': '',
+		'savePasswords': '',
 		'prefsGroup': '',
 		'ok': '',
 		'cancel': ''
@@ -1675,6 +1678,7 @@ TOOLTIPS = {
 		'userEdit': '',
 		'passwordLabel': '',
 		'passwordEdit': '',
+		'savePasswords': '',
 		'ok': '',
 		'cancel': ''
 	},
@@ -1868,7 +1872,7 @@ MESSAGES = {
 		'forceResign':  ''
 	},
 
-	# # Config
+	# Config
 	'prefs': {
 		'wrongFile':  '',
 		'configVersion':  '',
