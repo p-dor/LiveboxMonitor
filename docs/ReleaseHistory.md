@@ -1,5 +1,31 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
+
+## v1.5 - 26/01/2025
+
+- Ajustement des niveaux de logs pour faciliter la lecture. Toutes les logs de l'application sont au niveau 1 et les logs de trafic au niveau 2.
+- Amélioration de la sécurité avec un clef dynamique d'encryption des mots de passe, stockée dans un fichier Key.txt et encryptée avec une clef unique correspondant à l'ordinateur. Cette nouvelle version vous redemandera tous vos mots de passe (quand les cookies expireront).
+- Nouveau bouton "Notifications" dans l'onglet "Événements" permettant de recevoir des notifications automatiques par email ou de générer une log dans un fichier CSV local pour des événements concernant des appareils (connexion, déconnexion, changement de point d'accès, appareil connu ou inconnu, etc).
+- Possibilité de forcer la réauthentification à un répéteur Wifi si indiqué comme inactif.
+- Affichage du nombre total de redémarrages dans les informations Livebox & Répéteurs.
+- Affichage du voltage et du BIAS à la bonne unité pour les Livebox 6 et 7.
+- Possibilité de configurer le caractère séparateur à utiliser lors de la génération de fichiers CSV.
+- Nouveaux boutons dans l'onglet "Actions" pour configurer le DynDNS, la DMZ et gérer les sauvegardes/restaurations.
+- Nouvelle option pour empêcher l'ordinateur de partir en veille lorsque le logiciel est lancé.
+- Nouvelle option pour spécifier une marge de timeout pour les requêtes à la Livebox. Utile en cas d'accès sur un réseau lent ou à distance.
+- Adaptations au nouveau firmeware, notamment pour contrôler le planificateur Wifi.
+- Affichage du mode d'opération, du mode WPS et du type de lien dans les informations Wifi des répéteurs.
+- Nouvelle fonction (et bouton) pour assigner tous les noms locaux de façon identique aux noms assignés à la Livebox, pour tous les appareils inconnus. Lors de son premier lancement le programme propose d'utiliser ces noms.
+- Tous les messages sont maintenant traduits en français.
+- Nouveau bouton "WakeOnLAN" dans l'onglet "Infos Appareil", pour déclencher l'allumage de l'appareil s'il supporte cette fonction.
+- Lorsqu'on édite un contact depuis la liste d'appels, celui-ci est maintenant cherché par numéro et plus par nom.
+- Nouvelle méthode d'identification des répéteurs Wifi plus robuste.
+- Nouveau bouton "Spam" dans l'onglet "Téléphone" pour vérifier l'origine d'un appel sur le site numeroinconnu.fr.
+- Nouvelle option pour choisir d'enregistrer les mots de passe ou pas.
+- Ajustement de l'affichage des couleurs pour les puissances d'émission/réception des lignes XGS-PON.
+- Diverses améliorations et corrections de bugs mineures.
+
+
 ## v1.4 - 24/04/2024
 
 - Support des icônes personnalisées pour les appareils / possibilité de créer de nouveaux types d'appareils avec leurs icônes.
