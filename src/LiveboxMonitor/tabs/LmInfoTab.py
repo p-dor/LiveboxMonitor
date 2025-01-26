@@ -1151,23 +1151,39 @@ class LmInfo:
 			v = d.get('SignalRxPower')
 			if v is not None:
 				v /= 1000
-				if (v < -27.0) or (v > -2.0):
-					aQual = LmTools.ValQual.Error
-				elif (v < -22.0) or (v > -8.0):
-					aQual = LmTools.ValQual.Warn
+				if self._linkType == 'XGS-PON':
+					if (v < -28.0) or (v > -9.0):
+						aQual = LmTools.ValQual.Error
+					elif (v < -24.0) or (v > -13.0):
+						aQual = LmTools.ValQual.Warn
+					else:
+						aQual = LmTools.ValQual.Good					
 				else:
-					aQual = LmTools.ValQual.Good
+					if (v < -30.0) or (v > -8.0):
+						aQual = LmTools.ValQual.Error
+					elif (v < -26.0) or (v > -12.0):
+						aQual = LmTools.ValQual.Warn
+					else:
+						aQual = LmTools.ValQual.Good
 				i = self.addInfoLine(self._liveboxAList, i, lx('Signal RxPower'), str(v) + ' dBm', aQual)
 
 			v = d.get('SignalTxPower')
 			if v is not None:
 				v /= 1000
-				if (v < 0.5) or (v > 5.0):
-					aQual = LmTools.ValQual.Error
-				elif (v < 1.5) or (v > 4.0):
-					aQual = LmTools.ValQual.Warn
+				if self._linkType == 'XGS-PON':
+					if (v < 4.0) or (v > 9.0):
+						aQual = LmTools.ValQual.Error
+					elif (v < 4.5) or (v > 8.5):
+						aQual = LmTools.ValQual.Warn
+					else:
+						aQual = LmTools.ValQual.Good
 				else:
-					aQual = LmTools.ValQual.Good
+					if (v < 0.5) or (v > 5.0):
+						aQual = LmTools.ValQual.Error
+					elif (v < 1.0) or (v > 4.5):
+						aQual = LmTools.ValQual.Warn
+					else:
+						aQual = LmTools.ValQual.Good
 				i = self.addInfoLine(self._liveboxAList, i, lx('Signal TxPower'), str(v) + ' dBm', aQual)
 
 			v = d.get('Temperature')
@@ -1194,7 +1210,7 @@ class LmInfo:
 			v = d.get('Bias')
 			if v is not None:
 				if self._liveboxModel >= 6:
-					v /= 1000
+					v /= 10000
 				if (v < 0) or (v > 150):
 					aQual = LmTools.ValQual.Error
 				elif v > 75:
