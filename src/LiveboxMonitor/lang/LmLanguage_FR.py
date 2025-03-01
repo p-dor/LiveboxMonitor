@@ -1755,7 +1755,7 @@ MESSAGES = {
 		'ruleDel': '{} règles ont été supprimées.',
 		'patLoadErr': 'Impossible de charger les règles de redirection de port IPv4.',
 		'ptfLoadErr': 'Impossible de charger les règles de redirection de protocole IPv4.',
-		'ipv6AddrErr': '{} n\'est pas une adresse IPv6 valide.',
+		'ipv6AddrErr': '{} n\'est pas une adresse ou préfix IPv6 valide.',
 		'ipv4AddrErr': '{} n\'est pas une adresse IPv4 valide.',
 		'emptyAddr': 'Adresse IP vide'
 	},

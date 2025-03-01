@@ -1358,7 +1358,7 @@ class LmNatPat:
 		if len(aIP) == 0:
 			return False
 		if t == RULE_TYPE_IPv6:
-			if not LmTools.IsIPv6(aIP):
+			if not LmTools.IsIPv6Pfix(aIP):
 				LmTools.Error('Rule has wrong IPv6 {} set.'.format(aIP))
 				return False
 		else:
@@ -2146,7 +2146,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 		# Adjust IP field validator
 		if self.getType() == RULE_TYPE_IPv6:
-			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6_RS + '$')
+			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6Pfix_RS + '$')
 		else:
 			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
 		aIPValidator = QtGui.QRegularExpressionValidator(aIPRegExp)
@@ -2211,8 +2211,9 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		# Validate IP address
 		aIP = self.getIP()
 		if t == RULE_TYPE_IPv6:
-			if not LmTools.IsIPv6(aIP):
-				self.parent().displayError(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
+
+			if not LmTools.IsIPv6Pfix(aIP):
+				self.parent().displayError(mx('{} is not a valid IPv6 address or prefix.', 'ipv6AddrErr').format(aIP))
 				self._ipEdit.setFocus()
 				return
 		else:
