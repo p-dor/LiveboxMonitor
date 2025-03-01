@@ -485,7 +485,7 @@ La liste des règles de redirection de protocole, en bas, affiche les colonnes s
 - **Nom** : nom de la règle.
 - **Description** : description de la règle.
 - **Protocoles** : liste des protocoles concernés par la règle. 
-- **Appareil** : appareil (ou son adresse IP) sur lequel le trafic est redirigé.
+- **Appareil** : appareil (ou son adresse IP) sur lequel le trafic est redirigé. En IPv6 il est aussi possible de spécifier un préfix plutôt qu'une adresse.
 - **IP Externes** : liste des adresses IPs externes concernées par la règle.
 
 Un **double clic** sur une règle permet de facilement l'éditer.

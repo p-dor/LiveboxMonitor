@@ -1332,7 +1332,7 @@ TOOLTIPS = {
 		'icmpCheckbox': 'Redirige ou pas le trafic ICMP (v4 ou v6 en fonction du type).',
 		'deviceCombo': 'Appareil sur lequel le trafic doit être redirigé.',
 		'ipEdit': 'Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n'
-				  'être redirigé.',
+				  'être redirigé. En IPv6 il est aussi possible d\'indiquer un préfix.',
 		'extIPsEdit': 'Liste des adresses IPs (v4 ou v6 en fonction du type) externes concernées\n'
 					  'par la règle. Chaque adresse doit être séparée par une virgule.\n'
 					  'Laisser vide si aucun filtrage par IP externe n\'est requis.'
