@@ -256,6 +256,30 @@ class LmDeviceList:
 			self.displayError('NMC.IPv6:get service error')
 			return
 
+		# Get CGNat status
+		aCGNat = None
+		try:
+			d = self._session.request('NMC.ServiceEligibility.DSLITE', 'get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is not None:
+			aCGNat = d.get('Demand')
+
+		# Get IPv6Mode
+		aMode = None
+		try:
+			d = self._session.request('NMC.Autodetect', 'get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is not None:
+			aMode = d.get('IPv6Mode')
+
 		# Get IPv6 address and prefix
 		aIPv6Addr = None
 		aIPv6Prefix = None
@@ -273,17 +297,32 @@ class LmDeviceList:
 		if d is not None:
 			aIPv6Addr = d.get('IPv6Address')
 			aIPv6Prefix = d.get('IPv6DelegatedPrefix')
+			aGateway = d.get('RemoteGatewayIPv6')
 		if (aIPv6Addr is None) or (aIPv6Prefix is None):
 			self.endTask()
 			self.displayError('NMC:getWANStatus service error')
+			return
+
+		# Get IPv6 prefix leases delegation list
+		aPrefixes = None
+		try:
+			d = self._session.request('DHCPv6.Server', 'getPDPrefixLeases')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			aPrefixes = d.get('status')
+		if aPrefixes is None:
+			self.endTask()
+			self.displayError('DHCPv6.Server:getPDPrefixLeases service error')
 			return
 
 		self.loadDeviceIpNameMap()
 
 		self.endTask()
 
-		aIPv6Dialog = IPv6Dialog(aIPv6Enabled, aIPv6Addr, aIPv6Prefix, self)
-		aIPv6Dialog.loadDeviceList(self._liveboxDevices)
+		aIPv6Dialog = IPv6Dialog(aIPv6Enabled, aCGNat, aMode, aIPv6Addr, aIPv6Prefix, aGateway, self)
+		aIPv6Dialog.loadDeviceList(self._liveboxDevices, aPrefixes)
 		aIPv6Dialog.exec()
 
 
@@ -1200,14 +1239,15 @@ class IPv6Col(IntEnum):
 	Active = 4
 	IPv4 = 5
 	IPv6 = 6
-	Count = 7
+	Prefix = 7
+	Count = 8
 IPV6_ICON_COLUMNS = [IPv6Col.Active]
 
 
 class IPv6Dialog(QtWidgets.QDialog):
-	def __init__(self, iEnabled, iAddr, iPrefix, iParent = None):
+	def __init__(self, iEnabled, iCGNat, iMode, iAddr, iPrefix, iGateway, iParent = None):
 		super(IPv6Dialog, self).__init__(iParent)
-		self.resize(850, 110 + LmConfig.DialogHeight(12))
+		self.resize(1005, 110 + LmConfig.DialogHeight(12))
 
 		# IPv6 info box
 		aIPv6EnabledLabel = QtWidgets.QLabel(lix('IPv6 enabled:'), objectName = 'ipv6EnabledLabel')
@@ -1217,6 +1257,16 @@ class IPv6Dialog(QtWidgets.QDialog):
 		else:
 			aIPv6Enabled.setPixmap(LmIcon.CrossPixmap)
 
+		aCGNatEnabledLabel = QtWidgets.QLabel(lix('CGNat:'), objectName = 'cgNatLabel')
+		aCGNat = QtWidgets.QLabel(objectName = 'cgNat')
+		if iCGNat:
+			aCGNat.setPixmap(LmIcon.TickPixmap)
+		else:
+			aCGNat.setPixmap(LmIcon.CrossPixmap)
+
+		aIPv6ModeLabel = QtWidgets.QLabel(lix('Mode:'), objectName = 'ipv6ModeLabel')
+		aIPv6Mode = QtWidgets.QLabel(iMode, objectName = 'ipv6Mode')
+
 		aAddrLabel = QtWidgets.QLabel(lix('IPv6 address:'), objectName = 'addrLabel')
 		aAddr = QtWidgets.QLineEdit(iAddr, objectName = 'addr')
 		aAddr.setReadOnly(True)
@@ -1225,14 +1275,24 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aPrefix = QtWidgets.QLineEdit(iPrefix, objectName = 'prefix')
 		aPrefix.setReadOnly(True)
 
+		aGatewayLabel = QtWidgets.QLabel(lix('IPv6 gateway:'), objectName = 'gatewayLabel')
+		aGateway = QtWidgets.QLineEdit(iGateway, objectName = 'gateway')
+		aGateway.setReadOnly(True)
+
 		aIPv6InfoGrid = QtWidgets.QGridLayout()
 		aIPv6InfoGrid.setSpacing(10)
 		aIPv6InfoGrid.addWidget(aIPv6EnabledLabel, 0, 0)
 		aIPv6InfoGrid.addWidget(aIPv6Enabled, 0, 1)
+		aIPv6InfoGrid.addWidget(aCGNatEnabledLabel, 0, 2)
+		aIPv6InfoGrid.addWidget(aCGNat, 0, 3)
+		aIPv6InfoGrid.addWidget(aIPv6ModeLabel, 0, 4)
+		aIPv6InfoGrid.addWidget(aIPv6Mode, 0, 5)
 		aIPv6InfoGrid.addWidget(aAddrLabel, 1, 0)
 		aIPv6InfoGrid.addWidget(aAddr, 1, 1)
 		aIPv6InfoGrid.addWidget(aPrefixLabel, 1, 2)
 		aIPv6InfoGrid.addWidget(aPrefix, 1, 3)
+		aIPv6InfoGrid.addWidget(aGatewayLabel, 1, 4)
+		aIPv6InfoGrid.addWidget(aGateway, 1, 5)
 
 		# Device table
 		self._deviceTable = QtWidgets.QTableWidget(objectName = 'ipv6Table')
@@ -1242,7 +1302,8 @@ class IPv6Dialog(QtWidgets.QDialog):
 															lix('MAC'),
 															lix('A'),
 															lix('IPv4'),
-															lix('IPv6')))
+															lix('IPv6'),
+															lix('Prefix')))
 		self._deviceTable.setColumnHidden(IPv6Col.Key, True)
 		aHeader = self._deviceTable.horizontalHeader()
 		aHeader.setSectionsMovable(False)
@@ -1257,12 +1318,14 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aModel.setHeaderData(IPv6Col.Active, QtCore.Qt.Orientation.Horizontal, 'ipv6_Active', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(IPv6Col.IPv4, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv4', QtCore.Qt.ItemDataRole.UserRole)
 		aModel.setHeaderData(IPv6Col.IPv6, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv6', QtCore.Qt.ItemDataRole.UserRole)
+		aModel.setHeaderData(IPv6Col.Prefix, QtCore.Qt.Orientation.Horizontal, 'ipv6_Prefix', QtCore.Qt.ItemDataRole.UserRole)
 		self._deviceTable.setColumnWidth(IPv6Col.Name, 300)
 		self._deviceTable.setColumnWidth(IPv6Col.LBName, 300)
 		self._deviceTable.setColumnWidth(IPv6Col.MAC, 120)
 		self._deviceTable.setColumnWidth(IPv6Col.Active, 10)
 		self._deviceTable.setColumnWidth(IPv6Col.IPv4, 105)
 		self._deviceTable.setColumnWidth(IPv6Col.IPv6, 250)
+		self._deviceTable.setColumnWidth(IPv6Col.Prefix, 155)
 		self._deviceTable.verticalHeader().hide()
 		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		self._deviceTable.setSortingEnabled(True)
@@ -1289,7 +1352,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 		self.show()
 
 
-	def loadDeviceList(self, iDevices):
+	def loadDeviceList(self, iDevices, iPrefixes):
 		if (iDevices is not None):
 			self._deviceTable.setSortingEnabled(False)
 			i = 0
@@ -1306,7 +1369,24 @@ class IPv6Dialog(QtWidgets.QDialog):
 								aAddr = a.get('Address')
 								if aAddr is not None:
 									aIPv6Addr.append(aAddr)
-					if not len(aIPv6Addr):
+
+					# Get prefixes
+					aMac = d.get('PhysAddress', '')
+					aPrefixes = []
+					if type(iPrefixes).__name__ == 'list':
+						for m in iPrefixes:
+							if m.get('MacAddress') == aMac:
+								aPrefixList = m.get('PDPrefixList')
+								if type(aPrefixList).__name__ == 'list':
+									for n in aPrefixList:
+										aPrefix = n.get('Prefix')
+										if aPrefix is not None:
+											aPrefixLen = n.get('PrefixLen')
+											if aPrefixLen is not None:
+												aPrefix += '/' + str(aPrefixLen)
+											aPrefixes.append(aPrefix)
+
+					if not len(aIPv6Addr) and not len(aPrefixes):
 						continue
 
 					# Display data
@@ -1318,7 +1398,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 					aLBName = QtWidgets.QTableWidgetItem(d.get('Name', ''))
 					self._deviceTable.setItem(i, IPv6Col.LBName, aLBName)
 
-					p.formatMacWidget(self._deviceTable, i, d.get('PhysAddress', ''), IPv6Col.MAC)
+					p.formatMacWidget(self._deviceTable, i, aMac, IPv6Col.MAC)
 
 					aActiveStatus = d.get('Active', False)
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
@@ -1344,6 +1424,17 @@ class IPv6Dialog(QtWidgets.QDialog):
 							aResize = True
 						aIPv6Str += a
 					self._deviceTable.setItem(i, IPv6Col.IPv6, QtWidgets.QTableWidgetItem(aIPv6Str))
+					if aResize:
+						self._deviceTable.resizeRowToContents(i)
+
+					aPrefixStr = ''
+					aResize = False
+					for a in aPrefixes:
+						if len(aPrefixStr):
+							aPrefixStr += '\n'
+							aResize = True
+						aPrefixStr += a
+					self._deviceTable.setItem(i, IPv6Col.Prefix, QtWidgets.QTableWidgetItem(aPrefixStr))
 					if aResize:
 						self._deviceTable.resizeRowToContents(i)
 

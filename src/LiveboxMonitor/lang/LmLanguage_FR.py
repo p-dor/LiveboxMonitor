@@ -40,8 +40,10 @@ LABELS = {
 		'IPv6 enabled:': 'IPv6 activé :',
 		'IPv6 address:': 'Adresse IPv6 :',
 		'IPv6 prefix:': 'Préfixe IPv6 :',
+		'IPv6 gateway:': 'Passerelle IPv6',
 		'Name': 'Nom',
 		'Livebox Name': 'Nom Livebox',
+		'Prefix': 'Préfixe',
 		'IPv6 Devices': 'Appareils IPv6'
 	},
 
@@ -1000,9 +1002,14 @@ TOOLTIPS = {
 					 'Et elle s\'affiche en rouge si l\'adresse n\'est pas atteignable sur le réseau (unreacheable),\n'
 					 'typiquement lorsque l\'appareil n\'est pas actif.',
 		'ipv6_IPv6': 'Adresse(s) IPv6 de l\'appareil sur le LAN.',
+		'ipv6_Prefix': 'Préfixe(s) IPv6 attribué(s) à l\'appareil par le serveur DHCPv6 de la Livebox.',
 		'ipv6Enabled': 'Indique par une icône si la connectivité IPv6 est active ou non.',
+		'cgNat': 'Si le mode CGNat est actif il est possible que l’adresse IPv4 publique que vous utilisez\n'
+				 'pour naviguer sur Internet soit mutualisée au sein du réseau d’Orange.',
+		'ipv6Mode': 'Mode de connexion.',
 		'addr': 'Adresse IPv6 de la Livebox.',
-		'prefix': 'Préfixe IPv6 de la Livebox.'
+		'prefix': 'Préfixe IPv6 de la Livebox.',
+		'gateway': 'Passerelle IPv6 de la Livebox.'
 	},
 
 	# Device list - DNS dialog

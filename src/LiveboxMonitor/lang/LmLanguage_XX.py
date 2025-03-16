@@ -48,14 +48,18 @@ LABELS = {
 	# Device list - IPv6 dialog
 	'ipv6': {
 		'IPv6 enabled:': '',
+		'CGNat:': '',
+		'Mode:': '',
 		'IPv6 address:': '',
 		'IPv6 prefix:': '',
+		'IPv6 gateway:': '',
 		'Name': '',
 		'Livebox Name': '',
 		'MAC': '',
 		'A': '',
 		'IPv4': '',
 		'IPv6': '',
+		'Prefix': '',
 		'OK': '',
 		'IPv6 Devices': ''
 	},
@@ -1105,12 +1109,19 @@ TOOLTIPS = {
 		'ipv6_Active': '',
 		'ipv6_IPv4': '',
 		'ipv6_IPv6': '',
+		'ipv6_Prefix': '',
 		'ipv6EnabledLabel': '',
 		'ipv6Enabled': '',
+		'cgNatLabel': '',
+		'cgNat': '',
+		'ipv6ModeLabel': '',
+		'ipv6Mode': '',
 		'addrLabel': '',
 		'addr': '',
 		'prefixLabel': '',
 		'prefix': '',
+		'gatewayLabel': '',
+		'gateway': '',
 		'ok': ''
 	},
 
