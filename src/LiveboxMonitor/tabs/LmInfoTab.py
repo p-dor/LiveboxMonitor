@@ -651,7 +651,7 @@ class LmInfo:
 			else:
 				i = self.addInfoLine(self._liveboxAList, i, lx('Name'), d.get('Name'))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(d.get('Active')))
-				i = self.addInfoLine(self._liveboxAList, i, lx('Last Boot'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('First Boot'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Boot Loader Version'), d.get('BootLoaderVersion'))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Firewall Level'), d.get('FirewallLevel'))
 				i = self.addInfoLine(self._liveboxAList, i, lx('Internet Active'), LmTools.FmtBool(d.get('Internet')))

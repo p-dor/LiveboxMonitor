@@ -111,7 +111,7 @@ LABELS = {
 		'Reset Occurred': 'Reset Effectué',
 		'Restore Occurred': 'Restauration Effectuée',
 		'Active': 'Actif',
-		'Last Boot': 'Dernier Démarrage',
+		'First Boot': 'Premier Démarrage',
 		'Boot Loader Version': 'Version Boot Loader',
 		'Firewall Level': 'Niveau Firewall',
 		'Internet Active': 'Internet Actif',

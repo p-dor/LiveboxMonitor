@@ -137,7 +137,7 @@ LABELS = {
 		'Reset Occurred': '',
 		'Restore Occurred': '',
 		'Active': '',
-		'Last Boot': '',
+		'First Boot': '',
 		'Boot Loader Version': '',
 		'Firewall Level': '',
 		'Internet Active': '',
