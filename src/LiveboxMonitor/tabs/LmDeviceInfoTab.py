@@ -516,7 +516,10 @@ class LmDeviceInfo:
 			i = self.addInfoLine(self._infoAList, i, lx('Pairing Time'), LmTools.FmtLiveboxTimestamp(aSysSoftware.get('PairingTime')))
 			i = self.addInfoLine(self._infoAList, i, lx('Uplink Type'), aSysSoftware.get('UplinkType'))
 
-		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Strength'), LmTools.FmtInt(d.get('SignalStrength')) + ' dBm')
+		aSignalStrength = LmTools.FmtInt(d.get('SignalStrength'))
+		if len(aSignalStrength):
+			aSignalStrength += ' dBm'
+		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Strength'), aSignalStrength)
 		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Noise Ratio'), LmTools.FmtInt(d.get('SignalNoiseRatio')))
 
 		aSysSoftwareStd = d.get('SSWSta')
