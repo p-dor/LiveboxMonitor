@@ -356,8 +356,10 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				self._liveboxModel = 4
 			else:
 				self._liveboxModel = 0
+		LmTools.LogDebug(1, 'Identified Livebox model: {}'.format(self._liveboxModel))
 
 		self.determineFiberLink()
+		self.determineLiveboxPro()
 		SetLiveboxModel(self._liveboxModel)
 
 
@@ -392,6 +394,33 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		else:
 			# Check link type for Livebox 4
 			self._fiberLink = (self._linkType == 'SFP')
+
+		LmTools.LogDebug(1, 'Identified link type: {}'.format(self._linkType))
+		LmTools.LogDebug(1, 'Identified fiber link: {}'.format(self._fiberLink))
+
+
+	### Determine if Pro or Residential subscription
+	def determineLiveboxPro(self):
+		d = None
+		try:
+			d = self._session.request('NMC', 'get')
+		except BaseException as e:
+			LmTools.Error('Error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			LmTools.Error('NMC:get query error')
+			self._liveboxPro = False
+		else:
+			aOfferType = d.get('OfferType')
+			if aOfferType is None:
+				LmTools.Error('Missing offer type in NMC:get, cannot determine Livebox Pro model')
+				self._liveboxPro = False
+			else:
+				self._liveboxPro = 'PRO' in aOfferType.upper()
+
+		LmTools.LogDebug(1, 'Identified Livebox Pro: {}'.format(self._liveboxPro))
 
 
 	### Exit with escape
