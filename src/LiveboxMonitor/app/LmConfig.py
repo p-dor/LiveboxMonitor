@@ -34,6 +34,7 @@ from LiveboxMonitor.__init__ import __url__, __version__, __build__
 # Config file name
 CONFIG_FILE = 'Config.txt'
 KEY_FILE = 'Key.txt'
+SPAMCALLS_FILE = 'SpamCalls.txt'
 LIVEBOX_CACHE_DIR = 'lbcache_'
 LIVEBOX_ICON_CACHE_DIR = 'icons'
 CUSTOM_ICON_DIR = 'custom_icons'
@@ -48,6 +49,7 @@ DCFG_LANGUAGE = 'FR'
 DCFG_TOOLTIPS = True
 DCFG_STATS_FREQUENCY = 3000
 DCFG_MACADDR_API_KEY = ''
+DCFG_CALLFILTER_API_KEY = ''
 DCFG_PHONE_CODE = '33'
 DCFG_LIST_HEADER_HEIGHT = 25
 DCFG_LIST_HEADER_FONT_SIZE = 0
@@ -508,10 +510,12 @@ class LmConf:
 	FilterDevices = DCFG_FILTER_DEVICES
 	MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
 	MacAddrTable = {}
+	SpamCallsTable = []
 	Language = DCFG_LANGUAGE
 	Tooltips = DCFG_TOOLTIPS
 	StatsFrequency = DCFG_STATS_FREQUENCY
 	MacAddrApiKey = DCFG_MACADDR_API_KEY
+	CallFilterApiKey = DCFG_CALLFILTER_API_KEY
 	PhoneCode = DCFG_PHONE_CODE
 	ListHeaderHeight = DCFG_LIST_HEADER_HEIGHT
 	ListHeaderFontSize = DCFG_LIST_HEADER_FONT_SIZE
@@ -603,6 +607,9 @@ class LmConf:
 			p = aConfig.get('MacAddr API Key')
 			if p is not None:
 				LmConf.MacAddrApiKey = p
+			p = aConfig.get('CallFilter API Key')
+			if p is not None:
+				LmConf.CallFilterApiKey = p
 			p = aConfig.get('Phone Code')
 			if p is not None:
 				LmConf.PhoneCode = str(p)
@@ -984,6 +991,7 @@ class LmConf:
 				aConfig['Tooltips'] = LmConf.Tooltips
 				aConfig['Stats Frequency'] = LmConf.StatsFrequency
 				aConfig['MacAddr API Key'] = LmConf.MacAddrApiKey
+				aConfig['CallFilter API Key'] = LmConf.CallFilterApiKey
 				aConfig['Phone Code'] = LmConf.PhoneCode
 				aConfig['List Header Height'] = LmConf.ListHeaderHeight
 				aConfig['List Header Font Size'] = LmConf.ListHeaderFontSize
@@ -1128,6 +1136,62 @@ class LmConf:
 				json.dump(LmConf.MacAddrTable, aMacTableFile, indent = 4)
 		except BaseException as e:
 			LmTools.Error('Cannot save MacAddress file. Error: {}'.format(e))
+
+
+	### Load spam calls table
+	@staticmethod
+	def loadSpamCallsTable():
+		aSpamCallsTableFilePath = os.path.join(LmConf.getConfigDirectory(), SPAMCALLS_FILE)
+		try:
+			with open(aSpamCallsTableFilePath) as f:
+				t = json.load(f)
+				if type(t).__name__ == 'list':
+					LmConf.SpamCallsTable = t
+				else:
+					LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
+					LmConf.SpamCallsTable = []
+		except OSError:		# No file
+			LmConf.SpamCallsTable = []
+		except BaseException as e:
+			LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
+			LmConf.SpamCallsTable = []
+
+
+	### Declare a phone nb as spam
+	@staticmethod
+	def setSpamCall(iPhoneNb):
+		if iPhoneNb not in LmConf.SpamCallsTable:
+			LmConf.SpamCallsTable.append(iPhoneNb)
+			LmConf.saveSpamCallsTable()
+
+
+	### Undeclare a phone nb as spam
+	@staticmethod
+	def unsetSpamCall(iPhoneNb):
+		if iPhoneNb in LmConf.SpamCallsTable:
+			LmConf.SpamCallsTable.remove(iPhoneNb)
+			LmConf.saveSpamCallsTable()
+
+
+	### Save spam calls table
+	@staticmethod
+	def saveSpamCallsTable():
+		aConfigPath = LmConf.getConfigDirectory()
+
+		# Create config directory if doesn't exist
+		if not os.path.exists(aConfigPath):
+			try:
+				os.makedirs(aConfigPath)
+			except BaseException as e:
+				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				return
+
+		aSpamCallsTableFilePath = os.path.join(aConfigPath, SPAMCALLS_FILE)
+		try:
+			with open(aSpamCallsTableFilePath, 'w') as f:
+				json.dump(LmConf.SpamCallsTable, f, indent = 4)
+		except BaseException as e:
+			LmTools.Error('Cannot save spam calls file. Error: {}'.format(e))
 
 
 	### Set native run
@@ -1675,8 +1739,12 @@ class PrefsDialog(QtWidgets.QDialog):
 			self._languageCombo.addItem(LmLanguages.LANGUAGES_KEY[i] + ' - ' + LmLanguages.LANGUAGES_NAME[i])
 
 		self._tooltips = QtWidgets.QCheckBox(lx('Tooltips'), objectName = 'tooltips')
+
 		aMacAddrApiKeyLabel = QtWidgets.QLabel(lx('macaddress.io API Key'), objectName = 'macAddrApiKeyLabel')
 		self._macAddrApiKey = QtWidgets.QLineEdit(objectName = 'macAddrApiKeyEdit')
+
+		aCallFilterApiKeyLabel = QtWidgets.QLabel(lx('CallFilter API Key'), objectName = 'callFilterApiKeyLabel')
+		self._callFilterApiKey = QtWidgets.QLineEdit(objectName = 'callFilterApiKeyEdit')
 
 		aIntValidator = QtGui.QIntValidator()
 		aIntValidator.setRange(1, 99)
@@ -1732,26 +1800,28 @@ class PrefsDialog(QtWidgets.QDialog):
 
 		aPrefsEditGrid.addWidget(aMacAddrApiKeyLabel, 1, 0)
 		aPrefsEditGrid.addWidget(self._macAddrApiKey, 1, 1, 1, 3)
-		aPrefsEditGrid.addWidget(aStatsFrequencyLabel, 2, 0)
-		aPrefsEditGrid.addWidget(self._statsFrequency, 2, 1)
-		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 2, 2)
-		aPrefsEditGrid.addWidget(self._phoneCode, 2, 3)
-		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 3, 0)
-		aPrefsEditGrid.addWidget(self._listHeaderHeight, 3, 1)
-		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 3, 2)
-		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 3, 3)
-		aPrefsEditGrid.addWidget(aListLineHeightLabel, 4, 0)
-		aPrefsEditGrid.addWidget(self._listLineHeight, 4, 1)
-		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 4, 2)
-		aPrefsEditGrid.addWidget(self._listLineFontSize, 4, 3)
-		aPrefsEditGrid.addWidget(aTimeoutMarginLabel, 5, 0)
-		aPrefsEditGrid.addWidget(self._timeoutMargin, 5, 1)
-		aPrefsEditGrid.addWidget(aCsvDelimiterLabel, 5, 2)
-		aPrefsEditGrid.addWidget(self._csvDelimiter, 5, 3)
-		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 6, 0, 1, 2)
-		aPrefsEditGrid.addWidget(self._preventSleep, 6, 2, 1, 2)
-		aPrefsEditGrid.addWidget(self._nativeUIStyle, 7, 0, 1, 2)
-		aPrefsEditGrid.addWidget(self._savePasswords, 7, 2, 1, 2)
+		aPrefsEditGrid.addWidget(aCallFilterApiKeyLabel, 2, 0)
+		aPrefsEditGrid.addWidget(self._callFilterApiKey, 2, 1, 1, 3)
+		aPrefsEditGrid.addWidget(aStatsFrequencyLabel, 3, 0)
+		aPrefsEditGrid.addWidget(self._statsFrequency, 3, 1)
+		aPrefsEditGrid.addWidget(aPhoneCodeLabel, 3, 2)
+		aPrefsEditGrid.addWidget(self._phoneCode, 3, 3)
+		aPrefsEditGrid.addWidget(aListHeaderHeightLabel, 4, 0)
+		aPrefsEditGrid.addWidget(self._listHeaderHeight, 4, 1)
+		aPrefsEditGrid.addWidget(aListHeaderFontSizeLabel, 4, 2)
+		aPrefsEditGrid.addWidget(self._listHeaderFontSize, 4, 3)
+		aPrefsEditGrid.addWidget(aListLineHeightLabel, 5, 0)
+		aPrefsEditGrid.addWidget(self._listLineHeight, 5, 1)
+		aPrefsEditGrid.addWidget(aListLineFontSizeLabel, 5, 2)
+		aPrefsEditGrid.addWidget(self._listLineFontSize, 5, 3)
+		aPrefsEditGrid.addWidget(aTimeoutMarginLabel, 6, 0)
+		aPrefsEditGrid.addWidget(self._timeoutMargin, 6, 1)
+		aPrefsEditGrid.addWidget(aCsvDelimiterLabel, 6, 2)
+		aPrefsEditGrid.addWidget(self._csvDelimiter, 6, 3)
+		aPrefsEditGrid.addWidget(self._realtimeWifiStats, 7, 0, 1, 2)
+		aPrefsEditGrid.addWidget(self._preventSleep, 7, 2, 1, 2)
+		aPrefsEditGrid.addWidget(self._nativeUIStyle, 8, 0, 1, 2)
+		aPrefsEditGrid.addWidget(self._savePasswords, 8, 2, 1, 2)
 
 		aPrefsGroupBox = QtWidgets.QGroupBox(lx('Preferences'), objectName = 'prefsGroup')
 		aPrefsGroupBox.setLayout(aPrefsEditGrid)
@@ -1806,6 +1876,7 @@ class PrefsDialog(QtWidgets.QDialog):
 			self._tooltips.setCheckState(QtCore.Qt.CheckState.Unchecked)
 		self._statsFrequency.setText(str(int(LmConf.StatsFrequency / 1000)))
 		self._macAddrApiKey.setText(LmConf.MacAddrApiKey)
+		self._callFilterApiKey.setText(LmConf.CallFilterApiKey)
 		self._phoneCode.setText(LmConf.PhoneCode)
 		self._listHeaderHeight.setText(str(LmConf.ListHeaderHeight))
 		self._listHeaderFontSize.setText(str(LmConf.ListHeaderFontSize))
@@ -1852,6 +1923,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		LmConf.Tooltips = self._tooltips.isChecked()
 		LmConf.StatsFrequency = int(self._statsFrequency.text()) * 1000
 		LmConf.MacAddrApiKey = self._macAddrApiKey.text()
+		LmConf.CallFilterApiKey = self._callFilterApiKey.text()
 		LmConf.PhoneCode = self._phoneCode.text()
 		LmConf.ListHeaderHeight = int(self._listHeaderHeight.text())
 		LmConf.ListHeaderFontSize = int(self._listHeaderFontSize.text())

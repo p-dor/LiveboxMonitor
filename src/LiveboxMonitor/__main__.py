@@ -77,6 +77,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())
 			LmConf.loadMacAddrTable()
+			LmConf.loadSpamCallsTable()
 			QtCore.QCoreApplication.processEvents()
 			self.loadDeviceList()
 			self.initRepeaters()

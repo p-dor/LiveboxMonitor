@@ -553,6 +553,10 @@ LABELS = {
 		'Refresh': 'Rafraîchir',
 		'Delete': 'Supprimer',
 		'Delete All...': 'Tout Supprimer...',
+		'Spams scan': 'Scanner spams',
+		'Spam sites': 'Sites spam',
+		'Set as spam': 'Marquer spam',
+		'Unset as spam': 'Retirer spam',
 		'Name': 'Nom',
 		'Mobile': 'Portable',
 		'Home': 'Domicile',
@@ -834,6 +838,7 @@ LABELS = {
 		'Language': 'Langage',
 		'Stats Frequency': 'Fréquence Stats',
 		'macaddress.io API Key': 'API Key macaddress.io',
+		'CallFilter API Key': 'API Key CallFilter',
 		'Intl Phone Code': 'Indicatif Téléphonique',
 		'List Header Height': 'Hauteur Entêtes',
 		'List Header Font Size': 'Taille Police Entêtes',
@@ -1372,10 +1377,14 @@ TOOLTIPS = {
 		'colist_Work': 'Numéro de téléphone professionnel.',
 		'colist_Ring': 'Type de sonnerie sélectionné parmi les 7 supportés par la Livebox.',
 		'refreshCall': 'Rafraîchit la liste des appels.',
-		'spamCall': 'Ouvre un site web sur votre navigateur permettant de vérifier l\'origine\n'
-					'de l\'appel sélectionné.',
 		'deleteCall': 'Supprime l\'appel sélectionné.',
 		'deleteAllCalls': 'Supprime tous les appels.',
+		'spamCallScan': 'Scanne tous les appels entrants non identifiés et vérifie sur le site callfilter.app\n'
+						'si ces appels sont des spams ou non. Cette fonctionnalité nécessite d\'avoir une\n'
+						'API Key Call Filter et de l\'avoir configurée dans les préférences.',
+		'spamCallSites': 'Ouvre deux sites webs sur votre navigateur permettant de vérifier l\'origine\n'
+						 'de l\'appel sélectionné.',
+		'setSpamCall': 'Permet de marquer manuellement l\'appel sélectionné comme étant un spam ou non.',
 		'refreshContact': 'Rafraîchit la liste des contacts.',
 		'addContact': 'Permet de rajouter un contact.\n'
 					  'Attention aucun test de doublon n\'est effectué.',
@@ -1590,6 +1599,10 @@ TOOLTIPS = {
 							 'à partir de son adresse MAC (champ "Fabricant" dans les informations détaillées par appareil).\n'
 							 'C\'est un service gratuit, mais il faut créer un compte et indiquer ici l\'API Key correspondante\n'
 							 'pour bénéficier de cette fonctionnalité.',
+		'callFilterApiKeyEdit': 'Le programme utilise l\'API du site callfilter.app pour déterminer si un appel téléphonique\n'
+								'concerne du démarchage ou une fraude à partir de son numéro.\n'
+								'C\'est un service gratuit, mais il faut demander une clé par mail en anglais (info@callfilter.app)\n'
+								'et indiquer ici l\'API Key donnée pour bénéficier de cette fonctionnalité.',
 		'phoneCodeEdit': 'Indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts.\n'
 						 'Par défaut le code de la France est utilisé, c\'est-à-dire 33.',
 		'listHeaderHeightEdit': 'Hauteur en pixels des entêtes de liste, par défaut 25.',
@@ -1769,9 +1782,11 @@ MESSAGES = {
 
 	# Phone
 	'phone': {
+		'callFilterAPIKeyErr': 'Vous devez d\'abord configurer une API Key CallFilter dans les préférences.',
 		'callSelect': 'Vous devez sélectionner un appel téléphonique.',
 		'delAllCalls': 'Êtes-vous sûr de vouloir supprimer tous les appels téléphoniques ?',
 		'callLoad': 'Impossible de charger la liste des appels téléphoniques.',
+		'spamCount': 'Nombre de numéros identifiés comme spams : {}.',
 		'contactSelect': 'Vous devez sélectionner un contact.',
 		'delAllContacts': 'Êtes-vous sûr de vouloir supprimer tous les contacts ?',
 		'ring': 'Le téléphone devrait sonner.',
@@ -1825,7 +1840,7 @@ MESSAGES = {
 		'forceResign': 'Le répéteur est inactif. Voulez-vous forcer la connexion ?'
 	},
 
-	# # Config
+	# Config
 	'prefs': {
 		'wrongFile': 'Le fichier de configuration {} est corrompu. Réinitialiser ?',
 		'configVersion': 'Cette version de l\'application est plus ancienne que le fichier '
@@ -1835,6 +1850,8 @@ MESSAGES = {
 		'configFolderErr': 'Impossible de créer le répertoire de configuration.',
 		'profileNameErr': 'Ce nom est déjà utilisé.',
 		'wrongMacFile': 'Le fichier {} est corrompu, impossible de charger les noms d\'appareils.',
+		'wrongSpamCallsFile': 'Le fichier {} est corrompu, impossible de charger la liste des appels '
+							  'téléphoniques à indiquer comme spams.',
 		'profileName': 'Veuillez définir le nom du profil.',
 		'profileDup': 'Ce nom existe déjà.',
 		'profileOne': 'Vous devez avoir au moins un profil.',

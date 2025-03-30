@@ -2,6 +2,8 @@
 
 import os
 import webbrowser
+import requests
+import json
 
 from enum import IntEnum
 
@@ -26,7 +28,7 @@ class CallCol(IntEnum):
 	Type = 1
 	Time = 2
 	Number = 3
-	ContactSource = 4	# N=None, L=Livebox, D=Dynamic guess
+	ContactSource = 4	# N=None, L=Livebox, P=Program dynamic guess, S=Spam
 	Contact = 5
 	Duration = 6
 	Count = 7
@@ -41,8 +43,16 @@ class ContactCol(IntEnum):
 	Ring = 5
 	Count = 6
 
-# Check spam URL
-CHECK_SPAM_URL = 'https://www.numeroinconnu.fr/numero/{}'
+# Check spam URLs
+CHECK_SPAM_URL1 = 'https://www.numeroinconnu.fr/numero/{}'
+CHECK_SPAM_URL2 = 'https://callfilter.app/{}'
+
+# CallFilter URL
+CALLFILTER_URL = 'https://api.callfilter.app/apis/{0}/1/{1}'
+
+# Spam indicator in call list
+SPAM_CONTACT_NAME = '# SPAM #'
+
 
 
 # ################################ LmPhone class ################################
@@ -79,6 +89,7 @@ class LmPhone:
 		self._callList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._callList.setSortingEnabled(True)
 		self._callList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._callList.itemSelectionChanged.connect(self.callListClick)
 		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
 		self._callList.setMinimumWidth(480)
 		self._callList.setMaximumWidth(540)
@@ -91,21 +102,39 @@ class LmPhone:
 		aRefreshCallButton = QtWidgets.QPushButton(lx('Refresh'), objectName = 'refreshCall')
 		aRefreshCallButton.clicked.connect(self.refreshCallButtonClick)
 		aCallButtonsBox.addWidget(aRefreshCallButton)
-		aSpamCallButton = QtWidgets.QPushButton(lx('Spam'), objectName = 'spamCall')
-		aSpamCallButton.clicked.connect(self.spamCallButtonClick)
-		aCallButtonsBox.addWidget(aSpamCallButton)
-		aDeleteCallButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteCall')
-		aDeleteCallButton.clicked.connect(self.deleteCallButtonClick)
-		aCallButtonsBox.addWidget(aDeleteCallButton)
+		self._deleteCallButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteCall')
+		self._deleteCallButton.clicked.connect(self.deleteCallButtonClick)
+		aCallButtonsBox.addWidget(self._deleteCallButton)
 		aDeleteAllCallsButton = QtWidgets.QPushButton(lx('Delete All...'), objectName = 'deleteAllCalls')
 		aDeleteAllCallsButton.clicked.connect(self.deleteAllCallsButtonClick)
 		aCallButtonsBox.addWidget(aDeleteAllCallsButton)
 
+		# Spam tools button bar
+		aSpamButtonsBox = QtWidgets.QHBoxLayout()
+		aSpamButtonsBox.setSpacing(30)
+		aSpamCallScanButton = QtWidgets.QPushButton(lx('Spams scan'), objectName = 'spamCallScan')
+		aSpamCallScanButton.clicked.connect(self.spamCallScanButtonClick)
+		aSpamButtonsBox.addWidget(aSpamCallScanButton)
+		self._spamCallSitesButton = QtWidgets.QPushButton(lx('Spam sites'), objectName = 'spamCallSites')
+		self._spamCallSitesButton.clicked.connect(self.spamCallSitesButtonClick)
+		aSpamButtonsBox.addWidget(self._spamCallSitesButton)
+		self._setSpamCallButton = QtWidgets.QPushButton(lx('Set as spam'), objectName = 'setSpamCall')
+		self._setSpamCallButton.clicked.connect(self.setSpamCallButtonClick)
+		aSpamButtonsBox.addWidget(self._setSpamCallButton)
+
 		# Call layout
+		aSeparator = QtWidgets.QFrame()
+		aSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+
 		aCallBox = QtWidgets.QVBoxLayout()
-		aCallBox.setSpacing(10)
+		aCallBox.setSpacing(13)
 		aCallBox.addWidget(self._callList, 1)
 		aCallBox.addLayout(aCallButtonsBox, 0)
+		aCallBox.insertSpacing(-1, 2)
+		aCallBox.addWidget(aSeparator)
+		aCallBox.insertSpacing(-1, 2)
+		aCallBox.addLayout(aSpamButtonsBox, 0)
 
 		# Contact list
 		self._contactList = QtWidgets.QTableWidget(objectName = 'contactList')
@@ -133,6 +162,7 @@ class LmPhone:
 		self._contactList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self._contactList.setSortingEnabled(True)
 		self._contactList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._contactList.itemSelectionChanged.connect(self.contactListClick)
 		self._contactList.doubleClicked.connect(self.editContactButtonClick)
 		LmConfig.SetTableStyle(self._contactList)
 
@@ -145,12 +175,12 @@ class LmPhone:
 		aAddContactButton = QtWidgets.QPushButton(lx('Add...'), objectName = 'addContact')
 		aAddContactButton.clicked.connect(self.addContactButtonClick)
 		aContactButtonsBox.addWidget(aAddContactButton)
-		aEditContactButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editContact')
-		aEditContactButton.clicked.connect(self.editContactButtonClick)
-		aContactButtonsBox.addWidget(aEditContactButton)
-		aDeleteContactButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteContact')
-		aDeleteContactButton.clicked.connect(self.deleteContactButtonClick)
-		aContactButtonsBox.addWidget(aDeleteContactButton)
+		self._editContactButton = QtWidgets.QPushButton(lx('Edit...'), objectName = 'editContact')
+		self._editContactButton.clicked.connect(self.editContactButtonClick)
+		aContactButtonsBox.addWidget(self._editContactButton)
+		self._deleteContactButton = QtWidgets.QPushButton(lx('Delete'), objectName = 'deleteContact')
+		self._deleteContactButton.clicked.connect(self.deleteContactButtonClick)
+		aContactButtonsBox.addWidget(self._deleteContactButton)
 		aDeleteAllContactsButton = QtWidgets.QPushButton(lx('Delete All...'), objectName = 'deleteAllContacts')
 		aDeleteAllContactsButton.clicked.connect(self.deleteAllContactsButtonClick)
 		aContactButtonsBox.addWidget(aDeleteAllContactsButton)
@@ -237,6 +267,44 @@ class LmPhone:
 			self.loadCallList()
 
 
+	### Click on call list item
+	def callListClick(self):
+		i = self._callList.currentRow()
+		if i >= 0:
+			self._deleteCallButton.setEnabled(True)
+			self._spamCallSitesButton.setEnabled(True)
+
+			# Activate & set Set Spam button title according to call type
+			aCallType = self._callList.item(i, CallCol.Type).data(QtCore.Qt.ItemDataRole.UserRole)
+			if (aCallType == 1) or (aCallType == 3):	# Call received or missed
+				aContactSource = self._callList.item(i, CallCol.ContactSource).text()
+				if (aContactSource == 'N') or (aContactSource == 'S'):		# None or Spam
+					self._setSpamCallButton.setEnabled(True)
+					if aContactSource == 'S':
+						self._setSpamCallButton.setText(lx('Unset as spam'))
+					else:
+						self._setSpamCallButton.setText(lx('Set as spam'))
+				else:
+					self._setSpamCallButton.setEnabled(False)
+			else:
+				self._setSpamCallButton.setEnabled(False)
+		else:
+			self._deleteCallButton.setEnabled(False)
+			self._spamCallSitesButton.setEnabled(False)
+			self._setSpamCallButton.setEnabled(False)
+
+
+	### Click on contact list item
+	def contactListClick(self):
+		i = self._contactList.currentRow()
+		if i >= 0:
+			self._editContactButton.setEnabled(True)
+			self._deleteContactButton.setEnabled(True)
+		else:
+			self._editContactButton.setEnabled(False)
+			self._deleteContactButton.setEnabled(False)
+
+
 	### Click on call list refresh button
 	def refreshCallButtonClick(self):
 		self._callList.clearContents()
@@ -244,14 +312,57 @@ class LmPhone:
 		self.loadCallList()
 
 
-	### Click on spam call button
-	def spamCallButtonClick(self):
-		aCurrentSelection = self._callList.currentRow()
-		if aCurrentSelection >= 0:
-			aPhoneNb = self._callList.item(aCurrentSelection, CallCol.Number).text()
-			webbrowser.open_new_tab(CHECK_SPAM_URL.format(aPhoneNb))
+	### Click on spam calls scan button
+	def spamCallScanButtonClick(self):
+		if len(LmConf.CallFilterApiKey):
+			self.scanSpams()
+		else:
+			self.displayError(mx('You must configure a CallFilter API Key in the preferences first.', 'callFilterAPIKeyErr'))
+
+
+	### Click on spam call sites button
+	def spamCallSitesButtonClick(self):
+		i = self._callList.currentRow()
+		if i >= 0:
+			aPhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text(), False)
+			webbrowser.open_new_tab(CHECK_SPAM_URL1.format(aPhoneNb))
+			webbrowser.open_new_tab(CHECK_SPAM_URL2.format(aPhoneNb))
 		else:
 			self.displayError(mx('Please select a phone call.', 'callSelect'))
+
+
+	### Click on set/unset spam call button
+	def setSpamCallButtonClick(self):
+		i = self._callList.currentRow()
+		if i >= 0:
+			aCallType = self._callList.item(i, CallCol.Type).data(QtCore.Qt.ItemDataRole.UserRole)
+			if (aCallType == 1) or (aCallType == 3):	# Call received or missed
+				aPhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text())
+				aSource = self._callList.item(i, CallCol.ContactSource).text()
+				if (aSource == 'S'):		# Flagged as spam
+					LmConf.unsetSpamCall(aPhoneNb)
+					aSet = False
+				else:
+					LmConf.setSpamCall(aPhoneNb)
+					aSet = True
+		else:
+			self.displayError(mx('Please select a phone call.', 'callSelect'))
+			return
+
+		# Update all lines with same number
+		self._callList.setSortingEnabled(False)
+		n = self._callList.rowCount()
+		i = 0
+		while (i < n):
+			aCallType = self._callList.item(i, CallCol.Type).data(QtCore.Qt.ItemDataRole.UserRole)
+			if (aCallType == 1) or (aCallType == 3):	# Call received or missed
+				aLinePhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text())
+				if aLinePhoneNb == aPhoneNb:
+					self.displaySpamCall(i, aSet)
+			i += 1
+		self._callList.setSortingEnabled(True)
+
+		self.callListClick()
 
 
 	### Click on delete call button
@@ -410,10 +521,12 @@ class LmPhone:
 
 				i += 1
 			self.assignContactToCalls()
+			self.indicateSpamCalls()
 
 		self._callList.sortItems(CallCol.Time, QtCore.Qt.SortOrder.DescendingOrder)
 
 		self._callList.setSortingEnabled(True)
+		self.callListClick()
 
 		self.endTask()
 
@@ -438,6 +551,86 @@ class LmPhone:
 			i += 1
 
 		self._callList.setSortingEnabled(True)
+
+
+	### Assign spam contact name to all calls in the spam table
+	def indicateSpamCalls(self):
+		self._callList.setSortingEnabled(False)
+
+		n = self._callList.rowCount()
+		i = 0
+		while (i < n):
+			aCallType = self._callList.item(i, CallCol.Type).data(QtCore.Qt.ItemDataRole.UserRole)
+			if (((aCallType == 1) or (aCallType == 3)) and	# Call received or missed
+				self._callList.item(i, CallCol.ContactSource).text() == 'N'):
+				aPhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text())
+				if aPhoneNb in LmConf.SpamCallsTable:
+					self.displaySpamCall(i)
+			i += 1
+
+		self._callList.setSortingEnabled(True)
+
+
+	### Scan call list to detect spams via CallFilter API
+	def scanSpams(self):
+		self._callList.setSortingEnabled(False)
+
+		n = self._callList.rowCount()
+		i = 0
+		aSpamCount = 0
+		aAlreadyChecked = []
+		while (i < n):
+			aCallType = self._callList.item(i, CallCol.Type).data(QtCore.Qt.ItemDataRole.UserRole)
+			if (((aCallType == 1) or (aCallType == 3)) and	# Call received or missed
+				self._callList.item(i, CallCol.ContactSource).text() == 'N'):
+				aRawPhoneNb = self._callList.item(i, CallCol.Number).text()
+				aFullPhoneNb = LmPhone.intlPhoneNumber(aRawPhoneNb)
+				if aFullPhoneNb not in aAlreadyChecked:
+					aAlreadyChecked.append(aFullPhoneNb)
+					aPhoneNb = LmPhone.intlPhoneNumber(aRawPhoneNb, False)
+					if LmPhone.isSpam(aPhoneNb):
+						LmConf.setSpamCall(aFullPhoneNb)
+						aSpamCount += 1
+			i += 1
+
+		self._callList.setSortingEnabled(True)
+
+		if aSpamCount:
+			self.indicateSpamCalls()
+		self.displayStatus(mx('Number of detected spam numbers: {}.', 'spamCount').format(aSpamCount))
+
+
+	### Assign spam contact name to calls in the spam table
+	def displaySpamCall(self, iIndex, iSpam = True):
+		if iSpam:
+			aSource = 'S'	# Spam
+			aName = SPAM_CONTACT_NAME
+		else:
+			aSource = 'N'	# None
+			aName = ''
+		aContactSource = QtWidgets.QTableWidgetItem(aSource)
+		aForeground = self._callList.item(iIndex, CallCol.Contact).foreground()
+		aContact = QtWidgets.QTableWidgetItem(aName)
+		aContact.setForeground(aForeground)
+		self._callList.setItem(iIndex, CallCol.ContactSource, aContactSource)
+		self._callList.setItem(iIndex, CallCol.Contact, aContact)
+
+
+	### Check if number is spam via CallFilter API
+	@staticmethod
+	def isSpam(iPhoneNumber):
+		if len(LmConf.CallFilterApiKey) and len(iPhoneNumber):
+			try:
+				aData = requests.get(CALLFILTER_URL.format(LmConf.CallFilterApiKey, iPhoneNumber), timeout = 2)
+				aData = json.loads(aData.content)
+				aSpam = aData.get('blocked')
+				if aSpam is not None:
+					return aSpam != 0
+				else:
+					LmTools.Error('CallFilter response error: no blocked field')
+			except BaseException as e:
+				LmTools.Error('CallFilter error: {}'.format(e))
+		return False
 
 
 	### Click on contact list refresh button
@@ -729,13 +922,15 @@ class LmPhone:
 
 	### Convert phone numbers to intl format if local
 	@staticmethod
-	def intlPhoneNumber(iPhoneNumber):
+	def intlPhoneNumber(iPhoneNumber, iFull = True):
 		if ((len(iPhoneNumber) < 2) or
 			iPhoneNumber.startswith('00') or
 			(iPhoneNumber[0] != '0')):
 			return iPhoneNumber
 
-		return '00' + LmConf.PhoneCode + iPhoneNumber[1:]
+		if iFull:
+			return '00' + LmConf.PhoneCode + iPhoneNumber[1:]
+		return LmConf.PhoneCode + iPhoneNumber[1:]
 
 
 	### Compute formatted name from name and firstname
@@ -772,6 +967,7 @@ class LmPhone:
 		self._contactList.sortItems(ContactCol.Name, QtCore.Qt.SortOrder.AscendingOrder)
 		self._contactList.setSortingEnabled(True)
 		self.assignContactToCalls()
+		self.contactListClick()
 
 		self.endTask()
 
