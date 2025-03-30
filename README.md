@@ -198,14 +198,14 @@ Le programme créé automatiquement dans son répertoire de configuration deux f
 
 ### Le fichier Config.txt
 
-Ce fichier est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer. Les réglages principaux se font via le bouton `Préférences...` de l'onglet `Actions`.  
+Ce fichier JSON est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer. Les réglages principaux se font via le bouton `Préférences...` de l'onglet `Actions`.  
 À savoir :  
 - Les mots de passe y sont stockés cryptés grace à la clef de chiffrement du fichier `Key.txt`.
 - La clef `Repeaters` est générée automatiquement par le programme si des mots de passe différents sont utilisés pour le ou les répéteurs Wifi Orange connectés. La structure de ce paramètre est aussi au format JSON, utilise pour clef les adresses MAC des répéteurs, et référence pour chaque répéteur les valeurs 'User' & 'Password'.
 
 ### Le fichier MacAddrTable.txt
 
-Ce fichier est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer.
+Ce fichier JSON est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer.
 Les clefs correspondent aux adresses MAC des appareils et les valeurs au nom attribué.
 Tout appareil détecté dont l'adresse MAC n'est pas répertoriée sera affiché comme 'INCONNU' en rouge. Cette fonctionnalité est surtout utile pour détecter les nouveaux appareils ou des tentatives d'intrusions.
 
@@ -213,6 +213,11 @@ Pourquoi utiliser une base de noms locale alors que la Livebox stocke aussi des 
 - Parce que la Livebox "oublie" tout appareil qui ne s'est pas connecté depuis plus d'un mois.
 - Parce que parfois la Livebox perd des noms de façon impromptue pour certains appareils. C'est le cas par exemple pour le nom des répéteurs Wifi.  
 Un fichier de noms local offre la garantie de savoir si un appareil est vraiment inconnu.
+
+### Le fichier SpamCalls.txt
+
+Ce fichier JSON est géré automatiquement par l'application et il ne devrait pas être nécessaire de l'éditer.
+Il contient tous les numéros de téléphone au format international identifiés comme indésirables. Les appels provenants de ces numéros sont automatiquement marqués comme "spam" dans l'onglet `Téléphone`.
 
 
 ## Linux <a id="linux"></a>
@@ -518,7 +523,7 @@ La liste des appels téléphoniques, sur la gauche, affiche les colonnes suivant
     - ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Call_Out_Failed.png) : appel émis mais non abouti.
 - **Heure** : date et heure de l'appel.
 - **Numéro** : numéro de téléphone concerné.
-- **Contact** : le nom du contact déterminé par la Livebox en fonction de la liste des contacts au moment de l'appel. Si la Livebox n'a mémorisé aucun nom, alors le programme essai d'en trouver un dynamiquement à partir de la liste des contacts enregistrés par correspondance avec le numéro de téléphone.
+- **Contact** : le nom du contact déterminé par la Livebox en fonction de la liste des contacts au moment de l'appel. Si la Livebox n'a mémorisé aucun nom, alors le programme essai d'en trouver un dynamiquement à partir de la liste des contacts enregistrés par correspondance avec le numéro de téléphone. Si un numéro de téléphone indésirable a été mémorisé (voir fichier "SpamCalls.txt") il est automatiquement indiqué comme "# SPAM #".
 - **Durée** : durée de l'appel.
 
 Un **double clic** sur un appel permet de facilement créer ou éditer le contact correspondant.
@@ -526,9 +531,13 @@ Un **double clic** sur un appel permet de facilement créer ou éditer le contac
 ### Boutons
 Les boutons suivants sont proposés pour gérer la liste des appels :
 - **`Rafraîchir`** : rafraîchit la liste des appels.
-- **`Spam`** : ouvre un site web ([numeroinconnu.fr](https://www.numeroinconnu.fr/)) sur votre navigateur permettant de vérifier l'origine de l'appel sélectionné.
 - **`Supprimer`** : supprime l'appel sélectionné.
 - **`Tout Supprimer...`** : supprime tous les appels.
+- **`Scanner spams`** : analyse tous les appels entrants non identifiés et vérifie, via l'API du site [callfilter.app](https://callfilter.app/), si le numéro est indésirable ou non (démarchages, fraudes, etc). Tous les spams identifiés sont marqués comme "# SPAM #" et le programme les mémorise dans le fichier "SpamCalls.txt" stocké dans [le répertoire de configuration du programme](#configuration). Ce fichier JSON peut être facilement modifié manuellement (ne pas le faire lorsque le programme est en cours d’exécution). Pour pouvoir utiliser cette fonctionnalité une API Key Call Filter doit être configurée dans les préférences. Pour demander une API Key (service gratuit pour 15 requêtes par minute maximum), vous devez envoyer un email en anglais à info@callfilter.app en précisant :
+    - Les tâches pour lesquelles vous prévoyez d'utiliser l'API.
+    - Le nombre de requêtes par jour (minute, heure) que vous prévoyez d'effectuer.
+- **`Sites spam`** : ouvre deux sites webs ([numeroinconnu.fr](https://www.numeroinconnu.fr/) et [callfilter.app](https://callfilter.app/)) sur votre navigateur permettant de vérifier l'origine de l'appel sélectionné.
+- **`Marquer/Retirer spam`** : permet de marquer ou de démarquer manuellement un appel entrant comme étant indésirable. Cette action est également enregistrée dans le fichier local "SpamCalls.txt".
 
 ### Contacts
 La liste des contacts, sur la droite, affiche les colonnes suivantes :
@@ -627,6 +636,7 @@ Les actions concernant les **Réglages** :
     - `Tooltips` : active ou non les tooltips.
     - `Fréquence Stats` : Fréquence de rafraîchissement, en secondes, de toutes les statistiques. Par défaut 3 secondes.
     - `API Key macaddress.io` : le programme utilise l'API du site [macaddress.io](https://macaddress.io/) pour déterminer le fabricant d'un appareil à partir de son adresse MAC (champ **Fabricant** dans les informations détaillées par appareil). C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante pour bénéficier de cette fonctionnalité.
+    - `API Key CallFilter` : le programme utilise d'API du site [callfilter.app](https://callfilter.app/) pour identifier les appels téléphoniques indésirables (onglet `Téléphone`). Pour obtenir une API Key (service gratuit pour 15 requêtes par minute maximum), vous devez envoyer votre demande par email, en anglais, à info@callfilter.app.
     - `Indicatif Téléphonique` : indicatif téléphonique local, utile pour faire correspondre les appels téléphoniques avec les numéros de contacts. Par défaut le code de la France est utilisé, c'est-à-dire 33.
     - `Hauteur Entêtes` : hauteur en pixels des entêtes de liste, par défaut 25.
     - `Taille Police Entêtes` : taille de la police de caractères des entêtes de liste. Une valeur à zéro signifie d'utiliser la taille système. Par défaut ce paramètre est à zéro.
