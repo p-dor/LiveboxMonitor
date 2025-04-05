@@ -29,9 +29,17 @@ MODULES = [
 	'DHCPv6',
 	'DHCPv6Client',
 	'DLNA',
+	'Dms',						#LB6/LB7
+	'Dms.Configuration',		#LB6/LB7
+	'Dms.Database',				#LB6/LB7
+	'Dms.Partition',			#LB6/LB7
+	'Dms.Streaming',			#LB6/LB7
 	'DNS',
 	'DNSSD',
 	'Domino',
+	'Domino.Cellular',
+	'Domino.Airbox',
+	'Domino.Intf',
 	'DSPGDECT',					# LB5 only
 	'DSPPlugin',
 	'DummyPlugin',
@@ -52,8 +60,9 @@ MODULES = [
 	'IPsec',
 	'KMCD',
 	'Launcher',
+	'LEDs.LED',					# LB6/LB7
 	'LLMNR',
-	'Locations',
+	'Locations',				# LB6/LB7
 	'LXCManager',
 	'Maculan',
 	'ManagementServer',
