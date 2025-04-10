@@ -138,7 +138,7 @@ Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau
 
 ## Supporter le projet <a id="support"></a>
 
-Vous pouvez effectuer un don à l'auteur pour l'encourager à faire évoluer le projet.
+Vous pouvez [effectuer un don](https://www.paypal.com/donate/?hosted_button_id=U7CLQM3WGTUEJ&locale.x=fr_FR) à l'auteur pour l'encourager à faire évoluer le projet.  
 [![](https://www.paypalobjects.com/fr_FR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=U7CLQM3WGTUEJ&locale.x=fr_FR)
 
 
