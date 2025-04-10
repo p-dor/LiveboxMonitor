@@ -3,6 +3,7 @@ src/LiveboxMonitor/Config.txt
 src/LiveboxMonitor/Key.txt
 src/LiveboxMonitor/MacAddrTable.txt
 src/LiveboxMonitor/SpamCalls.txt
+ico/LiveboxMonitor.png
 LiveboxMonitor.bat
 LiveboxMonitor.sublime-project
 LiveboxMonitor.sublime-workspace
