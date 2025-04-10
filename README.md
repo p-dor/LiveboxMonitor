@@ -25,6 +25,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 2. [Configuration minimale](#minimalconfig)
 3. [À propos de l'auteur](#author)
 4. [Discussion](#discussion)
+4. [Supporter le projet](#support)
 5. [Prise en main](#handling)
 6. [Profils](#profiles)
 7. [Options de ligne de commande](#commandline)
@@ -133,6 +134,12 @@ Aucune documentation officielle des APIs de la Livebox n'étant disponible, l'é
 ## Discussion <a id="discussion"></a>
 
 Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
+
+
+## Supporter le projet <a id="support"></a>
+
+Vous pouvez effectuer un don à l'auteur pour l'encourager à faire évoluer le projet.
+[![](https://www.paypalobjects.com/fr_FR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=U7CLQM3WGTUEJ&locale.x=fr_FR)
 
 
 ## Prise en main <a id="handling"></a>
