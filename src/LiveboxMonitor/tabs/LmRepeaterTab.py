@@ -917,6 +917,10 @@ class LmRepHandler:
 			self.signin(aForceIt)
 			self._app.endTask()
 
+			# Sometimes the active event isn't raised
+			if self.isSigned():
+				self._active = True
+
 
 	### Click on Debug button
 	def debugButtonClick(self):
