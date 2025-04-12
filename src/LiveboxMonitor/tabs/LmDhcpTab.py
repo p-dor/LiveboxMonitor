@@ -198,7 +198,7 @@ class LmDhcp:
 			try:
 				aReply = self._session.request('DHCPv4.Server.Pool.' + d, 'addStaticLease', { 'MACAddress': aMAC, 'IPAddress': aIP })
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				self.displayError('DHCP binding query error.')
 				return
 
@@ -224,7 +224,7 @@ class LmDhcp:
 			try:
 				aReply = self._session.request('DHCPv4.Server.Pool.' + d, 'deleteStaticLease', { 'MACAddress': aMAC })
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				self.displayError('DHCP binding delete query error.')
 				return
 
@@ -252,7 +252,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('NMC', 'getLANIP')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -309,7 +309,7 @@ class LmDhcp:
 				try:
 					aNetwork = IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aNewDHCPMask)
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self.displayError(mx('Wrong values. Error: {}', 'dhcpValErr').format(e))
 					return
 				aNewDHCPPrefixLen = aNetwork.prefixlen
@@ -325,7 +325,7 @@ class LmDhcp:
 				try:
 					aReply = self._session.request('NetMaster.LAN.default.Bridge.lan', 'setIPv4', p)
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self.displayError('DHCP setup query error.')
 					return
 
@@ -346,7 +346,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('DHCPv4.Server.Pool.default', 'getStaticLeases', 'default')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -356,7 +356,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('DHCPv4.Server.Pool.guest', 'getStaticLeases', 'guest')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -447,7 +447,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('DHCPv4.Server', 'getDHCPServerPool')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -472,7 +472,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('DHCPv6.Server', 'getDHCPv6ServerStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -484,7 +484,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('DHCPv6.Server', 'getPDPrefixInformation')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -522,7 +522,7 @@ class LmDhcp:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getMIBs', { 'mibs': 'dhcp dhcpv6' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')

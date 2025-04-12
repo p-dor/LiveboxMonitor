@@ -320,7 +320,7 @@ class LmGraph:
 				aSuffix = '_' + str(n)
 				continue
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				self.displayError(mx('Cannot create the file.', 'createFileErr'))
 				return
 			break
@@ -348,7 +348,7 @@ class LmGraph:
 		try:
 			aExportFile.close()
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 
@@ -357,7 +357,7 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan', 'getReadingInterval')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('HomeLan:getReadingInterval query error.')
 			aReply = None
 
@@ -369,7 +369,7 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan', 'getDevicesReadingInterval')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('HomeLan:getDevicesReadingInterval query error.')
 			aReply = None
 
@@ -635,7 +635,7 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan.Interface', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('HomeLan interfaces query error.')
 			return
 
@@ -671,7 +671,7 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan.Device', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('HomeLan devices query error.')
 			return
 
@@ -707,7 +707,7 @@ class LmGraph:
 			else:
 				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, iTimeout = 15)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('Interface statistics query error.')
 			return
 
@@ -732,7 +732,7 @@ class LmGraph:
 			else:
 				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, iTimeout = 15)				
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('Device statistics query error.')
 			return
 

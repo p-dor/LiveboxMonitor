@@ -123,7 +123,7 @@ class LmSession:
 										   timeout = DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
 										   verify = self._verify)
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self._session = None
 					return -1
 				LmTools.LogDebug(2, 'Auth return', r.text)
@@ -160,7 +160,7 @@ class LmSession:
 									   timeout = DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
 									   verify = self._verify)
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				LmTools.Error('Authentification check query failed.')
 				os.remove(aStateFilePath)
 				self.close()
@@ -268,7 +268,7 @@ class LmSession:
 			r = json.loads(t)
 		except:
 			if not iSilent:
-				LmTools.Error('Error:', sys.exc_info()[0])
+				LmTools.Error(sys.exc_info()[0])
 				LmTools.Error('Bad json:', t)
 			return None
 
@@ -281,7 +281,7 @@ class LmSession:
 			r = r['result']
 			if 'errors' in r:
 				if not iSilent:
-					LmTools.Error('Error:', t)
+					LmTools.Error(t)
 				return None
 
 		LmTools.LogDebug(2, '-------------------------')
@@ -331,7 +331,7 @@ class LmSession:
 			r = json.loads(t)
 		except:
 			if not iSilent:
-				LmTools.Error('Error:', sys.exc_info()[0])
+				LmTools.Error(sys.exc_info()[0])
 				LmTools.Error('Bad json:', t)
 			return None
 
@@ -344,7 +344,7 @@ class LmSession:
 			r = r['result']
 			if 'errors' in r:
 				if not iSilent:
-					LmTools.Error('Error:', t)
+					LmTools.Error(t)
 				return None
 
 		LmTools.LogDebug(2, '-------------------------')

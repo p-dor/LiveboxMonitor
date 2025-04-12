@@ -479,7 +479,7 @@ class LmActions:
 		if d and (type(d).__name__ != 'dict'):
 			d = None
 		if not d:
-			LmTools.Error('Error: PowerManagement method failed, trying legacy method.')
+			LmTools.Error('PowerManagement method failed, trying legacy method.')
 			return self.schedulerOnOff_Legacy(iEnable)
 
 		# ID has to remain 'wl0' - it is NOT corresponding to an intf key
@@ -637,7 +637,7 @@ class LmActions:
 					self.displayStatus(mx('Application will now quit.', 'appQuit'))
 					self.close()
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				self.displayError('NMC:reboot service error.')
 			self.endTask()
 
@@ -689,7 +689,7 @@ class LmActions:
 		try:
 			aReply = self._session.request('Firewall', 'getFirewallIPv6Level')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('Firewall:getFirewallIPv6Level query error.')
 			return
 
@@ -713,7 +713,7 @@ class LmActions:
 				try:
 					aReply = self._session.request('Firewall', 'setFirewallLevel', { 'level': aNewFirewallIPv4Level })
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self.displayError('Firewall:setFirewallLevel query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
@@ -731,7 +731,7 @@ class LmActions:
 				try:
 					aReply = self._session.request('Firewall', 'setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self.displayError('Firewall:setFirewallIPv6Level query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
@@ -754,7 +754,7 @@ class LmActions:
 		try:
 			aReply = self._session.request('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self.displayError('Firewall:getRespondToPing query error.')
 			return
 
@@ -788,7 +788,7 @@ class LmActions:
 				try:
 					aReply = self._session.request('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					self.displayError('Firewall:setRespondToPing query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
@@ -1177,7 +1177,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		if self._currentFreq is not None:
 			i = next((i for i in self._config['Intf'] if i['Key'] == self._currentFreq), None)
 			if i is None:
-				LmTools.Error('Error: internal error, unconsistent configuration')
+				LmTools.Error('Internal error, unconsistent configuration - intf not found')
 				self.reject()
 				return
 			i['SSID'] = self._ssidEdit.text()
@@ -1210,7 +1210,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		aSecu = i['Secu']
 		aSecuList = i['SecuAvail']
 		if aSecuList is None:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - empty security list')
 			self.reject()
 		aSecuList = aSecuList.split(',')
 		self._secuCombo.clear()
@@ -1227,7 +1227,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 			self._secuCombo.setCurrentIndex(aSelection)
 			self.secuSelected(aSelection)
 		else:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - security mode not in list')
 			self.reject()
 
 
@@ -1264,7 +1264,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 			aChannels = None
 			aChannelsInUse = None
 		if (aChannels is None) or (aChannelsInUse is None):
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - no channels nor channels in use')
 			self.reject()
 			return
 		aChannels = aChannels.split(',')
@@ -1290,7 +1290,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		if aSelection >= 0:
 			self._chanCombo.setCurrentIndex(aSelection)
 		else:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - channel {} not in list'.format(aCurrentChannel))
 			self.reject()
 
 
@@ -1304,7 +1304,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		if aModes is not None:
 			aModes = aModes.get('Modes')
 		if aModes is None:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - no modes')
 			self.reject()
 			return
 		aModes = aModes.split(',')
@@ -1323,7 +1323,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		if aSelection >= 0:
 			self._modeCombo.setCurrentIndex(aSelection)
 		else:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - mode {} not in list'.format(aCurrentMode))
 			self.reject()
 
 
@@ -1331,7 +1331,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		aKey = self._freqCombo.currentData()
 		i = next((i for i in self._config['Intf'] if i['Key'] == aKey), None)
 		if i is None:
-			LmTools.Error('Error: internal error, unconsistent configuration')
+			LmTools.Error('Internal error, unconsistent configuration - intf {} not found'.format(aKey))
 			self.reject()
 		return aKey, i
 
@@ -1546,7 +1546,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1574,7 +1574,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': True })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1586,7 +1586,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': False })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1598,7 +1598,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1610,7 +1610,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkRestore')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if 'status' in d:
 			self._app.displayStatus(mx('Restore requested. Livebox will restart.', 'restoreSvcOk'))
@@ -1884,7 +1884,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getHosts')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1928,7 +1928,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getServices')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1980,7 +1980,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'delHost', { 'hostname': aHostName })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2023,7 +2023,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'addHost', h)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self._app.displayError('DynDNS:addHost query error.')
 			return
 
@@ -2045,7 +2045,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getGlobalEnable')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2060,7 +2060,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'setGlobalEnable', { 'enable': not self.getGlobalEnableStatus() })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2223,7 +2223,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'getDMZ')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2286,7 +2286,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'deleteDMZ', { 'id': aID })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2320,7 +2320,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'setDMZ', h)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self._app.displayError('Firewall:setDMZ query error.')
 			return
 

@@ -245,7 +245,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.IPv6', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -261,7 +261,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.ServiceEligibility.DSLITE', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -273,7 +273,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.Autodetect', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -286,7 +286,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			s = d.get('status')
@@ -308,7 +308,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('DHCPv6.Server', 'getPDPrefixLeases')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			aPrefixes = d.get('status')
@@ -356,7 +356,7 @@ class LmDeviceList:
 		try:
 			self._liveboxDevices = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self._liveboxDevices = None
 		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
@@ -370,7 +370,7 @@ class LmDeviceList:
 		try:
 			self._liveboxTopology = self._session.request('TopologyDiagnostics', 'buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			self._liveboxTopology = None
 		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
@@ -656,7 +656,7 @@ class LmDeviceList:
 			try:
 				d = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -1071,7 +1071,7 @@ class LmDeviceList:
 				try:
 					aReply = self._session.request('Devices.Device.' + iDeviceKey, 'getFirstParameter', { 'parameter': 'IPAddress' })
 				except BaseException as e:
-					LmTools.Error('Error: {}'.format(e))
+					LmTools.Error(e)
 					aReply = None
 				if aReply is None:
 					aCurrIP = aKnownIP
@@ -1613,7 +1613,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 			try:
 				aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getStationStats')
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				aResult = None
 			if aResult is not None:
 				aStats = aResult.get('status')

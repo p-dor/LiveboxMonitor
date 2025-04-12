@@ -158,7 +158,7 @@ class LmGenApiDoc:
 		try:
 			d = self._session.request('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -185,7 +185,7 @@ class LmGenApiDoc:
 		try:
 			d = self._session.request(iModule, iGet = True, iTimeout = 15)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			return
 
 		if d is None:
@@ -199,7 +199,7 @@ class LmGenApiDoc:
 		try:
 			self._file = open(aFilePath, 'w')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			return
 
 		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
@@ -208,7 +208,7 @@ class LmGenApiDoc:
 		try:
 			self._file.close()
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 		self._file = None
 
 
@@ -222,7 +222,7 @@ class LmGenApiDoc:
 		try:
 			d = self._session.request(iModule, iGet = True, iTimeout = 15)
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			return
 
 		if d is None:
@@ -236,7 +236,7 @@ class LmGenApiDoc:
 		try:
 			self._file = open(aFilePath, 'w')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 			return
 
 		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
@@ -249,7 +249,7 @@ class LmGenApiDoc:
 		try:
 			self._file.close()
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error(e)
 		self._file = None
 
 

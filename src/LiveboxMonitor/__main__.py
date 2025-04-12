@@ -283,7 +283,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			try:
 				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error(e)
 				r = -1
 			self.endTask()
 			if r > 0:
@@ -334,12 +334,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DeviceInfo:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			LmTools.Error('Error: cannot determine Livebox model')
+			LmTools.Error('Cannot determine Livebox model')
 			self._liveboxModel = 0
 			self._liveboxSoftwareVersion = ''
 		else:
@@ -371,7 +371,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC:getWANStatus error: {}'.format(e))
 			q = None
 		if q is not None:
 			d = q.get('status')
@@ -406,7 +406,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			d = self._session.request('NMC', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -631,7 +631,7 @@ def main(iNativeRun = False):
 			try:
 				locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error('setlocale() error: {}'.format(e))
 
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()
