@@ -1210,7 +1210,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		aSecu = i['Secu']
 		aSecuList = i['SecuAvail']
 		if aSecuList is None:
-			LmTools.Error('Internal error, unconsistent configuration - empty security list')
+			LmTools.Error('Internal error, unconsistent configuration - no security list')
 			self.reject()
 		aSecuList = aSecuList.split(',')
 		self._secuCombo.clear()
@@ -1223,12 +1223,21 @@ class WifiConfigDialog(QtWidgets.QDialog):
 				self._secuCombo.addItem(s)
 				n += 1
 
+		if aSelection == -1:
+			if aSecu is not None:
+				self._secuCombo.addItem(aSecu)
+				aSelection = n
+				LmTools.LogDebug(1, 'Warning - security {} not in list'.format(aSecu))
+			elif n == 0:
+				LmTools.Error('Internal error, unconsistent configuration - no security')
+				self.reject()
+			else:
+				LmTools.LogDebug(1, 'Warning - no security, defaulting to first')
+				aSelection = 0
+
 		if aSelection >= 0:
 			self._secuCombo.setCurrentIndex(aSelection)
 			self.secuSelected(aSelection)
-		else:
-			LmTools.Error('Internal error, unconsistent configuration - security mode not in list')
-			self.reject()
 
 
 	def secuSelected(self, iIndex):
@@ -1263,12 +1272,15 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		else:
 			aChannels = None
 			aChannelsInUse = None
-		if (aChannels is None) or (aChannelsInUse is None):
-			LmTools.Error('Internal error, unconsistent configuration - no channels nor channels in use')
+		if aChannels is None:
+			LmTools.Error('Internal error, unconsistent configuration - no channel list')
 			self.reject()
 			return
 		aChannels = aChannels.split(',')
-		aChannelsInUse = aChannelsInUse.split(',')
+		if aChannelsInUse is None:
+			aChannelsInUse = []
+		else:
+			aChannelsInUse = aChannelsInUse.split(',')
 
 		aCurrentChannel = str(i['Channel'])
 
@@ -1287,11 +1299,20 @@ class WifiConfigDialog(QtWidgets.QDialog):
 					aSelection = n
 				n += 1
 
+		if aSelection == -1:
+			if aCurrentChannel != 'None':
+				self._chanCombo.addItem(aCurrentChannel)
+				aSelection = n
+				LmTools.LogDebug(1, 'Warning - channel {} not in list'.format(aSecu))
+			elif n == 0:
+				LmTools.Error('Internal error, unconsistent configuration - no channel')
+				self.reject()
+			else:
+				LmTools.LogDebug(1, 'Warning - no channel, defaulting to first')
+				aSelection = 0
+
 		if aSelection >= 0:
 			self._chanCombo.setCurrentIndex(aSelection)
-		else:
-			LmTools.Error('Internal error, unconsistent configuration - channel {} not in list'.format(aCurrentChannel))
-			self.reject()
 
 
 	def loadModeCombo(self):
@@ -1304,7 +1325,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 		if aModes is not None:
 			aModes = aModes.get('Modes')
 		if aModes is None:
-			LmTools.Error('Internal error, unconsistent configuration - no modes')
+			LmTools.Error('Internal error, unconsistent configuration - no mode list')
 			self.reject()
 			return
 		aModes = aModes.split(',')
@@ -1320,11 +1341,20 @@ class WifiConfigDialog(QtWidgets.QDialog):
 				aSelection = n
 			n += 1
 
+		if aSelection == -1:
+			if aCurrentMode is not None:
+				self._modeCombo.addItem(aCurrentMode)
+				aSelection = n
+				LmTools.LogDebug(1, 'Warning - mode {} not in list'.format(aCurrentMode))
+			elif n == 0:
+				LmTools.Error('Internal error, unconsistent configuration - no mode')
+				self.reject()
+			else:
+				LmTools.LogDebug(1, 'Warning - no mode, defaulting to first')
+				aSelection = 0
+
 		if aSelection >= 0:
 			self._modeCombo.setCurrentIndex(aSelection)
-		else:
-			LmTools.Error('Internal error, unconsistent configuration - mode {} not in list'.format(aCurrentMode))
-			self.reject()
 
 
 	def getCurrentKeyIntf(self):
