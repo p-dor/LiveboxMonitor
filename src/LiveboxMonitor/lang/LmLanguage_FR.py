@@ -593,8 +593,9 @@ LABELS = {
 
 	# Actions
 	'actions': {
-		'Guest Wifi ON': 'Wifi Invité ON',
-		'Guest Wifi OFF': 'Wifi Invité OFF',
+		'Guest...': 'Invité...',
+		'Guest ON': 'Invité ON',
+		'Guest OFF': 'Invité OFF',
 		'Wifi Scheduler ON': 'Planificateur Wifi ON',
 		'Wifi Scheduler OFF': 'Planificateur Wifi OFF',
 		'Show Global Status...': 'État Global Wifi...',
@@ -618,6 +619,10 @@ LABELS = {
 		'Generate API Documentation...': 'Générer documentation APIs...',
 		'Debug': 'Débogage',
 		'Quit Application': 'Quitter l\'application',
+		'Getting Wifi Configuration...': 'Chargement de la configuration Wifi...',
+		'Setting Wifi Configuration...': 'Configuration du réseau Wifi...',
+		'Getting Guest Wifi Configuration...': 'Chargement de la configuration Wifi Invité...',
+		'Setting Guest Wifi Configuration...': 'Configuration du réseau Wifi Invité...',
 		'Getting Wifi Global Status...': 'Chargement de l\'état global du Wifi...',
 		'Getting Reboot History...': 'Chargement de l\'historique de redémarrages...',
 		'Set Firewall Levels...': 'Changement des niveaux de pare-feu...',
@@ -645,6 +650,23 @@ LABELS = {
 		'Shutdown Reason': 'Raison Arrêt',
 		'{} Reboot History': 'Historique Redémarrages {}',
 		'Unknown': 'Inconnu'
+	},
+
+	# Actions - Wifi configuration
+	'wconfig': {
+		'Enabled': 'Activé',
+		'Duration': 'Durée',
+		'hours (0 = unlimited).': 'heures (0 = illimitée).',
+		'Radio Band': 'Bande Radio',
+		'SSID Broadcast': 'Diffuser SSID',
+		'MAC Filtering': 'Filtrage MAC',
+		'Security': 'Sécurité',
+		'Password': 'Mot de passe',
+		'Channel': 'Canal',
+		'Cancel': 'Annuler',
+		'Guest Wifi Configuration': 'Configuration du Wifi Invité',
+		'Wifi Configuration': 'Configuration du Wifi',
+		'Enabled for {}': 'Activé pour {}'
 	},
 
 	# Actions - Wifi global status
@@ -1408,6 +1430,8 @@ TOOLTIPS = {
 
 	# Actions
 	'actions': {
+		'wifiConfig': 'Permet de configurer toutes les bandes radios du réseau Wifi.',
+		'wifiGuestConfig': 'Permet de configurer toutes les bandes radios du réseau Wifi Invité.',
 		'wifiOn': 'Permet d\'activer l\'interface Wifi de la Livebox.',
 		'wifiOff': 'Permet de désactiver l\'interface Wifi de la Livebox.',
 		'guestWifiOn': 'Permet d\'activer l\'interface Wifi invité de la Livebox.',
@@ -1456,6 +1480,30 @@ TOOLTIPS = {
 		'reboot_ShutdownReason': 'La raison de cet arrêt.\n'
 								 'Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "GUI_Reboot" pour\n'
 								 'un redémarrage demandé depuis l\'interface Web ou LiveboxMonitor.',
+	},
+
+	# Actions - Wifi configuration
+	'wconfig': {
+		'enableCheckbox': 'Active ou désactive l\'ensemble des bandes radios.',
+		'durationEdit': 'Durée en heure de l\'activation du Wifi Invité.\n'
+						'Indiquer 0 pour une durée illimitée.',
+		'freqCombo': 'Permet de sélectionner la bande radio à configurer.',
+		'ssidEdit': 'Nom du réseau à publier pour la bande radio sélectionnée.',
+		'freqEnabledCheckbox': 'Active ou désactive la bande radio sélectionnée.',
+		'broadcastCheckbox': 'Permet de diffuser le nom du réseau pour le rendre découvrable.',
+		'wpsCheckbox': 'Active ou désactive les méthodes de connexion WPS\n'
+					   '(Wi-Fi Protected Setup) pour la bande radio sélectionnée.',
+		'macFilteringCombo': 'Sélectionner \'Off\' pour désactiver le filtrage MAC.\n'
+							 '\'WhiteList\' pour activer le filtrage MAC et ne permettre la\n'
+							 'connexion uniquement aux appareils listés.\n'
+							 '\'BlackList\' pour activer le filtrage MAC et permettre la\n'
+							  'connexion à tous les appareils sauf ceux listés.',
+		'secuCombo': 'Type de sécurité pour la bande radio sélectionnée.\n'
+					 'Sélectionner \'None\' pour un accès libre sans mot de passe.',
+		'passEdit': 'Mot de passe pour la bande radio sélectionnée.',
+		'chanCombo': 'Canal à utiliser pour la bande radio sélectionnée.\n'
+					 'Sélectionner \'Auto\' pour une sélection automatique.',
+		'modeCombo': 'Mode de connexion pour la bande radio sélectionnée.'
 	},
 
 	# Actions - Wifi global status
@@ -1799,6 +1847,7 @@ MESSAGES = {
 
 	# Actions
 	'actions': {
+		'wifiGetConfErr':  'Une erreur s\'est produite lors du chargement de la configuration Wifi.',
 		'wifiOn': 'Wifi activé.',
 		'wifiOff': 'Wifi désactivé.',
 		'gwifiOn': 'Wifi invité activé. Réactivez le Planificateur si requis.',

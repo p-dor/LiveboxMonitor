@@ -89,6 +89,9 @@ TOOLTIPS = {
 	# Actions - Reboot history
 	'rhistory': {},
 
+	# Actions - Wifi configuration
+	'wconfig': {},
+
 	# Actions - Wifi global status
 	'wglobal': {},
 

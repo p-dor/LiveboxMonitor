@@ -541,7 +541,7 @@ class LmInfo:
 		try:
 			self._exportFile = open(aFileName, 'w')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('File creation error: {}'.format(e))
 			self.displayError(mx('Cannot create the file.', 'createFileErr'))
 			return
 
@@ -563,7 +563,7 @@ class LmInfo:
 		try:
 			self._exportFile.close()
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('File saving error: {}'.format(e))
 			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 		self._exportFile = None
@@ -577,7 +577,7 @@ class LmInfo:
 		try:
 			d = self._session.request('UPnP-IGD', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('UPnP-IGD:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -594,7 +594,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.Reboot', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.Reboot:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -606,7 +606,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DeviceInfo:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -642,7 +642,7 @@ class LmInfo:
 			try:
 				d = self._session.request('Devices.Device.' + aLiveboxMAC, 'get')
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error('Devices.Device:get error: {}'.format(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -661,7 +661,7 @@ class LmInfo:
 		try:
 			d = self._session.request('Time', 'getTime')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('Time:getTime error: {}'.format(e))
 			d = None
 		if d is not None:
 			s = d.get('status', False)
@@ -674,7 +674,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DeviceInfo.MemoryStatus', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DeviceInfo.MemoryStatus:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -695,7 +695,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -720,7 +720,7 @@ class LmInfo:
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC:getWANStatus error: {}'.format(e))
 			q = None
 		if q is not None:
 			d = q.get('status')
@@ -749,7 +749,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DeviceInfo:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -762,7 +762,7 @@ class LmInfo:
 			try:
 				d = self._session.request('Devices.Device.' + aLiveboxMAC, 'get')
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error('Devices.Device:get error: {}'.format(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -783,7 +783,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getMIBs', { 'mibs': 'dhcp' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.data:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -808,7 +808,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'VLANID' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.data:getFirstParameter error: {}'.format(e))
 			d = None
 		if d is None:
 			i = self.addInfoLine(self._liveboxAList, i, lx('VLAN ID'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
@@ -818,7 +818,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'MTU' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.data:getFirstParameter error: {}'.format(e))
 			d = None
 		if d is None:
 			i = self.addInfoLine(self._liveboxAList, i, lx('MTU'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
@@ -835,7 +835,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.Wifi:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -849,7 +849,7 @@ class LmInfo:
 		try:
 			d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('Scheduler:getCompleteSchedules error: {}'.format(e))
 			d = None
 		if (d is not None) and (d.get('status', False)):
 			d = d.get('data')
@@ -867,25 +867,17 @@ class LmInfo:
 
 		b = None
 		w = None
+
 		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio wlanvap' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is not None:
 			b = d.get('base')
 			w = d.get('wlanradio')
-
-		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
-		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is not None:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
@@ -905,9 +897,7 @@ class LmInfo:
 				i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(aBase.get('Status')))
 				aLowLevelIntf = aBase.get('LLIntf')
 				if aLowLevelIntf is not None:
-					for aKey in aLowLevelIntf:
-						aIntfKey = aKey
-						break
+					aIntfKey = next(iter(aLowLevelIntf))
 
 			q = w.get(aIntfKey) if aIntfKey is not None else None
 			r = d.get(s['Key'])
@@ -957,16 +947,17 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Antenna Defect'), LmTools.FmtBool(q.get('AntennaDefect')))
 
 		try:
-			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'wlanvap' })
+			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'base wlanvap' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.guest:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is not None:
+			b = d.get('base')
 			d = d.get('wlanvap')
 
-		if d is None:
+		if (d is None) or (b is None):
 			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NeMo.Intf.guest:getMIBs query error', LmTools.ValQual.Error)
 			return i
 
@@ -974,6 +965,11 @@ class LmInfo:
 			if s['Type'] != 'wig':
 				continue
 			i = self.addTitleLine(self._liveboxAList, i, s['Name'])
+
+			aBase = b.get(s['Key'])
+			if aBase is not None:
+				i = self.addInfoLine(self._liveboxAList, i, lx('Enabled'), LmTools.FmtBool(aBase.get('Enable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.FmtBool(aBase.get('Status')))
 
 			r = d.get(s['Key'])
 			if r is None:
@@ -1012,7 +1008,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DHCPv4.Server', 'getDHCPServerPool', { 'id': 'default' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DHCPv4.Server:getDHCPServerPool error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1032,7 +1028,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DHCPv6.Server', 'getDHCPv6ServerStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DHCPv6.Server:getDHCPv6ServerStatus error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1045,7 +1041,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base eth' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1087,7 +1083,7 @@ class LmInfo:
 			try:
 				d = self._session.request('SFP', 'get')
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error('SFP:get error: {}'.format(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -1131,7 +1127,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.' + aOntIntf, 'getMIBs', { 'mibs': 'gpon' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.{}:getMIBs error: {}'.format(aOntIntf, e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1257,7 +1253,7 @@ class LmInfo:
 		try:
 			d = self._session.request('VoiceService.VoiceApplication', 'listTrunks')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('VoiceService.VoiceApplication:listTrunks error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1285,7 +1281,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getName')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getName error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1297,7 +1293,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getPIN')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getPIN error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1309,7 +1305,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getRFPI')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getRFPI error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1321,7 +1317,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getVersion')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getVersion error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1333,7 +1329,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getStandardVersion')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getStandardVersion error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1345,7 +1341,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getPairingStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getPairingStatus error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1357,7 +1353,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT', 'getRadioState')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT:getRadioState error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1369,7 +1365,7 @@ class LmInfo:
 		try:
 			d = self._session.request('DECT.Repeater', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('DECT.Repeater:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1388,7 +1384,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.OrangeTV', 'getIPTVStatus')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.OrangeTV:getIPTVStatus error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -1402,7 +1398,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.OrangeTV', 'getIPTVMultiScreens')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.OrangeTV:getIPTVMultiScreens error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -1416,7 +1412,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.OrangeTV', 'getIPTVConfig')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.OrangeTV:getIPTVConfig error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1452,7 +1448,7 @@ class LmInfo:
 		try:
 			d = self._session.request('Devices', 'get', { 'expression': 'usb' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('Devices:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1514,6 +1510,388 @@ class LmInfo:
 		return i
 
 
+	### Get Wifi configuration (used by ActionsTab)
+	def getWifiConfig(self):
+		# Get enable status
+		try:
+			d = self._session.request('NMC.Wifi', 'get')
+		except BaseException as e:
+			LmTools.Error('NMC.Wifi:get error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			return None
+
+		aConfig = {}
+		aConfig['Enable'] = d.get('Enable')
+
+		# Get setup for each interface
+		b = None
+		w = None
+		try:
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio wlanvap' })
+		except BaseException as e:
+			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is not None:
+			b = d.get('base')
+			w = d.get('wlanradio')
+			d = d.get('wlanvap')
+
+		if (d is None) or (b is None) or (w is None):
+			LmTools.Error('NeMo.Intf.lan:getMIBs query failed')
+			return None
+
+		aIntf = []
+		for s in LmConfig.NET_INTF:
+			if s['Type'] != 'wif':
+				continue
+
+			# Get Wifi interface key in wlanradio list
+			aIntfKey = None
+			aBase = b.get(s['Key'])
+			if aBase is not None:
+				aLowLevelIntf = aBase.get('LLIntf')
+				if aLowLevelIntf is not None:
+					aIntfKey = next(iter(aLowLevelIntf))
+
+			q = w.get(aIntfKey) if aIntfKey is not None else None
+			r = d.get(s['Key'])
+			if (q is None) or (r is None):
+				continue
+
+			c = {}
+			c['Name'] = s['Name']
+			c['Key'] = s['Key']
+			c['LLIntf'] = aIntfKey
+			c['SSID'] = r.get('SSID')
+			c['Enable'] = aBase.get('Enable')
+			c['Broadcast'] = r.get('SSIDAdvertisementEnabled')
+
+			t = r.get('Security')
+			if t is not None:
+				c['Secu'] = t.get('ModeEnabled')
+				c['SecuAvail'] = t.get('ModesAvailable')
+				c['KeyPass'] = t.get('KeyPassPhrase')
+			else:
+				c['Secu'] = None
+				c['SecuAvail'] = None
+				c['KeyPass'] = None
+
+			t = r.get('WPS')
+			if t is not None:
+				c['WPS'] = t.get('Enable')
+			else:
+				c['WPS'] = None
+
+			t = r.get('MACFiltering')
+			if t is not None:
+				c['MACFiltering'] = t.get('Mode')
+			else:
+				c['MACFiltering'] = None
+
+			c['Mode'] = q.get('OperatingStandards')
+			c['ChannelAutoSupport'] = q.get('AutoChannelSupported')
+			c['ChannelAuto'] = q.get('AutoChannelEnable')
+			c['Channel'] = q.get('Channel')
+
+			aIntf.append(c)
+		aConfig['Intf'] = aIntf
+
+		# Get available modes & channels per interface
+		aModes = {}
+		for c in aIntf:
+			aIntfKey = c['LLIntf']
+			try:
+				d = self._session.request('NeMo.Intf.' + aIntfKey, 'get')
+			except BaseException as e:
+				LmTools.Error('NeMo.Intf.{}:get error: {}'.format(aIntfKey, e))
+				d = None
+			if d is not None:
+				d = d.get('status')
+			if d is not None:
+				m = {}
+				m['Modes'] = d.get('SupportedStandards')
+				m['Channels'] = d.get('PossibleChannels')
+				m['ChannelsInUse'] = d.get('ChannelsInUse')
+				aModes[aIntfKey] = m
+		aConfig['Modes'] = aModes
+
+		return aConfig
+
+
+	### Set Wifi configuration (used by ActionsTab)
+	def setWifiConfig(self, iOldConfig, iNewConfig):
+		aOldIntf = iOldConfig['Intf']
+		aNewIntf = iNewConfig['Intf']
+
+		# Check if SSIDs are the same accross frequencies before and after
+		s = None
+		aOldUniqueSSID = True
+		for o in aOldIntf:
+			if s is None:
+				s = o['SSID']
+			else:
+				if o['SSID'] != s:
+					aOldUniqueSSID = False
+					break
+		s = None
+		aNewUniqueSSID = True
+		for n in aNewIntf:
+			if s is None:
+				s = n['SSID']
+			else:
+				if n['SSID'] != s:
+					aNewUniqueSSID = False
+					break
+
+		# If SSID homogeneity changed, change the Configuration Mode
+		if aOldUniqueSSID != aNewUniqueSSID:
+			try:
+				d = self._session.request('NMC.Wifi', 'set', { 'ConfigurationMode': aNewUniqueSSID })
+			except BaseException as e:
+				LmTools.Error('ConfigurationMode error: {}'.format(e))
+				d = None
+			if d is not None:
+				d = d.get('status')
+			if not d:
+				self.displayError('NMC.Wifi:set service failed.')
+
+		# Initiate parameters
+		aVap = {}
+		aRadio = {}
+		aPenable = {}
+
+		# Check which setup changed
+		for o, n in zip(aOldIntf, aNewIntf):
+			v = {}
+			if (o['SSID'] != n['SSID']):
+				v['SSID'] = n['SSID']
+			if (o['Broadcast'] != n['Broadcast']):
+				v['SSIDAdvertisementEnabled'] = n['Broadcast']
+			if (o['Secu'] != n['Secu']):
+				v['Security'] = { 'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass'] }
+			elif (o['KeyPass'] != n['KeyPass']):
+				v['Security'] = { 'KeyPassPhrase': n['KeyPass'] }
+			if (o['WPS'] != n['WPS']):
+				v['WPS'] = { 'Enable': n['WPS'] }
+			if (o['MACFiltering'] != n['MACFiltering']):
+				v['MACFiltering'] = { 'Mode': n['MACFiltering'] }
+			if ((o['ChannelAuto'] != n['ChannelAuto']) or 
+				(o['Channel'] != n['Channel']) or
+				(o['Mode'] != n['Mode'])):
+				if n['ChannelAuto']:
+					r = { 'AutoChannelEnable': True, 'OperatingStandards': n['Mode'] }
+				else:
+					r = { 'AutoChannelEnable': False, 'Channel': n['Channel'], 'OperatingStandards': n['Mode'] }
+			else:
+				r = {}
+			if (o['Enable'] != n['Enable']):
+				aEnable = n['Enable']
+				p = {'Enable': aEnable, 'PersistentEnable': aEnable, 'Status': aEnable }
+			else:
+				p = {}
+
+			if len(v):
+				aVap[n['Key']] = v
+			if len(r):
+				aRadio[n['LLIntf']] = r
+			if len(p):
+				aPenable[n['Key']] = p
+
+		# Call the API if at least one parameter changed
+		if len(aVap) or len(aRadio) or len(aPenable):
+			aParams = {}
+			aParams['penable'] = aPenable
+			if len(aVap):
+				aParams['wlanvap'] = aVap
+			if len(aRadio):
+				aParams['wlanradio'] = aRadio
+			try:
+				d = self._session.request('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': aParams }, iTimeout = 35)
+			except BaseException as e:
+				LmTools.Error('setWLANConfig error: {}'.format(e))
+				d = None
+			if (d is None) or (not 'status' in d):
+				self.displayError('NeMo.Intf.lan.Wifi:setWLANConfig service failed.')
+
+		# Activate/Deactivate Wifi
+		if (iOldConfig['Enable'] != iNewConfig['Enable']):
+			self.activateWifi(iNewConfig['Enable'])
+
+
+	### Get Guest Wifi configuration (used by ActionsTab)
+	def getGuestWifiConfig(self):
+		# Get enable status
+		try:
+			d = self._session.request('NMC.Guest', 'get')
+		except BaseException as e:
+			LmTools.Error('NMC.Guest:get error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			return None
+
+		# Get activation total duration
+		aConfig = {}
+		aConfig['Enable'] = d.get('Status') == 'Enabled'
+
+		if d.get('ActivationTimeout', 0) != 0:
+			aStartTime = LmTools.LiveboxTimestamp(d.get('StartTime'))
+			aEndTime = LmTools.LiveboxTimestamp(d.get('ValidTime'))
+			if (aStartTime is None) or (aEndTime is None):
+				LmTools.Error('Activation timeout timestamps error')
+				aDiff = 0
+			else:
+				aDiff = int((aEndTime - aStartTime).total_seconds())
+			aConfig['Duration'] = aDiff
+		else:
+			aConfig['Duration'] = 0
+
+		# Get activation remaining time
+		try:
+			d = self._session.request('NMC.WlanTimer', 'getActivationTimer', { 'InterfaceName': 'guest' })
+		except BaseException as e:
+			LmTools.Error('NMC.WlanTimer:getActivationTimer error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is None:
+			LmTools.Error('NMC.WlanTimer:getActivationTimer service failed')
+			aConfig['Timer'] = 0
+		else:
+			aConfig['Timer'] = int(d)
+
+		# Get setup for each interface
+		try:
+			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'base wlanvap' })
+		except BaseException as e:
+			LmTools.Error('NeMo.Intf.guest:getMIBs error: {}'.format(e))
+			d = None
+		if d is not None:
+			d = d.get('status')
+		if d is not None:
+			b = d.get('base')
+			d = d.get('wlanvap')
+
+		if (d is None) or (b is None):
+			LmTools.Error('NeMo.Intf.guest:getMIBs query failed')
+			return None
+
+		aIntf = []
+		for s in LmConfig.NET_INTF:
+			if s['Type'] != 'wig':
+				continue
+
+			aBase = b.get(s['Key'])
+			r = d.get(s['Key'])
+			if r is None:
+				continue
+
+			c = {}
+			c['Name'] = s['Name']
+			c['Key'] = s['Key']
+			c['SSID'] = r.get('SSID')
+			c['Enable'] = aBase.get('Enable')
+			c['Broadcast'] = r.get('SSIDAdvertisementEnabled')
+
+			t = r.get('Security')
+			if t is not None:
+				c['Secu'] = t.get('ModeEnabled')
+				c['SecuAvail'] = t.get('ModesAvailable')
+				c['KeyPass'] = t.get('KeyPassPhrase')
+			else:
+				c['Secu'] = None
+				c['SecuAvail'] = None
+				c['KeyPass'] = None
+
+			t = r.get('WPS')
+			if t is not None:
+				c['WPS'] = t.get('Enable')
+			else:
+				c['WPS'] = None
+
+			t = r.get('MACFiltering')
+			if t is not None:
+				c['MACFiltering'] = t.get('Mode')
+			else:
+				c['MACFiltering'] = None
+
+			aIntf.append(c)
+		aConfig['Intf'] = aIntf
+
+		return aConfig
+
+
+	### Set Guest Wifi configuration (used by ActionsTab)
+	def setGuestWifiConfig(self, iOldConfig, iNewConfig):
+		aOldIntf = iOldConfig['Intf']
+		aNewIntf = iNewConfig['Intf']
+
+		# Initiate parameters
+		aVap = {}
+		aPenable = {}
+
+		# Check which setup changed
+		for o, n in zip(aOldIntf, aNewIntf):
+			v = {}
+			if (o['SSID'] != n['SSID']):
+				v['SSID'] = n['SSID']
+			if (o['Broadcast'] != n['Broadcast']):
+				v['SSIDAdvertisementEnabled'] = n['Broadcast']
+			if (o['Secu'] != n['Secu']):
+				v['Security'] = { 'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass'] }
+			elif (o['KeyPass'] != n['KeyPass']):
+				v['Security'] = { 'KeyPassPhrase': n['KeyPass'] }
+			if (o['WPS'] != n['WPS']):
+				v['WPS'] = { 'Enable': n['WPS'] }
+			if (o['MACFiltering'] != n['MACFiltering']):
+				v['MACFiltering'] = { 'Mode': n['MACFiltering'] }
+			if (o['Enable'] != n['Enable']):
+				aEnable = n['Enable']
+				p = {'Enable': aEnable, 'PersistentEnable': aEnable, 'Status': aEnable }
+			else:
+				p = {}
+
+			if len(v):
+				aVap[n['Key']] = v
+			if len(p):
+				aPenable[n['Key']] = p
+
+		# Call the API if at least one parameter changed
+		if len(aVap) or len(aPenable):
+			aParams = {}
+			aParams['penable'] = aPenable
+			if len(aVap):
+				aParams['wlanvap'] = aVap
+			try:
+				d = self._session.request('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': aParams }, iTimeout = 35)
+			except BaseException as e:
+				LmTools.Error('setWLANConfig error: {}'.format(e))
+				d = None
+			if (d is None) or (not 'status' in d):
+				self.displayError('NeMo.Intf.lan.Wifi:setWLANConfig service failed.')
+
+		# Activate/Deactivate Guest Wifi
+		if (iOldConfig['Enable'] != iNewConfig['Enable']):
+			self.activateGuestWifi(iNewConfig['Enable'])
+
+			# Set timer if enabled
+			if iNewConfig['Enable']:
+				try:
+					d = self._session.request('NMC.WlanTimer', 'setActivationTimer',
+											  { 'Timeout': iNewConfig['Duration'] // 3600, 'InterfaceName': 'guest' })
+				except BaseException as e:
+					LmTools.Error('NMC.WlanTimer:setActivationTimer error: {}'.format(e))
+					d = None
+				if (d is None) or (not 'status' in d):
+					LmTools.Error('NMC.WlanTimer:setActivationTimer service failed')
+
+
 	### Get Livebox Wifi status (used by ActionsTab)
 	def getLiveboxWifiStatus(self):
 		u = {}
@@ -1524,7 +1902,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NMC.Wifi:get error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1542,7 +1920,7 @@ class LmInfo:
 		try:
 			d = self._session.request('PowerManagement', 'getProfiles')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('PowerManagement:getProfiles error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1555,7 +1933,7 @@ class LmInfo:
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
-				LmTools.Error('Error: {}'.format(e))
+				LmTools.Error('Scheduler:getCompleteSchedules error: {}'.format(e))
 				d = None
 			if (d is not None) and (d.get('status', False)):
 				d = d.get('data')
@@ -1584,7 +1962,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs radio error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1595,7 +1973,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs vap error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1640,9 +2018,7 @@ class LmInfo:
 
 					aLowLevelIntf = aBase.get('LLIntf')
 					if aLowLevelIntf is not None:
-						for aKey in aLowLevelIntf:
-							aIntfKey = aKey
-							break
+						aIntfKey = next(iter(aLowLevelIntf))
 				else:
 					u[aEnableKey] = WifiStatus.Error
 					u[aStatusKey] = WifiStatus.Error
@@ -1658,7 +2034,7 @@ class LmInfo:
 		try:
 			d = self._session.request('NeMo.Intf.guest', 'getMIBs', { 'mibs': 'wlanvap' })
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.guest:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')

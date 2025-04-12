@@ -688,10 +688,12 @@ LABELS = {
 
 	# Actions
 	'actions': {
+		'Configuration...': '',
+		'Guest...': '',
 		'Wifi ON': '',
 		'Wifi OFF': '',
-		'Guest Wifi ON': '',
-		'Guest Wifi OFF': '',
+		'Guest ON': '',
+		'Guest OFF': '',
 		'Wifi Scheduler ON': '',
 		'Wifi Scheduler OFF': '',
 		'Show Global Status...': '',
@@ -719,6 +721,10 @@ LABELS = {
 		'Debug': '',
 		'Quit Application': '',
 		'Actions': '',
+		'Getting Wifi Configuration...': '',
+		'Setting Wifi Configuration...': '',
+		'Getting Guest Wifi Configuration...': '',
+		'Setting Guest Wifi Configuration...': '',
 		'Getting Wifi Global Status...': '',
 		'Getting Reboot History...': '',
 		'Set Firewall Levels...': '',
@@ -747,6 +753,28 @@ LABELS = {
 		'OK': '',
 		'{} Reboot History': '',
 		'Unknown': ''
+	},
+
+	# Actions - Wifi configuration
+	'wconfig': {
+		'Enabled': '',
+		'Duration': '',
+		'hours (0 = unlimited).': '',
+		'Radio Band': '',
+		'SSID': '',
+		'Options': '',
+		'SSID Broadcast': '',
+		'WPS': '',
+		'MAC Filtering': '',
+		'Security': '',
+		'Password': '',
+		'Channel': '',
+		'Mode': '',
+		'OK': '',
+		'Cancel': '',
+		'Guest Wifi Configuration': '',
+		'Wifi Configuration': '',
+		'Enabled for {}': ''
 	},
 
 	# Actions - Wifi global status
@@ -1477,6 +1505,8 @@ TOOLTIPS = {
 
 	# Actions
 	'actions': {
+		'wifiConfig': '',
+		'wifiGuestConfig': '',
 		'wifiOn': '',
 		'wifiOff': '',
 		'guestWifiOn': '',
@@ -1518,6 +1548,34 @@ TOOLTIPS = {
 		'reboot_ShutdownDate': '',
 		'reboot_ShutdownReason': '',
 		'ok': ''
+	},
+
+	# Actions - Wifi configuration
+	'wconfig': {
+		'enableCheckbox': '',
+		'durationLabel': '',
+		'durationEdit': '',
+		'durationUnit': '',
+		'freqLabel': '',
+		'freqCombo': '',
+		'ssidLabel': '',
+		'ssidEdit': '',
+		'optionsLabel': '',
+		'freqEnabledCheckbox': '',
+		'broadcastCheckbox': '',
+		'wpsCheckbox': '',
+		'macFilteringLabel': '',
+		'macFilteringCombo': '',
+		'secuLabel': '',
+		'secuCombo': '',
+		'passLabel': '',
+		'passEdit': '',
+		'chanLabel': '',
+		'chanCombo': '',
+		'modeLabel': '',
+		'modeCombo': '',
+		'ok': '',
+		'cancel': ''
 	},
 
 	# Actions - Wifi global status
@@ -1852,6 +1910,7 @@ MESSAGES = {
 
 	# Actions
 	'actions': {
+		'wifiGetConfErr':  '',
 		'wifiOn':  '',
 		'wifiOff':  '',
 		'gwifiOn':  '',
