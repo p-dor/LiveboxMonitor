@@ -215,7 +215,7 @@ class LmDeviceInfo:
 			else:
 				self.displayError('Set {} name query failed.'.format(t))
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Set {} name query error.'.format(t))
 		return False
 
@@ -235,7 +235,7 @@ class LmDeviceInfo:
 			else:
 				self.displayError('Remove {} name query failed.'.format(t))
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Remove {} name query error.'.format(t))
 		return False
 
@@ -261,7 +261,7 @@ class LmDeviceInfo:
 					else:
 						self.displayError('Set type query failed.')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Set type query error.')
 		else:
 			self.displayError(mx('Please select a device.', 'devSelect'))
@@ -279,7 +279,7 @@ class LmDeviceInfo:
 				else:
 					self.displayError('WOL query failed.')
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('WOL query error.')
 		else:
 			self.displayError(mx('Please select a device.', 'devSelect'))
@@ -300,7 +300,7 @@ class LmDeviceInfo:
 					else:
 						self.displayError('Destroy device query failed.')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Destroy device query error.')
 		else:
 			self.displayError(mx('Please select a device.', 'devSelect'))
@@ -320,7 +320,7 @@ class LmDeviceInfo:
 					return
 				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Scheduler:getSchedule query error.')
 				return
 
@@ -334,7 +334,7 @@ class LmDeviceInfo:
 						LmTools.Error(aReply)
 						self.displayError('Block query failed.')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Block query error.')
 			else:
 				try:
@@ -352,7 +352,7 @@ class LmDeviceInfo:
 						LmTools.Error(aReply)
 						self.displayError('Block query failed.')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Block query error.')
 		else:
 			self.displayError(mx('Please select a device.', 'devSelect'))
@@ -372,7 +372,7 @@ class LmDeviceInfo:
 					return
 				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Scheduler:getSchedule query error.')
 				return
 
@@ -385,7 +385,7 @@ class LmDeviceInfo:
 					else:
 						self.displayError('Unblock query failed.')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Unblock query error.')
 			else:
 				self.displayStatus(mx('Device {} is not blocked.', 'devNotBlocked').format(aKey))
@@ -400,7 +400,7 @@ class LmDeviceInfo:
 		try:
 			d = self._session.request('Devices.Device.' + iDeviceKey, 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if (d is not None):
 			d = d.get('status')
@@ -425,7 +425,7 @@ class LmDeviceInfo:
 				aBlocked = (aData.get('override', '') == 'Disable') and (aData.get('value', '') == 'Disable')
 			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), LmTools.FmtBool(aBlocked))
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
 
 		i = self.addInfoLine(self._infoAList, i, lx('First connection'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
@@ -496,7 +496,7 @@ class LmDeviceInfo:
 					aManufacturer = aCompDetails.get('companyName', '') + ' - ' + aCompDetails.get('countryCode', '')
 				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), aManufacturer)
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
 
 		i = self.addInfoLine(self._infoAList, i, lx('Vendor ID'), d.get('VendorClassID'))

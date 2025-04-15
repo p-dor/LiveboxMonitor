@@ -430,7 +430,7 @@ class LmNatPat:
 			try:
 				aExportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError(mx('Cannot create the file.', 'createFileErr'))
 				return
 
@@ -458,7 +458,7 @@ class LmNatPat:
 			try:
 				aExportFile.close()
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 			self.displayStatus(mx('{} rule(s) exported.', 'ruleExport').format(c))
@@ -474,7 +474,7 @@ class LmNatPat:
 		try:
 			aImportFile = open(aFileName, 'r')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot open the file.', 'openFileErr'))
 			return
 
@@ -506,7 +506,7 @@ class LmNatPat:
 		try:
 			aImportFile.close()
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot close the file.', 'closeFileErr'))
 
 		if not aError:
@@ -629,7 +629,7 @@ class LmNatPat:
 			try:
 				aExportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError(mx('Cannot create the file.', 'createFileErr'))
 				return
 
@@ -657,7 +657,7 @@ class LmNatPat:
 			try:
 				aExportFile.close()
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 			self.displayStatus(mx('{} rule(s) exported.', 'ruleExport').format(c))
@@ -673,7 +673,7 @@ class LmNatPat:
 		try:
 			aImportFile = open(aFileName, 'r')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot open the file.', 'openFileErr'))
 			return
 
@@ -705,7 +705,7 @@ class LmNatPat:
 		try:
 			aImportFile.close()
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot close the file.', 'closeFileErr'))
 
 		if not aError:
@@ -758,7 +758,7 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPortForwarding')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -809,7 +809,7 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1007,7 +1007,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPortForwarding', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			if not iSilent:
 				self.displayError('Firewall:setPortForwarding query error.')
 			return False
@@ -1051,7 +1051,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:setPinhole query error.')
 			return False
 
@@ -1089,7 +1089,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:deletePortForwarding query error.')
 			return False
 
@@ -1115,7 +1115,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:deletePinhole query error.')
 			return False
 
@@ -1142,7 +1142,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', { 'origin': o })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:deletePortForwarding query error.')
 			return False
 
@@ -1190,7 +1190,7 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getProtocolForwarding')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1239,7 +1239,7 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1411,7 +1411,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setProtocolForwarding', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			if not iSilent:
 				self.displayError('Firewall:setProtocolForwarding query error.')
 			return False
@@ -1451,7 +1451,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:setPinhole query error.')
 			return False
 
@@ -1479,7 +1479,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deleteProtocolForwarding', { 'id': iRule['Name'] })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:deleteProtocolForwarding query error.')
 			return False
 
@@ -1505,7 +1505,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:deletePinhole query error.')
 			return False
 
@@ -1525,7 +1525,7 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'commit')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			LmTools.Error('Firewall commit query error.')
 			return False
 

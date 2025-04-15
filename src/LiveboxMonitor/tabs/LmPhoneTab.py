@@ -373,7 +373,7 @@ class LmPhone:
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList', { 'callId': aKey })
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Phone call delete query error.')
 				return
 
@@ -393,7 +393,7 @@ class LmPhone:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
 			except BaseException as e:
 				self.endTask()
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Delete all calls query error.')
 				return
 			self.endTask()
@@ -662,7 +662,7 @@ class LmPhone:
 			try:
 				aReply = self._session.request('Phonebook', 'removeContactByUniqueID', { 'uniqueID': aKey })
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Contact delete query error.')
 				return
 
@@ -685,7 +685,7 @@ class LmPhone:
 				aReply = self._session.request('Phonebook', 'removeAllContacts')
 			except BaseException as e:
 				self.endTask()
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Delete all contacts query error.')
 				return
 			self.endTask()
@@ -708,7 +708,7 @@ class LmPhone:
 		try:
 			d = self._session.request('VoiceService.VoiceApplication', 'ring', aParams)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		LmTools.MouseCursor_Normal()
 
@@ -728,7 +728,7 @@ class LmPhone:
 		try:
 			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot create the file.', 'createFileErr'))
 			return
 
@@ -758,7 +758,7 @@ class LmPhone:
 		try:
 			aExportFile.close()
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 
@@ -1084,7 +1084,7 @@ class LmPhone:
 		try:
 			aReply = self._session.request('Phonebook', 'addContactAndGenUUID', { 'contact': aData })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Contact creation query error.')
 			return False
 
@@ -1108,7 +1108,7 @@ class LmPhone:
 		try:
 			aReply = self._session.request('Phonebook', 'getContactByUniqueID', { 'uniqueID': aKey })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Contact query error.')
 			return
 		if (aReply is None) or ('status' not in aReply):
@@ -1147,7 +1147,7 @@ class LmPhone:
 			try:
 				aReply = self._session.request('Phonebook', 'modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('Contact update query error.')
 				return
 

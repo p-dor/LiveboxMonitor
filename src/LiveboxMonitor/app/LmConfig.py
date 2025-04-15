@@ -559,7 +559,7 @@ class LmConf:
 			LmTools.Error('No configuration file, creating one.')
 			aDirtyConfig = True
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			if LmTools.AskQuestion(mx('Wrong {} file, fully reset it?', 'wrongFile').format(CONFIG_FILE)):
 				aDirtyConfig = True
 			else:
@@ -715,7 +715,7 @@ class LmConf:
 			LmTools.Error('No key file, creating one.')
 			aKey = None
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			LmTools.DisplayError(mx('Cannot read key file.', 'keyFileErr'))
 			if aKeyFile is not None:
 				aKeyFile.close()

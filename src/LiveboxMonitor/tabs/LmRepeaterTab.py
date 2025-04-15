@@ -536,7 +536,7 @@ class LmRepHandler:
 				# Need to ignore cookie as sessions opened with >1h cookie generate errors
 				r = self._session.signin(aUser, aPassword, True)
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				r = -1
 			if r > 0:
 				self._signed = True
@@ -752,7 +752,7 @@ class LmRepHandler:
 			try:
 				self._app._exportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError(mx('Cannot create the file.', 'createFileErr'))
 				return
 
@@ -766,7 +766,7 @@ class LmRepHandler:
 			try:
 				self._app._exportFile.close()
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError(mx('Cannot save the file.', 'saveFileErr'))
 
 			self._app._exportFile = None
@@ -787,7 +787,7 @@ class LmRepHandler:
 				else:
 					self._app.displayStatus(mx('Wifi activated (probably only 5GHz).', 'wifiOn'))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError('NMC.Wifi:set service error')
 			self._app.endTask()
 		else:
@@ -805,7 +805,7 @@ class LmRepHandler:
 				else:
 					self._app.displayStatus(mx('Wifi deactivated (probably only 5GHz).', 'wifiOff'))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError('NMC.Wifi:set service error')
 			self._app.endTask()
 		else:
@@ -828,7 +828,7 @@ class LmRepHandler:
 				else:
 					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError('Scheduler:enableSchedule service error')
 			self._app.endTask()
 		else:
@@ -851,7 +851,7 @@ class LmRepHandler:
 				else:
 					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self._app.displayError('Scheduler:enableSchedule service error')
 			self._app.endTask()
 		else:
@@ -870,7 +870,7 @@ class LmRepHandler:
 					else:
 						self._app.displayError('NMC:reboot service failed')
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self._app.displayError('NMC:reboot service error')
 				self._app.endTask()
 		else:
@@ -885,7 +885,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('NMC.Reboot.Reboot', 'get')
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -934,7 +934,7 @@ class LmRepHandler:
 				else:
 					self._app.displayInfos('NeMo.Intf.data:getMIBs', json.dumps(d, indent = 2))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				LmTools.MouseCursor_Normal()
 				self._app.displayError('NeMo.Intf.data:getMIBs service error')
 
@@ -947,7 +947,7 @@ class LmRepHandler:
 				else:
 					self._app.displayInfos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent = 2))
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				LmTools.MouseCursor_Normal()
 				self._app.displayError('NeMo.Intf.lan:getMIBs service error')
 		else:
@@ -989,7 +989,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NMC.Reboot', 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1001,7 +1001,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('Time', 'getTime')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			s = d.get('status', False)
@@ -1025,7 +1025,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -1045,7 +1045,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				d = None
 			if (d is not None) and (d.get('status', False)):
 				d = d.get('data')
@@ -1066,7 +1066,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1077,7 +1077,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1163,7 +1163,7 @@ class LmRepHandler:
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			q = None
 		if q is not None:
 			d = q.get('status')
@@ -1190,7 +1190,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'MTU' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is None:
 			i = self.addInfoLine(i, lx('MTU'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
@@ -1202,7 +1202,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('UplinkMonitor.DefaultGateway', 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1217,7 +1217,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base eth' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1292,7 +1292,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -1310,7 +1310,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				d = None
 			if (d is not None) and (d.get('status', False)):
 				d = d.get('data')
@@ -1340,7 +1340,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1351,7 +1351,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
