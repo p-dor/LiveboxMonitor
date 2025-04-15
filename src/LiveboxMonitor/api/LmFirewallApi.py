@@ -64,7 +64,7 @@ class FirewallApi:
 			elif not aReply['status']:
 				raise Exception('Firewall:setFirewallLevel query failed.')
 		else:
-			return 'Firewall:setFirewallLevel query failed.'
+			raise Exception('Firewall:setFirewallLevel query failed.')
 
 
 	### Set IPv6 firewall level
