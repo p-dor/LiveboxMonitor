@@ -15,75 +15,71 @@ class FirewallApi:
 		self._session = iApp._session
 
 
-	### Get IPv4 firewall level - return level + error message or None if successful
+	### Get IPv4 firewall level
 	def getIPv4FirewallLevel(self):
 		try:
 			aReply = self._session.request('Firewall', 'getFirewallLevel')
 		except BaseException as e:
 			LmTools.Error('Firewall:getFirewallLevel error: {}'.format(e))
-			return None, 'Firewall:getFirewallLevel query error.'
+			raise Exception('Firewall:getFirewallLevel query error.')
 
 		if (aReply is not None) and ('status' in aReply):
 			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 			if len(aErrors):
-				return None, aErrors
-			return aReply['status'], None
+				raise Exception(aErrors)
+			return aReply['status']
 		else:
-			return None, 'Firewall:getFirewallLevel query failed.'
+			raise Exception('Firewall:getFirewallLevel query failed.')
 
 
-	### Get IPv6 firewall level - return level + error message or None if successful
+	### Get IPv6 firewall level
 	def getIPv6FirewallLevel(self):
 		try:
 			aReply = self._session.request('Firewall', 'getFirewallIPv6Level')
 		except BaseException as e:
 			LmTools.Error('Firewall:getFirewallIPv6Level error: {}'.format(e))
-			return None, 'Firewall:getFirewallIPv6Level query error.'
+			raise Exception('Firewall:getFirewallIPv6Level query error.')
 
 		if (aReply is not None) and ('status' in aReply):
 			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 			if len(aErrors):
-				return None, aErrors
-			return aReply['status'], None
+				raise Exception(aErrors)
+			return aReply['status']
 		else:
-			return None, 'Firewall:getFirewallIPv6Level query failed.'
+			raise Exception('Firewall:getFirewallIPv6Level query failed.')
 
 
-	### Set IPv4 firewall level - return error message or None if successful
+	### Set IPv4 firewall level
 	def setIPv4FirewallLevel(self, iLevel):
 		try:
 			aReply = self._session.request('Firewall', 'setFirewallLevel', { 'level': iLevel })
 		except BaseException as e:
 			LmTools.Error('Firewall:setFirewallLevel error: {}'.format(e))
-			return 'Firewall:setFirewallLevel query error.'
+			raise Exception('Firewall:setFirewallLevel query error.')
 
 		if (aReply is not None) and ('status' in aReply):
 			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 			if len(aErrors):
-				return aErrors
+				raise Exception(aErrors)
 			elif not aReply['status']:
-				return 'Firewall:setFirewallLevel query failed.'
+				raise Exception('Firewall:setFirewallLevel query failed.')
 		else:
 			return 'Firewall:setFirewallLevel query failed.'
 
-		return None
 
-
-	### Set IPv6 firewall level - return error message or None if successful
+	### Set IPv6 firewall level
 	def setIPv6FirewallLevel(self, iLevel):
 		try:
 			aReply = self._session.request('Firewall', 'setFirewallIPv6Level', { 'level': iLevel })
 		except BaseException as e:
 			LmTools.Error('Firewall:setFirewallIPv6Level error: {}'.format(e))
-			return 'Firewall:setFirewallIPv6Level query error.'
+			raise Exception('Firewall:setFirewallIPv6Level query error.')
 
 		if (aReply is not None) and ('status' in aReply):
 			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
 			if len(aErrors):
-				return aErrors
+				raise Exception(aErrors)
 			elif not aReply['status']:
-				return 'Firewall:setFirewallIPv6Level query failed.'
+				raise Exception('Firewall:setFirewallIPv6Level query failed.')
 		else:
-			return 'Firewall:setFirewallIPv6Level query failed.'
-
-		return None
+			raise Exception('Firewall:setFirewallIPv6Level query failed.')
