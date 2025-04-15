@@ -98,6 +98,9 @@ TOOLTIPS = {
 	# Actions - Backup & Restore
 	'backrest': {},
 
+	# Actions - Screen & LEDs
+	'screen' : {},
+
 	# Actions - Firewall level
 	'fwlevel': {},
 

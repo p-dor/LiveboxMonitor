@@ -807,6 +807,11 @@ LABELS = {
 		'Backup and Restore Setup': ''
 	},
 
+	# Actions - Screen & LEDs
+	'screen' : {	###TODO###
+
+	},
+
 	# Actions - Firewall level
 	'fwlevel': {
 		'IPv4 Firewall Level': '',
@@ -1597,6 +1602,11 @@ TOOLTIPS = {
 		'forceBackup': '',
 		'forceRestore': '',
 		'ok': ''
+	},
+
+	# Actions - Screen & LEDs
+	'screen' : {	###TODO###
+
 	},
 
 	# Actions - Firewall level

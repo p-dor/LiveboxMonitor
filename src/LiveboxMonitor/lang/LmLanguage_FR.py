@@ -695,6 +695,11 @@ LABELS = {
 		'Backup and Restore Setup': 'Réglages Sauvegarde et Restauration'
 	},
 
+	# Actions - Screen & LEDs
+	'screen' : {	###TODO###
+
+	},
+
 	# Actions - Firewall level
 	'fwlevel': {
 		'IPv4 Firewall Level': 'Niveau du pare-feu IPv4',
@@ -1520,6 +1525,11 @@ TOOLTIPS = {
 		'forceBackup': 'Permet de forcer une sauvegarde de la configuration de la Livebox.',
 		'forceRestore': 'Permet de forcer une restauration de la configuration de la Livebox à partir\n'
 						'de la dernière sauvegarde. Un redémarrage de la Livebox est déclenché.'
+	},
+
+	# Actions - Screen & LEDs
+	'screen' : {	###TODO###
+
 	},
 
 	# Actions - Firewall level

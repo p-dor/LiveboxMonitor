@@ -15,6 +15,7 @@ from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
 										 ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
 from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
 								 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
 from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx, GetMainMessage as mx
@@ -73,6 +74,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		self.show()
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():
+			self._api = ApiRegistry(self)
 			self.adjustToLiveboxModel()
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())

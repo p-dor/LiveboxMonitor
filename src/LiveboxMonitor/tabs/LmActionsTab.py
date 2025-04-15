@@ -12,13 +12,14 @@ from LiveboxMonitor.app import LmGenApiDocumentation
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
+from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
+from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
 											 GetActionsMessage as mx,
 											 GetActionsRHistoryDialogLabel as lrx,
 											 GetActionsWConfigDialogLabel as lcx,
 											 GetActionsWGlobalDialogLabel as lwx,
 											 GetActionsBackupRestoreDialogLabel as lbx,
-											 GetActionsFirewallLevelDialogLabel as lfx,
 											 GetActionsPingResponseDialogLabel as lpx,
 											 GetActionsDynDnsDialogLabel as ldx,
 											 GetActionsDmzDialogLabel as lzx)
@@ -62,9 +63,6 @@ class WifiStatus:
 
 # Wifi MAC Filtering modes
 MAC_FILTERING_MODES = ['Off', 'WhiteList', 'BlackList']
-
-# Firewall levels
-FIREWALL_LEVELS = ['High', 'Medium', 'Low', 'Custom']
 
 # DynDNS host list columns
 class HostCol(IntEnum):
@@ -172,6 +170,11 @@ class LmActions:
 		aBackupRestoreButton.clicked.connect(self.backupRestoreButtonClick)
 		aBackupRestoreButton.setMinimumWidth(BUTTON_WIDTH)
 		aMiscButtons.addWidget(aBackupRestoreButton)
+
+		aScreenButton = QtWidgets.QPushButton(lx('LEDs and Screen...'), objectName = 'screen')	###TODO### strings
+		aScreenButton.clicked.connect(self.screenButtonClick)
+		aScreenButton.setMinimumWidth(BUTTON_WIDTH)
+		aMiscButtons.addWidget(aScreenButton)
 
 		aMiscGroupBox = QtWidgets.QGroupBox(lx('Miscellaneous'), objectName = 'miscGroup')
 		aMiscGroupBox.setLayout(aMiscButtons)
@@ -624,6 +627,14 @@ class LmActions:
 		aBackupRestoreDialog.exec()
 
 
+	### Click on LED & Screen setup button
+	def screenButtonClick(self):
+		###TODO### - load and save values with REST APIs
+		aScreenDialog = ScreenDialog(2, 3, True, self)
+		if aScreenDialog.exec():
+			print('Orange={} White={}'.format(aScreenDialog.getOrangeLedLevel(), aScreenDialog.getWhiteLedLevel()))
+
+
 	### Click on Reboot Livebox button
 	def rebootLiveboxButtonClick(self):
 		if self.askQuestion(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
@@ -667,40 +678,14 @@ class LmActions:
 
 	### Click on Firewall Level button
 	def firewallLevelButtonClick(self):
-		# Get current IPv4 firewall level
-		try:
-			aReply = self._session.request('Firewall', 'getFirewallLevel')
-		except BaseException as e:
-			LmTools.Error('Firewall:getFirewallLevel error: {}'.format(e))
-			self.displayError('Firewall:getFirewallLevel query error.')
+		aFirewallIPv4Level, aErr = self._api._firewall.getIPv4FirewallLevel()
+		if aErr is not None:
+			self.displayError(aErr)
 			return
 
-		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-			if len(aErrors):
-				self.displayError(aErrors)
-				return
-			aFirewallIPv4Level = aReply['status']
-		else:
-			self.displayError('Firewall:getFirewallLevel query failed.')
-			return
-
-		# Get current IPv6 firewall level
-		try:
-			aReply = self._session.request('Firewall', 'getFirewallIPv6Level')
-		except BaseException as e:
-			LmTools.Error(e)
-			self.displayError('Firewall:getFirewallIPv6Level query error.')
-			return
-
-		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-			if len(aErrors):
-				self.displayError(aErrors)
-				return
-			aFirewallIPv6Level = aReply['status']
-		else:
-			self.displayError('Firewall:getFirewallIPv6Level query failed.')
+		aFirewallIPv6Level, aErr = self._api._firewall.getIPv6FirewallLevel()
+		if aErr is not None:
+			self.displayError(aErr)
 			return
 
 		aFirewallLevelDialog = FirewallLevelDialog(aFirewallIPv4Level, aFirewallIPv6Level, self)
@@ -710,38 +695,16 @@ class LmActions:
 			# Set new IPv4 firewall level if changed
 			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
 			if aNewFirewallIPv4Level != aFirewallIPv4Level:
-				try:
-					aReply = self._session.request('Firewall', 'setFirewallLevel', { 'level': aNewFirewallIPv4Level })
-				except BaseException as e:
-					LmTools.Error(e)
-					self.displayError('Firewall:setFirewallLevel query error.')
-				else:
-					if (aReply is not None) and ('status' in aReply):
-						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-						if len(aErrors):
-							self.displayError(aErrors)
-						elif not aReply['status']:
-							self.displayError('Firewall:setFirewallLevel query failed.')
-					else:
-						self.displayError('Firewall:setFirewallLevel query failed.')
+				aErr = self._api._firewall.setIPv4FirewallLevel(aNewFirewallIPv4Level)
+				if aErr is not None:
+					self.displayError(aErr)
 
 			# Set new IPv6 firewall level if changed
 			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
 			if aNewFirewallIPv6Level != aFirewallIPv6Level:
-				try:
-					aReply = self._session.request('Firewall', 'setFirewallIPv6Level', { 'level': aNewFirewallIPv6Level })
-				except BaseException as e:
-					LmTools.Error(e)
-					self.displayError('Firewall:setFirewallIPv6Level query error.')
-				else:
-					if (aReply is not None) and ('status' in aReply):
-						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-						if len(aErrors):
-							self.displayError(aErrors)
-						elif not aReply['status']:
-							self.displayError('Firewall:setFirewallIPv6Level query failed.')
-					else:
-						self.displayError('Firewall:setFirewallIPv6Level query failed.')
+				aErr = self._api._firewall.setIPv6FirewallLevel(aNewFirewallIPv4Level)
+				if aErr is not None:
+					self.displayError(aErr)
 
 			self.endTask()
 
@@ -1646,66 +1609,6 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 			self._app.displayStatus(mx('Restore requested. Livebox will restart.', 'restoreSvcOk'))
 		else:
 			self._app.displayError(mx('Restore request failed.', 'restoreSvcErr'))
-
-
-
-# ############# Firewall Level dialog #############
-class FirewallLevelDialog(QtWidgets.QDialog):
-	def __init__(self, iIPv4Level, iIPv6Level, iParent = None):
-		super(FirewallLevelDialog, self).__init__(iParent)
-		self.setMinimumWidth(230)
-		self.resize(300, 150)
-
-		aIpV4LevelLabel = QtWidgets.QLabel(lfx('IPv4 Firewall Level'), objectName = 'ipV4Label')
-		self._ipV4LevelCombo = QtWidgets.QComboBox(objectName = 'ipV4Combo')
-		for l in FIREWALL_LEVELS:
-			self._ipV4LevelCombo.addItem(lfx(l), userData = l)
-		self._ipV4LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv4Level))
-
-		aIpV6LevelLabel = QtWidgets.QLabel(lfx('IPv6 Firewall Level'), objectName = 'ipV6Label')
-		self._ipV6LevelCombo = QtWidgets.QComboBox(objectName = 'ipV6Combo')
-		for l in FIREWALL_LEVELS:
-			self._ipV6LevelCombo.addItem(lfx(l), userData = l)
-		self._ipV6LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv6Level))
-
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(aIpV4LevelLabel, 0, 0)
-		aGrid.addWidget(self._ipV4LevelCombo, 0, 1)
-		aGrid.addWidget(aIpV6LevelLabel, 1, 0)
-		aGrid.addWidget(self._ipV6LevelCombo, 1, 1)
-		aGrid.setColumnStretch(0, 0)
-		aGrid.setColumnStretch(1, 1)
-
-		self._okButton = QtWidgets.QPushButton(lfx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lfx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.SetToolTips(self, 'fwlevel')
-
-		self.setWindowTitle(lfx('Firewall Levels'))
-
-		self.setModal(True)
-		self.show()
-
-
-	def getIPv4Level(self):
-		return self._ipV4LevelCombo.currentData()
-
-
-	def getIPv6Level(self):
-		return self._ipV6LevelCombo.currentData()
 
 
 
