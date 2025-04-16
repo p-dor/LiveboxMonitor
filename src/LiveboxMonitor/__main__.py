@@ -285,7 +285,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			try:
 				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				r = -1
 			self.endTask()
 			if r > 0:

@@ -699,6 +699,7 @@ LABELS = {
 		'Show Global Status...': '',
 		'Wifi': '',
 		'Backup and Restore...': '',
+		'LEDs and Screen...': '',
 		'Miscellaneous': '',
 		'Reboot Livebox...': '',
 		'Reboot History...': '',
@@ -727,7 +728,8 @@ LABELS = {
 		'Setting Guest Wifi Configuration...': '',
 		'Getting Wifi Global Status...': '',
 		'Getting Reboot History...': '',
-		'Set Firewall Levels...': '',
+		'Setting LEDs & Screen Setup...': '',
+		'Setting Firewall Levels...': '',
 		'Set Ping Responses...': '',
 		'Raw Device List': '',
 		'Raw Topology': '',
@@ -808,8 +810,12 @@ LABELS = {
 	},
 
 	# Actions - Screen & LEDs
-	'screen' : {	###TODO###
-
+	'screen' : {
+		'LED Brightness': '',
+		'Show Wifi Password': '',
+		'OK': '',
+		'Cancel': '',
+		'LEDs & Screen Setup': ''
 	},
 
 	# Actions - Firewall level
@@ -1521,6 +1527,7 @@ TOOLTIPS = {
 		'wifiGlobalStatus': '',
 		'wifiGroup': '',
 		'backupRestore': '',
+		'screen': '',
 		'miscGroup': '',
 		'rebootLivebox': '',
 		'rebootHistory': '',
@@ -1605,8 +1612,13 @@ TOOLTIPS = {
 	},
 
 	# Actions - Screen & LEDs
-	'screen' : {	###TODO###
-
+	'screen' : {
+		'orangeLabel': '',
+		'orangeSlider': '',
+		'orangeValue': '',
+		'showWifiPasswordCheckbox': '',
+		'ok': '',
+		'cancel': ''
 	},
 
 	# Actions - Firewall level

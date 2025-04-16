@@ -600,6 +600,7 @@ LABELS = {
 		'Wifi Scheduler OFF': 'Planificateur Wifi OFF',
 		'Show Global Status...': 'État Global Wifi...',
 		'Backup and Restore...': 'Sauvegarde et Restauration...',
+		'LEDs and Screen...': 'LEDs et Écran...',
 		'Miscellaneous': 'Divers',
 		'Reboot Livebox...': 'Redémarrer la Livebox...',
 		'Reboot History...': 'Historique Redémarrages...',
@@ -625,7 +626,8 @@ LABELS = {
 		'Setting Guest Wifi Configuration...': 'Configuration du réseau Wifi Invité...',
 		'Getting Wifi Global Status...': 'Chargement de l\'état global du Wifi...',
 		'Getting Reboot History...': 'Chargement de l\'historique de redémarrages...',
-		'Set Firewall Levels...': 'Changement des niveaux de pare-feu...',
+		'Setting LEDs & Screen Setup...': 'Changement des réglages des LEDs et de l\'écran...',
+		'Setting Firewall Levels...': 'Changement des niveaux de pare-feu...',
 		'Set Ping Responses...': 'Changement des réponses aux pings...',
 		'Raw Device List': 'JSON Liste Appareils',
 		'Raw Topology': 'JSON Topologie',
@@ -696,8 +698,11 @@ LABELS = {
 	},
 
 	# Actions - Screen & LEDs
-	'screen' : {	###TODO###
-
+	'screen' : {
+		'LED Brightness': 'Luminosité LED',
+		'Show Wifi Password': 'Afficher le mot de passe Wifi sur l\'écran',
+		'Cancel': 'Annuler',
+		'LEDs & Screen Setup': 'Réglages LEDs & Écran'
 	},
 
 	# Actions - Firewall level
@@ -1448,6 +1453,8 @@ TOOLTIPS = {
 							'les répéteurs Wifi Orange potentiellement connectés.',
 		'backupRestore': 'Permet de régler la sauvegarde automatique de la configuration de la Livebox,\n'
 						 'de déclencher une sauvegarde ou de demander une restauration de la configuration.',
+		'screen': 'Permet de régler le niveau des LEDs et l\'affichage du mot de passe\n'
+				  'Wifi sur l\'écran. Fonctionalité uniquement à partir de la Livebox 6.',
 		'rebootLivebox': 'Permet de forcer un redémarrage de la Livebox.',
 		'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
 						 'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.',
@@ -1528,8 +1535,9 @@ TOOLTIPS = {
 	},
 
 	# Actions - Screen & LEDs
-	'screen' : {	###TODO###
-
+	'screen' : {
+		'orangeSlider': 'Réglage du niveau de luminosité de la LED Orange.',
+		'showWifiPasswordCheckbox': 'Afficher la clef de sécurité sur l\'écran de la Livebox.'
 	},
 
 	# Actions - Firewall level

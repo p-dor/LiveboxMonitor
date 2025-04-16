@@ -171,10 +171,12 @@ class LmActions:
 		aBackupRestoreButton.setMinimumWidth(BUTTON_WIDTH)
 		aMiscButtons.addWidget(aBackupRestoreButton)
 
-		aScreenButton = QtWidgets.QPushButton(lx('LEDs and Screen...'), objectName = 'screen')	###TODO### strings
+		aScreenButton = QtWidgets.QPushButton(lx('LEDs and Screen...'), objectName = 'screen')
 		aScreenButton.clicked.connect(self.screenButtonClick)
 		aScreenButton.setMinimumWidth(BUTTON_WIDTH)
 		aMiscButtons.addWidget(aScreenButton)
+		if self._liveboxModel < 6:
+			aScreenButton.setEnabled(False)
 
 		aMiscGroupBox = QtWidgets.QGroupBox(lx('Miscellaneous'), objectName = 'miscGroup')
 		aMiscGroupBox.setLayout(aMiscButtons)
@@ -627,12 +629,36 @@ class LmActions:
 		aBackupRestoreDialog.exec()
 
 
-	### Click on LED & Screen setup button
+	### Click on LEDs & Screen setup button
 	def screenButtonClick(self):
-		###TODO### - load and save values with REST APIs
-		aScreenDialog = ScreenDialog(2, 3, True, self)
+		try:
+			aOrangeLedLevel = self._api._screen.getOrangeLedLevel()
+			aShowWifiPassword = self._api._screen.getShowWifiPassword()
+		except BaseException as e:
+			self.displayError(str(e))
+			return
+
+		aScreenDialog = ScreenDialog(aOrangeLedLevel, aShowWifiPassword, self)
 		if aScreenDialog.exec():
-			print('Orange={} White={}'.format(aScreenDialog.getOrangeLedLevel(), aScreenDialog.getWhiteLedLevel()))
+			self.startTask(lx('Setting LEDs & Screen Setup...'))
+
+			# Set orange LED level if changed
+			aNewOrangeLedLevel = aScreenDialog.getOrangeLedLevel()
+			if aNewOrangeLedLevel != aOrangeLedLevel:
+				try:
+					self._api._screen.setOrangeLedLevel(aNewOrangeLedLevel)
+				except BaseException as e:
+					self.displayError(str(e))
+
+			# Set show wifi password if changed
+			aNewShowWifiPassword = aScreenDialog.getShowWifiPassword()
+			if aNewShowWifiPassword != aShowWifiPassword:
+				try:
+					self._api._screen.setShowWifiPassword(aNewShowWifiPassword)
+				except BaseException as e:
+					self.displayError(str(e))
+
+			self.endTask()
 
 
 	### Click on Reboot Livebox button
@@ -648,7 +674,7 @@ class LmActions:
 					self.displayStatus(mx('Application will now quit.', 'appQuit'))
 					self.close()
 			except BaseException as e:
-				LmTools.Error(e)
+				LmTools.Error(str(e))
 				self.displayError('NMC:reboot service error.')
 			self.endTask()
 
@@ -678,33 +704,32 @@ class LmActions:
 
 	### Click on Firewall Level button
 	def firewallLevelButtonClick(self):
-		aFirewallIPv4Level, aErr = self._api._firewall.getIPv4FirewallLevel()
-		if aErr is not None:
-			self.displayError(aErr)
-			return
-
-		aFirewallIPv6Level, aErr = self._api._firewall.getIPv6FirewallLevel()
-		if aErr is not None:
-			self.displayError(aErr)
+		try:
+			aFirewallIPv4Level = self._api._firewall.getIPv4FirewallLevel()
+			aFirewallIPv6Level = self._api._firewall.getIPv6FirewallLevel()
+		except BaseException as e:
+			self.displayError(str(e))
 			return
 
 		aFirewallLevelDialog = FirewallLevelDialog(aFirewallIPv4Level, aFirewallIPv6Level, self)
 		if aFirewallLevelDialog.exec():
-			self.startTask(lx('Set Firewall Levels...'))
+			self.startTask(lx('Setting Firewall Levels...'))
 
 			# Set new IPv4 firewall level if changed
 			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
 			if aNewFirewallIPv4Level != aFirewallIPv4Level:
-				aErr = self._api._firewall.setIPv4FirewallLevel(aNewFirewallIPv4Level)
-				if aErr is not None:
-					self.displayError(aErr)
+				try:
+					self._api._firewall.setIPv4FirewallLevel(aNewFirewallIPv4Level)
+				except BaseException as e:
+					self.displayError(str(e))
 
 			# Set new IPv6 firewall level if changed
 			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
 			if aNewFirewallIPv6Level != aFirewallIPv6Level:
-				aErr = self._api._firewall.setIPv6FirewallLevel(aNewFirewallIPv4Level)
-				if aErr is not None:
-					self.displayError(aErr)
+				try:
+					self._api._firewall.setIPv6FirewallLevel(aNewFirewallIPv6Level)
+				except BaseException as e:
+					self.displayError(str(e))
 
 			self.endTask()
 
@@ -717,7 +742,7 @@ class LmActions:
 		try:
 			aReply = self._session.request('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self.displayError('Firewall:getRespondToPing query error.')
 			return
 
@@ -751,7 +776,7 @@ class LmActions:
 				try:
 					aReply = self._session.request('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
 				except BaseException as e:
-					LmTools.Error(e)
+					LmTools.Error(str(e))
 					self.displayError('Firewall:setRespondToPing query error.')
 				else:
 					if (aReply is not None) and ('status' in aReply):
@@ -1539,7 +1564,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'get')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1567,7 +1592,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': True })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1579,7 +1604,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': False })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1591,7 +1616,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if 'status' in d:
 			self.refreshStatus()
@@ -1603,7 +1628,7 @@ class BackupRestoreSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkRestore')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if 'status' in d:
 			self._app.displayStatus(mx('Restore requested. Livebox will restart.', 'restoreSvcOk'))
@@ -1817,7 +1842,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getHosts')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1861,7 +1886,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getServices')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1913,7 +1938,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'delHost', { 'hostname': aHostName })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1956,7 +1981,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'addHost', h)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self._app.displayError('DynDNS:addHost query error.')
 			return
 
@@ -1978,7 +2003,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'getGlobalEnable')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1993,7 +2018,7 @@ class DynDNSSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('DynDNS', 'setGlobalEnable', { 'enable': not self.getGlobalEnableStatus() })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2156,7 +2181,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'getDMZ')
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2219,7 +2244,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'deleteDMZ', { 'id': aID })
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -2253,7 +2278,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 		try:
 			d = self._app._session.request('Firewall', 'setDMZ', h)
 		except BaseException as e:
-			LmTools.Error(e)
+			LmTools.Error(str(e))
 			self._app.displayError('Firewall:setDMZ query error.')
 			return
 
