@@ -1358,7 +1358,7 @@ class LmRepHandler:
 			d = d.get('status')
 		if d is not None:
 			d = d.get('wlanvap')
-		print('###BASE={}\n###VAP={}\n###RADIO={}'.format(b, d, w))	###TODO### TEST
+
 		if (d is None) or (b is None) or (w is None):
 			u[WifiKey.Wifi2Enable] = WifiStatus.Error
 			u[WifiKey.Wifi2Status] = WifiStatus.Error
