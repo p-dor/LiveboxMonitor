@@ -10,9 +10,8 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Firewall APIs ################################
 class FirewallApi:
-	def __init__(self, iApp):
-		self._app = iApp
-		self._session = iApp._session
+	def __init__(self, iSession):
+		self._session = iSession
 
 
 	### Get IPv4 firewall level

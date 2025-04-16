@@ -7,5 +7,6 @@ from LiveboxMonitor.api.LmScreenApi import ScreenApi
 # ################################ API objects registry ################################
 class ApiRegistry:
 	def __init__(self, iApp):
-		self._firewall = FirewallApi(iApp)
-		self._screen = ScreenApi(iApp)
+		s = iApp._session
+		self._firewall = FirewallApi(s)
+		self._screen = ScreenApi(s)

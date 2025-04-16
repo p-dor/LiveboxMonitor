@@ -11,7 +11,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
 from LiveboxMonitor.tabs.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
 from LiveboxMonitor.lang.LmLanguages import GetRepeaterLabel as lx, GetRepeaterMessage as mx

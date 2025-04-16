@@ -15,8 +15,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 
 from LiveboxMonitor.app import LmTools
-from LiveboxMonitor.app.LmSession import DEFAULT_TIMEOUT
-from LiveboxMonitor.app.LmSession import LmSession
+from LiveboxMonitor.api.LmSession import DEFAULT_TIMEOUT
+from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
 											 GetConfigMessage as mx,
