@@ -22,7 +22,7 @@ class ScreenApi:
 			if len(aErrors):
 				raise Exception(aErrors)
 			aBrightness = aReply['status'].get('Brightness')
-			if aBrightness is None:
+			if aBrightness is not None:
 				return aBrightness
 			else:
 				LmTools.Error('LEDs.LED.Orange:get error: no Brightness field')
