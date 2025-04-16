@@ -50,17 +50,6 @@ NET_INTF_WR6 = [
 	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
 ]
 
-# Wifi Repeater 6 Interfaces with a Livebox 6
-NET_INTF_WR6_LB6 = [
-	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'vap6g0priv', 'Name': 'Wifi 6GHz',    'Type': 'wif', 'SwapStats': True  }
-]
-
-
 
 # ################################ LmRepeater class ################################
 
@@ -509,17 +498,14 @@ class LmRepHandler:
 		self.setNetIntf()
 
 
-	### Set Net Interfaces according to Repeater and Livebox versions
+	### Set Net Interfaces according to Repeater versions
 	def setNetIntf(self):
 		if self._version == 5:
 			self._netIntf = NET_INTF_WR5
 		elif self._version == 6:
-			if self._app._liveboxModel >= 6:
-				self._netIntf = NET_INTF_WR6_LB6
-			else:
-				self._netIntf = NET_INTF_WR6
+			self._netIntf = NET_INTF_WR6
 		else:
-			self._netIntf = "None"
+			self._netIntf = []
 
 
 	### Sign in to repeater
