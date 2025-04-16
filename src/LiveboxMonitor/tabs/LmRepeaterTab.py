@@ -12,8 +12,9 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.api.LmSession import LmSession
+from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
-from LiveboxMonitor.tabs.LmActionsTab import RebootHistoryDialog, WifiKey, WifiStatus
+from LiveboxMonitor.tabs.LmActionsTab import WifiKey, WifiStatus
 from LiveboxMonitor.lang.LmLanguages import GetRepeaterLabel as lx, GetRepeaterMessage as mx
 
 
@@ -1357,7 +1358,7 @@ class LmRepHandler:
 			d = d.get('status')
 		if d is not None:
 			d = d.get('wlanvap')
-
+		print('###BASE={}\n###VAP={}\n###RADIO={}'.format(b, d, w))	###TODO### TEST
 		if (d is None) or (b is None) or (w is None):
 			u[WifiKey.Wifi2Enable] = WifiStatus.Error
 			u[WifiKey.Wifi2Status] = WifiStatus.Error
