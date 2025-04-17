@@ -9,7 +9,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
 - Contrôler de manière fine les réglages du serveur DHCP, des règles NAT/PAT, du DynDNS et de la DMZ,
-- Contrôler l'état du Wifi,
+- Configurer le réseau Wifi et contrôler son état global,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
 
@@ -133,7 +133,8 @@ Aucune documentation officielle des APIs de la Livebox n'étant disponible, l'é
 
 ## Discussion <a id="discussion"></a>
 
-Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
+Si vous avez un compte GitHub le [forum de discussion](https://github.com/p-dor/LiveboxMonitor/discussions) est actif.
+Un [fil de discussion](https://lafibre.info/orange-les-news/controler-son-reseau-livebox-5-ou-6/) est aussi actif sur le forum [lafibre.info](https://lafibre.info). Il est possible d'y poster vos commentaires, résultats de tests ou de faire des demandes de fonctionnalités.
 
 
 ## Supporter le projet <a id="support"></a>
@@ -579,10 +580,12 @@ Les boutons suivants sont proposés pour gérer la liste des contacts :
 Cet onglet permet une liste d'actions par catégorie.
 
 Les actions concernant le **Wifi** :
+- **`Configuration...`** : permet de configurer toutes les bandes radios du réseau Wifi.
 - **`Wifi ON`** : permet d'activer l'interface Wifi de la Livebox.
 - **`Wifi OFF`** : permet de désactiver l'interface Wifi de la Livebox.
-- **`Wifi Invité ON`** : permet d'activer l'interface Wifi invité de la Livebox.
-- **`Wifi Invité OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
+- **`Invité...`** : permet de configurer toutes les bandes radios du réseau Wifi Invité.
+- **`Invité ON`** : permet d'activer l'interface Wifi invité de la Livebox.
+- **`Invité OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
 - **`Planificateur Wifi ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce planificateur doit être configuré depuis l'interface Web de la Livebox.
 - **`Planificateur Wifi OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
 - **`État Global Wifi...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
@@ -593,6 +596,7 @@ Les actions **Diverses** :
 - **`Sauvegarde et Restauration...`** : permet de régler la sauvegarde automatique de la configuration de la Livebox, de déclencher une sauvegarde ou de demander une restauration de la configuration.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_BackupRestore.png)
+- **`LEDs et Écran...`** : permet de régler le niveau de luminosité des LEDs et l'affichage du mot de passe Wifi sur l'écran de la Livebox. Cette fonctionalité est disponible uniquement à partir de la Livebox 6.
 
 Les actions concernant les **Redémarrages** :
 - **`Redémarrer la Livebox...`** : permet de forcer un redémarrage de la Livebox.
