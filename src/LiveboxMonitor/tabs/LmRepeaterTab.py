@@ -361,7 +361,7 @@ class LmRepeater:
 		aGlobalStatus = []
 
 		for r in self._repeaters:
-			u = r.getWifiStatus(self._liveboxModel)
+			u = r.getWifiStatus()
 			aGlobalStatus.append(u)
 
 		return aGlobalStatus
@@ -1238,7 +1238,7 @@ class LmRepHandler:
 
 
 	### Get Wifi statuses (used by ActionsTab)
-	def getWifiStatus(self, iLiveboxModel):
+	def getWifiStatus(self):
 		u = {}
 		u[WifiKey.AccessPoint] = self._name
 
@@ -1252,7 +1252,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Inactive
 			u[WifiKey.Wifi5Status] = WifiStatus.Inactive
 			u[WifiKey.Wifi5VAP] = WifiStatus.Inactive
-			if iLiveboxModel >= 6:
+			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
 				u[WifiKey.Wifi6Enable] = WifiStatus.Inactive
 				u[WifiKey.Wifi6Status] = WifiStatus.Inactive
 				u[WifiKey.Wifi6VAP] = WifiStatus.Inactive
@@ -1268,7 +1268,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5Status] = WifiStatus.Unsigned
 			u[WifiKey.Wifi5VAP] = WifiStatus.Unsigned
-			if iLiveboxModel >= 6:
+			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
 				u[WifiKey.Wifi6Enable] = WifiStatus.Unsigned
 				u[WifiKey.Wifi6Status] = WifiStatus.Unsigned
 				u[WifiKey.Wifi6VAP] = WifiStatus.Unsigned
@@ -1325,24 +1325,15 @@ class LmRepHandler:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio wlanvap' })
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is not None:
 			b = d.get('base')
 			w = d.get('wlanradio')
-
-		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is not None:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
@@ -1352,7 +1343,7 @@ class LmRepHandler:
 			u[WifiKey.Wifi5Enable] = WifiStatus.Error
 			u[WifiKey.Wifi5Status] = WifiStatus.Error
 			u[WifiKey.Wifi5VAP] = WifiStatus.Error
-			if iLiveboxModel >= 6:
+			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
 				u[WifiKey.Wifi6Enable] = WifiStatus.Error
 				u[WifiKey.Wifi6Status] = WifiStatus.Error
 				u[WifiKey.Wifi6VAP] = WifiStatus.Error

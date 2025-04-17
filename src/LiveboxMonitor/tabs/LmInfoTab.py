@@ -1960,24 +1960,15 @@ class LmInfo:
 		b = None
 		w = None
 		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
+			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio wlanvap' })
 		except BaseException as e:
-			LmTools.Error('NeMo.Intf.lan:getMIBs radio error: {}'.format(e))
+			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is not None:
 			b = d.get('base')
 			w = d.get('wlanradio')
-
-		try:
-			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
-		except BaseException as e:
-			LmTools.Error('NeMo.Intf.lan:getMIBs vap error: {}'.format(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is not None:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
