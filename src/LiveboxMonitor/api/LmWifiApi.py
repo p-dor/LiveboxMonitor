@@ -5,6 +5,9 @@ from LiveboxMonitor.api.LmIntfApi import IntfApi
 from LiveboxMonitor.app import LmTools
 
 
+###TODO### - migrate to new APIs calls
+
+
 # ################################ Wifi APIs ################################
 class WifiApi(LmApi):
 	def __init__(self, iSession):
@@ -20,10 +23,9 @@ class WifiApi(LmApi):
 		b = None
 		w = None
 		d = self.call('NeMo.Intf.' + i, 'getMIBs', { 'mibs': 'base wlanradio wlanvap' }, iTimeout = 25)
-		if d is not None:
-			b = d.get('base')
-			w = d.get('wlanradio')
-			d = d.get('wlanvap')
+		b = d.get('base')
+		w = d.get('wlanradio')
+		d = d.get('wlanvap')
 		if (b is None) or (w is None) or (d is None):
 			raise Exception('NeMo.Intf.' + i + ':getMIBs service failed.')
 
@@ -32,10 +34,7 @@ class WifiApi(LmApi):
 
 	### Get Wifi status
 	def getStatus(self):
-		d = self.call('NMC.Wifi', 'get', iTimeout = 15)
-		if not d:
-			raise Exception('NMC.Wifi:get service failed.')
-		return d
+		return self.call('NMC.Wifi', 'get', iTimeout = 15)
 
 
 	### Get enable status
@@ -45,17 +44,12 @@ class WifiApi(LmApi):
 
 	### Activate/Deactivate Wifi
 	def setEnable(self, iEnable):
-		d = self.call('NMC.Wifi', 'set', { 'Enable': iEnable, 'Status' : iEnable }, iErrStr = 'Enable')
-		if not d:
-			raise Exception('NMC.Wifi:set Enable service failed.')
+		self.call('NMC.Wifi', 'set', { 'Enable': iEnable, 'Status' : iEnable }, iErrStr = 'Enable')
 
 
 	### Get guest status
 	def getGuestStatus(self):
-		d = self.call('NMC.Guest', 'get', iTimeout = 15)
-		if not d:
-			raise Exception('NMC.Guest:get service failed.')
-		return d
+		return self.call('NMC.Guest', 'get', iTimeout = 15)
 
 
 	### Get guest enable status
@@ -65,7 +59,7 @@ class WifiApi(LmApi):
 
 	### Activate/Deactivate guest Wifi, timer in hours (0 == infinite)
 	def setGuestEnable(self, iEnable, iTimer = 0):
-		self.call('NMC.Guest', 'set', { 'Enable': iEnable })
+		self.callNoCheck('NMC.Guest', 'set', { 'Enable': iEnable })
 
 		# Set timer, just log in case of error
 		try:
@@ -79,60 +73,57 @@ class WifiApi(LmApi):
 
 	### Get guest activation timer - in seconds
 	def getGuestActivationTimer(self):
-		return int(self.call('NMC.WlanTimer', 'getActivationTimer', { 'InterfaceName': 'guest' }))
+		return int(self.callNoCheck('NMC.WlanTimer', 'getActivationTimer', { 'InterfaceName': 'guest' }))
 
 
 	### Set guest activation timer - in hours
 	def setGuestActivationTimer(self, iTimer):
-		self.call('NMC.WlanTimer', 'setActivationTimer', { 'Timeout': iTimer, 'InterfaceName': 'guest' })
+		self.callNoCheck('NMC.WlanTimer', 'setActivationTimer', { 'Timeout': iTimer, 'InterfaceName': 'guest' })
 
 
 	### Disable guest activation timer
 	def disableGuestActivationTimer(self):
-		d = self.call('NMC.WlanTimer', 'disableActivationTimer', { 'InterfaceName': 'guest' })
-		if not d:
-			raise Exception('NMC.WlanTimer:disableActivationTimer service failed.')
+		self.call('NMC.WlanTimer', 'disableActivationTimer', { 'InterfaceName': 'guest' })
 
 
 	### Set Configuration Mode - must be set to True if SSIDs are different between radio bands
 	def setConfigurationMode(self, iMode):
-		d = self.call('NMC.Wifi', 'set', { 'ConfigurationMode': iMode })
-		if not d:
-			raise Exception('NMC.Wifi:set ConfigurationMode service failed.')
+		self.call('NMC.Wifi', 'set', { 'ConfigurationMode': iMode })
 
 
 	### Set WLAN Configuration
 	def setWlanConfig(self, iMibs):
-		self.call('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': iMibs }, iTimeout = 35)
+		self.callNoCheck('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': iMibs }, iTimeout = 35)
 
 
 	### Set Wifi Scheduler on or off
 	def setSchedulerEnable(self, iEnable):
 		# Set PowerManagement profile
-		if iEnable:
-			p = [{ 'profile': 'WiFi',
-				   'activate': True,
-				   'type': 'Weekly',
-				   'schedules': [{
-                        'Day': 1,
-                        'Hour': 0,
-                        'Minute': 0,
-                        'Second': 0,
-                        'enable': True
-                    }]
-				}]
-			d = self.call('PowerManagement', 'setScheduledProfiles', { 'profiles' : p })
-		else:
-			d = self.call('PowerManagement', 'setProfiles', { 'profiles' : [{'profile' : 'WiFi', 'activate' : False}] })
-		if not d:
-			LmTools.Error('PowerManagement method failed, trying legacy method.')
+		try:
+			if iEnable:
+				p = [{ 'profile': 'WiFi',
+					   'activate': True,
+					   'type': 'Weekly',
+					   'schedules': [{
+	                        'Day': 1,
+	                        'Hour': 0,
+	                        'Minute': 0,
+	                        'Second': 0,
+	                        'enable': True
+	                    }]
+					}]
+				self.call('PowerManagement', 'setScheduledProfiles', { 'profiles' : p })
+			else:
+				self.call('PowerManagement', 'setProfiles', { 'profiles' : [{'profile' : 'WiFi', 'activate' : False}] })
+		except BaseException as e:
+			LmTools.Error('PowerManagement method failed with error={}, trying legacy method.'.format(e))
 			return self.setSchedulerEnable_Legacy(iEnable)
 
 		# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 		aID = 'wl0'
 
 		# Get current schedule info
-		d = self.call('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : aID }, iFullReply = True)
+		d = self.callRaw('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : aID })
 		aStatus = d.get('status')	#Warning: seems status can be easily false, need to investigate
 		if aStatus:
 			d = d.get('data')
@@ -153,9 +144,7 @@ class WifiApi(LmApi):
 		p['schedule'] = aSchedule.get('schedule')
 		p['enable'] = iEnable
 		p['override'] = ''
-		d = self.call('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
-		if not d:
-			raise Exception('Scheduler:addSchedule service failed for {} interface.'.format(aID))
+		d = self.call('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p }, iErrStr = aID)
 
 
 	### Legacy method to set Wifi Scheduler on or off
@@ -177,7 +166,13 @@ class WifiApi(LmApi):
 		n = 0
 		for i in w:
 			# Get current schedule info
-			d = self.call('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : i }, iErrStr = i, iFullReply = True)
+			try:
+				d = self.callRaw('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : i }, iErrStr = i)
+			except BaseException as e:
+				aErrMsg = str(e)
+				LmTools.Error(aErrMsg)
+				aFailed = True
+				break
 			aStatus = d.get('status')
 			if aStatus:		#Warning: seems status can be easily false, need to investigate
 				d = d.get('data')
@@ -205,7 +200,11 @@ class WifiApi(LmApi):
 			p['value'] = aSchedule.get('value')
 			p['ID'] = i
 			p['schedule'] = aSchedule.get('schedule')
-			d = self.call('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
+			try:
+				d = self.callNoCheck('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
+			except BaseException as e:
+				LmTools.Error(str(e))
+				d = None
 			if not d:
 				aErrMsg = 'Scheduler:addSchedule service failed for {} interface.\nLivebox might reboot.'.format(i)
 				LmTools.Error(aErrMsg)
@@ -219,11 +218,15 @@ class WifiApi(LmApi):
 		# Restore network configuration if failed and try another way
 		if aFailed:
 			if aRestore:
-				self.call('NMC.NetworkConfig', 'launchNetworkRestore')		# Restore config, triggering a Livebox reboot
+				self.callNoCheck('NMC.NetworkConfig', 'launchNetworkRestore')		# Restore config, triggering a Livebox reboot
 			aFailed = False
 
 			for i in w:
-				d = self.call('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : i, 'enable': iEnable }, iErrStr = i)
+				try:
+					d = self.callNoCheck('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : i, 'enable': iEnable }, iErrStr = i)
+				except BaseException as e:
+					LmTools.Error(str(e))
+					d = None
 				if not d:
 					aErrMsg = 'Scheduler:enableSchedule service failed for {} interface.'.format(i)
 					LmTools.Error(aErrMsg)
@@ -303,15 +306,14 @@ class WifiApi(LmApi):
 
 		# Get available modes & channels per interface
 		aModes = {}
+		aIntfApi = IntfApi(self._session)
 		for c in aIntf:
 			aIntfKey = c['LLIntf']
-			aIntfApi = IntfApi(self._session)
 			try:
 				d = aIntfApi.getIntfInfo(aIntfKey)
 			except BaseException as e:
 				LmTools.Error(str(e))
-				d = None
-			if d is not None:
+			else:
 				m = {}
 				m['Modes'] = d.get('SupportedStandards')
 				m['Channels'] = d.get('PossibleChannels')

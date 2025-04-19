@@ -27,13 +27,9 @@ class FirewallApi(LmApi):
 
 	### Set IPv4 firewall level
 	def setIPv4FirewallLevel(self, iLevel):
-		d = self.call('Firewall', 'setFirewallLevel', { 'level': iLevel })
-		if not d:
-			raise Exception('Firewall:setFirewallLevel service failed.')
+		self.call('Firewall', 'setFirewallLevel', { 'level': iLevel })
 
 
 	### Set IPv6 firewall level
 	def setIPv6FirewallLevel(self, iLevel):
-		d = self.call('Firewall', 'setFirewallIPv6Level', { 'level': iLevel })
-		if not d:
-			raise Exception('Firewall:setFirewallIPv6Level service failed.')
+		self.call('Firewall', 'setFirewallIPv6Level', { 'level': iLevel })
