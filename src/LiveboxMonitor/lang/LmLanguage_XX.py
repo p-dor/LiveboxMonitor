@@ -1933,14 +1933,13 @@ MESSAGES = {
 	# Actions
 	'actions': {
 		'wifiGetConfErr':  '',
+		'wifiSetConfErr':  '',
 		'wifiOn':  '',
 		'wifiOff':  '',
 		'gwifiOn':  '',
 		'gwifiOff':  '',
 		'schedOn':  '',
-		'schedOnErr':  '',
 		'schedOff':  '',
-		'schedOffErr':  '',
 		'backRestSvcErr' : '',
 		'backEnableSvcErr' : '',
 		'backDisableSvcErr' : '',

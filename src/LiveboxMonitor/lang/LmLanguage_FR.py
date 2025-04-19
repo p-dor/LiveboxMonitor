@@ -1866,14 +1866,13 @@ MESSAGES = {
 	# Actions
 	'actions': {
 		'wifiGetConfErr':  'Une erreur s\'est produite lors du chargement de la configuration Wifi.',
+		'wifiSetConfErr':  'Une erreur s\'est produite lors de la configuration du réseau Wifi.',
 		'wifiOn': 'Wifi activé.',
 		'wifiOff': 'Wifi désactivé.',
 		'gwifiOn': 'Wifi invité activé. Réactivez le Planificateur si requis.',
 		'gwifiOff': 'Wifi invité désactivé.',
 		'schedOn': 'Planificateur activé.',
-		'schedOnErr': 'Impossible d\'activer le planificateur.',
 		'schedOff': 'Planificateur désactivé.',
-		'schedOffErr': 'Impossible de désactiver le planificateur.',
 		'backRestSvcErr' : 'Impossible de charger le statut de la sauvegarde et de la restauration.',
 		'backEnableSvcErr' : 'Impossible d\'activer la sauvegarde automatique.',
 		'backDisableSvcErr' : 'Impossible de désactiver la sauvegarde automatique.',
