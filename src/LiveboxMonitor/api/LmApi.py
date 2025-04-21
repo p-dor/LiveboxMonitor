@@ -3,8 +3,9 @@
 
 # ################################ Livebox Monitor APIs ################################
 class LmApi:
-	def __init__(self, iSession):
-		self._session = iSession
+	def __init__(self, iApi, iSession):
+		self._api = iApi			# ApiRegistry instance
+		self._session = iSession	# LmSession instance
 
 
 	### Compute error string

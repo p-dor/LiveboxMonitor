@@ -6,8 +6,8 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Screen APIs ################################
 class ScreenApi(LmApi):
-	def __init__(self, iSession):
-		super(ScreenApi, self).__init__(iSession)
+	def __init__(self, iApi, iSession):
+		super(ScreenApi, self).__init__(iApi, iSession)
 
 
 	### Get Orange LED levels

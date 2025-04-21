@@ -7,8 +7,8 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Interface APIs ################################
 class IntfApi(LmApi):
-	def __init__(self, iSession):
-		super(IntfApi, self).__init__(iSession)
+	def __init__(self, iApi, iSession):
+		super(IntfApi, self).__init__(iApi, iSession)
 
 
 	### Get interface information
