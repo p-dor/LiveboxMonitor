@@ -74,7 +74,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		self.show()
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():
-			self._api = ApiRegistry(self)
+			self._api = ApiRegistry(self._session)
 			self.adjustToLiveboxModel()
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())
@@ -333,32 +333,10 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Adjust configuration to Livebox model
 	def adjustToLiveboxModel(self):
-		try:
-			d = self._session.request('DeviceInfo', 'get')
-		except BaseException as e:
-			LmTools.Error('DeviceInfo:get error: {}'.format(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None:
-			LmTools.Error('Cannot determine Livebox model')
-			self._liveboxModel = 0
-			self._liveboxSoftwareVersion = ''
-		else:
-			aMacAddr = d.get('BaseMAC', '').upper()
-			LmConf.setLiveboxMAC(aMacAddr)
-			self._liveboxSoftwareVersion = d.get('SoftwareVersion', '')
-			aModel = d.get('ProductClass', '')
-			if aModel == 'Livebox 7':
-				self._liveboxModel = 7
-			elif aModel == 'Livebox 6':
-				self._liveboxModel = 6
-			elif aModel == 'Livebox Fibre':
-				self._liveboxModel = 5
-			elif aModel == 'Livebox 4':
-				self._liveboxModel = 4
-			else:
-				self._liveboxModel = 0
+		LmConf.setLiveboxMAC(self._api._info.getLiveboxMAC())
+		self._liveboxSoftwareVersion = self._api._info.getSoftwareVersion()
+		self._liveboxModel = self._api._info.getLiveboxModel()
+
 		LmTools.LogDebug(1, 'Identified Livebox model: {}'.format(self._liveboxModel))
 
 		self.determineFiberLink()
