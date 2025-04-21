@@ -15,10 +15,10 @@ from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
 from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
+from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
 											 GetActionsMessage as mx,
-											 GetActionsBackupRestoreDialogLabel as lbx,
 											 GetActionsPingResponseDialogLabel as lpx,
 											 GetActionsDynDnsDialogLabel as ldx,
 											 GetActionsDmzDialogLabel as lzx)
@@ -427,7 +427,7 @@ class LmActions:
 
 	### Click on the Backup & Restore button
 	def backupRestoreButtonClick(self):
-		aBackupRestoreDialog = BackupRestoreSetupDialog(self)
+		aBackupRestoreDialog = BackupRestoreDialog(self)
 		aBackupRestoreDialog.exec()
 
 
@@ -678,156 +678,6 @@ class LmActions:
 	### Click on Quit Application button
 	def quitButtonClick(self):
 		self.close()
-
-
-
-# ############# Backup & Restore Setup dialog #############
-class BackupRestoreSetupDialog(QtWidgets.QDialog):
-	def __init__(self, iParent = None):
-		super(BackupRestoreSetupDialog, self).__init__(iParent)
-		self.resize(400, 300)
-
-		self._app = iParent
-
-		# Backup info box
-		aAutoBackupEnabledLabel = QtWidgets.QLabel(lbx('Auto backup enabled:'), objectName = 'autoBackEnabledLabel')
-		self._autoBackupEnabled = QtWidgets.QLabel(objectName = 'autoBackEnabled')
-
-		aStatusLabel = QtWidgets.QLabel(lbx('Status:'), objectName = 'statusLabel')
-		self._status = QtWidgets.QLabel(objectName = 'status')
-
-		aLastBackupLabel = QtWidgets.QLabel(lbx('Last Backup:'), objectName = 'lastBackupLabel')
-		self._lastBackup = QtWidgets.QLabel(objectName = 'lastBackup')
-
-		aInfoGrid = QtWidgets.QGridLayout()
-		aInfoGrid.setSpacing(5)
-		aInfoGrid.addWidget(aAutoBackupEnabledLabel, 0, 0)
-		aInfoGrid.addWidget(self._autoBackupEnabled, 0, 1)
-		aInfoGrid.addWidget(aStatusLabel, 1, 0)
-		aInfoGrid.addWidget(self._status, 1, 1)
-		aInfoGrid.addWidget(aLastBackupLabel, 2, 0)
-		aInfoGrid.addWidget(self._lastBackup, 2, 1)
-
-		aRefreshButton = QtWidgets.QPushButton(lbx('Refresh'), objectName = 'refresh')
-		aRefreshButton.clicked.connect(self.refreshStatus)
-
-		aEnableAutoBackupButton = QtWidgets.QPushButton(lbx('Enable Auto Backup'), objectName = 'enaAutoBack')
-		aEnableAutoBackupButton.clicked.connect(self.enableAutoBackup)
-
-		aDisableAutoBackupButton = QtWidgets.QPushButton(lbx('Disable Auto Backup'), objectName = 'disAutoBack')
-		aDisableAutoBackupButton.clicked.connect(self.disableAutoBackup)
-
-		aForceBackupButton = QtWidgets.QPushButton(lbx('Force Backup'), objectName = 'forceBackup')
-		aForceBackupButton.clicked.connect(self.forceBackup)
-
-		aForceRestoreButton = QtWidgets.QPushButton(lbx('Force Restore'), objectName = 'forceRestore')
-		aForceRestoreButton.clicked.connect(self.forceRestore)
-
-		aButtonGrid = QtWidgets.QGridLayout()
-		aButtonGrid.setSpacing(10)
-		aButtonGrid.addWidget(aRefreshButton, 0, 0)
-		aButtonGrid.addWidget(aEnableAutoBackupButton, 1, 0)
-		aButtonGrid.addWidget(aDisableAutoBackupButton, 2, 0)
-		aButtonGrid.addWidget(aForceBackupButton, 3, 0)
-		aButtonGrid.addWidget(aForceRestoreButton, 4, 0)
-
-		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton(lbx('OK'), objectName = 'ok')
-		aOKButton.clicked.connect(self.accept)
-		aOKButton.setDefault(True)
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.setSpacing(40)
-		aVBox.addLayout(aInfoGrid, 0)
-		aVBox.addLayout(aButtonGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.SetToolTips(self, 'backrest')
-
-		self.refreshStatus()
-
-		self.setWindowTitle(lbx('Backup and Restore Setup'))
-		self.setModal(True)
-		self.show()
-
-
-	def refreshStatus(self):
-		try:
-			d = self._app._session.request('NMC.NetworkConfig', 'get')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None or not len(d):
-			self._app.displayError(mx('Cannot load backup and restore status.', 'backRestSvcErr'))
-			return
-
-		aEnabled = d.get('Enable', False)
-		if aEnabled:
-			self._autoBackupEnabled.setPixmap(LmIcon.TickPixmap)
-		else:
-			self._autoBackupEnabled.setPixmap(LmIcon.CrossPixmap)
-
-		aStatus = d.get('Status', '-')
-		self._status.setText(aStatus)
-
-		aLastBackup = d.get('ConfigDate')
-		if aLastBackup:
-			self._lastBackup.setText(LmTools.FmtLiveboxTimestamp(aLastBackup))
-		else:
-			self._lastBackup.setText('-')
-
-
-	def enableAutoBackup(self):
-		try:
-			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': True })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if 'status' in d:
-			self.refreshStatus()
-		else:
-			self._app.displayError(mx('Cannot enable auto backup.', 'backEnableSvcErr'))
-
-
-	def disableAutoBackup(self):
-		try:
-			d = self._app._session.request('NMC.NetworkConfig', 'enableNetworkBR', { 'state': False })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if 'status' in d:
-			self.refreshStatus()
-		else:
-			self._app.displayError(mx('Cannot disable auto backup.', 'backDisableSvcErr'))
-
-
-	def forceBackup(self):
-		try:
-			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if 'status' in d:
-			self.refreshStatus()
-		else:
-			self._app.displayError(mx('Backup request failed.', 'backupSvcErr'))
-
-
-	def forceRestore(self):
-		try:
-			d = self._app._session.request('NMC.NetworkConfig', 'launchNetworkRestore')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if 'status' in d:
-			self._app.displayStatus(mx('Restore requested. Livebox will restart.', 'restoreSvcOk'))
-		else:
-			self._app.displayError(mx('Restore request failed.', 'restoreSvcErr'))
 
 
 

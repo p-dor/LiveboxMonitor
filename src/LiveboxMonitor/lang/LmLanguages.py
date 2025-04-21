@@ -141,7 +141,7 @@ def GetActionsMessage(iString, iKey): return GetMessage('actions', iString, iKey
 def GetRHistoryDialogLabel(iString): return GetLabel('rhistory', iString)
 def GetWifiConfigDialogLabel(iString): return GetLabel('wconfig', iString)
 def GetWifiGlobalDialogLabel(iString): return GetLabel('wglobal', iString)
-def GetActionsBackupRestoreDialogLabel(iString): return GetLabel('backrest', iString)
+def GetBackupRestoreDialogLabel(iString): return GetLabel('backrest', iString)
 def GetScreenDialogLabel(iString): return GetLabel('screen', iString)
 def GetFirewallLevelDialogLabel(iString): return GetLabel('fwlevel', iString)
 def GetActionsPingResponseDialogLabel(iString): return GetLabel('pingr', iString)

@@ -1876,6 +1876,7 @@ MESSAGES = {
 		'backRestSvcErr' : 'Impossible de charger le statut de la sauvegarde et de la restauration.',
 		'backEnableSvcErr' : 'Impossible d\'activer la sauvegarde automatique.',
 		'backDisableSvcErr' : 'Impossible de désactiver la sauvegarde automatique.',
+		'backupSvcOk' : 'La sauvegarde a été demandée.',
 		'backupSvcErr' : 'La demande de sauvegarde a échoué.',
 		'restoreSvcOk' : 'La restauration a été demandée. La Livebox va redémarrer.',
 		'restoreSvcErr' : 'La demande de restauration a échoué.',
