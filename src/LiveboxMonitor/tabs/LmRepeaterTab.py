@@ -14,7 +14,7 @@ from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
-from LiveboxMonitor.tabs.LmActionsTab import WifiKey, WifiStatus
+from LiveboxMonitor.api.LmWifiApi import WifiKey, WifiStatus
 from LiveboxMonitor.lang.LmLanguages import GetRepeaterLabel as lx, GetRepeaterMessage as mx
 
 
