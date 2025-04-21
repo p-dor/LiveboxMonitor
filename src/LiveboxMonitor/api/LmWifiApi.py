@@ -1,17 +1,43 @@
 ### Livebox Monitor Wifi APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi
-from LiveboxMonitor.api.LmIntfApi import IntfApi
 from LiveboxMonitor.app import LmTools
 
 
-###TODO### - migrate to new APIs calls
+# ################################ VARS & DEFS ################################
+
+# Wifi status keys
+class WifiKey:
+	AccessPoint = 'Name'
+	Enable = 'WE'
+	Status = 'WS'
+	Scheduler = 'SCH'
+	Wifi2Enable = 'W2E'
+	Wifi2Status = 'W2S'
+	Wifi2VAP = 'W2V'
+	Wifi5Enable = 'W5E'
+	Wifi5Status = 'W5S'
+	Wifi5VAP = 'W5V'
+	Wifi6Enable = 'W6E'
+	Wifi6Status = 'W6S'
+	Wifi6VAP = 'W6V'
+	Guest2VAP = 'G2V'
+	Guest5VAP = 'G5V'
+
+# Wifi status values
+class WifiStatus:
+	Enable = 'Y'
+	Disable = 'N'
+	Error = 'E'
+	Inactive = 'I'
+	Unsigned = 'S'
+
 
 
 # ################################ Wifi APIs ################################
 class WifiApi(LmApi):
-	def __init__(self, iSession):
-		super(WifiApi, self).__init__(iSession)
+	def __init__(self, iApi, iSession):
+		super(WifiApi, self).__init__(iApi, iSession)
 
 
 	### Get Wifi or Guest Interfaces setup - returns base, radio and vap
@@ -96,7 +122,35 @@ class WifiApi(LmApi):
 		self.callNoCheck('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': iMibs }, iTimeout = 35)
 
 
-	### Set Wifi Scheduler on or off
+	### Get Wifi Scheduler enable status
+	def getSchedulerEnable(self):
+		try:
+			d = self.call('PowerManagement', 'getProfiles')
+		except BaseException as e:
+			LmTools.Error(str(e))
+			# If failed, try legacy method
+			return self.getSchedulerEnable_Legacy()
+		else:
+			d = d.get('WiFi')
+			if d is not None:
+				return d.get('Activate')
+			else:
+				LmTools.Error('PowerManagement:getProfiles - No WiFi field')
+				return self.getSchedulerEnable_Legacy()
+
+
+	### Get Wifi Scheduler enable status - legacy method
+	def getSchedulerEnable_Legacy(self):
+		d = self.callRaw('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
+		d = d.get('data')
+		if d is not None:
+			d = d.get('scheduleInfo', [])
+			if len(d):
+				return d[0].get('enable')
+		return None
+
+
+	### Set Wifi Scheduler enable status
 	def setSchedulerEnable(self, iEnable):
 		# Set PowerManagement profile
 		try:
@@ -306,11 +360,10 @@ class WifiApi(LmApi):
 
 		# Get available modes & channels per interface
 		aModes = {}
-		aIntfApi = IntfApi(self._session)
 		for c in aIntf:
 			aIntfKey = c['LLIntf']
 			try:
-				d = aIntfApi.getIntfInfo(aIntfKey)
+				d = self._api._intf.getIntfInfo(aIntfKey)
 			except BaseException as e:
 				LmTools.Error(str(e))
 			else:
@@ -572,3 +625,139 @@ class WifiApi(LmApi):
 			aStatus = False
 
 		return aStatus
+
+
+	### Get Global Wifi status
+	def getGlobalWifiStatus(self):
+		u = {}
+		u[WifiKey.AccessPoint] = 'Livebox'
+
+		# General Wifi status
+		aWifiSchedulerStatus = None
+		try:
+			d = self.getStatus()
+		except BaseException as e:
+			LmTools.Error(str(e))
+			d = None
+		if d is None:
+			u[WifiKey.Enable] = WifiStatus.Error
+			u[WifiKey.Status] = WifiStatus.Error
+		else:
+			u[WifiKey.Enable] = WifiStatus.Enable if d.get('Enable', False) else WifiStatus.Disable
+			u[WifiKey.Status] = WifiStatus.Enable if d.get('Status', False) else WifiStatus.Disable
+			aWifiSchedulerStatus = d.get('SchedulingEnabled')
+
+		# Wifi scheduler status
+		try:
+			aStatus = self.getSchedulerEnable()
+		except BaseException as e:
+			LmTools.Error(str(e))
+			aStatus = None
+
+		# Agregate result
+		if aStatus is None:
+			if aWifiSchedulerStatus is None:
+				u[WifiKey.Scheduler] = WifiStatus.Error
+			else:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if aWifiSchedulerStatus else WifiStatus.Disable
+		else:
+			if aWifiSchedulerStatus is None:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if aStatus else WifiStatus.Disable
+			else:
+				u[WifiKey.Scheduler] = WifiStatus.Enable if (aStatus and aWifiSchedulerStatus) else WifiStatus.Disable
+
+		# Wifi interfaces status
+		try:
+			b, w, d = self.getIntf()
+		except BaseException as e:
+			LmTools.Error(str(e))
+			b = None
+			w = None
+			d = None
+
+		if (d is None) or (b is None) or (w is None):
+			u[WifiKey.Wifi2Enable] = WifiStatus.Error
+			u[WifiKey.Wifi2Status] = WifiStatus.Error
+			u[WifiKey.Wifi2VAP] = WifiStatus.Error
+			u[WifiKey.Wifi5Enable] = WifiStatus.Error
+			u[WifiKey.Wifi5Status] = WifiStatus.Error
+			u[WifiKey.Wifi5VAP] = WifiStatus.Error
+			if self._api._info.getLiveboxModel() >= 6:
+				u[WifiKey.Wifi6Enable] = WifiStatus.Error
+				u[WifiKey.Wifi6Status] = WifiStatus.Error
+				u[WifiKey.Wifi6VAP] = WifiStatus.Error
+		else:
+			for s in d:
+				# Get Wifi interface key in wlanradio list
+				aIntfKey = None
+				aBase = b.get(s)
+				if aBase is not None:
+					aLowLevelIntf = aBase.get('LLIntf')
+					if aLowLevelIntf is not None:
+						aIntfKey = next(iter(aLowLevelIntf))
+
+				q = w.get(aIntfKey) if aIntfKey is not None else None
+				r = d.get(s)
+				if (q is None) or (r is None):
+					u[aEnableKey] = WifiStatus.Error
+					u[aStatusKey] = WifiStatus.Error
+					continue
+
+				aRadioBand = q.get('OperatingFrequencyBand')
+				if aRadioBand == '2.4GHz':
+					aEnableKey = WifiKey.Wifi2Enable
+					aStatusKey = WifiKey.Wifi2Status
+					aVAPKey = WifiKey.Wifi2VAP
+				elif aRadioBand == '5GHz':
+					aEnableKey = WifiKey.Wifi5Enable
+					aStatusKey = WifiKey.Wifi5Status
+					aVAPKey = WifiKey.Wifi5VAP
+				elif aRadioBand == '6GHz':
+					aEnableKey = WifiKey.Wifi6Enable
+					aStatusKey = WifiKey.Wifi6Status
+					aVAPKey = WifiKey.Wifi6VAP
+				else:
+					continue
+
+				# Get Wifi interface key in wlanradio list
+				u[aEnableKey] = WifiStatus.Enable if aBase.get('Enable', False) else WifiStatus.Disable
+				u[aStatusKey] = WifiStatus.Enable if aBase.get('Status', False) else WifiStatus.Disable
+				u[aVAPKey] = WifiStatus.Enable if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.Disable
+
+		# Guest Wifi status
+		try:
+			b, w, d = self.getIntf(True)
+		except BaseException as e:
+			LmTools.Error(str(e))
+			b = None
+			w = None
+			d = None
+
+		if (d is None) or (b is None) or (w is None):
+			u[WifiKey.Guest2VAP] = WifiStatus.Error
+			u[WifiKey.Guest5VAP] = WifiStatus.Error
+		else:
+			for s in d:
+				# Get Wifi interface key in wlanradio list
+				aIntfKey = None
+				aBase = b.get(s)
+				if aBase is not None:
+					aLowLevelIntf = aBase.get('LLIntf')
+					if aLowLevelIntf is not None:
+						aIntfKey = next(iter(aLowLevelIntf))
+
+				q = w.get(aIntfKey) if aIntfKey is not None else None
+				r = d.get(s)
+				if (q is None) or (r is None):
+					continue
+
+				aRadioBand = q.get('OperatingFrequencyBand')
+				if aRadioBand == '2.4GHz':
+					aVAPKey = WifiKey.Guest2VAP
+				elif aRadioBand == '5GHz':
+					aVAPKey = WifiKey.Guest5VAP
+				else:
+					continue
+				u[aVAPKey] = WifiStatus.Enable if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.Disable
+
+		return u
