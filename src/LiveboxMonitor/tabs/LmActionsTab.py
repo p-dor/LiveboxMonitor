@@ -15,11 +15,11 @@ from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
 from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
+from LiveboxMonitor.dlg.LmPingResponse import PingResponseDialog
 from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
 											 GetActionsMessage as mx,
-											 GetActionsPingResponseDialogLabel as lpx,
 											 GetActionsDynDnsDialogLabel as ldx,
 											 GetActionsDmzDialogLabel as lzx)
 
@@ -531,31 +531,16 @@ class LmActions:
 
 	### Click on Ping Response button
 	def pingResponseButtonClick(self):
-		# ###Info### - works also for other sourceInterfaces such as veip0, eth0, voip, etc, but usefulness?
-
 		# Get current ping reponses
 		try:
-			aReply = self._session.request('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
+			d = self._api._firewall.getRespondToPing()
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:getRespondToPing query error.')
+			self.displayError(str(e))
 			return
-
-		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-			if len(aErrors):
-				self.displayError(aErrors)
-				return
-
-			aReply = aReply['status']
-			aIPv4Ping = aReply.get('enableIPv4')
-			aIPv6Ping = aReply.get('enableIPv6')
-			if (aIPv4Ping is None) or (aIPv6Ping is None):
-				self.displayError('Firewall:getRespondToPing query failed.')
-				return
-		else:
-			self.displayError('Firewall:getRespondToPing query failed.')
-			return
+		aIPv4Ping = d.get('enableIPv4')
+		aIPv6Ping = d.get('enableIPv6')
+		if (aIPv4Ping is None) or (aIPv6Ping is None):
+			LmTools.Error('Cannot get respond to ping setup')
 
 		aPingResponseDialog = PingResponseDialog(aIPv4Ping, aIPv6Ping, self)
 		if aPingResponseDialog.exec():
@@ -564,25 +549,13 @@ class LmActions:
 			aNewIPv6Ping = aPingResponseDialog.getIPv6()
 			if (aNewIPv4Ping != aIPv4Ping) or (aNewIPv6Ping != aIPv6Ping):
 				self.startTask(lx('Set Ping Responses...'))
-
 				p = {}
 				p['enableIPv4'] = aNewIPv4Ping
 				p['enableIPv6'] = aNewIPv6Ping
 				try:
-					aReply = self._session.request('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': p })
+					self._api._firewall.setRespondToPing(p)
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Firewall:setRespondToPing query error.')
-				else:
-					if (aReply is not None) and ('status' in aReply):
-						aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
-						if len(aErrors):
-							self.displayError(aErrors)
-						elif not aReply['status']:
-							self.displayError('Firewall:setRespondToPing query failed.')
-					else:
-						self.displayError('Firewall:setRespondToPing query failed.')
-
+					self.displayError(str(e))
 				self.endTask()
 
 
@@ -678,62 +651,6 @@ class LmActions:
 	### Click on Quit Application button
 	def quitButtonClick(self):
 		self.close()
-
-
-
-# ############# Ping Response dialog #############
-class PingResponseDialog(QtWidgets.QDialog):
-	def __init__(self, iIPv4, iIPv6, iParent = None):
-		super(PingResponseDialog, self).__init__(iParent)
-		self.setMinimumWidth(230)
-		self.resize(230, 150)
-
-		self._ipV4CheckBox = QtWidgets.QCheckBox(lpx('Respond to IPv4 ping'), objectName = 'ipV4Checkbox')
-		if iIPv4:
-				self._ipV4CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-				self._ipV4CheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		self._ipV6CheckBox = QtWidgets.QCheckBox(lpx('Respond to IPv6 ping'), objectName = 'ipV6Checkbox')
-		if iIPv6:
-				self._ipV6CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-				self._ipV6CheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		aVCBox = QtWidgets.QVBoxLayout()
-		aVCBox.setSpacing(10)
-		aVCBox.addWidget(self._ipV4CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aVCBox.addWidget(self._ipV6CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		self._okButton = QtWidgets.QPushButton(lpx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lpx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aVCBox, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.SetToolTips(self, 'pingr')
-
-		self.setWindowTitle(lpx('Ping Responses'))
-
-		self.setModal(True)
-		self.show()
-
-
-	def getIPv4(self):
-		return self._ipV4CheckBox.checkState() == QtCore.Qt.CheckState.Checked
-
-
-	def getIPv6(self):
-		return self._ipV6CheckBox.checkState() == QtCore.Qt.CheckState.Checked
 
 
 

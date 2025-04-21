@@ -33,3 +33,14 @@ class FirewallApi(LmApi):
 	### Set IPv6 firewall level
 	def setIPv6FirewallLevel(self, iLevel):
 		self.call('Firewall', 'setFirewallIPv6Level', { 'level': iLevel })
+
+
+	### Get IPv4 & IPv6 respond to ping setup
+	def getRespondToPing(self):
+		# ###Info### - works also for other sourceInterfaces such as veip0, eth0, voip, etc, but usefulness?
+		return self.call('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
+
+
+	### Set IPv6 firewall level - iEnable must be a dict with 'enableIPv4' & 'enableIPv6' boolean values
+	def setRespondToPing(self, iEnable):
+		self.call('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': iEnable })
