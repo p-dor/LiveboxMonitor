@@ -393,19 +393,22 @@ def FmtTime(iSeconds, iNoZero = False):
 
 
 ### Format Livebox timestamps
-def FmtLiveboxTimestamp(iTimestamp):
+def FmtLiveboxTimestamp(iTimestamp, iUTC = True):
 	if iTimestamp is None:
 		return ''
-	aDateTime = LiveboxTimestamp(iTimestamp)
+	aDateTime = LiveboxTimestamp(iTimestamp, iUTC)
 	if aDateTime is None:
 		return ''
 	return aDateTime.strftime('%Y-%m-%d %H:%M:%S')
 
 
-### Parse Livebox timestamp (UTC time)
-def LiveboxTimestamp(iTimestamp):
+### Parse Livebox timestamp (UTC time by default)
+def LiveboxTimestamp(iTimestamp, iUTC = True):
 	try:
-		return datetime.datetime.fromisoformat(iTimestamp.replace('Z','+00:00')).replace(tzinfo = tz.tzutc()).astimezone(tz.tzlocal())
+		if iUTC:
+			return datetime.datetime.fromisoformat(iTimestamp.replace('Z','+00:00')).replace(tzinfo = tz.tzutc()).astimezone(tz.tzlocal())
+		else:
+			return datetime.datetime.fromisoformat(iTimestamp.replace('Z','+00:00'))
 	except:
 		return None
 
