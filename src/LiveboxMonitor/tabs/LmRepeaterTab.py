@@ -1240,38 +1240,38 @@ class LmRepHandler:
 	### Get Wifi statuses (used by ActionsTab)
 	def getWifiStatus(self):
 		u = {}
-		u[WifiKey.AccessPoint] = self._name
+		u[WifiKey.ACCESS_POINT] = self._name
 
 		if not self.isActive():
-			u[WifiKey.Enable] = WifiStatus.Inactive
-			u[WifiKey.Status] = WifiStatus.Inactive
-			u[WifiKey.Scheduler] = WifiStatus.Inactive
-			u[WifiKey.Wifi2Enable] = WifiStatus.Inactive
-			u[WifiKey.Wifi2Status] = WifiStatus.Inactive
-			u[WifiKey.Wifi2VAP] = WifiStatus.Inactive
-			u[WifiKey.Wifi5Enable] = WifiStatus.Inactive
-			u[WifiKey.Wifi5Status] = WifiStatus.Inactive
-			u[WifiKey.Wifi5VAP] = WifiStatus.Inactive
+			u[WifiKey.ENABLE] = WifiStatus.INACTIVE
+			u[WifiKey.STATUS] = WifiStatus.INACTIVE
+			u[WifiKey.SCHEDULER] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI2_ENABLE] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI2_STATUS] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI2_VAP] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI5_ENABLE] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI5_STATUS] = WifiStatus.INACTIVE
+			u[WifiKey.WIFI5_VAP] = WifiStatus.INACTIVE
 			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
-				u[WifiKey.Wifi6Enable] = WifiStatus.Inactive
-				u[WifiKey.Wifi6Status] = WifiStatus.Inactive
-				u[WifiKey.Wifi6VAP] = WifiStatus.Inactive
+				u[WifiKey.WIFI6_ENABLE] = WifiStatus.INACTIVE
+				u[WifiKey.WIFI6_STATUS] = WifiStatus.INACTIVE
+				u[WifiKey.WIFI6_VAP] = WifiStatus.INACTIVE
 			return u
 
 		if not self.isSigned():
-			u[WifiKey.Enable] = WifiStatus.Unsigned
-			u[WifiKey.Status] = WifiStatus.Unsigned
-			u[WifiKey.Scheduler] = WifiStatus.Unsigned
-			u[WifiKey.Wifi2Enable] = WifiStatus.Unsigned
-			u[WifiKey.Wifi2Status] = WifiStatus.Unsigned
-			u[WifiKey.Wifi2VAP] = WifiStatus.Unsigned
-			u[WifiKey.Wifi5Enable] = WifiStatus.Unsigned
-			u[WifiKey.Wifi5Status] = WifiStatus.Unsigned
-			u[WifiKey.Wifi5VAP] = WifiStatus.Unsigned
+			u[WifiKey.ENABLE] = WifiStatus.UNSIGNED
+			u[WifiKey.STATUS] = WifiStatus.UNSIGNED
+			u[WifiKey.SCHEDULER] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI2_ENABLE] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI2_STATUS] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI2_VAP] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI5_ENABLE] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI5_STATUS] = WifiStatus.UNSIGNED
+			u[WifiKey.WIFI5_VAP] = WifiStatus.UNSIGNED
 			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
-				u[WifiKey.Wifi6Enable] = WifiStatus.Unsigned
-				u[WifiKey.Wifi6Status] = WifiStatus.Unsigned
-				u[WifiKey.Wifi6VAP] = WifiStatus.Unsigned
+				u[WifiKey.WIFI6_ENABLE] = WifiStatus.UNSIGNED
+				u[WifiKey.WIFI6_STATUS] = WifiStatus.UNSIGNED
+				u[WifiKey.WIFI6_VAP] = WifiStatus.UNSIGNED
 			return u
 
 		# General Wifi status
@@ -1284,11 +1284,11 @@ class LmRepHandler:
 		if d is not None:
 			d = d.get('data')
 		if d is None:
-			u[WifiKey.Enable] = WifiStatus.Error
-			u[WifiKey.Status] = WifiStatus.Error
+			u[WifiKey.ENABLE] = WifiStatus.ERROR
+			u[WifiKey.STATUS] = WifiStatus.ERROR
 		else:
-			u[WifiKey.Enable] = WifiStatus.Enable if d.get('Enable', False) else WifiStatus.Disable
-			u[WifiKey.Status] = WifiStatus.Enable if d.get('Status', False) else WifiStatus.Disable
+			u[WifiKey.ENABLE] = WifiStatus.ENABLE if d.get('Enable', False) else WifiStatus.DISABLE
+			u[WifiKey.STATUS] = WifiStatus.ENABLE if d.get('Status', False) else WifiStatus.DISABLE
 			aWifiSchedulerStatus = d.get('SchedulingEnabled')
 
 		# Wifi scheduler status
@@ -1304,7 +1304,7 @@ class LmRepHandler:
 			else:
 				d = None
 			if d is None:
-				u[WifiKey.Scheduler] = WifiStatus.Error
+				u[WifiKey.SCHEDULER] = WifiStatus.ERROR
 			else:
 				d = d.get('scheduleInfo', [])
 				if len(d):
@@ -1313,14 +1313,14 @@ class LmRepHandler:
 			# Agregate result
 			if aStatus is None:
 				if aWifiSchedulerStatus is None:
-					u[WifiKey.Scheduler] = WifiStatus.Error
+					u[WifiKey.SCHEDULER] = WifiStatus.ERROR
 				else:
-					u[WifiKey.Scheduler] = WifiStatus.Enable if aWifiSchedulerStatus else WifiStatus.Disable
+					u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if aWifiSchedulerStatus else WifiStatus.DISABLE
 			else:
 				if aWifiSchedulerStatus is None:
-					u[WifiKey.Scheduler] = WifiStatus.Enable if aStatus else WifiStatus.Disable
+					u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if aStatus else WifiStatus.DISABLE
 				else:
-					u[WifiKey.Scheduler] = WifiStatus.Enable if (aStatus and aWifiSchedulerStatus) else WifiStatus.Disable
+					u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if (aStatus and aWifiSchedulerStatus) else WifiStatus.DISABLE
 
 		b = None
 		w = None
@@ -1337,40 +1337,40 @@ class LmRepHandler:
 			d = d.get('wlanvap')
 
 		if (d is None) or (b is None) or (w is None):
-			u[WifiKey.Wifi2Enable] = WifiStatus.Error
-			u[WifiKey.Wifi2Status] = WifiStatus.Error
-			u[WifiKey.Wifi2VAP] = WifiStatus.Error
-			u[WifiKey.Wifi5Enable] = WifiStatus.Error
-			u[WifiKey.Wifi5Status] = WifiStatus.Error
-			u[WifiKey.Wifi5VAP] = WifiStatus.Error
+			u[WifiKey.WIFI2_ENABLE] = WifiStatus.ERROR
+			u[WifiKey.WIFI2_STATUS] = WifiStatus.ERROR
+			u[WifiKey.WIFI2_VAP] = WifiStatus.ERROR
+			u[WifiKey.WIFI5_ENABLE] = WifiStatus.ERROR
+			u[WifiKey.WIFI5_STATUS] = WifiStatus.ERROR
+			u[WifiKey.WIFI5_VAP] = WifiStatus.ERROR
 			if self._version >= 99:		# To be updated if a repeater supporting 6 GHz is produced
-				u[WifiKey.Wifi6Enable] = WifiStatus.Error
-				u[WifiKey.Wifi6Status] = WifiStatus.Error
-				u[WifiKey.Wifi6VAP] = WifiStatus.Error
+				u[WifiKey.WIFI6_ENABLE] = WifiStatus.ERROR
+				u[WifiKey.WIFI6_STATUS] = WifiStatus.ERROR
+				u[WifiKey.WIFI6_VAP] = WifiStatus.ERROR
 		else:
 			for s in self._netIntf:
 				if s['Type'] != 'wif':
 					continue
 
 				if s['Name'] == 'Wifi 2.4GHz':
-					aEnableKey = WifiKey.Wifi2Enable
-					aStatusKey = WifiKey.Wifi2Status
-					aVAPKey = WifiKey.Wifi2VAP
+					aEnableKey = WifiKey.WIFI2_ENABLE
+					aStatusKey = WifiKey.WIFI2_STATUS
+					aVAPKey = WifiKey.WIFI2_VAP
 				elif s['Name'] == 'Wifi 5GHz':
-					aEnableKey = WifiKey.Wifi5Enable
-					aStatusKey = WifiKey.Wifi5Status
-					aVAPKey = WifiKey.Wifi5VAP
+					aEnableKey = WifiKey.WIFI5_ENABLE
+					aStatusKey = WifiKey.WIFI5_STATUS
+					aVAPKey = WifiKey.WIFI5_VAP
 				else:
-					aEnableKey = WifiKey.Wifi6Enable
-					aStatusKey = WifiKey.Wifi6Status
-					aVAPKey = WifiKey.Wifi6VAP
+					aEnableKey = WifiKey.WIFI6_ENABLE
+					aStatusKey = WifiKey.WIFI6_STATUS
+					aVAPKey = WifiKey.WIFI6_VAP
 
 				# Get Wifi interface key in wlanradio list
 				aIntfKey = None
 				aBase = b.get(s['Key'])
 				if aBase is not None:
-					u[aEnableKey] = WifiStatus.Enable if aBase.get('Enable', False) else WifiStatus.Disable
-					u[aStatusKey] = WifiStatus.Enable if aBase.get('Status', False) else WifiStatus.Disable
+					u[aEnableKey] = WifiStatus.ENABLE if aBase.get('Enable', False) else WifiStatus.DISABLE
+					u[aStatusKey] = WifiStatus.ENABLE if aBase.get('Status', False) else WifiStatus.DISABLE
 
 					aLowLevelIntf = aBase.get('LLIntf')
 					if aLowLevelIntf is not None:
@@ -1378,15 +1378,15 @@ class LmRepHandler:
 							aIntfKey = aKey
 							break
 				else:
-					u[aEnableKey] = WifiStatus.Error
-					u[aStatusKey] = WifiStatus.Error
+					u[aEnableKey] = WifiStatus.ERROR
+					u[aStatusKey] = WifiStatus.ERROR
 
 				q = w.get(aIntfKey) if aIntfKey is not None else None
 				r = d.get(s['Key'])
 				if (q is None) or (r is None):
-					u[aVAPKey] = WifiStatus.Error
+					u[aVAPKey] = WifiStatus.ERROR
 				else:
-					u[aVAPKey] = WifiStatus.Enable if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.Disable
+					u[aVAPKey] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
 
 		return u
 

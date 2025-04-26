@@ -305,7 +305,7 @@ class LmActions:
 	### Click on Wifi config button
 	def wifiConfigButtonClick(self):
 		self.startTask(lx('Getting Wifi Configuration...'))
-		c = self._api._wifi.getConfig()
+		c = self._api._wifi.get_config()
 		self.endTask()
 		if (c is None) or (not len(c['Intf'])):
 			self.displayError(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
@@ -314,7 +314,7 @@ class LmActions:
 			if aWifiConfigDialog.exec():
 				self.startTask(lx('Setting Wifi Configuration...'))
 				n = aWifiConfigDialog.getConfig()
-				if not self._api._wifi.setConfig(c, n):
+				if not self._api._wifi.set_config(c, n):
 					self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
 				self.endTask()
 
@@ -322,7 +322,7 @@ class LmActions:
 	### Click on Wifi guest config button
 	def wifiGuestConfigButtonClick(self):
 		self.startTask(lx('Getting Guest Wifi Configuration...'))
-		c = self._api._wifi.getGuestConfig()
+		c = self._api._wifi.get_guest_config()
 		self.endTask()
 		if (c is None) or (not len(c['Intf'])):
 			self.displayError(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
@@ -331,7 +331,7 @@ class LmActions:
 			if aWifiConfigDialog.exec():
 				self.startTask(lx('Setting Guest Wifi Configuration...'))
 				n = aWifiConfigDialog.getConfig()
-				if not self._api._wifi.setGuestConfig(c, n):
+				if not self._api._wifi.set_guest_config(c, n):
 					self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
 				self.endTask()
 
@@ -340,7 +340,7 @@ class LmActions:
 	def wifiOnButtonClick(self):
 		self.startTask(lx('Activating Wifi...'))
 		try:
-			self._api._wifi.setEnable(True)
+			self._api._wifi.set_enable(True)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -352,7 +352,7 @@ class LmActions:
 	def wifiOffButtonClick(self):
 		self.startTask(lx('Deactivating Wifi...'))
 		try:
-			self._api._wifi.setEnable(False)
+			self._api._wifi.set_enable(False)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -364,7 +364,7 @@ class LmActions:
 	def guestWifiOnButtonClick(self):
 		self.startTask(lx('Activating Guest Wifi...'))
 		try:
-			self._api._wifi.setGuestEnable(True)
+			self._api._wifi.set_guest_enable(True)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -376,7 +376,7 @@ class LmActions:
 	def guestWifiOffButtonClick(self):
 		self.startTask(lx('Deactivating Guest Wifi...'))
 		try:
-			self._api._wifi.setGuestEnable(False)
+			self._api._wifi.set_guest_enable(False)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -388,7 +388,7 @@ class LmActions:
 	def schedulerOnButtonClick(self):
 		self.startTask(lx('Activating Wifi Scheduler...'))
 		try:
-			self._api._wifi.setSchedulerEnable(True)
+			self._api._wifi.set_scheduler_enable(True)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -400,7 +400,7 @@ class LmActions:
 	def schedulerOffButtonClick(self):
 		self.startTask(lx('Deactivating Wifi Scheduler...'))
 		try:
-			self._api._wifi.setSchedulerEnable(False)
+			self._api._wifi.set_scheduler_enable(False)
 		except BaseException as e:
 			self.displayError(str(e))
 		else:
@@ -413,7 +413,7 @@ class LmActions:
 		self.startTask(lx('Getting Wifi Global Status...'))
 
 		# Getting Livebox status
-		aLiveboxStatus = self._api._wifi.getGlobalWifiStatus()
+		aLiveboxStatus = self._api._wifi.get_global_wifi_status()
 
 		# Getting Repeater statuses
 		aGlobalStatus = self.getRepeatersWifiStatus()
@@ -434,8 +434,8 @@ class LmActions:
 	### Click on LEDs & Screen setup button
 	def screenButtonClick(self):
 		try:
-			aOrangeLedLevel = self._api._screen.getOrangeLedLevel()
-			aShowWifiPassword = self._api._screen.getShowWifiPassword()
+			aOrangeLedLevel = self._api._screen.get_orange_led_level()
+			aShowWifiPassword = self._api._screen.get_show_wifi_password()
 		except BaseException as e:
 			self.displayError(str(e))
 			return
@@ -448,7 +448,7 @@ class LmActions:
 			aNewOrangeLedLevel = aScreenDialog.getOrangeLedLevel()
 			if aNewOrangeLedLevel != aOrangeLedLevel:
 				try:
-					self._api._screen.setOrangeLedLevel(aNewOrangeLedLevel)
+					self._api._screen.set_orange_led_level(aNewOrangeLedLevel)
 				except BaseException as e:
 					self.displayError(str(e))
 
@@ -456,7 +456,7 @@ class LmActions:
 			aNewShowWifiPassword = aScreenDialog.getShowWifiPassword()
 			if aNewShowWifiPassword != aShowWifiPassword:
 				try:
-					self._api._screen.setShowWifiPassword(aNewShowWifiPassword)
+					self._api._screen.set_show_wifi_password(aNewShowWifiPassword)
 				except BaseException as e:
 					self.displayError(str(e))
 
@@ -468,7 +468,7 @@ class LmActions:
 		if self.askQuestion(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
 			self.startTask(lx('Rebooting Livebox...'))
 			try:
-				self._api._reboot.rebootLivebox()
+				self._api._reboot.reboot_livebox()
 			except BaseException as e:
 				self.endTask()
 				self.displayError(str(e))
@@ -484,7 +484,7 @@ class LmActions:
 		self.startTask(lx('Getting Reboot History...'))
 
 		try:
-			d = self._api._reboot.getRebootHistory()
+			d = self._api._reboot.get_reboot_history()
 		except BaseException as e:
 			self.endTask()
 			self.displayError(str(e))
@@ -500,8 +500,8 @@ class LmActions:
 	### Click on Firewall Level button
 	def firewallLevelButtonClick(self):
 		try:
-			aFirewallIPv4Level = self._api._firewall.getIPv4FirewallLevel()
-			aFirewallIPv6Level = self._api._firewall.getIPv6FirewallLevel()
+			aFirewallIPv4Level = self._api._firewall.get_ipv4_firewall_level()
+			aFirewallIPv6Level = self._api._firewall.get_ipv6_firewall_level()
 		except BaseException as e:
 			self.displayError(str(e))
 			return
@@ -514,7 +514,7 @@ class LmActions:
 			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
 			if aNewFirewallIPv4Level != aFirewallIPv4Level:
 				try:
-					self._api._firewall.setIPv4FirewallLevel(aNewFirewallIPv4Level)
+					self._api._firewall.set_ipv4_firewall_level(aNewFirewallIPv4Level)
 				except BaseException as e:
 					self.displayError(str(e))
 
@@ -522,7 +522,7 @@ class LmActions:
 			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
 			if aNewFirewallIPv6Level != aFirewallIPv6Level:
 				try:
-					self._api._firewall.setIPv6FirewallLevel(aNewFirewallIPv6Level)
+					self._api._firewall.set_ipv6_firewall_level(aNewFirewallIPv6Level)
 				except BaseException as e:
 					self.displayError(str(e))
 
@@ -533,7 +533,7 @@ class LmActions:
 	def pingResponseButtonClick(self):
 		# Get current ping reponses
 		try:
-			d = self._api._firewall.getRespondToPing()
+			d = self._api._firewall.get_respond_to_ping()
 		except BaseException as e:
 			self.displayError(str(e))
 			return
@@ -553,7 +553,7 @@ class LmActions:
 				p['enableIPv4'] = aNewIPv4Ping
 				p['enableIPv6'] = aNewIPv6Ping
 				try:
-					self._api._firewall.setRespondToPing(p)
+					self._api._firewall.set_respond_to_ping(p)
 				except BaseException as e:
 					self.displayError(str(e))
 				self.endTask()

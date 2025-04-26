@@ -17,6 +17,7 @@ from cryptography.fernet import Fernet
 from LiveboxMonitor.app import LmTools
 from LiveboxMonitor.api.LmSession import DEFAULT_TIMEOUT
 from LiveboxMonitor.api.LmSession import LmSession
+from LiveboxMonitor.api.LmLiveboxInfoApi import LiveboxInfoApi
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
 											 GetConfigMessage as mx,
@@ -756,7 +757,7 @@ class LmConf:
 	@staticmethod
 	def apply():
 		LmLanguages.SetLanguage(LmConf.Language)
-		LmSession.setTimeoutMargin(LmConf.TimeoutMargin)
+		LmSession.set_timeout_margin(LmConf.TimeoutMargin)
 
 
 	### Apply decoupled saved values after application auto restarts following pref's change
@@ -780,7 +781,7 @@ class LmConf:
 			aMatchingProfiles = []
 			for p in LmConf.Profiles:
 				aProfileMAC = p.get('Livebox MacAddr')
-				aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+				aLiveboxMAC = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
 				if aLiveboxMAC is not None:
 					aReachableProfiles.append(p)
 					if aLiveboxMAC == aProfileMAC:
@@ -823,7 +824,7 @@ class LmConf:
 			iMatchingProfiles = []
 			for p in LmConf.Profiles:
 				aProfileMAC = p.get('Livebox MacAddr')
-				aLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+				aLiveboxMAC = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
 				if (aLiveboxMAC is not None) and (aLiveboxMAC == aProfileMAC):
 					iMatchingProfiles.append(p)
 		LmTools.MouseCursor_Normal()
@@ -1629,7 +1630,7 @@ class SelectProfileDialog(QtWidgets.QDialog):
 			self._assMac.setStyleSheet('QLabel { color : black }')
 
 		LmTools.MouseCursor_Busy()
-		aDetectedLiveboxMAC = LmSession.getLiveboxMAC(p.get('Livebox URL'))
+		aDetectedLiveboxMAC = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
 		LmTools.MouseCursor_Normal()
 		if aDetectedLiveboxMAC is None:
 			self._detMac.setText(lpx('<None>'))

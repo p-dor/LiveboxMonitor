@@ -6,15 +6,15 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Reboot APIs ################################
 class RebootApi(LmApi):
-	def __init__(self, iApi, iSession):
-		super(RebootApi, self).__init__(iApi, iSession)
+    def __init__(self, api, session):
+        super(RebootApi, self).__init__(api, session)
 
 
-	### Reboot the Livebox
-	def rebootLivebox(self):
-		self.call('NMC', 'reboot', { 'reason': 'GUI_Reboot' })
+    ### Reboot the Livebox
+    def reboot_livebox(self):
+        self.call('NMC', 'reboot', { 'reason': 'GUI_Reboot' })
 
 
-	### Get reboot history
-	def getRebootHistory(self):
-		return self.call('NMC.Reboot.Reboot', 'get')
+    ### Get reboot history
+    def get_reboot_history(self):
+        return self.call('NMC.Reboot.Reboot', 'get')

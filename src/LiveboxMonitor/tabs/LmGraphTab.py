@@ -703,9 +703,9 @@ class LmGraph:
 			if iStart:
 				aReply = self._session.request('HomeLan', 'getResults',
 											   { 'InterfaceName': iID, 'BeginTrafficTimestamp': iStart, 'EndTrafficTimestamp': iEnd },
-											   iTimeout = 15)
+											   timeout=15)
 			else:
-				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, iTimeout = 15)
+				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, timeout=15)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self.displayError('Interface statistics query error.')
@@ -728,9 +728,9 @@ class LmGraph:
 			if iStart:
 				aReply = self._session.request('HomeLan', 'getDeviceResults',
 											   { 'DeviceName': iID, 'BeginTrafficTimestamp': iStart, 'EndTrafficTimestamp': iEnd },
-											   iTimeout = 15)
+											   timeout=15)
 			else:
-				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, iTimeout = 15)				
+				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, timeout=15)				
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self.displayError('Device statistics query error.')

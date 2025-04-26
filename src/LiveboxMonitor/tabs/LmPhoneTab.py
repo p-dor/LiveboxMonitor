@@ -455,7 +455,7 @@ class LmPhone:
 
 		self._callList.setSortingEnabled(False)
 
-		aCallList = self._session.request('VoiceService.VoiceApplication', 'getCallList', [{ 'line': '1' }], iTimeout = 8)
+		aCallList = self._session.request('VoiceService.VoiceApplication', 'getCallList', [{ 'line': '1' }], timeout=8)
 		if aCallList is not None:
 			aCallList = aCallList.get('status')
 		if aCallList is None:
@@ -734,7 +734,7 @@ class LmPhone:
 
 		self.startTask(lx('Exporting all contacts...'))
 
-		aContactList = self._session.request('Phonebook', 'getAllContacts', iTimeout = 20)
+		aContactList = self._session.request('Phonebook', 'getAllContacts', timeout=20)
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
@@ -950,7 +950,7 @@ class LmPhone:
 		self._contactList.setSortingEnabled(False)
 
 		self._contactMatching = {}
-		aContactList = self._session.request('Phonebook', 'getAllContacts', iTimeout = 20)
+		aContactList = self._session.request('Phonebook', 'getAllContacts', timeout=20)
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:

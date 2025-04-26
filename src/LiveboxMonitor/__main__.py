@@ -75,6 +75,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():
 			self._api = ApiRegistry(self._session)
+			if not self._api._intf.build_intf_list():
+				LmTools.Error('Failed to build interface list.')
 			self.adjustToLiveboxModel()
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())
@@ -333,9 +335,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Adjust configuration to Livebox model
 	def adjustToLiveboxModel(self):
-		LmConf.setLiveboxMAC(self._api._info.getLiveboxMAC())
-		self._liveboxSoftwareVersion = self._api._info.getSoftwareVersion()
-		self._liveboxModel = self._api._info.getLiveboxModel()
+		LmConf.setLiveboxMAC(self._api._info.get_livebox_mac())
+		self._liveboxSoftwareVersion = self._api._info.get_software_version()
+		self._liveboxModel = self._api._info.get_livebox_model()
 
 		LmTools.LogDebug(1, 'Identified Livebox model: {}'.format(self._liveboxModel))
 
@@ -599,7 +601,7 @@ def main(iNativeRun = False):
 		aArgParser.add_argument('--redir', '-r', help = 'add a url redirection, REDIR format must be "url1=url2"', action = 'append')
 		aArgs = aArgParser.parse_args()
 		if aArgs.redir:
-			LmSession.loadUrlRedirections(aArgs.redir)
+			LmSession.load_url_redirections(aArgs.redir)
 
 		while True:
 			SetApplicationStyle()

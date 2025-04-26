@@ -6,25 +6,25 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Backup & Restore APIs ################################
 class BackupRestoreApi(LmApi):
-	def __init__(self, iApi, iSession):
-		super(BackupRestoreApi, self).__init__(iApi, iSession)
+    def __init__(self, api, session):
+        super(BackupRestoreApi, self).__init__(api, session)
 
 
-	### Get status
-	def getStatus(self):
-		return self.call('NMC.NetworkConfig', 'get')
+    ### Get status
+    def get_status(self):
+        return self.call('NMC.NetworkConfig', 'get')
 
 
-	### Set Auto Backup enable status
-	def setAutoBackupEnable(self, iEnable):
-		self.callNoCheck('NMC.NetworkConfig', 'enableNetworkBR', { 'state': iEnable })
+    ### Set Auto Backup enable status
+    def set_auto_backup_enable(self, enable):
+        self.call_no_check('NMC.NetworkConfig', 'enableNetworkBR', { 'state': enable })
 
 
-	### Start a backup
-	def doBackup(self):
-		self.callNoCheck('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
+    ### Start a backup
+    def do_backup(self):
+        self.call_no_check('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
 
 
-	### Start a restore
-	def doRestore(self):
-		self.callNoCheck('NMC.NetworkConfig', 'launchNetworkRestore')
+    ### Start a restore
+    def do_restore(self):
+        self.call_no_check('NMC.NetworkConfig', 'launchNetworkRestore')

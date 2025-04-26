@@ -83,7 +83,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
 	def refreshStatus(self):
 		try:
-			d = self._api._backup.getStatus()
+			d = self._api._backup.get_status()
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._app.displayError(mx('Cannot load backup and restore status.', 'backRestSvcErr'))
@@ -107,7 +107,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
 	def enableAutoBackup(self):
 		try:
-			self._api._backup.setAutoBackupEnable(True)
+			self._api._backup.set_auto_backup_enable(True)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._app.displayError(mx('Cannot enable auto backup.', 'backEnableSvcErr'))
@@ -117,7 +117,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
 	def disableAutoBackup(self):
 		try:
-			self._api._backup.setAutoBackupEnable(False)
+			self._api._backup.set_auto_backup_enable(False)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._app.displayError(mx('Cannot disable auto backup.', 'backDisableSvcErr'))
@@ -127,7 +127,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
 	def forceBackup(self):
 		try:
-			self._api._backup.doBackup()
+			self._api._backup.do_backup()
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._app.displayError(mx('Backup request failed.', 'backupSvcErr'))
@@ -138,7 +138,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
 	def forceRestore(self):
 		try:
-			self._api._backup.doRestore()
+			self._api._backup.do_restore()
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._app.displayError(mx('Restore request failed.', 'restoreSvcErr'))

@@ -1407,7 +1407,7 @@ class LiveboxEventThread(QtCore.QObject):
 
 
 	def collectEvents(self):
-		aResult = self._session.eventRequest(['Devices.Device', 'HomeLan'], iTimeout = 2)
+		aResult = self._session.event_request(['Devices.Device', 'HomeLan'], timeout=2)
 		if aResult is not None:
 			if aResult.get('errors') is not None:
 				# Session has probably timed out on Livebox side, resign

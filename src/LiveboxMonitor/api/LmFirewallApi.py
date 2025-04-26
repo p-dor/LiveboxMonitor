@@ -4,43 +4,38 @@ from LiveboxMonitor.api.LmApi import LmApi
 from LiveboxMonitor.app import LmTools
 
 
-# ################################ VARS & DEFS ################################
-
-
-
-
 # ################################ Firewall APIs ################################
 class FirewallApi(LmApi):
-	def __init__(self, iApi, iSession):
-		super(FirewallApi, self).__init__(iApi, iSession)
+    def __init__(self, api, session):
+        super(FirewallApi, self).__init__(api, session)
 
 
-	### Get IPv4 firewall level
-	def getIPv4FirewallLevel(self):
-		return self.call('Firewall', 'getFirewallLevel')
+    ### Get IPv4 firewall level
+    def get_ipv4_firewall_level(self):
+        return self.call('Firewall', 'getFirewallLevel')
 
 
-	### Get IPv6 firewall level
-	def getIPv6FirewallLevel(self):
-		return self.call('Firewall', 'getFirewallIPv6Level')
+    ### Get IPv6 firewall level
+    def get_ipv6_firewall_level(self):
+        return self.call('Firewall', 'getFirewallIPv6Level')
 
 
-	### Set IPv4 firewall level
-	def setIPv4FirewallLevel(self, iLevel):
-		self.call('Firewall', 'setFirewallLevel', { 'level': iLevel })
+    ### Set IPv4 firewall level
+    def set_ipv4_firewall_level(self, level):
+        self.call('Firewall', 'setFirewallLevel', { 'level': level })
 
 
-	### Set IPv6 firewall level
-	def setIPv6FirewallLevel(self, iLevel):
-		self.call('Firewall', 'setFirewallIPv6Level', { 'level': iLevel })
+    ### Set IPv6 firewall level
+    def set_ipv6_firewall_level(self, level):
+        self.call('Firewall', 'setFirewallIPv6Level', { 'level': level })
 
 
-	### Get IPv4 & IPv6 respond to ping setup
-	def getRespondToPing(self):
-		# ###Info### - works also for other sourceInterfaces such as veip0, eth0, voip, etc, but usefulness?
-		return self.call('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
+    ### Get IPv4 & IPv6 respond to ping setup
+    def get_respond_to_ping(self):
+        # ###Info### - works also for other sourceInterfaces such as veip0, eth0, voip, etc, but usefulness?
+        return self.call('Firewall', 'getRespondToPing', { 'sourceInterface': 'data' })
 
 
-	### Set IPv6 firewall level - iEnable must be a dict with 'enableIPv4' & 'enableIPv6' boolean values
-	def setRespondToPing(self, iEnable):
-		self.call('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': iEnable })
+    ### Set IPv6 firewall level - enable must be a dict with 'enableIPv4' & 'enableIPv6' boolean values
+    def set_respond_to_ping(self, enable):
+        self.call('Firewall', 'setRespondToPing', { 'sourceInterface': 'data', 'service_enable': enable })

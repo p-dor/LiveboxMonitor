@@ -354,7 +354,7 @@ class LmDeviceList:
 
 		# Get device infos from Livebox & build IP -> name map
 		try:
-			self._liveboxDevices = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+			self._liveboxDevices = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, timeout=10)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._liveboxDevices = None
@@ -368,7 +368,7 @@ class LmDeviceList:
 
 		# Get topology infos from Livebox & build link & device maps
 		try:
-			self._liveboxTopology = self._session.request('TopologyDiagnostics', 'buildTopology', { 'SendXmlFile': 'false' }, iTimeout = 20)
+			self._liveboxTopology = self._session.request('TopologyDiagnostics', 'buildTopology', { 'SendXmlFile': 'false' }, timeout=20)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			self._liveboxTopology = None
@@ -654,7 +654,7 @@ class LmDeviceList:
 
 			d = None
 			try:
-				d = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, iTimeout = 10)
+				d = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, timeout=10)
 			except BaseException as e:
 				LmTools.Error(str(e))
 				d = None

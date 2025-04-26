@@ -8,7 +8,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
-from LiveboxMonitor.api.LmWifiApi import WifiKey, WifiStatus
 from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx, GetInfoMessage as mx
 
 
@@ -1574,7 +1573,7 @@ class LiveboxStatsThread(QtCore.QObject):
 		# - HomeLan:getWANCounters generates wrong HomeLan veip0 stats events
 		# - HomeLan events do not cover all interfaces -> need to keep getNetDevStats()
 		for s in LmConfig.NET_INTF:
-			if s['Type'] == 'wan':	# WARNING -> need to add a 'wan' line in LmConfig.NET_INTF
+			if s['Type'] == 'wan':
 				aResult = self._session.request('HomeLan', 'getWANCounters')	# WARNING: Works but generates wrong HomeLan veip0 stats events
 				if aResult is not None:
 					aStats = aResult.get('status')

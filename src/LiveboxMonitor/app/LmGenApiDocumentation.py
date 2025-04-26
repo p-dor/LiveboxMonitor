@@ -183,7 +183,7 @@ class LmGenApiDoc:
 			iName = iModule
 
 		try:
-			d = self._session.request(iModule, iGet = True, iTimeout = 15)
+			d = self._session.request(iModule, get=True, timeout=15)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			return
@@ -220,7 +220,7 @@ class LmGenApiDoc:
 		self._app.updateTask(iName)
 
 		try:
-			d = self._session.request(iModule, iGet = True, iTimeout = 15)
+			d = self._session.request(iModule, get=True, timeout=15)
 		except BaseException as e:
 			LmTools.Error(str(e))
 			return

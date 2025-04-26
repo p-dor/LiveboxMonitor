@@ -19,7 +19,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		aHeaders = []
 		aHeaders.append(lx('Interfaces'))
 		for s in self._status:
-			aHeaders.append(s[WifiKey.AccessPoint])
+			aHeaders.append(s[WifiKey.ACCESS_POINT])
 		self._statusTable.setHorizontalHeaderLabels((*aHeaders,))
 		aTableHeader = self._statusTable.horizontalHeader()
 		aTableHeader.setSectionsMovable(False)
@@ -57,21 +57,21 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 
 	def loadStatus(self, iLiveboxModel):
 		i = 0
-		i = self.addStatusLine(lx('{} Enabled').format('Wifi'), WifiKey.Enable, i)
-		i = self.addStatusLine(lx('{} Active').format('Wifi'), WifiKey.Status, i)
-		i = self.addStatusLine(lx('Wifi Scheduler'), WifiKey.Scheduler, i)
-		i = self.addStatusLine(lx('{} Enabled').format('Wifi 2.4GHz'), WifiKey.Wifi2Enable, i)
-		i = self.addStatusLine(lx('{} Active').format('Wifi 2.4GHz'), WifiKey.Wifi2Status, i)
-		i = self.addStatusLine(lx('{} VAP').format('Wifi 2.4GHz'), WifiKey.Wifi2VAP, i)
-		i = self.addStatusLine(lx('{} Enabled').format('Wifi 5GHz'), WifiKey.Wifi5Enable, i)
-		i = self.addStatusLine(lx('{} Active').format('Wifi 5GHz'), WifiKey.Wifi5Status, i)
-		i = self.addStatusLine(lx('{} VAP').format('Wifi 5GHz'), WifiKey.Wifi5VAP, i)
+		i = self.addStatusLine(lx('{} Enabled').format('Wifi'), WifiKey.ENABLE, i)
+		i = self.addStatusLine(lx('{} Active').format('Wifi'), WifiKey.STATUS, i)
+		i = self.addStatusLine(lx('Wifi Scheduler'), WifiKey.SCHEDULER, i)
+		i = self.addStatusLine(lx('{} Enabled').format('Wifi 2.4GHz'), WifiKey.WIFI2_ENABLE, i)
+		i = self.addStatusLine(lx('{} Active').format('Wifi 2.4GHz'), WifiKey.WIFI2_STATUS, i)
+		i = self.addStatusLine(lx('{} VAP').format('Wifi 2.4GHz'), WifiKey.WIFI2_VAP, i)
+		i = self.addStatusLine(lx('{} Enabled').format('Wifi 5GHz'), WifiKey.WIFI5_ENABLE, i)
+		i = self.addStatusLine(lx('{} Active').format('Wifi 5GHz'), WifiKey.WIFI5_STATUS, i)
+		i = self.addStatusLine(lx('{} VAP').format('Wifi 5GHz'), WifiKey.WIFI5_VAP, i)
 		if iLiveboxModel >= 6:
-			i = self.addStatusLine(lx('{} Enabled').format('Wifi 6GHz'), WifiKey.Wifi6Enable, i)
-			i = self.addStatusLine(lx('{} Active').format('Wifi 6GHz'), WifiKey.Wifi6Status, i)
-			i = self.addStatusLine(lx('{} VAP').format('Wifi 6GHz'), WifiKey.Wifi6VAP, i)
-		i = self.addStatusLine(lx('{} VAP').format(lx('Guest 2.4GHz')), WifiKey.Guest2VAP, i)
-		i = self.addStatusLine(lx('{} VAP').format(lx('Guest 5GHz')), WifiKey.Guest5VAP, i)
+			i = self.addStatusLine(lx('{} Enabled').format('Wifi 6GHz'), WifiKey.WIFI6_ENABLE, i)
+			i = self.addStatusLine(lx('{} Active').format('Wifi 6GHz'), WifiKey.WIFI6_STATUS, i)
+			i = self.addStatusLine(lx('{} VAP').format('Wifi 6GHz'), WifiKey.WIFI6_VAP, i)
+		i = self.addStatusLine(lx('{} VAP').format(lx('Guest 2.4GHz')), WifiKey.GUEST2_VAP, i)
+		i = self.addStatusLine(lx('{} VAP').format(lx('Guest 5GHz')), WifiKey.GUEST5_VAP, i)
 		return i
 
 
@@ -83,27 +83,27 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 		i = 1
 		for s in self._status:
 			aStatus = s.get(iKey)
-			if aStatus == WifiStatus.Enable:
+			if aStatus == WifiStatus.ENABLE:
 				aIconItem = QtWidgets.QLabel()
 				aIconItem.setPixmap(LmIcon.TickPixmap)
 				aIconItem.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setCellWidget(iIndex, i, aIconItem)
-			elif aStatus == WifiStatus.Disable:
+			elif aStatus == WifiStatus.DISABLE:
 				aIconItem = QtWidgets.QLabel()
 				aIconItem.setPixmap(LmIcon.CrossPixmap)
 				aIconItem.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setCellWidget(iIndex, i, aIconItem)
-			elif aStatus == WifiStatus.Error:
+			elif aStatus == WifiStatus.ERROR:
 				aItem = QtWidgets.QTableWidgetItem(lx('Error'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setItem(iIndex, i, aItem)
-			elif aStatus == WifiStatus.Inactive:
+			elif aStatus == WifiStatus.INACTIVE:
 				aItem = QtWidgets.QTableWidgetItem(lx('Inactive'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				self._statusTable.setItem(iIndex, i, aItem)
-			elif aStatus == WifiStatus.Unsigned:
+			elif aStatus == WifiStatus.UNSIGNED:
 				aItem = QtWidgets.QTableWidgetItem(lx('Not signed'))
 				aItem.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
 				aItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)

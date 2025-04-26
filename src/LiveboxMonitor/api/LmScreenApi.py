@@ -6,43 +6,43 @@ from LiveboxMonitor.app import LmTools
 
 # ################################ Screen APIs ################################
 class ScreenApi(LmApi):
-	def __init__(self, iApi, iSession):
-		super(ScreenApi, self).__init__(iApi, iSession)
+    def __init__(self, api, session):
+        super(ScreenApi, self).__init__(api, session)
 
 
-	### Get Orange LED levels
-	def getOrangeLedLevel(self):
-		d = self.call('LEDs.LED.Orange', 'get')
-		aBrightness = d.get('Brightness')
-		if aBrightness is None:
-			raise Exception('LEDs.LED.Orange:get error: no Brightness field')
-		return aBrightness
+    ### Get Orange LED levels
+    def get_orange_led_level(self):
+        d = self.call('LEDs.LED.Orange', 'get')
+        brightness = d.get('Brightness')
+        if brightness is None:
+            raise Exception('LEDs.LED.Orange:get error: no Brightness field')
+        return brightness
 
 
-	### Get White LED levels
-	def getWhiteLedLevel(self):
-		d = self.call('LEDs.LED.White', 'get')
-		aBrightness = d.get('Brightness')
-		if aBrightness is None:
-			raise Exception('LEDs.LED.White:get error: no Brightness field')
-		return aBrightness
+    ### Get White LED levels
+    def get_white_led_level(self):
+        d = self.call('LEDs.LED.White', 'get')
+        brightness = d.get('Brightness')
+        if brightness is None:
+            raise Exception('LEDs.LED.White:get error: no Brightness field')
+        return brightness
 
 
-	### Get Show Wifi Password setup
-	def getShowWifiPassword(self):
-		return self.callNoCheck('Screen', 'getShowWifiPassword')
+    ### Get Show Wifi Password setup
+    def get_show_wifi_password(self):
+        return self.call_no_check('Screen', 'getShowWifiPassword')
 
 
-	### Set Orange LED level
-	def setOrangeLedLevel(self, iLevel):
-		self.call('LEDs.LED.Orange', 'set', { 'Brightness': iLevel })
+    ### Set Orange LED level
+    def set_orange_led_level(self, level):
+        self.call('LEDs.LED.Orange', 'set', { 'Brightness': level })
 
 
-	### Set White LED level
-	def setWhiteLedLevel(self, iLevel):
-		self.call('LEDs.LED.White', 'set', { 'Brightness': iLevel })
+    ### Set White LED level
+    def set_white_led_level(self, level):
+        self.call('LEDs.LED.White', 'set', { 'Brightness': level })
 
 
-	### Set Show Wifi Password setup
-	def setShowWifiPassword(self, iShowWifiPassword):
-		self.callNoCheck('Screen', 'setShowWifiPassword', { 'Enable': iShowWifiPassword })
+    ### Set Show Wifi Password setup
+    def set_show_wifi_password(self, show_wifi_password):
+        self.call_no_check('Screen', 'setShowWifiPassword', { 'Enable': show_wifi_password })
