@@ -108,7 +108,7 @@ class IntfApi(LmApi):
                 self._list.append(i)
 
         # All Livebox have bridge intf as LAN interface
-        i = { 'Key': 'bridge', 'Name': 'LAN', 'Type': 'lan', 'SwapStats': True }
+        i = {'Key': 'bridge', 'Name': 'LAN', 'Type': 'lan', 'SwapStats': True}
         self._list.append(i)
 
         if eth:

@@ -43,7 +43,7 @@ class WifiApi(LmApi):
     ### Get Wifi or Guest Interfaces setup - returns base, radio and vap
     def get_intf(self, guest=False):
         i = 'guest' if guest else 'lan'
-        d = self.call('NeMo.Intf.' + i, 'getMIBs', { 'mibs': 'base wlanradio wlanvap' }, timeout=25)
+        d = self.call('NeMo.Intf.' + i, 'getMIBs', {'mibs': 'base wlanradio wlanvap'}, timeout=25)
         base = d.get('base')
         radio = d.get('wlanradio')
         vap = d.get('wlanvap')
@@ -64,7 +64,7 @@ class WifiApi(LmApi):
 
     ### Activate/Deactivate Wifi
     def set_enable(self, enable):
-        self.call('NMC.Wifi', 'set', { 'Enable': enable, 'Status' : enable }, err_str='Enable')
+        self.call('NMC.Wifi', 'set', {'Enable': enable, 'Status': enable}, err_str='Enable')
 
 
     ### Get guest status
@@ -79,7 +79,7 @@ class WifiApi(LmApi):
 
     ### Activate/Deactivate guest Wifi, timer in hours (0 == infinite)
     def set_guest_enable(self, enable, timer=0):
-        self.call_no_check('NMC.Guest', 'set', { 'Enable': enable })
+        self.call_no_check('NMC.Guest', 'set', {'Enable': enable})
 
         # Set timer, just log in case of error
         try:
@@ -93,27 +93,27 @@ class WifiApi(LmApi):
 
     ### Get guest activation timer - in seconds
     def get_guest_activation_timer(self):
-        return int(self.call_no_check('NMC.WlanTimer', 'getActivationTimer', { 'InterfaceName': 'guest' }))
+        return int(self.call_no_check('NMC.WlanTimer', 'getActivationTimer', {'InterfaceName': 'guest'}))
 
 
     ### Set guest activation timer - in hours
     def set_guest_activation_timer(self, timer):
-        self.call_no_check('NMC.WlanTimer', 'setActivationTimer', { 'Timeout': timer, 'InterfaceName': 'guest' })
+        self.call_no_check('NMC.WlanTimer', 'setActivationTimer', {'Timeout': timer, 'InterfaceName': 'guest'})
 
 
     ### Disable guest activation timer
     def disable_guest_activation_timer(self):
-        self.call('NMC.WlanTimer', 'disableActivationTimer', { 'InterfaceName': 'guest' })
+        self.call('NMC.WlanTimer', 'disableActivationTimer', {'InterfaceName': 'guest'})
 
 
     ### Set Configuration Mode - must be set to True if SSIDs are different between radio bands
     def set_configuration_mode(self, mode):
-        self.call('NMC.Wifi', 'set', { 'ConfigurationMode': mode })
+        self.call('NMC.Wifi', 'set', {'ConfigurationMode': mode})
 
 
     ### Set WLAN Configuration
     def set_wlan_config(self, iMibs):
-        self.call_no_check('NeMo.Intf.lan', 'setWLANConfig', { 'mibs': iMibs }, timeout=35)
+        self.call_no_check('NeMo.Intf.lan', 'setWLANConfig', {'mibs': iMibs}, timeout=35)
 
 
     ### Get Wifi Scheduler enable status
@@ -135,7 +135,7 @@ class WifiApi(LmApi):
 
     ### Get Wifi Scheduler enable status - legacy method
     def get_scheduler_enable_legacy(self):
-        d = self.call_raw('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
+        d = self.call_raw('Scheduler', 'getCompleteSchedules', {'type': 'WLAN'})
         d = d.get('data')
         if d is not None:
             d = d.get('scheduleInfo', [])
@@ -149,20 +149,20 @@ class WifiApi(LmApi):
         # Set PowerManagement profile
         try:
             if enable:
-                p = [{ 'profile': 'WiFi',
-                       'activate': True,
-                       'type': 'Weekly',
-                       'schedules': [{
-                            'Day': 1,
-                            'Hour': 0,
-                            'Minute': 0,
-                            'Second': 0,
-                            'enable': True
+                p = [{'profile': 'WiFi',
+                      'activate': True,
+                      'type': 'Weekly',
+                      'schedules': [{
+                          'Day': 1,
+                          'Hour': 0,
+                          'Minute': 0,
+                          'Second': 0,
+                          'enable': True
                         }]
                     }]
-                self.call('PowerManagement', 'setScheduledProfiles', { 'profiles' : p })
+                self.call('PowerManagement', 'setScheduledProfiles', {'profiles': p})
             else:
-                self.call('PowerManagement', 'setProfiles', { 'profiles' : [{'profile' : 'WiFi', 'activate' : False}] })
+                self.call('PowerManagement', 'setProfiles', {'profiles': [{'profile': 'WiFi', 'activate': False}]})
         except BaseException as e:
             LmTools.Error(f'PowerManagement method failed with error={e}, trying legacy method.')
             return self.set_scheduler_enable_legacy(enable)
@@ -171,7 +171,7 @@ class WifiApi(LmApi):
         intf_id = 'wl0'
 
         # Get current schedule info
-        d = self.call_raw('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : intf_id })
+        d = self.call_raw('Scheduler', 'getSchedule', {'type': 'WLAN', 'ID': intf_id})
         status = d.get('status')   #Warning: seems status can be easily false, need to investigate
         if status:
             d = d.get('data')
@@ -192,20 +192,20 @@ class WifiApi(LmApi):
         p['schedule'] = schedule.get('schedule')
         p['enable'] = enable
         p['override'] = ''
-        d = self.call('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p }, err_str=intf_id)
+        d = self.call('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p}, err_str=intf_id)
 
 
     ### Legacy method to set Wifi Scheduler on or off
     ### These calls were used by the deprecated "MaLiveBox" iOS app
     def set_scheduler_enable_legacy(self, enable):
         # First save network configuration
-        self.call('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
+        self.call('NMC.NetworkConfig', 'launchNetworkBackup', {'delay': True})
         failed = False
         restore = False
         err_msg = ''
 
         # Get Wifi interfaces
-        d = self.call('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap' }, timeout=25)
+        d = self.call('NeMo.Intf.lan', 'getMIBs', {'mibs': 'wlanvap'}, timeout=25)
         w = d.get('wlanvap')
         if w is None:
             raise Exception('NeMo.Intf.lan:getMIBs service failed.')
@@ -215,7 +215,7 @@ class WifiApi(LmApi):
         for i in w:
             # Get current schedule info
             try:
-                d = self.call_raw('Scheduler', 'getSchedule', { 'type' : 'WLAN', 'ID' : i }, err_str=i)
+                d = self.call_raw('Scheduler', 'getSchedule', {'type': 'WLAN', 'ID': i}, err_str=i)
             except BaseException as e:
                 err_msg = str(e)
                 LmTools.Error(err_msg)
@@ -249,7 +249,7 @@ class WifiApi(LmApi):
             p['ID'] = i
             p['schedule'] = schedule.get('schedule')
             try:
-                d = self.call_no_check('Scheduler', 'addSchedule', { 'type' : 'WLAN', 'info' : p })
+                d = self.call_no_check('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p})
             except BaseException as e:
                 LmTools.Error(str(e))
                 d = None
@@ -271,7 +271,7 @@ class WifiApi(LmApi):
 
             for i in w:
                 try:
-                    d = self.call_no_check('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : i, 'enable': enable }, err_str=i)
+                    d = self.call_no_check('Scheduler', 'enableSchedule', {'type': 'WLAN', 'ID': i, 'enable': enable}, err_str=i)
                 except BaseException as e:
                     LmTools.Error(str(e))
                     d = None
@@ -418,20 +418,20 @@ class WifiApi(LmApi):
             if (o['Broadcast'] != n['Broadcast']):
                 v['SSIDAdvertisementEnabled'] = n['Broadcast']
             if (o['Secu'] != n['Secu']):
-                v['Security'] = { 'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass'] }
+                v['Security'] = {'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass']}
             elif (o['KeyPass'] != n['KeyPass']):
-                v['Security'] = { 'KeyPassPhrase': n['KeyPass'] }
+                v['Security'] = {'KeyPassPhrase': n['KeyPass']}
             if (o['WPS'] != n['WPS']):
-                v['WPS'] = { 'Enable': n['WPS'] }
+                v['WPS'] = {'Enable': n['WPS']}
             if (o['MACFiltering'] != n['MACFiltering']):
-                v['MACFiltering'] = { 'Mode': n['MACFiltering'] }
+                v['MACFiltering'] = {'Mode': n['MACFiltering']}
             if ((o['ChannelAuto'] != n['ChannelAuto']) or 
                 (o['Channel'] != n['Channel']) or
                 (o['Mode'] != n['Mode'])):
                 if n['ChannelAuto']:
-                    r = { 'AutoChannelEnable': True, 'OperatingStandards': n['Mode'] }
+                    r = {'AutoChannelEnable': True, 'OperatingStandards': n['Mode']}
                 else:
-                    r = { 'AutoChannelEnable': False, 'Channel': n['Channel'], 'OperatingStandards': n['Mode'] }
+                    r = {'AutoChannelEnable': False, 'Channel': n['Channel'], 'OperatingStandards': n['Mode']}
             else:
                 r = {}
             if (o['Enable'] != n['Enable']):
@@ -578,13 +578,13 @@ class WifiApi(LmApi):
             if (o['Broadcast'] != n['Broadcast']):
                 v['SSIDAdvertisementEnabled'] = n['Broadcast']
             if (o['Secu'] != n['Secu']):
-                v['Security'] = { 'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass'] }
+                v['Security'] = {'ModeEnabled': n['Secu'], 'KeyPassPhrase': n['KeyPass']}
             elif (o['KeyPass'] != n['KeyPass']):
-                v['Security'] = { 'KeyPassPhrase': n['KeyPass'] }
+                v['Security'] = {'KeyPassPhrase': n['KeyPass']}
             if (o['WPS'] != n['WPS']):
-                v['WPS'] = { 'Enable': n['WPS'] }
+                v['WPS'] = {'Enable': n['WPS']}
             if (o['MACFiltering'] != n['MACFiltering']):
-                v['MACFiltering'] = { 'Mode': n['MACFiltering'] }
+                v['MACFiltering'] = {'Mode': n['MACFiltering']}
             if (o['Enable'] != n['Enable']):
                 enable = n['Enable']
                 p = {'Enable': enable, 'PersistentEnable': enable, 'Status': enable }

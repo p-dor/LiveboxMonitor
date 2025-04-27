@@ -108,9 +108,9 @@ class LmSession:
      
                 auth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, user, password)
 
-                self._sah_service_headers = { 'Accept':'*/*',
-                                              'Authorization':'X-Sah-Login',
-                                              'Content-Type':'application/x-sah-ws-4-call+json' }
+                self._sah_service_headers = {'Accept':'*/*',
+                                             'Authorization':'X-Sah-Login',
+                                             'Content-Type':'application/x-sah-ws-4-call+json'}
 
                 LmTools.LogDebug(2, 'Auth with', auth)
                 try:
@@ -139,15 +139,15 @@ class LmSession:
                     pickle.dump(cookie_data, f, pickle.HIGHEST_PROTOCOL)
                     pickle.dump(context_id, f, pickle.HIGHEST_PROTOCOL)
 
-            self._sah_service_headers = { 'Accept':'*/*',
-                                          'Authorization':'X-Sah ' + context_id,
-                                          'Content-Type':'application/x-sah-ws-4-call+json; charset=UTF-8',
-                                          'X-Context': context_id }
+            self._sah_service_headers = {'Accept':'*/*',
+                                         'Authorization':'X-Sah ' + context_id,
+                                         'Content-Type':'application/x-sah-ws-4-call+json; charset=UTF-8',
+                                         'X-Context': context_id}
 
-            self._sah_event_headers = { 'Accept':'*/*',
-                                        'Authorization':'X-Sah ' + context_id,
-                                        'Content-Type':'application/x-sah-event-4-call+json; charset=UTF-8',
-                                        'X-Context': context_id }
+            self._sah_event_headers = {'Accept':'*/*',
+                                       'Authorization':'X-Sah ' + context_id,
+                                       'Content-Type':'application/x-sah-event-4-call+json; charset=UTF-8',
+                                       'X-Context': context_id}
 
             # Check authentication
             try:
@@ -176,7 +176,7 @@ class LmSession:
     def close(self):
         if self._session is not None:
             # Fails with access denied error (but same behavior from the web interface...)
-            self.request('sah.Device.Information:releaseContext', { 'applicationName': APP_NAME })
+            self.request('sah.Device.Information:releaseContext', {'applicationName': APP_NAME})
             self._session = None
             self._channel_id = 0
             self._sah_service_headers = None
@@ -188,7 +188,7 @@ class LmSession:
         # Check session is established
         if self._session is None:
             if self.signin(self._user, self._password) <= 0:
-                return { 'errors' : 'No session' }
+                return {'errors': 'No session'}
 
         if get:
             # Build request path
@@ -217,7 +217,7 @@ class LmSession:
             except BaseException as e:
                 if not silent:
                     LmTools.Error(f'Request error: {e}')
-                return { 'errors' : 'Request exception' }
+                return {'errors': 'Request exception'}
 
             t = t.decode('utf-8', errors='replace')
             t = t.replace('[,]', '[]')  # Some lists, like in GET '*' request, contain a failing comma
@@ -257,7 +257,7 @@ class LmSession:
             except BaseException as e:
                 if not silent:
                     LmTools.Error(f'Request error: {e}')
-                return { 'errors' : 'Request exception' }
+                return {'errors': 'Request exception'}
 
             t = t.decode('utf-8', errors='replace')
 
@@ -290,7 +290,7 @@ class LmSession:
         # Check session is established
         if self._session is None:
             if self.signin(self._user, self._password) <= 0:
-                return { 'errors' : 'No session' }
+                return {'errors': 'No session'}
 
         data = {'events': events}
         if self._channel_id:
@@ -314,7 +314,7 @@ class LmSession:
         except BaseException as e:
             if not silent:
                 LmTools.Error(f'Event request error: {e}')
-            return { 'errors' : 'Event request exception' }
+            return {'errors': 'Event request exception'}
 
         t = t.decode('utf-8', errors='replace')
 

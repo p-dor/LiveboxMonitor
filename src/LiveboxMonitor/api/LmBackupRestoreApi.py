@@ -17,12 +17,12 @@ class BackupRestoreApi(LmApi):
 
     ### Set Auto Backup enable status
     def set_auto_backup_enable(self, enable):
-        self.call_no_check('NMC.NetworkConfig', 'enableNetworkBR', { 'state': enable })
+        self.call_no_check('NMC.NetworkConfig', 'enableNetworkBR', {'state': enable})
 
 
     ### Start a backup
     def do_backup(self):
-        self.call_no_check('NMC.NetworkConfig', 'launchNetworkBackup', { 'delay' : True })
+        self.call_no_check('NMC.NetworkConfig', 'launchNetworkBackup', {'delay' : True})
 
 
     ### Start a restore

@@ -35,14 +35,14 @@ class ScreenApi(LmApi):
 
     ### Set Orange LED level
     def set_orange_led_level(self, level):
-        self.call('LEDs.LED.Orange', 'set', { 'Brightness': level })
+        self.call('LEDs.LED.Orange', 'set', {'Brightness': level})
 
 
     ### Set White LED level
     def set_white_led_level(self, level):
-        self.call('LEDs.LED.White', 'set', { 'Brightness': level })
+        self.call('LEDs.LED.White', 'set', {'Brightness': level})
 
 
     ### Set Show Wifi Password setup
     def set_show_wifi_password(self, show_wifi_password):
-        self.call_no_check('Screen', 'setShowWifiPassword', { 'Enable': show_wifi_password })
+        self.call_no_check('Screen', 'setShowWifiPassword', {'Enable': show_wifi_password})

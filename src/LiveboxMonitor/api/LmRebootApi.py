@@ -12,7 +12,7 @@ class RebootApi(LmApi):
 
     ### Reboot the Livebox
     def reboot_livebox(self):
-        self.call('NMC', 'reboot', { 'reason': 'GUI_Reboot' })
+        self.call('NMC', 'reboot', {'reason': 'GUI_Reboot'})
 
 
     ### Get reboot history
