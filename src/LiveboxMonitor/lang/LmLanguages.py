@@ -145,7 +145,7 @@ def GetBackupRestoreDialogLabel(iString): return GetLabel('backrest', iString)
 def GetScreenDialogLabel(iString): return GetLabel('screen', iString)
 def GetFirewallLevelDialogLabel(iString): return GetLabel('fwlevel', iString)
 def GetPingResponseDialogLabel(iString): return GetLabel('pingr', iString)
-def GetActionsDynDnsDialogLabel(iString): return GetLabel('dyndns', iString)
+def GetDynDnsDialogLabel(iString): return GetLabel('dyndns', iString)
 def GetActionsDmzDialogLabel(iString): return GetLabel('dmz', iString)
 
 # Repeater

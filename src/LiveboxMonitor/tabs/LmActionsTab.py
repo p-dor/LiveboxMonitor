@@ -16,11 +16,11 @@ from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
 from LiveboxMonitor.dlg.LmPingResponse import PingResponseDialog
+from LiveboxMonitor.dlg.LmDynDns import DynDnsSetupDialog
 from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.lang.LmLanguages import (GetActionsLabel as lx,
 											 GetActionsMessage as mx,
-											 GetActionsDynDnsDialogLabel as ldx,
 											 GetActionsDmzDialogLabel as lzx)
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
@@ -33,16 +33,6 @@ TAB_NAME = 'actionTab'
 
 # Static Config
 BUTTON_WIDTH = 150
-
-# DynDNS host list columns
-class HostCol(IntEnum):
-	Service = 0
-	HostName = 1
-	UserName = 2
-	Password = 3
-	LastUpdate = 4
-	Status = 5
-	Count = 6
 
 # DMZ device list columns
 class DmzCol(IntEnum):
@@ -192,7 +182,7 @@ class LmActions:
 		aNetworkButtons.addWidget(aPingResponseButton)
 
 		aDynDNSButton = QtWidgets.QPushButton(lx('DynDNS...'), objectName = 'dynDNS')
-		aDynDNSButton.clicked.connect(self.dynDNSButtonClick)
+		aDynDNSButton.clicked.connect(self.dynDnsButtonClick)
 		aDynDNSButton.setMinimumWidth(BUTTON_WIDTH)
 		aNetworkButtons.addWidget(aDynDNSButton)
 
@@ -560,9 +550,9 @@ class LmActions:
 
 
 	### Click on DynDNS button
-	def dynDNSButtonClick(self):
-		aDynDNSSetupDialog = DynDNSSetupDialog(self)
-		aDynDNSSetupDialog.exec()
+	def dynDnsButtonClick(self):
+		aDynDnsSetupDialog = DynDnsSetupDialog(self)
+		aDynDnsSetupDialog.exec()
 
 
 	### Click on DMZ button
@@ -651,351 +641,6 @@ class LmActions:
 	### Click on Quit Application button
 	def quitButtonClick(self):
 		self.close()
-
-
-
-# ################################ DynDNS setup dialog ################################
-class DynDNSSetupDialog(QtWidgets.QDialog):
-	### Constructor
-	def __init__(self, iParent = None):
-		super(DynDNSSetupDialog, self).__init__(iParent)
-		self.resize(720, 400)
-
-		self._app = iParent
-		self._hostSelection = -1
-		self._init = True
-		self._showPasswords = False
-
-		# Host box
-		aHostLayout = QtWidgets.QHBoxLayout()
-		aHostLayout.setSpacing(30)
-
-		aHostListLayout = QtWidgets.QVBoxLayout()
-		aHostListLayout.setSpacing(5)
-
-		# Host list columns
-		self._hostList = QtWidgets.QTableWidget(objectName = 'hostList')
-		self._hostList.setColumnCount(HostCol.Count)
-
-		# Set columns
-		self._hostList.setHorizontalHeaderLabels((ldx('Service'), ldx('Host Name'), ldx('User Email'), ldx('Password'), ldx('Last Update'), ldx('Status')))
-
-		aHeader = self._hostList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(HostCol.HostName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(HostCol.UserName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-
-		# Assign tags for tooltips
-		aModel = aHeader.model()
-		aModel.setHeaderData(HostCol.Service, QtCore.Qt.Orientation.Horizontal, 'hlist_Service', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(HostCol.HostName, QtCore.Qt.Orientation.Horizontal, 'hlist_HostName', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(HostCol.UserName, QtCore.Qt.Orientation.Horizontal, 'hlist_UserName', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(HostCol.Password, QtCore.Qt.Orientation.Horizontal, 'hlist_Password', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(HostCol.LastUpdate, QtCore.Qt.Orientation.Horizontal, 'hlist_LastUpdate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(HostCol.Status, QtCore.Qt.Orientation.Horizontal, 'hlist_Status', QtCore.Qt.ItemDataRole.UserRole)
-
-		self._hostList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._hostList.setColumnWidth(HostCol.Service, 90)
-		self._hostList.setColumnWidth(HostCol.HostName, 80)
-		self._hostList.setColumnWidth(HostCol.UserName, 80)
-		self._hostList.setColumnWidth(HostCol.Password, 130)
-		self._hostList.setColumnWidth(HostCol.LastUpdate, 120)
-		self._hostList.setColumnWidth(HostCol.Status, 120)
-		self._hostList.verticalHeader().hide()
-		self._hostList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._hostList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._hostList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._hostList.setMinimumWidth(880)
-		self._hostList.itemSelectionChanged.connect(self.hostListClick)
-		LmConfig.SetTableStyle(self._hostList)
-		self._hostList.setMinimumHeight(LmConfig.TableHeight(4))
-
-		aHostListLayout.addWidget(self._hostList, 1)
-
-		aHostButtonBox = QtWidgets.QHBoxLayout()
-		aHostButtonBox.setSpacing(5)
-
-		aRefreshButton = QtWidgets.QPushButton(ldx('Refresh'), objectName = 'refresh')
-		aRefreshButton.clicked.connect(self.refreshButtonClick)
-		aHostButtonBox.addWidget(aRefreshButton)
-		self._showPasswordButton = QtWidgets.QPushButton(ldx('Show Passwords'), objectName = 'showPassword')
-		self._showPasswordButton.clicked.connect(self.showPasswordButtonClick)
-		aHostButtonBox.addWidget(self._showPasswordButton)
-		self._delHostButton = QtWidgets.QPushButton(ldx('Delete'), objectName = 'delHost')
-		self._delHostButton.clicked.connect(self.delHostButtonClick)
-		aHostButtonBox.addWidget(self._delHostButton)
-		aHostListLayout.addLayout(aHostButtonBox, 0)
-		aHostLayout.addLayout(aHostListLayout, 0)
-
-		aHostGroupBox = QtWidgets.QGroupBox(ldx('Hosts'), objectName = 'hostGroup')
-		aHostGroupBox.setLayout(aHostLayout)
-
-		# Add host box
-		aServiceLabel = QtWidgets.QLabel(ldx('Service'), objectName = 'serviceLabel')
-		self._serviceCombo = QtWidgets.QComboBox(objectName = 'serviceCombo')
-		self.loadServiceCombo()
-		aHostNameLabel = QtWidgets.QLabel(ldx('Host Name'), objectName = 'hostNameLabel')
-		self._hostName = QtWidgets.QLineEdit(objectName = 'hostNameEdit')
-		self._hostName.textChanged.connect(self.hostTyped)
-		aUserNameLabel = QtWidgets.QLabel(ldx('User Email'), objectName = 'userNameLabel')
-		self._userName = QtWidgets.QLineEdit(objectName = 'userNameEdit')
-		self._userName.textChanged.connect(self.hostTyped)
-		aPasswordLabel = QtWidgets.QLabel(ldx('Password'), objectName = 'passwordLabel')
-		self._password = QtWidgets.QLineEdit(objectName = 'passwordEdit')
-		self._password.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-		self._password.textChanged.connect(self.hostTyped)
-		self._addHostButton = QtWidgets.QPushButton(ldx('Add'), objectName = 'addHost')
-		self._addHostButton.clicked.connect(self.addHostButtonClick)
-		self._addHostButton.setDisabled(True)
-
-		aHostEditGrid = QtWidgets.QGridLayout()
-		aHostEditGrid.setSpacing(10)
-
-		aHostEditGrid.addWidget(aServiceLabel, 0, 0)
-		aHostEditGrid.addWidget(self._serviceCombo, 0, 1)
-		aHostEditGrid.addWidget(aHostNameLabel, 0, 2)
-		aHostEditGrid.addWidget(self._hostName, 0, 3)
-		aHostEditGrid.addWidget(aUserNameLabel, 1, 0)
-		aHostEditGrid.addWidget(self._userName, 1, 1)
-		aHostEditGrid.addWidget(aPasswordLabel, 1, 2)
-		aHostEditGrid.addWidget(self._password, 1, 3)
-		aHostEditGrid.addWidget(self._addHostButton, 0, 4, 2, 2)
-
-		aHostEditGroupBox = QtWidgets.QGroupBox(ldx('Add Host'), objectName = 'addHostGroup')
-		aHostEditGroupBox.setLayout(aHostEditGrid)
-
-		# Button bar
-		self._disableButton = QtWidgets.QPushButton(self.getDisableButtonTitle(), objectName = 'disableAll')
-		self._disableButton.setStyleSheet('padding-left: 15px; padding-right: 15px; padding-top: 3px; padding-bottom: 3px;')
-		self._disableButton.clicked.connect(self.disableButtonClick)
-		aOkButton = QtWidgets.QPushButton(ldx('OK'), objectName = 'ok')
-		aOkButton.clicked.connect(self.accept)
-		aOkButton.setDefault(True)
-		aButtonBar = QtWidgets.QHBoxLayout()
-		aButtonBar.setSpacing(10)
-		aButtonBar.addWidget(self._disableButton, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		# Final layout
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.setSpacing(20)
-		aVBox.addWidget(aHostGroupBox, 1)
-		aVBox.addWidget(aHostEditGroupBox, 0)
-		aVBox.addLayout(aButtonBar, 0)
-
-		self._hostName.setFocus()
-
-		LmConfig.SetToolTips(self, 'dyndns')
-
-		self.setWindowTitle(ldx('DynDNS'))
-		self.setModal(True)
-		self.loadHosts()
-		self.show()
-
-		self._init = False
-
-
-	### Load host list
-	def loadHosts(self):
-		self._app.startTask(ldx('Loading DynDNS hosts...'))
-
-		try:
-			d = self._app._session.request('DynDNS', 'getHosts')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None:
-			self._app.displayError(mx('Cannot load DynDNS host list.', 'dynDnsLoadErr'))
-			return
-
-		i = 0
-		for h in d:
-			self._hostList.insertRow(i)
-			self._hostList.setItem(i, HostCol.Service, QtWidgets.QTableWidgetItem(h.get('service', '')))
-			self._hostList.setItem(i, HostCol.HostName, QtWidgets.QTableWidgetItem(h.get('hostname', '')))
-			self._hostList.setItem(i, HostCol.UserName, QtWidgets.QTableWidgetItem(h.get('username', '')))
-			if self._showPasswords:
-				self._hostList.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem(h.get('password', '')))
-			else:
-				self._hostList.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem('******'))
-			self._hostList.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(h.get('last_update'))))
-			self._hostList.setItem(i, HostCol.Status, QtWidgets.QTableWidgetItem(h.get('status', '')))
-
-			i += 1
-
-		self.hostListClick()
-		self._app.endTask()
-
-
-	### Click on host list item
-	def hostListClick(self):
-		aNewSelection = self._hostList.currentRow()
-
-		# Check if selection really changed
-		if not self._init and self._hostSelection == aNewSelection:
-			return
-		self._hostSelection = aNewSelection
-
-		self._delHostButton.setDisabled(aNewSelection < 0)
-
-
-	### Load service combo box
-	def loadServiceCombo(self):
-		try:
-			d = self._app._session.request('DynDNS', 'getServices')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None or not len(d):
-			self._app.displayError(mx('Cannot load DynDNS services.', 'dynDnsSvcErr'))
-			return
-
-		for s in d:
-			self._serviceCombo.addItem(s)
-
-
-	### Text changed in host edit box field
-	def hostTyped(self, iText):
-		h = self._hostName.text()
-		u = self._userName.text()
-		p = self._password.text()
-		self._addHostButton.setDisabled(not len(h) or not len(u) or not len(p))
-
-
-	### Click on refresh button
-	def refreshButtonClick(self):
-		self._hostList.clearContents()
-		self._hostList.setRowCount(0)
-		self._hostSelection = -1
-		self._init = True
-		self.loadHosts()
-		self._init = False
-
-
-	### Click on show password button
-	def showPasswordButtonClick(self):
-		if self._showPasswords:
-			self._showPasswordButton.setText(ldx('Show Passwords'))
-			self._showPasswords = False
-		else:
-			self._showPasswordButton.setText(ldx('Hide Passwords'))
-			self._showPasswords = True
-		self.refreshButtonClick()
-
-
-	### Click on delete host button
-	def delHostButtonClick(self):
-		i = self._hostSelection
-		if i < 0:
-			return
-
-		# Delete the host entry
-		aHostName = self._hostList.item(i, HostCol.HostName).text()
-		try:
-			d = self._app._session.request('DynDNS', 'delHost', { 'hostname': aHostName })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None or not d:
-			self._app.displayError(mx('Cannot delete DynDNS host.', 'dynDnsDelErr'))
-			return
-
-		# Delete the list line
-		self._hostSelection = -1
-		self._init = True
-		self._hostList.removeRow(i)
-		self._init = False
-
-		# Update selection
-		self._hostSelection = self._hostList.currentRow()
-
-
-	### Click on add host button
-	def addHostButtonClick(self):
-		# Hostname has to be unique
-		aHostName = self._hostName.text()
-		if not len(aHostName):
-			return
-		i = 0
-		n = self._hostList.rowCount()
-		while (i < n):
-			if self._hostList.item(i, HostCol.HostName).text() == aHostName:
-				self._app.displayError(mx('Host name {} is already used.', 'dynDnsHostName').format(aHostName))
-				return
-			i += 1
-
-		# Set parameters
-		h = {}
-		h['service'] = self._serviceCombo.currentText()
-		h['username'] = self._userName.text()
-		h['hostname'] = aHostName
-		h['password'] = self._password.text()
-
-		# Call Livebox API
-		try:
-			d = self._app._session.request('DynDNS', 'addHost', h)
-		except BaseException as e:
-			LmTools.Error(str(e))
-			self._app.displayError('DynDNS:addHost query error.')
-			return
-
-		if (d is not None) and ('status' in d):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(d)
-			if len(aErrors):
-				self._app.displayError(aErrors)
-				return
-			self.refreshButtonClick()
-			self._userName.setText('')
-			self._hostName.setText('')
-			self._password.setText('')
-		else:
-			self._app.displayError('DynDNS:addHost query failed.')
-
-
-	### Get global enable status
-	def getGlobalEnableStatus(self):
-		try:
-			d = self._app._session.request('DynDNS', 'getGlobalEnable')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None:
-			LmTools.Error(mx('Cannot get DynDNS global enable status.', 'dynDnsEnableErr'))
-			return False
-		return d
-
-
-	### Click on enable/disable button
-	def disableButtonClick(self):
-		try:
-			d = self._app._session.request('DynDNS', 'setGlobalEnable', { 'enable': not self.getGlobalEnableStatus() })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if d is None or not d:
-			LmTools.Error('Cannot set DynDNS global enable status.')
-
-		self._disableButton.setText(self.getDisableButtonTitle())
-		self.refreshButtonClick()
-
-
-	### get disable all button title
-	def getDisableButtonTitle(self):
-		if self.getGlobalEnableStatus():
-			return ldx('Disable All')
-		else:
-			return ldx('Enable All')
 
 
 
