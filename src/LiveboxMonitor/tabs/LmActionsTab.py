@@ -313,7 +313,7 @@ class LmActions:
 			aWifiConfigDialog = WifiConfigDialog(self, c, False)
 			if aWifiConfigDialog.exec():
 				self.startTask(lx('Setting Wifi Configuration...'))
-				n = aWifiConfigDialog.getConfig()
+				n = aWifiConfigDialog.get_config()
 				if not self._api._wifi.set_config(c, n):
 					self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
 				self.endTask()
@@ -330,7 +330,7 @@ class LmActions:
 			aWifiConfigDialog = WifiConfigDialog(self, c, True)
 			if aWifiConfigDialog.exec():
 				self.startTask(lx('Setting Guest Wifi Configuration...'))
-				n = aWifiConfigDialog.getConfig()
+				n = aWifiConfigDialog.get_config()
 				if not self._api._wifi.set_guest_config(c, n):
 					self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
 				self.endTask()
@@ -445,7 +445,7 @@ class LmActions:
 			self.startTask(lx('Setting LEDs & Screen Setup...'))
 
 			# Set orange LED level if changed
-			aNewOrangeLedLevel = aScreenDialog.getOrangeLedLevel()
+			aNewOrangeLedLevel = aScreenDialog.get_orange_led_level()
 			if aNewOrangeLedLevel != aOrangeLedLevel:
 				try:
 					self._api._screen.set_orange_led_level(aNewOrangeLedLevel)
@@ -453,7 +453,7 @@ class LmActions:
 					self.displayError(str(e))
 
 			# Set show wifi password if changed
-			aNewShowWifiPassword = aScreenDialog.getShowWifiPassword()
+			aNewShowWifiPassword = aScreenDialog.get_show_wifi_password()
 			if aNewShowWifiPassword != aShowWifiPassword:
 				try:
 					self._api._screen.set_show_wifi_password(aNewShowWifiPassword)
@@ -493,7 +493,7 @@ class LmActions:
 		self.endTask()
 
 		aHistoryDialog = RebootHistoryDialog('Livebox', self)
-		aHistoryDialog.loadHistory(d)
+		aHistoryDialog.load_history(d)
 		aHistoryDialog.exec()
 
 
@@ -511,7 +511,7 @@ class LmActions:
 			self.startTask(lx('Setting Firewall Levels...'))
 
 			# Set new IPv4 firewall level if changed
-			aNewFirewallIPv4Level = aFirewallLevelDialog.getIPv4Level()
+			aNewFirewallIPv4Level = aFirewallLevelDialog.get_ipv4_level()
 			if aNewFirewallIPv4Level != aFirewallIPv4Level:
 				try:
 					self._api._firewall.set_ipv4_firewall_level(aNewFirewallIPv4Level)
@@ -519,7 +519,7 @@ class LmActions:
 					self.displayError(str(e))
 
 			# Set new IPv6 firewall level if changed
-			aNewFirewallIPv6Level = aFirewallLevelDialog.getIPv6Level()
+			aNewFirewallIPv6Level = aFirewallLevelDialog.get_ipv6_level()
 			if aNewFirewallIPv6Level != aFirewallIPv6Level:
 				try:
 					self._api._firewall.set_ipv6_firewall_level(aNewFirewallIPv6Level)
@@ -545,8 +545,8 @@ class LmActions:
 		aPingResponseDialog = PingResponseDialog(aIPv4Ping, aIPv6Ping, self)
 		if aPingResponseDialog.exec():
 			# Set new ping responses level if changed
-			aNewIPv4Ping = aPingResponseDialog.getIPv4()
-			aNewIPv6Ping = aPingResponseDialog.getIPv6()
+			aNewIPv4Ping = aPingResponseDialog.get_ipv4()
+			aNewIPv6Ping = aPingResponseDialog.get_ipv6()
 			if (aNewIPv4Ping != aIPv4Ping) or (aNewIPv6Ping != aIPv6Ping):
 				self.startTask(lx('Set Ping Responses...'))
 				p = {}

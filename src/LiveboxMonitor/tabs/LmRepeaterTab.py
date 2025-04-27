@@ -884,7 +884,7 @@ class LmRepHandler:
 				return
 
 			aHistoryDialog = RebootHistoryDialog('Repeater', self._app)
-			aHistoryDialog.loadHistory(d)
+			aHistoryDialog.load_history(d)
 			aHistoryDialog.exec()
 		else:
 			self._app.displayError(mx('Not signed to repeater.', 'noSign'))

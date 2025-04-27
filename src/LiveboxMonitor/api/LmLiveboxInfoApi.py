@@ -49,7 +49,7 @@ class LiveboxInfoApi(LmApi):
             if aModel:
                 self._livebox_model = LIVEBOX_MODEL_MAP.get(aModel)
             if self._livebox_model is None:
-                LmTools.Error('Unknown Livebox model: {}.'.format(aModel))
+                LmTools.Error(f'Unknown Livebox model: {aModel}.')
                 self._livebox_model = 0
             self._software_version = d.get('SoftwareVersion', '')
 

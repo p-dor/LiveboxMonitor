@@ -16,434 +16,434 @@ MAC_FILTERING_MODES = ['Off', 'WhiteList', 'BlackList']
 
 # ################################ Wifi Configuration dialog ################################
 class WifiConfigDialog(QtWidgets.QDialog):
-	def __init__(self, iParent, iConfig, iGuest):
-		super(WifiConfigDialog, self).__init__(iParent)
-
-		self._guest = iGuest
-		if self._guest:
-			self.resize(390, 350)
-		else:
-			self.resize(390, 380)
-
-		self._enableCheckBox = QtWidgets.QCheckBox(lx('Enabled'), objectName = 'enableCheckbox')
-		self._enableCheckBox.clicked.connect(self.enableClick)
-
-		if self._guest:
-			aDurationLabel = QtWidgets.QLabel(lx('Duration'), objectName = 'durationLabel')
-			aIntValidator = QtGui.QIntValidator()
-			aIntValidator.setRange(0, 999)
-			self._durationEdit = QtWidgets.QLineEdit(objectName = 'durationEdit')
-			self._durationEdit.setValidator(aIntValidator)
-			aDurationUnit = QtWidgets.QLabel(lx('hours (0 = unlimited).'), objectName = 'durationUnit')
-
-		aSeparator = QtWidgets.QFrame()
-		aSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-
-		aFreqLabel = QtWidgets.QLabel(lx('Radio Band'), objectName = 'freqLabel')
-		self._freqCombo = QtWidgets.QComboBox(objectName = 'freqCombo')
-		self._freqCombo.activated.connect(self.freqSelected)
-
-		aSsidLabel = QtWidgets.QLabel(lx('SSID'), objectName = 'ssidLabel')
-		self._ssidEdit = QtWidgets.QLineEdit(objectName = 'ssidEdit')
-
-		aOptionsLabel = QtWidgets.QLabel(lx('Options'), objectName = 'optionsLabel')
-		self._freqEnabledCheckBox = QtWidgets.QCheckBox(lx('Enabled'), objectName = 'freqEnabledCheckbox')
-		self._broadcastCheckBox = QtWidgets.QCheckBox(lx('SSID Broadcast'), objectName = 'broadcastCheckbox')
-		self._wpsCheckBox = QtWidgets.QCheckBox(lx('WPS'), objectName = 'wpsCheckbox')
-		aOptionsBox = QtWidgets.QHBoxLayout()
-		aOptionsBox.setSpacing(10)
-		aOptionsBox.addWidget(self._freqEnabledCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aOptionsBox.addWidget(self._broadcastCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aOptionsBox.addWidget(self._wpsCheckBox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		aMacFilteringLabel = QtWidgets.QLabel(lx('MAC Filtering'), objectName = 'macFilteringLabel')
-		self._macFilteringCombo = QtWidgets.QComboBox(objectName = 'macFilteringCombo')
-		self._macFilteringCombo.addItems(MAC_FILTERING_MODES)
-
-		aSecuLabel = QtWidgets.QLabel(lx('Security'), objectName = 'secuLabel')
-		self._secuCombo = QtWidgets.QComboBox(objectName = 'secuCombo')
-		self._secuCombo.activated.connect(self.secuSelected)
-
-		aPassLabel = QtWidgets.QLabel(lx('Password'), objectName = 'passLabel')
-		self._passEdit = QtWidgets.QLineEdit(objectName = 'passEdit')
-		self._passEdit.textChanged.connect(self.passTyped)
-
-		if not self._guest:
-			aChanLabel = QtWidgets.QLabel(lx('Channel'), objectName = 'chanLabel')
-			self._chanCombo = QtWidgets.QComboBox(objectName = 'chanCombo')
-
-			aModeLabel = QtWidgets.QLabel(lx('Mode'), objectName = 'modeLabel')
-			self._modeCombo = QtWidgets.QComboBox(objectName = 'modeCombo')
-
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-
-		if self._guest:
-			aGrid.addWidget(self._enableCheckBox, 0, 0, 1, 4)
-			aGrid.addWidget(aDurationLabel, 1, 0)
-			aGrid.addWidget(self._durationEdit, 1, 1)
-			aGrid.addWidget(aDurationUnit, 1, 2, 1, 3)
-			aGrid.addWidget(aSeparator, 2, 0, 1, 5)
-			aGrid.addWidget(aFreqLabel, 3, 0)
-			aGrid.addWidget(self._freqCombo, 3, 1, 1, 4)
-			aGrid.addWidget(aSsidLabel, 4, 0)
-			aGrid.addWidget(self._ssidEdit, 4, 1, 1, 4)
-			aGrid.addWidget(aOptionsLabel, 5, 0)
-			aGrid.addLayout(aOptionsBox, 5, 1, 1, 4)
-			aGrid.addWidget(aMacFilteringLabel, 6, 0)
-			aGrid.addWidget(self._macFilteringCombo, 6, 1, 1, 4)			
-			aGrid.addWidget(aSecuLabel, 7, 0)
-			aGrid.addWidget(self._secuCombo, 7, 1, 1, 4)
-			aGrid.addWidget(aPassLabel, 8, 0)
-			aGrid.addWidget(self._passEdit, 8, 1, 1, 4)
-
-			# Cannot be changed on guest interfaces
-			self._broadcastCheckBox.setEnabled(False)
-			self._wpsCheckBox.setEnabled(False)
-			self._macFilteringCombo.setEnabled(False)
-		else:
-			aGrid.addWidget(self._enableCheckBox, 0, 0, 1, 2)
-			aGrid.addWidget(aSeparator, 1, 0, 1, 2)
-			aGrid.addWidget(aFreqLabel, 2, 0)
-			aGrid.addWidget(self._freqCombo, 2, 1)
-			aGrid.addWidget(aSsidLabel, 3, 0)
-			aGrid.addWidget(self._ssidEdit, 3, 1)
-			aGrid.addWidget(aOptionsLabel, 4, 0)
-			aGrid.addLayout(aOptionsBox, 4, 1)
-			aGrid.addWidget(aMacFilteringLabel, 5, 0)
-			aGrid.addWidget(self._macFilteringCombo, 5, 1)			
-			aGrid.addWidget(aSecuLabel, 6, 0)
-			aGrid.addWidget(self._secuCombo, 6, 1)
-			aGrid.addWidget(aPassLabel, 7, 0)
-			aGrid.addWidget(self._passEdit, 7, 1)
-			aGrid.addWidget(aChanLabel, 8, 0)
-			aGrid.addWidget(self._chanCombo, 8, 1)
-			aGrid.addWidget(aModeLabel, 9, 0)
-			aGrid.addWidget(self._modeCombo, 9, 1)
-
-		self._okButton = QtWidgets.QPushButton(lx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.SetToolTips(self, 'wconfig')
-
-		if self._guest:
-			self.setWindowTitle(lx('Guest Wifi Configuration'))
-		else:
-			self.setWindowTitle(lx('Wifi Configuration'))
-
-		self.setConfig(iConfig)
-
-		self._ssidEdit.setFocus()
-		self.setModal(True)
-		self.show()
-
-
-	def setConfig(self, iConfig):
-		self._config = copy.deepcopy(iConfig)
-		self._currentFreq = None
-
-		if self._config['Enable']:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if self._guest:
-			self._durationEdit.setText(str(self._config['Duration'] // 3600))
-			aTimer = self._config['Timer']
-			if aTimer:
-				self._enableCheckBox.setText(lx('Enabled for {}').format(LmTools.FmtTime(aTimer, True)))
-
-		self.enableClick()		
-		self.loadFreqCombo()
-		self.freqSelected(0)
-
-
-	def enableClick(self):
-		if self._guest:
-			if self._enableCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-				self._durationEdit.setText(str(self._config['Duration'] // 3600))
-				self._durationEdit.setEnabled(True)
-			else:
-				self._durationEdit.setText('0')
-				self._durationEdit.setEnabled(False)
-
-
-	def loadFreqCombo(self):
-		c = self._config['Intf']
-		for f in c:
-			self._freqCombo.addItem(f['Name'], userData = f['Key'])
-
-
-	def freqSelected(self, iIndex):
-		# First save config of previously selected freq
-		self.saveFreqConfig()
-
-		# Retrieve interface in config according to selection
-		aKey, i = self.getCurrentKeyIntf()
-		if i is None:
-			return
-		self._currentFreq = aKey
-
-		self._ssidEdit.setText(i['SSID'])
-		self._passEdit.setText(i['KeyPass'])
-
-		if i['Enable']:
-			self._freqEnabledCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._freqEnabledCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if i['Broadcast']:
-			self._broadcastCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._broadcastCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if i['WPS']:
-			self._wpsCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._wpsCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		try:
-			aIndex = MAC_FILTERING_MODES.index(i['MACFiltering'])
-		except:
-			MAC_FILTERING_MODES.append(i['MACFiltering'])
-			self._macFilteringCombo.addItem(i['MACFiltering'])
-			aIndex = self._macFilteringCombo.count() - 1
-		self._macFilteringCombo.setCurrentIndex(aIndex)
-
-		self.loadSecuCombo()
-
-		if not self._guest:
-			self.loadChanCombo()
-			self.loadModeCombo()
-
-
-	def saveFreqConfig(self):
-		if self._currentFreq is not None:
-			i = next((i for i in self._config['Intf'] if i['Key'] == self._currentFreq), None)
-			if i is None:
-				LmTools.Error('Internal error, unconsistent configuration - intf not found')
-				self.reject()
-				return
-			i['SSID'] = self._ssidEdit.text()
-			i['Enable'] = self._freqEnabledCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-			i['Broadcast'] = self._broadcastCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-			i['WPS'] = self._wpsCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-			i['MACFiltering'] = self._macFilteringCombo.currentText()
-			i['Secu'] = self._secuCombo.currentText()
-			if i['Secu'] != 'None':
-				i['KeyPass'] = self._passEdit.text()
-
-			if not self._guest:
-				aChan = self._chanCombo.currentText()
-				if aChan == 'Auto':
-					i['ChannelAuto'] = True
-				else:
-					i['ChannelAuto'] = False
-					i['Channel'] = int(aChan)
-				i['Mode'] = self._modeCombo.currentText()
-
-
-	def passTyped(self, iText):
-		self.setOkButtonState()
-
-
-	def loadSecuCombo(self):
-		aKey, i = self.getCurrentKeyIntf()
-		if i is None:
-			return
-		aSecu = i['Secu']
-		aSecuList = i['SecuAvail']
-		if aSecuList is None:
-			LmTools.Error('Internal error, unconsistent configuration - no security list')
-			self.reject()
-		aSecuList = aSecuList.split(',')
-		self._secuCombo.clear()
-		n = 0
-		aSelection = -1
-		for s in aSecuList:
-			if not 'WEP' in s:
-				if s == aSecu:
-					aSelection = n
-				self._secuCombo.addItem(s)
-				n += 1
-
-		if aSelection == -1:
-			if aSecu is not None:
-				self._secuCombo.addItem(aSecu)
-				aSelection = n
-				LmTools.LogDebug(1, 'Warning - security {} not in list'.format(aSecu))
-			elif n == 0:
-				LmTools.Error('Internal error, unconsistent configuration - no security')
-				self.reject()
-			else:
-				LmTools.LogDebug(1, 'Warning - no security, defaulting to first')
-				aSelection = 0
-
-		if aSelection >= 0:
-			self._secuCombo.setCurrentIndex(aSelection)
-			self.secuSelected(aSelection)
-
-
-	def secuSelected(self, iIndex):
-		aKey, i = self.getCurrentKeyIntf()
-		if i is None:
-			return
-
-		aSecu = self._secuCombo.currentText()
-		if aSecu == 'None':
-			# Save pass key in case secu is reselected
-			i['KeyPass'] = self._passEdit.text()
-			self._passEdit.setEnabled(False)
-			self._passEdit.setText('')
-		else:
-			self._passEdit.setEnabled(True)
-			if len(self._passEdit.text()) == 0:
-				self._passEdit.setText(i['KeyPass'])
-
-		self.setOkButtonState()
-
-
-	def loadChanCombo(self):
-		aKey, i = self.getCurrentKeyIntf()
-		if i is None:
-			return
-		aIntf = i['LLIntf']
-
-		aModes = self._config['Modes'].get(aIntf)
-		if aModes is not None:
-			aChannels = aModes.get('Channels')
-			aChannelsInUse = aModes.get('ChannelsInUse')
-		else:
-			aChannels = None
-			aChannelsInUse = None
-		if aChannels is None:
-			LmTools.Error('Internal error, unconsistent configuration - no channel list')
-			self.reject()
-			return
-		aChannels = aChannels.split(',')
-		if aChannelsInUse is None:
-			aChannelsInUse = []
-		else:
-			aChannelsInUse = aChannelsInUse.split(',')
-
-		aCurrentChannel = str(i['Channel'])
-
-		self._chanCombo.clear()
-		n = 0
-		aSelection = -1
-		if i['ChannelAutoSupport']:
-			self._chanCombo.addItem('Auto')
-			if i['ChannelAuto']:
-				aSelection = n
-			n += 1
-		for c in aChannels:
-			if (not c in aChannelsInUse) or (c == aCurrentChannel):
-				self._chanCombo.addItem(c)
-				if (c == aCurrentChannel) and (aSelection == -1):
-					aSelection = n
-				n += 1
-
-		if aSelection == -1:
-			if aCurrentChannel != 'None':
-				self._chanCombo.addItem(aCurrentChannel)
-				aSelection = n
-				LmTools.LogDebug(1, 'Warning - channel {} not in list'.format(aSecu))
-			elif n == 0:
-				LmTools.Error('Internal error, unconsistent configuration - no channel')
-				self.reject()
-			else:
-				LmTools.LogDebug(1, 'Warning - no channel, defaulting to first')
-				aSelection = 0
-
-		if aSelection >= 0:
-			self._chanCombo.setCurrentIndex(aSelection)
-
-
-	def loadModeCombo(self):
-		aKey, i = self.getCurrentKeyIntf()
-		if i is None:
-			return
-		aIntf = i['LLIntf']
-
-		aModes = self._config['Modes'].get(aIntf)
-		if aModes is not None:
-			aModes = aModes.get('Modes')
-		if aModes is None:
-			LmTools.Error('Internal error, unconsistent configuration - no mode list')
-			self.reject()
-			return
-		aModes = aModes.split(',')
-
-		aCurrentMode = i['Mode']
-
-		self._modeCombo.clear()
-		n = 0
-		aSelection = -1
-		for m in aModes:
-			self._modeCombo.addItem(m)
-			if m == aCurrentMode:
-				aSelection = n
-			n += 1
-
-		if aSelection == -1:
-			if aCurrentMode is not None:
-				self._modeCombo.addItem(aCurrentMode)
-				aSelection = n
-				LmTools.LogDebug(1, 'Warning - mode {} not in list'.format(aCurrentMode))
-			elif n == 0:
-				LmTools.Error('Internal error, unconsistent configuration - no mode')
-				self.reject()
-			else:
-				LmTools.LogDebug(1, 'Warning - no mode, defaulting to first')
-				aSelection = 0
-
-		if aSelection >= 0:
-			self._modeCombo.setCurrentIndex(aSelection)
-
-
-	def getCurrentKeyIntf(self):
-		aKey = self._freqCombo.currentData()
-		i = next((i for i in self._config['Intf'] if i['Key'] == aKey), None)
-		if i is None:
-			LmTools.Error('Internal error, unconsistent configuration - intf {} not found'.format(aKey))
-			self.reject()
-		return aKey, i
-
-
-	def getConfig(self):
-		self._config['Enable'] = self._enableCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-		if self._guest:
-			self._config['Duration'] = int(self._durationEdit.text()) * 3600
-		self.saveFreqConfig()
-		return self._config
-
-
-	def setOkButtonState(self):
-		# Check if another frequency is in background with no passkey
-		aDisable = False
-		for i in self._config['Intf']:
-			if i['Key'] == self._currentFreq:
-				continue
-			if (i['Secu'] != 'None') and (len(i['KeyPass']) == 0):
-				aDisable = True
-				break
-
-		# Check current frequency
-		if not aDisable:
-			if (self._secuCombo.currentText() != 'None') and (len(self._passEdit.text()) == 0):
-				aDisable = True
-
-		self._okButton.setDisabled(aDisable)
+    def __init__(self, parent, config, guest):
+        super(WifiConfigDialog, self).__init__(parent)
+
+        self._guest = guest
+        if self._guest:
+            self.resize(390, 350)
+        else:
+            self.resize(390, 380)
+
+        self._enable_checkbox = QtWidgets.QCheckBox(lx('Enabled'), objectName='enableCheckbox')
+        self._enable_checkbox.clicked.connect(self.enable_click)
+
+        if self._guest:
+            duration_label = QtWidgets.QLabel(lx('Duration'), objectName='durationLabel')
+            int_validator = QtGui.QIntValidator()
+            int_validator.setRange(0, 999)
+            self._duration_edit = QtWidgets.QLineEdit(objectName='durationEdit')
+            self._duration_edit.setValidator(int_validator)
+            duration_unit = QtWidgets.QLabel(lx('hours (0 = unlimited).'), objectName='durationUnit')
+
+        separator = QtWidgets.QFrame()
+        separator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        separator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+
+        freq_label = QtWidgets.QLabel(lx('Radio Band'), objectName='freqLabel')
+        self._freq_combo = QtWidgets.QComboBox(objectName='freqCombo')
+        self._freq_combo.activated.connect(self.freq_selected)
+
+        ssid_label = QtWidgets.QLabel(lx('SSID'), objectName='ssidLabel')
+        self._ssid_edit = QtWidgets.QLineEdit(objectName='ssidEdit')
+
+        options_label = QtWidgets.QLabel(lx('Options'), objectName='optionsLabel')
+        self._freq_enabled_checkbox = QtWidgets.QCheckBox(lx('Enabled'), objectName='freqEnabledCheckbox')
+        self._broadcast_checkbox = QtWidgets.QCheckBox(lx('SSID Broadcast'), objectName='broadcastCheckbox')
+        self._wps_checkbox = QtWidgets.QCheckBox(lx('WPS'), objectName='wpsCheckbox')
+        options_box = QtWidgets.QHBoxLayout()
+        options_box.setSpacing(10)
+        options_box.addWidget(self._freq_enabled_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        options_box.addWidget(self._broadcast_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        options_box.addWidget(self._wps_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+
+        mac_filtering_label = QtWidgets.QLabel(lx('MAC Filtering'), objectName='macFilteringLabel')
+        self._mac_filtering_combo = QtWidgets.QComboBox(objectName='macFilteringCombo')
+        self._mac_filtering_combo.addItems(MAC_FILTERING_MODES)
+
+        secu_label = QtWidgets.QLabel(lx('Security'), objectName='secuLabel')
+        self._secu_combo = QtWidgets.QComboBox(objectName='secuCombo')
+        self._secu_combo.activated.connect(self.secu_selected)
+
+        pass_label = QtWidgets.QLabel(lx('Password'), objectName='passLabel')
+        self._pass_edit = QtWidgets.QLineEdit(objectName='passEdit')
+        self._pass_edit.textChanged.connect(self.pass_typed)
+
+        if not self._guest:
+            chan_label = QtWidgets.QLabel(lx('Channel'), objectName='chanLabel')
+            self._chan_combo = QtWidgets.QComboBox(objectName='chanCombo')
+
+            mode_label = QtWidgets.QLabel(lx('Mode'), objectName='modeLabel')
+            self._mode_combo = QtWidgets.QComboBox(objectName='modeCombo')
+
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(10)
+
+        if self._guest:
+            grid.addWidget(self._enable_checkbox, 0, 0, 1, 4)
+            grid.addWidget(duration_label, 1, 0)
+            grid.addWidget(self._duration_edit, 1, 1)
+            grid.addWidget(duration_unit, 1, 2, 1, 3)
+            grid.addWidget(separator, 2, 0, 1, 5)
+            grid.addWidget(freq_label, 3, 0)
+            grid.addWidget(self._freq_combo, 3, 1, 1, 4)
+            grid.addWidget(ssid_label, 4, 0)
+            grid.addWidget(self._ssid_edit, 4, 1, 1, 4)
+            grid.addWidget(options_label, 5, 0)
+            grid.addLayout(options_box, 5, 1, 1, 4)
+            grid.addWidget(mac_filtering_label, 6, 0)
+            grid.addWidget(self._mac_filtering_combo, 6, 1, 1, 4)            
+            grid.addWidget(secu_label, 7, 0)
+            grid.addWidget(self._secu_combo, 7, 1, 1, 4)
+            grid.addWidget(pass_label, 8, 0)
+            grid.addWidget(self._pass_edit, 8, 1, 1, 4)
+
+            # Cannot be changed on guest interfaces
+            self._broadcast_checkbox.setEnabled(False)
+            self._wps_checkbox.setEnabled(False)
+            self._mac_filtering_combo.setEnabled(False)
+        else:
+            grid.addWidget(self._enable_checkbox, 0, 0, 1, 2)
+            grid.addWidget(separator, 1, 0, 1, 2)
+            grid.addWidget(freq_label, 2, 0)
+            grid.addWidget(self._freq_combo, 2, 1)
+            grid.addWidget(ssid_label, 3, 0)
+            grid.addWidget(self._ssid_edit, 3, 1)
+            grid.addWidget(options_label, 4, 0)
+            grid.addLayout(options_box, 4, 1)
+            grid.addWidget(mac_filtering_label, 5, 0)
+            grid.addWidget(self._mac_filtering_combo, 5, 1)          
+            grid.addWidget(secu_label, 6, 0)
+            grid.addWidget(self._secu_combo, 6, 1)
+            grid.addWidget(pass_label, 7, 0)
+            grid.addWidget(self._pass_edit, 7, 1)
+            grid.addWidget(chan_label, 8, 0)
+            grid.addWidget(self._chan_combo, 8, 1)
+            grid.addWidget(mode_label, 9, 0)
+            grid.addWidget(self._mode_combo, 9, 1)
+
+        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button.clicked.connect(self.accept)
+        self._ok_button.setDefault(True)
+        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button.clicked.connect(self.reject)
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.setSpacing(10)
+        hbox.addWidget(self._ok_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.addWidget(cancel_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+
+        vbox = QtWidgets.QVBoxLayout(self)
+        vbox.addLayout(grid, 0)
+        vbox.addLayout(hbox, 1)
+
+        LmConfig.SetToolTips(self, 'wconfig')
+
+        if self._guest:
+            self.setWindowTitle(lx('Guest Wifi Configuration'))
+        else:
+            self.setWindowTitle(lx('Wifi Configuration'))
+
+        self.set_config(config)
+
+        self._ssid_edit.setFocus()
+        self.setModal(True)
+        self.show()
+
+
+    def set_config(self, config):
+        self._config = copy.deepcopy(config)
+        self._current_freq = None
+
+        if self._config['Enable']:
+            self._enable_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._enable_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        if self._guest:
+            self._duration_edit.setText(str(self._config['Duration'] // 3600))
+            timer = self._config['Timer']
+            if timer:
+                self._enable_checkbox.setText(lx(f'Enabled for {LmTools.FmtTime(timer, True)}'))
+
+        self.enable_click()      
+        self.load_freq_combo()
+        self.freq_selected(0)
+
+
+    def enable_click(self):
+        if self._guest:
+            if self._enable_checkbox.checkState() == QtCore.Qt.CheckState.Checked:
+                self._duration_edit.setText(str(self._config['Duration'] // 3600))
+                self._duration_edit.setEnabled(True)
+            else:
+                self._duration_edit.setText('0')
+                self._duration_edit.setEnabled(False)
+
+
+    def load_freq_combo(self):
+        c = self._config['Intf']
+        for f in c:
+            self._freq_combo.addItem(f['Name'], userData = f['Key'])
+
+
+    def freq_selected(self, index):
+        # First save config of previously selected freq
+        self.save_freq_config()
+
+        # Retrieve interface in config according to selection
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+        self._current_freq = key
+
+        self._ssid_edit.setText(i['SSID'])
+        self._pass_edit.setText(i['KeyPass'])
+
+        if i['Enable']:
+            self._freq_enabled_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._freq_enabled_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        if i['Broadcast']:
+            self._broadcast_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._broadcast_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        if i['WPS']:
+            self._wps_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._wps_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        try:
+            new_index = MAC_FILTERING_MODES.index(i['MACFiltering'])
+        except:
+            MAC_FILTERING_MODES.append(i['MACFiltering'])
+            self._mac_filtering_combo.addItem(i['MACFiltering'])
+            new_index = self._mac_filtering_combo.count() - 1
+        self._mac_filtering_combo.setCurrentIndex(new_index)
+
+        self.load_secu_combo()
+
+        if not self._guest:
+            self.load_chan_combo()
+            self.load_mode_combo()
+
+
+    def save_freq_config(self):
+        if self._current_freq is not None:
+            i = next((i for i in self._config['Intf'] if i['Key'] == self._current_freq), None)
+            if i is None:
+                LmTools.Error('Internal error, unconsistent configuration - intf not found')
+                self.reject()
+                return
+            i['SSID'] = self._ssid_edit.text()
+            i['Enable'] = self._freq_enabled_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+            i['Broadcast'] = self._broadcast_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+            i['WPS'] = self._wps_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+            i['MACFiltering'] = self._mac_filtering_combo.currentText()
+            i['Secu'] = self._secu_combo.currentText()
+            if i['Secu'] != 'None':
+                i['KeyPass'] = self._pass_edit.text()
+
+            if not self._guest:
+                chan = self._chan_combo.currentText()
+                if chan == 'Auto':
+                    i['ChannelAuto'] = True
+                else:
+                    i['ChannelAuto'] = False
+                    i['Channel'] = int(chan)
+                i['Mode'] = self._mode_combo.currentText()
+
+
+    def pass_typed(self, text):
+        self.set_ok_button_state()
+
+
+    def load_secu_combo(self):
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+        secu = i['Secu']
+        secu_list = i['SecuAvail']
+        if secu_list is None:
+            LmTools.Error('Internal error, unconsistent configuration - no security list')
+            self.reject()
+        secu_list = secu_list.split(',')
+        self._secu_combo.clear()
+        n = 0
+        selection = -1
+        for s in secu_list:
+            if not 'WEP' in s:
+                if s == secu:
+                    selection = n
+                self._secu_combo.addItem(s)
+                n += 1
+
+        if selection == -1:
+            if secu is not None:
+                self._secu_combo.addItem(secu)
+                selection = n
+                LmTools.LogDebug(1, f'Warning - security {secu} not in list')
+            elif n == 0:
+                LmTools.Error('Internal error, unconsistent configuration - no security')
+                self.reject()
+            else:
+                LmTools.LogDebug(1, 'Warning - no security, defaulting to first')
+                selection = 0
+
+        if selection >= 0:
+            self._secu_combo.setCurrentIndex(selection)
+            self.secu_selected(selection)
+
+
+    def secu_selected(self, index):
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+
+        secu = self._secu_combo.currentText()
+        if secu == 'None':
+            # Save pass key in case secu is reselected
+            i['KeyPass'] = self._pass_edit.text()
+            self._pass_edit.setEnabled(False)
+            self._pass_edit.setText('')
+        else:
+            self._pass_edit.setEnabled(True)
+            if len(self._pass_edit.text()) == 0:
+                self._pass_edit.setText(i['KeyPass'])
+
+        self.set_ok_button_state()
+
+
+    def load_chan_combo(self):
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+        intf = i['LLIntf']
+
+        modes = self._config['Modes'].get(intf)
+        if modes is not None:
+            channels = modes.get('Channels')
+            channels_in_use = modes.get('ChannelsInUse')
+        else:
+            channels = None
+            channels_in_use = None
+        if channels is None:
+            LmTools.Error('Internal error, unconsistent configuration - no channel list')
+            self.reject()
+            return
+        channels = channels.split(',')
+        if channels_in_use is None:
+            channels_in_use = []
+        else:
+            channels_in_use = channels_in_use.split(',')
+
+        current_channel = str(i['Channel'])
+
+        self._chan_combo.clear()
+        n = 0
+        selection = -1
+        if i['ChannelAutoSupport']:
+            self._chan_combo.addItem('Auto')
+            if i['ChannelAuto']:
+                selection = n
+            n += 1
+        for c in channels:
+            if (not c in channels_in_use) or (c == current_channel):
+                self._chan_combo.addItem(c)
+                if (c == current_channel) and (selection == -1):
+                    selection = n
+                n += 1
+
+        if selection == -1:
+            if current_channel != 'None':
+                self._chan_combo.addItem(current_channel)
+                selection = n
+                LmTools.LogDebug(1, f'Warning - channel {secu} not in list')
+            elif n == 0:
+                LmTools.Error('Internal error, unconsistent configuration - no channel')
+                self.reject()
+            else:
+                LmTools.LogDebug(1, 'Warning - no channel, defaulting to first')
+                selection = 0
+
+        if selection >= 0:
+            self._chan_combo.setCurrentIndex(selection)
+
+
+    def load_mode_combo(self):
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+        intf = i['LLIntf']
+
+        modes = self._config['Modes'].get(intf)
+        if modes is not None:
+            modes = modes.get('Modes')
+        if modes is None:
+            LmTools.Error('Internal error, unconsistent configuration - no mode list')
+            self.reject()
+            return
+        modes = modes.split(',')
+
+        current_mode = i['Mode']
+
+        self._mode_combo.clear()
+        n = 0
+        selection = -1
+        for m in modes:
+            self._mode_combo.addItem(m)
+            if m == current_mode:
+                selection = n
+            n += 1
+
+        if selection == -1:
+            if current_mode is not None:
+                self._mode_combo.addItem(current_mode)
+                selection = n
+                LmTools.LogDebug(1, f'Warning - mode {current_mode} not in list')
+            elif n == 0:
+                LmTools.Error('Internal error, unconsistent configuration - no mode')
+                self.reject()
+            else:
+                LmTools.LogDebug(1, 'Warning - no mode, defaulting to first')
+                selection = 0
+
+        if selection >= 0:
+            self._mode_combo.setCurrentIndex(selection)
+
+
+    def get_current_key_intf(self):
+        key = self._freq_combo.currentData()
+        i = next((i for i in self._config['Intf'] if i['Key'] == key), None)
+        if i is None:
+            LmTools.Error(f'Internal error, unconsistent configuration - intf {key} not found')
+            self.reject()
+        return key, i
+
+
+    def get_config(self):
+        self._config['Enable'] = self._enable_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+        if self._guest:
+            self._config['Duration'] = int(self._duration_edit.text()) * 3600
+        self.save_freq_config()
+        return self._config
+
+
+    def set_ok_button_state(self):
+        # Check if another frequency is in background with no passkey
+        disable = False
+        for i in self._config['Intf']:
+            if i['Key'] == self._current_freq:
+                continue
+            if (i['Secu'] != 'None') and (len(i['KeyPass']) == 0):
+                disable = True
+                break
+
+        # Check current frequency
+        if not disable:
+            if (self._secu_combo.currentText() != 'None') and (len(self._pass_edit.text()) == 0):
+                disable = True
+
+        self._ok_button.setDisabled(disable)

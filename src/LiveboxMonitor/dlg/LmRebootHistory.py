@@ -8,57 +8,57 @@ from LiveboxMonitor.lang.LmLanguages import GetRHistoryDialogLabel as lx
 
 # ################################ Reboot History dialog ################################
 class RebootHistoryDialog(QtWidgets.QDialog):
-	def __init__(self, iName, iParent = None):
-		super(RebootHistoryDialog, self).__init__(iParent)
-		self.resize(550, 56 + LmConfig.DialogHeight(10))
+    def __init__(self, name, parent=None):
+        super(RebootHistoryDialog, self).__init__(parent)
+        self.resize(550, 56 + LmConfig.DialogHeight(10))
 
-		self._historyTable = QtWidgets.QTableWidget(objectName = 'historyTable')
-		self._historyTable.setColumnCount(4)
-		self._historyTable.setHorizontalHeaderLabels((lx('Boot Date'), lx('Boot Reason'), lx('Shutdown Date'), lx('Shutdown Reason')))
-		aHeader = self._historyTable.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(0, QtCore.Qt.Orientation.Horizontal, 'reboot_BootDate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(1, QtCore.Qt.Orientation.Horizontal, 'reboot_BootReason', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(2, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownDate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(3, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownReason', QtCore.Qt.ItemDataRole.UserRole)
-		self._historyTable.setColumnWidth(0, 125)
-		self._historyTable.setColumnWidth(1, 225)
-		self._historyTable.setColumnWidth(2, 125)
-		self._historyTable.setColumnWidth(3, 225)
-		self._historyTable.verticalHeader().hide()
-		self._historyTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._historyTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(self._historyTable)
+        self._history_table = QtWidgets.QTableWidget(objectName='historyTable')
+        self._history_table.setColumnCount(4)
+        self._history_table.setHorizontalHeaderLabels((lx('Boot Date'), lx('Boot Reason'), lx('Shutdown Date'), lx('Shutdown Reason')))
+        header = self._history_table.horizontalHeader()
+        header.setSectionsMovable(False)
+        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        model = header.model()
+        model.setHeaderData(0, QtCore.Qt.Orientation.Horizontal, 'reboot_BootDate', QtCore.Qt.ItemDataRole.UserRole)
+        model.setHeaderData(1, QtCore.Qt.Orientation.Horizontal, 'reboot_BootReason', QtCore.Qt.ItemDataRole.UserRole)
+        model.setHeaderData(2, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownDate', QtCore.Qt.ItemDataRole.UserRole)
+        model.setHeaderData(3, QtCore.Qt.Orientation.Horizontal, 'reboot_ShutdownReason', QtCore.Qt.ItemDataRole.UserRole)
+        self._history_table.setColumnWidth(0, 125)
+        self._history_table.setColumnWidth(1, 225)
+        self._history_table.setColumnWidth(2, 125)
+        self._history_table.setColumnWidth(3, 225)
+        self._history_table.verticalHeader().hide()
+        self._history_table.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+        self._history_table.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        LmConfig.SetTableStyle(self._history_table)
 
-		aHBox = QtWidgets.QHBoxLayout()
-		aOKButton = QtWidgets.QPushButton(lx('OK'), objectName = 'ok')
-		aOKButton.clicked.connect(self.accept)
-		aOKButton.setDefault(True)
-		aHBox.addWidget(aOKButton, 1, QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox = QtWidgets.QHBoxLayout()
+        ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        ok_button.clicked.connect(self.accept)
+        ok_button.setDefault(True)
+        hbox.addWidget(ok_button, 1, QtCore.Qt.AlignmentFlag.AlignRight)
 
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addWidget(self._historyTable, 0)
-		aVBox.addLayout(aHBox, 1)
+        vbox = QtWidgets.QVBoxLayout(self)
+        vbox.addWidget(self._history_table, 0)
+        vbox.addLayout(hbox, 1)
 
-		LmConfig.SetToolTips(self, 'rhistory')
+        LmConfig.SetToolTips(self, 'rhistory')
 
-		self.setWindowTitle(lx('{} Reboot History').format(iName))
-		self.setModal(True)
-		self.show()
+        self.setWindowTitle(lx(f'{name} Reboot History'))
+        self.setModal(True)
+        self.show()
 
 
-	def loadHistory(self, iHistory):
-		i = 0
+    def load_history(self, history):
+        i = 0
 
-		for aKey in iHistory:
-			d = iHistory[aKey]
-			self._historyTable.insertRow(i)
-			self._historyTable.setItem(i, 0, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('BootDate'))))
-			self._historyTable.setItem(i, 1, QtWidgets.QTableWidgetItem(d.get('BootReason', lx('Unknown'))))
-			self._historyTable.setItem(i, 2, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('ShutdownDate'))))
-			self._historyTable.setItem(i, 3, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', lx('Unknown'))))
-			i += 1
+        for aKey in history:
+            d = history[aKey]
+            self._history_table.insertRow(i)
+            self._history_table.setItem(i, 0, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('BootDate'))))
+            self._history_table.setItem(i, 1, QtWidgets.QTableWidgetItem(d.get('BootReason', lx('Unknown'))))
+            self._history_table.setItem(i, 2, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('ShutdownDate'))))
+            self._history_table.setItem(i, 3, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', lx('Unknown'))))
+            i += 1

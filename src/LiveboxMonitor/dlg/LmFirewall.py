@@ -14,58 +14,58 @@ FIREWALL_LEVELS = ['High', 'Medium', 'Low', 'Custom']
 
 # ################################ Firewall Level dialog ################################
 class FirewallLevelDialog(QtWidgets.QDialog):
-	def __init__(self, iIPv4Level, iIPv6Level, iParent = None):
-		super(FirewallLevelDialog, self).__init__(iParent)
-		self.setMinimumWidth(230)
-		self.resize(300, 150)
+    def __init__(self, ipv4_level, ipv6_level, parent=None):
+        super(FirewallLevelDialog, self).__init__(parent)
+        self.setMinimumWidth(230)
+        self.resize(300, 150)
 
-		aIpV4LevelLabel = QtWidgets.QLabel(lx('IPv4 Firewall Level'), objectName = 'ipV4Label')
-		self._ipV4LevelCombo = QtWidgets.QComboBox(objectName = 'ipV4Combo')
-		for l in FIREWALL_LEVELS:
-			self._ipV4LevelCombo.addItem(lx(l), userData = l)
-		self._ipV4LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv4Level))
+        ipv4_level_label = QtWidgets.QLabel(lx('IPv4 Firewall Level'), objectName='ipV4Label')
+        self._ipv4_level_combo = QtWidgets.QComboBox(objectName='ipV4Combo')
+        for l in FIREWALL_LEVELS:
+            self._ipv4_level_combo.addItem(lx(l), userData=l)
+        self._ipv4_level_combo.setCurrentIndex(FIREWALL_LEVELS.index(ipv4_level))
 
-		aIpV6LevelLabel = QtWidgets.QLabel(lx('IPv6 Firewall Level'), objectName = 'ipV6Label')
-		self._ipV6LevelCombo = QtWidgets.QComboBox(objectName = 'ipV6Combo')
-		for l in FIREWALL_LEVELS:
-			self._ipV6LevelCombo.addItem(lx(l), userData = l)
-		self._ipV6LevelCombo.setCurrentIndex(FIREWALL_LEVELS.index(iIPv6Level))
+        ipv6_level_label = QtWidgets.QLabel(lx('IPv6 Firewall Level'), objectName='ipV6Label')
+        self._ipv6_level_combo = QtWidgets.QComboBox(objectName='ipV6Combo')
+        for l in FIREWALL_LEVELS:
+            self._ipv6_level_combo.addItem(lx(l), userData = l)
+        self._ipv6_level_combo.setCurrentIndex(FIREWALL_LEVELS.index(ipv6_level))
 
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(aIpV4LevelLabel, 0, 0)
-		aGrid.addWidget(self._ipV4LevelCombo, 0, 1)
-		aGrid.addWidget(aIpV6LevelLabel, 1, 0)
-		aGrid.addWidget(self._ipV6LevelCombo, 1, 1)
-		aGrid.setColumnStretch(0, 0)
-		aGrid.setColumnStretch(1, 1)
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(10)
+        grid.addWidget(ipv4_level_label, 0, 0)
+        grid.addWidget(self._ipv4_level_combo, 0, 1)
+        grid.addWidget(ipv6_level_label, 1, 0)
+        grid.addWidget(self._ipv6_level_combo, 1, 1)
+        grid.setColumnStretch(0, 0)
+        grid.setColumnStretch(1, 1)
 
-		self._okButton = QtWidgets.QPushButton(lx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button.clicked.connect(self.accept)
+        self._ok_button.setDefault(True)
+        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button.clicked.connect(self.reject)
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.setSpacing(10)
+        hbox.addWidget(self._ok_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.addWidget(cancel_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
+        vbox = QtWidgets.QVBoxLayout(self)
+        vbox.addLayout(grid, 0)
+        vbox.addLayout(hbox, 1)
 
-		LmConfig.SetToolTips(self, 'fwlevel')
+        LmConfig.SetToolTips(self, 'fwlevel')
 
-		self.setWindowTitle(lx('Firewall Levels'))
+        self.setWindowTitle(lx('Firewall Levels'))
 
-		self.setModal(True)
-		self.show()
-
-
-	def getIPv4Level(self):
-		return self._ipV4LevelCombo.currentData()
+        self.setModal(True)
+        self.show()
 
 
-	def getIPv6Level(self):
-		return self._ipV6LevelCombo.currentData()
+    def get_ipv4_level(self):
+        return self._ipv4_level_combo.currentData()
+
+
+    def get_ipv6_level(self):
+        return self._ipv6_level_combo.currentData()

@@ -8,66 +8,66 @@ from LiveboxMonitor.lang.LmLanguages import GetScreenDialogLabel as lx
 
 # ################################ Screen setup dialog ################################
 class ScreenDialog(QtWidgets.QDialog):
-	def __init__(self, iOrangeLedLevel, iShowWifiPassword, iParent = None):
-		super(ScreenDialog, self).__init__(iParent)
-		self.setMinimumWidth(300)
-		self.resize(350, 150)
+    def __init__(self, orange_led_level, show_wifi_password, parent=None):
+        super(ScreenDialog, self).__init__(parent)
+        self.setMinimumWidth(300)
+        self.resize(350, 150)
 
-		aOrangeLabel = QtWidgets.QLabel(lx('LED Brightness'), objectName = 'orangeLabel')
-		self._orangeSlider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, objectName = 'orangeSlider')
-		self._orangeSlider.setRange(0, 255)
-		self._orangeSlider.setValue(iOrangeLedLevel)
-		self._orangeSlider.setSingleStep(5)
-		self._orangeSlider.setPageStep(50)
-		self._orangeSlider.setTickPosition(QtWidgets.QSlider.TickPosition.TicksAbove)
-		self._orangeSlider.setTickInterval(15)
-		self._orangeSlider.valueChanged.connect(self.orangeLevelChanged)
-		self._orangeValue = QtWidgets.QLabel(str(iOrangeLedLevel), objectName = 'orangeValue')
-		self._orangeValue.setMinimumWidth(20)
+        orange_label = QtWidgets.QLabel(lx('LED Brightness'), objectName='orangeLabel')
+        self._orange_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, objectName='orangeSlider')
+        self._orange_slider.setRange(0, 255)
+        self._orange_slider.setValue(orange_led_level)
+        self._orange_slider.setSingleStep(5)
+        self._orange_slider.setPageStep(50)
+        self._orange_slider.setTickPosition(QtWidgets.QSlider.TickPosition.TicksAbove)
+        self._orange_slider.setTickInterval(15)
+        self._orange_slider.valueChanged.connect(self.orange_level_changed)
+        self._orange_value = QtWidgets.QLabel(str(orange_led_level), objectName='orangeValue')
+        self._orange_value.setMinimumWidth(20)
 
-		self._showWifiPasswordCheckBox = QtWidgets.QCheckBox(lx('Show Wifi Password'), objectName = 'showWifiPasswordCheckbox')
-		if iShowWifiPassword:
-			self._showWifiPasswordCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._showWifiPasswordCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._show_wifi_password_checkbox = QtWidgets.QCheckBox(lx('Show Wifi Password'), objectName='showWifiPasswordCheckbox')
+        if show_wifi_password:
+            self._show_wifi_password_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._show_wifi_password_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(aOrangeLabel, 0, 0)
-		aGrid.addWidget(self._orangeSlider, 0, 1)
-		aGrid.addWidget(self._orangeValue, 0, 2)
-		aGrid.addWidget(self._showWifiPasswordCheckBox, 1, 0, 1, 3)
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(10)
+        grid.addWidget(orange_label, 0, 0)
+        grid.addWidget(self._orange_slider, 0, 1)
+        grid.addWidget(self._orange_value, 0, 2)
+        grid.addWidget(self._show_wifi_password_checkbox, 1, 0, 1, 3)
 
-		self._okButton = QtWidgets.QPushButton(lx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button.clicked.connect(self.accept)
+        self._ok_button.setDefault(True)
+        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button.clicked.connect(self.reject)
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.setSpacing(10)
+        hbox.addWidget(self._ok_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox.addWidget(cancel_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
+        vbox = QtWidgets.QVBoxLayout(self)
+        vbox.addLayout(grid, 0)
+        vbox.addLayout(hbox, 1)
 
-		LmConfig.SetToolTips(self, 'screen')
+        LmConfig.SetToolTips(self, 'screen')
 
-		self.setWindowTitle(lx('LEDs & Screen Setup'))
+        self.setWindowTitle(lx('LEDs & Screen Setup'))
 
-		self.setModal(True)
-		self.show()
-
-
-	def orangeLevelChanged(self, iValue):
-		self._orangeValue.setText(str(iValue))
+        self.setModal(True)
+        self.show()
 
 
-	def getOrangeLedLevel(self):
-		return self._orangeSlider.value()
+    def orange_level_changed(self, value):
+        self._orange_value.setText(str(value))
 
 
-	def getShowWifiPassword(self):
-		return self._showWifiPasswordCheckBox.checkState() == QtCore.Qt.CheckState.Checked
+    def get_orange_led_level(self):
+        return self._orange_slider.value()
+
+
+    def get_show_wifi_password(self):
+        return self._show_wifi_password_checkbox.checkState() == QtCore.Qt.CheckState.Checked
