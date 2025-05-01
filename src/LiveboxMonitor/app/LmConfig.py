@@ -2097,12 +2097,11 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		self._smtpPort = QtWidgets.QLineEdit(objectName = 'smtpPortEdit')
 		self._smtpPort.setValidator(aPortValidator)
 
+		aOptionsLabel = QtWidgets.QLabel(lex('Options'), objectName = 'optionsLabel')
+		self._useSTARTTLS = QtWidgets.QCheckBox(lex('Use STARTTLS'), objectName = 'useSTARTTLS')
+		self._useSTARTTLS.stateChanged.connect(self.starttlsChanged)
 		self._useTLS = QtWidgets.QCheckBox(lex('Use TLS'), objectName = 'useTLS')
 		self._useTLS.stateChanged.connect(self.tlsChanged)
-
-		self._useSSL = QtWidgets.QCheckBox(lex('Use SSL'), objectName = 'useSSL')
-		self._useSSL.stateChanged.connect(self.sslChanged)
-
 		self._authentication = QtWidgets.QCheckBox(lex('Authentication'), objectName = 'authentication')
 		self._authentication.stateChanged.connect(self.setupChanged)
 
@@ -2127,9 +2126,10 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		aEditGrid.addWidget(self._smtpServer, 3, 1, 1, 8)
 		aEditGrid.addWidget(aSMTPPortLabel, 3, 9)
 		aEditGrid.addWidget(self._smtpPort, 3, 10)
-		aEditGrid.addWidget(self._useTLS, 4, 0)
-		aEditGrid.addWidget(self._useSSL, 4, 2)
-		aEditGrid.addWidget(self._authentication, 4, 4)
+		aEditGrid.addWidget(aOptionsLabel, 4, 0)
+		aEditGrid.addWidget(self._useSTARTTLS, 4, 1)
+		aEditGrid.addWidget(self._useTLS, 4, 3)
+		aEditGrid.addWidget(self._authentication, 4, 5)
 		aEditGrid.addWidget(aUserLabel, 5, 0)
 		aEditGrid.addWidget(self._user, 5, 1, 1, 10)
 		aEditGrid.addWidget(aPasswordLabel, 6, 0)
@@ -2184,15 +2184,15 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		self._subjectPrefix.setText(c.get('Prefix', '[LiveboxMonitor] '))
 		self._smtpServer.setText(c.get('Server', ''))
 		self._smtpPort.setText(str(int(c.get('Port', 587))))
-		aTLS = c.get('TLS', True)
-		if aTLS:
+		aStartTLS = c.get('TLS', True)
+		if aStartTLS:
+			self._useSTARTTLS.setCheckState(QtCore.Qt.CheckState.Checked)
+		else:
+			self._useSTARTTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
+		if c.get('SSL', False) and not aStartTLS:
 			self._useTLS.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
 			self._useTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		if c.get('SSL', False) and not aTLS:
-			self._useSSL.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._useSSL.setCheckState(QtCore.Qt.CheckState.Unchecked)
 		if c.get('Authentication', True):
 			self._authentication.setCheckState(QtCore.Qt.CheckState.Checked)
 		else:
@@ -2214,8 +2214,8 @@ class EmailSetupDialog(QtWidgets.QDialog):
 			c['Port'] = int(self._smtpPort.text())
 		except:
 			c['Port'] = 0
-		c['TLS'] = self._useTLS.isChecked()
-		c['SSL'] = self._useSSL.isChecked()
+		c['TLS'] = self._useSTARTTLS.isChecked()
+		c['SSL'] = self._useTLS.isChecked()
 		c['Authentication'] = self._authentication.isChecked()
 		c['User'] = self._user.text()
 		c['Password'] = self._password.text()
@@ -2234,15 +2234,15 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		a.endTask()
 
 
+	def starttlsChanged(self, iState):
+		if not self._init and self._useSTARTTLS.isChecked():
+			self._useTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+
 	def tlsChanged(self, iState):
-		if not self._init and self._useTLS.isChecked():
-			self._useSSL.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-
-	def sslChanged(self, iState):
 		if not self._init:
-			if self._useSSL.isChecked():
-				self._useTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
+			if self._useTLS.isChecked():
+				self._useSTARTTLS.setCheckState(QtCore.Qt.CheckState.Unchecked)
 				self._smtpPort.setText('465')
 			else:
 				self._smtpPort.setText('587')

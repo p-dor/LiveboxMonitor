@@ -911,8 +911,8 @@ LABELS = {
 		'To Address': 'Adresse Destination',
 		'Subject Prefix': 'Préfixe Sujet',
 		'SMTP Server': 'Serveur SMTP',
+		'Use STARTTLS': 'Utiliser STARTTLS',
 		'Use TLS': 'Utiliser TLS',
-		'Use SSL': 'Utiliser SSL',
 		'Authentication': 'Authentification',
 		'User': 'Utilisateur',
 		'Password': 'Mot de passe',
@@ -1725,8 +1725,8 @@ TOOLTIPS = {
 		'smtpServerEdit': 'Serveur SMTP de votre fournisseur de messagerie.',
 		'smtpPortEdit': 'Port SMTP à utiliser. 465 est recommandé pour SSL,\n'
 						'587 pour tout autre protocole.',
-		'useTLS': 'Utilisation du protocole d\'encryption TLS (recommandé).',
-		'useSSL': 'Utilisation du protocole d\'encryption SSL.',
+		'useSTARTTLS': 'Utilisation du protocole d\'encryption STARTTLS (recommandé).',
+		'useTLS': 'Utilisation du protocole d\'encryption TLS.',
 		'authentication': 'À sélectionner si le serveur nécessite de s\'authentifier.',
 		'test': 'Permet d\'envoyer un message de test avec les réglages\n'
 				'courants sans les sauvegarder.'
