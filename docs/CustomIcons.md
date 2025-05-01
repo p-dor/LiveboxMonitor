@@ -1,5 +1,5 @@
 
-# ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/Doc_AppIcon.png) LiveboxMonitor - personnaliser les icônes d'appareil
+# ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_AppIcon.png) LiveboxMonitor - personnaliser les icônes d'appareil
 
 ## Sections de cette documentation
 1. [Répertoire de configuration](#configuration)
@@ -110,6 +110,6 @@ La table ci-dessous donne l'ensemble des clefs disponibles, les noms affichés d
 
 
 ## Créer un nouveau type d'appareil avec son icône <a id="create"></a>
-Il est possible de créer un nouveau type d'appareil en simplement plaçant dans le répertoire `custom_icons` un fichier PNG ayant la clef du type que l'on veut ajouter (et qui n'est donc pas référencée dans la table ci-dessus).
+Il est possible de créer un nouveau type d'appareil en simplement plaçant dans le répertoire `custom_icons` un fichier PNG ayant pour nom la clef du type que l'on veut ajouter (et qui n'est donc pas référencée dans la table ci-dessus).
 Par exemple un fichier `Balance.png` aura pour effet de créer une nouvelle clef `Balance` avec exactement le même nom pour l'affichage et utilisant l'icône `Balance.png`.  
 Bien évidemment, le type ajouté restera inconnu de l'interface web de la Livebox.
