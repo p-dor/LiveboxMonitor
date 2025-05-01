@@ -133,7 +133,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			elif t == LmPhoneTab.TAB_NAME:
 				self.createPhoneTab()
 			elif t == LmActionsTab.TAB_NAME:
-				self.createActionsTab()
+				self.create_actions_tab()
 
 		self.setCentralWidget(self._tabWidget)
 
@@ -558,7 +558,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Switch to actions tab
 	def switchToActionsTab(self):
-		self._tabWidget.setCurrentWidget(self._actionsTab)
+		self._tabWidget.setCurrentWidget(self._actions_tab)
 
 
 # ### wakepy error handler

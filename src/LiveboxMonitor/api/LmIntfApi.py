@@ -35,6 +35,11 @@ class IntfApi(LmApi):
         return self.call('NeMo.Intf.' + intf, 'get')
 
 
+    ### Get list of interface keys
+    def get_intf_key_list(self):
+        return self.call('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
+
+
     ### Build interface list - return True if successful
     def build_intf_list(self):
         self._list = []

@@ -6,130 +6,129 @@ import json
 from LiveboxMonitor.app import LmTools
 
 
-
 # ################################ VARS & DEFS ################################
 MODULES = [
-	'AccountManager',
-	'Audiphone',
-	'AutoDiag',
-	'BulkData',
-	'CaptivePortal',
-	'ConMon',
-	'Conntrack',
-	'CPUStats',
-	'CupsService',				# LB5 only
-	'DECT',						# LB5 only
-	'DeviceInfo',
-	'DeviceLookup',
-	'DeviceManagement',
-	'DeviceManager',
-	'Devices',
-	'BCMPlugin',
-	'DHCPv4',
-	'DHCPv6',
-	'DHCPv6Client',
-	'DLNA',
-	'Dms',						#LB6/LB7
-	'Dms.Configuration',		#LB6/LB7
-	'Dms.Database',				#LB6/LB7
-	'Dms.Partition',			#LB6/LB7
-	'Dms.Streaming',			#LB6/LB7
-	'DNS',
-	'DNSSD',
-	'Domino',
-	'Domino.Cellular',
-	'Domino.Airbox',
-	'Domino.Intf',
-	'DSPGDECT',					# LB5 only
-	'DSPPlugin',
-	'DummyPlugin',
-	'DynDNS',
-	'eventmanager',
-	'FaultMonitor',
-	'Firewall',
-	'Flowstats',
-	'GenLog',
-	'Gpon',
-	'History',
-	'HomeLan',
-	'HTTPService',
-	'IEEE1905',
-	'Invocation',
-	'IoTService',
-	'IPPingDiagnostics',
-	'IPsec',
-	'KMCD',
-	'Launcher',
-	'LEDs.LED',					# LB6/LB7
-	'LLMNR',
-	'Locations',				# LB6/LB7
-	'LXCManager',
-	'Maculan',
-	'ManagementServer',
-	'Manifests',
-	'MQTTBroker',
-	'MQTTMessages',
-	'MSS',
-	'NeMo',
-	'NetDev',
-	'NetMaster',
-	'NMC',
-	'ObjectMonitor',
-	'OopsTracker',
-	'OrangeDynDNS',
-	'OrangeRemoteAccess',
-	'OrangeServices',
-	'OUI',
-	'Pass',
-	'PasswordRecovery',
-	'Phonebook',
-	'PnP',
-	'PowerManagement',			# LB6 only
-	'PPP',
-	'Probe',
-	'Process',
-	'ProcessMonitor',
-	'Profiles',
-	'QueueManagement',
-	'RemoteAccess',
-	'RouterAdvertisement',
-	'sah',
-	'SAHPairing',
-	'SambaService',
-	'ServiceInvocation',		# LB7 only
-	'Scheduler',
-	'Screen',					# LB6 only
-	'SFP',						# LB4 only
-	'SpeedTest',
-	'SrvInterface',
-	'SSLEServer',
-	'SSW',
-	'SSW.Steering',
-	'SSW.FeatureConfig',
-	'StorageService',
-	'Time',
-	'ToD',
-	'TopologyDiagnostics',
-	'UDPEchoConfig',
-	'Upgrade',
-	'UplinkMonitor',
-	'UPnP',
-	'UPnP-IGD',
-	'URLMon',					# LB5 only
-	'USBHosts',
-	'UserInterface',
-	'UserManagement',
-	'VoiceActivation',
-	'VoiceService',
-	'VoWifi',
-	'VPN',
-	'WatchDog',
-	'WebuiupgradeService',
-	'WiFiBCM',
-	'WiFiQUAN',					# LB5 only
-	'WLanScheduler',
-	'WOL',
-	'WOLProxy'
+    'AccountManager',
+    'Audiphone',
+    'AutoDiag',
+    'BulkData',
+    'CaptivePortal',
+    'ConMon',
+    'Conntrack',
+    'CPUStats',
+    'CupsService',              # LB5 only
+    'DECT',                     # LB5 only
+    'DeviceInfo',
+    'DeviceLookup',
+    'DeviceManagement',
+    'DeviceManager',
+    'Devices',
+    'BCMPlugin',
+    'DHCPv4',
+    'DHCPv6',
+    'DHCPv6Client',
+    'DLNA',
+    'Dms',                      #LB6/LB7
+    'Dms.Configuration',        #LB6/LB7
+    'Dms.Database',             #LB6/LB7
+    'Dms.Partition',            #LB6/LB7
+    'Dms.Streaming',            #LB6/LB7
+    'DNS',
+    'DNSSD',
+    'Domino',
+    'Domino.Cellular',
+    'Domino.Airbox',
+    'Domino.Intf',
+    'DSPGDECT',                 # LB5 only
+    'DSPPlugin',
+    'DummyPlugin',
+    'DynDNS',
+    'eventmanager',
+    'FaultMonitor',
+    'Firewall',
+    'Flowstats',
+    'GenLog',
+    'Gpon',
+    'History',
+    'HomeLan',
+    'HTTPService',
+    'IEEE1905',
+    'Invocation',
+    'IoTService',
+    'IPPingDiagnostics',
+    'IPsec',
+    'KMCD',
+    'Launcher',
+    'LEDs.LED',                 # LB6/LB7
+    'LLMNR',
+    'Locations',                # LB6/LB7
+    'LXCManager',
+    'Maculan',
+    'ManagementServer',
+    'Manifests',
+    'MQTTBroker',
+    'MQTTMessages',
+    'MSS',
+    'NeMo',
+    'NetDev',
+    'NetMaster',
+    'NMC',
+    'ObjectMonitor',
+    'OopsTracker',
+    'OrangeDynDNS',
+    'OrangeRemoteAccess',
+    'OrangeServices',
+    'OUI',
+    'Pass',
+    'PasswordRecovery',
+    'Phonebook',
+    'PnP',
+    'PowerManagement',          # LB6 only
+    'PPP',
+    'Probe',
+    'Process',
+    'ProcessMonitor',
+    'Profiles',
+    'QueueManagement',
+    'RemoteAccess',
+    'RouterAdvertisement',
+    'sah',
+    'SAHPairing',
+    'SambaService',
+    'ServiceInvocation',        # LB7 only
+    'Scheduler',
+    'Screen',                   # LB6 only
+    'SFP',                      # LB4 only
+    'SpeedTest',
+    'SrvInterface',
+    'SSLEServer',
+    'SSW',
+    'SSW.Steering',
+    'SSW.FeatureConfig',
+    'StorageService',
+    'Time',
+    'ToD',
+    'TopologyDiagnostics',
+    'UDPEchoConfig',
+    'Upgrade',
+    'UplinkMonitor',
+    'UPnP',
+    'UPnP-IGD',
+    'URLMon',                   # LB5 only
+    'USBHosts',
+    'UserInterface',
+    'UserManagement',
+    'VoiceActivation',
+    'VoiceService',
+    'VoWifi',
+    'VPN',
+    'WatchDog',
+    'WebuiupgradeService',
+    'WiFiBCM',
+    'WiFiQUAN',                 # LB5 only
+    'WLanScheduler',
+    'WOL',
+    'WOLProxy'
 ]
 
 INDENT = '  '
@@ -137,277 +136,279 @@ INDENT = '  '
 
 
 # ################################ GenApiDoc Class ################################
-
 class LmGenApiDoc:
-	def __init__(self, iApp, iFolder, iFilterValue):
-		self._app = iApp
-		self._session = iApp._session
-		self._softwareVersion = iApp._liveboxSoftwareVersion
-		self._folder = iFolder
-		self._filter = iFilterValue
-		self._file = None
+    def __init__(self, app, folder, filter_value):
+        self._app = app
+        self._api = app._api
+        self._session = app._session
+        self._software_version = app._liveboxSoftwareVersion
+        self._folder = folder
+        self._filter = filter_value
+        self._file = None
 
 
-	### Generate files for each known module
-	def genModuleFiles(self):
-		# Generate for each known module
-		for m in MODULES:
-			self.genModuleFile(m)
+    ### Generate files for each known module
+    def gen_module_files(self):
+        # Generate for each known module
+        for m in MODULES:
+            self.gen_module_file(m)
 
-		# Generate for all interfaces
-		try:
-			d = self._session.request('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
-		except BaseException as e:
-			LmTools.Error(str(e))
-			d = None
-		if d is not None:
-			d = d.get('status')
-		if type(d).__name__ == 'list':
-			for m in d:
-				self.genModuleFile('NeMo.Intf.' + m)
-
-
-	### Generate all modules in flat file
-	def genFullFile(self):
-		self.genModuleFile('.', '_ALL MODULES_')
+        # Generate for all interfaces
+        try:
+            d = self._api._intf.get_intf_key_list()
+        except BaseException as e:
+            LmTools.Error(str(e))
+        else:
+            if isinstance(d, list):
+                for m in d:
+                    self.gen_module_file('NeMo.Intf.' + m)
+            else:
+                LmTools.Error('Bad return from interface list API.')
 
 
-	### Generate process list file
-	def genProcessListFile(self):
-		self.genModuleFile('*', '_PROCESSES_')
+    ### Generate all modules in a flat file
+    def gen_full_file(self):
+        self.gen_module_file('.', '_ALL MODULES_')
 
 
-	### Generate JSON result file for a module - useful only to get raw results
-	def genModuleJsonFile(self, iModule, iName = None):
-		if iName is None:
-			iName = iModule
-
-		try:
-			d = self._session.request(iModule, get=True, timeout=15)
-		except BaseException as e:
-			LmTools.Error(str(e))
-			return
-
-		if d is None:
-			return
-
-		# Module doesn't exist error
-		if (type(d).__name__ == 'dict') and (d.get('error', 0) == 196618):	
-			return
-
-		aFilePath = os.path.join(self._folder, iName + '_json.txt')
-		try:
-			self._file = open(aFilePath, 'w')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			return
-
-		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
-		json.dump(d, self._file, indent = 4)
-
-		try:
-			self._file.close()
-		except BaseException as e:
-			LmTools.Error(str(e))
-		self._file = None
+    ### Generate process list file
+    def gen_process_list_file(self):
+        self.gen_module_file('*', '_PROCESSES_')
 
 
-	### Generate document file for a module
-	def genModuleFile(self, iModule, iName = None):
-		if iName is None:
-			iName = iModule
+    ### Generate JSON result file for a module - useful only to get raw results
+    def gen_module_json_file(self, module, name=None):
+        if name is None:
+            name = module
 
-		self._app.updateTask(iName)
+        try:
+            d = self._session.request(module, get=True, timeout=15)
+        except BaseException as e:
+            LmTools.Error(str(e))
+            return
 
-		try:
-			d = self._session.request(iModule, get=True, timeout=15)
-		except BaseException as e:
-			LmTools.Error(str(e))
-			return
+        if d is None:
+            return
 
-		if d is None:
-			return
+        # Module doesn't exist error
+        if isinstance(d, dict) and (d.get('error', 0) == 196618):
+            return
 
-		# Module doesn't exist error
-		if (type(d).__name__ == 'dict') and (d.get('error', 0) == 196618):	
-			return
+        file_path = os.path.join(self._folder, name + '_json.txt')
+        try:
+            self._file = open(file_path, 'w')
+        except BaseException as e:
+            LmTools.Error(str(e))
+            return
 
-		aFilePath = os.path.join(self._folder, iName + '.txt')
-		try:
-			self._file = open(aFilePath, 'w')
-		except BaseException as e:
-			LmTools.Error(str(e))
-			return
+        self._file.write(f'=== LIVEBOX SOFTWARE VERSION: {self._software_version}\n\n')
+        json.dump(d, self._file, indent = 4)
 
-		self._file.write('=== LIVEBOX SOFTWARE VERSION: {}\n\n'.format(self._softwareVersion))
-		if type(d).__name__ != 'list':
-			d = [d]
-		for o in d:
-			if not self.genObject(o):
-				json.dump(o, self._file, indent = 4)
-
-		try:
-			self._file.close()
-		except BaseException as e:
-			LmTools.Error(str(e))
-		self._file = None
+        try:
+            self._file.close()
+        except BaseException as e:
+            LmTools.Error(str(e))
+        self._file = None
 
 
-	### Generate documentation for an object - return False if not an object
-	def genObject(self, iObject, iInstance = False, iLevel = 0):
-		o = iObject.get('objectInfo')
-		if o is None:
-			return False
+    ### Generate document file for a module
+    def gen_module_file(self, module, name=None):
+        if name is None:
+            name = module
 
-		aIdent = INDENT * iLevel
-		if iInstance:
-			self._file.write(aIdent + '-----------------------------------------------------------------------\n')
-			self._file.write(aIdent + 'INSTANCE: {}.{} - Name: {}.{}\n'.format(o.get('keyPath'), o.get('key'),
-																			   o.get('indexPath'), o.get('name')))
-		else:
-			self._file.write(aIdent + '=======================================================================\n')
-			self._file.write(aIdent + 'OBJECT: {}.{} - Name: {}.{}\n'.format(o.get('keyPath'), o.get('key'),
-																			 o.get('indexPath'), o.get('name')))
+        self._app.updateTask(name)
 
-		self.genParameters(iObject, iLevel)
-		self.genFunctions(iObject, iLevel)
-		self._file.write('\n')
-		if not self._filter:
-			self.genInstances(iObject, iLevel)
-		self.genChildren(iObject, iLevel)
+        try:
+            d = self._session.request(module, get=True, timeout=15)
+        except BaseException as e:
+            LmTools.Error(str(e))
+            return
 
-		return True
+        if d is None:
+            return
 
+        # Module doesn't exist error
+        if isinstance(d, dict) and (d.get('error', 0) == 196618):  
+            return
 
-	### Generate parameters
-	def genParameters(self, iObject, iLevel = 0):
-		o = iObject.get('parameters')
-		if (o is not None) and len(o):
-			aIdent = INDENT * iLevel
-			self._file.write(aIdent + ' == PARAMETERS:\n')
-			for p in o:
-				self.genParameter(p, iLevel + 1)
+        file_path = os.path.join(self._folder, name + '.txt')
+        try:
+            self._file = open(file_path, 'w')
+        except BaseException as e:
+            LmTools.Error(str(e))
+            return
 
+        self._file.write(f'=== LIVEBOX SOFTWARE VERSION: {self._software_version}\n\n')
+        if not isinstance(d, list):
+            d = [d]
+        for o in d:
+            if not self.gen_object(o):
+                json.dump(o, self._file, indent=4)
 
-	### Generate a parameter
-	def genParameter(self, iParam, iLevel = 0):
-		aIdent = INDENT * iLevel
-
-		# Collect values
-		aName = iParam.get('name')
-		aType = iParam.get('type')
-		aAttributes = ''
-		aAttributesDict = iParam.get('attributes')
-		for a in aAttributesDict:
-			if aAttributesDict[a]:
-				if len(aAttributes):
-					aAttributes += ', '
-				aAttributes += a
-		aValue = iParam.get('value')
-		aValidator = iParam.get('validator')
-
-		# Rendering
-		self._file.write(aIdent + '- {} (type: {})\n'.format(aName, aType))
-		aIdent = INDENT * (iLevel + 2)
-		if len(aAttributes):
-			self._file.write(aIdent + 'Attributes: {}\n'.format(aAttributes))
-		if (not self._filter) and (aValue is not None):
-			if (type(aValue).__name__ == 'str'):
-				if len(aValue): 
-					self._file.write(aIdent + 'Value: \'{}\'\n'.format(aValue))
-			else:
-				self._file.write(aIdent + 'Value: {}\n'.format(aValue))
-		if aValidator is not None:
-			self._file.write(aIdent + 'Validator: {}\n'.format(aValidator))
+        try:
+            self._file.close()
+        except BaseException as e:
+            LmTools.Error(str(e))
+        self._file = None
 
 
-	### Generate functions
-	def genFunctions(self, iObject, iLevel = 0):
-		o = iObject.get('functions')
-		if (o is not None) and len(o):
-			aIdent = INDENT * iLevel
-			self._file.write(aIdent + ' == FUNCTIONS:\n')
-			for f in o:
-				self.genFunction(f, iLevel + 1)
+    ### Generate documentation for an object - return False if not an object
+    def gen_object(self, object_info, instance=False, level=0):
+        o = object_info.get('objectInfo')
+        if o is None:
+            return False
+
+        indent = INDENT * level
+        key_path = o.get('keyPath')
+        key = o.get('key')
+        index_path = o.get('indexPath')
+        name = o.get('name')
+        if instance:
+            self._file.write(f'{indent}-----------------------------------------------------------------------\n')
+            self._file.write(f'{indent}INSTANCE: {key_path}.{key} - Name: {index_path}.{name}\n')
+        else:
+            self._file.write(f'{indent}=======================================================================\n')
+            self._file.write(f'{indent}OBJECT: {key_path}.{key} - Name: {index_path}.{name}\n')
+
+        self.gen_parameters(object_info, level)
+        self.gen_functions(object_info, level)
+        self._file.write('\n')
+        if not self._filter:
+            self.gen_instances(object_info, level)
+        self.gen_children(object_info, level)
+
+        return True
 
 
-	### Generate a function
-	def genFunction(self, iFunc, iLevel = 0):
-		aIdent = INDENT * iLevel
-
-		# Collect values
-		aName = iFunc.get('name')
-		aReturnType = iFunc.get('type')
-		aAttributes = ''
-		aAttributesDict = iFunc.get('attributes')
-		for a in aAttributesDict:
-			if aAttributesDict[a]:
-				if len(aAttributes):
-					aAttributes += ', '
-				aAttributes += a
-		aArguments = ''
-		aArgumentsDict = iFunc.get('arguments')
-		for a in aArgumentsDict:
-			if len(aArguments):
-				aArguments += ', '
-			
-			aArgName = a.get('name')
-			aArgType = a.get('type')
-			aArgOptional = True
-			aArgAttributesDict = a.get('attributes')
-			if (aArgAttributesDict is not None) and (aArgAttributesDict.get('mandatory', False)):
-				aArgOptional = False
-			if aArgOptional:
-				aArguments += '({} {})'.format(aArgType, aArgName)
-			else:
-				aArguments += '{} {}'.format(aArgType, aArgName)
-
-		# Rendering
-		self._file.write(aIdent + '- {} {}({})\n'.format(aReturnType, aName, aArguments))
-		aIdent = INDENT * (iLevel + 2)
-		if len(aAttributes):
-			self._file.write(aIdent + 'Attributes: {}\n'.format(aAttributes))
+    ### Generate parameters
+    def gen_parameters(self, object_info, level=0):
+        o = object_info.get('parameters')
+        if o:
+            indent = INDENT * level
+            self._file.write(f'{indent} == PARAMETERS:\n')
+            for p in o:
+                self.gen_parameter(p, level + 1)
 
 
-	### Generate parameters
-	def genInstances(self, iObject, iLevel = 0):
-		o = iObject.get('instances')
-		if (o is not None) and len(o):
-			aIdent = INDENT * iLevel
-			self._file.write(aIdent + ' == INSTANCES:\n')
-			for i in o:
-				self.genObject(i, True, iLevel + 1)
+    ### Generate a parameter
+    def gen_parameter(self, param, level=0):
+        indent = INDENT * level
+
+        # Collect values
+        name = param.get('name')
+        type = param.get('type')
+        attributes = ''
+        attributes_dict = param.get('attributes')
+        for a in attributes_dict:
+            if attributes_dict[a]:
+                if len(attributes):
+                    attributes += ', '
+                attributes += a
+        value = param.get('value')
+        validator = param.get('validator')
+
+        # Rendering
+        self._file.write(f'{indent}- {name} (type: {type})\n')
+        indent = INDENT * (level + 2)
+        if len(attributes):
+            self._file.write(f'{indent}Attributes: {attributes}\n')
+        if (not self._filter) and (value is not None):
+            if isinstance(value, str):
+                if len(value):
+                    self._file.write(f'{indent}Value: \'{value}\'\n')
+            else:
+                self._file.write(f'{indent}Value: {value}\n')
+        if validator is not None:
+            self._file.write(f'{indent}Validator: {validator}\n')
 
 
-	### Generate child objects
-	def genChildren(self, iObject, iLevel = 0):
-		o = iObject.get('children')
-		if (o is not None) and len(o):
-			for i in o:
-				self.genObject(i, False, iLevel)
+    ### Generate functions
+    def gen_functions(self, object_info, level=0):
+        o = object_info.get('functions')
+        if o:
+            indent = INDENT * level
+            self._file.write(f'{indent} == FUNCTIONS:\n')
+            for f in o:
+                self.gen_function(f, level + 1)
 
 
-	### Test GET request on some characters
-#	def doTest(self):
-#		self.genModuleJsonFile('.', 'DOT')
-#		self.genModuleJsonFile('*', 'STAR')
-#		self.genModuleJsonFile('!', 'EXCLAM')
-#		self.genModuleJsonFile('#', 'HASH')
-#		self.genModuleJsonFile('`', 'QUOTE')
-#		self.genModuleJsonFile('+', 'PLUS')
-#		self.genModuleJsonFile('@', 'AT')
-#		self.genModuleJsonFile('?', 'QUESTION')
-#		self.genModuleJsonFile('/', 'SLASH')
-#		self.genModuleJsonFile('-', 'MINUS')
-#		self.genModuleJsonFile('~', 'TILDA')
-#		self.genModuleJsonFile('$', 'DOLLAR')
-#		self.genModuleJsonFile('%', 'PERCENT')
-#		self.genModuleJsonFile('^', 'HAT')
-#		self.genModuleJsonFile('&', 'AND')
-#		self.genModuleJsonFile('(', 'LEFTPAR')
-#		self.genModuleJsonFile(')', 'RIGHTPAR')
-#		self.genModuleJsonFile('_', 'UNDERSCORE')
-#		self.genModuleJsonFile('=', 'EGUAL')
-#		self.genModuleJsonFile(',', 'COMMA')
-#		self.genModuleJsonFile(':', 'COLONN')
-#		self.genModuleJsonFile(';', 'SEMICOLONN')
+    ### Generate a function
+    def gen_function(self, func, level=0):
+        indent = INDENT * level
+
+        # Collect values
+        name = func.get('name')
+        return_type = func.get('type')
+        attributes = ''
+        attributes_dict = func.get('attributes')
+        for a in attributes_dict:
+            if attributes_dict[a]:
+                if len(attributes):
+                    attributes += ', '
+                attributes += a
+        arguments = ''
+        arguments_dict = func.get('arguments')
+        for a in arguments_dict:
+            if len(arguments):
+                arguments += ', '
+
+            arg_name = a.get('name')
+            arg_type = a.get('type')
+            arg_optional = True
+            arg_attributes_dict = a.get('attributes')
+            if (arg_attributes_dict is not None) and (arg_attributes_dict.get('mandatory', False)):
+                arg_optional = False
+            if arg_optional:
+                arguments += f'({arg_type} {arg_name})'
+            else:
+                arguments += f'{arg_type} {arg_name}'
+
+        # Rendering
+        self._file.write(f'{indent}- {return_type} {name}({arguments})\n')
+        indent = INDENT * (level + 2)
+        if len(attributes):
+            self._file.write(f'{indent}Attributes: {attributes}\n')
+
+
+    ### Generate parameters
+    def gen_instances(self, object_info, level=0):
+        o = object_info.get('instances')
+        if o:
+            indent = INDENT * level
+            self._file.write(f'{indent} == INSTANCES:\n')
+            for i in o:
+                self.gen_object(i, True, level + 1)
+
+
+    ### Generate child objects
+    def gen_children(self, object_info, level=0):
+        o = object_info.get('children')
+        if o:
+            for i in o:
+                self.gen_object(i, False, level)
+
+
+    ### Test GET request on some characters
+#   def doTest(self):
+#       self.gen_module_json_file('.', 'DOT')
+#       self.gen_module_json_file('*', 'STAR')
+#       self.gen_module_json_file('!', 'EXCLAM')
+#       self.gen_module_json_file('#', 'HASH')
+#       self.gen_module_json_file('`', 'QUOTE')
+#       self.gen_module_json_file('+', 'PLUS')
+#       self.gen_module_json_file('@', 'AT')
+#       self.gen_module_json_file('?', 'QUESTION')
+#       self.gen_module_json_file('/', 'SLASH')
+#       self.gen_module_json_file('-', 'MINUS')
+#       self.gen_module_json_file('~', 'TILDA')
+#       self.gen_module_json_file('$', 'DOLLAR')
+#       self.gen_module_json_file('%', 'PERCENT')
+#       self.gen_module_json_file('^', 'HAT')
+#       self.gen_module_json_file('&', 'AND')
+#       self.gen_module_json_file('(', 'LEFTPAR')
+#       self.gen_module_json_file(')', 'RIGHTPAR')
+#       self.gen_module_json_file('_', 'UNDERSCORE')
+#       self.gen_module_json_file('=', 'EGUAL')
+#       self.gen_module_json_file(',', 'COMMA')
+#       self.gen_module_json_file(':', 'COLONN')
+#       self.gen_module_json_file(';', 'SEMICOLONN')
