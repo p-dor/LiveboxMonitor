@@ -39,3 +39,24 @@ class FirewallApi(LmApi):
     ### Set IPv6 firewall level - enable must be a dict with 'enableIPv4' & 'enableIPv6' boolean values
     def set_respond_to_ping(self, enable):
         self.call('Firewall', 'setRespondToPing', {'sourceInterface': 'data', 'service_enable': enable})
+
+
+    ### Get list of devices in DMZ, returns a dictionary
+    def get_dmz_devices(self):
+        return self.call('Firewall', 'getDMZ')
+
+
+    ### Add a DMZ entry
+    def add_dmz(self, dmz_id, dest_ip, ext_ips=None, enable=True):
+        p = {'id': dmz_id,
+             'sourceInterface': 'data',
+             'destinationIPAddress': dest_ip,
+             'enable': enable}
+        if ext_ips:
+            p['sourcePrefix'] = ext_ips
+        self.call('Firewall', 'setDMZ', p)
+
+
+    ### Delete a DMZ entry
+    def delete_dmz(self, dmz_id):
+        self.call('Firewall', 'deleteDMZ', { 'id': dmz_id })
