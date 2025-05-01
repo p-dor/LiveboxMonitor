@@ -277,7 +277,10 @@ def SendEmail(iEmailSetup, iSubject, iMessage):
 	except BaseException as e:
 		Error('Cannot setup email session. Error: {}'.format(e))
 		if s is not None:
-			s.quit()
+			try:
+				s.quit()
+			except Exception:
+				pass
 		return False
 
 	# Authenticate if necessary
@@ -286,7 +289,10 @@ def SendEmail(iEmailSetup, iSubject, iMessage):
 			s.login(iEmailSetup['User'], iEmailSetup['Password'])
 		except BaseException as e:
 			Error('Authentication to SMTP server failed. Error: {}'.format(e))
-			s.quit()
+			try:
+				s.quit()
+			except Exception:
+				pass
 			return False
 
 	# Send the message
@@ -294,7 +300,10 @@ def SendEmail(iEmailSetup, iSubject, iMessage):
 		s.send_message(m)
 	except BaseException as e:
 		Error('Cannot send email. Error: {}'.format(e))
-		s.quit()
+		try:
+			s.quit()
+		except Exception:
+			pass
 		return False
 
 	s.quit()
