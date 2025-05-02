@@ -43,7 +43,7 @@ class FirewallApi(LmApi):
 
     ### Get list of devices in DMZ, returns a dictionary
     def get_dmz_devices(self):
-        return self.call('Firewall', 'getDMZ')
+        return self.call_no_check('Firewall', 'getDMZ')
 
 
     ### Add a DMZ entry

@@ -163,31 +163,34 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._firewall.get_dmz_devices()
         except BaseException as e:
-            LmTools.Error(str(e))
-            d = None
-
-        if not isinstance(d, dict):
-            self._app.displayError(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
+            self._app.displayError(str(e))
+            self._app.endTask()
             return
 
-        i = 0
-        for k in d:
-            self._dmz_list.insertRow(i)
-            self._dmz_list.setItem(i, DmzCol.ID, QtWidgets.QTableWidgetItem(k))
+        if d:
+            if not isinstance(d, dict):
+                self._app.displayError(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
+                self._app.endTask()
+                return
 
-            z = d[k]
-            ip = z.get('DestinationIPAddress', '')
-            self._dmz_list.setItem(i, DmzCol.IP, QtWidgets.QTableWidgetItem(ip))
-            self._dmz_list.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.getDeviceNameFromIp(ip)))
+            i = 0
+            for k in d:
+                self._dmz_list.insertRow(i)
+                self._dmz_list.setItem(i, DmzCol.ID, QtWidgets.QTableWidgetItem(k))
 
-            external_ips = z.get('SourcePrefix', '')
-            if len(external_ips) == 0:
-                external_ips = lx('All')
-            self._dmz_list.setItem(i, DmzCol.ExtIPs, QtWidgets.QTableWidgetItem(external_ips))
+                z = d[k]
+                ip = z.get('DestinationIPAddress', '')
+                self._dmz_list.setItem(i, DmzCol.IP, QtWidgets.QTableWidgetItem(ip))
+                self._dmz_list.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.getDeviceNameFromIp(ip)))
 
-            i += 1
+                external_ips = z.get('SourcePrefix', '')
+                if len(external_ips) == 0:
+                    external_ips = lx('All')
+                self._dmz_list.setItem(i, DmzCol.ExtIPs, QtWidgets.QTableWidgetItem(external_ips))
 
-        self.dmz_list_click()
+                i += 1
+
+            self.dmz_list_click()
         self._app.endTask()
 
 
