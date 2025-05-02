@@ -23,6 +23,9 @@ TOOLTIPS = {
 		'repeaterTab': 'Detailed information about the Wifi repeater and traffic statistics.'
 	},
 
+	# Export table dialog
+	'export_table': {},
+
 	# Device list
 	'dlist': {},
 
