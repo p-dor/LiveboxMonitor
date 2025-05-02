@@ -90,6 +90,7 @@ def GetMessage(iKey, iString, iItemKey):
 # Main
 def GetMainLabel(iString): return GetLabel('main', iString)
 def GetMainMessage(iString, iKey): return GetMessage('main', iString, iKey)
+def GetExportTableDialogLabel(iString): return GetLabel('export_table', iString)
 
 # Device list
 def GetDeviceListLabel(iString): return GetLabel('dlist', iString)
