@@ -8,7 +8,19 @@ LABELS = {
 	# Main window
 	'main': {
 		'Terminating threads...': '',
-		'Signing in...': ''
+		'Signing in...': '',
+		'Export...'
+	},
+
+	# Export table dialog
+	'export_table': {
+		'Options': '',
+		'Export Header': '',
+		'Columns': '',
+		'OK': '',
+		'Cancel': '',
+		'Export Table': '',
+		'Save File': ''
 	},
 
 	# Device list
@@ -1122,6 +1134,15 @@ TOOLTIPS = {
 		'repeaterTab': ''
 	},
 
+	# Export table dialog
+	'export_table': {
+		'optionsLabel': '',
+		'exportHeaderCheckbox': '',
+		'columnsLabel': '',
+		'ok': '',
+		'cancel': ''
+	},
+
 	# Device list
 	'dlist': {
 		'dlist_Type': '',
@@ -1841,6 +1862,8 @@ MESSAGES = {
 	'main': {
 		'cnx': '',
 		'auth': '',
+		'createFileErr': '',
+		'saveFileErr': ''
 	},
 
 	# Device list
@@ -1848,146 +1871,146 @@ MESSAGES = {
 		'dlistErr': '',
 		'topoErr': '',
 		'aName': '',
-		'aNameStartup':  ''
+		'aNameStartup': ''
 	},
 
 	# Livebox infos
 	'info': {
-		'createFileErr':  '',
-		'saveFileErr':  ''
+		'createFileErr': '',
+		'saveFileErr': ''
 	},
 
 	# Graph
 	'graph': {
-		'lineSelect':  '',
-		'noGraph':  '',
-		'createFileErr':  '',
-		'saveFileErr':  ''
+		'lineSelect': '',
+		'noGraph': '',
+		'createFileErr': '',
+		'saveFileErr': ''
 	},
 
 	# Device infos
 	'dinfo': {	
-		'devSelect':  '',
+		'devSelect': '',
 		'devWOL': '',
-		'devBlocked':  '',
-		'devUnblocked':  '',
-		'devNotBlocked':  '',
-		'devInfoErr':  ''
+		'devBlocked': '',
+		'devUnblocked': '',
+		'devNotBlocked': '',
+		'devInfoErr': ''
 	},
 
 	# Events
 	'events': {
-		'devSelect':  '',
-		'evtSelect':  '',
-		'evtNotFound':  '',
-		'email':  '',
-		'macErr':  '',
-		'logDirExist':  '',
-		'logDirErr':  ''
+		'devSelect': '',
+		'evtSelect': '',
+		'evtNotFound': '',
+		'email': '',
+		'macErr': '',
+		'logDirExist': '',
+		'logDirErr': ''
 	},
 
 	# DHCP
 	'dhcp': {
-		'dhcpSelect':  '',
-		'dhcpLoad':  '',
-		'deactiv':  '',
-		'addrChange':  '',
-		'dhcpValErr':  '',
-		'bindLoad':  ''
+		'dhcpSelect': '',
+		'dhcpLoad': '',
+		'deactiv': '',
+		'addrChange': '',
+		'dhcpValErr': '',
+		'bindLoad': ''
 	},
 
 	# NAT/PAT
 	'natpat': {
-		'delAllPat':  '',
-		'createFileErr':  '',
-		'saveFileErr':  '',
-		'ruleExport':  '',
-		'openFileErr':  '',
-		'fileFormatErr':  '',
-		'fileTypeErr':  '',
-		'closeFileErr':  '',
-		'ruleImport':  '',
-		'ruleDel':  '',
-		'patLoadErr':  '',
-		'ptfLoadErr':  '',
-		'ipv6AddrErr':  '',
-		'ipv4AddrErr':  '',
-		'emptyAddr':  ''
+		'delAllPat': '',
+		'createFileErr': '',
+		'saveFileErr': '',
+		'ruleExport': '',
+		'openFileErr': '',
+		'fileFormatErr': '',
+		'fileTypeErr': '',
+		'closeFileErr': '',
+		'ruleImport': '',
+		'ruleDel': '',
+		'patLoadErr': '',
+		'ptfLoadErr': '',
+		'ipv6AddrErr': '',
+		'ipv4AddrErr': '',
+		'emptyAddr': ''
 	},
 
 	# Phone
 	'phone': {
 		'callFilterAPIKeyErr': '',
-		'callSelect':  '',
-		'delAllCalls':  '',
-		'callLoad':  '',
+		'callSelect': '',
+		'delAllCalls': '',
+		'callLoad': '',
 		'spamCount': '',
-		'contactSelect':  '',
-		'delAllContacts':  '',
-		'ring':  '',
-		'createFileErr':  '',
-		'saveFileErr':  '',
-		'contactLoad':  '',
-		'contactMax':  '',
-		'contactGet':  ''
+		'contactSelect': '',
+		'delAllContacts': '',
+		'ring': '',
+		'createFileErr': '',
+		'saveFileErr': '',
+		'contactLoad': '',
+		'contactMax': '',
+		'contactGet': ''
 	},
 
 	# Actions
 	'actions': {
-		'wifiGetConfErr':  '',
-		'wifiSetConfErr':  '',
-		'wifiOn':  '',
-		'wifiOff':  '',
-		'gwifiOn':  '',
-		'gwifiOff':  '',
-		'schedOn':  '',
-		'schedOff':  '',
+		'wifiGetConfErr': '',
+		'wifiSetConfErr': '',
+		'wifiOn': '',
+		'wifiOff': '',
+		'gwifiOn': '',
+		'gwifiOff': '',
+		'schedOn': '',
+		'schedOff': '',
 		'backRestSvcErr' : '',
 		'backEnableSvcErr' : '',
 		'backDisableSvcErr' : '',
 		'backupSvcErr' : '',
 		'restoreSvcOk' : '',
 		'restoreSvcErr' : '',
-		'lbReboot':  '',
-		'appQuit':  '',
-		'dynDnsLoadErr':  '',
-		'dynDnsSvcErr':  '',
-		'dynDnsDelErr':  '',
-		'dynDnsHostName':  '',
-		'dynDnsEnableErr':  '',
-		'dmzLoadErr':  '',
-		'dmzDelErr':  ''
+		'lbReboot': '',
+		'appQuit': '',
+		'dynDnsLoadErr': '',
+		'dynDnsSvcErr': '',
+		'dynDnsDelErr': '',
+		'dynDnsHostName': '',
+		'dynDnsEnableErr': '',
+		'dmzLoadErr': '',
+		'dmzDelErr': ''
 	},
 
 	# Repeater
 	'repeater': {
-		'cnxErr':  '',
-		'noSign':  '',
+		'cnxErr': '',
+		'noSign': '',
 		'createFileErr': '',
-		'saveFileErr':  '',
-		'wifiOn':  '',
-		'wifiOff':  '',
-		'schedOn':  '',
-		'schedOff':  '',
-		'reboot':  '',
-		'rebooting':  '',
-		'resign':  '',
-		'forceResign':  ''
+		'saveFileErr': '',
+		'wifiOn': '',
+		'wifiOff': '',
+		'schedOn': '',
+		'schedOff': '',
+		'reboot': '',
+		'rebooting': '',
+		'resign': '',
+		'forceResign': ''
 	},
 
 	# Config
 	'prefs': {
-		'wrongFile':  '',
-		'configVersion':  '',
-		'keyFileErr':  '',
-		'configFolderErr':  '',
-		'profileNameErr':  '',
-		'wrongMacFile':  '',
-		'wrongSpamCallsFile':  '',
-		'profileName':  '',
-		'profileDup':  '',
-		'profileOne':  '',
-		'emailSuccess':  '',
-		'emailFail':  ''
+		'wrongFile': '',
+		'configVersion': '',
+		'keyFileErr': '',
+		'configFolderErr': '',
+		'profileNameErr': '',
+		'wrongMacFile': '',
+		'wrongSpamCallsFile': '',
+		'profileName': '',
+		'profileDup': '',
+		'profileOne': '',
+		'emailSuccess': '',
+		'emailFail': ''
 	}
 }
