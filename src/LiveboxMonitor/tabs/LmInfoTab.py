@@ -551,7 +551,7 @@ class LmInfo:
 		i = self.loadInternetInfo(i)
 		i = self.loadWifiInfo(i)
 		i = self.loadLanInfo(i)
-		if self._liveboxModel >= 5:
+		if self._fiberLink:
 			i = self.loadOntInfo(i)
 		i = self.loadVoipInfo(i)
 		i = self.loadIptvInfo(i)
