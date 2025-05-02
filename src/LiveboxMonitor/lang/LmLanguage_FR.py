@@ -1069,7 +1069,7 @@ TOOLTIPS = {
 	# Livebox infos
 	'info': {
 		'stats_Name': 'Nom de l\'interface réseau.\n'
-					  '"Fiber" concerne tout le trafic WAN, c\'est-à-dire externe entre la Livebox et internet.\n'
+					  '"Fibre" concerne tout le trafic WAN, c\'est-à-dire externe entre la Livebox et internet.\n'
 					  '"LAN" tout le trafic interne transitant à travers la Livebox.\n'
 					  'Ensuite on dispose des statistiques par interface précise.\n'
 					  'Les interfaces "Guest" concernent le trafic du réseau Wifi invité, s\'il est activé.',
