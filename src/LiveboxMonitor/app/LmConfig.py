@@ -406,20 +406,19 @@ def SetToolTips(iQtObject, iKey):
 		for aItem in aItemList:
 			k = aItem.objectName()
 			if len(k):
-				aType = type(aItem).__name__
-				if aType == 'QTableWidget':
+				if isinstance(aItem, QtWidgets.QTableWidget):
 					h = aItem.horizontalHeader()
 					m = h.model()
 					for c in range(h.count()):
 						k = m.headerData(c, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.UserRole)
 						if k is not None:
 							aItem.horizontalHeaderItem(c).setToolTip(LmLanguages.GetToolTip(iKey, k))
-				elif aType == 'QTabWidget':
+				elif isinstance(aItem, QtWidgets.QTabWidget):
 					for i in range(aItem.count()):
 						k = aItem.widget(i).objectName()
 						if len(k):
 							aItem.setTabToolTip(i, LmLanguages.GetToolTip(iKey, k))
-				elif aType == 'QGroupBox':
+				elif isinstance(aItem, QtWidgets.QGroupBox):
 					# Set tooltip to the group if any
 					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
 					# Recursive call to handle group content
