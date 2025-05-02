@@ -9,6 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
 from LiveboxMonitor.lang.LmLanguages import (GetDeviceInfoLabel as lx,
@@ -35,17 +36,12 @@ class LmDeviceInfo:
 		self._deviceInfoTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list
-		self._infoDList = QtWidgets.QTableWidget(objectName = 'infoDList')
+		self._infoDList = LmTableWidget(objectName = 'infoDList')
 		self._infoDList.setColumnCount(DSelCol.Count)
 		self._infoDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('MAC')))
 		self._infoDList.setColumnHidden(DSelCol.Key, True)
-		aHeader = self._infoDList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(DSelCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DSelCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
+		self._infoDList.set_header_resize([DSelCol.MAC])
+		self._infoDList.set_header_tags({DSelCol.Name: 'dlist_Name', DSelCol.MAC: 'dlist_MAC'})
 		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoDList.setColumnWidth(DSelCol.Name, 200)
 		self._infoDList.setColumnWidth(DSelCol.MAC, 120)
@@ -56,26 +52,23 @@ class LmDeviceInfo:
 		self._infoDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._infoDList.setMinimumWidth(350)
 		self._infoDList.itemSelectionChanged.connect(self.infoDeviceListClick)
-		LmConfig.SetTableStyle(self._infoDList)
+		self._infoDList.set_style()
+		self._infoDList.set_context_menu()
 
 		# Attribute list
-		self._infoAList = QtWidgets.QTableWidget(objectName = 'infoAList')
+		self._infoAList = LmTableWidget(objectName = 'infoAList')
 		self._infoAList.setColumnCount(InfoCol.Count)
 		self._infoAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
-		aHeader = self._infoAList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
+		self._infoAList.set_header_resize([InfoCol.Value])
+		self._infoAList.set_header_tags({InfoCol.Attribute: 'alist_Attribute', InfoCol.Value: 'alist_Value'})
 		self._infoAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._infoAList.setColumnWidth(InfoCol.Attribute, 200)
 		self._infoAList.setColumnWidth(InfoCol.Value, 600)
 		self._infoAList.verticalHeader().hide()
 		self._infoAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
 		self._infoAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(self._infoAList)
+		self._infoAList.set_style()
+		self._infoAList.set_context_menu()
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()

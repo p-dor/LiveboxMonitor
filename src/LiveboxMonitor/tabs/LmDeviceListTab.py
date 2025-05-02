@@ -9,6 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
 from LiveboxMonitor.lang.LmLanguages import (GetDeviceListLabel as lx,
@@ -57,7 +58,7 @@ class LmDeviceList:
 		self._deviceListTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list columns
-		self._deviceList = QtWidgets.QTableWidget(objectName = 'deviceList')
+		self._deviceList = LmTableWidget(objectName = 'deviceList')
 		self._deviceList.setColumnCount(DevCol.Count)
 		self._deviceList.setHorizontalHeaderLabels(('Key', lx('T'), 
 														   lx('Name'),
@@ -73,26 +74,20 @@ class LmDeviceList:
 														   lx('RxRate'),
 														   lx('TxRate')))
 		self._deviceList.setColumnHidden(DevCol.Key, True)
-		aHeader = self._deviceList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(DevCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DevCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DevCol.Link, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(DevCol.Type, QtCore.Qt.Orientation.Horizontal, 'dlist_Type', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.LBName, QtCore.Qt.Orientation.Horizontal, 'dlist_LBName', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.IP, QtCore.Qt.Orientation.Horizontal, 'dlist_IP', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Link, QtCore.Qt.Orientation.Horizontal, 'dlist_Link', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Active, QtCore.Qt.Orientation.Horizontal, 'dlist_Active', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Wifi, QtCore.Qt.Orientation.Horizontal, 'dlist_Wifi', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Event, QtCore.Qt.Orientation.Horizontal, 'dlist_Event', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Down, QtCore.Qt.Orientation.Horizontal, 'dlist_Rx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.Up, QtCore.Qt.Orientation.Horizontal, 'dlist_Tx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'dlist_RxRate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DevCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'dlist_TxRate', QtCore.Qt.ItemDataRole.UserRole)
+		self._deviceList.set_header_resize([DevCol.Name, DevCol.LBName, DevCol.Link])
+		self._deviceList.set_header_tags({DevCol.Type: 'dlist_Type',
+										  DevCol.Name: 'dlist_Name',
+										  DevCol.LBName: 'dlist_LBName',
+										  DevCol.MAC: 'dlist_MAC',
+										  DevCol.IP: 'dlist_IP',
+										  DevCol.Link: 'dlist_Link',
+										  DevCol.Active: 'dlist_Active',
+										  DevCol.Wifi: 'dlist_Wifi',
+										  DevCol.Event: 'dlist_Event',
+										  DevCol.Down: 'dlist_Rx',
+										  DevCol.Up: 'dlist_Tx',
+										  DevCol.DownRate: 'dlist_RxRate',
+										  DevCol.UpRate: 'dlist_TxRate'})
 		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 		self._deviceList.setColumnWidth(DevCol.Type, 48)
 		self._deviceList.setColumnWidth(DevCol.Name, 400)
@@ -113,7 +108,8 @@ class LmDeviceList:
 		self._deviceList.setSortingEnabled(True)
 		self._deviceList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 		self._deviceList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
-		LmConfig.SetTableStyle(self._deviceList)
+		self._deviceList.set_style()
+		self._deviceList.set_context_menu()
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
@@ -544,10 +540,12 @@ class LmDeviceList:
 		for d in LmConfig.DEVICE_TYPES:
 			if iDeviceType == d['Key']:
 				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.getDeviceIcon(d, iLBSoftVersion)))
+				aDeviceTypeName = d['Name']
 				break
 			i += 1
 
 		aDeviceTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, i)
+		aDeviceTypeIcon.setData(QtCore.Qt.ItemDataRole.DisplayRole, aDeviceTypeName)
 
 		return aDeviceTypeIcon
 
