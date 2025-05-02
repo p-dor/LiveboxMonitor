@@ -10,6 +10,15 @@ LABELS = {
 		'Signing in...': 'Authentification...'
 	},
 
+	# Export table dialog
+	'export_table': {
+		'Export Header': 'Exporter l\'en-tête',
+		'Columns': 'Colonnes',
+		'Cancel': 'Annuler',
+		'Export Table': 'Exporter le tableau',
+		'Save File': 'Enregistrer le fichier'
+	},
+
 	# Device list
 	'dlist': {
 		'T': 'T',
@@ -982,6 +991,11 @@ TOOLTIPS = {
 					   '- Vert : le répéteur est actif et une session a été créée pour communiquer avec lui.'
 	},
 
+	# Export table dialog
+	'export_table': {
+		'exportHeaderCheckbox': 'Permet de choisir d\'exporter les titres de colonnes ou non.'
+	},
+
 	# Device list
 	'dlist': {
 		'dlist_Type': 'Icône correspondant au type de l\'appareil.\n'
@@ -1761,7 +1775,9 @@ MESSAGES = {
 	# Main window
 	'main': {
 		'cnx': 'Impossible de se connecter à la Livebox.',
-		'auth': 'L\'authentification à la Livebox a échoué.'
+		'auth': 'L\'authentification à la Livebox a échoué.',
+		'createFileErr': 'Impossible de créer le fichier.',
+		'saveFileErr': 'Impossible d\'enregistrer le fichier.'
 	},
 
 	# Device list
