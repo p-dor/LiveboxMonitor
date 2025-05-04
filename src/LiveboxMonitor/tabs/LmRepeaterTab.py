@@ -11,6 +11,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
@@ -61,33 +62,16 @@ class LmRepeater:
 		iRepeater._tab.setProperty('Key', iRepeater._key)
 
 		# Statistics list
-		aStatsList = QtWidgets.QTableWidget(objectName = 'statsList')
-		aStatsList.setColumnCount(StatsCol.Count)
-		aStatsList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Rx'), lx('Tx'), lx('RxRate'), lx('TxRate')))
-		aStatsList.setColumnHidden(StatsCol.Key, True)
-		aHeader = aStatsList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(StatsCol.Name, QtCore.Qt.Orientation.Horizontal, 'stats_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.Down, QtCore.Qt.Orientation.Horizontal, 'stats_Rx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.Up, QtCore.Qt.Orientation.Horizontal, 'stats_Tx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'stats_RxRate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'stats_TxRate', QtCore.Qt.ItemDataRole.UserRole)
-		aStatsList.setColumnWidth(StatsCol.Name, 100)
-		aStatsList.setColumnWidth(StatsCol.Down, 65)
-		aStatsList.setColumnWidth(StatsCol.Up, 65)
-		aStatsList.setColumnWidth(StatsCol.DownRate, 65)
-		aStatsList.setColumnWidth(StatsCol.UpRate, 65)
-		aStatsList.verticalHeader().hide()
-		aStatsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		aStatsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		aStatsList = LmTableWidget(objectName = 'statsList')
+		aStatsList.set_columns({StatsCol.Key: ['Key', 0, None],
+								StatsCol.Name: [lx('Name'), 100, 'stats_Name'],
+								StatsCol.Down: [lx('Rx'), 65, 'stats_Rx'],
+								StatsCol.Up: [lx('Tx'), 65, 'stats_Tx'],
+								StatsCol.DownRate: [lx('RxRate'), 65, 'stats_RxRate'],
+								StatsCol.UpRate: [lx('TxRate'), 65, 'stats_TxRate']})
+		aStatsList.set_header_resize([StatsCol.Down, StatsCol.Up, StatsCol.DownRate, StatsCol.UpRate])
+		aStatsList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 		aStatsList.setMinimumWidth(450)
-		LmConfig.SetTableStyle(aStatsList)
 
 		i = 0
 		for s in iRepeater._netIntf:
@@ -174,23 +158,11 @@ class LmRepeater:
 		aLeftBox.addWidget(aGroupBox, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# Attribute list
-		aRepeaterAList = QtWidgets.QTableWidget(objectName = 'repeaterAList')
-		aRepeaterAList.setColumnCount(InfoCol.Count)
-		aRepeaterAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
-		aHeader = aRepeaterAList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
-		aRepeaterAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		aRepeaterAList.setColumnWidth(InfoCol.Attribute, 200)
-		aRepeaterAList.setColumnWidth(InfoCol.Value, 600)
-		aRepeaterAList.verticalHeader().hide()
-		aRepeaterAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		aRepeaterAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(aRepeaterAList)
+		aRepeaterAList = LmTableWidget(objectName = 'repeaterAList')
+		aRepeaterAList.set_columns({InfoCol.Attribute: [lx('Attribute'), 200, 'alist_Attribute'],
+									InfoCol.Value: [lx('Value'), 600, 'alist_Value']})
+		aRepeaterAList.set_header_resize([InfoCol.Value])
+		aRepeaterAList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 		iRepeater._repeaterAList = aRepeaterAList
 
 		# Lists layout

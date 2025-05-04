@@ -12,6 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconHeaderView, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.lang.LmLanguages import (GetEventsLabel as lx,
@@ -53,7 +54,6 @@ class EventCol(IntEnum):
 	Time = 1
 	Reason = 2
 	Attribute = 3
-	Count = 4
 
 class RuleCol(IntEnum):
 	Key = 0
@@ -64,7 +64,6 @@ class RuleCol(IntEnum):
 	Link = 5
 	File = 6
 	Email = 7
-	Count = 8
 ICON_COLUMNS = [RuleCol.Add, RuleCol.Delete, RuleCol.Active, RuleCol.Inactive, RuleCol.Link, RuleCol.File, RuleCol.Email]
 
 
@@ -77,53 +76,24 @@ class LmEvents:
 		self._eventsTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Device list
-		self._eventDList = QtWidgets.QTableWidget(objectName = 'eventDList')
-		self._eventDList.setColumnCount(DSelCol.Count)
-		self._eventDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('MAC')))
-		self._eventDList.setColumnHidden(DSelCol.Key, True)
-		aHeader = self._eventDList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(DSelCol.MAC, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(DSelCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DSelCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
-		self._eventDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._eventDList.setColumnWidth(DSelCol.Name, 200)
-		self._eventDList.setColumnWidth(DSelCol.MAC, 120)
-		self._eventDList.verticalHeader().hide()
-		self._eventDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._eventDList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._eventDList.setSortingEnabled(True)
-		self._eventDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._eventDList = LmTableWidget(objectName = 'eventDList')
+		self._eventDList.set_columns({DSelCol.Key: ['Key', 0, None],
+									  DSelCol.Name: [lx('Name'), 200, 'dlist_Name'],
+									  DSelCol.MAC: [lx('MAC'), 120, 'dlist_MAC']})
+		self._eventDList.set_header_resize([DSelCol.MAC])
+		self._eventDList.set_standard_setup(self)
 		self._eventDList.setMinimumWidth(350)
 		self._eventDList.itemSelectionChanged.connect(self.eventDeviceListClick)
-		LmConfig.SetTableStyle(self._eventDList)
 
 		# Event list
-		self._eventList = QtWidgets.QTableWidget(objectName = 'eventList')
-		self._eventList.setColumnCount(EventCol.Count)
-		self._eventList.setHorizontalHeaderLabels(('Key', lx('Time'), lx('Reason'), lx('Attributes')))
-		self._eventList.setColumnHidden(EventCol.Key, True)
-		aHeader = self._eventList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(EventCol.Attribute, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(EventCol.Time, QtCore.Qt.Orientation.Horizontal, 'elist_Time', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(EventCol.Reason, QtCore.Qt.Orientation.Horizontal, 'elist_Reason', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(EventCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'elist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
-		self._eventList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._eventList.setColumnWidth(EventCol.Time, 80)
-		self._eventList.setColumnWidth(EventCol.Reason, 150)
-		self._eventList.setColumnWidth(EventCol.Attribute, 600)
-		self._eventList.verticalHeader().hide()
-		self._eventList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._eventList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._eventList.setSortingEnabled(True)
-		self._eventList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._eventList = LmTableWidget(objectName = 'eventList')
+		self._eventList.set_columns({EventCol.Key: ['Key', 0, None],
+									 EventCol.Time: [lx('Time'), 80, 'elist_Time'],
+									 EventCol.Reason: [lx('Reason'), 150, 'elist_Reason'],
+									 EventCol.Attribute: [lx('Attributes'), 600, 'elist_Attribute']})
+		self._eventList.set_header_resize([EventCol.Attribute])
+		self._eventList.set_standard_setup(self)
 		self._eventList.doubleClicked.connect(self.displayEventButtonClick)
-		LmConfig.SetTableStyle(self._eventList)
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()
@@ -311,7 +281,9 @@ class LmEvents:
 		self._eventList.setItem(iLine, EventCol.Time, aTimeItem)
 		self._eventList.setItem(iLine, EventCol.Reason, QtWidgets.QTableWidgetItem(iEvent['Reason']))
 		aAttribute = str(iEvent['Attributes'])[0:256]
-		self._eventList.setItem(iLine, EventCol.Attribute, QtWidgets.QTableWidgetItem(aAttribute))
+		aAttributeItem = QtWidgets.QTableWidgetItem(aAttribute)
+		aAttributeItem.setData(LmTools.ItemDataRole.ExportRole, iEvent['Attributes'])
+		self._eventList.setItem(iLine, EventCol.Attribute, aAttributeItem)
 
 
 	### Process a new Livebox event
@@ -710,56 +682,32 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		aRuleListLayout.setSpacing(5)
 
 		# Device list columns
-		self._ruleList = QtWidgets.QTableWidget(objectName = 'ruleList')
-		self._ruleList.setHorizontalHeader(LmTools.CenteredIconHeaderView(self, ICON_COLUMNS))
-		self._ruleList.setColumnCount(RuleCol.Count)
+		self._ruleList = LmTableWidget(objectName = 'ruleList')
+		self._ruleList.setHorizontalHeader(CenteredIconHeaderView(self, ICON_COLUMNS))
+		self._ruleList.set_columns({RuleCol.Key: [lnx('Device'), 390, 'rlist_Key'],
+									RuleCol.Add: [lnx('Added'), 10, 'rlist_Add'],
+									RuleCol.Delete: [lnx('Deleted'), 10, 'rlist_Delete'],
+									RuleCol.Active: [lnx('Connected'), 10, 'rlist_Active'],
+									RuleCol.Inactive: [lnx('Disconnected'), 10, 'rlist_Inactive'],
+									RuleCol.Link: [lnx('Link Changed'), 10, 'rlist_Link'],
+									RuleCol.File: [lnx('File'), 10, 'rlist_File'],
+									RuleCol.Email: [lnx('Email'), 10, 'rlist_Email']})
+		self._ruleList.set_header_resize([RuleCol.Key])
+		self._ruleList.set_standard_setup(iParent)
 
-		# Set columns - need to set to empty strings for icons
-		self._ruleList.setHorizontalHeaderLabels((lnx('Device'), '', '', '', '', '', '', ''))
+		# Assign icon headers - drawn by CenteredIconHeaderView
+		aModel = self._ruleList.horizontalHeader().model()
+		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), LmTools.ItemDataRole.IconRole)
+		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), LmTools.ItemDataRole.IconRole)
 
-		aHeader = self._ruleList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-		aHeader.setSectionResizeMode(RuleCol.Key, QtWidgets.QHeaderView.ResizeMode.Stretch)
-
-		aModel = aHeader.model()
-
-		# Assign icon headers - will be drawn by LmTools.CenteredIconHeaderView
-		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), QtCore.Qt.ItemDataRole.DisplayRole)
-
-		# Assign tags for tooltips
-		aModel.setHeaderData(RuleCol.Key, QtCore.Qt.Orientation.Horizontal, 'rlist_Key', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, 'rlist_Add', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, 'rlist_Delete', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, 'rlist_Active', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, 'rlist_Inactive', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, 'rlist_Link', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, 'rlist_File', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, 'rlist_Email', QtCore.Qt.ItemDataRole.UserRole)
-
-		self._ruleList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._ruleList.setColumnWidth(RuleCol.Key, 390)
-		self._ruleList.setColumnWidth(RuleCol.Add, 10)
-		self._ruleList.setColumnWidth(RuleCol.Delete, 10)
-		self._ruleList.setColumnWidth(RuleCol.Active, 10)
-		self._ruleList.setColumnWidth(RuleCol.Inactive, 10)
-		self._ruleList.setColumnWidth(RuleCol.Link, 10)
-		self._ruleList.setColumnWidth(RuleCol.File, 10)
-		self._ruleList.setColumnWidth(RuleCol.Email, 10)
-		self._ruleList.verticalHeader().hide()
-		self._ruleList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._ruleList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._ruleList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._ruleList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
+		self._ruleList.setItemDelegate(CenteredIconsDelegate(self, ICON_COLUMNS))
 		self._ruleList.setMinimumWidth(460)
 		self._ruleList.itemSelectionChanged.connect(self.ruleListClick)
-		LmConfig.SetTableStyle(self._ruleList)
 
 		aRuleListLayout.addWidget(self._ruleList, 1)
 
@@ -943,22 +891,27 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_ADD in e:
 			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Add, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_DELETE in e:
 			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Delete, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_ACTIVE in e:
 			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Active, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_INACTIVE in e:
 			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Inactive, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_TYPE_LINK_CHANGE in e:
 			i.setIcon(QtGui.QIcon(LmIcon.BlueLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Link, i)
 
 		# Set rule action flags
@@ -966,10 +919,12 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_RULE_FILE in r:
 			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.File, i)
 		i = QtWidgets.QTableWidgetItem()
 		if NOTIF_EVENT_RULE_EMAIL in r:
 			i.setIcon(QtGui.QIcon(LmIcon.GreenLightPixmap))
+			i.setData(QtCore.Qt.ItemDataRole.UserRole, True)
 		self._ruleList.setItem(iRow, RuleCol.Email, i)
 
 

@@ -5,6 +5,7 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import GetDynDnsDialogLabel as lx, GetActionsMessage as mx
 
 
@@ -18,7 +19,6 @@ class HostCol(IntEnum):
     Password = 3
     LastUpdate = 4
     Status = 5
-    Count = 6
 
 
 # ################################ DynDNS setup dialog ################################
@@ -42,42 +42,18 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         host_list_layout.setSpacing(5)
 
         # Host list columns
-        self._host_list = QtWidgets.QTableWidget(objectName='hostList')
-        self._host_list.setColumnCount(HostCol.Count)
-
-        # Set columns
-        self._host_list.setHorizontalHeaderLabels((lx('Service'), lx('Host Name'), lx('User Email'), lx('Password'), lx('Last Update'), lx('Status')))
-
-        header = self._host_list.horizontalHeader()
-        header.setSectionsMovable(False)
-        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-        header.setSectionResizeMode(HostCol.HostName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(HostCol.UserName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-
-        # Assign tags for tooltips
-        model = header.model()
-        model.setHeaderData(HostCol.Service, QtCore.Qt.Orientation.Horizontal, 'hlist_Service', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(HostCol.HostName, QtCore.Qt.Orientation.Horizontal, 'hlist_HostName', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(HostCol.UserName, QtCore.Qt.Orientation.Horizontal, 'hlist_UserName', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(HostCol.Password, QtCore.Qt.Orientation.Horizontal, 'hlist_Password', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(HostCol.LastUpdate, QtCore.Qt.Orientation.Horizontal, 'hlist_LastUpdate', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(HostCol.Status, QtCore.Qt.Orientation.Horizontal, 'hlist_Status', QtCore.Qt.ItemDataRole.UserRole)
-
-        self._host_list.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self._host_list.setColumnWidth(HostCol.Service, 90)
-        self._host_list.setColumnWidth(HostCol.HostName, 80)
-        self._host_list.setColumnWidth(HostCol.UserName, 80)
-        self._host_list.setColumnWidth(HostCol.Password, 130)
-        self._host_list.setColumnWidth(HostCol.LastUpdate, 120)
-        self._host_list.setColumnWidth(HostCol.Status, 120)
-        self._host_list.verticalHeader().hide()
-        self._host_list.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-        self._host_list.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-        self._host_list.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self._host_list = LmTableWidget(objectName='hostList')
+        self._host_list.set_columns({HostCol.Service: [lx('Service'), 90, 'hlist_Service'],
+                                     HostCol.HostName: [lx('Host Name'), 80, 'hlist_HostName'],
+                                     HostCol.UserName: [lx('User Email'), 80, 'hlist_UserName'],
+                                     HostCol.Password: [lx('Password'), 130, 'hlist_Password'],
+                                     HostCol.LastUpdate: [lx('Last Update'), 120, 'hlist_LastUpdate'],
+                                     HostCol.Status: [lx('Status'), 120, 'hlist_Status']})
+        self._host_list.set_header_resize([HostCol.HostName, HostCol.UserName])
+        self._host_list.set_standard_setup(parent, allow_sort=False)
         self._host_list.setMinimumWidth(880)
-        self._host_list.itemSelectionChanged.connect(self.host_list_click)
-        LmConfig.SetTableStyle(self._host_list)
         self._host_list.setMinimumHeight(LmConfig.TableHeight(4))
+        self._host_list.itemSelectionChanged.connect(self.host_list_click)
 
         host_list_layout.addWidget(self._host_list, 1)
 

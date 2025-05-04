@@ -7,8 +7,9 @@ from ipaddress import IPv4Address
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
-from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem
+from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
 from LiveboxMonitor.lang.LmLanguages import (GetDhcpLabel as lx,
 											 GetDhcpMessage as mx,
@@ -28,7 +29,6 @@ class DhcpCol(IntEnum):
 	Domain = 2
 	MAC = 3
 	IP = 4
-	Count = 5
 
 
 # ################################ LmDhcp class ################################
@@ -39,31 +39,15 @@ class LmDhcp:
 		self._dhcpTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# DHCP binding list
-		self._dhcpDList = QtWidgets.QTableWidget(objectName = 'dhcpDList')
-		self._dhcpDList.setColumnCount(DhcpCol.Count)
-		self._dhcpDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Domain'), lx('MAC'), lx('IP')))
-		self._dhcpDList.setColumnHidden(DhcpCol.Key, True)
-		aHeader = self._dhcpDList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(DhcpCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(DhcpCol.Name, QtCore.Qt.Orientation.Horizontal, 'dlist_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DhcpCol.Domain, QtCore.Qt.Orientation.Horizontal, 'dlist_Domain', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DhcpCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dlist_MAC', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DhcpCol.IP, QtCore.Qt.Orientation.Horizontal, 'dlist_IP', QtCore.Qt.ItemDataRole.UserRole)
-		self._dhcpDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._dhcpDList.setColumnWidth(DhcpCol.Name, 200)
-		self._dhcpDList.setColumnWidth(DhcpCol.Domain, 60)
-		self._dhcpDList.setColumnWidth(DhcpCol.MAC, 120)
-		self._dhcpDList.setColumnWidth(DhcpCol.IP, 105)
-		self._dhcpDList.verticalHeader().hide()
-		self._dhcpDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._dhcpDList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._dhcpDList.setSortingEnabled(True)
-		self._dhcpDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._dhcpDList = LmTableWidget(objectName = 'dhcpDList')
+		self._dhcpDList.set_columns({DhcpCol.Key: ['Key', 0, None],
+									 DhcpCol.Name: [lx('Name'), 200, 'dlist_Name'],
+									 DhcpCol.Domain: [lx('Domain'), 60, 'dlist_Domain'],
+									 DhcpCol.MAC: [lx('MAC'), 120, 'dlist_MAC'],
+									 DhcpCol.IP: [lx('IP'), 105, 'dlist_IP']})
+		self._dhcpDList.set_header_resize([DhcpCol.Name])
+		self._dhcpDList.set_standard_setup(self)
 		self._dhcpDList.setMinimumWidth(515)
-		LmConfig.SetTableStyle(self._dhcpDList)
 
 		# DHCP binding button bar
 		aBindingButtonsBox = QtWidgets.QHBoxLayout()
@@ -85,23 +69,11 @@ class LmDhcp:
 		aBindingBox.addLayout(aBindingButtonsBox, 0)
 
 		# Attribute list
-		self._dhcpAList = QtWidgets.QTableWidget(objectName = 'dhcpAList')
-		self._dhcpAList.setColumnCount(InfoCol.Count)
-		self._dhcpAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
-		aHeader = self._dhcpAList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
-		self._dhcpAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._dhcpAList.setColumnWidth(InfoCol.Attribute, 200)
-		self._dhcpAList.setColumnWidth(InfoCol.Value, 500)
-		self._dhcpAList.verticalHeader().hide()
-		self._dhcpAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._dhcpAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(self._dhcpAList)
+		self._dhcpAList = LmTableWidget(objectName = 'dhcpAList')
+		self._dhcpAList.set_columns({InfoCol.Attribute: [lx('Attribute'), 200, 'alist_Attribute'],
+									 InfoCol.Value: [lx('Value'), 500, 'alist_Value']})
+		self._dhcpAList.set_header_resize([InfoCol.Value])
+		self._dhcpAList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 
 		# Attribute button bar
 		aAttributeButtonsBox = QtWidgets.QHBoxLayout()
@@ -384,7 +356,7 @@ class LmDhcp:
 			self._dhcpDList.setItem(i, DhcpCol.Domain, QtWidgets.QTableWidgetItem(iDomain))
 			self.formatMacWidget(self._dhcpDList, i, aKey, DhcpCol.MAC)
 
-			aIpItem = LmTools.NumericSortItem(aIP)
+			aIpItem = NumericSortItem(aIP)
 			aIpItem.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIP)))
 			self._dhcpDList.setItem(i, DhcpCol.IP, aIpItem)
 

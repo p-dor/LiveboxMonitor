@@ -5,6 +5,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.api.LmWifiApi import WifiKey, WifiStatus
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import GetWifiGlobalDialogLabel as lx
 
 
@@ -14,26 +15,17 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
         super(WifiGlobalStatusDialog, self).__init__(parent)
 
         self._status = status
-        self._status_table = QtWidgets.QTableWidget(objectName='statusTable')
-        self._status_table.setColumnCount(1 + len(status))
-        headers = []
-        headers.append(lx('Interfaces'))
-        for s in self._status:
-            headers.append(s[WifiKey.ACCESS_POINT])
-        self._status_table.setHorizontalHeaderLabels((*headers,))
-        table_header = self._status_table.horizontalHeader()
-        table_header.setSectionsMovable(False)
-        table_header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-        table_header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self._status_table.setColumnWidth(0, 200)
-        i = 1
-        while i <= len(self._status):
-            self._status_table.setColumnWidth(i, 125)
-            i += 1
-        self._status_table.verticalHeader().hide()
-        self._status_table.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-        self._status_table.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-        LmConfig.SetTableStyle(self._status_table)
+        self._status_table = LmTableWidget(objectName='statusTable')
+        cols = {}
+        icon_cols = []
+        cols[0] = [lx('Interfaces'), 200, None]
+        for i, s in enumerate(self._status, start=1):
+            cols[i] = [s[WifiKey.ACCESS_POINT], 125, None]
+            icon_cols.append(i)
+        self._status_table.set_columns(cols)
+        self._status_table.set_header_resize([0])
+        self._status_table.set_standard_setup(parent, allow_sel=False, allow_sort=False)
+        self._status_table.setItemDelegate(CenteredIconsDelegate(self, icon_cols))
 
         hbox = QtWidgets.QHBoxLayout()
         ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
@@ -77,37 +69,30 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
 
     def add_status_line(self, title, key, index):
         self._status_table.insertRow(index)
-
         self._status_table.setItem(index, 0, QtWidgets.QTableWidgetItem(title))
-
-        i = 1
-        for s in self._status:
-            status = s.get(key)
-            if status == WifiStatus.ENABLE:
-                icon_item = QtWidgets.QLabel()
-                icon_item.setPixmap(LmIcon.TickPixmap)
-                icon_item.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                self._status_table.setCellWidget(index, i, icon_item)
-            elif status == WifiStatus.DISABLE:
-                icon_item = QtWidgets.QLabel()
-                icon_item.setPixmap(LmIcon.CrossPixmap)
-                icon_item.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                self._status_table.setCellWidget(index, i, icon_item)
-            elif status == WifiStatus.ERROR:
-                item = QtWidgets.QTableWidgetItem(lx('Error'))
-                item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
-                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                self._status_table.setItem(index, i, item)
-            elif status == WifiStatus.INACTIVE:
-                item = QtWidgets.QTableWidgetItem(lx('Inactive'))
-                item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
-                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                self._status_table.setItem(index, i, item)
-            elif status == WifiStatus.UNSIGNED:
-                item = QtWidgets.QTableWidgetItem(lx('Not signed'))
-                item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
-                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                self._status_table.setItem(index, i, item)
-            i += 1
+        for i, s in enumerate(self._status, start=1):
+            item = None
+            match s.get(key):
+                case WifiStatus.ENABLE:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setIcon(QtGui.QIcon(LmIcon.TickPixmap))
+                    item.setData(QtCore.Qt.ItemDataRole.UserRole, 'ON')
+                case WifiStatus.DISABLE:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setIcon(QtGui.QIcon(LmIcon.CrossPixmap))
+                    item.setData(QtCore.Qt.ItemDataRole.UserRole, 'off')
+                case WifiStatus.ERROR:
+                    item = QtWidgets.QTableWidgetItem(lx('Error'))
+                    item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                case WifiStatus.INACTIVE:
+                    item = QtWidgets.QTableWidgetItem(lx('Inactive'))
+                    item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                case WifiStatus.UNSIGNED:
+                    item = QtWidgets.QTableWidgetItem(lx('Not signed'))
+                    item.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            self._status_table.setItem(index, i, item)
 
         return index + 1

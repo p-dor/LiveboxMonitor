@@ -10,8 +10,9 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
-from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import (GetPhoneLabel as lx,
 											 GetPhoneMessage as mx,
 											 GetPhoneContactDialogLabel as lcx)
@@ -31,7 +32,6 @@ class CallCol(IntEnum):
 	ContactSource = 4	# N=None, L=Livebox, P=Program dynamic guess, S=Spam
 	Contact = 5
 	Duration = 6
-	Count = 7
 ICON_COLUMNS = [CallCol.Type]
 
 class ContactCol(IntEnum):
@@ -41,7 +41,6 @@ class ContactCol(IntEnum):
 	Home = 3
 	Work = 4
 	Ring = 5
-	Count = 6
 
 # Check spam URLs
 CHECK_SPAM_URL1 = 'https://www.numeroinconnu.fr/numero/{}'
@@ -63,38 +62,21 @@ class LmPhone:
 		self._phoneTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Call list
-		self._callList = QtWidgets.QTableWidget(objectName = 'callList')
-		self._callList.setColumnCount(CallCol.Count)
-		self._callList.setHorizontalHeaderLabels(('Key', lx('T'), lx('Time'), lx('Number'), 'CS', lx('Contact'), lx('Duration')))
-		self._callList.setColumnHidden(CallCol.Key, True)
-		self._callList.setColumnHidden(CallCol.ContactSource, True)
-		aHeader = self._callList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(CallCol.Contact, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(CallCol.Type, QtCore.Qt.Orientation.Horizontal, 'calist_Type', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(CallCol.Time, QtCore.Qt.Orientation.Horizontal, 'calist_Time', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(CallCol.Number, QtCore.Qt.Orientation.Horizontal, 'calist_Number', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(CallCol.Contact, QtCore.Qt.Orientation.Horizontal, 'calist_Contact', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(CallCol.Duration, QtCore.Qt.Orientation.Horizontal, 'calist_Duration', QtCore.Qt.ItemDataRole.UserRole)
-		self._callList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._callList.setColumnWidth(CallCol.Type, 30)
-		self._callList.setColumnWidth(CallCol.Time, 130)
-		self._callList.setColumnWidth(CallCol.Number, 110)
-		self._callList.setColumnWidth(CallCol.Contact, 250)
-		self._callList.setColumnWidth(CallCol.Duration, 80)
-		self._callList.verticalHeader().hide()
-		self._callList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._callList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._callList.setSortingEnabled(True)
-		self._callList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._callList = LmTableWidget(objectName = 'callList')
+		self._callList.set_columns({CallCol.Key: ['Key', 0, None],
+									CallCol.Type: [lx('T'), 30, 'calist_Type'],
+									CallCol.Time: [lx('Time'), 130, 'calist_Time'],
+									CallCol.Number: [lx('Number'), 110, 'calist_Number'],
+									CallCol.ContactSource: ['CS', 0, None],
+									CallCol.Contact: [lx('Contact'), 250, 'calist_Contact'],
+									CallCol.Duration: [lx('Duration'), 80, 'calist_Duration']})
+		self._callList.set_header_resize([CallCol.Contact])
+		self._callList.set_standard_setup(self)
 		self._callList.itemSelectionChanged.connect(self.callListClick)
 		self._callList.doubleClicked.connect(self.editContactFromCallListClick)
 		self._callList.setMinimumWidth(480)
 		self._callList.setMaximumWidth(540)
-		self._callList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
-		LmConfig.SetTableStyle(self._callList)
+		self._callList.setItemDelegate(CenteredIconsDelegate(self, ICON_COLUMNS))
 
 		# Call button bar
 		aCallButtonsBox = QtWidgets.QHBoxLayout()
@@ -137,34 +119,17 @@ class LmPhone:
 		aCallBox.addLayout(aSpamButtonsBox, 0)
 
 		# Contact list
-		self._contactList = QtWidgets.QTableWidget(objectName = 'contactList')
-		self._contactList.setColumnCount(ContactCol.Count)
-		self._contactList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Mobile'), lx('Home'), lx('Work'), lx('Ring')))
-		self._contactList.setColumnHidden(ContactCol.Key, True)
-		aHeader = self._contactList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(ContactCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(ContactCol.Name, QtCore.Qt.Orientation.Horizontal, 'colist_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(ContactCol.Cell, QtCore.Qt.Orientation.Horizontal, 'colist_Cell', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(ContactCol.Home, QtCore.Qt.Orientation.Horizontal, 'colist_Home', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(ContactCol.Work, QtCore.Qt.Orientation.Horizontal, 'colist_Work', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(ContactCol.Ring, QtCore.Qt.Orientation.Horizontal, 'colist_Ring', QtCore.Qt.ItemDataRole.UserRole)
-		self._contactList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._contactList.setColumnWidth(ContactCol.Name, 250)
-		self._contactList.setColumnWidth(ContactCol.Cell, 110)
-		self._contactList.setColumnWidth(ContactCol.Home, 110)
-		self._contactList.setColumnWidth(ContactCol.Work, 110)
-		self._contactList.setColumnWidth(ContactCol.Ring, 60)
-		self._contactList.verticalHeader().hide()
-		self._contactList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._contactList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._contactList.setSortingEnabled(True)
-		self._contactList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._contactList = LmTableWidget(objectName = 'contactList')
+		self._contactList.set_columns({ContactCol.Key: ['Key', 0, None],
+									   ContactCol.Name: [lx('Name'), 250, 'colist_Name'],
+									   ContactCol.Cell: [lx('Mobile'), 110, 'colist_Cell'],
+									   ContactCol.Home: [lx('Home'), 110, 'colist_Home'],
+									   ContactCol.Work: [lx('Work'), 110, 'colist_Work'],
+									   ContactCol.Ring: [lx('Ring'), 60, 'colist_Ring']})
+		self._contactList.set_header_resize([ContactCol.Name])
+		self._contactList.set_standard_setup(self)
 		self._contactList.itemSelectionChanged.connect(self.contactListClick)
 		self._contactList.doubleClicked.connect(self.editContactButtonClick)
-		LmConfig.SetTableStyle(self._contactList)
 
 		# Contact button bar
 		aContactButtonsBox = QtWidgets.QHBoxLayout()
@@ -467,7 +432,7 @@ class LmPhone:
 
 				aKey = QtWidgets.QTableWidgetItem(c.get('callId', ''))
 
-				aCallTypeIcon = LmTools.NumericSortItem()
+				aCallTypeIcon = NumericSortItem()
 				aStatus = c.get('callType', '')
 				aOrigin = c.get('callOrigin', '')
 				if aStatus == 'succeeded':
@@ -501,7 +466,7 @@ class LmPhone:
 				aContact = QtWidgets.QTableWidgetItem(aContactStr)
 
 				aSeconds = c.get('duration')
-				aDuration = LmTools.NumericSortItem(LmTools.FmtTime(aSeconds, True))
+				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
 				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
 				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 

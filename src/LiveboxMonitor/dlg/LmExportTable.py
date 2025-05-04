@@ -11,10 +11,11 @@ from LiveboxMonitor.lang.LmLanguages import GetExportTableDialogLabel as lx, Get
 
 # ################################ Export table dialog ################################
 class ExportTableDialog(QtWidgets.QDialog):
-    def __init__(self, table_widget, parent=None):
+    def __init__(self, table_widget, app, parent=None):
         super(ExportTableDialog, self).__init__(parent)
 
         self._table_widget = table_widget
+        self._app = app
 
         options_label = QtWidgets.QLabel(lx('Options'), objectName='optionsLabel')
         self._export_header_checkbox = QtWidgets.QCheckBox(lx('Export Header'), objectName='exportHeaderCheckbox')
@@ -69,11 +70,13 @@ class ExportTableDialog(QtWidgets.QDialog):
 
         # Open file
         try:
-            export_file = open(file_name, 'w')
+            export_file = open(file_name, 'w', newline = '')
         except BaseException as e:
             LmTools.Error('File creation error: {}'.format(e))
-            self.displayError(mx('Cannot create the file.', 'createFileErr'))
+            self._app.displayError(mx('Cannot create the file.', 'createFileErr'))
             return
+
+        self._app.startTask(lx('Exporting data...'))
 
         # Create CSV writer
         csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
@@ -97,7 +100,9 @@ class ExportTableDialog(QtWidgets.QDialog):
             export_file.close()
         except BaseException as e:
             LmTools.Error('File saving error: {}'.format(e))
-            self.displayError(mx('Cannot save the file.', 'saveFileErr'))
+            self._app.displayError(mx('Cannot save the file.', 'saveFileErr'))
+ 
+        self._app.endTask()
 
 
     # Return an export string for the item at the given row & column
@@ -107,7 +112,12 @@ class ExportTableDialog(QtWidgets.QDialog):
         if not item:
             return ''
 
-        # First try a DisplayRole data
+        # First try a ExportDataRole data
+        data = item.data(LmTools.ItemDataRole.ExportRole)
+        if data:
+            return str(data)
+
+        # Then try a DisplayRole data
         data = item.data(QtCore.Qt.ItemDataRole.DisplayRole)
         if data:
             return str(data)

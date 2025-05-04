@@ -9,7 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
-from LiveboxMonitor.app.LmTableWidget import LmTableWidget
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
 from LiveboxMonitor.lang.LmLanguages import (GetDeviceListLabel as lx,
@@ -39,15 +39,12 @@ class DevCol(IntEnum):
 	Up = 11
 	DownRate = 12
 	UpRate = 13
-	Count = 14
 ICON_COLUMNS = [DevCol.Type, DevCol.Active, DevCol.Wifi, DevCol.Event]
 
 class DSelCol(IntEnum):
 	Key = 0		# Must be the same as DevCol.Key
 	Name = 1
 	MAC = 2
-	Count = 3
-
 
 
 # ################################ LmDeviceList class ################################
@@ -59,57 +56,23 @@ class LmDeviceList:
 
 		# Device list columns
 		self._deviceList = LmTableWidget(objectName = 'deviceList')
-		self._deviceList.setColumnCount(DevCol.Count)
-		self._deviceList.setHorizontalHeaderLabels(('Key', lx('T'), 
-														   lx('Name'),
-														   lx('Livebox Name'),
-														   lx('MAC'),
-														   lx('IP'),
-														   lx('Link'),
-														   lx('A'),
-														   lx('Wifi'),
-														   lx('E'),
-														   lx('Rx'),
-														   lx('Tx'),
-														   lx('RxRate'),
-														   lx('TxRate')))
-		self._deviceList.setColumnHidden(DevCol.Key, True)
+		self._deviceList.set_columns({DevCol.Key: ['Key', 0, None],
+									  DevCol.Type: [lx('T'), 48, 'dlist_Type'],
+									  DevCol.Name: [lx('Name'), 400, 'dlist_Name'],
+									  DevCol.LBName: [lx('Livebox Name'), 400, 'dlist_LBName'],
+									  DevCol.MAC: [lx('MAC'), 120, 'dlist_MAC'],
+									  DevCol.IP: [lx('IP'), 105, 'dlist_IP'],
+									  DevCol.Link: [lx('Link'), 150, 'dlist_Link'],
+									  DevCol.Active: [lx('A'), 10, 'dlist_Active'],
+									  DevCol.Wifi: [lx('Wifi'), 70, 'dlist_Wifi'],
+									  DevCol.Event: [lx('E'), 10, 'dlist_Event'],
+									  DevCol.Down: [lx('Rx'), 75, 'dlist_Rx'],
+									  DevCol.Up: [lx('Tx'), 75, 'dlist_Tx'],
+									  DevCol.DownRate: [lx('RxRate'), 75, 'dlist_RxRate'],
+									  DevCol.UpRate: [lx('TxRate'), 75, 'dlist_TxRate']})
 		self._deviceList.set_header_resize([DevCol.Name, DevCol.LBName, DevCol.Link])
-		self._deviceList.set_header_tags({DevCol.Type: 'dlist_Type',
-										  DevCol.Name: 'dlist_Name',
-										  DevCol.LBName: 'dlist_LBName',
-										  DevCol.MAC: 'dlist_MAC',
-										  DevCol.IP: 'dlist_IP',
-										  DevCol.Link: 'dlist_Link',
-										  DevCol.Active: 'dlist_Active',
-										  DevCol.Wifi: 'dlist_Wifi',
-										  DevCol.Event: 'dlist_Event',
-										  DevCol.Down: 'dlist_Rx',
-										  DevCol.Up: 'dlist_Tx',
-										  DevCol.DownRate: 'dlist_RxRate',
-										  DevCol.UpRate: 'dlist_TxRate'})
-		self._deviceList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._deviceList.setColumnWidth(DevCol.Type, 48)
-		self._deviceList.setColumnWidth(DevCol.Name, 400)
-		self._deviceList.setColumnWidth(DevCol.LBName, 400)
-		self._deviceList.setColumnWidth(DevCol.MAC, 120)
-		self._deviceList.setColumnWidth(DevCol.IP, 105)
-		self._deviceList.setColumnWidth(DevCol.Link, 150)
-		self._deviceList.setColumnWidth(DevCol.Active, 10)
-		self._deviceList.setColumnWidth(DevCol.Wifi, 70)
-		self._deviceList.setColumnWidth(DevCol.Event, 10)
-		self._deviceList.setColumnWidth(DevCol.Down, 75)
-		self._deviceList.setColumnWidth(DevCol.Up, 75)
-		self._deviceList.setColumnWidth(DevCol.DownRate, 75)
-		self._deviceList.setColumnWidth(DevCol.UpRate, 75)
-		self._deviceList.verticalHeader().hide()
-		self._deviceList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._deviceList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._deviceList.setSortingEnabled(True)
-		self._deviceList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._deviceList.setItemDelegate(LmTools.CenteredIconsDelegate(self, ICON_COLUMNS))
-		self._deviceList.set_style()
-		self._deviceList.set_context_menu()
+		self._deviceList.set_standard_setup(self)
+		self._deviceList.setItemDelegate(CenteredIconsDelegate(self, ICON_COLUMNS))
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
@@ -490,7 +453,7 @@ class LmDeviceList:
 		if aActiveStatus and (aLinkType == 'wif'):
 			aWifiSignal = iDevice.get('SignalNoiseRatio')
 			if aWifiSignal is not None:
-				aWifiIcon = LmTools.NumericSortItem()
+				aWifiIcon = NumericSortItem()
 				if aWifiSignal >= 40:
 					aWifiIcon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
 				elif aWifiSignal >= 32:
@@ -534,7 +497,7 @@ class LmDeviceList:
 	### Format device type cell
 	@staticmethod
 	def formatDeviceTypeTableWidget(iDeviceType, iLBSoftVersion):
-		aDeviceTypeIcon = LmTools.NumericSortItem()
+		aDeviceTypeIcon = NumericSortItem()
 
 		i = 0
 		for d in LmConfig.DEVICE_TYPES:
@@ -545,7 +508,7 @@ class LmDeviceList:
 			i += 1
 
 		aDeviceTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, i)
-		aDeviceTypeIcon.setData(QtCore.Qt.ItemDataRole.DisplayRole, aDeviceTypeName)
+		aDeviceTypeIcon.setData(LmTools.ItemDataRole.ExportRole, aDeviceTypeName)
 
 		return aDeviceTypeIcon
 
@@ -572,20 +535,22 @@ class LmDeviceList:
 	### Format Active status cell
 	@staticmethod
 	def formatActiveTableWidget(iActiveStatus):
-		aActiveIconItem = LmTools.NumericSortItem()
+		aActiveIconItem = NumericSortItem()
 		if iActiveStatus:
 			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.TickPixmap))
 			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
+			aActiveIconItem.setData(LmTools.ItemDataRole.ExportRole, True)
 		else:
 			aActiveIconItem.setIcon(QtGui.QIcon(LmIcon.CrossPixmap))
 			aActiveIconItem.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
+			aActiveIconItem.setData(LmTools.ItemDataRole.ExportRole, False)
 		return aActiveIconItem
 
 
 	### Format IPv4 cell
 	@staticmethod
 	def formatIPv4TableWidget(iIPv4, iReacheableStatus, iReserved):
-		aIP = LmTools.NumericSortItem(iIPv4)
+		aIP = NumericSortItem(iIPv4)
 		if len(iIPv4):
 			aIP.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(iIPv4)))
 		else:
@@ -846,7 +811,7 @@ class LmDeviceList:
 		# Set indicator on new device
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
-			aEventIndicator = LmTools.NumericSortItem()
+			aEventIndicator = NumericSortItem()
 			aEventIndicator.setIcon(QtGui.QIcon(LmIcon.NotifPixmap))
 			aEventIndicator.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 			self._deviceList.setItem(aListLine, DevCol.Event, aEventIndicator)
@@ -896,14 +861,14 @@ class LmDeviceList:
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
-			aDown = LmTools.NumericSortItem(LmTools.FmtBytes(aDownBytes))
+			aDown = NumericSortItem(LmTools.FmtBytes(aDownBytes))
 			aDown.setData(QtCore.Qt.ItemDataRole.UserRole, aDownBytes)
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Down, aDown)
 
-			aUp = LmTools.NumericSortItem(LmTools.FmtBytes(aUpBytes))
+			aUp = NumericSortItem(LmTools.FmtBytes(aUpBytes))
 			aUp.setData(QtCore.Qt.ItemDataRole.UserRole, aUpBytes)
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
@@ -911,7 +876,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = LmTools.NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -921,7 +886,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = LmTools.NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1199,7 +1164,7 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = LmTools.NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1211,7 +1176,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = LmTools.NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1238,7 +1203,6 @@ class IPv6Col(IntEnum):
 	IPv4 = 5
 	IPv6 = 6
 	Prefix = 7
-	Count = 8
 IPV6_ICON_COLUMNS = [IPv6Col.Active]
 
 
@@ -1293,43 +1257,18 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aIPv6InfoGrid.addWidget(aGateway, 1, 5)
 
 		# Device table
-		self._deviceTable = QtWidgets.QTableWidget(objectName = 'ipv6Table')
-		self._deviceTable.setColumnCount(IPv6Col.Count)
-		self._deviceTable.setHorizontalHeaderLabels(('Key', lix('Name'),
-															lix('Livebox Name'),
-															lix('MAC'),
-															lix('A'),
-															lix('IPv4'),
-															lix('IPv6'),
-															lix('Prefix')))
-		self._deviceTable.setColumnHidden(IPv6Col.Key, True)
-		aHeader = self._deviceTable.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(IPv6Col.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(IPv6Col.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._deviceTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		aModel = aHeader.model()
-		aModel.setHeaderData(IPv6Col.Name, QtCore.Qt.Orientation.Horizontal, 'ipv6_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.LBName, QtCore.Qt.Orientation.Horizontal, 'ipv6_LBName', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.MAC, QtCore.Qt.Orientation.Horizontal, 'ipv6_MAC', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.Active, QtCore.Qt.Orientation.Horizontal, 'ipv6_Active', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.IPv4, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv4', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.IPv6, QtCore.Qt.Orientation.Horizontal, 'ipv6_IPv6', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(IPv6Col.Prefix, QtCore.Qt.Orientation.Horizontal, 'ipv6_Prefix', QtCore.Qt.ItemDataRole.UserRole)
-		self._deviceTable.setColumnWidth(IPv6Col.Name, 300)
-		self._deviceTable.setColumnWidth(IPv6Col.LBName, 300)
-		self._deviceTable.setColumnWidth(IPv6Col.MAC, 120)
-		self._deviceTable.setColumnWidth(IPv6Col.Active, 10)
-		self._deviceTable.setColumnWidth(IPv6Col.IPv4, 105)
-		self._deviceTable.setColumnWidth(IPv6Col.IPv6, 250)
-		self._deviceTable.setColumnWidth(IPv6Col.Prefix, 155)
-		self._deviceTable.verticalHeader().hide()
-		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._deviceTable.setSortingEnabled(True)
-		self._deviceTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._deviceTable.setItemDelegate(LmTools.CenteredIconsDelegate(self, IPV6_ICON_COLUMNS))
-		LmConfig.SetTableStyle(self._deviceTable)
+		self._deviceTable = LmTableWidget(objectName = 'ipv6Table')
+		self._deviceTable.set_columns({IPv6Col.Key: ['Key', 0, None],
+									   IPv6Col.Name: [lix('Name'), 300, 'ipv6_Name'],
+									   IPv6Col.LBName: [lix('Livebox Name'), 300, 'ipv6_LBName'],
+									   IPv6Col.MAC: [lix('MAC'), 120, 'ipv6_MAC'],
+									   IPv6Col.Active: [lix('A'), 10, 'ipv6_Active'],
+									   IPv6Col.IPv4: [lix('IPv4'), 105, 'ipv6_IPv4'],
+									   IPv6Col.IPv6: [lix('IPv6'), 250, 'ipv6_IPv6'],
+									   IPv6Col.Prefix: [lix('Prefix'), 155, 'ipv6_Prefix']})
+		self._deviceTable.set_header_resize([IPv6Col.Name, IPv6Col.LBName])
+		self._deviceTable.set_standard_setup(iParent, allow_sel=False)
+		self._deviceTable.setItemDelegate(CenteredIconsDelegate(self, IPV6_ICON_COLUMNS))
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()
@@ -1453,7 +1392,6 @@ class DnsCol(IntEnum):
 	Active = 4
 	IP = 5
 	DNS = 6
-	Count = 7
 DNS_ICON_COLUMNS = [DnsCol.Active]
 
 
@@ -1463,40 +1401,17 @@ class DnsDialog(QtWidgets.QDialog):
 		self.resize(850, 56 + LmConfig.DialogHeight(12))
 
 		# Device table
-		self._deviceTable = QtWidgets.QTableWidget(objectName = 'dnsTable')
-		self._deviceTable.setColumnCount(DnsCol.Count)
-		self._deviceTable.setHorizontalHeaderLabels(('Key', ldx('Name'),
-															ldx('Livebox Name'),
-															ldx('MAC'),
-															ldx('A'),
-															ldx('IP'),
-															ldx('DNS')))
-		self._deviceTable.setColumnHidden(DnsCol.Key, True)
-		aHeader = self._deviceTable.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(DnsCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(DnsCol.LBName, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		self._deviceTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		aModel = aHeader.model()
-		aModel.setHeaderData(DnsCol.Name, QtCore.Qt.Orientation.Horizontal, 'dns_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.LBName, QtCore.Qt.Orientation.Horizontal, 'dns_LBName', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.MAC, QtCore.Qt.Orientation.Horizontal, 'dns_MAC', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.Active, QtCore.Qt.Orientation.Horizontal, 'dns_Active', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.IP, QtCore.Qt.Orientation.Horizontal, 'dns_IP', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(DnsCol.DNS, QtCore.Qt.Orientation.Horizontal, 'dns_DNS', QtCore.Qt.ItemDataRole.UserRole)
-		self._deviceTable.setColumnWidth(DnsCol.Name, 300)
-		self._deviceTable.setColumnWidth(DnsCol.LBName, 300)
-		self._deviceTable.setColumnWidth(DnsCol.MAC, 120)
-		self._deviceTable.setColumnWidth(DnsCol.Active, 10)
-		self._deviceTable.setColumnWidth(DnsCol.IP, 105)
-		self._deviceTable.setColumnWidth(DnsCol.DNS, 250)
-		self._deviceTable.verticalHeader().hide()
-		self._deviceTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._deviceTable.setSortingEnabled(True)
-		self._deviceTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._deviceTable.setItemDelegate(LmTools.CenteredIconsDelegate(self, DNS_ICON_COLUMNS))
-		LmConfig.SetTableStyle(self._deviceTable)
+		self._deviceTable = LmTableWidget(objectName = 'dnsTable')
+		self._deviceTable.set_columns({DnsCol.Key: ['Key', 0, None],
+									   DnsCol.Name: [ldx('Name'), 300, 'dns_Name'],
+									   DnsCol.LBName: [ldx('Livebox Name'), 300, 'dns_LBName'],
+									   DnsCol.MAC: [ldx('MAC'), 120, 'dns_MAC'],
+									   DnsCol.Active: [ldx('A'), 10, 'dns_Active'],
+									   DnsCol.IP: [ldx('IP'), 105, 'dns_IP'],
+									   DnsCol.DNS: [ldx('DNS'), 250, 'dns_DNS']})
+		self._deviceTable.set_header_resize([DnsCol.Name, DnsCol.LBName])
+		self._deviceTable.set_standard_setup(iParent, allow_sel=False)
+		self._deviceTable.setItemDelegate(CenteredIconsDelegate(self, DNS_ICON_COLUMNS))
 
 		# Button bar
 		aHBox = QtWidgets.QHBoxLayout()

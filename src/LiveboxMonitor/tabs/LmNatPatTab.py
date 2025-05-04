@@ -7,8 +7,9 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
-from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmIcons import LmIcon
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import (GetNatPatLabel as lx,
 											 GetNatPatMessage as mx,
 											 GetPatRuleDialogLabel as lrx,
@@ -37,7 +38,6 @@ class PatCol(IntEnum):
 	Device = 8
 	DestIP = 9
 	ExtIPs = 10
-	Count = 11
 PAT_ICON_COLUMNS = [PatCol.Enabled]
 
 class PtfCol(IntEnum):
@@ -50,7 +50,6 @@ class PtfCol(IntEnum):
 	Device = 6
 	DestIP = 7
 	ExtIPs = 8
-	Count = 9
 PTF_ICON_COLUMNS = [PtfCol.Enabled]
 
 RULE_TYPE_IPv4 = 'IPv4'
@@ -117,53 +116,23 @@ class LmNatPat:
 		self._natPatTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# PAT - port forwarding list
-		self._patList = QtWidgets.QTableWidget(objectName = 'patList')
-		self._patList.setColumnCount(PatCol.Count)
-		self._patList.setHorizontalHeaderLabels(('Key', lx('A'),
-														lx('Type'),
-														lx('Name'),
-														lx('Port Forwarding Rule Description'),
-														lx('Protocols'),
-														lx('Internal Port'),
-														lx('External Port'),
-														lx('Device'),
-														'DestIP',
-														lx('External IPs')))
-		self._patList.setColumnHidden(PatCol.Key, True)
-		self._patList.setColumnHidden(PatCol.DestIP, True)
-		aHeader = self._patList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(PatCol.Description, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(PatCol.Enabled, QtCore.Qt.Orientation.Horizontal, 'plist_Enabled', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.Type, QtCore.Qt.Orientation.Horizontal, 'plist_Type', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.ID, QtCore.Qt.Orientation.Horizontal, 'plist_ID', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.Description, QtCore.Qt.Orientation.Horizontal, 'plist_Description', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.Protocols, QtCore.Qt.Orientation.Horizontal, 'plist_Protocols', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.IntPort, QtCore.Qt.Orientation.Horizontal, 'plist_IntPort', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.ExtPort, QtCore.Qt.Orientation.Horizontal, 'plist_ExtPort', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.Device, QtCore.Qt.Orientation.Horizontal, 'plist_Device', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PatCol.ExtIPs, QtCore.Qt.Orientation.Horizontal, 'plist_ExtIPs', QtCore.Qt.ItemDataRole.UserRole)
-		self._patList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._patList.setColumnWidth(PatCol.Enabled, 10)
-		self._patList.setColumnWidth(PatCol.Type, 55)
-		self._patList.setColumnWidth(PatCol.ID, 120)
-		self._patList.setColumnWidth(PatCol.Description, 400)
-		self._patList.setColumnWidth(PatCol.Protocols, 70)
-		self._patList.setColumnWidth(PatCol.IntPort, 95)
-		self._patList.setColumnWidth(PatCol.ExtPort, 95)
-		self._patList.setColumnWidth(PatCol.Device, 180)
-		self._patList.setColumnWidth(PatCol.ExtIPs, 250)
-		self._patList.verticalHeader().hide()
-		self._patList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._patList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._patList.setSortingEnabled(True)
-		self._patList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._patList.setItemDelegate(LmTools.CenteredIconsDelegate(self, PAT_ICON_COLUMNS))
+		self._patList = LmTableWidget(objectName = 'patList')
+		self._patList.set_columns({PatCol.Key: ['Key', 0, None],
+								   PatCol.Enabled: [lx('A'), 10, 'plist_Enabled'],
+								   PatCol.Type: [lx('Type'), 55, 'plist_Type'],
+								   PatCol.ID: [lx('Name'), 120, 'plist_ID'],
+								   PatCol.Description: [lx('Port Forwarding Rule Description'), 400, 'plist_Description'],
+								   PatCol.Protocols: [lx('Protocols'), 70, 'plist_Protocols'],
+								   PatCol.IntPort: [lx('Internal Port'), 95, 'plist_IntPort'],
+								   PatCol.ExtPort: [lx('External Port'), 95, 'plist_ExtPort'],
+								   PatCol.Device: [lx('Device'), 180, 'plist_Device'],
+								   PatCol.DestIP: ['DestIP', 0, None],
+								   PatCol.ExtIPs: [lx('External IPs'), 250, 'plist_ExtIPs']})
+		self._patList.set_header_resize([PatCol.Description])
+		self._patList.set_standard_setup(self)
+		self._patList.setItemDelegate(CenteredIconsDelegate(self, PAT_ICON_COLUMNS))
 		self._patList.itemSelectionChanged.connect(self.patListClick)
 		self._patList.doubleClicked.connect(self.editPatRuleButtonClick)
-		LmConfig.SetTableStyle(self._patList)
 
 		# PAT - port forwarding button bar
 		aPatButtonsBox = QtWidgets.QHBoxLayout()
@@ -194,47 +163,21 @@ class LmNatPat:
 		aPatButtonsBox.addWidget(aImportPatRulesButton)
 
 		# PTF - Layer 3 protocol forwarding list
-		self._ptfList = QtWidgets.QTableWidget(objectName = 'ptfList')
-		self._ptfList.setColumnCount(PtfCol.Count)
-		self._ptfList.setHorizontalHeaderLabels(('Key', lx('A'),
-														lx('Type'),
-														lx('Name'),
-														lx('Protocol Forwarding Rule Description'),
-														lx('Protocols'),
-														lx('Device'),
-														'DestIP',
-														lx('External IPs')))
-		self._ptfList.setColumnHidden(PtfCol.Key, True)
-		self._ptfList.setColumnHidden(PtfCol.DestIP, True)
-		aHeader = self._ptfList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(PtfCol.Description, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(PtfCol.Enabled, QtCore.Qt.Orientation.Horizontal, 'tlist_Enabled', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.Type, QtCore.Qt.Orientation.Horizontal, 'tlist_Type', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.ID, QtCore.Qt.Orientation.Horizontal, 'tlist_ID', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.Description, QtCore.Qt.Orientation.Horizontal, 'tlist_Description', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.Protocols, QtCore.Qt.Orientation.Horizontal, 'tlist_Protocols', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.Device, QtCore.Qt.Orientation.Horizontal, 'tlist_Device', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(PtfCol.ExtIPs, QtCore.Qt.Orientation.Horizontal, 'tlist_ExtIPs', QtCore.Qt.ItemDataRole.UserRole)
-		self._ptfList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._ptfList.setColumnWidth(PtfCol.Enabled, 10)
-		self._ptfList.setColumnWidth(PtfCol.Type, 55)
-		self._ptfList.setColumnWidth(PtfCol.ID, 120)
-		self._ptfList.setColumnWidth(PtfCol.Description, 360)
-		self._ptfList.setColumnWidth(PtfCol.Protocols, 180)
-		self._ptfList.setColumnWidth(PtfCol.Device, 220)
-		self._ptfList.setColumnWidth(PtfCol.ExtIPs, 250)
-		self._ptfList.verticalHeader().hide()
-		self._ptfList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._ptfList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._ptfList.setSortingEnabled(True)
-		self._ptfList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._ptfList.setItemDelegate(LmTools.CenteredIconsDelegate(self, PTF_ICON_COLUMNS))
+		self._ptfList = LmTableWidget(objectName = 'ptfList')
+		self._ptfList.set_columns({PtfCol.Key: ['Key', 0, None],
+								   PtfCol.Enabled: [lx('A'), 10, 'tlist_Enabled'],
+								   PtfCol.Type: [lx('Type'), 55, 'tlist_Type'],
+								   PtfCol.ID: [lx('Name'), 120, 'tlist_ID'],
+								   PtfCol.Description: [lx('Protocol Forwarding Rule Description'), 360, 'tlist_Description'],
+								   PtfCol.Protocols: [lx('Protocols'), 180, 'tlist_Protocols'],
+								   PtfCol.Device: [lx('Device'), 220, 'tlist_Device'],
+								   PtfCol.DestIP: ['DestIP', 0, None],
+								   PtfCol.ExtIPs: [lx('External IPs'), 250, 'tlist_ExtIPs']})
+		self._ptfList.set_header_resize([PtfCol.Description])
+		self._ptfList.set_standard_setup(self)
+		self._ptfList.setItemDelegate(CenteredIconsDelegate(self, PTF_ICON_COLUMNS))
 		self._ptfList.itemSelectionChanged.connect(self.ptfListClick)
 		self._ptfList.doubleClicked.connect(self.editPtfRuleButtonClick)
-		LmConfig.SetTableStyle(self._ptfList)
 		aListSize = LmConfig.TableHeight(5)
 		self._ptfList.setMinimumHeight(aListSize)
 		self._ptfList.setMaximumHeight(aListSize)
@@ -1577,7 +1520,7 @@ class LmNatPat:
 	### Format Port cell
 	@staticmethod
 	def formatPortTableWidget(iPort):
-		aPort = LmTools.NumericSortItem(iPort)
+		aPort = NumericSortItem(iPort)
 		p = iPort.split('-')[0]		# If range is used, sort with the first port
 		try:
 			i = int(p)

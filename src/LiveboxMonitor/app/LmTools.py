@@ -65,6 +65,10 @@ class ValQual(IntEnum):
 	Warn = 2
 	Error = 3
 
+# Table item data roles
+class ItemDataRole(IntEnum):
+	ExportRole = QtCore.Qt.ItemDataRole.UserRole + 1
+	IconRole = QtCore.Qt.ItemDataRole.UserRole + 2
 
 
 # ################################ Tools ################################
@@ -420,57 +424,6 @@ def LiveboxTimestamp(iTimestamp, iUTC = True):
 			return datetime.datetime.fromisoformat(iTimestamp.replace('Z','+00:00'))
 	except:
 		return None
-
-
-
-# ############# Column sort classes #############
-
-### Sorting columns by numeric
-class NumericSortItem(QtWidgets.QTableWidgetItem):
-	def __lt__(self, iOther):
-		x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
-		if x is None:
-			x = 0
-		y = iOther.data(QtCore.Qt.ItemDataRole.UserRole)
-		if y is None:
-			y = 0
-		return x < y
-
-
-### Drawing centered icons
-class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
-	def __init__(self, iParent, iColumnList):
-		super(CenteredIconsDelegate, self).__init__(iParent)
-		self._columnList = iColumnList
-
-	def paint(self, iPainter, iOption, iIndex):
-		if iIndex.column() in self._columnList:
-			aIcon = iIndex.data(QtCore.Qt.ItemDataRole.DecorationRole)
-			if aIcon is not None:
-				aIcon.paint(iPainter, iOption.rect)
-		else:
-			super(CenteredIconsDelegate, self).paint(iPainter, iOption, iIndex)
-
-
-### Drawing centered icons in QHeaderView
-class CenteredIconHeaderView(QtWidgets.QHeaderView):
-	def __init__(self, iParent, iColumnList):
-		super(CenteredIconHeaderView, self).__init__(QtCore.Qt.Orientation.Horizontal, iParent)
-		self._columnList = iColumnList
-
-	def paintSection(self, iPainter, iRect, iIndex):
-		if iIndex in self._columnList:
-			# If icon, first draw the column's normally - ensure title is an empty string
-			iPainter.save()
-			super(CenteredIconHeaderView, self).paintSection(iPainter, iRect, iIndex)
-			iPainter.restore()
-
-			# Then draw the icon stored in DisplayRole on top
-			aIcon = self.model().headerData(iIndex, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.DisplayRole)
-			if aIcon is not None:
-				aIcon.paint(iPainter, iRect)
-		else:
-			super(CenteredIconHeaderView, self).paintSection(iPainter, iRect, iIndex)
 
 
 

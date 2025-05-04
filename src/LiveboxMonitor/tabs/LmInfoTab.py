@@ -8,6 +8,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx, GetInfoMessage as mx
 
 
@@ -20,7 +21,6 @@ TAB_NAME = 'liveboxInfoTab'
 class InfoCol(IntEnum):
 	Attribute = 0
 	Value = 1
-	Count = 2
 
 class StatsCol(IntEnum):
 	Key = 0
@@ -29,7 +29,6 @@ class StatsCol(IntEnum):
 	Up = 3
 	DownRate = 4
 	UpRate = 5
-	Count = 6
 
 
 # ################################ LmInfo class ################################
@@ -40,37 +39,16 @@ class LmInfo:
 		self._liveboxInfoTab = QtWidgets.QWidget(objectName = TAB_NAME)
 
 		# Statistics list
-		self._statsList = QtWidgets.QTableWidget(objectName = 'statsList')
-		self._statsList.setColumnCount(StatsCol.Count)
-		self._statsList.setHorizontalHeaderLabels(('Key', lx('Name'),
-														  lx('Rx'),
-														  lx('Tx'),
-														  lx('RxRate'),
-														  lx('TxRate')))
-		self._statsList.setColumnHidden(StatsCol.Key, True)
-		aHeader = self._statsList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(StatsCol.Down, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.Up, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.DownRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aHeader.setSectionResizeMode(StatsCol.UpRate, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(StatsCol.Name, QtCore.Qt.Orientation.Horizontal, 'stats_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.Down, QtCore.Qt.Orientation.Horizontal, 'stats_Rx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.Up, QtCore.Qt.Orientation.Horizontal, 'stats_Tx', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.DownRate, QtCore.Qt.Orientation.Horizontal, 'stats_RxRate', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(StatsCol.UpRate, QtCore.Qt.Orientation.Horizontal, 'stats_TxRate', QtCore.Qt.ItemDataRole.UserRole)
-		self._statsList.setColumnWidth(StatsCol.Name, 100)
-		self._statsList.setColumnWidth(StatsCol.Down, 65)
-		self._statsList.setColumnWidth(StatsCol.Up, 65)
-		self._statsList.setColumnWidth(StatsCol.DownRate, 65)
-		self._statsList.setColumnWidth(StatsCol.UpRate, 65)
-		self._statsList.verticalHeader().hide()
-		self._statsList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._statsList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._statsList = LmTableWidget(objectName = 'statsList')
+		self._statsList.set_columns({StatsCol.Key: ['Key', 0, None],
+									 StatsCol.Name: [lx('Name'), 100, 'stats_Name'],
+									 StatsCol.Down: [lx('Rx'), 65, 'stats_Rx'],
+									 StatsCol.Up: [lx('Tx'), 65, 'stats_Tx'],
+									 StatsCol.DownRate: [lx('RxRate'), 65, 'stats_RxRate'],
+									 StatsCol.UpRate: [lx('TxRate'), 65, 'stats_TxRate']})
+		self._statsList.set_header_resize([StatsCol.Down, StatsCol.Up, StatsCol.DownRate, StatsCol.UpRate])
+		self._statsList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 		self._statsList.setMinimumWidth(450)
-		LmConfig.SetTableStyle(self._statsList)
 
 		i = 0
 		for s in LmConfig.NET_INTF:
@@ -83,23 +61,11 @@ class LmInfo:
 		self._statsList.setMaximumHeight(aStatsListSize)
 
 		# Attribute list
-		self._liveboxAList = QtWidgets.QTableWidget(objectName = 'liveboxAList')
-		self._liveboxAList.setColumnCount(InfoCol.Count)
-		self._liveboxAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
-		aHeader = self._liveboxAList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(InfoCol.Value, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(InfoCol.Attribute, QtCore.Qt.Orientation.Horizontal, 'alist_Attribute', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(InfoCol.Value, QtCore.Qt.Orientation.Horizontal, 'alist_Value', QtCore.Qt.ItemDataRole.UserRole)
-		self._liveboxAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._liveboxAList.setColumnWidth(InfoCol.Attribute, 200)
-		self._liveboxAList.setColumnWidth(InfoCol.Value, 600)
-		self._liveboxAList.verticalHeader().hide()
-		self._liveboxAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._liveboxAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(self._liveboxAList)
+		self._liveboxAList = LmTableWidget(objectName = 'liveboxAList')
+		self._liveboxAList.set_columns({InfoCol.Attribute: [lx('Attribute'), 200, 'alist_Attribute'],
+										InfoCol.Value: [lx('Value'), 600, 'alist_Value']})
+		self._liveboxAList.set_header_resize([InfoCol.Value])
+		self._liveboxAList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()

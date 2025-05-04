@@ -16,7 +16,8 @@ LABELS = {
 		'Columns': 'Colonnes',
 		'Cancel': 'Annuler',
 		'Export Table': 'Exporter le tableau',
-		'Save File': 'Enregistrer le fichier'
+		'Save File': 'Enregistrer le fichier',
+		'Exporting data...': 'Exportation des données...'
 	},
 
 	# Device list
@@ -396,6 +397,12 @@ LABELS = {
 	# Event Notification Rules
 	'evnrules' : {
 		'Device': 'Appareil',
+		'Added': 'Ajouté',
+		'Deleted': 'Supprimé',
+		'Connected': 'Connecté',
+		'Disconnected': 'Déconnecté',
+		'Link Changed': 'Point d\'Accès',
+		'File': 'Fichier CSV',
 		'Add': 'Ajouter',
 		'Delete': 'Supprimer',
 		'Any device': 'Tout appareil',
@@ -1096,10 +1103,10 @@ TOOLTIPS = {
 					'S\'affiche en rouge si des erreurs de transmission sont détectées.\n'
 					'Attention ce compteur est circulaire et ne dépasse pas les 4 Go pour certaines interfaces.',
 		'stats_RxRate': 'Taux d\'octets reçus par seconde par l\'interface dans les trois dernières secondes.\n'
-						'La fréquence réglable dans les préférences.\n'
+						'La fréquence est réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
 		'stats_TxRate': 'Taux d\'octets envoyés par seconde par l\'interface dans les trois dernières secondes.\n'
-						'La fréquence réglable dans les préférences.\n'
+						'La fréquence est réglable dans les préférences.\n'
 						'S\'affiche en rouge si des erreurs de transmission sont détectées.',
 		'liveboxInfo': 'Affiche les informations principales concernant la Livebox, telles que les versions de logiciels,\n'
 					   'l\'adresse IP WAN, les services actifs, l\'état de la mémoire, etc.',

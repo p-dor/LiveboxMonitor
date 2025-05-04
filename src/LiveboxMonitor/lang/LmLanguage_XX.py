@@ -20,7 +20,8 @@ LABELS = {
 		'OK': '',
 		'Cancel': '',
 		'Export Table': '',
-		'Save File': ''
+		'Save File': '',
+		'Exporting data...': ''
 	},
 
 	# Device list
@@ -464,6 +465,13 @@ LABELS = {
 	# Event Notification Rules
 	'evnrules' : {
 		'Device': '',
+		'Added': '',
+		'Deleted': '',
+		'Connected': '',
+		'Disconnected': '',
+		'Link Changed': '',
+		'File': '',
+		'Email': '',
 		'Add': '',
 		'Delete': '',
 		'Any device': '',

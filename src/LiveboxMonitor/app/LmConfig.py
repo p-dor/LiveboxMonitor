@@ -368,22 +368,6 @@ def SetApplicationStyle():
 		QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(aStyle))
 
 
-### Setting up table style depending on platform
-def SetTableStyle(iTable):
-	iTable.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
-	iTable.setStyleSheet(LIST_STYLESHEET)
-	iTable.setFont(LIST_LINE_FONT)
-
-	aHeader = iTable.horizontalHeader()
-	aHeader.setStyleSheet(LIST_HEADER_STYLESHEET)
-	aHeader.setFont(LIST_HEADER_FONT)
-	aHeader.setFixedHeight(LmConf.ListHeaderHeight)
-
-	aHeader = iTable.verticalHeader()
-	aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-	aHeader.setDefaultSectionSize(LmConf.ListLineHeight)
-
-
 ### Compute table height based on nb of rows
 def TableHeight(iRowNb):
 	return LmConf.ListHeaderHeight + (LmConf.ListLineHeight * iRowNb) + TABLE_ADJUST
@@ -432,18 +416,19 @@ def SetLiveboxModel(iModel):
 	global NET_INTF
 	global INTF_NAME_MAP
 
-	if iModel == 7:
-		NET_INTF = NET_INTF_LB7
-		INTF_NAME_MAP = INTF_NAME_MAP_LB7
-	elif iModel == 6:
-		NET_INTF = NET_INTF_LB6
-		INTF_NAME_MAP = INTF_NAME_MAP_LB6
-	elif iModel == 5:
-		NET_INTF = NET_INTF_LB5
-		INTF_NAME_MAP = INTF_NAME_MAP_LB5
-	else:
-		NET_INTF = NET_INTF_LB4
-		INTF_NAME_MAP = INTF_NAME_MAP_LB4
+	match iModel:
+		case 7:
+			NET_INTF = NET_INTF_LB7
+			INTF_NAME_MAP = INTF_NAME_MAP_LB7
+		case 6:
+			NET_INTF = NET_INTF_LB6
+			INTF_NAME_MAP = INTF_NAME_MAP_LB6
+		case 5:
+			NET_INTF = NET_INTF_LB5
+			INTF_NAME_MAP = INTF_NAME_MAP_LB5
+		case _:
+			NET_INTF = NET_INTF_LB4
+			INTF_NAME_MAP = INTF_NAME_MAP_LB4
 
 
 ### Check if latest release

@@ -10,6 +10,7 @@ import pyqtgraph as pg
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import (GetGraphLabel as lx,
 											 GetGraphMessage as mx,
 											 GetAddGraphDialogLabel as lgx)
@@ -49,7 +50,6 @@ class GraphCol(IntEnum):
 	Type = 2
 	ID = 3
 	Color = 4
-	Count = 5
 
 
 # ################################ LmGraph class ################################
@@ -68,30 +68,15 @@ class LmGraph:
 		aGraphListLayout.addWidget(aSelectLabel, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
 		# Interface / device graph list
-		self._graphList = QtWidgets.QTableWidget(objectName = 'graphList')
-		self._graphList.setColumnCount(GraphCol.Count)
-		self._graphList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('Type'), lx('ID'), lx('Color')))
-		self._graphList.setColumnHidden(GraphCol.Key, True)
-		aHeader = self._graphList.horizontalHeader()
-		aHeader.setSectionsMovable(False)
-		aHeader.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
-		aHeader.setSectionResizeMode(GraphCol.Name, QtWidgets.QHeaderView.ResizeMode.Stretch)
-		aModel = aHeader.model()
-		aModel.setHeaderData(GraphCol.Name, QtCore.Qt.Orientation.Horizontal, 'graphList_Name', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(GraphCol.Type, QtCore.Qt.Orientation.Horizontal, 'graphList_Type', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(GraphCol.ID, QtCore.Qt.Orientation.Horizontal, 'graphList_ID', QtCore.Qt.ItemDataRole.UserRole)
-		aModel.setHeaderData(GraphCol.Color, QtCore.Qt.Orientation.Horizontal, 'graphList_Color', QtCore.Qt.ItemDataRole.UserRole)
-		self._graphList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._graphList.setColumnWidth(GraphCol.Name, 150)
-		self._graphList.setColumnWidth(GraphCol.Type, 55)
-		self._graphList.setColumnWidth(GraphCol.ID, 120)
-		self._graphList.setColumnWidth(GraphCol.Color, 55)
-		self._graphList.verticalHeader().hide()
-		self._graphList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._graphList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._graphList.setSortingEnabled(True)
-		self._graphList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		LmConfig.SetTableStyle(self._graphList)
+		self._graphList = LmTableWidget(objectName = 'graphList')
+		self._graphList.set_columns({GraphCol.Key: ['Key', 0, None],
+									 GraphCol.Name: [lx('Name'), 150, 'graphList_Name'],
+									 GraphCol.Type: [lx('Type'), 55, 'graphList_Type'],
+									 GraphCol.ID: [lx('ID'), 120, 'graphList_ID'],
+									 GraphCol.Color: [lx('Color'), 55, 'graphList_Color']})
+		self._graphList.set_header_resize([GraphCol.Name])
+		self._graphList.set_standard_setup(self)
+
 		aGraphListSize = LmConfig.TableHeight(8)
 		self._graphList.setMinimumHeight(aGraphListSize)
 		self._graphList.setMaximumHeight(aGraphListSize)
@@ -259,6 +244,7 @@ class LmGraph:
 
 		aColorItem = QtWidgets.QTableWidgetItem()
 		aColorItem.setBackground(QtGui.QColor(iColor))
+		aColorItem.setData(QtCore.Qt.ItemDataRole.UserRole, iColor)
 		self._graphList.setItem(i, GraphCol.Color, aColorItem)
 
 

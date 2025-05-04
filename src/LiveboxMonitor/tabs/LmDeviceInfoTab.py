@@ -37,38 +37,20 @@ class LmDeviceInfo:
 
 		# Device list
 		self._infoDList = LmTableWidget(objectName = 'infoDList')
-		self._infoDList.setColumnCount(DSelCol.Count)
-		self._infoDList.setHorizontalHeaderLabels(('Key', lx('Name'), lx('MAC')))
-		self._infoDList.setColumnHidden(DSelCol.Key, True)
+		self._infoDList.set_columns({DSelCol.Key: ['Key', 0, None],
+									 DSelCol.Name: [lx('Name'), 200, 'dlist_Name'],
+									 DSelCol.MAC: [lx('MAC'), 120, 'dlist_MAC']})
 		self._infoDList.set_header_resize([DSelCol.MAC])
-		self._infoDList.set_header_tags({DSelCol.Name: 'dlist_Name', DSelCol.MAC: 'dlist_MAC'})
-		self._infoDList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._infoDList.setColumnWidth(DSelCol.Name, 200)
-		self._infoDList.setColumnWidth(DSelCol.MAC, 120)
-		self._infoDList.verticalHeader().hide()
-		self._infoDList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-		self._infoDList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-		self._infoDList.setSortingEnabled(True)
-		self._infoDList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+		self._infoDList.set_standard_setup(self)
 		self._infoDList.setMinimumWidth(350)
 		self._infoDList.itemSelectionChanged.connect(self.infoDeviceListClick)
-		self._infoDList.set_style()
-		self._infoDList.set_context_menu()
 
 		# Attribute list
 		self._infoAList = LmTableWidget(objectName = 'infoAList')
-		self._infoAList.setColumnCount(InfoCol.Count)
-		self._infoAList.setHorizontalHeaderLabels((lx('Attribute'), lx('Value')))
+		self._infoAList.set_columns({InfoCol.Attribute: [lx('Attribute'), 200, 'alist_Attribute'],
+									 InfoCol.Value: [lx('Value'), 600, 'alist_Value']})
 		self._infoAList.set_header_resize([InfoCol.Value])
-		self._infoAList.set_header_tags({InfoCol.Attribute: 'alist_Attribute', InfoCol.Value: 'alist_Value'})
-		self._infoAList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-		self._infoAList.setColumnWidth(InfoCol.Attribute, 200)
-		self._infoAList.setColumnWidth(InfoCol.Value, 600)
-		self._infoAList.verticalHeader().hide()
-		self._infoAList.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-		self._infoAList.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-		self._infoAList.set_style()
-		self._infoAList.set_context_menu()
+		self._infoAList.set_standard_setup(self, allow_sel=False, allow_sort=False)
 
 		# Lists layout
 		aListBox = QtWidgets.QHBoxLayout()

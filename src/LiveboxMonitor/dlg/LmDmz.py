@@ -5,6 +5,7 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import GetDmzDialogLabel as lx, GetActionsMessage as mx
 
 
@@ -16,7 +17,6 @@ class DmzCol(IntEnum):
     IP = 1
     Device = 2
     ExtIPs = 3
-    Count = 4
 
 
 # ################################ DMZ setup dialog ################################
@@ -40,38 +40,16 @@ class DmzSetupDialog(QtWidgets.QDialog):
         dmz_list_layout.setSpacing(5)
 
         # DMZ list columns
-        self._dmz_list = QtWidgets.QTableWidget(objectName='dmzList')
-        self._dmz_list.setColumnCount(DmzCol.Count)
-
-        # Set columns
-        self._dmz_list.setHorizontalHeaderLabels((lx('ID'), lx('IP'), lx('Device'), lx('External IPs')))
-
-        header = self._dmz_list.horizontalHeader()
-        header.setSectionsMovable(False)
-        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-        header.setSectionResizeMode(DmzCol.Device, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(DmzCol.ExtIPs, QtWidgets.QHeaderView.ResizeMode.Stretch)
-
-        # Assign tags for tooltips
-        model = header.model()
-        model.setHeaderData(DmzCol.ID, QtCore.Qt.Orientation.Horizontal, 'zlist_ID', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(DmzCol.IP, QtCore.Qt.Orientation.Horizontal, 'zlist_IP', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(DmzCol.Device, QtCore.Qt.Orientation.Horizontal, 'zlist_Device', QtCore.Qt.ItemDataRole.UserRole)
-        model.setHeaderData(DmzCol.ExtIPs, QtCore.Qt.Orientation.Horizontal, 'zlist_ExtIPs', QtCore.Qt.ItemDataRole.UserRole)
-
-        self._dmz_list.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self._dmz_list.setColumnWidth(DmzCol.ID, 100)
-        self._dmz_list.setColumnWidth(DmzCol.IP, 100)
-        self._dmz_list.setColumnWidth(DmzCol.Device, 150)
-        self._dmz_list.setColumnWidth(DmzCol.ExtIPs, 150)
-        self._dmz_list.verticalHeader().hide()
-        self._dmz_list.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
-        self._dmz_list.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-        self._dmz_list.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self._dmz_list = LmTableWidget(objectName='dmzList')
+        self._dmz_list.set_columns({DmzCol.ID: [lx('ID'), 100, 'zlist_ID'],
+                                    DmzCol.IP: [lx('IP'), 100, 'zlist_IP'],
+                                    DmzCol.Device: [lx('Device'), 150, 'zlist_Device'],
+                                    DmzCol.ExtIPs: [lx('External IPs'), 150, 'zlist_ExtIPs']})
+        self._dmz_list.set_header_resize([DmzCol.Device, DmzCol.ExtIPs])
+        self._dmz_list.set_standard_setup(parent, allow_sort=False)
         self._dmz_list.setMinimumWidth(680)
-        self._dmz_list.itemSelectionChanged.connect(self.dmz_list_click)
-        LmConfig.SetTableStyle(self._dmz_list)
         self._dmz_list.setMinimumHeight(LmConfig.TableHeight(4))
+        self._dmz_list.itemSelectionChanged.connect(self.dmz_list_click)
 
         dmz_list_layout.addWidget(self._dmz_list, 1)
 
