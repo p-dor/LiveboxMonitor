@@ -498,6 +498,7 @@ class LmDeviceList:
 	@staticmethod
 	def formatDeviceTypeTableWidget(iDeviceType, iLBSoftVersion):
 		aDeviceTypeIcon = NumericSortItem()
+		aDeviceTypeName = iDeviceType
 
 		i = 0
 		for d in LmConfig.DEVICE_TYPES:
