@@ -476,10 +476,10 @@ def GetHardwareKey():
 	aHardwareID = platform.system() + platform.machine() + platform.node() + platform.processor()
 
 	# Hashing to 32 bytes array
-	aHardwareHash = hashlib.md5(aHardwareID.encode('utf-8')).hexdigest()
+	aHardwareHash = hashlib.sha256(aHardwareID.encode('utf-8')).digest()
 
-	# Return as base64 string
-	return base64.urlsafe_b64encode(str.encode(aHardwareHash)).decode()
+	# Return as 44-chars base64 string
+	return base64.urlsafe_b64encode(aHardwareHash).decode('utf-8')
 
 
 
@@ -693,7 +693,7 @@ class LmConf:
 		# Read file if it exists
 		LmTools.LogDebug(1, 'Reading key file in', aKeyFilePath)
 		try:
-			aKeyFile = open(aKeyFilePath)
+			aKeyFile = open(aKeyFilePath, 'rb')
 			aKey = aKeyFile.read()
 			aKeyFile.close()
 		except OSError:
@@ -708,11 +708,11 @@ class LmConf:
 		else:
 			# Decrypt key to get secret
 			try:
-				LmConf.Secret = Fernet(aHWKey.encode('utf-8')).decrypt(aKey.encode('utf-8')).decode('utf-8')
+				LmConf.Secret = Fernet(aHWKey.encode('utf-8')).decrypt(aKey).decode('utf-8')
 			except:
-				LmTools.Error('Invalid key file, you should delete it.')
-				return False
-			return True
+				LmTools.Error('Invalid key file, recreating it.')
+			else:
+				return True
 
 		# Create config directory if doesn't exist
 		if not os.path.isdir(aConfigPath):
@@ -726,10 +726,10 @@ class LmConf:
 
 		# Create key file
 		LmConf.Secret = Fernet.generate_key().decode()
-		aKey = Fernet(aHWKey.encode('utf-8')).encrypt(LmConf.Secret.encode('utf-8')).decode('utf-8')
+		aKey = Fernet(aHWKey.encode('utf-8')).encrypt(LmConf.Secret.encode('utf-8'))
 		LmTools.LogDebug(1, 'Creating key file', aKeyFilePath)
 		try:
-			with open(aKeyFilePath, 'w') as aKeyFile:
+			with open(aKeyFilePath, 'wb') as aKeyFile:
 				aKeyFile.write(aKey)
 		except BaseException as e:
 			LmTools.Error('Cannot save key file. Error: {}'.format(e))
