@@ -100,7 +100,7 @@ class LmSession:
                     self._session.cookies = cookies
                     context_id = pickle.load(f)
             else:
-                LmTools.LogDebug(1, 'New session')
+                LmTools.LogDebug(1, f'New session ({self._name})')
                 self._session = requests.Session()
                 self._channel_id = 0
 
