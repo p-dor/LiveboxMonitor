@@ -127,7 +127,7 @@ class LmDhcp:
 	def dhcpTabClick(self):
 		if not self._dhcpDataLoaded:
 			self._dhcpDataLoaded = True		# Must be first to avoid reentrency during tab drag&drop
-			self.loadDhcpInfo()			# Load first as home/guest server, start & mask must be known before DHCP bindings
+			self.loadDhcpInfo()				# Load first as home/guest server, start & mask must be known before DHCP bindings
 			self.loadDhcpBindings()
 
 
@@ -357,7 +357,10 @@ class LmDhcp:
 			self.formatMacWidget(self._dhcpDList, i, aKey, DhcpCol.MAC)
 
 			aIpItem = NumericSortItem(aIP)
-			aIpItem.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIP)))
+			try:
+				aIpItem.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(aIP)))
+			except:
+				aIpItem.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
 			self._dhcpDList.setItem(i, DhcpCol.IP, aIpItem)
 
 			i += 1
@@ -387,7 +390,10 @@ class LmDhcp:
 		aNetwork = self.getDomainNetwork(iDomain)
 		if aNetwork is None:
 			return False
-		return IPv4Address(iIP) in aNetwork
+		try:	# Due to a LB firmware issue the IP can be empty even if the device is active
+			return IPv4Address(iIP) in aNetwork
+		except:
+			return False
 
 
 	### Get domain network
@@ -403,7 +409,10 @@ class LmDhcp:
 		# Set network
 		if LmTools.IsIPv4(aServer):
 			i = aServer.split('.')
-			return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aMask)
+			try:
+				return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + aMask)
+			except:
+				return None
 		return None
 
 
