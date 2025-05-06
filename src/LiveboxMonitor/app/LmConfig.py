@@ -151,6 +151,35 @@ NET_INTF_LB7 = [
 	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
 ]
 
+# LBW7 Interfaces
+NET_INTF_LBW7 = [
+	{ 'Key': 'veip0',        'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'bridge',       'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'ETH1',         'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH2',         'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH3',         'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH4',         'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH0',         'Name': 'Ether 10G',    'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv0',  'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv0',  'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap2g0guest0', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+]
+
+# LBS Interfaces
+NET_INTF_LBS = [
+	{ 'Key': 'veip0',        'Name': 'Fiber',        'Type': 'ont', 'SwapStats': False },
+	{ 'Key': 'bridge',       'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
+	{ 'Key': 'ETH1',         'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH2',         'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH3',         'Name': 'Ethernet 3',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'ETH4',         'Name': 'Ethernet 4',   'Type': 'eth', 'SwapStats': True  },
+	{ 'Key': 'vap2g0priv0',  'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap5g0priv0',  'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  },
+	{ 'Key': 'vap2g0guest0', 'Name': 'Guest 2.4GHz', 'Type': 'wig', 'SwapStats': True  },
+	{ 'Key': 'vap5g0guest0', 'Name': 'Guest 5GHz',   'Type': 'wig', 'SwapStats': True  }
+]
+
 # Interface name mapping
 INTF_NAME_MAP = []
 
@@ -417,15 +446,21 @@ def SetLiveboxModel(iModel):
 	global INTF_NAME_MAP
 
 	match iModel:
-		case 7:
-			NET_INTF = NET_INTF_LB7
-			INTF_NAME_MAP = INTF_NAME_MAP_LB7
-		case 6:
-			NET_INTF = NET_INTF_LB6
-			INTF_NAME_MAP = INTF_NAME_MAP_LB6
 		case 5:
 			NET_INTF = NET_INTF_LB5
 			INTF_NAME_MAP = INTF_NAME_MAP_LB5
+		case 6:
+			NET_INTF = NET_INTF_LB6
+			INTF_NAME_MAP = INTF_NAME_MAP_LB6
+		case 7:
+			NET_INTF = NET_INTF_LB7
+			INTF_NAME_MAP = INTF_NAME_MAP_LB7
+		case 7.1:
+			NET_INTF = NET_INTF_LBW7
+			INTF_NAME_MAP = INTF_NAME_MAP_LB7
+		case 7.2:
+			NET_INTF = NET_INTF_LBS
+			INTF_NAME_MAP = INTF_NAME_MAP_LB7
 		case _:
 			NET_INTF = NET_INTF_LB4
 			INTF_NAME_MAP = INTF_NAME_MAP_LB4

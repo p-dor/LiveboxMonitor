@@ -116,24 +116,25 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 		aTabOrder = self.getTabsOrder()
 		for t in aTabOrder:
-			if t == LmDeviceListTab.TAB_NAME:
-				self.createDeviceListTab()
-			elif t == LmInfoTab.TAB_NAME:
-				self.createLiveboxInfoTab()
-			elif t == LmGraphTab.TAB_NAME:
-				self.createGraphTab()
-			elif t == LmDeviceInfoTab.TAB_NAME:
-				self.createDeviceInfoTab()
-			elif t == LmEventsTab.TAB_NAME:
-				self.createEventsTab()
-			elif t == LmDhcpTab.TAB_NAME:
-				self.createDhcpTab()
-			elif t == LmNatPatTab.TAB_NAME:
-				self.createNatPatTab()
-			elif t == LmPhoneTab.TAB_NAME:
-				self.createPhoneTab()
-			elif t == LmActionsTab.TAB_NAME:
-				self.create_actions_tab()
+			match t:
+				case LmDeviceListTab.TAB_NAME:
+					self.createDeviceListTab()
+				case LmInfoTab.TAB_NAME:
+					self.createLiveboxInfoTab()
+				case LmGraphTab.TAB_NAME:
+					self.createGraphTab()
+				case LmDeviceInfoTab.TAB_NAME:
+					self.createDeviceInfoTab()
+				case LmEventsTab.TAB_NAME:
+					self.createEventsTab()
+				case LmDhcpTab.TAB_NAME:
+					self.createDhcpTab()
+				case LmNatPatTab.TAB_NAME:
+					self.createNatPatTab()
+				case LmPhoneTab.TAB_NAME:
+					self.createPhoneTab()
+				case LmActionsTab.TAB_NAME:
+					self.create_actions_tab()
 
 		self.setCentralWidget(self._tabWidget)
 
@@ -153,60 +154,61 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	def tabChangedEvent(self, iNewTabIndex):
 		if self._appReady:
 			aTabName = self._tabWidget.widget(iNewTabIndex).objectName()
-			if aTabName == LmDeviceListTab.TAB_NAME:
-				if not NO_THREAD:
-					self.resumeWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-			elif aTabName == LmInfoTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.resumeStatsLoop()
-					self.suspendRepeaterStatsLoop()
-			elif aTabName == LmGraphTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-				self.graphTabClick()
-			elif aTabName == LmDeviceInfoTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-			elif aTabName == LmEventsTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-			elif aTabName == LmDhcpTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-				self.dhcpTabClick()
-			elif aTabName == LmNatPatTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-				self.natPatTabClick()
-			elif aTabName == LmPhoneTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-				self.phoneTabClick()
-			elif aTabName == LmActionsTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.suspendRepeaterStatsLoop()
-			elif aTabName == LmRepeaterTab.TAB_NAME:
-				if not NO_THREAD:
-					self.suspendWifiStatsLoop()
-					self.suspendStatsLoop()
-					self.resumeRepeaterStatsLoop()
+			match aTabName:
+				case LmDeviceListTab.TAB_NAME:
+					if not NO_THREAD:
+						self.resumeWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+				case LmInfoTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.resumeStatsLoop()
+						self.suspendRepeaterStatsLoop()
+				case LmGraphTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+					self.graphTabClick()
+				case LmDeviceInfoTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+				case LmEventsTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+				case LmDhcpTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+					self.dhcpTabClick()
+				case LmNatPatTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+					self.natPatTabClick()
+				case LmPhoneTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+					self.phoneTabClick()
+				case LmActionsTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.suspendRepeaterStatsLoop()
+				case LmRepeaterTab.TAB_NAME:
+					if not NO_THREAD:
+						self.suspendWifiStatsLoop()
+						self.suspendStatsLoop()
+						self.resumeRepeaterStatsLoop()
 
 
 	### Handle move of tab event
@@ -235,28 +237,24 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 	def saveTabsOrder(self):
 		LmConf.Tabs = []	# Reset
 		n = self._tabWidget.count()
-		i = 0
-		while i < n:
+		for i in range(n):
 			aTab = self._tabWidget.widget(i)
 			aKey = aTab.property('Key')
 			if aKey is not None:
 				LmConf.Tabs.append(aTab.objectName() + '_' + aKey)
 			else:
 				LmConf.Tabs.append(aTab.objectName())
-			i += 1
 		LmConf.save()
 
 
 	### Get tab index from name & key, key can be None, returns -1 of not found
 	def getTabIndex(self, iName, iKey):
 		n = self._tabWidget.count()
-		i = 0
-		while i < n:
+		for i in range(n):
 			aTab = self._tabWidget.widget(i)
 			aKey = aTab.property('Key')
 			if (iName == aTab.objectName()) and (iKey == aTab.property('Key')):
 				return i
-			i += 1
 		return -1
 
 
@@ -339,7 +337,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		self._liveboxSoftwareVersion = self._api._info.get_software_version()
 		self._liveboxModel = self._api._info.get_livebox_model()
 
-		LmTools.LogDebug(1, 'Identified Livebox model: {}'.format(self._liveboxModel))
+		LmTools.LogDebug(1, f'Identified Livebox model: {self._liveboxModel} ({self._api._info.get_livebox_model_name()})')
 
 		self.determineFiberLink()
 		self.determineLiveboxPro()
@@ -353,7 +351,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error('NMC:getWANStatus error: {}'.format(e))
+			LmTools.Error(f'NMC:getWANStatus error: {e}')
 			q = None
 		if q is not None:
 			d = q.get('status')
@@ -378,8 +376,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			# Check link type for Livebox 4
 			self._fiberLink = (self._linkType == 'SFP')
 
-		LmTools.LogDebug(1, 'Identified link type: {}'.format(self._linkType))
-		LmTools.LogDebug(1, 'Identified fiber link: {}'.format(self._fiberLink))
+		LmTools.LogDebug(1, f'Identified link type: {self._linkType}')
+		LmTools.LogDebug(1, f'Identified fiber link: {self._fiberLink}')
 
 
 	### Determine if Pro or Residential subscription
@@ -388,7 +386,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			d = self._session.request('NMC', 'get')
 		except BaseException as e:
-			LmTools.Error('NMC:get error: {}'.format(e))
+			LmTools.Error(f'NMC:get error: {e}')
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -403,7 +401,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			else:
 				self._liveboxPro = 'PRO' in aOfferType.upper()
 
-		LmTools.LogDebug(1, 'Identified Livebox Pro: {}'.format(self._liveboxPro))
+		LmTools.LogDebug(1, f'Identified Livebox Pro: {self._liveboxPro}')
 
 
 	### Exit with escape
@@ -432,7 +430,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			QtCore.QCoreApplication.sendPostedEvents()
 			QtCore.QCoreApplication.processEvents()
 
-		LmTools.LogDebug(1, 'TASK STARTING stack={} task={}'.format(self._taskNb, iTask))
+		LmTools.LogDebug(1, f'TASK STARTING stack={self._taskNb} task={iTask}')
 
 
 	### Suspend a potential running task
@@ -458,7 +456,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				QtCore.QCoreApplication.sendPostedEvents()
 				QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(1, 'TASK UPDATE stack={} - task={} - status={}'.format(self._taskNb, aTask, iStatus))
+			LmTools.LogDebug(1, f'TASK UPDATE stack={self._taskNb} - task={aTask} - status={iStatus}')
 
 
 	### End a long (nested) task
@@ -484,7 +482,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self._statusBar.clearMessage()
 					QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(1, 'TASK ENDING stack={} - restoring={}'.format(self._taskNb, aTask))
+			LmTools.LogDebug(1, f'TASK ENDING stack={self._taskNb} - restoring={aTask}')
 
 
 	# Display an error popup
@@ -563,7 +561,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 # ### wakepy error handler
 def wakePyFailure(iResult):
-	LmTools.Error('Failed to keep system awake mode={} active={} success={} err={}'.format(iResult.mode_name, iResult.active_method, iResult.success, iResult.get_failure_text()))
+	LmTools.Error(f'Failed to keep system awake mode={iResult.mode_name} active={iResult.active_method} success={iResult.success} err={iResult.get_failure_text()}')
 
 
 # ### Fatal error handler
@@ -598,7 +596,7 @@ def main(iNativeRun = False):
 
 		# Command line parameters
 		aArgParser = argparse.ArgumentParser()
-		aArgParser.add_argument('--redir', '-r', help = 'add a url redirection, REDIR format must be "url1=url2"', action = 'append')
+		aArgParser.add_argument('--redir', '-r', help='add a url redirection, REDIR format must be "url1=url2"', action='append')
 		aArgs = aArgParser.parse_args()
 		if aArgs.redir:
 			LmSession.load_url_redirections(aArgs.redir)
@@ -613,7 +611,7 @@ def main(iNativeRun = False):
 			try:
 				locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
 			except BaseException as e:
-				LmTools.Error('setlocale() error: {}'.format(e))
+				LmTools.Error(f'setlocale() error: {e}')
 
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()
@@ -626,7 +624,7 @@ def main(iNativeRun = False):
 			aApp.aboutToQuit.connect(aUI.appTerminate)
 			if aUI.isSigned():
 				if LmConf.PreventSleep:
-					with keep.running(on_fail = wakePyFailure):
+					with keep.running(on_fail=wakePyFailure):
 						aApp.exec()
 				else:
 					aApp.exec()

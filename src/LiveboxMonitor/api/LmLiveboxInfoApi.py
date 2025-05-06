@@ -15,8 +15,11 @@ LIVEBOX_MODEL_MAP = {
     'Livebox 4': 4,
     'Livebox Fibre': 5,
     'Livebox 6': 6,
-    'Livebox 7': 7
+    'Livebox 7': 7,
+    'Livebox W7': 7.1,
+    'Livebox S': 7.2
     }
+DEFAULT_MODEL = 'Livebox 7'
 
 
 # ################################ Livebox Info APIs ################################
@@ -25,6 +28,7 @@ class LiveboxInfoApi(LmApi):
         super(LiveboxInfoApi, self).__init__(api, session)
         self._livebox_mac = None
         self._livebox_model = None
+        self._livebox_model_name = None
         self._software_version = None
 
 
@@ -42,15 +46,17 @@ class LiveboxInfoApi(LmApi):
             LmTools.Error('Cannot determine Livebox model.')
             self._livebox_mac = ''
             self._livebox_model = 0
+            self._livebox_model_name = ''
             self._software_version = ''
         else:
             self._livebox_mac = d.get('BaseMAC', '').upper()
-            aModel = d.get('ProductClass', '')
-            if aModel:
-                self._livebox_model = LIVEBOX_MODEL_MAP.get(aModel)
+            model = d.get('ProductClass', '')
+            if model:
+                self._livebox_model = LIVEBOX_MODEL_MAP.get(model)
+                self._livebox_model_name = model
             if self._livebox_model is None:
-                LmTools.Error(f'Unknown Livebox model: {aModel}.')
-                self._livebox_model = 0
+                LmTools.Error(f'Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.')
+                self._livebox_model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
             self._software_version = d.get('SoftwareVersion', '')
 
 
@@ -66,6 +72,13 @@ class LiveboxInfoApi(LmApi):
         if not self._livebox_model:
             self.set_livebox_info_cache()
         return self._livebox_model
+
+
+    ### Get Livebox model name
+    def get_livebox_model_name(self):
+        if not self._livebox_model_name:
+            self.set_livebox_info_cache()
+        return self._livebox_model_name
 
 
     ### Get Livebox software version
