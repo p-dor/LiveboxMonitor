@@ -6,7 +6,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
-from LiveboxMonitor.lang.LmLanguages import GetExportTableDialogLabel as lx, GetMainMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_export_table_label as lx, get_main_message as mx
 
 
 # ################################ Export table dialog ################################

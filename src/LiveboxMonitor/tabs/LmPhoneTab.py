@@ -13,9 +13,9 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
-from LiveboxMonitor.lang.LmLanguages import (GetPhoneLabel as lx,
-											 GetPhoneMessage as mx,
-											 GetPhoneContactDialogLabel as lcx)
+from LiveboxMonitor.lang.LmLanguages import (get_phone_label as lx,
+											 get_phone_message as mx,
+											 get_phone_contact_label as lcx)
 
 
 # ################################ VARS & DEFS ################################

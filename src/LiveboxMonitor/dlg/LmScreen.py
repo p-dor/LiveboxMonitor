@@ -3,7 +3,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmConfig
-from LiveboxMonitor.lang.LmLanguages import GetScreenDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_screen_label as lx
 
 
 # ################################ Screen setup dialog ################################

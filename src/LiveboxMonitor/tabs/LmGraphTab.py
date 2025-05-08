@@ -11,9 +11,9 @@ import pyqtgraph as pg
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import (GetGraphLabel as lx,
-											 GetGraphMessage as mx,
-											 GetAddGraphDialogLabel as lgx)
+from LiveboxMonitor.lang.LmLanguages import (get_graph_label as lx,
+											 get_graph_message as mx,
+											 get_add_graph_label as lgx)
 
 
 # ################################ VARS & DEFS ################################

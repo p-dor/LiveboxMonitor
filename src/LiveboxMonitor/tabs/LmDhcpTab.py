@@ -11,10 +11,10 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
-from LiveboxMonitor.lang.LmLanguages import (GetDhcpLabel as lx,
-											 GetDhcpMessage as mx,
-											 GetDhcpBindingDialogLabel as lbx,
-											 GetDhcpSetupDialogLabel as lsx)
+from LiveboxMonitor.lang.LmLanguages import (get_dhcp_label as lx,
+											 get_dhcp_message as mx,
+											 get_dhcp_binding_label as lbx,
+											 get_dhcp_setup_label as lsx)
 
 
 # ################################ VARS & DEFS ################################

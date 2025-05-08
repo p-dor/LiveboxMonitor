@@ -6,7 +6,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import GetDynDnsDialogLabel as lx, GetActionsMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_dyndns_label as lx, get_actions_message as mx
 
 
 # ################################ VARS & DEFS ################################

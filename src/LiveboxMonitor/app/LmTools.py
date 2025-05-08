@@ -14,7 +14,7 @@ from email.message import EmailMessage
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.lang import LmLanguages
-from LiveboxMonitor.lang.LmLanguages import GetToolsLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_tools_label as lx
 
 
 # ################################ VARS & DEFS ################################

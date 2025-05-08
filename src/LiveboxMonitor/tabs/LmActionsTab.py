@@ -18,7 +18,7 @@ from LiveboxMonitor.dlg.LmDynDns import DynDnsSetupDialog
 from LiveboxMonitor.dlg.LmDmz import DmzSetupDialog
 from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
-from LiveboxMonitor.lang.LmLanguages import GetActionsLabel as lx, GetActionsMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_actions_label as lx, get_actions_message as mx
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
 

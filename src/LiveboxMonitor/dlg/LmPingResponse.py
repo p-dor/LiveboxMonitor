@@ -3,7 +3,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmConfig
-from LiveboxMonitor.lang.LmLanguages import GetPingResponseDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_ping_response_label as lx
 
 
 # ################################ Ping Response setup dialog ################################

@@ -15,9 +15,9 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconHeaderView, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
-from LiveboxMonitor.lang.LmLanguages import (GetEventsLabel as lx,
-											 GetEventsMessage as mx,
-											 GetNotificationRulesLabel as lnx)
+from LiveboxMonitor.lang.LmLanguages import (get_events_label as lx,
+											 get_events_message as mx,
+											 get_notification_rules_label as lnx)
 
 
 # ################################ VARS & DEFS ################################

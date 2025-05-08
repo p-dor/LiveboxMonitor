@@ -9,7 +9,7 @@ from LiveboxMonitor.lang import LmLanguage_EN, LmLanguage_FR
 # - Create LmLanguage_XX module, XX being the language code.
 # - Add language code in LANGUAGES_KEY list.
 # - Add language name in LANGUAGES_NAME list.
-# - Assign LABELS & TOOLS according to language code in SetLanguage().
+# - Assign LABELS & TOOLS according to language code in set_language().
 
 # Rules for Labels:
 # - One function per window/area, using a specific ID / aliased in the module (lx, lix, etc)
@@ -31,7 +31,7 @@ from LiveboxMonitor.lang import LmLanguage_EN, LmLanguage_FR
 # ################################ VARS & DEFS ################################
 
 # Current language
-CURRENT_LANGUAGE = 'FR'
+current_language = 'FR'
 
 # Supported languages
 LANGUAGES_KEY = [ 'FR', 'EN' ]
@@ -39,128 +39,129 @@ LANGUAGES_NAME = [ 'Français', 'English']
 LANGUAGES_LOCALE = { 'FR': 'fr_FR', 'EN': 'en_US' }
 
 # Labels & Tooltips - to set according to current language
-LABELS = LmLanguage_FR.LABELS
-TOOLTIPS = LmLanguage_FR.TOOLTIPS
-MESSAGES = LmLanguage_FR.MESSAGES
+labels = LmLanguage_FR.LABELS
+tooltips = LmLanguage_FR.TOOLTIPS
+messages = LmLanguage_FR.MESSAGES
 
 
 # ################################ Tools ################################
 
 # Setup according to selected language
-def SetLanguage(iLanguage):
-	global CURRENT_LANGUAGE
-	global LABELS
-	global TOOLTIPS
-	global MESSAGES
+def set_language(language):
+    global current_language
+    global labels
+    global tooltips
+    global messages
 
-	CURRENT_LANGUAGE = iLanguage
-	if iLanguage == 'FR':
-		LABELS = LmLanguage_FR.LABELS
-		TOOLTIPS = LmLanguage_FR.TOOLTIPS
-		MESSAGES = LmLanguage_FR.MESSAGES
-	elif iLanguage == 'EN':
-		TOOLTIPS = LmLanguage_EN.TOOLTIPS
-	else:
-		TOOLTIPS = LmLanguage_EN.TOOLTIPS
+    current_language = language
+    match language:
+        case 'FR':
+            labels = LmLanguage_FR.LABELS
+            tooltips = LmLanguage_FR.TOOLTIPS
+            messages = LmLanguage_FR.MESSAGES
+        case 'EN':
+            tooltips = LmLanguage_EN.TOOLTIPS
+        case _:
+            tooltips = LmLanguage_EN.TOOLTIPS
 
 
 # Get label translation
-def GetLabel(iKey, iString):
-	if CURRENT_LANGUAGE == 'EN':
-		return iString
-	return LABELS[iKey].get(iString, iString)
+def get_label(key, string):
+    if current_language == 'EN':
+        return string
+    return labels[key].get(string, string)
 
 
 # Get item tooltip
-def GetToolTip(iKey, iItemKey):
-	return TOOLTIPS[iKey].get(iItemKey)
+def get_tooltip(key, item_key):
+    return tooltips[key].get(item_key)
 
 
 # Get message translation
-def GetMessage(iKey, iString, iItemKey):
-	if CURRENT_LANGUAGE == 'EN':
-		return iString
-	m = MESSAGES[iKey].get(iItemKey)
-	return m if m else iString
+def get_message(key, string, item_key):
+    if current_language == 'EN':
+        return string
+    m = messages[key].get(item_key)
+    return m if m else string
 
 
 
 # ################################ Specialized Tools ################################
 
 # Main
-def GetMainLabel(iString): return GetLabel('main', iString)
-def GetMainMessage(iString, iKey): return GetMessage('main', iString, iKey)
-def GetExportTableDialogLabel(iString): return GetLabel('export_table', iString)
+def get_main_label(string): return get_label('main', string)
+def get_main_message(string, key): return get_message('main', string, key)
+def get_export_table_label(string): return get_label('export_table', string)
 
 # Device list
-def GetDeviceListLabel(iString): return GetLabel('dlist', iString)
-def GetDeviceListMessage(iString, iKey): return GetMessage('dlist', iString, iKey)
-def GetIPv6DialogLabel(iString): return GetLabel('ipv6', iString)
-def GetDnsDialogLabel(iString): return GetLabel('dns', iString)
+def get_device_list_label(string): return get_label('dlist', string)
+def get_device_list_message(string, key): return get_message('dlist', string, key)
+def get_ipv6_label(string): return get_label('ipv6', string)
+def get_dns_label(string): return get_label('dns', string)
 
 # Livebox infos
-def GetInfoLabel(iString): return GetLabel('info', iString)
-def GetInfoMessage(iString, iKey): return GetMessage('info', iString, iKey)
+def get_info_label(string): return get_label('info', string)
+def get_info_message(string, key): return get_message('info', string, key)
 
 # Graph
-def GetGraphLabel(iString): return GetLabel('graph', iString)
-def GetGraphMessage(iString, iKey): return GetMessage('graph', iString, iKey)
-def GetAddGraphDialogLabel(iString): return GetLabel('addgraph', iString)
+def get_graph_label(string): return get_label('graph', string)
+def get_graph_message(string, key): return get_message('graph', string, key)
+def get_add_graph_label(string): return get_label('addgraph', string)
 
 # Device infos
-def GetDeviceInfoLabel(iString): return GetLabel('dinfo', iString)
-def GetDeviceInfoMessage(iString, iKey): return GetMessage('dinfo', iString, iKey)
-def GetDeviceNameDialogLabel(iString): return GetLabel('dname', iString)
-def GetDeviceTypeDialogLabel(iString): return GetLabel('dtype', iString)
+def get_device_info_label(string): return get_label('dinfo', string)
+def get_device_info_message(string, key): return get_message('dinfo', string, key)
+def get_device_name_label(string): return get_label('dname', string)
+def get_device_type_label(string): return get_label('dtype', string)
 
 # Events
-def GetEventsLabel(iString): return GetLabel('events', iString)
-def GetEventsMessage(iString, iKey): return GetMessage('events', iString, iKey)
-def GetNotificationRulesLabel(iString): return GetLabel('evnrules', iString)
+def get_events_label(string): return get_label('events', string)
+def get_events_message(string, key): return get_message('events', string, key)
+def get_notification_rules_label(string): return get_label('evnrules', string)
 
 # DHCP
-def GetDhcpLabel(iString): return GetLabel('dhcp', iString)
-def GetDhcpMessage(iString, iKey): return GetMessage('dhcp', iString, iKey)
-def GetDhcpBindingDialogLabel(iString): return GetLabel('dbinding', iString)
-def GetDhcpSetupDialogLabel(iString): return GetLabel('dsetup', iString)
+def get_dhcp_label(string): return get_label('dhcp', string)
+def get_dhcp_message(string, key): return get_message('dhcp', string, key)
+def get_dhcp_binding_label(string): return get_label('dbinding', string)
+def get_dhcp_setup_label(string): return get_label('dsetup', string)
 
 # NAT/PAT
-def GetNatPatLabel(iString): return GetLabel('natpat', iString)
-def GetNatPatMessage(iString, iKey): return GetMessage('natpat', iString, iKey)
-def GetPatRuleDialogLabel(iString): return GetLabel('patrule', iString)
-def GetPtfRuleDialogLabel(iString): return GetLabel('ptfrule', iString)
-def GetNatPatRuleTypeDialogLabel(iString): return GetLabel('nprtype', iString)
+def get_nat_pat_label(string): return get_label('natpat', string)
+def get_nat_pat_message(string, key): return get_message('natpat', string, key)
+def get_pat_rule_label(string): return get_label('patrule', string)
+def get_ptf_rule_label(string): return get_label('ptfrule', string)
+def get_nat_pat_rule_type_label(string): return get_label('nprtype', string)
 
 # Phone
-def GetPhoneLabel(iString): return GetLabel('phone', iString)
-def GetPhoneMessage(iString, iKey): return GetMessage('phone', iString, iKey)
-def GetPhoneContactDialogLabel(iString): return GetLabel('pcontact', iString)
+def get_phone_label(string): return get_label('phone', string)
+def get_phone_message(string, key): return get_message('phone', string, key)
+def get_phone_contact_label(string): return get_label('pcontact', string)
 
 # Actions
-def GetActionsLabel(iString): return GetLabel('actions', iString)
-def GetActionsMessage(iString, iKey): return GetMessage('actions', iString, iKey)
-def GetRHistoryDialogLabel(iString): return GetLabel('rhistory', iString)
-def GetWifiConfigDialogLabel(iString): return GetLabel('wconfig', iString)
-def GetWifiGlobalDialogLabel(iString): return GetLabel('wglobal', iString)
-def GetBackupRestoreDialogLabel(iString): return GetLabel('backrest', iString)
-def GetScreenDialogLabel(iString): return GetLabel('screen', iString)
-def GetFirewallLevelDialogLabel(iString): return GetLabel('fwlevel', iString)
-def GetPingResponseDialogLabel(iString): return GetLabel('pingr', iString)
-def GetDynDnsDialogLabel(iString): return GetLabel('dyndns', iString)
-def GetDmzDialogLabel(iString): return GetLabel('dmz', iString)
+def get_actions_label(string): return get_label('actions', string)
+def get_actions_message(string, key): return get_message('actions', string, key)
+def get_reboot_history_label(string): return get_label('rhistory', string)
+def get_wifi_config_label(string): return get_label('wconfig', string)
+def get_wifi_global_label(string): return get_label('wglobal', string)
+def get_backup_restore_label(string): return get_label('backrest', string)
+def get_screen_label(string): return get_label('screen', string)
+def get_firewall_level_label(string): return get_label('fwlevel', string)
+def get_ping_response_label(string): return get_label('pingr', string)
+def get_dyndns_label(string): return get_label('dyndns', string)
+def get_dmz_label(string): return get_label('dmz', string)
 
 # Repeater
-def GetRepeaterLabel(iString): return GetLabel('repeater', iString)
-def GetRepeaterMessage(iString, iKey): return GetMessage('repeater', iString, iKey)
+def get_repeater_label(string): return get_label('repeater', string)
+def get_repeater_message(string, key): return get_message('repeater', string, key)
 
 # Config
-def GetConfigPrefsDialogLabel(iString): return GetLabel('prefs', iString)
-def GetConfigMessage(iString, iKey): return GetMessage('prefs', iString, iKey)
-def GetConfigCnxDialogLabel(iString): return GetLabel('cnx', iString)
-def GetConfigSigninDialogLabel(iString): return GetLabel('signin', iString)
-def GetConfigEmailDialogLabel(iString): return GetLabel('email', iString)
-def GetSelectProfileDialogLabel(iString): return GetLabel('sprofile', iString)
-def GetReleaseWarningDialogLabel(iString): return GetLabel('rwarn', iString)
+def get_config_prefs_label(string): return get_label('prefs', string)
+def get_config_message(string, key): return get_message('prefs', string, key)
+def get_config_cnx_label(string): return get_label('cnx', string)
+def get_config_signin_label(string): return get_label('signin', string)
+def get_config_email_label(string): return get_label('email', string)
+def get_select_profile_label(string): return get_label('sprofile', string)
+def get_release_warning_label(string): return get_label('rwarn', string)
 
 # Tools
-def GetToolsLabel(iString): return GetLabel('tools', iString)
+def get_tools_label(string): return get_label('tools', string)

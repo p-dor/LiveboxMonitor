@@ -5,7 +5,7 @@ import copy
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
-from LiveboxMonitor.lang.LmLanguages import GetWifiConfigDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_wifi_config_label as lx
 
 
 # ################################ VARS & DEFS ################################

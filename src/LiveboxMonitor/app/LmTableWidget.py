@@ -6,7 +6,7 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.dlg.LmExportTable import ExportTableDialog
 
-from LiveboxMonitor.lang.LmLanguages import GetMainLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_main_label as lx
 
 
 # ################################ LmTableWidget class ################################

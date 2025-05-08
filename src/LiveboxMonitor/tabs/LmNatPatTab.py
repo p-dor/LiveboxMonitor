@@ -10,11 +10,11 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
-from LiveboxMonitor.lang.LmLanguages import (GetNatPatLabel as lx,
-											 GetNatPatMessage as mx,
-											 GetPatRuleDialogLabel as lrx,
-											 GetPtfRuleDialogLabel as lfx,
-											 GetNatPatRuleTypeDialogLabel as ltx)
+from LiveboxMonitor.lang.LmLanguages import (get_nat_pat_label as lx,
+											 get_nat_pat_message as mx,
+											 get_pat_rule_label as lrx,
+											 get_ptf_rule_label as lfx,
+											 get_nat_pat_rule_type_label as ltx)
 
 from LiveboxMonitor.__init__ import __build__
 

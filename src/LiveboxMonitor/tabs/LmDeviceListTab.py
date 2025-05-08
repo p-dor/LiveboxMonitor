@@ -12,10 +12,10 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
-from LiveboxMonitor.lang.LmLanguages import (GetDeviceListLabel as lx,
-											 GetDeviceListMessage as mx,
-											 GetIPv6DialogLabel as lix,
-											 GetDnsDialogLabel as ldx)
+from LiveboxMonitor.lang.LmLanguages import (get_device_list_label as lx,
+											 get_device_list_message as mx,
+											 get_ipv6_label as lix,
+											 get_dns_label as ldx)
 
 
 # ################################ VARS & DEFS ################################

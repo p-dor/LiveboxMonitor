@@ -18,7 +18,7 @@ from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
 								 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
-from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, GetMainLabel as lx, GetMainMessage as mx
+from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, get_main_label as lx, get_main_message as mx
 
 from LiveboxMonitor.__init__ import __version__
 

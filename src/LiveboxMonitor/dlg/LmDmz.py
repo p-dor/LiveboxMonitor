@@ -6,7 +6,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import GetDmzDialogLabel as lx, GetActionsMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_dmz_label as lx, get_actions_message as mx
 
 
 # ################################ VARS & DEFS ################################

@@ -19,13 +19,13 @@ from LiveboxMonitor.api.LmSession import DEFAULT_TIMEOUT
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmLiveboxInfoApi import LiveboxInfoApi
 from LiveboxMonitor.lang import LmLanguages
-from LiveboxMonitor.lang.LmLanguages import (GetConfigPrefsDialogLabel as lx,
-											 GetConfigMessage as mx,
-											 GetConfigCnxDialogLabel as lcx,
-											 GetConfigSigninDialogLabel as lsx,
-											 GetConfigEmailDialogLabel as lex,
-											 GetSelectProfileDialogLabel as lpx,
-											 GetReleaseWarningDialogLabel as lrx)
+from LiveboxMonitor.lang.LmLanguages import (get_config_prefs_label as lx,
+											 get_config_message as mx,
+											 get_config_cnx_label as lcx,
+											 get_config_signin_label as lsx,
+											 get_config_email_label as lex,
+											 get_select_profile_label as lpx,
+											 get_release_warning_label as lrx)
 
 from LiveboxMonitor.__init__ import __url__, __version__, __build__
 
@@ -425,19 +425,19 @@ def SetToolTips(iQtObject, iKey):
 					for c in range(h.count()):
 						k = m.headerData(c, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.UserRole)
 						if k is not None:
-							aItem.horizontalHeaderItem(c).setToolTip(LmLanguages.GetToolTip(iKey, k))
+							aItem.horizontalHeaderItem(c).setToolTip(LmLanguages.get_tooltip(iKey, k))
 				elif isinstance(aItem, QtWidgets.QTabWidget):
 					for i in range(aItem.count()):
 						k = aItem.widget(i).objectName()
 						if len(k):
-							aItem.setTabToolTip(i, LmLanguages.GetToolTip(iKey, k))
+							aItem.setTabToolTip(i, LmLanguages.get_tooltip(iKey, k))
 				elif isinstance(aItem, QtWidgets.QGroupBox):
 					# Set tooltip to the group if any
-					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
+					aItem.setToolTip(LmLanguages.get_tooltip(iKey, k))
 					# Recursive call to handle group content
 					SetToolTips(aItem, iKey)
 				else:
-					aItem.setToolTip(LmLanguages.GetToolTip(iKey, k))
+					aItem.setToolTip(LmLanguages.get_tooltip(iKey, k))
 
 
 ### Setup configuration according to Livebox model
@@ -593,7 +593,7 @@ class LmConf:
 				LmConf.Language = str(p)
 				if LmConf.Language not in LmLanguages.LANGUAGES_KEY:
 					LmConf.Language = DCFG_LANGUAGE
-			LmLanguages.SetLanguage(LmConf.Language)
+			LmLanguages.set_language(LmConf.Language)
 
 			# Check if config version is more recent than the application
 			aConfigVersion = aConfig.get('Version', 0)
@@ -775,7 +775,7 @@ class LmConf:
 	### Apply immediate actions derived from configuration
 	@staticmethod
 	def apply():
-		LmLanguages.SetLanguage(LmConf.Language)
+		LmLanguages.set_language(LmConf.Language)
 		LmSession.set_timeout_margin(LmConf.TimeoutMargin)
 
 

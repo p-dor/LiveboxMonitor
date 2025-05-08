@@ -9,7 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import GetInfoLabel as lx, GetInfoMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_info_label as lx, get_info_message as mx
 
 
 # ################################ VARS & DEFS ################################

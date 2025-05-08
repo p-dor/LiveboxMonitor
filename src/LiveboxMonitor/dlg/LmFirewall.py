@@ -3,7 +3,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmConfig
-from LiveboxMonitor.lang.LmLanguages import GetFirewallLevelDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_firewall_level_label as lx
 
 
 # ################################ VARS & DEFS ################################

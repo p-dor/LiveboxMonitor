@@ -4,7 +4,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.lang.LmLanguages import GetBackupRestoreDialogLabel as lx, GetActionsMessage as mx
+from LiveboxMonitor.lang.LmLanguages import get_backup_restore_label as lx, get_actions_message as mx
 
 
 # ################################ Backup & Restore setup dialog ################################

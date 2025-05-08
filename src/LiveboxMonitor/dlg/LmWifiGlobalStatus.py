@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmWifiApi import WifiKey, WifiStatus
 from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate
-from LiveboxMonitor.lang.LmLanguages import GetWifiGlobalDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_wifi_global_label as lx
 
 
 # ################################ Wifi Global Status dialog ################################

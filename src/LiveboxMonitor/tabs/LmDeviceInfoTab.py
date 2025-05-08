@@ -12,10 +12,10 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
-from LiveboxMonitor.lang.LmLanguages import (GetDeviceInfoLabel as lx,
-											 GetDeviceInfoMessage as mx,
-											 GetDeviceNameDialogLabel as lnx,
-											 GetDeviceTypeDialogLabel as ltx)
+from LiveboxMonitor.lang.LmLanguages import (get_device_info_label as lx,
+											 get_device_info_message as mx,
+											 get_device_name_label as lnx,
+											 get_device_type_label as ltx)
 
 
 # ################################ VARS & DEFS ################################

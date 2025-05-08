@@ -6,7 +6,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import GetRHistoryDialogLabel as lx
+from LiveboxMonitor.lang.LmLanguages import get_reboot_history_label as lx
 
 
 # ################################ VARS & DEFS ################################
