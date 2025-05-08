@@ -496,6 +496,12 @@ class LmDeviceInfo:
 			aSignalStrength += ' dBm'
 		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Strength'), aSignalStrength)
 		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Noise Ratio'), LmTools.fmt_int(d.get('SignalNoiseRatio')))
+		i = self.addInfoLine(self._infoAList, i, lx('Encryption Mode'), d.get('EncryptionMode'))
+		i = self.addInfoLine(self._infoAList, i, lx('Security Mode'), d.get('SecurityModeEnabled'))
+		i = self.addInfoLine(self._infoAList, i, lx('Link Bandwidth'), d.get('LinkBandwidth'))
+		i = self.addInfoLine(self._infoAList, i, lx('Operating Standard'), d.get('OperatingStandard'))
+		i = self.addInfoLine(self._infoAList, i, lx('Operating Band'), d.get('OperatingFrequencyBand'))
+
 
 		aSysSoftwareStd = d.get('SSWSta')
 		if aSysSoftwareStd is not None:
