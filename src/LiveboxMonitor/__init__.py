@@ -1,10 +1,10 @@
 # #### Livebox Monitor ####
 
 __title__ = 'LiveboxMonitor'
-__description__ = 'Graphical user interface to manage Livebox 4, 5, 6 & 7'
+__description__ = 'Graphical user interface to manage Livebox 4, 5, 6, 7, W7 & S'
 __url__ = 'https://github.com/p-dor/LiveboxMonitor'
-__version__ = '1.5.2'
-__build__ = 0x010502
+__version__ = '1.5.3b'
+__build__ = 0x010503
 __author__ = 'Pierre Dor'
 __author_email__ = 'dorpierre@orange.fr'
 __license__ = 'MIT'
