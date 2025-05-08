@@ -1,7 +1,6 @@
 ### Livebox Monitor DynDNS APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi
-from LiveboxMonitor.app import LmTools
 
 
 # ################################ DynDNS APIs ################################

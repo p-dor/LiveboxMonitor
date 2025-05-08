@@ -88,7 +88,7 @@ class WifiApi(LmApi):
             else:
                 self.disable_guest_activation_timer()
         except:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
 
 
     ### Get guest activation timer - in seconds
@@ -121,7 +121,7 @@ class WifiApi(LmApi):
         try:
             d = self.call('PowerManagement', 'getProfiles')
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             # If failed, try legacy method
             return self.get_scheduler_enable_legacy()
         else:
@@ -129,7 +129,7 @@ class WifiApi(LmApi):
             if d is not None:
                 return d.get('Activate')
             else:
-                LmTools.Error('PowerManagement:getProfiles - No WiFi field')
+                LmTools.error('PowerManagement:getProfiles - No WiFi field')
                 return self.get_scheduler_enable_legacy()
 
 
@@ -164,7 +164,7 @@ class WifiApi(LmApi):
             else:
                 self.call('PowerManagement', 'setProfiles', {'profiles': [{'profile': 'WiFi', 'activate': False}]})
         except BaseException as e:
-            LmTools.Error(f'PowerManagement method failed with error={e}, trying legacy method.')
+            LmTools.error(f'PowerManagement method failed with error={e}, trying legacy method.')
             return self.set_scheduler_enable_legacy(enable)
 
         # ID has to remain 'wl0' - it is NOT corresponding to an intf key
@@ -218,7 +218,7 @@ class WifiApi(LmApi):
                 d = self.call_raw('Scheduler', 'getSchedule', {'type': 'WLAN', 'ID': i}, err_str=i)
             except BaseException as e:
                 err_msg = str(e)
-                LmTools.Error(err_msg)
+                LmTools.error(err_msg)
                 failed = True
                 break
             status = d.get('status')
@@ -232,7 +232,7 @@ class WifiApi(LmApi):
                 schedule = d
             else:
                 err_msg = f'Scheduler:getSchedule service failed for {i} interface.'
-                LmTools.Error(err_msg)
+                LmTools.error(err_msg)
                 failed = True
                 break
 
@@ -251,11 +251,11 @@ class WifiApi(LmApi):
             try:
                 d = self.call_no_check('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p})
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
                 d = None
             if not d:
                 err_msg = f'Scheduler:addSchedule service failed for {i} interface.\nLivebox might reboot.'
-                LmTools.Error(err_msg)
+                LmTools.error(err_msg)
                 failed = True
                 if n:   # Trigger a restore (causing a Livebox reboot) if at least one succeeded previously
                     restore = True
@@ -273,11 +273,11 @@ class WifiApi(LmApi):
                 try:
                     d = self.call_no_check('Scheduler', 'enableSchedule', {'type': 'WLAN', 'ID': i, 'enable': enable}, err_str=i)
                 except BaseException as e:
-                    LmTools.Error(str(e))
+                    LmTools.error(str(e))
                     d = None
                 if not d:
                     err_msg = f'Scheduler:enableSchedule service failed for {i} interface.'
-                    LmTools.Error(err_msg)
+                    LmTools.error(err_msg)
                     failed = True
 
         if failed:
@@ -292,7 +292,7 @@ class WifiApi(LmApi):
             config['Enable'] = self.get_enable()
             b, w, d = self.get_intf()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             return None
 
         # Get setup for each interface in wlanvap
@@ -359,7 +359,7 @@ class WifiApi(LmApi):
             try:
                 d = self._api._intf.get_intf_info(intf_key)
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
             else:
                 m = {}
                 m['Modes'] = d.get('SupportedStandards')
@@ -402,7 +402,7 @@ class WifiApi(LmApi):
             try:
                 self.set_configuration_mode(new_unique_ssid)
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
                 status = False
 
         # Initiate parameters
@@ -458,7 +458,7 @@ class WifiApi(LmApi):
             try:
                 self.set_wlan_config(params)
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
                 status = False
 
         # Activate/Deactivate Wifi
@@ -466,7 +466,7 @@ class WifiApi(LmApi):
             try:
                 self.set_enable(new_config['Enable'])
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
                 status = False             
 
         return status
@@ -481,16 +481,16 @@ class WifiApi(LmApi):
             s = self.get_guest_status()
             b, w, d = self.get_intf(True)
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             return None
 
         config['Enable'] = s.get('Status') == 'Enabled'
 
         if s.get('ActivationTimeout', 0) != 0:
-            start_time = LmTools.LiveboxTimestamp(s.get('StartTime'))
-            end_time = LmTools.LiveboxTimestamp(s.get('ValidTime'))
+            start_time = LmTools.livebox_timestamp(s.get('StartTime'))
+            end_time = LmTools.livebox_timestamp(s.get('ValidTime'))
             if (start_time is None) or (end_time is None):
-                LmTools.Error('Activation timeout timestamps error')
+                LmTools.error('Activation timeout timestamps error')
                 diff = 0
             else:
                 diff = int((end_time - start_time).total_seconds())
@@ -502,7 +502,7 @@ class WifiApi(LmApi):
         try:
             config['Timer'] = self.get_guest_activation_timer()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             config['Timer'] = 0
 
         # Get setup for each interface
@@ -605,7 +605,7 @@ class WifiApi(LmApi):
             try:
                 self.set_wlan_config(params)
             except BaseException as e:
-                LmTools.Error(str(e))
+                LmTools.error(str(e))
                 status = False
 
         # Activate/Deactivate Guest Wifi or reset timer
@@ -615,7 +615,7 @@ class WifiApi(LmApi):
             elif new_config['Enable']:
                 self.set_guest_activation_timer(new_config['Duration'] // 3600)
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             status = False
 
         return status
@@ -631,7 +631,7 @@ class WifiApi(LmApi):
         try:
             d = self.get_status()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             d = None
         if d is None:
             u[WifiKey.ENABLE] = WifiStatus.ERROR
@@ -645,7 +645,7 @@ class WifiApi(LmApi):
         try:
             status = self.get_scheduler_enable()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             status = None
 
         # Agregate result
@@ -664,7 +664,7 @@ class WifiApi(LmApi):
         try:
             b, w, d = self.get_intf()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             b = None
             w = None
             d = None
@@ -720,7 +720,7 @@ class WifiApi(LmApi):
         try:
             b, w, d = self.get_intf(True)
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             b = None
             w = None
             d = None

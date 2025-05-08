@@ -56,7 +56,7 @@ class IntfApi(LmApi):
         try:
             d = self.call('HomeLan.Interface', 'get')
         except:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             return False
 
         # Collect all interfaces per type

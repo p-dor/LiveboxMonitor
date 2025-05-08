@@ -171,7 +171,7 @@ class LmDeviceList:
 
 	### Click on assign names button
 	def assignNamesButtonClick(self):
-		if self.askQuestion(mx('This will assign the Livebox name as the local name for all unknown devices. Continue?', 'aName')):
+		if self.ask_question(mx('This will assign the Livebox name as the local name for all unknown devices. Continue?', 'aName')):
 			self.assignLBNamesToUnkownDevices()
 
 
@@ -204,7 +204,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.IPv6', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -212,7 +212,7 @@ class LmDeviceList:
 			aIPv6Enabled = d.get('Enable')
 		if aIPv6Enabled is None:
 			self.endTask()
-			self.displayError('NMC.IPv6:get service error')
+			self.display_error('NMC.IPv6:get service error')
 			return
 
 		# Get CGNat status
@@ -220,7 +220,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.ServiceEligibility.DSLITE', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -232,7 +232,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC.Autodetect', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -245,7 +245,7 @@ class LmDeviceList:
 		try:
 			d = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			s = d.get('status')
@@ -259,7 +259,7 @@ class LmDeviceList:
 			aGateway = d.get('RemoteGatewayIPv6')
 		if (aIPv6Addr is None) or (aIPv6Prefix is None):
 			self.endTask()
-			self.displayError('NMC:getWANStatus service error')
+			self.display_error('NMC:getWANStatus service error')
 			return
 
 		# Get IPv6 prefix leases delegation list
@@ -267,13 +267,13 @@ class LmDeviceList:
 		try:
 			d = self._session.request('DHCPv6.Server', 'getPDPrefixLeases')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			aPrefixes = d.get('status')
 		if aPrefixes is None:
 			self.endTask()
-			self.displayError('DHCPv6.Server:getPDPrefixLeases service error')
+			self.display_error('DHCPv6.Server:getPDPrefixLeases service error')
 			return
 
 		self.loadDeviceIpNameMap()
@@ -315,12 +315,12 @@ class LmDeviceList:
 		try:
 			self._liveboxDevices = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, timeout=10)
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			self._liveboxDevices = None
 		if self._liveboxDevices is not None:
 			self._liveboxDevices = self._liveboxDevices.get('status')
 		if self._liveboxDevices is None:
-			self.displayError(mx('Error getting device list.', 'dlistErr'))
+			self.display_error(mx('Error getting device list.', 'dlistErr'))
 		else:
 			self.buildDeviceIpNameMap()
 			self._deviceIpNameMapDirty = False
@@ -329,12 +329,12 @@ class LmDeviceList:
 		try:
 			self._liveboxTopology = self._session.request('TopologyDiagnostics', 'buildTopology', { 'SendXmlFile': 'false' }, timeout=20)
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			self._liveboxTopology = None
 		if self._liveboxTopology is not None:
 			self._liveboxTopology = self._liveboxTopology.get('status')
 		if self._liveboxTopology is None:
-			self.displayError(mx('Error getting device topology.', 'topoErr'))
+			self.display_error(mx('Error getting device topology.', 'topoErr'))
 		else:
 			self.buildLinkMaps()
 
@@ -413,7 +413,7 @@ class LmDeviceList:
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))
 		self._deviceList.setItem(iLine, DevCol.LBName, aLBName)
 
-		aIPStruct = LmTools.DetermineIP(iDevice)
+		aIPStruct = LmTools.determine_ip(iDevice)
 		if aIPStruct is None:
 			aIPv4 = ''
 			aIPv4Reacheable = ''
@@ -595,8 +595,8 @@ class LmDeviceList:
 	### Propose to assign LB names to all unknown devices
 	def proposeToAssignNamesToUnkownDevices(self):
 		if not LmConf.MacAddrTable:
-			if self.askQuestion(mx('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
-								   'You can still do that action later.', 'aNameStartup')):
+			if self.ask_question(mx('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
+								    'You can still do that action later.', 'aNameStartup')):
 				self.assignLBNamesToUnkownDevices()
 
 
@@ -620,13 +620,13 @@ class LmDeviceList:
 			try:
 				d = self._session.request('Devices', 'get', { 'expression': 'physical and !self and !voice' }, timeout=10)
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
 			if d is None:
 				self.endTask()
-				self.displayError(mx('Error getting device list.', 'dlistErr'))
+				self.display_error(mx('Error getting device list.', 'dlistErr'))
 				return
 			self._liveboxDevices = d
 
@@ -651,7 +651,7 @@ class LmDeviceList:
 				aIPv4DeviceInfo['IPVers'] = 'IPv4'
 
 				# Map IPv4 address to device infos
-				aIPv4Struct = LmTools.DetermineIP(d)
+				aIPv4Struct = LmTools.determine_ip(d)
 				if aIPv4Struct is not None:
 					aIPv4 = aIPv4Struct.get('Address', '')
 
@@ -693,8 +693,8 @@ class LmDeviceList:
 		aRootNode = self._liveboxTopology[0]
 		aDeviceKey = aRootNode.get('Key', '')
 		self.buildLinksMapNode(aRootNode.get('Children', []), aDeviceKey, 'Livebox', '', '')
-#DBG	self.displayInfos('Interface map', str(self._interfaceMap))
-#DBG	self.displayInfos('Device map', str(self._deviceMap))
+#DBG	self.display_infos('Interface map', str(self._interfaceMap))
+#DBG	self.display_infos('Device map', str(self._deviceMap))
 
 
 	### Handle a topology node to build links map
@@ -831,7 +831,7 @@ class LmDeviceList:
 		aUpRateBytes = 0
 		aDownDeltaErrors = iEvent.get('DeltaRxErrors', 0)
 		aUpDeltaErrors = iEvent.get('DeltaTxErrors', 0)
-		aTimestamp = LmTools.LiveboxTimestamp(iEvent.get('Timestamp', ''))
+		aTimestamp = LmTools.livebox_timestamp(iEvent.get('Timestamp', ''))
 
 		# Try to find a previously received statistic record
 		aPrevStats = self._statsMap.get(iDeviceKey)
@@ -862,14 +862,14 @@ class LmDeviceList:
 			# Prevent device line to change due to sorting
 			self._deviceList.setSortingEnabled(False)
 
-			aDown = NumericSortItem(LmTools.FmtBytes(aDownBytes))
+			aDown = NumericSortItem(LmTools.fmt_bytes(aDownBytes))
 			aDown.setData(QtCore.Qt.ItemDataRole.UserRole, aDownBytes)
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			self._deviceList.setItem(aListLine, DevCol.Down, aDown)
 
-			aUp = NumericSortItem(LmTools.FmtBytes(aUpBytes))
+			aUp = NumericSortItem(LmTools.fmt_bytes(aUpBytes))
 			aUp.setData(QtCore.Qt.ItemDataRole.UserRole, aUpBytes)
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
@@ -877,7 +877,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.fmt_bytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -887,7 +887,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.fmt_bytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -942,7 +942,7 @@ class LmDeviceList:
 
 			# Check if IPv4 changed
 			aIPv4 = iEvent.get('IPAddress')
-			if (aIPv4 is not None) and (LmTools.IsIPv4(aIPv4)):
+			if (aIPv4 is not None) and (LmTools.is_ipv4(aIPv4)):
 				self._deviceIpNameMapDirty = True
 				aIP = self._deviceList.item(aListLine, DevCol.IP)
 				aIP.setText(aIPv4)
@@ -1035,7 +1035,7 @@ class LmDeviceList:
 				try:
 					aReply = self._session.request('Devices.Device.' + iDeviceKey, 'getFirstParameter', { 'parameter': 'IPAddress' })
 				except BaseException as e:
-					LmTools.Error(str(e))
+					LmTools.error(str(e))
 					aReply = None
 				if aReply is None:
 					aCurrIP = aKnownIP
@@ -1046,7 +1046,7 @@ class LmDeviceList:
 				if aKnownIP != aCurrIP:
 					# If current IP is the one of the event, take it, overwise wait for next device update event
 					aIPv4 = iEvent.get('Address', '')
-					if (LmTools.IsIPv4(aIPv4)) and (aCurrIP == aIPv4):
+					if (LmTools.is_ipv4(aIPv4)) and (aCurrIP == aIPv4):
 						aIPv4Reacheable = iEvent.get('Status', '')
 						aIPv4Reserved = iEvent.get('Reserved', False)
 						aIP = self.formatIPv4TableWidget(aIPv4, aIPv4Reacheable, aIPv4Reserved)
@@ -1165,7 +1165,7 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(False)
 
 			if aDownRateBytes:
-				aDownRate = NumericSortItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = NumericSortItem(LmTools.fmt_bytes(aDownRateBytes) + '/s')
 				aDownRate.setData(QtCore.Qt.ItemDataRole.UserRole, aDownRateBytes)
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1177,7 +1177,7 @@ class LmDeviceList:
 			self._deviceList.setItem(aListLine, DevCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = NumericSortItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = NumericSortItem(LmTools.fmt_bytes(aUpRateBytes) + '/s')
 				aUpRate.setData(QtCore.Qt.ItemDataRole.UserRole, aUpRateBytes)
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1342,7 +1342,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
 					self._deviceTable.setItem(i, IPv6Col.Active, aActiveIcon)
 
-					aIPStruct = LmTools.DetermineIP(d)
+					aIPStruct = LmTools.determine_ip(d)
 					if aIPStruct is None:
 						aIPv4 = ''
 						aIPv4Reacheable = ''
@@ -1465,7 +1465,7 @@ class DnsDialog(QtWidgets.QDialog):
 					aActiveIcon = p.formatActiveTableWidget(aActiveStatus)
 					self._deviceTable.setItem(i, DnsCol.Active, aActiveIcon)
 
-					aIPStruct = LmTools.DetermineIP(d)
+					aIPStruct = LmTools.determine_ip(d)
 					if aIPStruct is None:
 						aIPv4 = ''
 						aIPv4Reacheable = ''
@@ -1527,7 +1527,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 			try:
 				aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getStationStats')
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				aResult = None
 			if aResult is not None:
 				aStats = aResult.get('status')

@@ -254,7 +254,7 @@ class LmGraph:
 		if aCurrentSelection >= 0:
 			self._graphList.removeRow(aCurrentSelection)
 		else:
-			self.displayError(mx('Please select a line.', 'lineSelect'))
+			self.display_error(mx('Please select a line.', 'lineSelect'))
 
 
 	### Click on apply button
@@ -265,7 +265,7 @@ class LmGraph:
 			self._graphWindow = 0
 		elif self._graphWindow > 99:
 			self._graphWindow = 99
-		self._graphBackColor = self._graphBackColorEdit.getColor()
+		self._graphBackColor = self._graphBackColorEdit.get_color()
 
 		# Save setup
 		self.saveGraphConfig()
@@ -289,7 +289,7 @@ class LmGraph:
 				for o in self._graphData:
 					self.exportGraphObject(aFolder, o)
 		else:
-			self.displayError(mx('No graph to export.', 'noGraph'))
+			self.display_error(mx('No graph to export.', 'noGraph'))
 
 
 	### Export a graph object to a file
@@ -306,8 +306,8 @@ class LmGraph:
 				aSuffix = '_' + str(n)
 				continue
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError(mx('Cannot create the file.', 'createFileErr'))
+				LmTools.error(str(e))
+				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 			break
 
@@ -334,8 +334,8 @@ class LmGraph:
 		try:
 			aExportFile.close()
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
 
 	### Load stats parameters
@@ -343,8 +343,8 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan', 'getReadingInterval')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('HomeLan:getReadingInterval query error.')
+			LmTools.error(str(e))
+			self.display_error('HomeLan:getReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:
@@ -355,8 +355,8 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan', 'getDevicesReadingInterval')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('HomeLan:getDevicesReadingInterval query error.')
+			LmTools.error(str(e))
+			self.display_error('HomeLan:getDevicesReadingInterval query error.')
 			aReply = None
 
 		if aReply is not None:
@@ -416,7 +416,7 @@ class LmGraph:
 					continue
 
 		self._graphWindowEdit.setText(str(self._graphWindow))
-		self._graphBackColorEdit.setColor(self._graphBackColor)
+		self._graphBackColorEdit.set_color(self._graphBackColor)
 
 
 	### Save configuration
@@ -621,8 +621,8 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan.Interface', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('HomeLan interfaces query error.')
+			LmTools.error(str(e))
+			self.display_error('HomeLan interfaces query error.')
 			return
 
 		if aReply is not None:
@@ -649,7 +649,7 @@ class LmGraph:
 						id = k
 					self._graphValidInterfaces.append([k, m, id])
 		else:
-			self.displayError('HomeLan interfaces query failed.')
+			self.display_error('HomeLan interfaces query failed.')
 
 
 	### Load the current valid devices
@@ -657,8 +657,8 @@ class LmGraph:
 		try:
 			aReply = self._session.request('HomeLan.Device', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('HomeLan devices query error.')
+			LmTools.error(str(e))
+			self.display_error('HomeLan devices query error.')
 			return
 
 		if aReply is not None:
@@ -680,7 +680,7 @@ class LmGraph:
 						m = 0
 					self._graphValidDevices.append([a, m, a])
 		else:
-			self.displayError('HomeLan devices query failed.')
+			self.display_error('HomeLan devices query failed.')
 
 
 	### Load the stats for the given interface ID
@@ -693,8 +693,8 @@ class LmGraph:
 			else:
 				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, timeout=15)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Interface statistics query error.')
+			LmTools.error(str(e))
+			self.display_error('Interface statistics query error.')
 			return
 
 		if aReply is not None:
@@ -718,8 +718,8 @@ class LmGraph:
 			else:
 				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, timeout=15)				
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Device statistics query error.')
+			LmTools.error(str(e))
+			self.display_error('Device statistics query error.')
 			return
 
 		if aReply is not None:
@@ -767,8 +767,8 @@ class AddGraphDialog(QtWidgets.QDialog):
 
 		aColorLabel = QtWidgets.QLabel(lgx('Color'), objectName = 'colorLabel')
 		self._colorEdit = LmTools.ColorButton(objectName = 'colorEdit')
-		self._colorEdit.setColor(DCFG_OBJECT_COLOR[self._app._graphList.rowCount() % len(DCFG_OBJECT_COLOR)])
-		self._colorEdit._colorChanged.connect(self.colorSelected)
+		self._colorEdit.set_color(DCFG_OBJECT_COLOR[self._app._graphList.rowCount() % len(DCFG_OBJECT_COLOR)])
+		self._colorEdit._color_changed.connect(self.colorSelected)
 
 		aGrid = QtWidgets.QGridLayout()
 		aGrid.setSpacing(10)
@@ -918,4 +918,4 @@ class AddGraphDialog(QtWidgets.QDialog):
 
 
 	def getColor(self):
-		return self._colorEdit.getColor()
+		return self._colorEdit.get_color()

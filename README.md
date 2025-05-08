@@ -13,7 +13,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
 
-**AVERTISSEMENT** : le programme a été **conçu pour contrôler une Livebox 5 et a été adapté avec quelques tests pour les Livebox 4, 6 et 7**, des tests supplémentaires avec une Livebox 4, 6 ou 7 seraient bienvenus. Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
+**AVERTISSEMENT** : Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
 
 L'application est dynamique car elle réagit aux événements envoyés par la Livebox et les interprète.
 
@@ -47,11 +47,11 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 
 ## Installation <a id="install"></a>
 
-L'application est écrite en [Python 3.9](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique et sur [PyQtGraph](https://www.pyqtgraph.org/) pour les graphes statistiques.
+L'application est écrite en [Python 3.11](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique et sur [PyQtGraph](https://www.pyqtgraph.org/) pour les graphes statistiques.
 
-Les autres dépendances sont `requests`, `cryptography` et `python-dateutil`.
+Les autres dépendances sont `requests`, `cryptography`, `wakepy` et `python-dateutil`.
 
-**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5,6 & 7. Le support des événements a aussi été rajouté.
+**Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5, 6 & 7. Le support des événements a aussi été rajouté.
 
 ### Téléchargement - version 1.5 (26/01/2025)
 
@@ -153,6 +153,7 @@ Les points importants à comprendre avant de commencer :
 - Tous les onglets peuvent être déplacés à la souris pour être mis dans l'ordre qui vous convient. Cet ordre sera restauré au prochain lancement du programme.
 - Toutes les colonnes dans le programme sont redimensionnables à la souris sauf certaines qui s'élargissent dynamiquement en fonction de la taille de la fenêtre. Donc, en fonction de la situation, vous pouvez soit redimensionner la colonne soit la fenêtre avec la souris pour ajuster la largeur d'une colonne.
 - On peut copier la valeur de n'importe quelle cellule de liste dans le presse-papiers. Pour cela il suffit de cliquer sur la cellule et de taper Ctrl-C.
+- Le contenu de toutes les listes du programme, y compris celles dans les dialogues, peut être exporté dans un fichier au format CSV exploitable par n'importe quel tableur (type Excel). Il suffit d'un clic droit sur la liste, de sélectionner "Export...", et de choisir ses options et colonnes à exporter.
 - Le programme dispose d'une barre de statut en bas de la fenêtre. Elle affiche sur la gauche des tâches en cours et sur la droite le nom du profil en cours (voir la section **Profils** ci-dessous). Un clic sur le nom de profil affichera la fenêtre pour en changer.
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
 
@@ -199,10 +200,10 @@ Ou alors si vous avez configuré un DynDNS : https://monNomDeDomaine.com:monPort
     - Windows : `%APPDATA%\LiveboxMonitor`
     - MacOS : `~/Library/Application Support/LiveboxMonitor`
 
-Le programme créé automatiquement dans son répertoire de configuration deux fichiers au format JSON :
+Le programme créé automatiquement dans son répertoire de configuration trois fichiers :
 - `Key.txt` : clef de chiffrement unique générée pour crypter tous les mots de passe. Cette clef est elle-même cryptée avec une clef qui est calculée par le programme à partir des caractéristiques uniques de votre PC (y compris son nom). Si quelque chose de significatif change sur votre PC (le processeur, l'OS, son nom, etc), cette clef sera régénérée automatiquement et tous vos mots de passe devront être ressaisis.
-- `Config.txt` : contient tous les paramètres de l'application.
-- `MacAddrTable.txt` : contient la correspondance entre les adresses MAC et les noms d'appareil.
+- `Config.txt` : contient tous les paramètres de l'application (format JSON).
+- `MacAddrTable.txt` : contient la correspondance entre les adresses MAC et les noms d'appareil (format JSON).
 
 ### Le fichier Config.txt
 

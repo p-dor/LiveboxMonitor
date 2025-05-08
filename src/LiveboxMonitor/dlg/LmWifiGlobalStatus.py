@@ -3,7 +3,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.api.LmWifiApi import WifiKey, WifiStatus
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import GetWifiGlobalDialogLabel as lx

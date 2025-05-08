@@ -65,9 +65,9 @@ class LmSession:
                 if url_from in URL_REDIRECTIONS:
                     raise Exception('Source redirection URL already declared.')
                 URL_REDIRECTIONS[url_from] = url_to
-                LmTools.LogDebug(1, 'Added redirection', url_from, 'to', url_to)
+                LmTools.log_debug(1, 'Added redirection', url_from, 'to', url_to)
         except BaseException as e:
-            LmTools.Error(f'Error while processing redirections: {e}')
+            LmTools.error(f'Error while processing redirections: {e}')
 
 
     ### Setup timeout margin
@@ -80,7 +80,7 @@ class LmSession:
     def signin(self, user, password, new_session=False):
         # Set cookie & contextID file path
         state_file_path = os.path.join(tempfile.gettempdir(), self._name + '_state')
-        LmTools.LogDebug(1, 'State file', state_file_path)
+        LmTools.log_debug(1, 'State file', state_file_path)
 
         # Close current session if any
         self.close()
@@ -91,7 +91,7 @@ class LmSession:
 
         for _ in range(2):
             if not new_session and os.path.exists(state_file_path):
-                LmTools.LogDebug(1, 'Loading saved cookies')
+                LmTools.log_debug(1, 'Loading saved cookies')
 
                 with open(state_file_path, 'rb') as f:
                     cookies = requests.utils.cookiejar_from_dict(pickle.load(f))
@@ -100,11 +100,11 @@ class LmSession:
                     self._session.cookies = cookies
                     context_id = pickle.load(f)
             else:
-                LmTools.LogDebug(1, f'New session ({self._name})')
+                LmTools.log_debug(1, f'New session ({self._name})')
                 self._session = requests.Session()
                 self._channel_id = 0
 
-                LmTools.LogDebug(1, 'Authentication')
+                LmTools.log_debug(1, 'Authentication')
      
                 auth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, user, password)
 
@@ -112,7 +112,7 @@ class LmSession:
                                              'Authorization':'X-Sah-Login',
                                              'Content-Type':'application/x-sah-ws-4-call+json'}
 
-                LmTools.LogDebug(2, 'Auth with', auth)
+                LmTools.log_debug(2, 'Auth with', auth)
                 try:
                     r = self._session.post(self._url + 'ws',
                                            data=auth,
@@ -120,20 +120,20 @@ class LmSession:
                                            timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
                                            verify=self._verify)
                 except BaseException as e:
-                    LmTools.Error(str(e))
+                    LmTools.error(str(e))
                     self._session = None
                     return -1
-                LmTools.LogDebug(2, 'Auth return', r.text)
+                LmTools.log_debug(2, 'Auth return', r.text)
 
                 resp_json = r.json()
                 if 'contextID' not in resp_json.get('data', {}):
-                    LmTools.Error('Auth error', str(r.text))
+                    LmTools.error('Auth error', str(r.text))
                     break
 
                 context_id = resp_json['data']['contextID']
 
                 # Saving cookie & contextID
-                LmTools.LogDebug(1, 'Setting cookies')
+                LmTools.log_debug(1, 'Setting cookies')
                 with open(state_file_path, 'wb') as f:
                     cookie_data = requests.utils.dict_from_cookiejar(self._session.cookies)
                     pickle.dump(cookie_data, f, pickle.HIGHEST_PROTOCOL)
@@ -157,8 +157,8 @@ class LmSession:
                                        timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
                                        verify=self._verify)
             except BaseException as e:
-                LmTools.Error(str(e))
-                LmTools.Error('Authentification check query failed.')
+                LmTools.error(str(e))
+                LmTools.error('Authentification check query failed.')
                 os.remove(state_file_path)
                 self.close()
                 return -1
@@ -168,7 +168,7 @@ class LmSession:
             else:
                 os.remove(state_file_path)
 
-        LmTools.Error('Authentification failed.')
+        LmTools.error('Authentification failed.')
         return 0
 
 
@@ -201,22 +201,22 @@ class LmSession:
             else:
                 c += '?_restDepth=' + str(args)
 
-            LmTools.LogDebug(2, f'Request: {c}')
+            LmTools.log_debug(2, f'Request: {c}')
             timestamp = datetime.datetime.now()
             try:
                 t = self._session.get(self._url + c,
                                       headers=self._sah_service_headers,
                                       timeout=timeout + LmSession.TimeoutMargin,
                                       verify=self._verify)
-                LmTools.LogDebug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
+                LmTools.log_debug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
                 t = t.content
             except requests.exceptions.Timeout as e:
                 if not silent:
-                    LmTools.Error(f'Request timeout error: {e}')
+                    LmTools.error(f'Request timeout error: {e}')
                 return None
             except BaseException as e:
                 if not silent:
-                    LmTools.Error(f'Request error: {e}')
+                    LmTools.error(f'Request error: {e}')
                 return {'errors': 'Request exception'}
 
             t = t.decode('utf-8', errors='replace')
@@ -224,7 +224,7 @@ class LmSession:
             if t.startswith(',"errors":'):
                 t = '{' + t[1:] + '}'
             elif '}{' in t:
-                LmTools.LogDebug(2, 'Multiple json lists')
+                LmTools.log_debug(2, 'Multiple json lists')
                 t = '[' + t.replace('}{', '},{') + ']'
         else:
             # Setup request parameters
@@ -240,7 +240,7 @@ class LmSession:
                 data['parameters'] = {}
 
             # Send request & headers
-            LmTools.LogDebug(2, f'Request: {data}')
+            LmTools.log_debug(2, f'Request: {data}')
             timestamp = datetime.datetime.now()
             try:
                 t = self._session.post(self._url + 'ws',
@@ -248,15 +248,15 @@ class LmSession:
                                        headers=self._sah_service_headers,
                                        timeout=timeout + LmSession.TimeoutMargin,
                                        verify=self._verify)
-                LmTools.LogDebug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
+                LmTools.log_debug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
                 t = t.content
             except requests.exceptions.Timeout as e:
                 if not silent:
-                    LmTools.Error(f'Request timeout error: {e}')
+                    LmTools.error(f'Request timeout error: {e}')
                 return None
             except BaseException as e:
                 if not silent:
-                    LmTools.Error(f'Request error: {e}')
+                    LmTools.error(f'Request error: {e}')
                 return {'errors': 'Request exception'}
 
             t = t.decode('utf-8', errors='replace')
@@ -265,23 +265,23 @@ class LmSession:
             r = json.loads(t)
         except:
             if not silent:
-                LmTools.Error(sys.exc_info()[0])
-                LmTools.Error('Bad json:', t)
+                LmTools.error(sys.exc_info()[0])
+                LmTools.error('Bad json:', t)
             return None
 
         overview = str(r)
         if len(overview) > 128:
             overview = overview[:128] + '...'
-        LmTools.LogDebug(2, 'Reply:', overview)
+        LmTools.log_debug(2, 'Reply:', overview)
 
         if not get and 'result' in r:
             r = r['result']
             if 'errors' in r:
                 if not silent:
-                    LmTools.Error(t)
+                    LmTools.error(t)
                 return None
 
-        LmTools.LogDebug(2, '-------------------------')
+        LmTools.log_debug(2, '-------------------------')
         return r
 
 
@@ -297,7 +297,7 @@ class LmSession:
             data['channelid'] = str(self._channel_id)
 
         # Send request & headers
-        LmTools.LogDebug(2, f'Event Request: {data}')
+        LmTools.log_debug(2, f'Event Request: {data}')
         timestamp = datetime.datetime.now()
         try:
             t = self._session.post(self._url + 'ws',
@@ -305,15 +305,15 @@ class LmSession:
                                    headers=self._sah_event_headers,
                                    timeout=timeout,
                                    verify=self._verify)
-            LmTools.LogDebug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
+            LmTools.log_debug(2, f'Request duration: {datetime.datetime.now() - timestamp}')
             t = t.content
         except requests.exceptions.Timeout as e:
             if not silent:
-                LmTools.LogDebug(2, f'Event request timeout error: {e}')
+                LmTools.log_debug(2, f'Event request timeout error: {e}')
             return None
         except BaseException as e:
             if not silent:
-                LmTools.Error(f'Event request error: {e}')
+                LmTools.error(f'Event request error: {e}')
             return {'errors': 'Event request exception'}
 
         t = t.decode('utf-8', errors='replace')
@@ -326,22 +326,22 @@ class LmSession:
             r = json.loads(t)
         except Exception:
             if not silent:
-                LmTools.Error(sys.exc_info()[0])
-                LmTools.Error('Bad json:', t)
+                LmTools.error(sys.exc_info()[0])
+                LmTools.error('Bad json:', t)
             return None
 
         overview = str(r)
         if len(overview) > 50:
             overview = overview[:50] + '...'
-        LmTools.LogDebug(2, 'Reply:', overview)
+        LmTools.log_debug(2, 'Reply:', overview)
 
         if 'result' in r:
             r = r['result']
             if 'errors' in r:
                 if not silent:
-                    LmTools.Error(t)
+                    LmTools.error(t)
                 return None
 
-        LmTools.LogDebug(2, '-------------------------')
+        LmTools.log_debug(2, '-------------------------')
         self._channel_id = r.get('channelid', 0)
         return r

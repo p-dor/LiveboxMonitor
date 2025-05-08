@@ -243,7 +243,7 @@ class LmRepeater:
 			except:
 				aVersion = 5	# Default to version 5
 
-			aIPStruct = LmTools.DetermineIP(iDevice)
+			aIPStruct = LmTools.determine_ip(iDevice)
 			if aIPStruct is None:
 				aIPAddress = None
 			else:
@@ -415,20 +415,20 @@ class LmRepeater:
 		# Update UI
 		aListLine = r.findStatsLine(aKey)
 		if aListLine >= 0:
-			aDown = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownBytes))
+			aDown = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aDownBytes))
 			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			r._statsList.setItem(aListLine, StatsCol.Down, aDown)
 
-			aUp = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpBytes))
+			aUp = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aUpBytes))
 			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 			if aUpErrors:
 				aUp.setForeground(QtCore.Qt.GlobalColor.red)
 			r._statsList.setItem(aListLine, StatsCol.Up, aUp)
 
 			if aDownRateBytes:
-				aDownRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aDownRateBytes) + '/s')
+				aDownRate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aDownRateBytes) + '/s')
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
 				aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
@@ -437,7 +437,7 @@ class LmRepeater:
 			r._statsList.setItem(aListLine, StatsCol.DownRate, aDownRate)
 
 			if aUpRateBytes:
-				aUpRate = QtWidgets.QTableWidgetItem(LmTools.FmtBytes(aUpRateBytes) + '/s')
+				aUpRate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aUpRateBytes) + '/s')
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
 				aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
@@ -495,14 +495,14 @@ class LmRepHandler:
 				# Need to ignore cookie as sessions opened with >1h cookie generate errors
 				r = self._session.signin(aUser, aPassword, True)
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				r = -1
 			if r > 0:
 				self._signed = True
 				break
 
 			if r < 0:
-				self._app.displayError(mx('Cannot connect to repeater {} ({}).', 'cnxErr').format(self._name, self._ipAddr))
+				self._app.display_error(mx('Cannot connect to repeater {} ({}).', 'cnxErr').format(self._name, self._ipAddr))
 				self._session = None
 				self._signed = False
 				break
@@ -622,7 +622,7 @@ class LmRepHandler:
 
 	### Process a device updated event
 	def processDeviceUpdatedEvent(self, iEvent):
-		aIPv4Struct = LmTools.DetermineIP(iEvent)
+		aIPv4Struct = LmTools.determine_ip(iEvent)
 		if aIPv4Struct is None:
 			aIPv4 = None
 		else:
@@ -667,7 +667,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Wifi infos button
@@ -682,7 +682,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on LAN infos button
@@ -697,7 +697,7 @@ class LmRepHandler:
 
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Export infos button
@@ -711,8 +711,8 @@ class LmRepHandler:
 			try:
 				self._app._exportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError(mx('Cannot create the file.', 'createFileErr'))
+				LmTools.error(str(e))
+				self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
 			self._app.startTask(lx('Exporting all information...'))
@@ -725,14 +725,14 @@ class LmRepHandler:
 			try:
 				self._app._exportFile.close()
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError(mx('Cannot save the file.', 'saveFileErr'))
+				LmTools.error(str(e))
+				self._app.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
 			self._app._exportFile = None
 
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Wifi ON button
@@ -742,15 +742,15 @@ class LmRepHandler:
 			try:
 				d = self._session.request('NMC.Wifi', 'set', { 'Enable': True, 'Status' : True })
 				if d is None:
-					self._app.displayError('NMC.Wifi:set service error')
+					self._app.display_error('NMC.Wifi:set service error')
 				else:
-					self._app.displayStatus(mx('Wifi activated (probably only 5GHz).', 'wifiOn'))
+					self._app.display_status(mx('Wifi activated (probably only 5GHz).', 'wifiOn'))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError('NMC.Wifi:set service error')
+				LmTools.error(str(e))
+				self._app.display_error('NMC.Wifi:set service error')
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Wifi OFF button
@@ -760,15 +760,15 @@ class LmRepHandler:
 			try:
 				d = self._session.request('NMC.Wifi', 'set', { 'Enable': False, 'Status' : False })
 				if d is None:
-					self._app.displayError('NMC.Wifi:set service error')
+					self._app.display_error('NMC.Wifi:set service error')
 				else:
-					self._app.displayStatus(mx('Wifi deactivated (probably only 5GHz).', 'wifiOff'))
+					self._app.display_status(mx('Wifi deactivated (probably only 5GHz).', 'wifiOff'))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError('NMC.Wifi:set service error')
+				LmTools.error(str(e))
+				self._app.display_error('NMC.Wifi:set service error')
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Wifi Scheduler ON button
@@ -779,19 +779,19 @@ class LmRepHandler:
 			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
 				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': True })
-				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+				aErrors = LmTools.get_errors_from_livebox_reply(d)
 				if d is not None:
 					d = d.get('status')
 				if d:
-					self._app.displayStatus(mx('Scheduler activated.', 'schedOn'))
+					self._app.display_status(mx('Scheduler activated.', 'schedOn'))
 				else:
-					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
+					self._app.display_error('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError('Scheduler:enableSchedule service error')
+				LmTools.error(str(e))
+				self._app.display_error('Scheduler:enableSchedule service error')
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Wifi Scheduler OFF button
@@ -802,38 +802,38 @@ class LmRepHandler:
 			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
 				d = self._session.request('Scheduler', 'enableSchedule', { 'type' : 'WLAN', 'ID' : 'wl0', 'enable': False })
-				aErrors = LmTools.GetErrorsFromLiveboxReply(d)
+				aErrors = LmTools.get_errors_from_livebox_reply(d)
 				if d is not None:
 					d = d.get('status')
 				if d:
-					self._app.displayStatus(mx('Scheduler deactivated.', 'schedOff'))
+					self._app.display_status(mx('Scheduler deactivated.', 'schedOff'))
 				else:
-					self._app.displayError('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
+					self._app.display_error('Scheduler:enableSchedule service error.\n{}'.format(aErrors))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self._app.displayError('Scheduler:enableSchedule service error')
+				LmTools.error(str(e))
+				self._app.display_error('Scheduler:enableSchedule service error')
 			self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Reboot Repeater button
 	def rebootRepeaterButtonClick(self):
 		if self.isSigned():
-			if self._app.askQuestion(mx('Are you sure you want to reboot the Repeater?', 'reboot')):
+			if self._app.ask_question(mx('Are you sure you want to reboot the Repeater?', 'reboot')):
 				self._app.startTask(lx('Rebooting Repeater...'))
 				try:
 					d = self._session.request('NMC', 'reboot', { 'reason': 'WebUI reboot' })
 					if (d is not None) and (d.get('status', False)):
-						self._app.displayStatus(mx('Repeater is now restarting.', 'rebooting'))
+						self._app.display_status(mx('Repeater is now restarting.', 'rebooting'))
 					else:
-						self._app.displayError('NMC:reboot service failed')
+						self._app.display_error('NMC:reboot service failed')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self._app.displayError('NMC:reboot service error')
+					LmTools.error(str(e))
+					self._app.display_error('NMC:reboot service error')
 				self._app.endTask()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Reboot History button
@@ -844,7 +844,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('NMC.Reboot.Reboot', 'get')
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				d = None
 			if d is not None:
 				d = d.get('status')
@@ -852,14 +852,14 @@ class LmRepHandler:
 			self._app.endTask()
 
 			if d is None:
-				self._app.displayError('NMC.Reboot.Reboot:get service error')
+				self._app.display_error('NMC.Reboot.Reboot:get service error')
 				return
 
 			aHistoryDialog = RebootHistoryDialog('Repeater', self._app)
 			aHistoryDialog.load_history(d)
 			aHistoryDialog.exec()
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Click on Resign button
@@ -867,9 +867,9 @@ class LmRepHandler:
 		aDoIt = False
 		aForceIt = False
 		if self.isActive():
-			aDoIt = self._app.askQuestion(mx('Are you sure you want to resign to the Repeater?', 'resign'))
+			aDoIt = self._app.ask_question(mx('Are you sure you want to resign to the Repeater?', 'resign'))
 		else:
-			aDoIt = self._app.askQuestion(mx('Repeater is inactive. Do you want to force signin?', 'forceResign'))
+			aDoIt = self._app.ask_question(mx('Repeater is inactive. Do you want to force signin?', 'forceResign'))
 			aForceIt = True
 		if aDoIt:
 			self._app.startTask(lx('Signing in to repeater...'))
@@ -885,32 +885,32 @@ class LmRepHandler:
 	def debugButtonClick(self):
 		if self.isSigned():
 			try:
-				LmTools.MouseCursor_Busy()
+				LmTools.mouse_cursor_busy()
 				d = self._session.request('NeMo.Intf.data', 'getMIBs')
-				LmTools.MouseCursor_Normal()
+				LmTools.mouse_cursor_normal()
 				if d is None:
-					self._app.displayError('NeMo.Intf.data:getMIBs service failed')
+					self._app.display_error('NeMo.Intf.data:getMIBs service failed')
 				else:
-					self._app.displayInfos('NeMo.Intf.data:getMIBs', json.dumps(d, indent = 2))
+					self._app.display_infos('NeMo.Intf.data:getMIBs', json.dumps(d, indent=2))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				LmTools.MouseCursor_Normal()
-				self._app.displayError('NeMo.Intf.data:getMIBs service error')
+				LmTools.error(str(e))
+				LmTools.mouse_cursor_normal()
+				self._app.display_error('NeMo.Intf.data:getMIBs service error')
 
 			try:
-				LmTools.MouseCursor_Busy()
+				LmTools.mouse_cursor_busy()
 				d = self._session.request('NeMo.Intf.lan', 'getMIBs')
-				LmTools.MouseCursor_Normal()
+				LmTools.mouse_cursor_normal()
 				if d is None:
-					self._app.displayError('NeMo.Intf.lan:getMIBs service failed')
+					self._app.display_error('NeMo.Intf.lan:getMIBs service failed')
 				else:
-					self._app.displayInfos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent = 2))
+					self._app.display_infos('NeMo.Intf.lan:getMIBs', json.dumps(d, indent=2))
 			except BaseException as e:
-				LmTools.Error(str(e))
-				LmTools.MouseCursor_Normal()
-				self._app.displayError('NeMo.Intf.lan:getMIBs service error')
+				LmTools.error(str(e))
+				LmTools.mouse_cursor_normal()
+				self._app.display_error('NeMo.Intf.lan:getMIBs service error')
 		else:
-			self._app.displayError(mx('Not signed to repeater.', 'noSign'))
+			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
 
 	### Add a title line in an info attribute/value list
@@ -930,7 +930,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('DeviceInfo', 'get')
 		except BaseException as e:
-			LmTools.Error('Error: {}'.format(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -938,29 +938,29 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Repeater Infos'), 'DeviceInfo:get query error', LmTools.ValQual.Error)
 		else:
 			i = self.addInfoLine(i, lx('Model Name'), d.get('ModelName'))
-			i = self.addInfoLine(i, lx('Repeater Up Time'), LmTools.FmtTime(d.get('UpTime')))
+			i = self.addInfoLine(i, lx('Repeater Up Time'), LmTools.fmt_time(d.get('UpTime')))
 			i = self.addInfoLine(i, lx('Serial Number'), d.get('SerialNumber'))
 			i = self.addInfoLine(i, lx('Hardware Version'), d.get('HardwareVersion'))
 			i = self.addInfoLine(i, lx('Software Version'), d.get('SoftwareVersion'))
 			i = self.addInfoLine(i, lx('Orange Firmware Version'), d.get('AdditionalSoftwareVersion'))
-			i = self.addInfoLine(i, lx('Country'), LmTools.FmtStrUpper(d.get('Country')))
+			i = self.addInfoLine(i, lx('Country'), LmTools.fmt_str_upper(d.get('Country')))
 
 		try:
 			d = self._session.request('NMC.Reboot', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
 			i = self.addInfoLine(i, lx('Repeater Infos'), 'NMC.Reboot:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, lx('Total Number Of Reboots'), LmTools.FmtInt(d.get('BootCounter')))
+			i = self.addInfoLine(i, lx('Total Number Of Reboots'), LmTools.fmt_int(d.get('BootCounter')))
 
 		try:
 			d = self._session.request('Time', 'getTime')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			s = d.get('status', False)
@@ -984,19 +984,19 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
 		if d is None:
 			i = self.addInfoLine(i, lx('Wifi'), 'NMC.Wifi:get query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(d.get('Enable')))
-			i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(d.get('Status')))
+			i = self.addInfoLine(i, lx('Enabled'), LmTools.fmt_bool(d.get('Enable')))
+			i = self.addInfoLine(i, lx('Active'), LmTools.fmt_bool(d.get('Status')))
 			i = self.addInfoLine(i, lx('Mode'), d.get('EnableTarget'))
 			i = self.addInfoLine(i, lx('WPS Mode'), d.get('WPSMode'))
 			i = self.addInfoLine(i, lx('Link Type'), d.get('CurrentBackhaul'))
-			i = self.addInfoLine(i, lx('Read Only'), LmTools.FmtBool(d.get('ReadOnlyStatus')))
+			i = self.addInfoLine(i, lx('Read Only'), LmTools.fmt_bool(d.get('ReadOnlyStatus')))
 			i = self.addInfoLine(i, lx('Pairing Status'), d.get('PairingStatus'))
 			i = self.addInfoLine(i, lx('PIN Code'), d.get('PINCode'))
 
@@ -1004,7 +1004,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				d = None
 			if (d is not None) and (d.get('status', False)):
 				d = d.get('data')
@@ -1018,14 +1018,14 @@ class LmRepHandler:
 					aActive = d[0].get('enable', False)
 				else:
 					aActive = False
-				i = self.addInfoLine(i, lx('Scheduler Enabled'), LmTools.FmtBool(aActive))
+				i = self.addInfoLine(i, lx('Scheduler Enabled'), LmTools.fmt_bool(aActive))
 
 		b = None
 		w = None
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio' })
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1036,7 +1036,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'wlanvap', 'flag': 'wlanvap !secondary' })
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1056,8 +1056,8 @@ class LmRepHandler:
 			aIntfKey = None
 			aBase = b.get(s['Key'])
 			if aBase is not None:
-				i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(aBase.get('Enable')))
-				i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(aBase.get('Status')))
+				i = self.addInfoLine(i, lx('Enabled'), LmTools.fmt_bool(aBase.get('Enable')))
+				i = self.addInfoLine(i, lx('Active'), LmTools.fmt_bool(aBase.get('Status')))
 				aLowLevelIntf = aBase.get('LLIntf')
 				if aLowLevelIntf is not None:
 					for aKey in aLowLevelIntf:
@@ -1071,10 +1071,10 @@ class LmRepHandler:
 
 			i = self.addInfoLine(i, lx('Radio Status'), q.get('RadioStatus'))
 			i = self.addInfoLine(i, lx('VAP Status'), r.get('VAPStatus'))
-			i = self.addInfoLine(i, lx('Vendor Name'), LmTools.FmtStrUpper(q.get('VendorName')))
-			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(r.get('MACAddress')))
+			i = self.addInfoLine(i, lx('Vendor Name'), LmTools.fmt_str_upper(q.get('VendorName')))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.fmt_str_upper(r.get('MACAddress')))
 			i = self.addInfoLine(i, lx('SSID'), r.get('SSID'))
-			i = self.addInfoLine(i, lx('SSID Advertisement'), LmTools.FmtBool(r.get('SSIDAdvertisementEnabled')))
+			i = self.addInfoLine(i, lx('SSID Advertisement'), LmTools.fmt_bool(r.get('SSIDAdvertisementEnabled')))
 
 			t = r.get('Security')
 			if t is not None:
@@ -1085,31 +1085,31 @@ class LmRepHandler:
 
 			t = r.get('WPS')
 			if t is not None:
-				i = self.addInfoLine(i, lx('WPS Enabled'), LmTools.FmtBool(t.get('Enable')))
+				i = self.addInfoLine(i, lx('WPS Enabled'), LmTools.fmt_bool(t.get('Enable')))
 				i = self.addInfoLine(i, lx('WPS Methods'), t.get('ConfigMethodsEnabled'))
 				i = self.addInfoLine(i, lx('WPS Self PIN'), t.get('SelfPIN'))
-				i = self.addInfoLine(i, lx('WPS Pairing In Progress'), LmTools.FmtBool(t.get('PairingInProgress')))
+				i = self.addInfoLine(i, lx('WPS Pairing In Progress'), LmTools.fmt_bool(t.get('PairingInProgress')))
 
 			t = r.get('MACFiltering')
 			if t is not None:
 				i = self.addInfoLine(i, lx('MAC Filtering'), t.get('Mode'))
 
-			i = self.addInfoLine(i, lx('Max Bitrate'), LmTools.FmtInt(q.get('MaxBitRate')))
-			i = self.addInfoLine(i, lx('AP Mode'), LmTools.FmtBool(q.get('AP_Mode')))
-			i = self.addInfoLine(i, lx('STA Mode'), LmTools.FmtBool(q.get('STA_Mode')))
-			i = self.addInfoLine(i, lx('WDS Mode'), LmTools.FmtBool(q.get('WDS_Mode')))
-			i = self.addInfoLine(i, lx('WET Mode'), LmTools.FmtBool(q.get('WET_Mode')))
+			i = self.addInfoLine(i, lx('Max Bitrate'), LmTools.fmt_int(q.get('MaxBitRate')))
+			i = self.addInfoLine(i, lx('AP Mode'), LmTools.fmt_bool(q.get('AP_Mode')))
+			i = self.addInfoLine(i, lx('STA Mode'), LmTools.fmt_bool(q.get('STA_Mode')))
+			i = self.addInfoLine(i, lx('WDS Mode'), LmTools.fmt_bool(q.get('WDS_Mode')))
+			i = self.addInfoLine(i, lx('WET Mode'), LmTools.fmt_bool(q.get('WET_Mode')))
 			i = self.addInfoLine(i, lx('Frequency Band'), q.get('OperatingFrequencyBand'))
 			i = self.addInfoLine(i, lx('Channel Bandwidth'), q.get('CurrentOperatingChannelBandwidth'))
 			i = self.addInfoLine(i, lx('Standard'), q.get('OperatingStandards'))
-			i = self.addInfoLine(i, lx('Channel'), LmTools.FmtInt(q.get('Channel')))
-			i = self.addInfoLine(i, lx('Auto Channel Supported'), LmTools.FmtBool(q.get('AutoChannelSupported')))
-			i = self.addInfoLine(i, lx('Auto Channel Enabled'), LmTools.FmtBool(q.get('AutoChannelEnable')))
+			i = self.addInfoLine(i, lx('Channel'), LmTools.fmt_int(q.get('Channel')))
+			i = self.addInfoLine(i, lx('Auto Channel Supported'), LmTools.fmt_bool(q.get('AutoChannelSupported')))
+			i = self.addInfoLine(i, lx('Auto Channel Enabled'), LmTools.fmt_bool(q.get('AutoChannelEnable')))
 			i = self.addInfoLine(i, lx('Channel Change Reason'), q.get('ChannelChangeReason'))
-			i = self.addInfoLine(i, lx('Max Associated Devices'), LmTools.FmtInt(q.get('MaxAssociatedDevices')))
-			i = self.addInfoLine(i, lx('Active Associated Devices'), LmTools.FmtInt(q.get('ActiveAssociatedDevices')))
-			i = self.addInfoLine(i, lx('Noise'), LmTools.FmtInt(q.get('Noise')))
-			i = self.addInfoLine(i, lx('Antenna Defect'), LmTools.FmtBool(q.get('AntennaDefect')))
+			i = self.addInfoLine(i, lx('Max Associated Devices'), LmTools.fmt_int(q.get('MaxAssociatedDevices')))
+			i = self.addInfoLine(i, lx('Active Associated Devices'), LmTools.fmt_int(q.get('ActiveAssociatedDevices')))
+			i = self.addInfoLine(i, lx('Noise'), LmTools.fmt_int(q.get('Noise')))
+			i = self.addInfoLine(i, lx('Antenna Defect'), LmTools.fmt_bool(q.get('AntennaDefect')))
 
 		return i
 
@@ -1122,7 +1122,7 @@ class LmRepHandler:
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			q = None
 		if q is not None:
 			d = q.get('status')
@@ -1135,10 +1135,10 @@ class LmRepHandler:
 		if d is None:
 			i = self.addInfoLine(i, lx('LAN Infos'), 'NMC:getWANStatus data error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(d.get('MACAddress')))
-			i = self.addInfoLine(i, lx('Link Status'), LmTools.FmtStrCapitalize(d.get('LinkState')))
-			i = self.addInfoLine(i, lx('Link Type'), LmTools.FmtStrUpper(d.get('LinkType')))
-			i = self.addInfoLine(i, lx('Protocol'), LmTools.FmtStrUpper(d.get('Protocol')))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.fmt_str_upper(d.get('MACAddress')))
+			i = self.addInfoLine(i, lx('Link Status'), LmTools.fmt_str_capitalize(d.get('LinkState')))
+			i = self.addInfoLine(i, lx('Link Type'), LmTools.fmt_str_upper(d.get('LinkType')))
+			i = self.addInfoLine(i, lx('Protocol'), LmTools.fmt_str_upper(d.get('Protocol')))
 			i = self.addInfoLine(i, lx('Connection Status'), d.get('ConnectionState'))
 			i = self.addInfoLine(i, lx('Last Connection Error'), d.get('LastConnectionError'))
 			i = self.addInfoLine(i, lx('IP Address'), d.get('IPAddress'))
@@ -1149,19 +1149,19 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.data', 'getFirstParameter', { 'name': 'MTU' })
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is None:
 			i = self.addInfoLine(i, lx('MTU'), 'NeMo.Intf.data:getFirstParameter query error', LmTools.ValQual.Error)
 		else:
-			i = self.addInfoLine(i, lx('MTU'), LmTools.FmtInt(d.get('status')))
+			i = self.addInfoLine(i, lx('MTU'), LmTools.fmt_int(d.get('status')))
 
 		i = self.addTitleLine(i, lx('Link to the Livebox'))
 
 		try:
 			d = self._session.request('UplinkMonitor.DefaultGateway', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1169,14 +1169,14 @@ class LmRepHandler:
 			i = self.addInfoLine(i, lx('Livebox link Infos'), 'UplinkMonitor.DefaultGateway:get query error', LmTools.ValQual.Error)
 		else:
 			i = self.addInfoLine(i, lx('IP Address'), d.get('IPv4Address'))
-			i = self.addInfoLine(i, lx('MAC Address'), LmTools.FmtStrUpper(d.get('MACAddress')))
-			i = self.addInfoLine(i, lx('Interface'), LmTools.FmtStrCapitalize(d.get('NeMoIntfName')))
+			i = self.addInfoLine(i, lx('MAC Address'), LmTools.fmt_str_upper(d.get('MACAddress')))
+			i = self.addInfoLine(i, lx('Interface'), LmTools.fmt_str_capitalize(d.get('NeMoIntfName')))
 
 		b = None
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base eth' })
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
@@ -1198,13 +1198,13 @@ class LmRepHandler:
 			if (q is None) or (r is None):
 				continue
 
-			i = self.addInfoLine(i, lx('Enabled'), LmTools.FmtBool(q.get('Enable')))
-			i = self.addInfoLine(i, lx('Active'), LmTools.FmtBool(q.get('Status')))
-			i = self.addInfoLine(i, lx('Current Bit Rate'), LmTools.FmtInt(r.get('CurrentBitRate')))
-			i = self.addInfoLine(i, lx('Max Bit Rate Supported'), LmTools.FmtInt(r.get('MaxBitRateSupported')))
+			i = self.addInfoLine(i, lx('Enabled'), LmTools.fmt_bool(q.get('Enable')))
+			i = self.addInfoLine(i, lx('Active'), LmTools.fmt_bool(q.get('Status')))
+			i = self.addInfoLine(i, lx('Current Bit Rate'), LmTools.fmt_int(r.get('CurrentBitRate')))
+			i = self.addInfoLine(i, lx('Max Bit Rate Supported'), LmTools.fmt_int(r.get('MaxBitRateSupported')))
 			i = self.addInfoLine(i, lx('Current Duplex Mode'), r.get('CurrentDuplexMode'))
-			i = self.addInfoLine(i, lx('Power Saving Supported'), LmTools.FmtBool(q.get('PowerSavingSupported')))
-			i = self.addInfoLine(i, lx('Power Saving Enabled'), LmTools.FmtBool(q.get('PowerSavingEnabled')))
+			i = self.addInfoLine(i, lx('Power Saving Supported'), LmTools.fmt_bool(q.get('PowerSavingSupported')))
+			i = self.addInfoLine(i, lx('Power Saving Enabled'), LmTools.fmt_bool(q.get('PowerSavingEnabled')))
 
 		return i
 
@@ -1251,7 +1251,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('data')
@@ -1269,7 +1269,7 @@ class LmRepHandler:
 			try:
 				d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				d = None
 			if (d is not None) and (d.get('status', False)):
 				d = d.get('data')
@@ -1299,7 +1299,7 @@ class LmRepHandler:
 		try:
 			d = self._session.request('NeMo.Intf.lan', 'getMIBs', { 'mibs': 'base wlanradio wlanvap' })
 		except BaseException as e:
-			LmTools.Error('NeMo.Intf.lan:getMIBs error: {}'.format(e))
+			LmTools.error(f'NeMo.Intf.lan:getMIBs error: {e}')
 			d = None
 		if d is not None:
 			d = d.get('status')

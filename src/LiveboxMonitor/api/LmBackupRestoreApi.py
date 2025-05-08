@@ -1,7 +1,6 @@
 ### Livebox Monitor Backup & Restore APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi
-from LiveboxMonitor.app import LmTools
 
 
 # ################################ Backup & Restore APIs ################################

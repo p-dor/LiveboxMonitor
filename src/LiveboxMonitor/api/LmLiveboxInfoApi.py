@@ -42,8 +42,8 @@ class LiveboxInfoApi(LmApi):
         try:
             d = self.get_livebox_info()
         except BaseException as e:
-            LmTools.Error(str(e))
-            LmTools.Error('Cannot determine Livebox model.')
+            LmTools.error(str(e))
+            LmTools.error('Cannot determine Livebox model.')
             self._livebox_mac = ''
             self._livebox_model = 0
             self._livebox_model_name = ''
@@ -55,7 +55,7 @@ class LiveboxInfoApi(LmApi):
                 self._livebox_model = LIVEBOX_MODEL_MAP.get(model)
                 self._livebox_model_name = model
             if self._livebox_model is None:
-                LmTools.Error(f'Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.')
+                LmTools.error(f'Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.')
                 self._livebox_model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
             self._software_version = d.get('SoftwareVersion', '')
 

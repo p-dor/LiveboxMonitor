@@ -54,7 +54,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
         for i, key in enumerate(history):
             d = history[key]
             self._history_table.insertRow(i)
-            self._history_table.setItem(i, RebootCol.BootDate, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('BootDate'))))
+            self._history_table.setItem(i, RebootCol.BootDate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(d.get('BootDate'))))
             self._history_table.setItem(i, RebootCol.BootReason, QtWidgets.QTableWidgetItem(d.get('BootReason', lx('Unknown'))))
-            self._history_table.setItem(i, RebootCol.ShutdownDate, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(d.get('ShutdownDate'))))
+            self._history_table.setItem(i, RebootCol.ShutdownDate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(d.get('ShutdownDate'))))
             self._history_table.setItem(i, RebootCol.ShutdownReason, QtWidgets.QTableWidgetItem(d.get('ShutdownReason', lx('Unknown'))))

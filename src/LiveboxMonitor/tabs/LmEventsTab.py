@@ -204,9 +204,9 @@ class LmEvents:
 			self.stopNotificationTimer()
 			self.startNotificationTimer()
 			if LmEvents.notifyHasEmailRule() and (LmConf.Email is None):
-				if LmTools.AskQuestion(mx('You have configured at least one rule with sending emails as an action but '
-										  'you have not configured how to send emails. '
-										  'Do you want to configure how to send emails?', 'email')):
+				if LmTools.ask_question(mx('You have configured at least one rule with sending emails as an action but '
+										   'you have not configured how to send emails. '
+										   'Do you want to configure how to send emails?', 'email')):
 					self.emailSetupButtonClick()
 
 
@@ -214,14 +214,14 @@ class LmEvents:
 	def displayEventButtonClick(self):
 		aCurrDeviceSelection = self._eventDList.currentRow()
 		if aCurrDeviceSelection < 0:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 			return
 
 		aDeviceKey = self._eventDList.item(aCurrDeviceSelection, DSelCol.Key).text()
 
 		aCurrEventSelection = self._eventList.currentRow()
 		if aCurrEventSelection < 0:
-			self.displayError(mx('No event selected.', 'evtSelect'))
+			self.display_error(mx('No event selected.', 'evtSelect'))
 			return
 
 		aEventKey = int(self._eventList.item(aCurrEventSelection, EventCol.Key).text())
@@ -231,7 +231,7 @@ class LmEvents:
 		# Retrieve event entry in the array
 		e = next((e for e in aEventArray if e['Key'] == aEventKey), None)
 		if e is None:
-			self.displayError(mx('Event entry not found.', 'evtNotFound'))
+			self.display_error(mx('Event entry not found.', 'evtNotFound'))
 			return
 
 		# Display event entry
@@ -256,7 +256,7 @@ class LmEvents:
 		aCursor.insertText(json.dumps(e['Attributes'], indent=2), aStandardFormat)
 		aCursor.endEditBlock()
 
-		self.displayInfos(lx('Event Entry'), None, aTextDoc)
+		self.display_infos(lx('Event Entry'), None, aTextDoc)
 
 
 	### Update event list
@@ -275,7 +275,7 @@ class LmEvents:
 	def setEventListLine(self, iLine, iEvent):
 		self._eventList.setItem(iLine, EventCol.Key, QtWidgets.QTableWidgetItem(str(iEvent['Key'])))
 		aTime = iEvent['Timestamp']
-		aTimeStamp = '{:02d}:{:02d}:{:02d}'.format(aTime.hour, aTime.minute, aTime.second)
+		aTimeStamp = f'{aTime.hour:02d}:{aTime.minute:02d}:{aTime.second:02d}'
 		aTimeItem = QtWidgets.QTableWidgetItem(aTimeStamp)
 		aTimeItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 		self._eventList.setItem(iLine, EventCol.Time, aTimeItem)
@@ -309,7 +309,7 @@ class LmEvents:
 			a = None
 
 		# Try to guess device key from handler
-		aDeviceKey = LmTools.ExtractMacAddrFromString(h)
+		aDeviceKey = LmTools.extract_mac_addr_from_string(h)
 		if len(aDeviceKey):
 			self.updateEventIndicator(aDeviceKey)
 			if r == 'Statistics':
@@ -445,15 +445,15 @@ class LmEvents:
 		t = iEvent['Type']
 
 		### Debug logs
-		if LmTools.GetVerbosity() >= 1:
+		if LmTools.get_verbosity() >= 1:
 			ts = iEvent['Timestamp'].strftime('%d/%m/%Y - %H:%M:%S')
 			k = iEvent['Key']
 			if t == NOTIF_EVENT_TYPE_ACTIVE:
-				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {} -> {}.'.format(ts, k, t, iEvent['Link']))
+				LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> {iEvent["Link"]}.')
 			elif t == NOTIF_EVENT_TYPE_LINK_CHANGE:
-				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {} -> from {} to {}.'.format(ts, k, t, iEvent['OldLink'], iEvent['NewLink']))
+				LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> from {iEvent["OldLink"]} to {iEvent["NewLink"]}.')
 			else:
-				LmTools.LogDebug(1, 'RAW EVT = {} - {} DEV {}.'.format(ts, k, t))
+				LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t}.')
 
 		# If DELETE event look for a recent DELETE event, if too close (duplicates) don't add
 		if t == NOTIF_EVENT_TYPE_DELETE:
@@ -552,7 +552,7 @@ class LmEvents:
 
 	### Generate a user notification for an event in a CSV file
 	def notifyUserFile(self, iEvent):
-		LmTools.LogDebug(1, 'Logging event in file:', str(iEvent))
+		LmTools.log_debug(1, 'Logging event in file:', str(iEvent))
 
 		k = iEvent['Key']
 		n = LmConf.MacAddrTable.get(k, lx('### UNKNOWN ###'))
@@ -563,7 +563,7 @@ class LmEvents:
 			aPath = LmConf.getConfigDirectory()
 		else:
 			aPath = LmConf.NotificationFilePath
-		aFileName = 'LiveboxMonitor_Events_{}.csv'.format(ts.strftime('%Y-%m-%d'))
+		aFileName = f'LiveboxMonitor_Events_{ts.strftime("%Y-%m-%d")}.csv'
 		aFilePath = os.path.join(aPath, aFileName)
 
 		try:
@@ -583,16 +583,16 @@ class LmEvents:
 				aCsvWriter = csv.writer(f, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
 				aCsvWriter.writerow(r)
 		except BaseException as e:
-			LmTools.Error('Cannot log event. Error: {}'.format(e))
+			LmTools.error(f'Cannot log event. Error: {e}')
 
 
 	### Generate a user notification for an event via configured email
 	def notifyUserEmail(self, iEvent):
-		LmTools.LogDebug(1, 'Emailing event:', str(iEvent))
+		LmTools.log_debug(1, 'Emailing event:', str(iEvent))
 
 		c = LmConf.loadEmailSetup()
 		if c is None:
-			LmTools.Error('No email setup to notify event by email.')
+			LmTools.error('No email setup to notify event by email.')
 			return
 
 		k = iEvent['Key']
@@ -615,7 +615,7 @@ class LmEvents:
 			m += lx('Old access link:') + ' ' + iEvent['OldLink'] + '\n'
 			m += lx('New access link:') + ' ' + iEvent['NewLink'] + '\n'
 
-		LmTools.SendEmailAsync(c, aSubject, m)
+		LmTools.async_send_email(c, aSubject, m)
 
 
 	### Check if a notification event match any configured notification rules
@@ -1191,8 +1191,8 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 			k = r['Key']
 			if k != NOTIF_EVENT_DEVICE_ALL and k != NOTIF_EVENT_DEVICE_UNKNOWN:
 				m = self._macEdit.text()
-				if not LmTools.IsMACAddr(m):
-						self.parent().displayError(mx('{} is not a valid MAC address.', 'macErr').format(m))
+				if not LmTools.is_mac_addr(m):
+						self.parent().display_error(mx('{} is not a valid MAC address.', 'macErr').format(m))
 						self._macEdit.setFocus()
 						return False
 		return True
@@ -1306,12 +1306,12 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		# Create directory if doesn't exist
 		p = self._eventFilePath.text()
 		if not os.path.isdir(p):
-			if LmTools.AskQuestion(mx('Configured log file directory does not exist. Do you want to create it?', 'logDirExist')):
+			if LmTools.ask_question(mx('Configured log file directory does not exist. Do you want to create it?', 'logDirExist')):
 				try:
 					os.makedirs(p)
 				except BaseException as e:
-					LmTools.Error('Cannot create log file directory. Error: {}'.format(e))
-					LmTools.DisplayError(mx('Cannot create log file directory.\nError: {}.', 'logDirErr').format(e))
+					LmTools.error(f'Cannot create log file directory. Error: {e}')
+					LmTools.display_error(mx('Cannot create log file directory.\nError: {}.', 'logDirErr').format(e))
 					return False
 			else:
 				return False
@@ -1366,7 +1366,7 @@ class LiveboxEventThread(QtCore.QObject):
 		if aResult is not None:
 			if aResult.get('errors') is not None:
 				# Session has probably timed out on Livebox side, resign
-				LmTools.LogDebug(1, 'Errors in event request, resign')
+				LmTools.log_debug(1, 'Errors in event request, resign')
 				if self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword) <= 0:
 					time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
 			else:

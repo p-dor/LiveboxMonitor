@@ -287,14 +287,14 @@ class LmActions:
         c = self._api._wifi.get_config()
         self.endTask()
         if (c is None) or (not len(c['Intf'])):
-            self.displayError(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
+            self.display_error(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
         else:
             wifi_config_dialog = WifiConfigDialog(self, c, False)
             if wifi_config_dialog.exec():
                 self.startTask(lx('Setting Wifi Configuration...'))
                 n = wifi_config_dialog.get_config()
                 if not self._api._wifi.set_config(c, n):
-                    self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
+                    self.display_error(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
                 self.endTask()
 
 
@@ -304,14 +304,14 @@ class LmActions:
         c = self._api._wifi.get_guest_config()
         self.endTask()
         if (c is None) or (not len(c['Intf'])):
-            self.displayError(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
+            self.display_error(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
         else:
             wifi_config_dialog = WifiConfigDialog(self, c, True)
             if wifi_config_dialog.exec():
                 self.startTask(lx('Setting Guest Wifi Configuration...'))
                 n = wifi_config_dialog.get_config()
                 if not self._api._wifi.set_guest_config(c, n):
-                    self.displayError(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
+                    self.display_error(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
                 self.endTask()
 
 
@@ -321,9 +321,9 @@ class LmActions:
         try:
             self._api._wifi.set_enable(True)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Wifi activated.', 'wifiOn'))
+            self.display_status(mx('Wifi activated.', 'wifiOn'))
         self.endTask()
 
 
@@ -333,9 +333,9 @@ class LmActions:
         try:
             self._api._wifi.set_enable(False)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Wifi deactivated.', 'wifiOff'))
+            self.display_status(mx('Wifi deactivated.', 'wifiOff'))
         self.endTask()
 
 
@@ -345,9 +345,9 @@ class LmActions:
         try:
             self._api._wifi.set_guest_enable(True)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Guest Wifi activated. Reactivate Scheduler if required.', 'gwifiOn'))
+            self.display_status(mx('Guest Wifi activated. Reactivate Scheduler if required.', 'gwifiOn'))
         self.endTask()
 
 
@@ -357,9 +357,9 @@ class LmActions:
         try:
             self._api._wifi.set_guest_enable(False)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Guest Wifi deactivated.', 'gwifiOff'))
+            self.display_status(mx('Guest Wifi deactivated.', 'gwifiOff'))
         self.endTask()
 
 
@@ -369,9 +369,9 @@ class LmActions:
         try:
             self._api._wifi.set_scheduler_enable(True)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Scheduler activated.', 'schedOn'))
+            self.display_status(mx('Scheduler activated.', 'schedOn'))
         self.endTask()
 
 
@@ -381,9 +381,9 @@ class LmActions:
         try:
             self._api._wifi.set_scheduler_enable(False)
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
         else:
-            self.displayStatus(mx('Scheduler deactivated.', 'schedOff'))
+            self.display_status(mx('Scheduler deactivated.', 'schedOff'))
         self.endTask()
 
 
@@ -416,7 +416,7 @@ class LmActions:
             orange_led_level = self._api._screen.get_orange_led_level()
             show_wifi_password = self._api._screen.get_show_wifi_password()
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
             return
 
         screen_dialog = ScreenDialog(orange_led_level, show_wifi_password, self)
@@ -429,7 +429,7 @@ class LmActions:
                 try:
                     self._api._screen.set_orange_led_level(new_orange_led_level)
                 except BaseException as e:
-                    self.displayError(str(e))
+                    self.display_error(str(e))
 
             # Set show wifi password if changed
             new_show_wifi_password = screen_dialog.get_show_wifi_password()
@@ -437,24 +437,24 @@ class LmActions:
                 try:
                     self._api._screen.set_show_wifi_password(new_show_wifi_password)
                 except BaseException as e:
-                    self.displayError(str(e))
+                    self.display_error(str(e))
 
             self.endTask()
 
 
     ### Click on Reboot Livebox button
     def reboot_livebox_button_click(self):
-        if self.askQuestion(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
+        if self.ask_question(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
             self.startTask(lx('Rebooting Livebox...'))
             try:
                 self._api._reboot.reboot_livebox()
             except BaseException as e:
                 self.endTask()
-                self.displayError(str(e))
+                self.display_error(str(e))
                 return
 
             self.endTask()
-            self.displayStatus(mx('Application will now quit.', 'appQuit'))
+            self.display_status(mx('Application will now quit.', 'appQuit'))
             self.close()
 
 
@@ -466,7 +466,7 @@ class LmActions:
             d = self._api._reboot.get_reboot_history()
         except BaseException as e:
             self.endTask()
-            self.displayError(str(e))
+            self.display_error(str(e))
             return
 
         self.endTask()
@@ -482,7 +482,7 @@ class LmActions:
             firewall_ipv4_level = self._api._firewall.get_ipv4_firewall_level()
             firewall_ipv6_level = self._api._firewall.get_ipv6_firewall_level()
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
             return
 
         firewall_level_dialog = FirewallLevelDialog(firewall_ipv4_level, firewall_ipv6_level, self)
@@ -495,7 +495,7 @@ class LmActions:
                 try:
                     self._api._firewall.set_ipv4_firewall_level(new_firewall_ipv4_level)
                 except BaseException as e:
-                    self.displayError(str(e))
+                    self.display_error(str(e))
 
             # Set new IPv6 firewall level if changed
             new_firewall_ipv6_level = firewall_level_dialog.get_ipv6_level()
@@ -503,7 +503,7 @@ class LmActions:
                 try:
                     self._api._firewall.set_ipv6_firewall_level(new_firewall_ipv6_level)
                 except BaseException as e:
-                    self.displayError(str(e))
+                    self.display_error(str(e))
 
             self.endTask()
 
@@ -514,12 +514,12 @@ class LmActions:
         try:
             d = self._api._firewall.get_respond_to_ping()
         except BaseException as e:
-            self.displayError(str(e))
+            self.display_error(str(e))
             return
         ipv4_ping = d.get('enableIPv4')
         ipv6_ping = d.get('enableIPv6')
         if (ipv4_ping is None) or (ipv6_ping is None):
-            LmTools.Error('Cannot get respond to ping setup')
+            LmTools.error('Cannot get respond to ping setup')
 
         ping_response_dialog = PingResponseDialog(ipv4_ping, ipv6_ping, self)
         if ping_response_dialog.exec():
@@ -534,7 +534,7 @@ class LmActions:
                 try:
                     self._api._firewall.set_respond_to_ping(p)
                 except BaseException as e:
-                    self.displayError(str(e))
+                    self.display_error(str(e))
                 self.endTask()
 
 
@@ -586,12 +586,12 @@ class LmActions:
 
     ### Click on show raw device list button
     def show_raw_device_list_button_click(self):
-        self.displayInfos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent=2))
+        self.display_infos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent=2))
 
 
     ### Click on show raw topology button
     def show_raw_topology_button_click(self):
-        self.displayInfos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent=2))
+        self.display_infos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent=2))
 
 
     ### Click on set log level button

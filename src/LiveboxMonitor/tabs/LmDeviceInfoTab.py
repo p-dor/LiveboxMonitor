@@ -151,7 +151,7 @@ class LmDeviceInfo:
 				if aLbSuccess or aDnsSuccess:
 					self.infoDeviceListClick()
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Set a device name stored in the the MacAddr table
@@ -188,10 +188,10 @@ class LmDeviceInfo:
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
-				self.displayError('Set {} name query failed.'.format(t))
+				self.display_error('Set {} name query failed.'.format(t))
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Set {} name query error.'.format(t))
+			LmTools.error(str(e))
+			self.display_error('Set {} name query error.'.format(t))
 		return False
 
 
@@ -208,10 +208,10 @@ class LmDeviceInfo:
 			if (aReply is not None) and (aReply.get('status', False)):
 				return True
 			else:
-				self.displayError('Remove {} name query failed.'.format(t))
+				self.display_error('Remove {} name query failed.'.format(t))
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Remove {} name query error.'.format(t))
+			LmTools.error(str(e))
+			self.display_error('Remove {} name query error.'.format(t))
 		return False
 
 
@@ -234,12 +234,12 @@ class LmDeviceInfo:
 						self.infoDeviceListClick()
 						self._currentDeviceType = aType		# LB device type update is async and refresh screen might be too fast
 					else:
-						self.displayError('Set type query failed.')
+						self.display_error('Set type query failed.')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Set type query error.')
+					LmTools.error(str(e))
+					self.display_error('Set type query error.')
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on WakeOnLAN button
@@ -250,14 +250,14 @@ class LmDeviceInfo:
 			try:
 				aReply = self._session.request('WOL', 'sendWakeOnLan', { 'hostID': aKey, 'broadcast': True })
 				if (aReply is not None) and ('status' in aReply):
-					self.displayStatus(mx('Wake on LAN signal sent to device {}.', 'devWOL').format(aKey))
+					self.display_status(mx('Wake on LAN signal sent to device {}.', 'devWOL').format(aKey))
 				else:
-					self.displayError('WOL query failed.')
+					self.display_error('WOL query failed.')
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('WOL query error.')
+				LmTools.error(str(e))
+				self.display_error('WOL query error.')
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on forget device button
@@ -265,7 +265,7 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
-			if self.askQuestion('Are you sure you want to forget device [' + aKey + ']?'):
+			if self.ask_question('Are you sure you want to forget device [' + aKey + ']?'):
 				try:
 					aReply = self._session.request('Devices', 'destroyDevice', { 'key': aKey })
 					if (aReply is not None) and (aReply.get('status', False)):
@@ -273,12 +273,12 @@ class LmDeviceInfo:
 						# Call event handler directly - in some (unknown) cases, the event is not raised
 						self.processDeviceDeletedEvent(aKey)
 					else:
-						self.displayError('Destroy device query failed.')
+						self.display_error('Destroy device query failed.')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Destroy device query error.')
+					LmTools.error(str(e))
+					self.display_error('Destroy device query error.')
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on block device button
@@ -291,12 +291,12 @@ class LmDeviceInfo:
 			try:
 				aReply = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': aKey })
 				if (aReply is None) or (aReply.get('status') is None):
-					self.displayError('Scheduler:getSchedule query failed.')
+					self.display_error('Scheduler:getSchedule query failed.')
 					return
 				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('Scheduler:getSchedule query error.')
+				LmTools.error(str(e))
+				self.display_error('Scheduler:getSchedule query error.')
 				return
 
 			# If has schedule override it, otherwise add it
@@ -304,13 +304,13 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus(mx('Device {} now blocked.', 'devBlocked').format(aKey))
+						self.display_status(mx('Device {} now blocked.', 'devBlocked').format(aKey))
 					else:
-						LmTools.Error(aReply)
-						self.displayError('Block query failed.')
+						LmTools.error(aReply)
+						self.display_error('Block query failed.')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Block query error.')
+					LmTools.error(str(e))
+					self.display_error('Block query error.')
 			else:
 				try:
 					aInfos = {}
@@ -322,15 +322,15 @@ class LmDeviceInfo:
 					aInfos['override'] = 'Disable'
 					aReply = self._session.request('Scheduler', 'addSchedule', { 'type': 'ToD', 'info': aInfos })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus(mx('Device {} now blocked.', 'devBlocked').format(aKey))
+						self.display_status(mx('Device {} now blocked.', 'devBlocked').format(aKey))
 					else:
-						LmTools.Error(aReply)
-						self.displayError('Block query failed.')
+						LmTools.error(aReply)
+						self.display_error('Block query failed.')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Block query error.')
+					LmTools.error(str(e))
+					self.display_error('Block query error.')
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Click on unblock device button
@@ -343,12 +343,12 @@ class LmDeviceInfo:
 			try:
 				aReply = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': aKey })
 				if (aReply is None) or (aReply.get('status') is None):
-					self.displayError('Scheduler:getSchedule query failed.')
+					self.display_error('Scheduler:getSchedule query failed.')
 					return
 				aHasSchedule = aReply.get('status', False)
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('Scheduler:getSchedule query error.')
+				LmTools.error(str(e))
+				self.display_error('Scheduler:getSchedule query error.')
 				return
 
 			# If has schedule override it, otherwise no need to unlock
@@ -356,16 +356,16 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.displayStatus(mx('Device {} now unblocked.', 'devUnblocked').format(aKey))
+						self.display_status(mx('Device {} now unblocked.', 'devUnblocked').format(aKey))
 					else:
-						self.displayError('Unblock query failed.')
+						self.display_error('Unblock query failed.')
 				except BaseException as e:
-					LmTools.Error(str(e))
-					self.displayError('Unblock query error.')
+					LmTools.error(str(e))
+					self.display_error('Unblock query error.')
 			else:
-				self.displayStatus(mx('Device {} is not blocked.', 'devNotBlocked').format(aKey))
+				self.display_status(mx('Device {} is not blocked.', 'devNotBlocked').format(aKey))
 		else:
-			self.displayError(mx('Please select a device.', 'devSelect'))
+			self.display_error(mx('Please select a device.', 'devSelect'))
 
 
 	### Update device infos list
@@ -375,19 +375,19 @@ class LmDeviceInfo:
 		try:
 			d = self._session.request('Devices.Device.' + iDeviceKey, 'get')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if (d is not None):
 			d = d.get('status')
 		if (d is None):
 			self.endTask()
-			self.displayError(mx('Error getting device information.', 'devInfoErr'))
+			self.display_error(mx('Error getting device information.', 'devInfoErr'))
 			return
 
 		i = 0
 		i = self.addInfoLine(self._infoAList, i, lx('Key'), iDeviceKey)
-		i = self.addInfoLine(self._infoAList, i, lx('Active'), LmTools.FmtBool(d.get('Active')))
-		i = self.addInfoLine(self._infoAList, i, lx('Authenticated'), LmTools.FmtBool(d.get('AuthenticationState')))
+		i = self.addInfoLine(self._infoAList, i, lx('Active'), LmTools.fmt_bool(d.get('Active')))
+		i = self.addInfoLine(self._infoAList, i, lx('Authenticated'), LmTools.fmt_bool(d.get('AuthenticationState')))
 
 		try:
 			aData = self._session.request('Scheduler', 'getSchedule', { 'type': 'ToD', 'ID': iDeviceKey })
@@ -398,14 +398,14 @@ class LmDeviceInfo:
 				aData = aData.get('scheduleInfo')
 			if (aData is not None):
 				aBlocked = (aData.get('override', '') == 'Disable') and (aData.get('value', '') == 'Disable')
-			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), LmTools.FmtBool(aBlocked))
+			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), LmTools.fmt_bool(aBlocked))
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			i = self.addInfoLine(self._infoAList, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
 
-		i = self.addInfoLine(self._infoAList, i, lx('First connection'), LmTools.FmtLiveboxTimestamp(d.get('FirstSeen')))
-		i = self.addInfoLine(self._infoAList, i, lx('Last connection'), LmTools.FmtLiveboxTimestamp(d.get('LastConnection')))
-		i = self.addInfoLine(self._infoAList, i, lx('Last changed'), LmTools.FmtLiveboxTimestamp(d.get('LastChanged')))
+		i = self.addInfoLine(self._infoAList, i, lx('First connection'), LmTools.fmt_livebox_timestamp(d.get('FirstSeen')))
+		i = self.addInfoLine(self._infoAList, i, lx('Last connection'), LmTools.fmt_livebox_timestamp(d.get('LastConnection')))
+		i = self.addInfoLine(self._infoAList, i, lx('Last changed'), LmTools.fmt_livebox_timestamp(d.get('LastChanged')))
 		i = self.addInfoLine(self._infoAList, i, lx('Source'), d.get('DiscoverySource'))
 
 		self._currentDeviceLiveboxName = d.get('Name')
@@ -433,7 +433,7 @@ class LmDeviceInfo:
 			for aType in aTypeList:
 				i = self.addInfoLine(self._infoAList, i, lx('Type'), aType.get('Type', '') + ' (' + aType.get('Source', '') + ')')
 
-		aActiveIPStruct = LmTools.DetermineIP(d)
+		aActiveIPStruct = LmTools.determine_ip(d)
 		if aActiveIPStruct is not None:
 			aActiveIP = aActiveIPStruct.get('Address', '')
 		else:
@@ -471,7 +471,7 @@ class LmDeviceInfo:
 					aManufacturer = aCompDetails.get('companyName', '') + ' - ' + aCompDetails.get('countryCode', '')
 				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), aManufacturer)
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				i = self.addInfoLine(self._infoAList, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
 
 		i = self.addInfoLine(self._infoAList, i, lx('Vendor ID'), d.get('VendorClassID'))
@@ -488,21 +488,21 @@ class LmDeviceInfo:
 			i = self.addInfoLine(self._infoAList, i, lx('State'), aSysSoftware.get('State'))
 			i = self.addInfoLine(self._infoAList, i, lx('Protocol'), aSysSoftware.get('Protocol'))
 			i = self.addInfoLine(self._infoAList, i, lx('Current Mode'), aSysSoftware.get('CurrentMode'))
-			i = self.addInfoLine(self._infoAList, i, lx('Pairing Time'), LmTools.FmtLiveboxTimestamp(aSysSoftware.get('PairingTime')))
+			i = self.addInfoLine(self._infoAList, i, lx('Pairing Time'), LmTools.fmt_livebox_timestamp(aSysSoftware.get('PairingTime')))
 			i = self.addInfoLine(self._infoAList, i, lx('Uplink Type'), aSysSoftware.get('UplinkType'))
 
-		aSignalStrength = LmTools.FmtInt(d.get('SignalStrength'))
+		aSignalStrength = LmTools.fmt_int(d.get('SignalStrength'))
 		if len(aSignalStrength):
 			aSignalStrength += ' dBm'
 		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Strength'), aSignalStrength)
-		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Noise Ratio'), LmTools.FmtInt(d.get('SignalNoiseRatio')))
+		i = self.addInfoLine(self._infoAList, i, lx('Wifi Signal Noise Ratio'), LmTools.fmt_int(d.get('SignalNoiseRatio')))
 
 		aSysSoftwareStd = d.get('SSWSta')
 		if aSysSoftwareStd is not None:
 			i = self.addInfoLine(self._infoAList, i, lx('Supported Standards'), aSysSoftwareStd.get('SupportedStandards'))
-			i = self.addInfoLine(self._infoAList, i, lx('Supports 2.4GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports24GHz')))
-			i = self.addInfoLine(self._infoAList, i, lx('Supports 5GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports5GHz')))
-			i = self.addInfoLine(self._infoAList, i, lx('Supports 6GHz'), LmTools.FmtBool(aSysSoftwareStd.get('Supports6GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 2.4GHz'), LmTools.fmt_bool(aSysSoftwareStd.get('Supports24GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 5GHz'), LmTools.fmt_bool(aSysSoftwareStd.get('Supports5GHz')))
+			i = self.addInfoLine(self._infoAList, i, lx('Supports 6GHz'), LmTools.fmt_bool(aSysSoftwareStd.get('Supports6GHz')))
 
 		self.endTask()
 

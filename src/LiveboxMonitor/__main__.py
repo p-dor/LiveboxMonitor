@@ -76,7 +76,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		if self.signin():
 			self._api = ApiRegistry(self._session)
 			if not self._api._intf.build_intf_list():
-				LmTools.Error('Failed to build interface list.')
+				LmTools.error('Failed to build interface list.')
 			self.adjustToLiveboxModel()
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())
@@ -285,7 +285,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			try:
 				r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
 			except BaseException as e:
-				LmTools.Error(str(e))
+				LmTools.error(str(e))
 				r = -1
 			self.endTask()
 			if r > 0:
@@ -298,12 +298,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				if aDialog.exec():
 					aURL = aDialog.getURL()
 					# Remove unwanted characters (can be set via Paste action) + cleanup
-					aURL = LmTools.CleanURL(re.sub('[\n\t]', '', aURL))
+					aURL = LmTools.clean_url(re.sub('[\n\t]', '', aURL))
 					LmConf.setLiveboxURL(aURL)
 					self.show()
 					continue
 				else:
-					self.displayError(mx('Cannot connect to the Livebox.', 'cnx'))
+					self.display_error(mx('Cannot connect to the Livebox.', 'cnx'))
 					return False
 
 			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, LmConf.SavePasswords, self)
@@ -315,7 +315,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:
-				self.displayError(mx('Livebox authentication failed.', 'auth'))
+				self.display_error(mx('Livebox authentication failed.', 'auth'))
 				return False
 
 
@@ -337,7 +337,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		self._liveboxSoftwareVersion = self._api._info.get_software_version()
 		self._liveboxModel = self._api._info.get_livebox_model()
 
-		LmTools.LogDebug(1, f'Identified Livebox model: {self._liveboxModel} ({self._api._info.get_livebox_model_name()})')
+		LmTools.log_debug(1, f'Identified Livebox model: {self._liveboxModel} ({self._api._info.get_livebox_model_name()})')
 
 		self.determineFiberLink()
 		self.determineLiveboxPro()
@@ -351,18 +351,18 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			q = self._session.request('NMC', 'getWANStatus')
 		except BaseException as e:
-			LmTools.Error(f'NMC:getWANStatus error: {e}')
+			LmTools.error(f'NMC:getWANStatus error: {e}')
 			q = None
 		if q is not None:
 			d = q.get('status')
 		if not d:
-			LmTools.Error('NMC:getWANStatus query error')
+			LmTools.error('NMC:getWANStatus query error')
 		if q is not None:
 			d = q.get('data')
 		else:
 			d = None
 		if d is None:
-			LmTools.Error('NMC:getWANStatus data error')
+			LmTools.error('NMC:getWANStatus data error')
 			self._linkType = 'UNKNOWN'
 		else:
 			self._linkType = d.get('LinkType', 'UNKNOWN').upper()
@@ -376,8 +376,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			# Check link type for Livebox 4
 			self._fiberLink = (self._linkType == 'SFP')
 
-		LmTools.LogDebug(1, f'Identified link type: {self._linkType}')
-		LmTools.LogDebug(1, f'Identified fiber link: {self._fiberLink}')
+		LmTools.log_debug(1, f'Identified link type: {self._linkType}')
+		LmTools.log_debug(1, f'Identified fiber link: {self._fiberLink}')
 
 
 	### Determine if Pro or Residential subscription
@@ -386,22 +386,22 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		try:
 			d = self._session.request('NMC', 'get')
 		except BaseException as e:
-			LmTools.Error(f'NMC:get error: {e}')
+			LmTools.error(f'NMC:get error: {e}')
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			LmTools.Error('NMC:get query error')
+			LmTools.error('NMC:get query error')
 			self._liveboxPro = False
 		else:
 			aOfferType = d.get('OfferType')
 			if aOfferType is None:
-				LmTools.Error('Missing offer type in NMC:get, cannot determine Livebox Pro model')
+				LmTools.error('Missing offer type in NMC:get, cannot determine Livebox Pro model')
 				self._liveboxPro = False
 			else:
 				self._liveboxPro = 'PRO' in aOfferType.upper()
 
-		LmTools.LogDebug(1, f'Identified Livebox Pro: {self._liveboxPro}')
+		LmTools.log_debug(1, f'Identified Livebox Pro: {self._liveboxPro}')
 
 
 	### Exit with escape
@@ -417,11 +417,11 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		return self._applicationName
 
 
-	### Show the start of a long task - they can be nested
+	### Show the start of a long task - they can be nested - ###TODO### makes it a class
 	def startTask(self, iTask):
 		self._taskNb += 1
 		self._taskStack.append(iTask)
-		LmTools.MouseCursor_Busy()	# Stack cursor change
+		LmTools.mouse_cursor_busy()	# Stack cursor change
 
 		if self._statusBar is None:
 			self.setWindowTitle(self.appWindowTitle() + ' - ' + iTask)
@@ -430,19 +430,19 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			QtCore.QCoreApplication.sendPostedEvents()
 			QtCore.QCoreApplication.processEvents()
 
-		LmTools.LogDebug(1, f'TASK STARTING stack={self._taskNb} task={iTask}')
+		LmTools.log_debug(1, f'TASK STARTING stack={self._taskNb} task={iTask}')
 
 
 	### Suspend a potential running task
 	def suspendTask(self):
 		if self._taskNb:
-			LmTools.MouseCursor_ForceNormal()
+			LmTools.mouse_cursor_force_normal()
 
 
 	### Resume a potential running task
 	def resumeTask(self):
 		if self._taskNb:
-			LmTools.MouseCursor_ForceBusy()
+			LmTools.mouse_cursor_force_busy()
 
 
 	### Update a task by adding a status
@@ -456,7 +456,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				QtCore.QCoreApplication.sendPostedEvents()
 				QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(1, f'TASK UPDATE stack={self._taskNb} - task={aTask} - status={iStatus}')
+			LmTools.log_debug(1, f'TASK UPDATE stack={self._taskNb} - task={aTask} - status={iStatus}')
 
 
 	### End a long (nested) task
@@ -464,7 +464,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		if self._taskNb:
 			self._taskNb -= 1
 			self._taskStack.pop()
-			LmTools.MouseCursor_Normal()	# Unstack cursor change
+			LmTools.mouse_cursor_normal()	# Unstack cursor change
 
 			if self._taskNb:
 				aTask = self._taskStack[self._taskNb - 1]
@@ -482,35 +482,35 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					self._statusBar.clearMessage()
 					QtCore.QCoreApplication.processEvents()
 
-			LmTools.LogDebug(1, f'TASK ENDING stack={self._taskNb} - restoring={aTask}')
+			LmTools.log_debug(1, f'TASK ENDING stack={self._taskNb} - restoring={aTask}')
 
 
 	# Display an error popup
-	def displayError(self, iErrorMsg):
+	def display_error(self, error_msg):
 		self.suspendTask()
-		LmTools.DisplayError(iErrorMsg, self)
+		LmTools.display_error(error_msg, self)
 		self.resumeTask()
 
 
 	# Display a status popup
-	def displayStatus(self, iStatusMsg):
+	def display_status(self, status_msg):
 		self.suspendTask()
-		LmTools.DisplayStatus(iStatusMsg, self)
+		LmTools.display_status(status_msg, self)
 		self.resumeTask()
 
 
 	# Ask a question and return True if OK clicked
-	def askQuestion(self, iQuestionMsg):
+	def ask_question(self, question_msg):
 		self.suspendTask()
-		aAnswer = LmTools.AskQuestion(iQuestionMsg, self)
+		aAnswer = LmTools.ask_question(question_msg, self)
 		self.resumeTask()
 		return aAnswer
 
 
 	# Display an info text popup
-	def displayInfos(self, iTitle, iInfoMsg, iInfoDoc = None):
+	def display_infos(self, title, info_msg, info_doc=None):
 		self.suspendTask()
-		LmTools.DisplayInfos(iTitle, iInfoMsg, iInfoDoc, self)
+		LmTools.display_infos(title, info_msg, info_doc, self)
 		self.resumeTask()
 
 
@@ -561,7 +561,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 # ### wakepy error handler
 def wakePyFailure(iResult):
-	LmTools.Error(f'Failed to keep system awake mode={iResult.mode_name} active={iResult.active_method} success={iResult.success} err={iResult.get_failure_text()}')
+	LmTools.error(f'Failed to keep system awake mode={iResult.mode_name} active={iResult.active_method} success={iResult.success} err={iResult.get_failure_text()}')
 
 
 # ### Fatal error handler
@@ -611,7 +611,7 @@ def main(iNativeRun = False):
 			try:
 				locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
 			except BaseException as e:
-				LmTools.Error(f'setlocale() error: {e}')
+				LmTools.error(f'setlocale() error: {e}')
 
 			# Set Qt language to selected preference
 			aTranslator = QtCore.QTranslator()

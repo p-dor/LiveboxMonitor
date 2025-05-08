@@ -141,13 +141,13 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._firewall.get_dmz_devices()
         except BaseException as e:
-            self._app.displayError(str(e))
+            self._app.display_error(str(e))
             self._app.endTask()
             return
 
         if d:
             if not isinstance(d, dict):
-                self._app.displayError(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
+                self._app.display_error(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
                 self._app.endTask()
                 return
 
@@ -206,8 +206,8 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             self._api._firewall.delete_dmz(dmz_id)
         except BaseException as e:
-            LmTools.Error(str(e))
-            self._app.displayError(mx('Cannot delete DMZ device.', 'dmzDelErr'))
+            LmTools.error(str(e))
+            self._app.display_error(mx('Cannot delete DMZ device.', 'dmzDelErr'))
             return
 
         # Delete the list line
@@ -231,7 +231,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             self._api._firewall.add_dmz(dmz_id, dest_ip, ext_ips=ext_ips)
         except BaseException as e:
-            self._app.displayError(str(e))
+            self._app.display_error(str(e))
             return
 
         self.refresh_button_click()

@@ -282,7 +282,7 @@ class LmPhone:
 		if len(LmConf.CallFilterApiKey):
 			self.scanSpams()
 		else:
-			self.displayError(mx('You must configure a CallFilter API Key in the preferences first.', 'callFilterAPIKeyErr'))
+			self.display_error(mx('You must configure a CallFilter API Key in the preferences first.', 'callFilterAPIKeyErr'))
 
 
 	### Click on spam call sites button
@@ -293,7 +293,7 @@ class LmPhone:
 			webbrowser.open_new_tab(CHECK_SPAM_URL1.format(aPhoneNb))
 			webbrowser.open_new_tab(CHECK_SPAM_URL2.format(aPhoneNb))
 		else:
-			self.displayError(mx('Please select a phone call.', 'callSelect'))
+			self.display_error(mx('Please select a phone call.', 'callSelect'))
 
 
 	### Click on set/unset spam call button
@@ -311,7 +311,7 @@ class LmPhone:
 					LmConf.setSpamCall(aPhoneNb)
 					aSet = True
 		else:
-			self.displayError(mx('Please select a phone call.', 'callSelect'))
+			self.display_error(mx('Please select a phone call.', 'callSelect'))
 			return
 
 		# Update all lines with same number
@@ -338,35 +338,35 @@ class LmPhone:
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList', { 'callId': aKey })
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('Phone call delete query error.')
+				LmTools.error(str(e))
+				self.display_error('Phone call delete query error.')
 				return
 
 			if (aReply is not None) and ('status' in aReply):
 				self._callList.removeRow(aCurrentSelection)
 			else:
-				self.displayError('Phone call delete query failed.')
+				self.display_error('Phone call delete query failed.')
 		else:
-			self.displayError(mx('Please select a phone call.', 'callSelect'))
+			self.display_error(mx('Please select a phone call.', 'callSelect'))
 
 
 	### Click on delete all calls button
 	def deleteAllCallsButtonClick(self):
-		if self.askQuestion(mx('Are you sure you want to delete all phone calls?', 'delAllCalls')):
+		if self.ask_question(mx('Are you sure you want to delete all phone calls?', 'delAllCalls')):
 			self.startTask(lx('Deleting phone call list...'))
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
 			except BaseException as e:
 				self.endTask()
-				LmTools.Error(str(e))
-				self.displayError('Delete all calls query error.')
+				LmTools.error(str(e))
+				self.display_error('Delete all calls query error.')
 				return
 			self.endTask()
 
 			if (aReply is not None) and ('status' in aReply):
 				self.refreshCallButtonClick()
 			else:
-				self.displayError('Delete all calls query failed.')
+				self.display_error('Delete all calls query failed.')
 
 
 	### Double click on a call to add/edit corresponding contact
@@ -424,7 +424,7 @@ class LmPhone:
 		if aCallList is not None:
 			aCallList = aCallList.get('status')
 		if aCallList is None:
-			self.displayError(mx('Error getting phone call list.', 'callLoad'))
+			self.display_error(mx('Error getting phone call list.', 'callLoad'))
 		else:
 			i = 0
 			for c in aCallList:
@@ -454,7 +454,7 @@ class LmPhone:
 						aCallTypeIcon.setData(QtCore.Qt.ItemDataRole.UserRole, 1)
 						aMissedCall = True
 
-				aTime = QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(c.get('startTime')))
+				aTime = QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(c.get('startTime')))
 				aTime.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 				aNumber = QtWidgets.QTableWidgetItem(c.get('remoteNumber'))
 				aNumber.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -466,7 +466,7 @@ class LmPhone:
 				aContact = QtWidgets.QTableWidgetItem(aContactStr)
 
 				aSeconds = c.get('duration')
-				aDuration = NumericSortItem(LmTools.FmtTime(aSeconds, True))
+				aDuration = NumericSortItem(LmTools.fmt_time(aSeconds, True))
 				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
 				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
 
@@ -562,7 +562,7 @@ class LmPhone:
 
 		if aSpamCount:
 			self.indicateSpamCalls()
-		self.displayStatus(mx('Number of detected spam numbers: {}.', 'spamCount').format(aSpamCount))
+		self.display_status(mx('Number of detected spam numbers: {}.', 'spamCount').format(aSpamCount))
 
 
 	### Assign spam contact name to calls in the spam table
@@ -592,9 +592,9 @@ class LmPhone:
 				if aSpam is not None:
 					return aSpam != 0
 				else:
-					LmTools.Error('CallFilter response error: no blocked field')
+					LmTools.error('CallFilter response error: no blocked field')
 			except BaseException as e:
-				LmTools.Error('CallFilter error: {}'.format(e))
+				LmTools.error(f'CallFilter error: {e}')
 		return False
 
 
@@ -616,7 +616,7 @@ class LmPhone:
 		if aCurrentSelection >= 0:
 			self.editContactDialog(aCurrentSelection)
 		else:
-			self.displayError(mx('Please select a contact.', 'contactSelect'))
+			self.display_error(mx('Please select a contact.', 'contactSelect'))
 
 
 	### Click on delete contact button
@@ -627,8 +627,8 @@ class LmPhone:
 			try:
 				aReply = self._session.request('Phonebook', 'removeContactByUniqueID', { 'uniqueID': aKey })
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('Contact delete query error.')
+				LmTools.error(str(e))
+				self.display_error('Contact delete query error.')
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
@@ -637,28 +637,28 @@ class LmPhone:
 				self._contactList.removeRow(aCurrentSelection)
 				self.assignContactToCalls()
 			else:
-				self.displayError('Contact delete query failed.')
+				self.display_error('Contact delete query failed.')
 		else:
-			self.displayError(mx('Please select a contact.', 'contactSelect'))
+			self.display_error(mx('Please select a contact.', 'contactSelect'))
 
 
 	### Click on delete all contacts button
 	def deleteAllContactsButtonClick(self):
-		if self.askQuestion(mx('Are you sure you want to delete all contacts?', 'delAllContacts')):
+		if self.ask_question(mx('Are you sure you want to delete all contacts?', 'delAllContacts')):
 			self.startTask(lx('Deleting contact list...'))
 			try:
 				aReply = self._session.request('Phonebook', 'removeAllContacts')
 			except BaseException as e:
 				self.endTask()
-				LmTools.Error(str(e))
-				self.displayError('Delete all contacts query error.')
+				LmTools.error(str(e))
+				self.display_error('Delete all contacts query error.')
 				return
 			self.endTask()
 
 			if (aReply is not None) and (aReply.get('status', False)):
 				self.refreshContactButtonClick()
 			else:
-				self.displayError('Delete all contacts query failed.')
+				self.display_error('Delete all contacts query failed.')
 
 
 	### Click on Phone Ring button
@@ -669,18 +669,18 @@ class LmPhone:
 		else:
 			aParams = { "ringtone": aRingTone }
 
-		LmTools.MouseCursor_Busy()
+		LmTools.mouse_cursor_busy()
 		try:
 			d = self._session.request('VoiceService.VoiceApplication', 'ring', aParams)
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
-		LmTools.MouseCursor_Normal()
+		LmTools.mouse_cursor_normal()
 
 		if d is None:
-			self.displayError('Ring service error.')
+			self.display_error('Ring service error.')
 		else:
-			self.displayStatus(mx('Phone should be ringing.', 'ring'))
+			self.display_status(mx('Phone should be ringing.', 'ring'))
 
 
 	### Click on export contacts button
@@ -693,8 +693,8 @@ class LmPhone:
 		try:
 			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot create the file.', 'createFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot create the file.', 'createFileErr'))
 			return
 
 		self.startTask(lx('Exporting all contacts...'))
@@ -703,7 +703,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			self.displayError(mx('Error getting contact list.', 'contactLoad'))
+			self.display_error(mx('Error getting contact list.', 'contactLoad'))
 		else:
 			for c in aContactList:
 				aContact = self.decodeLiveboxContact(c)
@@ -723,8 +723,8 @@ class LmPhone:
 		try:
 			aExportFile.close()
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot save the file.', 'saveFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
 
 	### Click on import contacts button
@@ -754,7 +754,7 @@ class LmPhone:
 				aErrorStr += f + ', '
 			n = len(aErrorStr)
 			aErrorStr = aErrorStr[:n - 2] + '.'
-			self.displayError(aErrorStr)
+			self.display_error(aErrorStr)
 
 
 	### VCF file import, returns: 1=Success, 0=File error, -1=Stop all error
@@ -821,7 +821,7 @@ class LmPhone:
 				else:
 					LmPhone.importVcfTag(c, aTag, aTagParams, l)
 		except BaseException as aExcept:
-			LmTools.Error(aExcept)
+			LmTools.error(str(aExcept))
 			f.close()
 			return 0
 
@@ -919,7 +919,7 @@ class LmPhone:
 		if aContactList is not None:
 			aContactList = aContactList.get('status')
 		if aContactList is None:
-			self.displayError(mx('Error getting contact list.', 'contactLoad'))
+			self.display_error(mx('Error getting contact list.', 'contactLoad'))
 		else:
 			i = 0
 			for c in aContactList:
@@ -1049,19 +1049,19 @@ class LmPhone:
 		try:
 			aReply = self._session.request('Phonebook', 'addContactAndGenUUID', { 'contact': aData })
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Contact creation query error.')
+			LmTools.error(str(e))
+			self.display_error('Contact creation query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
 			aKey = aReply['status']
 			if aKey is None:
-				self.displayError(mx('Max number of contacts reached.', 'contactMax'))
+				self.display_error(mx('Max number of contacts reached.', 'contactMax'))
 				return False
 			iContact['key'] = aReply['status']
 			return True
 
-		self.displayError('Contact creation query failed.')
+		self.display_error('Contact creation query failed.')
 		return False
 
 
@@ -1073,11 +1073,11 @@ class LmPhone:
 		try:
 			aReply = self._session.request('Phonebook', 'getContactByUniqueID', { 'uniqueID': aKey })
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Contact query error.')
+			LmTools.error(str(e))
+			self.display_error('Contact query error.')
 			return
 		if (aReply is None) or ('status' not in aReply):
-			self.displayError(mx('Cannot retrieve contact.', 'contactGet'))
+			self.display_error(mx('Cannot retrieve contact.', 'contactGet'))
 			return
 		aLBContact = aReply['status']
 		aContact = self.decodeLiveboxContact(aLBContact)
@@ -1112,8 +1112,8 @@ class LmPhone:
 			try:
 				aReply = self._session.request('Phonebook', 'modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError('Contact update query error.')
+				LmTools.error(str(e))
+				self.display_error('Contact update query error.')
 				return
 
 			if (aReply is not None) and (aReply.get('status', False)):
@@ -1125,7 +1125,7 @@ class LmPhone:
 				self.addContactToMatchingIndex(aContact)
 				self.assignContactToCalls()
 			else:
-				self.displayError('Contact update query failed.')
+				self.display_error('Contact update query failed.')
 
 
 	### Add contact to matching index

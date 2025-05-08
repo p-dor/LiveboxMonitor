@@ -356,7 +356,7 @@ class LmNatPat:
 			self.refreshPatList()
 			self.endTask()
 
-			self.displayStatus(mx('All selected rule(s) deleted.', 'delAllPat'))
+			self.display_status(mx('All selected rule(s) deleted.', 'delAllPat'))
 
 
 	### Click on export PAT rules button
@@ -373,8 +373,8 @@ class LmNatPat:
 			try:
 				aExportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError(mx('Cannot create the file.', 'createFileErr'))
+				LmTools.error(str(e))
+				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
 			self.startTask(lx('Exporting port forwarding rules...'))
@@ -401,10 +401,10 @@ class LmNatPat:
 			try:
 				aExportFile.close()
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError(mx('Cannot save the file.', 'saveFileErr'))
+				LmTools.error(str(e))
+				self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
-			self.displayStatus(mx('{} rule(s) exported.', 'ruleExport').format(c))
+			self.display_status(mx('{} rule(s) exported.', 'ruleExport').format(c))
 
 
 	### Click on import PAT rules button
@@ -417,23 +417,23 @@ class LmNatPat:
 		try:
 			aImportFile = open(aFileName, 'r')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot open the file.', 'openFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot open the file.', 'openFileErr'))
 			return
 
 		aError = False
 		try:
 			aFile = json.load(aImportFile)
 		except BaseException as e:
-			LmTools.Error('Error loading file: {}'.format(e))
-			self.displayError(mx('Wrong file format.', 'fileFormatErr'))
+			LmTools.error(f'Error loading file: {e}')
+			self.display_error(mx('Wrong file format.', 'fileFormatErr'))
 			aError = True
 
 		if not aError:
 			aRules = aFile.get('Rules', None)
 
 			if (aFile.get('Type', '') != 'PAT') or (aRules is None):
-				self.displayError(mx('Wrong file type.', 'fileTypeErr'))
+				self.display_error(mx('Wrong file type.', 'fileTypeErr'))
 				aError = True
 
 		if not aError:
@@ -449,14 +449,14 @@ class LmNatPat:
 		try:
 			aImportFile.close()
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot close the file.', 'closeFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot close the file.', 'closeFileErr'))
 
 		if not aError:
 			self.commitNatPatRuleChange()
 			self.refreshPatList()
 
-			self.displayStatus(mx('{} rule(s) imported.', 'ruleImport').format(c))
+			self.display_status(mx('{} rule(s) imported.', 'ruleImport').format(c))
 
 
 	### Click on PTF list item
@@ -555,7 +555,7 @@ class LmNatPat:
 			self.refreshPtfList()
 			self.endTask()
 
-			self.displayStatus(mx('{} rule(s) deleted.', 'ruleDel').format(c))
+			self.display_status(mx('{} rule(s) deleted.', 'ruleDel').format(c))
 
 
 	### Click on export PTF rules button
@@ -572,8 +572,8 @@ class LmNatPat:
 			try:
 				aExportFile = open(aFileName, 'w')
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError(mx('Cannot create the file.', 'createFileErr'))
+				LmTools.error(str(e))
+				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
 			self.startTask(lx('Exporting protocol forwarding rules...'))
@@ -600,10 +600,10 @@ class LmNatPat:
 			try:
 				aExportFile.close()
 			except BaseException as e:
-				LmTools.Error(str(e))
-				self.displayError(mx('Cannot save the file.', 'saveFileErr'))
+				LmTools.error(str(e))
+				self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
-			self.displayStatus(mx('{} rule(s) exported.', 'ruleExport').format(c))
+			self.display_status(mx('{} rule(s) exported.', 'ruleExport').format(c))
 
 
 	### Click on import PTF rules button
@@ -616,23 +616,23 @@ class LmNatPat:
 		try:
 			aImportFile = open(aFileName, 'r')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot open the file.', 'openFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot open the file.', 'openFileErr'))
 			return
 
 		aError = False
 		try:
 			aFile = json.load(aImportFile)
 		except BaseException as e:
-			LmTools.Error('Error loading file: {}'.format(e))
-			self.displayError(mx('Wrong file format.', 'fileFormatErr'))
+			LmTools.error(f'Error loading file: {e}')
+			self.display_error(mx('Wrong file format.', 'fileFormatErr'))
 			aError = True
 
 		if not aError:
 			aRules = aFile.get('Rules', None)
 
 			if (aFile.get('Type', '') != 'PTF') or (aRules is None):
-				self.displayError(mx('Wrong file type.', 'fileTypeErr'))
+				self.display_error(mx('Wrong file type.', 'fileTypeErr'))
 				aError = True
 
 		if not aError:
@@ -648,14 +648,14 @@ class LmNatPat:
 		try:
 			aImportFile.close()
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError(mx('Cannot close the file.', 'closeFileErr'))
+			LmTools.error(str(e))
+			self.display_error(mx('Cannot close the file.', 'closeFileErr'))
 
 		if not aError:
 			self.commitNatPatRuleChange()
 			self.refreshPtfList()
 
-			self.displayStatus(mx('{} rule(s) imported.', 'ruleImport').format(c))
+			self.display_status(mx('{} rule(s) imported.', 'ruleImport').format(c))
 
 
 	### Load protocol name to number reverse map from number to name
@@ -701,12 +701,12 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPortForwarding')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			self.displayError(mx('Cannot load IPv4 port forwarding rules.', 'patLoadErr'))
+			self.display_error(mx('Cannot load IPv4 port forwarding rules.', 'patLoadErr'))
 			return
 
 		i = self._patList.rowCount()
@@ -752,12 +752,12 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			LmTools.Error('Cannot load IPv6 port forwarding rules.')	# Do not display a dialog as not all LB models have this API
+			LmTools.error('Cannot load IPv6 port forwarding rules.')	# Do not display a dialog as not all LB models have this API
 			return
 
 		i = self._patList.rowCount()
@@ -844,55 +844,55 @@ class LmNatPat:
 	### Check a PAT rule object consistency
 	def checkPatRule(self, iRule):
 		if iRule.get('Enable') is None:
-			LmTools.Error('Rule as no Enable tag.')
+			LmTools.error('Rule as no Enable tag.')
 			return False
 
 		t = iRule.get('Type', 'UNK')
 		if t not in RULE_PAT_TYPES:
-			LmTools.Error('Rule has unknown {} type.'.format(t))
+			LmTools.error(f'Rule has unknown {t} type.')
 			return False
 
 		if len(iRule.get('Name', '')) == 0:
-			LmTools.Error('Rule has no Name.')
+			LmTools.error('Rule has no Name.')
 			return False
 
 		aProtocols = iRule.get('ProtoNumbers', '')
 		if len(aProtocols) == 0:
-			LmTools.Error('Rule has no protocol.')
+			LmTools.error('Rule has no protocol.')
 			return False
 
 		for p in aProtocols.split(','):
 			n = PROTOCOL_NAMES.get(p)
 			if n is None:
-				LmTools.Error('Rule has wrong protocol {} set.'.format(p))
+				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 			n = int(p)
 			if (n != Protocols.TCP) and (n != Protocols.UDP):
-				LmTools.Error('Rule has wrong protocol {} set.'.format(p))
+				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 
 		n = iRule.get('IntPort', '')
 		if (n is not None) and len(n):
-			if not LmTools.isTcpUdpPort(n):
-				LmTools.Error('Rule has wrong internal port {} set.'.format(n))
+			if not LmTools.is_tcp_udp_port(n):
+				LmTools.error(f'Rule has wrong internal port {n} set.')
 				return False
 
 		n = iRule.get('ExtPort', '')
 		if (n is not None) and len(n):
-			if not LmTools.isTcpUdpPort(n):
-				LmTools.Error('Rule has wrong external port {} set.'.format(n))
+			if not LmTools.is_tcp_udp_port(n):
+				LmTools.error(f'Rule has wrong external port {n} set.')
 				return False
 
 		aIP = iRule.get('IP', '')
 		if len(aIP) == 0:
 			return False
 		if t == RULE_TYPE_IPv6:
-			if not LmTools.IsIPv6(aIP):
-				LmTools.Error('Rule has wrong IPv6 {} set.'.format(aIP))
+			if not LmTools.is_ipv6(aIP):
+				LmTools.error(f'Rule has wrong IPv6 {aIP} set.')
 				return False
 		else:
-			if not LmTools.IsIPv4(aIP):
-				LmTools.Error('Rule has wrong IPv4 {} set.'.format(aIP))
+			if not LmTools.is_ipv4(aIP):
+				LmTools.error(f'Rule has wrong IPv4 {aIP} set.')
 				return False
 
 		e = iRule.get('ExtIPs', '')
@@ -900,16 +900,16 @@ class LmNatPat:
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					LmTools.Error('Rule external IPs has an empty IP address.')
+					LmTools.error('Rule external IPs has an empty IP address.')
 					return False
 
 				if t == RULE_TYPE_IPv6:
-					if not LmTools.IsIPv6(aIP):
-						LmTools.Error('Rule external IPs has a wrong IPv6 {} set.'.format(aIP))
+					if not LmTools.is_ipv6(aIP):
+						LmTools.error(f'Rule external IPs has a wrong IPv6 {aIP} set.')
 						return False
 				else:
-					if not LmTools.IsIPv4(aIP):
-						LmTools.Error('Rule external IPs has a wrong IPv4 {} set.'.format(aIP))
+					if not LmTools.is_ipv4(aIP):
+						LmTools.error(f'Rule external IPs has a wrong IPv4 {aIP} set.')
 						return False
 
 		return True
@@ -950,21 +950,21 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPortForwarding', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			if not iSilent:
-				self.displayError('Firewall:setPortForwarding query error.')
+				self.display_error('Firewall:setPortForwarding query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
 				if not iSilent:
-					self.displayError(aErrors)
+					self.display_error(aErrors)
 				return False
 			return True
 		else:
 			if not iSilent:
-				self.displayError('Firewall:setPortForwarding query failed.')
+				self.display_error('Firewall:setPortForwarding query failed.')
 			return False
 
 
@@ -994,18 +994,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:setPinhole query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:setPinhole query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return True
 		else:
-			self.displayError('Firewall:setPinhole query failed.')
+			self.display_error('Firewall:setPinhole query failed.')
 			return False
 
 
@@ -1032,18 +1032,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:deletePortForwarding query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:deletePortForwarding query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return aReply['status']
 		else:
-			self.displayError('Firewall:deletePortForwarding query failed.')
+			self.display_error('Firewall:deletePortForwarding query failed.')
 			return False
 
 
@@ -1058,18 +1058,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:deletePinhole query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:deletePinhole query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return aReply['status']
 		else:
-			self.displayError('Firewall:deletePinhole query failed.')
+			self.display_error('Firewall:deletePinhole query failed.')
 			return False
 
 
@@ -1085,18 +1085,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', { 'origin': o })
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:deletePortForwarding query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:deletePortForwarding query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return aReply['status']
 		else:
-			self.displayError('Firewall:deletePortForwarding query failed.')
+			self.display_error('Firewall:deletePortForwarding query failed.')
 			return False
 
 
@@ -1133,12 +1133,12 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getProtocolForwarding')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			self.displayError(mx('Cannot load IPv4 protocol forwarding rules.', 'ptfLoadErr'))
+			self.display_error(mx('Cannot load IPv4 protocol forwarding rules.', 'ptfLoadErr'))
 			return
 
 		i = self._ptfList.rowCount()
@@ -1182,12 +1182,12 @@ class LmNatPat:
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			d = None
 		if d is not None:
 			d = d.get('status')
 		if d is None:
-			LmTools.Error('Cannot load IPv6 protocol forwarding rules.')	# Do not display a dialog as not all LB models have this API
+			LmTools.error('Cannot load IPv6 protocol forwarding rules.')	# Do not display a dialog as not all LB models have this API
 			return
 
 		i = self._ptfList.rowCount()
@@ -1261,27 +1261,27 @@ class LmNatPat:
 	### Check a PTF rule object consistency
 	def checkPtfRule(self, iRule):
 		if iRule.get('Enable') is None:
-			LmTools.Error('Rule as no Enable tag.')
+			LmTools.error('Rule as no Enable tag.')
 			return False
 
 		t = iRule.get('Type', 'UNK')
 		if t not in RULE_PTF_TYPES:
-			LmTools.Error('Rule has unknown {} type.'.format(t))
+			LmTools.error(f'Rule has unknown {t} type.')
 			return False
 
 		if len(iRule.get('Name', '')) == 0:
-			LmTools.Error('Rule has no Name.')
+			LmTools.error('Rule has no Name.')
 			return False
 
 		aProtocols = iRule.get('ProtoNumbers', '')
 		if len(aProtocols) == 0:
-			LmTools.Error('Rule has no protocol.')
+			LmTools.error('Rule has no protocol.')
 			return False
 
 		for p in aProtocols.split(','):
 			n = PROTOCOL_NAMES.get(p)
 			if n is None:
-				LmTools.Error('Rule has wrong protocol {} set.'.format(p))
+				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 			n = int(p)
 			if t == RULE_TYPE_IPv6:
@@ -1294,19 +1294,19 @@ class LmNatPat:
 				(n != Protocols.GRE) and
 				(n != Protocols.ESP) and
 				(n != aICMP)):
-				LmTools.Error('Rule has wrong protocol {} set.'.format(p))
+				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 
 		aIP = iRule.get('IP', '')
 		if len(aIP) == 0:
 			return False
 		if t == RULE_TYPE_IPv6:
-			if not LmTools.IsIPv6Pfix(aIP):
-				LmTools.Error('Rule has wrong IPv6 {} set.'.format(aIP))
+			if not LmTools.is_ipv6_pfix(aIP):
+				LmTools.error(f'Rule has wrong IPv6 {aIP} set.')
 				return False
 		else:
-			if not LmTools.IsIPv4(aIP):
-				LmTools.Error('Rule has wrong IPv4 {} set.'.format(aIP))
+			if not LmTools.is_ipv4(aIP):
+				LmTools.error(f'Rule has wrong IPv4 {aIP} set.')
 				return False
 
 		e = iRule.get('ExtIPs', '')
@@ -1314,16 +1314,16 @@ class LmNatPat:
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					LmTools.Error('Rule external IPs has an empty IP address.')
+					LmTools.error('Rule external IPs has an empty IP address.')
 					return False
 
 				if t == RULE_TYPE_IPv6:
-					if not LmTools.IsIPv6(aIP):
-						LmTools.Error('Rule external IPs has a wrong IPv6 {} set.'.format(aIP))
+					if not LmTools.is_ipv6(aIP):
+						LmTools.error(f'Rule external IPs has a wrong IPv6 {aIP} set.')
 						return False
 				else:
-					if not LmTools.IsIPv4(aIP):
-						LmTools.Error('Rule external IPs has a wrong IPv4 {} set.'.format(aIP))
+					if not LmTools.is_ipv4(aIP):
+						LmTools.error(f'Rule external IPs has a wrong IPv4 {aIP} set.')
 						return False
 
 		return True
@@ -1354,21 +1354,21 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setProtocolForwarding', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
+			LmTools.error(str(e))
 			if not iSilent:
-				self.displayError('Firewall:setProtocolForwarding query error.')
+				self.display_error('Firewall:setProtocolForwarding query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
 				if not iSilent:
-					self.displayError(aErrors)
+					self.display_error(aErrors)
 				return False
 			return True
 		else:
 			if not iSilent:
-				self.displayError('Firewall:setProtocolForwarding query failed.')
+				self.display_error('Firewall:setProtocolForwarding query failed.')
 			return False
 
 
@@ -1394,18 +1394,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:setPinhole query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:setPinhole query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return True
 		else:
-			self.displayError('Firewall:setPinhole query failed.')
+			self.display_error('Firewall:setPinhole query failed.')
 			return False
 
 
@@ -1422,18 +1422,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deleteProtocolForwarding', { 'id': iRule['Name'] })
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:deleteProtocolForwarding query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:deleteProtocolForwarding query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return aReply['status']
 		else:
-			self.displayError('Firewall:deleteProtocolForwarding query failed.')
+			self.display_error('Firewall:deleteProtocolForwarding query failed.')
 			return False
 
 
@@ -1448,18 +1448,18 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
 		except BaseException as e:
-			LmTools.Error(str(e))
-			self.displayError('Firewall:deletePinhole query error.')
+			LmTools.error(str(e))
+			self.display_error('Firewall:deletePinhole query error.')
 			return False
 
 		if (aReply is not None) and ('status' in aReply):
-			aErrors = LmTools.GetErrorsFromLiveboxReply(aReply)
+			aErrors = LmTools.get_errors_from_livebox_reply(aReply)
 			if len(aErrors):
-				self.displayError(aErrors)
+				self.display_error(aErrors)
 				return False
 			return aReply['status']
 		else:
-			self.displayError('Firewall:deletePinhole query failed.')
+			self.display_error('Firewall:deletePinhole query failed.')
 			return False
 
 
@@ -1468,14 +1468,14 @@ class LmNatPat:
 		try:
 			aReply = self._session.request('Firewall', 'commit')
 		except BaseException as e:
-			LmTools.Error(str(e))
-			LmTools.Error('Firewall commit query error.')
+			LmTools.error(str(e))
+			LmTools.error('Firewall commit query error.')
 			return False
 
 		if aReply is not None:
 			return aReply.get('status', False)
 		else:
-			LmTools.Error('Firewall commit query failed.')
+			LmTools.error('Firewall commit query failed.')
 			return False
 
 
@@ -1795,13 +1795,13 @@ class PatRuleDialog(QtWidgets.QDialog):
 		# Validate IP address
 		aIP = self.getIP()
 		if t == RULE_TYPE_IPv6:
-			if not LmTools.IsIPv6(aIP):
-				self.parent().displayError(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
+			if not LmTools.is_ipv6(aIP):
+				self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
 				self._ipEdit.setFocus()
 				return
 		else:
-			if not LmTools.IsIPv4(aIP):
-				self.parent().displayError(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
+			if not LmTools.is_ipv4(aIP):
+				self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
 				self._ipEdit.setFocus()
 				return
 
@@ -1811,18 +1811,18 @@ class PatRuleDialog(QtWidgets.QDialog):
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					self.parent().displayError(mx('Empty IP address.', 'emptyAddr'))
+					self.parent().display_error(mx('Empty IP address.', 'emptyAddr'))
 					self._extIPsEdit.setFocus()
 					return
 
 				if t == RULE_TYPE_IPv6:
-					if not LmTools.IsIPv6(aIP):
-						self.parent().displayError(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
+					if not LmTools.is_ipv6(aIP):
+						self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 				else:
-					if not LmTools.IsIPv4(aIP):
-						self.parent().displayError(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
+					if not LmTools.is_ipv4(aIP):
+						self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 
@@ -2155,13 +2155,13 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		aIP = self.getIP()
 		if t == RULE_TYPE_IPv6:
 
-			if not LmTools.IsIPv6Pfix(aIP):
-				self.parent().displayError(mx('{} is not a valid IPv6 address or prefix.', 'ipv6AddrErr').format(aIP))
+			if not LmTools.is_ipv6_pfix(aIP):
+				self.parent().display_error(mx('{} is not a valid IPv6 address or prefix.', 'ipv6AddrErr').format(aIP))
 				self._ipEdit.setFocus()
 				return
 		else:
-			if not LmTools.IsIPv4(aIP):
-				self.parent().displayError(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
+			if not LmTools.is_ipv4(aIP):
+				self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
 				self._ipEdit.setFocus()
 				return
 
@@ -2171,18 +2171,18 @@ class PtfRuleDialog(QtWidgets.QDialog):
 			aExtIPs = e.split(',')
 			for aIP in aExtIPs:
 				if len(aIP) == 0:
-					self.parent().displayError(mx('Empty IP address.', 'emptyAddr'))
+					self.parent().display_error(mx('Empty IP address.', 'emptyAddr'))
 					self._extIPsEdit.setFocus()
 					return
 
 				if t == RULE_TYPE_IPv6:
-					if not LmTools.IsIPv6(aIP):
-						self.parent().displayError(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
+					if not LmTools.is_ipv6(aIP):
+						self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 				else:
-					if not LmTools.IsIPv4(aIP):
-						self.parent().displayError(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
+					if not LmTools.is_ipv4(aIP):
+						self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
 						self._extIPsEdit.setFocus()
 						return
 

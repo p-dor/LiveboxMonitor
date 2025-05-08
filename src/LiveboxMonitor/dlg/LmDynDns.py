@@ -147,11 +147,11 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._dyndns.get_hosts()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             d = None
 
         if not isinstance(d, list):
-            self._app.displayError(mx('Cannot load DynDNS host list.', 'dynDnsLoadErr'))
+            self._app.display_error(mx('Cannot load DynDNS host list.', 'dynDnsLoadErr'))
             return
 
         i = 0
@@ -164,7 +164,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
                 self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem(h.get('password', '')))
             else:
                 self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem('******'))
-            self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.FmtLiveboxTimestamp(h.get('last_update'))))
+            self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(h.get('last_update'))))
             self._host_list.setItem(i, HostCol.Status, QtWidgets.QTableWidgetItem(h.get('status', '')))
 
             i += 1
@@ -190,14 +190,14 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._dyndns.get_services()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             d = None
 
         if isinstance(d, list):
             for s in d:
                 self._service_combo.addItem(s)
         else:
-            self._app.displayError(mx('Cannot load DynDNS services.', 'dynDnsSvcErr'))
+            self._app.display_error(mx('Cannot load DynDNS services.', 'dynDnsSvcErr'))
 
 
     ### Text changed in host edit box field
@@ -240,8 +240,8 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             self._api._dyndns.delete_host(hostname)
         except BaseException as e:
-            LmTools.Error(str(e))
-            self._app.displayError(mx('Cannot delete DynDNS host.', 'dynDnsDelErr'))
+            LmTools.error(str(e))
+            self._app.display_error(mx('Cannot delete DynDNS host.', 'dynDnsDelErr'))
             return
 
         # Delete the list line
@@ -264,7 +264,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         n = self._host_list.rowCount()
         while (i < n):
             if self._host_list.item(i, HostCol.HostName).text() == hostname:
-                self._app.displayError(mx('Host name {} is already used.', 'dynDnsHostName').format(hostname))
+                self._app.display_error(mx('Host name {} is already used.', 'dynDnsHostName').format(hostname))
                 return
             i += 1
 
@@ -278,7 +278,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             self._api._dyndns.add_host(service, username, hostname, password)
         except BaseException as e:
-            self._app.displayError(str(e))
+            self._app.display_error(str(e))
             return
 
         self.refresh_button_click()
@@ -292,10 +292,10 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._dyndns.get_enable()
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
             return False
         if d is None:
-            LmTools.Error(mx('Cannot get DynDNS global enable status.', 'dynDnsEnableErr'))
+            LmTools.error(mx('Cannot get DynDNS global enable status.', 'dynDnsEnableErr'))
             return False
         return d
 
@@ -306,7 +306,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             self._api._dyndns.set_enable(enable)
         except BaseException as e:
-            LmTools.Error(str(e))
+            LmTools.error(str(e))
 
         self._disable_button.setText(self.get_disable_button_title())
         self.refresh_button_click()

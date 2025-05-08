@@ -1,7 +1,6 @@
 ### Livebox Monitor Firewall APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi
-from LiveboxMonitor.app import LmTools
 
 
 # ################################ Firewall APIs ################################

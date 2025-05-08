@@ -474,7 +474,7 @@ def ReleaseCheck():
 		d = json.loads(d.content)
 		v = d['tag_name']
 	except BaseException as e:
-		LmTools.Error('Cannot get latest release infos. Error: {}'.format(e))
+		LmTools.error(f'Cannot get latest release infos. Error: {e}')
 		return
 
 	# Convert version string into hex int aligned with __build__ representation
@@ -492,7 +492,7 @@ def ReleaseCheck():
 	try:
 		r = int(aMajor.zfill(2) + aMinor.zfill(2) + aPatch.zfill(2), 16)
 	except:
-		LmTools.Error('Cannot decode latest release infos. Error: {}'.format(e))
+		LmTools.error(f'Cannot decode latest release infos. Error: {e}')
 		return
 
 	# Warn if this release is not the latest
@@ -571,16 +571,16 @@ class LmConf:
 		aConfigFile = None
 		aDirtyConfig = False
 		aConfigFilePath = os.path.join(LmConf.getConfigDirectory(), CONFIG_FILE)
-		LmTools.LogDebug(1, 'Reading configuration in', aConfigFilePath)
+		LmTools.log_debug(1, 'Reading configuration in', aConfigFilePath)
 		try:
 			aConfigFile = open(aConfigFilePath)
 			aConfig = json.load(aConfigFile)
 		except OSError:
-			LmTools.Error('No configuration file, creating one.')
+			LmTools.error('No configuration file, creating one.')
 			aDirtyConfig = True
 		except BaseException as e:
-			LmTools.Error(str(e))
-			if LmTools.AskQuestion(mx('Wrong {} file, fully reset it?', 'wrongFile').format(CONFIG_FILE)):
+			LmTools.error(str(e))
+			if LmTools.ask_question(mx('Wrong {} file, fully reset it?', 'wrongFile').format(CONFIG_FILE)):
 				aDirtyConfig = True
 			else:
 				if aConfigFile is not None:
@@ -598,9 +598,9 @@ class LmConf:
 			# Check if config version is more recent than the application
 			aConfigVersion = aConfig.get('Version', 0)
 			if aConfigVersion > __build__:
-				if not LmTools.AskQuestion(mx('This version of the application is older than the configuration file.\n'
-											  'If you continue you might lose some setup.\n'
-											  'Are you sure you want to continue?', 'configVersion')):
+				if not LmTools.ask_question(mx('This version of the application is older than the configuration file.\n'
+											   'If you continue you might lose some setup.\n'
+											   'Are you sure you want to continue?', 'configVersion')):
 					return False
 
 			# Potentially convert the format to newer version
@@ -659,7 +659,7 @@ class LmConf:
 					LmConf.LogLevel = 0
 				elif LmConf.LogLevel > 2:
 					LmConf.LogLevel = 2
-				LmTools.SetVerbosity(LmConf.LogLevel)
+				LmTools.set_verbosity(LmConf.LogLevel)
 			p = aConfig.get('No Release Warning')
 			if p is not None:
 				LmConf.NoReleaseWarning = int(p)
@@ -726,17 +726,17 @@ class LmConf:
 		aHWKey = GetHardwareKey()
 
 		# Read file if it exists
-		LmTools.LogDebug(1, 'Reading key file in', aKeyFilePath)
+		LmTools.log_debug(1, 'Reading key file in', aKeyFilePath)
 		try:
 			aKeyFile = open(aKeyFilePath, 'rb')
 			aKey = aKeyFile.read()
 			aKeyFile.close()
 		except OSError:
-			LmTools.Error('No key file, creating one.')
+			LmTools.error('No key file, creating one.')
 			aKey = None
 		except BaseException as e:
-			LmTools.Error(str(e))
-			LmTools.DisplayError(mx('Cannot read key file.', 'keyFileErr'))
+			LmTools.error(str(e))
+			LmTools.display_error(mx('Cannot read key file.', 'keyFileErr'))
 			if aKeyFile is not None:
 				aKeyFile.close()
 				return False
@@ -745,29 +745,29 @@ class LmConf:
 			try:
 				LmConf.Secret = Fernet(aHWKey.encode('utf-8')).decrypt(aKey).decode('utf-8')
 			except:
-				LmTools.Error('Invalid key file, recreating it.')
+				LmTools.error('Invalid key file, recreating it.')
 			else:
 				return True
 
 		# Create config directory if doesn't exist
 		if not os.path.isdir(aConfigPath):
-			LmTools.LogDebug(1, 'Creating config directory', aConfigPath)
+			LmTools.log_debug(1, 'Creating config directory', aConfigPath)
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
-				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
-				LmTools.DisplayError(mx('Cannot create configuration folder.', 'configFolderErr'))
+				LmTools.error(f'Cannot create configuration folder. Error: {e}')
+				LmTools.display_error(mx('Cannot create configuration folder.', 'configFolderErr'))
 				return False
 
 		# Create key file
 		LmConf.Secret = Fernet.generate_key().decode()
 		aKey = Fernet(aHWKey.encode('utf-8')).encrypt(LmConf.Secret.encode('utf-8'))
-		LmTools.LogDebug(1, 'Creating key file', aKeyFilePath)
+		LmTools.log_debug(1, 'Creating key file', aKeyFilePath)
 		try:
 			with open(aKeyFilePath, 'wb') as aKeyFile:
 				aKeyFile.write(aKey)
 		except BaseException as e:
-			LmTools.Error('Cannot save key file. Error: {}'.format(e))
+			LmTools.error(f'Cannot save key file. Error: {e}')
 
 		return True
 
@@ -795,7 +795,7 @@ class LmConf:
 		# Find dynamically if no default
 		if LmConf.CurrProfile is None:
 			# First collect reachable profiles and those matching Livebox's MAC address
-			LmTools.MouseCursor_Busy()
+			LmTools.mouse_cursor_busy()
 			aReachableProfiles = []
 			aMatchingProfiles = []
 			for p in LmConf.Profiles:
@@ -805,7 +805,7 @@ class LmConf:
 					aReachableProfiles.append(p)
 					if aLiveboxMAC == aProfileMAC:
 						aMatchingProfiles.append(p)
-			LmTools.MouseCursor_Normal()
+			LmTools.mouse_cursor_normal()
 
 			# If at least one matching profile, take the first
 			if len(aMatchingProfiles):
@@ -838,7 +838,7 @@ class LmConf:
 		if len(LmConf.Profiles) == 0:
 			return 1
 
-		LmTools.MouseCursor_Busy()
+		LmTools.mouse_cursor_busy()
 		if iMatchingProfiles is None:
 			iMatchingProfiles = []
 			for p in LmConf.Profiles:
@@ -846,7 +846,7 @@ class LmConf:
 				aLiveboxMAC = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
 				if (aLiveboxMAC is not None) and (aLiveboxMAC == aProfileMAC):
 					iMatchingProfiles.append(p)
-		LmTools.MouseCursor_Normal()
+		LmTools.mouse_cursor_normal()
 
 		aSelectProfileDialog = SelectProfileDialog(iMatchingProfiles)
 		if aSelectProfileDialog.exec():
@@ -868,7 +868,7 @@ class LmConf:
 				if q is None:
 					break
 				else:
-					LmTools.DisplayError(mx('This name is already used.', 'profileNameErr'))
+					LmTools.display_error(mx('This name is already used.', 'profileNameErr'))
 			else:
 				return False
 
@@ -889,7 +889,7 @@ class LmConf:
 	### Assign parameters depending on current profile
 	@staticmethod
 	def assignProfile():
-		LmConf.LiveboxURL = LmTools.CleanURL(LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL))
+		LmConf.LiveboxURL = LmTools.clean_url(LmConf.CurrProfile.get('Livebox URL', DCFG_LIVEBOX_URL))
 		LmConf.LiveboxUser = LmConf.CurrProfile.get('Livebox User', DCFG_LIVEBOX_USER)
 
 		p = LmConf.CurrProfile.get('Livebox Password')
@@ -897,7 +897,7 @@ class LmConf:
 			try:
 				LmConf.LiveboxPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 			except:
-				LmTools.Error('Cannot decrypt Livebox password.')
+				LmTools.error('Cannot decrypt Livebox password.')
 				LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
 		else:
 			LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
@@ -977,15 +977,15 @@ class LmConf:
 
 		# Create config directory if doesn't exist
 		if not os.path.isdir(aConfigPath):
-			LmTools.LogDebug(1, 'Creating config directory', aConfigPath)
+			LmTools.log_debug(1, 'Creating config directory', aConfigPath)
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
-				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				LmTools.error(f'Cannot create configuration folder. Error: {e}')
 				return
 
 		aConfigFilePath = os.path.join(aConfigPath, CONFIG_FILE)
-		LmTools.LogDebug(1, 'Saving configuration in', aConfigFilePath)
+		LmTools.log_debug(1, 'Saving configuration in', aConfigFilePath)
 		try:
 			with open(aConfigFilePath, 'w') as aConfigFile:
 				aConfig = {}
@@ -1034,7 +1034,7 @@ class LmConf:
 				aConfig['Save Passwords'] = LmConf.SavePasswords
 				json.dump(aConfig, aConfigFile, indent = 4)
 		except BaseException as e:
-			LmTools.Error('Cannot save configuration file. Error: {}'.format(e))
+			LmTools.error(f'Cannot save configuration file. Error: {e}')
 
 
 	### Set Livebox password
@@ -1068,7 +1068,7 @@ class LmConf:
 		elif iLevel > 2:
 			iLevel = 2
 		LmConf.LogLevel = iLevel
-		LmTools.SetVerbosity(iLevel)
+		LmTools.set_verbosity(iLevel)
 		LmConf.save()
 
 
@@ -1087,7 +1087,7 @@ class LmConf:
 					try:
 						aPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 					except:
-						LmTools.Error('Cannot decrypt repeater password.')
+						LmTools.error('Cannot decrypt repeater password.')
 						aPassword = LmConf.LiveboxPassword
 				return aUser, aPassword
 
@@ -1133,7 +1133,7 @@ class LmConf:
 		except OSError:		# No file
 			LmConf.MacAddrTable = {}
 		except BaseException as e:
-			LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongMacFile').format(LmConf.MacAddrTableFile))
+			LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongMacFile').format(LmConf.MacAddrTableFile))
 			LmConf.MacAddrTable = {}
 
 
@@ -1147,7 +1147,7 @@ class LmConf:
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
-				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				LmTools.error(f'Cannot create configuration folder. Error: {e}')
 				return
 
 		aMacAddrTableFilePath = os.path.join(aConfigPath, LmConf.MacAddrTableFile)
@@ -1155,7 +1155,7 @@ class LmConf:
 			with open(aMacAddrTableFilePath, 'w') as aMacTableFile:
 				json.dump(LmConf.MacAddrTable, aMacTableFile, indent = 4)
 		except BaseException as e:
-			LmTools.Error('Cannot save MacAddress file. Error: {}'.format(e))
+			LmTools.error(f'Cannot save MacAddress file. Error: {e}')
 
 
 	### Load spam calls table
@@ -1168,12 +1168,12 @@ class LmConf:
 				if type(t).__name__ == 'list':
 					LmConf.SpamCallsTable = t
 				else:
-					LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
+					LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
 					LmConf.SpamCallsTable = []
 		except OSError:		# No file
 			LmConf.SpamCallsTable = []
 		except BaseException as e:
-			LmTools.DisplayError(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
+			LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
 			LmConf.SpamCallsTable = []
 
 
@@ -1203,7 +1203,7 @@ class LmConf:
 			try:
 				os.makedirs(aConfigPath)
 			except BaseException as e:
-				LmTools.Error('Cannot create configuration folder. Error: {}'.format(e))
+				LmTools.error(f'Cannot create configuration folder. Error: {e}')
 				return
 
 		aSpamCallsTableFilePath = os.path.join(aConfigPath, SPAMCALLS_FILE)
@@ -1211,7 +1211,7 @@ class LmConf:
 			with open(aSpamCallsTableFilePath, 'w') as f:
 				json.dump(LmConf.SpamCallsTable, f, indent = 4)
 		except BaseException as e:
-			LmTools.Error('Cannot save spam calls file. Error: {}'.format(e))
+			LmTools.error(f'Cannot save spam calls file. Error: {e}')
 
 
 	### Set native run
@@ -1247,7 +1247,7 @@ class LmConf:
 			aIconPixMap = QtGui.QPixmap()
 			if not aIconPixMap.load(aIconFilePath):
 				aIconPixMap = None
-				LmTools.Error('Cannot load device icon cache file {}. Cache file will be recreated.'.format(aIconFilePath))
+				LmTools.error(f'Cannot load device icon cache file {aIconFilePath}. Cache file will be recreated.')
 		return aIconPixMap
 
 
@@ -1262,7 +1262,7 @@ class LmConf:
 			try:
 				os.makedirs(aIconDirPath)
 			except BaseException as e:
-				LmTools.Error('Cannot create icon cache folder {}. Error: {}'.format(aIconDirPath, e))
+				LmTools.error(f'Cannot create icon cache folder {aIconDirPath}. Error: {e}')
 				return
 
 		# Create and save icon cache file
@@ -1270,7 +1270,7 @@ class LmConf:
 			with open(aIconFilePath, 'wb') as aIconFile:
 				aIconFile.write(iContent)
 		except BaseException as e:
-			LmTools.Error('Cannot save icon cache file {}. Error: {}'.format(aIconFilePath, e))
+			LmTools.error(f'Cannot save icon cache file {aIconFilePath}. Error: {e}')
 
 
 	### Get a device icon
@@ -1296,11 +1296,11 @@ class LmConf:
 					if aIconPixMap.loadFromData(aIconData.content):
 						aStoreInCache = True
 					else:
-						LmTools.Error('Cannot load device icon {}.'.format(iDevice['Icon']))
+						LmTools.error(f'Cannot load device icon {iDevice["Icon"]}.')
 				except requests.exceptions.Timeout as e:
-					LmTools.Error('Device icon {} request timeout error: {}.'.format(iDevice['Icon'], e))
+					LmTools.error(f'Device icon {iDevice["Icon"]} request timeout error: {e}.')
 				except BaseException as e:
-					LmTools.Error('{}. Cannot request device icon {}.'.format(e, iDevice['Icon']))
+					LmTools.error(f'{e}. Cannot request device icon {iDevice["Icon"]}.')
 
 				# If successfully loaded, try to store in local cache file for faster further loads
 				if aStoreInCache:
@@ -1365,7 +1365,7 @@ class LmConf:
 						DEVICE_TYPES.append(aDevice)
 						aSortDeviceTypes = True
 				else:
-					LmTools.Error('Cannot load custom device icon {}.'.format(aIconFilePath))
+					LmTools.error(f'Cannot load custom device icon {aIconFilePath}.')
 
 		# Resort device type list if required
 		if aSortDeviceTypes:
@@ -1397,7 +1397,7 @@ class LmConf:
 			try:
 				aPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
 			except:
-				LmTools.Error('Cannot decrypt email password.')
+				LmTools.error('Cannot decrypt email password.')
 		e['Password'] = aPassword
 
 		return e
@@ -1410,7 +1410,7 @@ class LmConf:
 		try:
 			iEmailSetup['Password'] = Fernet(LmConf.Secret.encode('utf-8')).encrypt(p.encode('utf-8')).decode('utf-8')
 		except:
-			LmTools.Error('Cannot encrypt email password.')
+			LmTools.error('Cannot encrypt email password.')
 			iEmailSetup['Password'] = ''
 		LmConf.Email = iEmailSetup
 
@@ -1648,9 +1648,9 @@ class SelectProfileDialog(QtWidgets.QDialog):
 			self._assMac.setText(aAssociatedLiveboxMAC)
 			self._assMac.setStyleSheet('QLabel { color : black }')
 
-		LmTools.MouseCursor_Busy()
+		LmTools.mouse_cursor_busy()
 		aDetectedLiveboxMAC = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
-		LmTools.MouseCursor_Normal()
+		LmTools.mouse_cursor_normal()
 		if aDetectedLiveboxMAC is None:
 			self._detMac.setText(lpx('<None>'))
 			self._detMac.setStyleSheet('QLabel { color : red }')
@@ -1995,11 +1995,11 @@ class PrefsDialog(QtWidgets.QDialog):
 		# Check if name is not duplicated
 		aProfileName = self._profileName.text()
 		if len(aProfileName) == 0:
-			LmTools.DisplayError(mx('Please set profile name.', 'profileName'))
+			LmTools.display_error(mx('Please set profile name.', 'profileName'))
 			return False
 
 		if self.countProfileName(aProfileName) > 1:
-			LmTools.DisplayError(mx('Duplicated name.', 'profileDup'))
+			LmTools.display_error(mx('Duplicated name.', 'profileDup'))
 			return False
 
 		# If default profile is selected, set all others to false
@@ -2011,7 +2011,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		# Save in profiles buffer
 		p = self._profiles[self._profileSelection]
 		p['Name'] = self._profileName.text()
-		p['Livebox URL'] = LmTools.CleanURL(self._liveboxUrl.text())
+		p['Livebox URL'] = LmTools.clean_url(self._liveboxUrl.text())
 		p['Livebox User'] = self._liveboxUser.text()
 		p['Filter Devices'] = self._filterDevices.isChecked()
 		p['MacAddr Table File'] = self._macAddrTableFile.text()
@@ -2057,7 +2057,7 @@ class PrefsDialog(QtWidgets.QDialog):
 	### Click on delete profile button
 	def delProfileButtonClick(self):
 		if len(self._profiles) == 1:
-			LmTools.DisplayError(mx('You must have at least one profile.', 'profileOne'))
+			LmTools.display_error(mx('You must have at least one profile.', 'profileOne'))
 			return
 
 		# Delete the list line
@@ -2243,14 +2243,14 @@ class EmailSetupDialog(QtWidgets.QDialog):
 
 	### Click on test button
 	def testButtonClick(self):
-		a = self.parentWidget()
-		a.startTask(lex('Sending test email...'))
+		app = self.parentWidget()
+		app.startTask(lex('Sending test email...'))
 		c = self.getSetup()
-		if LmTools.SendEmail(c, lex('Test Message'), lex('This is a test email from LiveboxMonitor.')):
-			a.displayStatus(mx('Message sent successfully.', 'emailSuccess'))
+		if LmTools.send_email(c, lex('Test Message'), lex('This is a test email from LiveboxMonitor.')):
+			app.display_status(mx('Message sent successfully.', 'emailSuccess'))
 		else:
-			a.displayError(mx('Message send failure. Check your setup.', 'emailFail'))
-		a.endTask()
+			app.display_error(mx('Message send failure. Check your setup.', 'emailFail'))
+		app.endTask()
 
 
 	def starttlsChanged(self, iState):
