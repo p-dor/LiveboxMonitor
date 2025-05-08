@@ -75,7 +75,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():
 			self._api = ApiRegistry(self._session)
-			if not self._api._intf.build_intf_list():
+			if not self._api._intf.build_list():
 				LmTools.error('Failed to build interface list.')
 			self.adjustToLiveboxModel()
 			self.initUI()

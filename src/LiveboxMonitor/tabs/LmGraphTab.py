@@ -399,7 +399,7 @@ class LmGraph:
 					e = next((e for e in self._graphValidInterfaces if e[0] == aKey), None)
 					if e is None:
 						continue
-					i = next((i for i in LmConfig.NET_INTF if i['Key'] == aKey), None)
+					i = next((i for i in self._api._intf.get_list() if i['Key'] == aKey), None)
 					if i is None:
 						continue
 					self.addGraphObject(aType, aKey, i['Name'], e[2], aColor)
@@ -486,7 +486,7 @@ class LmGraph:
 		aSwapStats = False
 		if iType == TYPE_INTERFACE:
 			aStatsData = self.loadStatsInterface(iID, aStartTime, aEndTime)
-			aIntf = next((i for i in LmConfig.NET_INTF if i['Key'] == iKey), None)
+			aIntf = next((i for i in self._api._intf.get_list() if i['Key'] == iKey), None)
 			if aIntf is not None:
 				aSwapStats = aIntf['SwapStats']
 		else:
@@ -634,7 +634,7 @@ class LmGraph:
 			self._graphValidInterfaces = []
 
 			# Iterate over all configured interfaces
-			for i in LmConfig.NET_INTF:
+			for i in self._api._intf.get_list():
 				# Check if key exists in the returned interfaces
 				k = i['Key']
 				aIntfData = aInterfaces.get(k)
@@ -842,7 +842,7 @@ class AddGraphDialog(QtWidgets.QDialog):
 			k = i[0]
 			# Look if not already in the graph list
 			if self._app.findGraphObjectLine(TYPE_INTERFACE, k) == -1:
-				aIntf = next((j for j in LmConfig.NET_INTF if j['Key'] == k), None)
+				aIntf = next((j for j in self._app._api._intf.get_list() if j['Key'] == k), None)
 				if aIntf is not None:
 					self._objectCombo.addItem(aIntf['Name'], userData = k)
 

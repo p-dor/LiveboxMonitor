@@ -357,7 +357,7 @@ class WifiApi(LmApi):
         for c in intf:
             intf_key = c['LLIntf']
             try:
-                d = self._api._intf.get_intf_info(intf_key)
+                d = self._api._intf.get_info(intf_key)
             except BaseException as e:
                 LmTools.error(str(e))
             else:

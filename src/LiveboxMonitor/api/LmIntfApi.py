@@ -31,17 +31,25 @@ class IntfApi(LmApi):
 
 
     ### Get interface information
-    def get_intf_info(self, intf):
+    def get_info(self, intf):
         return self.call('NeMo.Intf.' + intf, 'get')
 
 
     ### Get list of interface keys
-    def get_intf_key_list(self):
+    def get_key_list(self):
         return self.call('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
 
 
+    ### Get list of useful interfaces with key, name, type and swap stats fields
+    def get_list(self):
+        if self._list is None:
+            if not self._api._intf.build_list():
+                LmTools.error('Failed to build interface list.')
+        return self._list
+
+
     ### Build interface list - return True if successful
-    def build_intf_list(self):
+    def build_list(self):
         self._list = []
 
         '''
@@ -127,3 +135,14 @@ class IntfApi(LmApi):
                 self._list.append(i)
 
         return True
+
+
+    ### Get wifi interface statistics
+    def get_wifi_stats(self, wifi_intf_key):
+        return self.call('NeMo.Intf.' + wifi_intf_key, 'getStationStats')
+
+
+    ### Get interface statistics
+    # WARNING counters are recycling at 4Gb only:
+    def get_stats(self, intf_key):
+        return self.call('NeMo.Intf.' + intf_key, 'getNetDevStats')

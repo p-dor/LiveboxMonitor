@@ -155,7 +155,7 @@ class LmGenApiDoc:
 
         # Generate for all interfaces
         try:
-            d = self._api._intf.get_intf_key_list()
+            d = self._api._intf.get_key_list()
         except BaseException as e:
             LmTools.error(str(e))
         else:

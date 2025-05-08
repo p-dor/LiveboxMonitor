@@ -51,7 +51,7 @@ class LmInfo:
 		self._statsList.setMinimumWidth(450)
 
 		i = 0
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			self._statsList.insertRow(i)
 			self._statsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
 			self._statsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(lx(s['Name'])))
@@ -146,10 +146,10 @@ class LmInfo:
 	### Start the Livebox stats collector thread
 	def startStatsLoop(self):
 		self._liveboxStatsThread = QtCore.QThread()
-		self._liveboxStatsLoop = LiveboxStatsThread(self._session)
+		self._liveboxStatsLoop = LiveboxStatsThread(self._api)
 		self._liveboxStatsLoop.moveToThread(self._liveboxStatsThread)
 		self._liveboxStatsThread.started.connect(self._liveboxStatsLoop.run)
-		self._liveboxStatsLoop._statsReceived.connect(self.processLiveboxStats)
+		self._liveboxStatsLoop._stats_received.connect(self.processLiveboxStats)
 		self._liveboxStatsLoop._resume.connect(self._liveboxStatsLoop.resume)
 		self._liveboxStatsThread.start()
 
@@ -179,7 +179,7 @@ class LmInfo:
 
 	### Process a HomeLan interface stats event
 	def processIntfStatisticsEvent(self, iIntf, iAttributes):
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			if s['Key'] == iIntf:
 				e = {}
 				e['Key'] = iIntf
@@ -796,6 +796,7 @@ class LmInfo:
 	### Load Wifi infos
 	def loadWifiInfo(self, iIndex = 0):
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Wifi Information'))
+		intf_list = self._api._intf.get_list()
 
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
@@ -849,7 +850,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return i 
 
-		for s in LmConfig.NET_INTF:
+		for s in intf_list:
 			if s['Type'] != 'wif':
 				continue
 			i = self.addTitleLine(self._liveboxAList, i, s['Name'])
@@ -926,7 +927,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Wifi'), 'NeMo.Intf.guest:getMIBs query error', LmTools.ValQual.Error)
 			return i
 
-		for s in LmConfig.NET_INTF:
+		for s in intf_list:
 			if s['Type'] != 'wig':
 				continue
 			i = self.addTitleLine(self._liveboxAList, i, s['Name'])
@@ -1018,7 +1019,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('LAN'), 'NeMo.Intf.lan:getMIBs query error', LmTools.ValQual.Error)
 			return
 
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			if s['Type'] != 'eth':
 				continue
 			i = self.addTitleLine(self._liveboxAList, i, s['Name'])
@@ -1082,7 +1083,7 @@ class LmInfo:
 			return i
 
 		aOntIntf = None
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			if s['Type'] == 'ont':
 				aOntIntf = s['Key']
 				break
@@ -1478,72 +1479,74 @@ class LmInfo:
 
 # ############# Livebox global stats collector thread #############
 class LiveboxStatsThread(QtCore.QObject):
-	_statsReceived = QtCore.pyqtSignal(dict)
+	_stats_received = QtCore.pyqtSignal(dict)
 	_resume = QtCore.pyqtSignal()
 
-	def __init__(self, iSession):
+	def __init__(self, api):
 		super(LiveboxStatsThread, self).__init__()
-		self._session = iSession
+		self._api = api
 		self._timer = None
 		self._loop = None
-		self._isRunning = False
+		self._is_running = False
 
 
 	def run(self):
 		self._timer = QtCore.QTimer()
-		self._timer.timeout.connect(self.collectStats)
+		self._timer.timeout.connect(self.collect_stats)
 		self._loop = QtCore.QEventLoop()
 		self.resume()
 
 
 	def resume(self):
-		if not self._isRunning:
+		if not self._is_running:
 			self._timer.start(LmConf.StatsFrequency)
-			self._isRunning = True
+			self._is_running = True
 			self._loop.exec()
 			self._timer.stop()
-			self._isRunning = False
+			self._is_running = False
 
 
 	def stop(self):
-		if self._isRunning:
+		if self._is_running:
 			self._loop.exit()
 
 
-	def collectStats(self):
+	def collect_stats(self):
 		# WARNING counters are recycling at 4Gb only:
-		for s in LmConfig.NET_INTF:
-			aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getNetDevStats')
-			if aResult is not None:
-				aStats = aResult.get('status')
-				if type(aStats).__name__ == 'dict':
+		for s in self._api._intf.get_list():
+			try:
+				d = self._api._intf.get_stats(s['Key'])
+			except BaseException as e:
+				LmTools.error(str(e))
+			else:
+				if isinstance(d, dict):
 					e = {}
 					e['Key'] = s['Key']
 					e['Source'] = 'nds'		# NetDevStats
 					e['Timestamp'] = datetime.datetime.now()
 					if s['SwapStats']:
-						e['RxBytes'] = aStats.get('TxBytes', 0)
-						e['TxBytes'] = aStats.get('RxBytes', 0)
-						e['RxErrors'] = aStats.get('TxErrors', 0)
-						e['TxErrors'] = aStats.get('RxErrors', 0)
+						e['RxBytes'] = d.get('TxBytes', 0)
+						e['TxBytes'] = d.get('RxBytes', 0)
+						e['RxErrors'] = d.get('TxErrors', 0)
+						e['TxErrors'] = d.get('RxErrors', 0)
 					else:
-						e['RxBytes'] = aStats.get('RxBytes', 0)
-						e['TxBytes'] = aStats.get('TxBytes', 0)
-						e['RxErrors'] = aStats.get('RxErrors', 0)
-						e['TxErrors'] = aStats.get('TxErrors', 0)
-					self._statsReceived.emit(e)
+						e['RxBytes'] = d.get('RxBytes', 0)
+						e['TxBytes'] = d.get('TxBytes', 0)
+						e['RxErrors'] = d.get('RxErrors', 0)
+						e['TxErrors'] = d.get('TxErrors', 0)
+					self._stats_received.emit(e)
 
 
 '''
 		# EXPERIMENTAL - not successful:
 		# - HomeLan:getWANCounters generates wrong HomeLan veip0 stats events
 		# - HomeLan events do not cover all interfaces -> need to keep getNetDevStats()
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			if s['Type'] == 'wan':
 				aResult = self._session.request('HomeLan', 'getWANCounters')	# WARNING: Works but generates wrong HomeLan veip0 stats events
 				if aResult is not None:
 					aStats = aResult.get('status')
-					if type(aStats).__name__ == 'dict':
+					if isinstance(aStats, dict):
 						e = {}
 						e['Key'] = s['Key']
 						e['Timestamp'] = datetime.datetime.now()		# WARNING - can use timestamp coming from stat itself
@@ -1557,7 +1560,7 @@ class LiveboxStatsThread(QtCore.QObject):
 							e['TxBytes'] = aStats.get('BytesSent', 0)
 							e['RxErrors'] = 0
 							e['TxErrors'] = 0
-						self._statsReceived.emit(e)
+						self._stats_received.emit(e)
 				break
 
 '''
@@ -1566,14 +1569,14 @@ class LiveboxStatsThread(QtCore.QObject):
 		# EXPERIMENTAL - not successful:
 		# - Stats are not real time, not relevant.
 		# - Counters look 64bits but are recycling chaotically, after 512Gb, or 3Gb, ...
-		for s in LmConfig.NET_INTF:
+		for s in self._api._intf.get_list():
 			if s['Type'] == 'wan':
 				aResult = self._session.request('HomeLan', 'getWANCounters')
 			else:
 				aResult = self._session.request('HomeLan.Interface.' + s['Key'] + '.Stats', 'get')
 			if aResult is not None:
 				aStats = aResult.get('status')
-				if type(aStats).__name__ == 'dict':
+				if isinstance(aStats, dict):
 					e = {}
 					e['Key'] = s['Key']
 					e['Timestamp'] = datetime.datetime.now()
@@ -1587,7 +1590,7 @@ class LiveboxStatsThread(QtCore.QObject):
 						e['TxBytes'] = aStats.get('BytesSent', 0)
 						e['RxErrors'] = 0
 						e['TxErrors'] = 0
-					self._statsReceived.emit(e)
+					self._stats_received.emit(e)
 '''
 
 

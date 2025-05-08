@@ -119,10 +119,10 @@ class LmDeviceList:
 	def startWifiStatsLoop(self):
 		if LmConf.RealtimeWifiStats:
 			self._liveboxWifiStatsThread = QtCore.QThread()
-			self._liveboxWifiStatsLoop = LiveboxWifiStatsThread(self._session)
+			self._liveboxWifiStatsLoop = LiveboxWifiStatsThread(self._api)
 			self._liveboxWifiStatsLoop.moveToThread(self._liveboxWifiStatsThread)
 			self._liveboxWifiStatsThread.started.connect(self._liveboxWifiStatsLoop.run)
-			self._liveboxWifiStatsLoop._wifiStatsReceived.connect(self.processLiveboxWifiStats)
+			self._liveboxWifiStatsLoop._wifi_stats_received.connect(self.processLiveboxWifiStats)
 			self._liveboxWifiStatsLoop._resume.connect(self._liveboxWifiStatsLoop.resume)
 			self._liveboxWifiStatsThread.start()
 
@@ -699,6 +699,7 @@ class LmDeviceList:
 
 	### Handle a topology node to build links map
 	def buildLinksMapNode(self, iNode, iDeviceKey, iDeviceName, iInterfaceKey, iInterfaceName):
+		intf_list = self._api._intf.get_list()
 		for d in iNode:
 			aTags = d.get('Tags', '').split()
 
@@ -727,7 +728,7 @@ class LmDeviceList:
 				else:
 					aInterfaceType = 'wif'
 					if iDeviceName == 'Livebox':
-						i = next((i for i in LmConfig.NET_INTF if i['Key'] == aInterfaceKey), None)
+						i = next((i for i in intf_list if i['Key'] == aInterfaceKey), None)
 						if i is None:
 							aInterfaceName = d.get('Name', aInterfaceKey)
 						else:
@@ -1488,51 +1489,49 @@ class DnsDialog(QtWidgets.QDialog):
 
 # ############# Livebox Wifi device stats collector thread #############
 class LiveboxWifiStatsThread(QtCore.QObject):
-	_wifiStatsReceived = QtCore.pyqtSignal(dict)
+	_wifi_stats_received = QtCore.pyqtSignal(dict)
 	_resume = QtCore.pyqtSignal()
 
-	def __init__(self, iSession):
+	def __init__(self, api):
 		super(LiveboxWifiStatsThread, self).__init__()
-		self._session = iSession
+		self._api = api
 		self._timer = None
 		self._loop = None
-		self._isRunning = False
+		self._is_running = False
 
 
 	def run(self):
 		self._timer = QtCore.QTimer()
-		self._timer.timeout.connect(self.collectStats)
+		self._timer.timeout.connect(self.collect_stats)
 		self._loop = QtCore.QEventLoop()
 		self.resume()
 
 
 	def resume(self):
-		if not self._isRunning:
+		if not self._is_running:
 			self._timer.start(LmConf.StatsFrequency)
-			self._isRunning = True
+			self._is_running = True
 			self._loop.exec()
 			self._timer.stop()
-			self._isRunning = False
+			self._is_running = False
 
 
 	def stop(self):
-		if self._isRunning:
+		if self._is_running:
 			self._loop.exit()
 
 
-	def collectStats(self):
-		for s in LmConfig.NET_INTF:
+	def collect_stats(self):
+		for s in self._api._intf.get_list():
 			if s['Type'] != 'wif':
 				continue
 			try:
-				aResult = self._session.request('NeMo.Intf.' + s['Key'], 'getStationStats')
+				d = self._api._intf.get_wifi_stats(s['Key'])
 			except BaseException as e:
 				LmTools.error(str(e))
-				aResult = None
-			if aResult is not None:
-				aStats = aResult.get('status')
-				if type(aStats).__name__ == 'list':
-					for aStat in aStats:
+			else:
+				if isinstance(d, list):
+					for aStat in d:
 						e = {}
 						e['DeviceKey'] = aStat.get('MACAddress', '')
 						e['Key'] = e['DeviceKey'] + '_' + s['Key']
@@ -1541,5 +1540,5 @@ class LiveboxWifiStatsThread(QtCore.QObject):
 						e['TxBytes'] = aStat.get('RxBytes', 0)
 						e['RxErrors'] = aStat.get('TxErrors', 0)
 						e['TxErrors'] = aStat.get('RxErrors', 0)
-						self._wifiStatsReceived.emit(e)
+						self._wifi_stats_received.emit(e)
 
