@@ -12,12 +12,13 @@ from wakepy import keep, ActivationResult
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel,
-										 ReleaseCheck, LiveboxCnxDialog, LiveboxSigninDialog)
+from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel, ReleaseCheck)
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
 								 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+from LiveboxMonitor.dlg.LmLiveboxCnx import LiveboxCnxDialog
+from LiveboxMonitor.dlg.LmLiveboxSignin import LiveboxSigninDialog
 from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, get_main_label as lx, get_main_message as mx
 
 from LiveboxMonitor.__init__ import __version__
@@ -296,7 +297,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			if r < 0:
 				aDialog = LiveboxCnxDialog(LmConf.LiveboxURL, self)
 				if aDialog.exec():
-					aURL = aDialog.getURL()
+					aURL = aDialog.get_url()
 					# Remove unwanted characters (can be set via Paste action) + cleanup
 					aURL = LmTools.clean_url(re.sub('[\n\t]', '', aURL))
 					LmConf.setLiveboxURL(aURL)
@@ -309,9 +310,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			aDialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, LmConf.SavePasswords, self)
 			if aDialog.exec():
 				# Remove unwanted characters (can be set via Paste action)
-				aUser = re.sub('[\n\t]', '', aDialog.getUser())
-				aPassword = re.sub('[\n\t]', '', aDialog.getPassword())
-				LmConf.SavePasswords = aDialog.getSavePasswords()
+				aUser = re.sub('[\n\t]', '', aDialog.get_user())
+				aPassword = re.sub('[\n\t]', '', aDialog.get_password())
+				LmConf.SavePasswords = aDialog.get_save_passwords()
 				LmConf.setLiveboxUserPassword(aUser, aPassword)
 				self.show()
 			else:

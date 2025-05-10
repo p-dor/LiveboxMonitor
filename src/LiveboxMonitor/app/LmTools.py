@@ -73,11 +73,6 @@ class ItemDataRole(IntEnum):
 
 # ################################ Tools ################################
 
-### Output error on stderr
-def error(*args, **kwargs):
-    print('###ERROR:', *args, file=sys.stderr, **kwargs)
-
-
 ### Set verbosity
 def set_verbosity(level):
     global verbosity
@@ -93,6 +88,11 @@ def get_verbosity():
 def log_debug(level, *args):
     if verbosity >= level:
         sys.stderr.write('###DEBUG-L' + str(level) + ': ' + ' '.join(args) + '\n')
+
+
+### Output error on stderr
+def error(*args, **kwargs):
+    print('###ERROR:', *args, file=sys.stderr, **kwargs)
 
 
 ### Display an error popup
@@ -342,9 +342,9 @@ def async_send_email(email_setup, subject, message):
 
 ### Format number of bytes
 def fmt_bytes(bytes_nb, suffix='B'):
-    for aUnit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
         if abs(bytes_nb) < 1024.0:
-            return f'{bytes_nb:3.1f} {aUnit}{suffix}'
+            return f'{bytes_nb:3.1f} {unit}{suffix}'
         bytes_nb /= 1024.0
     return f'{bytes_nb:.1f} Y{suffix}'
 
@@ -410,10 +410,10 @@ def fmt_time(seconds, no_zero=False):
 def fmt_livebox_timestamp(timestamp, utc=True):
     if timestamp is None:
         return ''
-    aDateTime = livebox_timestamp(timestamp, utc)
-    if aDateTime is None:
+    date_time = livebox_timestamp(timestamp, utc)
+    if date_time is None:
         return ''
-    return aDateTime.strftime('%Y-%m-%d %H:%M:%S')
+    return date_time.strftime('%Y-%m-%d %H:%M:%S')
 
 
 ### Parse Livebox timestamp (UTC time by default)

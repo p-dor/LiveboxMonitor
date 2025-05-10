@@ -8,7 +8,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmGenApiDocumentation
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmConfig import LmConf, PrefsDialog, SetApplicationStyle, EmailSetupDialog
+from LiveboxMonitor.app.LmConfig import LmConf, SetApplicationStyle, EmailSetupDialog
+from LiveboxMonitor.dlg.LmPrefs import PrefsDialog
 from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
 from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
