@@ -991,6 +991,13 @@ class LmDeviceList:
 				self._deviceList.setItem(aListLine, DevCol.LBName, QtWidgets.QTableWidgetItem(aName))
 				self.updateInterfaceMap(iDeviceKey, aName)
 
+		# Check if the device is the selected one in the device info tab
+		aCurrentSelection = self._infoDList.currentRow()
+		if aCurrentSelection >= 0:
+			aSelectedKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+			if (aSelectedKey == iDeviceKey):
+				self._currentDeviceLiveboxName = iEvent.get('NewName')
+
 
 	### Process a new device_updated, eth_device_updated or wifi_device_updated event
 	def processDeviceUpdatedEvent(self, iDeviceKey, iEvent):
