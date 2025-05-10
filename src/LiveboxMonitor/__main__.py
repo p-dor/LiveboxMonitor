@@ -148,7 +148,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Click on the profile indication in the status bar
 	def statusBarProfileClick(self, iEvent):
-		self.changeProfileButtonClick()
+		self.change_profile_button_click()
 
 
 	### Handle change of tab event
