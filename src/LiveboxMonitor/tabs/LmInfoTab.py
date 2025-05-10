@@ -798,6 +798,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('Wifi Information'))
 		intf_list = self._api._intf.get_list()
 
+		# General infos
 		try:
 			d = self._session.request('NMC.Wifi', 'get')
 		except BaseException as e:
@@ -812,6 +813,7 @@ class LmInfo:
 			i = self.addInfoLine(self._liveboxAList, i, lx('Active'), LmTools.fmt_bool(d.get('Status')))
 			i = self.addInfoLine(self._liveboxAList, i, lx('BGN User Bandwidth'), d.get('BGNUserBandwidth'))
 
+		# Wifi scheduler
 		try:
 			d = self._session.request('Scheduler', 'getCompleteSchedules', { 'type': 'WLAN' })
 		except BaseException as e:
@@ -831,6 +833,22 @@ class LmInfo:
 				aActive = False
 			i = self.addInfoLine(self._liveboxAList, i, lx('Scheduler Enabled'), LmTools.fmt_bool(aActive))
 
+		# Wifi 7 MLP
+		if self._api._wifi.has_mlo():
+			try:
+				d = self._api._wifi.get_mlo_config()
+			except BaseException as e:
+				LmTools.error(str(e))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO'), 'API query error', LmTools.ValQual.Error)
+			else:
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO'), LmTools.fmt_bool(d.get('MLOEnable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO Single MLD Unit'), LmTools.fmt_int(d.get('SingleMLDUnit')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO EMLSR'), LmTools.fmt_bool(d.get('EMLSREnable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO EMLMR'), LmTools.fmt_bool(d.get('EMLMREnable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO STR'), LmTools.fmt_bool(d.get('STREnable')))
+				i = self.addInfoLine(self._liveboxAList, i, lx('MLO Split MLD Mode'), d.get('SplitMLDMode'))
+
+		# Wifi interfaces
 		b = None
 		w = None
 

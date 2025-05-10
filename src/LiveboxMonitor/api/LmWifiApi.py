@@ -38,6 +38,7 @@ class WifiStatus:
 class WifiApi(LmApi):
     def __init__(self, api_registry):
         super(WifiApi, self).__init__(api_registry)
+        self._has_mlo = None
 
 
     ### Get Wifi or Guest Interfaces setup - returns base, radio and vap
@@ -112,8 +113,8 @@ class WifiApi(LmApi):
 
 
     ### Set WLAN Configuration
-    def set_wlan_config(self, iMibs):
-        self.call_no_check('NeMo.Intf.lan', 'setWLANConfig', {'mibs': iMibs}, timeout=35)
+    def set_wlan_config(self, mibs):
+        self.call_no_check('NeMo.Intf.lan', 'setWLANConfig', {'mibs': mibs}, timeout=35)
 
 
     ### Get Wifi Scheduler enable status
@@ -284,16 +285,51 @@ class WifiApi(LmApi):
             raise Exception(err_msg)
 
 
+    ### Determine if Livebox model supports MLO Wifi 7 technology - returns True if yes
+    def has_mlo(self):
+        if self._has_mlo is None:
+            try:
+                mlo = self.get_mlo_enable()
+                self._has_mlo = mlo is not None
+            except:
+                self._has_mlo = False
+        return self._has_mlo
+
+
+    ### Get MLO Wifi 7 technology configuration
+    def get_mlo_config(self):
+        return self.call('SSW.DataElements.Network.APMLDTemplate.privMlo', 'get', timeout=15) 
+
+
+    ### Get MLO Wifi 7 enable status
+    def get_mlo_enable(self):
+        return self.get_mlo_config().get('MLOEnable')
+
+
+    ### Set MLO Wifi 7 enable status
+    def set_mlo_enable(self, enable):
+        self.call('SSW.DataElements.Network.APMLDTemplate.privMlo', 'set', {'MLOEnable': enable}, timeout=15) 
+
+
     ### Get Wifi configuration
     def get_config(self):
         config = {}
 
+        # Get enable status + interfaces setup
         try:
             config['Enable'] = self.get_enable()
             b, w, d = self.get_intf()
         except BaseException as e:
             LmTools.error(str(e))
             return None
+
+        # Get MLO status if available
+        if self.has_mlo():
+            try:
+                config['MLO'] = self.get_mlo_enable()
+            except BaseException as e:
+                LmTools.error(str(e))
+                config['MLO'] = False
 
         # Get setup for each interface in wlanvap
         intf = []
@@ -465,6 +501,14 @@ class WifiApi(LmApi):
         if (old_config['Enable'] != new_config['Enable']):
             try:
                 self.set_enable(new_config['Enable'])
+            except BaseException as e:
+                LmTools.error(str(e))
+                status = False             
+
+        # Activate/Deactivate MLO if relevant
+        if self.has_mlo() and (old_config['MLO'] != new_config['MLO']):
+            try:
+                self.set_mlo_enable(new_config['MLO'])
             except BaseException as e:
                 LmTools.error(str(e))
                 status = False             

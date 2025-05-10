@@ -1503,7 +1503,7 @@ TOOLTIPS = {
         'setLogLevel': 'Permet de changer le niveau de logs dans la console.\n'
                        'Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.',
         'getApiDoc': 'Permet d\'exporter dans un ensemble de fichiers la documentation disponible\n'
-                     'sur les API REST/JSON de la Livebox.',
+                     'sur les API REST/JSON de la Livebox. Fonctionalité bloquée sur les Livebox W7 et S.',
         'quit': 'Pour quitter l\'application. Strictement équivalent à fermer la fenêtre de l\'application.'
     },
 
@@ -1522,6 +1522,7 @@ TOOLTIPS = {
     # Actions - Wifi configuration
     'wconfig': {
         'enableCheckbox': 'Active ou désactive l\'ensemble des bandes radios.',
+        'mloCheckbox': 'Active ou désactive la technologie Wifi 7 MLO (Multi-Link Operation).',
         'durationEdit': 'Durée en heure de l\'activation du Wifi Invité.\n'
                         'Indiquer 0 pour une durée illimitée.',
         'freqCombo': 'Permet de sélectionner la bande radio à configurer.',

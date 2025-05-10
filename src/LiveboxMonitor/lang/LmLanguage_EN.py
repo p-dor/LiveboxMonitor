@@ -525,8 +525,8 @@ TOOLTIPS = {
                            'Useful for getting more information or for debugging.',
         'setLogLevel': 'Allows you to change the log level in the console.\n'
                        'This level is stored in the program configuration and will be retained at the next launch.',
-        'getApiDoc': 'Allows you to export the available documentation\n'
-                     'on the Livebox REST/JSON APIs into a set of files.',
+        'getApiDoc': 'Allows you to export the available documentation on the Livebox REST/JSON APIs\n'
+                     'into a set of files. This feature is blocked on Livebox W7 & S.',
         'quit': 'To quit the application. Strictly equivalent to closing the application window.'
     },
 
@@ -545,6 +545,7 @@ TOOLTIPS = {
     # Actions - Wifi configuration
     'wconfig': {
         'enableCheckbox': 'Enables or disables all radio bands.',
+        'mloCheckbox': 'Enables or disables Wifi 7 MLO technology (Multi-Link Operation).',
         'durationEdit': 'Duration in hours of Guest Wifi activation.\n'
                         'Enter 0 for unlimited duration.',
         'freqCombo': 'Allows you to select the radio band to configure.',

@@ -28,6 +28,10 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self._enable_checkbox = QtWidgets.QCheckBox(lx('Enabled'), objectName='enableCheckbox')
         self._enable_checkbox.clicked.connect(self.enable_click)
 
+        self._mlo = config.get('MLO') is not None
+        if self._mlo:
+            self._mlo_checkbox = QtWidgets.QCheckBox(lx('MLO'), objectName='mloCheckbox')
+
         if self._guest:
             duration_label = QtWidgets.QLabel(lx('Duration'), objectName='durationLabel')
             int_validator = QtGui.QIntValidator()
@@ -103,7 +107,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
             self._wps_checkbox.setEnabled(False)
             self._mac_filtering_combo.setEnabled(False)
         else:
-            grid.addWidget(self._enable_checkbox, 0, 0, 1, 2)
+            grid.addWidget(self._enable_checkbox, 0, 0, 1, 1)
+            if self._mlo:
+                grid.addWidget(self._mlo_checkbox, 0, 1)
             grid.addWidget(separator, 1, 0, 1, 2)
             grid.addWidget(freq_label, 2, 0)
             grid.addWidget(self._freq_combo, 2, 1)
@@ -155,10 +161,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self._config = copy.deepcopy(config)
         self._current_freq = None
 
-        if self._config['Enable']:
-            self._enable_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-            self._enable_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._enable_checkbox.setChecked(self._config['Enable'])
+        if self._mlo:
+            self._mlo_checkbox.setChecked(self._config['MLO'])
 
         if self._guest:
             self._duration_edit.setText(str(self._config['Duration'] // 3600))
@@ -173,7 +178,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
     def enable_click(self):
         if self._guest:
-            if self._enable_checkbox.checkState() == QtCore.Qt.CheckState.Checked:
+            if self._enable_checkbox.isChecked():
                 self._duration_edit.setText(str(self._config['Duration'] // 3600))
                 self._duration_edit.setEnabled(True)
             else:
@@ -199,21 +204,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
         self._ssid_edit.setText(i['SSID'])
         self._pass_edit.setText(i['KeyPass'])
-
-        if i['Enable']:
-            self._freq_enabled_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-            self._freq_enabled_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-        if i['Broadcast']:
-            self._broadcast_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-            self._broadcast_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-        if i['WPS']:
-            self._wps_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-            self._wps_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._freq_enabled_checkbox.setChecked(i['Enable'])
+        self._broadcast_checkbox.setChecked(i['Broadcast'])
+        self._wps_checkbox.setChecked(i['WPS'])
 
         try:
             new_index = MAC_FILTERING_MODES.index(i['MACFiltering'])
@@ -238,9 +231,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
                 self.reject()
                 return
             i['SSID'] = self._ssid_edit.text()
-            i['Enable'] = self._freq_enabled_checkbox.checkState() == QtCore.Qt.CheckState.Checked
-            i['Broadcast'] = self._broadcast_checkbox.checkState() == QtCore.Qt.CheckState.Checked
-            i['WPS'] = self._wps_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+            i['Enable'] = self._freq_enabled_checkbox.isChecked()
+            i['Broadcast'] = self._broadcast_checkbox.isChecked()
+            i['WPS'] = self._wps_checkbox.isChecked()
             i['MACFiltering'] = self._mac_filtering_combo.currentText()
             i['Secu'] = self._secu_combo.currentText()
             if i['Secu'] != 'None':
@@ -424,7 +417,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
 
     def get_config(self):
-        self._config['Enable'] = self._enable_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+        self._config['Enable'] = self._enable_checkbox.isChecked()
+        if self._mlo:
+            self._config['MLO'] = self._mlo_checkbox.isChecked()
         if self._guest:
             self._config['Duration'] = int(self._duration_edit.text()) * 3600
         self.save_freq_config()

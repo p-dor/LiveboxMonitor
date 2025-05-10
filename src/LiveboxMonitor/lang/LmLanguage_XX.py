@@ -1600,6 +1600,7 @@ TOOLTIPS = {
     # Actions - Wifi configuration
     'wconfig': {
         'enableCheckbox': '',
+        'mloCheckbox': '',
         'durationLabel': '',
         'durationEdit': '',
         'durationUnit': '',
