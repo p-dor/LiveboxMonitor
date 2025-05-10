@@ -903,6 +903,9 @@ class LmDeviceList:
 
 	### Process a new changed event
 	def processChangedEvent(self, iDeviceKey, iHandler, iEvent):
+		# Refresh if current selected one in device info
+		self.refreshDeviceIfSelected(iDeviceKey)
+
 		# Check if device is in the UI list
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
@@ -991,12 +994,8 @@ class LmDeviceList:
 				self._deviceList.setItem(aListLine, DevCol.LBName, QtWidgets.QTableWidgetItem(aName))
 				self.updateInterfaceMap(iDeviceKey, aName)
 
-		# Check if the device is the selected one in the device info tab
-		aCurrentSelection = self._infoDList.currentRow()
-		if aCurrentSelection >= 0:
-			aSelectedKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
-			if (aSelectedKey == iDeviceKey):
-				self._currentDeviceLiveboxName = iEvent.get('NewName')
+		# Refresh if the device is the selected one in the device info tab
+		self.refreshDeviceIfSelected(iDeviceKey)
 
 
 	### Process a new device_updated, eth_device_updated or wifi_device_updated event
@@ -1022,6 +1021,9 @@ class LmDeviceList:
 
 			# Restore sorting
 			self._deviceList.setSortingEnabled(True)
+
+		# Refresh if the device is the selected one in the device info tab
+		self.refreshDeviceIfSelected(iDeviceKey)
 
 
 	### Process a new ip_address_added event

@@ -147,11 +147,17 @@ class LmDeviceInfo:
 						aDnsSuccess = self.delDeviceLiveboxName(aKey, True)
 				else:
 					aDnsSuccess = self.setDeviceLiveboxName(aKey, aName, True)
-
-				if aLbSuccess or aDnsSuccess:
-					self.infoDeviceListClick()
 		else:
 			self.display_error(mx('Please select a device.', 'devSelect'))
+
+
+	### Refresh device info if the passed key is the selected one
+	def refreshDeviceIfSelected(self, iDeviceKey):
+		aCurrentSelection = self._infoDList.currentRow()
+		if aCurrentSelection >= 0:
+			aSelectedKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
+			if (aSelectedKey == iDeviceKey):
+				self.infoDeviceListClick()
 
 
 	### Set a device name stored in the the MacAddr table
