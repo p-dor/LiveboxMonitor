@@ -36,8 +36,8 @@ class WifiStatus:
 
 # ################################ Wifi APIs ################################
 class WifiApi(LmApi):
-    def __init__(self, api, session):
-        super(WifiApi, self).__init__(api, session)
+    def __init__(self, api_registry):
+        super(WifiApi, self).__init__(api_registry)
 
 
     ### Get Wifi or Guest Interfaces setup - returns base, radio and vap

@@ -13,11 +13,12 @@ from LiveboxMonitor.api.LmScreenApi import ScreenApi
 # ################################ API objects registry ################################
 class ApiRegistry:
     def __init__(self, session):
-        self._info = LiveboxInfoApi(self, session)
-        self._intf = IntfApi(self, session)
-        self._wifi = WifiApi(self, session)
-        self._reboot = RebootApi(self, session)
-        self._firewall = FirewallApi(self, session)
-        self._dyndns = DynDnsApi(self, session)
-        self._backup = BackupRestoreApi(self, session)
-        self._screen = ScreenApi(self, session)
+        self._session = session
+        self._info = LiveboxInfoApi(self)
+        self._intf = IntfApi(self)
+        self._wifi = WifiApi(self)
+        self._reboot = RebootApi(self)
+        self._firewall = FirewallApi(self)
+        self._dyndns = DynDnsApi(self)
+        self._backup = BackupRestoreApi(self)
+        self._screen = ScreenApi(self)

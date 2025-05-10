@@ -140,8 +140,8 @@ class LmGenApiDoc:
     def __init__(self, app, folder, filter_value):
         self._app = app
         self._api = app._api
-        self._session = app._session
-        self._software_version = app._liveboxSoftwareVersion
+        self._session = self._api._session
+        self._software_version = self._api._info.get_software_version()
         self._folder = folder
         self._filter = filter_value
         self._file = None

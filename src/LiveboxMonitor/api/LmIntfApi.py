@@ -25,8 +25,8 @@ FRIENDLY_NAME_MAP = {
 
 # ################################ Interface APIs ################################
 class IntfApi(LmApi):
-    def __init__(self, api, session):
-        super(IntfApi, self).__init__(api, session)
+    def __init__(self, api_registry):
+        super(IntfApi, self).__init__(api_registry)
         self._list = None
 
 

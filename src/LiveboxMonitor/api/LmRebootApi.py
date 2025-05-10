@@ -5,8 +5,8 @@ from LiveboxMonitor.api.LmApi import LmApi
 
 # ################################ Reboot APIs ################################
 class RebootApi(LmApi):
-    def __init__(self, api, session):
-        super(RebootApi, self).__init__(api, session)
+    def __init__(self, api_registry):
+        super(RebootApi, self).__init__(api_registry)
 
 
     ### Reboot the Livebox
