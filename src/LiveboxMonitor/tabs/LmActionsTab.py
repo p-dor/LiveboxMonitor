@@ -257,6 +257,8 @@ class LmActions:
         gen_doc_button = QtWidgets.QPushButton(lx('Generate API Documentation...'), objectName='getApiDoc')
         gen_doc_button.clicked.connect(self.get_doc_button_click)
         debug_buttons.addWidget(gen_doc_button)
+        if self._liveboxModel > 7:      # API doc generation is blocked since LB W7
+            gen_doc_button.setEnabled(False)
 
         debug_group_box = QtWidgets.QGroupBox(lx('Debug'), objectName='debugGroup')
         debug_group_box.setLayout(debug_buttons)
