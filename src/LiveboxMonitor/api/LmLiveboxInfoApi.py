@@ -12,6 +12,7 @@ LIVEBOX_SCAN_TIMEOUT = 0.6
 
 # Livebox versions map
 LIVEBOX_MODEL_MAP = {
+    'Livebox 3': 3,
     'Livebox 4': 4,
     'Livebox Fibre': 5,
     'Livebox 6': 6,
