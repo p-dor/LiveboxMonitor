@@ -256,7 +256,7 @@ class LmDeviceInfo:
 			try:
 				aReply = self._session.request('WOL', 'sendWakeOnLan', { 'hostID': aKey, 'broadcast': True })
 				if (aReply is not None) and ('status' in aReply):
-					self.display_status(mx('Wake on LAN signal sent to device {}.', 'devWOL').format(aKey))
+					self.display_status(mx('Wake on LAN signal sent to device [{}].', 'devWOL').format(aKey))
 				else:
 					self.display_error('WOL query failed.')
 			except BaseException as e:
@@ -271,7 +271,7 @@ class LmDeviceInfo:
 		aCurrentSelection = self._infoDList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
-			if self.ask_question('Are you sure you want to forget device [' + aKey + ']?'):
+			if self.ask_question(mx('Are you sure you want to forget device [{}]?', 'devForget').format(aKey)):
 				try:
 					aReply = self._session.request('Devices', 'destroyDevice', { 'key': aKey })
 					if (aReply is not None) and (aReply.get('status', False)):
@@ -310,7 +310,7 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Disable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.display_status(mx('Device {} now blocked.', 'devBlocked').format(aKey))
+						self.display_status(mx('Device [{}] now blocked.', 'devBlocked').format(aKey))
 					else:
 						LmTools.error(aReply)
 						self.display_error('Block query failed.')
@@ -328,7 +328,7 @@ class LmDeviceInfo:
 					aInfos['override'] = 'Disable'
 					aReply = self._session.request('Scheduler', 'addSchedule', { 'type': 'ToD', 'info': aInfos })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.display_status(mx('Device {} now blocked.', 'devBlocked').format(aKey))
+						self.display_status(mx('Device [{}] now blocked.', 'devBlocked').format(aKey))
 					else:
 						LmTools.error(aReply)
 						self.display_error('Block query failed.')
@@ -362,14 +362,14 @@ class LmDeviceInfo:
 				try:
 					aReply = self._session.request('Scheduler', 'overrideSchedule', { 'type': 'ToD', 'ID': aKey, 'override': 'Enable' })
 					if (aReply is not None) and (aReply.get('status', False)):
-						self.display_status(mx('Device {} now unblocked.', 'devUnblocked').format(aKey))
+						self.display_status(mx('Device [{}] now unblocked.', 'devUnblocked').format(aKey))
 					else:
 						self.display_error('Unblock query failed.')
 				except BaseException as e:
 					LmTools.error(str(e))
 					self.display_error('Unblock query error.')
 			else:
-				self.display_status(mx('Device {} is not blocked.', 'devNotBlocked').format(aKey))
+				self.display_status(mx('Device [{}] is not blocked.', 'devNotBlocked').format(aKey))
 		else:
 			self.display_error(mx('Please select a device.', 'devSelect'))
 

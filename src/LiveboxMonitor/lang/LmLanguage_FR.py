@@ -1820,10 +1820,11 @@ MESSAGES = {
     # Device infos
     'dinfo': {  
         'devSelect': 'Vous devez sélectionner un appareil.',
-        'devWOL': 'Signal de réveil sur réseau envoyé à l\'appareil {}.',
-        'devBlocked': 'L\'appareil {} est maintenant bloqué.',
-        'devUnblocked': 'L\'appareil {} est maintenant débloqué.',
-        'devNotBlocked': 'L\'appareil {} n\'est pas bloqué.',
+        'devWOL': 'Signal de réveil sur réseau envoyé à l\'appareil [{}].',
+        'devForget': 'Êtes-vous sûr de vouloir oublier l\'appareil [{}]?',
+        'devBlocked': 'L\'appareil [{}] est maintenant bloqué.',
+        'devUnblocked': 'L\'appareil [{}] est maintenant débloqué.',
+        'devNotBlocked': 'L\'appareil [{}] n\'est pas bloqué.',
         'devInfoErr': 'Impossible d\'obtenir les informations sur l\'appareil.'
     },
 

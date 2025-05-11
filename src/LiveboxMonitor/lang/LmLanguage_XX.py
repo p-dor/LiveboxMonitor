@@ -1906,6 +1906,7 @@ MESSAGES = {
     'dinfo': {  
         'devSelect': '',
         'devWOL': '',
+        'devForget': '',
         'devBlocked': '',
         'devUnblocked': '',
         'devNotBlocked': '',
