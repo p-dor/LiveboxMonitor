@@ -340,18 +340,16 @@ def SetLiveboxModel(iModel):
 	global INTF_NAME_MAP
 
 	match iModel:
+		case 3 | 4:
+			INTF_NAME_MAP = INTF_NAME_MAP_LB4
 		case 5:
 			INTF_NAME_MAP = INTF_NAME_MAP_LB5
 		case 6:
 			INTF_NAME_MAP = INTF_NAME_MAP_LB6
-		case 7:
-			INTF_NAME_MAP = INTF_NAME_MAP_LB7
-		case 7.1:
-			INTF_NAME_MAP = INTF_NAME_MAP_LB7
-		case 7.2:
+		case 7 | 7.1 | 7.2:
 			INTF_NAME_MAP = INTF_NAME_MAP_LB7
 		case _:
-			INTF_NAME_MAP = INTF_NAME_MAP_LB4
+			INTF_NAME_MAP = INTF_NAME_MAP_LB7
 
 
 ### Check if latest release
