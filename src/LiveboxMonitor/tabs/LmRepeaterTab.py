@@ -29,27 +29,32 @@ WIFI_REPEATER_TYPES = {'repeteurwifi', 'repeteurwifi6', 'sah ap'}
 WIFI_REPEATER_5 = 'WIFIREPARCFR'
 WIFI_REPEATER_6 = 'WIFI6REPSERCOMM'
 WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
-WIFI_REPEATER_VERSION_MAP = { WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6 }
+WIFI_REPEATER_VERSION_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6}
 DEFAULT_REPEATER_NAME = 'RW #'
 DEBUG_BUTTON = False
 
 #  Wifi Repeater 5 Interfaces
 NET_INTF_WR5 = [
-	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth1_0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth1_1',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'wl0',        'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
+	{'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True},
+	{'Key': 'eth1_0',     'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True},
+	{'Key': 'eth1_1',     'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True},
+	{'Key': 'wl0',        'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True},
+	{'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True}
 ]
 
 # Wifi Repeater 6 Interfaces
 NET_INTF_WR6 = [
-	{ 'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True  },
-	{ 'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True  },
-	{ 'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True  },
-	{ 'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True  }
+	{'Key': 'bridge',     'Name': 'LAN',          'Type': 'lan', 'SwapStats': True},
+	{'Key': 'eth0',       'Name': 'Ethernet 1',   'Type': 'eth', 'SwapStats': True},
+	{'Key': 'eth1',       'Name': 'Ethernet 2',   'Type': 'eth', 'SwapStats': True},
+	{'Key': 'vap2g0priv', 'Name': 'Wifi 2.4GHz',  'Type': 'wif', 'SwapStats': True},
+	{'Key': 'vap5g0priv', 'Name': 'Wifi 5GHz',    'Type': 'wif', 'SwapStats': True}
 ]
+
+# Interface name mapping
+INTF_NAME_MAP_WR = {'Eth0': 'Eth1', 'Eth1': 'Eth2',
+					'Eth0-1': 'Eth1', 'Eth1-1': 'Eth2',
+					'Eth1_0': 'Eth1', 'Eth1_1': 'Eth2'}
 
 
 # ################################ LmRepeater class ################################

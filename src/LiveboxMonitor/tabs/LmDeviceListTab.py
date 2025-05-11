@@ -12,6 +12,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
+from LiveboxMonitor.tabs.LmRepeaterTab import INTF_NAME_MAP_WR
 from LiveboxMonitor.lang.LmLanguages import (get_device_list_label as lx,
 											 get_device_list_message as mx,
 											 get_ipv6_label as lix,
@@ -715,13 +716,13 @@ class LmDeviceList:
 				aInterfaceType = d.get('InterfaceType', '')
 				if aInterfaceType == 'Ethernet':
 					aInterfaceType = 'eth'
-					aInterfaceName = d.get('NetDevName', '')
+					aInterfaceName = d.get('Name', '').capitalize()
 					if len(aInterfaceName) == 0:
-						aInterfaceName = d.get('Name', '')
+						aInterfaceName = d.get('NetDevName', '').capitalize()
 					if iDeviceName == 'Livebox':
-						aNameMap = LmConfig.INTF_NAME_MAP['Livebox']
+						aNameMap = LmConfig.INTF_NAME_MAP
 					else:
-						aNameMap = LmConfig.INTF_NAME_MAP['Repeater']
+						aNameMap = INTF_NAME_MAP_WR
 					aMappedName = aNameMap.get(aInterfaceName)
 					if aMappedName is not None:
 						aInterfaceName = aMappedName
