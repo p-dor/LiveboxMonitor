@@ -571,7 +571,7 @@ class LmActions:
 
     ### Change the current profile in use
     def change_profile_button_click(self):
-        r = LmConf.askProfile(None)
+        r = LmConf.askProfile()
         if r == 1:
             LmConf.assignProfile()
             self.resetUI()
