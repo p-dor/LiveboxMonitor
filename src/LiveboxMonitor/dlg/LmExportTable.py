@@ -52,7 +52,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'export_table')
+        LmConfig.set_tooltips(self, 'export_table')
 
         self.setWindowTitle(lx('Export Table'))
 

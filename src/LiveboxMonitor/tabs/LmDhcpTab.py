@@ -103,7 +103,7 @@ class LmDhcp:
 		aHBox.addLayout(aAttributeBox, 1)
 		self._dhcpTab.setLayout(aHBox)
 
-		LmConfig.SetToolTips(self._dhcpTab, 'dhcp')
+		LmConfig.set_tooltips(self._dhcpTab, 'dhcp')
 		self._tabWidget.addTab(self._dhcpTab, lx('DHCP'))
 
 		# Set default values
@@ -621,7 +621,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'dbinding')
+		LmConfig.set_tooltips(self, 'dbinding')
 
 		self.setWindowTitle(lbx('Add DHCP binding'))
 		self.suggestIP()
@@ -803,7 +803,7 @@ class DhcpSetupDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'dsetup')
+		LmConfig.set_tooltips(self, 'dsetup')
 
 		self.setWindowTitle(lsx('DHCP Setup'))
 		self.setOkButtonState()

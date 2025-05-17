@@ -118,7 +118,7 @@ class LmEvents:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._eventsTab.setLayout(aVBox)
 
-		LmConfig.SetToolTips(self._eventsTab, 'events')
+		LmConfig.set_tooltips(self._eventsTab, 'events')
 		self._tabWidget.addTab(self._eventsTab, lx('Events'))
 
 
@@ -560,7 +560,7 @@ class LmEvents:
 		t = iEvent['Type']
 
 		if LmConf.NotificationFilePath is None:
-			aPath = LmConf.getConfigDirectory()
+			aPath = LmConf.get_config_directory()
 		else:
 			aPath = LmConf.NotificationFilePath
 		aFileName = f'LiveboxMonitor_Events_{ts.strftime("%Y-%m-%d")}.csv'
@@ -590,7 +590,7 @@ class LmEvents:
 	def notifyUserEmail(self, iEvent):
 		LmTools.log_debug(1, 'Emailing event:', str(iEvent))
 
-		c = LmConf.loadEmailSetup()
+		c = LmConf.load_email_setup()
 		if c is None:
 			LmTools.error('No email setup to notify event by email.')
 			return
@@ -832,7 +832,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
 		self._flushFrequency.setFocus()
 
-		LmConfig.SetToolTips(self, 'evnrules')
+		LmConfig.set_tooltips(self, 'evnrules')
 
 		self.setWindowTitle(lnx('Notification Rules Setup'))
 		self.setModal(True)
@@ -860,7 +860,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 		self._flushFrequency.setText(str(int(LmConf.NotificationFlushFrequency)))
 		if LmConf.NotificationFilePath is None:
 			self._defaultFilePath.setCheckState(QtCore.Qt.CheckState.Checked)
-			self._eventFilePath.setText(LmConf.getConfigDirectory())
+			self._eventFilePath.setText(LmConf.get_config_directory())
 			self._eventFilePath.setDisabled(True)
 			self._eventFilePathSelectButton.setDisabled(True)
 		else:
@@ -1286,12 +1286,12 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 	def defaultFilePathChanged(self, iState):
 		if not self._init:
 			if self._defaultFilePath.isChecked():
-				self._eventFilePath.setText(LmConf.getConfigDirectory())
+				self._eventFilePath.setText(LmConf.get_config_directory())
 				self._eventFilePath.setDisabled(True)
 				self._eventFilePathSelectButton.setDisabled(True)
 			else:
 				if LmConf.NotificationFilePath is None:
-					self._eventFilePath.setText(LmConf.getConfigDirectory())
+					self._eventFilePath.setText(LmConf.get_config_directory())
 				else:
 					self._eventFilePath.setText(LmConf.NotificationFilePath)
 				self._eventFilePath.setDisabled(False)

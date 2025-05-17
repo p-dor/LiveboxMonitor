@@ -48,7 +48,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         self._dmz_list.set_header_resize([DmzCol.Device, DmzCol.ExtIPs])
         self._dmz_list.set_standard_setup(parent, allow_sort=False)
         self._dmz_list.setMinimumWidth(680)
-        self._dmz_list.setMinimumHeight(LmConfig.TableHeight(4))
+        self._dmz_list.setMinimumHeight(LmConfig.table_height(4))
         self._dmz_list.itemSelectionChanged.connect(self.dmz_list_click)
 
         dmz_list_layout.addWidget(self._dmz_list, 1)
@@ -122,7 +122,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         self._ip.setFocus()
 
-        LmConfig.SetToolTips(self, 'dmz')
+        LmConfig.set_tooltips(self, 'dmz')
 
         self.setWindowTitle(lx('DMZ'))
         self.setModal(True)

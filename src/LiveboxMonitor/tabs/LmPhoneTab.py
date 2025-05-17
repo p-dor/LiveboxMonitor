@@ -202,7 +202,7 @@ class LmPhone:
 		aHBox.addLayout(aContactBox, 1)
 		self._phoneTab.setLayout(aHBox)
 
-		LmConfig.SetToolTips(self._phoneTab, 'phone')
+		LmConfig.set_tooltips(self._phoneTab, 'phone')
 		self._tabWidget.addTab(self._phoneTab, lx('Phone'))
 
 		# Init context
@@ -305,10 +305,10 @@ class LmPhone:
 				aPhoneNb = LmPhone.intlPhoneNumber(self._callList.item(i, CallCol.Number).text())
 				aSource = self._callList.item(i, CallCol.ContactSource).text()
 				if (aSource == 'S'):		# Flagged as spam
-					LmConf.unsetSpamCall(aPhoneNb)
+					LmConf.unset_spam_call(aPhoneNb)
 					aSet = False
 				else:
-					LmConf.setSpamCall(aPhoneNb)
+					LmConf.set_spam_call(aPhoneNb)
 					aSet = True
 		else:
 			self.display_error(mx('Please select a phone call.', 'callSelect'))
@@ -554,7 +554,7 @@ class LmPhone:
 					aAlreadyChecked.append(aFullPhoneNb)
 					aPhoneNb = LmPhone.intlPhoneNumber(aRawPhoneNb, False)
 					if LmPhone.isSpam(aPhoneNb):
-						LmConf.setSpamCall(aFullPhoneNb)
+						LmConf.set_spam_call(aFullPhoneNb)
 						aSpamCount += 1
 			i += 1
 
@@ -1250,7 +1250,7 @@ class EditContactDialog(QtWidgets.QDialog):
 
 		self._firstNameEdit.setFocus()
 
-		LmConfig.SetToolTips(self, 'pcontact')
+		LmConfig.set_tooltips(self, 'pcontact')
 
 		if iEditMode:
 			self.setWindowTitle(lcx('Contact edition'))

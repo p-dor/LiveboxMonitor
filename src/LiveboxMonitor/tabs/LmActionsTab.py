@@ -8,7 +8,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmGenApiDocumentation
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmConfig import LmConf, SetApplicationStyle
+from LiveboxMonitor.app.LmConfig import LmConf, set_application_style
 from LiveboxMonitor.dlg.LmPrefs import PrefsDialog
 from LiveboxMonitor.dlg.LmEmailSetup import EmailSetupDialog
 from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
@@ -281,7 +281,7 @@ class LmActions:
         hbox.addLayout(right_zone, 1)
         self._actions_tab.setLayout(hbox)
 
-        LmConfig.SetToolTips(self._actions_tab, 'actions')
+        LmConfig.set_tooltips(self._actions_tab, 'actions')
         self._tabWidget.addTab(self._actions_tab, lx('Actions'))
 
 
@@ -563,18 +563,18 @@ class LmActions:
     def prefs_button_click(self):
         prefs_dialog = PrefsDialog(self)
         if prefs_dialog.exec():
-            LmConf.assignProfile()
+            LmConf.assign_profile()
             LmConf.save()
             LmConf.apply()
-            SetApplicationStyle()
+            set_application_style()
             self.resetUI()
 
 
     ### Change the current profile in use
     def change_profile_button_click(self):
-        r = LmConf.askProfile()
+        r = LmConf.ask_profile()
         if r == 1:
-            LmConf.assignProfile()
+            LmConf.assign_profile()
             self.resetUI()
         elif r == 2:
             self.prefs_button_click()
@@ -584,7 +584,7 @@ class LmActions:
     def email_setup_button_click(self):
         email_setup_dialog = EmailSetupDialog(self)
         if email_setup_dialog.exec():
-            LmConf.setEmailSetup(email_setup_dialog.get_setup())
+            LmConf.set_email_setup(email_setup_dialog.get_setup())
             LmConf.save()
 
 
@@ -605,7 +605,7 @@ class LmActions:
                                                    lx('Please select a log level:'),
                                                    levels, LmConf.LogLevel, False)
         if ok:
-            LmConf.setLogLevel(int(level))
+            LmConf.set_log_level(int(level))
 
 
     ### Click on generate API documentation button

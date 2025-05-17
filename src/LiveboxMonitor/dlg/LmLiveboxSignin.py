@@ -51,7 +51,7 @@ class LiveboxSigninDialog(QtWidgets.QDialog):
 
 		self._user_edit.setFocus()
 
-		LmConfig.SetToolTips(self, 'signin')
+		LmConfig.set_tooltips(self, 'signin')
 
 		title = lx('Enter password')
 		if len(LmConf.Profiles) > 1:

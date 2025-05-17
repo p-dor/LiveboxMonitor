@@ -104,7 +104,7 @@ class LmDeviceList:
 		aVBox.addLayout(aHBox, 1)
 		self._deviceListTab.setLayout(aVBox)
 
-		LmConfig.SetToolTips(self._deviceListTab, 'dlist')
+		LmConfig.set_tooltips(self._deviceListTab, 'dlist')
 		self._tabWidget.addTab(self._deviceListTab, lx('Device List'))
 
 
@@ -166,7 +166,7 @@ class LmDeviceList:
 		self._eventDList.setRowCount(0)
 		self._eventList.clearContents()
 		self._eventList.setRowCount(0)
-		LmConf.loadMacAddrTable()
+		LmConf.load_mac_addr_table()
 		self.loadDeviceList()
 
 
@@ -504,7 +504,7 @@ class LmDeviceList:
 		i = 0
 		for d in LmConfig.DEVICE_TYPES:
 			if iDeviceType == d['Key']:
-				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.getDeviceIcon(d, iLBSoftVersion)))
+				aDeviceTypeIcon.setIcon(QtGui.QIcon(LmConf.get_device_icon(d, iLBSoftVersion)))
 				aDeviceTypeName = d['Name']
 				break
 			i += 1
@@ -1221,7 +1221,7 @@ IPV6_ICON_COLUMNS = [IPv6Col.Active]
 class IPv6Dialog(QtWidgets.QDialog):
 	def __init__(self, iEnabled, iCGNat, iMode, iAddr, iPrefix, iGateway, iParent = None):
 		super(IPv6Dialog, self).__init__(iParent)
-		self.resize(1005, 110 + LmConfig.DialogHeight(12))
+		self.resize(1005, 110 + LmConfig.dialog_height(12))
 
 		# IPv6 info box
 		aIPv6EnabledLabel = QtWidgets.QLabel(lix('IPv6 enabled:'), objectName = 'ipv6EnabledLabel')
@@ -1294,7 +1294,7 @@ class IPv6Dialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._deviceTable, 1)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'ipv6')
+		LmConfig.set_tooltips(self, 'ipv6')
 
 		self.setWindowTitle(lix('IPv6 Devices'))
 		self.setModal(True)
@@ -1410,7 +1410,7 @@ DNS_ICON_COLUMNS = [DnsCol.Active]
 class DnsDialog(QtWidgets.QDialog):
 	def __init__(self, iParent = None):
 		super(DnsDialog, self).__init__(iParent)
-		self.resize(850, 56 + LmConfig.DialogHeight(12))
+		self.resize(850, 56 + LmConfig.dialog_height(12))
 
 		# Device table
 		self._deviceTable = LmTableWidget(objectName = 'dnsTable')
@@ -1436,7 +1436,7 @@ class DnsDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._deviceTable, 1)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'dns')
+		LmConfig.set_tooltips(self, 'dns')
 
 		self.setWindowTitle(ldx('Devices DNS'))
 		self.setModal(True)

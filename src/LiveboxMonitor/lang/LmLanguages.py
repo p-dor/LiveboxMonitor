@@ -18,7 +18,7 @@ from LiveboxMonitor.lang import LmLanguage_EN, LmLanguage_FR
 # - If no key found, native label is used.
 
 # Rules for Tooltips:
-# - Each window/dialog calls LmConfig.SetToolTips() with a specific ID.
+# - Each window/dialog calls LmConfig.set_tooltips() with a specific ID.
 # - For each ID, set of keys/values. Keys designate UI object, value the tooltip to display.
 # - If no key found, no tooltip is displayed.
 # - Rules for the keys:

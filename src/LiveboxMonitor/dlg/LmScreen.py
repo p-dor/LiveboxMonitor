@@ -53,7 +53,7 @@ class ScreenDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'screen')
+        LmConfig.set_tooltips(self, 'screen')
 
         self.setWindowTitle(lx('LEDs & Screen Setup'))
 

@@ -143,7 +143,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'wconfig')
+        LmConfig.set_tooltips(self, 'wconfig')
 
         if self._guest:
             self.setWindowTitle(lx('Guest Wifi Configuration'))

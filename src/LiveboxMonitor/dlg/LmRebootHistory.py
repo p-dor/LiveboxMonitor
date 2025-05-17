@@ -23,7 +23,7 @@ class RebootCol(IntEnum):
 class RebootHistoryDialog(QtWidgets.QDialog):
     def __init__(self, name, parent=None):
         super(RebootHistoryDialog, self).__init__(parent)
-        self.resize(550, 56 + LmConfig.DialogHeight(10))
+        self.resize(550, 56 + LmConfig.dialog_height(10))
 
         self._history_table = LmTableWidget(objectName='historyTable')
         self._history_table.set_columns({RebootCol.BootDate: [lx('Boot Date'), 125, 'reboot_BootDate'],
@@ -43,7 +43,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
         vbox.addWidget(self._history_table, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'rhistory')
+        LmConfig.set_tooltips(self, 'rhistory')
 
         self.setWindowTitle(lx(f'{name} Reboot History'))
         self.setModal(True)

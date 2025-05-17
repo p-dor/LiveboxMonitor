@@ -52,7 +52,7 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
 
 		self._url_edit.setFocus()
 
-		LmConfig.SetToolTips(self, 'cnx')
+		LmConfig.set_tooltips(self, 'cnx')
 
 		title = lx('Livebox connection')
 		if len(LmConf.Profiles) > 1:

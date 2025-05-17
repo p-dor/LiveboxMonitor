@@ -84,7 +84,7 @@ class LmRepeater:
 			aStatsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
 			aStatsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(s['Name']))
 			i += 1
-		aStatsListSize = LmConfig.TableHeight(i)
+		aStatsListSize = LmConfig.table_height(i)
 		aStatsList.setMinimumHeight(aStatsListSize)
 		aStatsList.setMaximumHeight(aStatsListSize)
 
@@ -208,7 +208,7 @@ class LmRepeater:
 		aVBox.addLayout(aButtonsBox, 1)
 		iRepeater._tab.setLayout(aVBox)
 
-		LmConfig.SetToolTips(iRepeater._tab, 'repeater')
+		LmConfig.set_tooltips(iRepeater._tab, 'repeater')
 		self._tabWidget.insertTab(iRepeater.tabIndexFromConfig(), iRepeater._tab, iRepeater._name)
 		iRepeater.setTabIcon()
 
@@ -492,7 +492,7 @@ class LmRepHandler:
 
 		self.signout()
 
-		aUser, aPassword = LmConf.getRepeaterUserPassword(self._macAddr)
+		aUser, aPassword = LmConf.get_repeater_user_password(self._macAddr)
 
 		while True:
 			self._session = LmSession('http://' + self._ipAddr + '/', self._name)
@@ -521,7 +521,7 @@ class LmRepHandler:
 			if aOK:
 				# Remove unwanted characters from password (can be set via Paste action)
 				aPassword = re.sub('[\n\t]', '', aPassword)
-				LmConf.setRepeaterPassword(self._macAddr, aPassword)
+				LmConf.set_repeater_password(self._macAddr, aPassword)
 			else:
 				self._session = None
 				self._signed = False

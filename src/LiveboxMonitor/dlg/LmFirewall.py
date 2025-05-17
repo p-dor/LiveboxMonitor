@@ -55,7 +55,7 @@ class FirewallLevelDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'fwlevel')
+        LmConfig.set_tooltips(self, 'fwlevel')
 
         self.setWindowTitle(lx('Firewall Levels'))
 

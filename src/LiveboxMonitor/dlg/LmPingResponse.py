@@ -45,7 +45,7 @@ class PingResponseDialog(QtWidgets.QDialog):
         vbox.addLayout(vcbox, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'pingr')
+        LmConfig.set_tooltips(self, 'pingr')
 
         self.setWindowTitle(lx('Ping Responses'))
 

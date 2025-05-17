@@ -90,7 +90,7 @@ class LmDeviceInfo:
 		aVBox.addLayout(aButtonsBox, 1)
 		self._deviceInfoTab.setLayout(aVBox)
 
-		LmConfig.SetToolTips(self._deviceInfoTab, 'dinfo')
+		LmConfig.set_tooltips(self._deviceInfoTab, 'dinfo')
 		self._tabWidget.addTab(self._deviceInfoTab, lx('Device Infos'))
 
 		# Init context
@@ -165,7 +165,7 @@ class LmDeviceInfo:
 		aCurrentName = LmConf.MacAddrTable.get(iDeviceKey)
 		if aCurrentName != iDeviceName:
 			LmConf.MacAddrTable[iDeviceKey] = iDeviceName
-			LmConf.saveMacAddrTable()
+			LmConf.save_mac_addr_table()
 			self.updateDeviceName(iDeviceKey)
 
 
@@ -176,7 +176,7 @@ class LmDeviceInfo:
 		except:
 			pass
 		else:
-			LmConf.saveMacAddrTable()
+			LmConf.save_mac_addr_table()
 			self.updateDeviceName(iDeviceKey)
 
 
@@ -228,7 +228,7 @@ class LmDeviceInfo:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 
 			self.startTask(lx('Loading device icons...'))
-			LmConf.loadDeviceIcons(self._liveboxSoftwareVersion)
+			LmConf.load_device_icons(self._liveboxSoftwareVersion)
 			self.endTask()
 
 			aSetDeviceTypeDialog = SetDeviceTypeDialog(aKey, self._currentDeviceType, self)
@@ -590,7 +590,7 @@ class SetDeviceNameDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aNameGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'dname')
+		LmConfig.set_tooltips(self, 'dname')
 
 		self.setWindowTitle(lnx('Assign device names'))
 		self.setModal(True)
@@ -684,7 +684,7 @@ class SetDeviceTypeDialog(QtWidgets.QDialog):
 		aVBox.addWidget(self._typeKeyEdit, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'dtype')
+		LmConfig.set_tooltips(self, 'dtype')
 
 		self.setWindowTitle(ltx('Assign a device type'))
 		self.setModal(True)

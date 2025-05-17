@@ -77,7 +77,7 @@ class LmGraph:
 		self._graphList.set_header_resize([GraphCol.Name])
 		self._graphList.set_standard_setup(self)
 
-		aGraphListSize = LmConfig.TableHeight(8)
+		aGraphListSize = LmConfig.table_height(8)
 		self._graphList.setMinimumHeight(aGraphListSize)
 		self._graphList.setMaximumHeight(aGraphListSize)
 		self._graphList.setMinimumWidth(380)
@@ -172,7 +172,7 @@ class LmGraph:
 		aHBox.addLayout(aGraphBox, 1)
 		self._graphTab.setLayout(aHBox)
 
-		LmConfig.SetToolTips(self._graphTab, 'graph')
+		LmConfig.set_tooltips(self._graphTab, 'graph')
 		self._tabWidget.addTab(self._graphTab, lx('Graph'))
 
 		# Init context
@@ -819,7 +819,7 @@ class AddGraphDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aInfoGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'addgraph')
+		LmConfig.set_tooltips(self, 'addgraph')
 
 		self.setWindowTitle(lgx('Add a graph'))
 		self.udpdateInfos()

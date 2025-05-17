@@ -67,7 +67,7 @@ class SelectProfileDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(button_bar, 1)
 
-        LmConfig.SetToolTips(self, 'sprofile')
+        LmConfig.set_tooltips(self, 'sprofile')
 
         self.setWindowTitle(lx('Profile selection'))
 

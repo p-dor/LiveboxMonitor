@@ -44,7 +44,7 @@ class ReleaseWarningDialog(QtWidgets.QDialog):
 		vbox.addLayout(warn_box, 0)
 		vbox.addLayout(button_bar, 1)
 
-		LmConfig.SetToolTips(self, 'rwarn')
+		LmConfig.set_tooltips(self, 'rwarn')
 
 		self.setWindowTitle(lx('You are not using the latest release'))
 

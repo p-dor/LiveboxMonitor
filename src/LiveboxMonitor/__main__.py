@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-### Python program to monitor & administrate a Livebox 4, 5 or 6 ###
+### Python program to monitor & administrate a Livebox 4, 5, 6, 7, W7 or S ###
 
 import sys
 import re
@@ -12,7 +12,7 @@ from wakepy import keep, ActivationResult
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmConfig import (LmConf, SetApplicationStyle, SetLiveboxModel, ReleaseCheck)
+from LiveboxMonitor.app.LmConfig import LmConf, set_application_style, set_livebox_model, release_check
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
@@ -71,7 +71,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.initRepeaterStatsLoop()
 		self._applicationName = 'Livebox Monitor v' + __version__
 		self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
-		self.setGeometry(100, 100, 1300, 102 + LmConfig.WindowHeight(21))
+		self.setGeometry(100, 100, 1300, 102 + LmConfig.window_height(21))
 		self.show()
 		QtCore.QCoreApplication.processEvents()
 		if self.signin():
@@ -81,12 +81,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 			self.adjustToLiveboxModel()
 			self.initUI()
 			self.setWindowTitle(self.appWindowTitle())
-			LmConf.loadMacAddrTable()
-			LmConf.loadSpamCallsTable()
+			LmConf.load_mac_addr_table()
+			LmConf.load_spam_calls_table()
 			QtCore.QCoreApplication.processEvents()
 			self.loadDeviceList()
 			self.initRepeaters()
-			LmConfig.SetToolTips(self, 'main')
+			LmConfig.set_tooltips(self, 'main')
 			self._appReady = True
 			if not NO_THREAD:
 				self.startEventLoop()
@@ -300,7 +300,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 					aURL = aDialog.get_url()
 					# Remove unwanted characters (can be set via Paste action) + cleanup
 					aURL = LmTools.clean_url(re.sub('[\n\t]', '', aURL))
-					LmConf.setLiveboxURL(aURL)
+					LmConf.set_livebox_url(aURL)
 					self.show()
 					continue
 				else:
@@ -313,7 +313,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 				aUser = re.sub('[\n\t]', '', aDialog.get_user())
 				aPassword = re.sub('[\n\t]', '', aDialog.get_password())
 				LmConf.SavePasswords = aDialog.get_save_passwords()
-				LmConf.setLiveboxUserPassword(aUser, aPassword)
+				LmConf.set_livebox_user_password(aUser, aPassword)
 				self.show()
 			else:
 				self.display_error(mx('Livebox authentication failed.', 'auth'))
@@ -334,7 +334,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 	### Adjust configuration to Livebox model
 	def adjustToLiveboxModel(self):
-		LmConf.setLiveboxMAC(self._api._info.get_livebox_mac())
+		LmConf.set_livebox_mac(self._api._info.get_livebox_mac())
 		self._liveboxSoftwareVersion = self._api._info.get_software_version()
 		self._liveboxModel = self._api._info.get_livebox_model()
 
@@ -342,7 +342,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 		self.determineFiberLink()
 		self.determineLiveboxPro()
-		SetLiveboxModel(self._liveboxModel)
+		set_livebox_model(self._liveboxModel)
 
 
 	### Determine link type and if fiber or not
@@ -586,14 +586,14 @@ def main(iNativeRun = False):
 	if sys.stdout is None:
 		sys.stdout = open(os.devnull, 'w')
 
-	LmConf.setNativeRun(iNativeRun)
+	LmConf.set_native_run(iNativeRun)
 
 	aApp = QtWidgets.QApplication(sys.argv)
 	sys.excepthook = exceptHook
 	if LmConf.load():
 		LmIcon.load()
-		LmConf.loadCustomDeviceIcons()
-		ReleaseCheck()
+		LmConf.load_custom_device_icons()
+		release_check()
 
 		# Command line parameters
 		aArgParser = argparse.ArgumentParser()
@@ -603,10 +603,10 @@ def main(iNativeRun = False):
 			LmSession.load_url_redirections(aArgs.redir)
 
 		while True:
-			SetApplicationStyle()
+			set_application_style()
 
 			# Apply decoupled saved preferences
-			LmConf.applySavedPrefs()
+			LmConf.apply_saved_prefs()
 
 			# Assign Python locale to selected preference (useful e.g. for pyqtgraph time axis localization)
 			try:

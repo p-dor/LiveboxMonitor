@@ -72,7 +72,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         vbox.addLayout(button_grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.SetToolTips(self, 'backrest')
+        LmConfig.set_tooltips(self, 'backrest')
 
         self.refresh_status()
 

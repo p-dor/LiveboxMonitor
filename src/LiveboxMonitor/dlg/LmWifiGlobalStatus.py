@@ -38,9 +38,9 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
         vbox.addLayout(hbox, 1)
 
         i = self.load_status(livebox_model)
-        self.resize(550, 56 + LmConfig.DialogHeight(i))
+        self.resize(550, 56 + LmConfig.dialog_height(i))
 
-        LmConfig.SetToolTips(self, 'wglobal')
+        LmConfig.set_tooltips(self, 'wglobal')
 
         self.setWindowTitle(lx('Wifi Global Status'))
         self.setModal(True)

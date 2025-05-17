@@ -106,7 +106,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
 
 		self._from_address.setFocus()
 
-		LmConfig.SetToolTips(self, 'email')
+		LmConfig.set_tooltips(self, 'email')
 
 		self.setWindowTitle(lx('Email Setup'))
 		self.setModal(True)
@@ -119,7 +119,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
 	### Load preferences data
 	def load_setup(self):
 		# If no config set to default values
-		c = LmConf.loadEmailSetup()
+		c = LmConf.load_email_setup()
 		if c is None:
 			c = {}
 

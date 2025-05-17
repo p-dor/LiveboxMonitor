@@ -178,7 +178,7 @@ class LmNatPat:
 		self._ptfList.setItemDelegate(CenteredIconsDelegate(self, PTF_ICON_COLUMNS))
 		self._ptfList.itemSelectionChanged.connect(self.ptfListClick)
 		self._ptfList.doubleClicked.connect(self.editPtfRuleButtonClick)
-		aListSize = LmConfig.TableHeight(5)
+		aListSize = LmConfig.table_height(5)
 		self._ptfList.setMinimumHeight(aListSize)
 		self._ptfList.setMaximumHeight(aListSize)
 
@@ -226,7 +226,7 @@ class LmNatPat:
 		aVBox.addLayout(aPtfButtonsBox, 0)
 		self._natPatTab.setLayout(aVBox)
 
-		LmConfig.SetToolTips(self._natPatTab, 'natpat')
+		LmConfig.set_tooltips(self._natPatTab, 'natpat')
 		self._tabWidget.addTab(self._natPatTab, lx('NAT/PAT'))
 
 		# Init context
@@ -1629,7 +1629,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'patrule')
+		LmConfig.set_tooltips(self, 'patrule')
 
 		self.setWindowTitle(lrx('Port Forwarding Rule'))
 
@@ -1975,7 +1975,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aGrid, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'ptfrule')
+		LmConfig.set_tooltips(self, 'ptfrule')
 
 		self.setWindowTitle(lfx('Protocol Forwarding Rule'))
 
@@ -2291,7 +2291,7 @@ class NatPatRuleTypeDialog(QtWidgets.QDialog):
 		aVBox.addLayout(aVCBox, 0)
 		aVBox.addLayout(aHBox, 1)
 
-		LmConfig.SetToolTips(self, 'nprtype')
+		LmConfig.set_tooltips(self, 'nprtype')
 
 		self.setWindowTitle(ltx('Select rule types'))
 

@@ -52,7 +52,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         self._host_list.set_header_resize([HostCol.HostName, HostCol.UserName])
         self._host_list.set_standard_setup(parent, allow_sort=False)
         self._host_list.setMinimumWidth(880)
-        self._host_list.setMinimumHeight(LmConfig.TableHeight(4))
+        self._host_list.setMinimumHeight(LmConfig.table_height(4))
         self._host_list.itemSelectionChanged.connect(self.host_list_click)
 
         host_list_layout.addWidget(self._host_list, 1)
@@ -130,7 +130,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
 
         self._hostname.setFocus()
 
-        LmConfig.SetToolTips(self, 'dyndns')
+        LmConfig.set_tooltips(self, 'dyndns')
 
         self.setWindowTitle(lx('DynDNS'))
         self.setModal(True)

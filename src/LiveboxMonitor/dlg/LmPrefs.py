@@ -187,7 +187,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		vbox.addWidget(prefs_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 		vbox.addLayout(button_bar, 1)
 
-		LmConfig.SetToolTips(self, 'prefs')
+		LmConfig.set_tooltips(self, 'prefs')
 
 		self.setWindowTitle(lx('Preferences'))
 		self.setModal(True)

@@ -56,7 +56,7 @@ class LmInfo:
 			self._statsList.setItem(i, StatsCol.Key, QtWidgets.QTableWidgetItem(s['Key']))
 			self._statsList.setItem(i, StatsCol.Name, QtWidgets.QTableWidgetItem(lx(s['Name'])))
 			i += 1
-		aStatsListSize = LmConfig.TableHeight(i)
+		aStatsListSize = LmConfig.table_height(i)
 		self._statsList.setMinimumHeight(aStatsListSize)
 		self._statsList.setMaximumHeight(aStatsListSize)
 
@@ -132,7 +132,7 @@ class LmInfo:
 		self._homeLanIntfStatsMap = {}
 		self._liveboxStatsMapHomeLan = {}
 
-		LmConfig.SetToolTips(self._liveboxInfoTab, 'info')
+		LmConfig.set_tooltips(self._liveboxInfoTab, 'info')
 		self._tabWidget.addTab(self._liveboxInfoTab, lx('Livebox Stats/Infos'))
 
 
