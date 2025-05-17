@@ -8,8 +8,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmGenApiDocumentation
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
-from LiveboxMonitor.app.LmConfig import LmConf, SetApplicationStyle, EmailSetupDialog
+from LiveboxMonitor.app.LmConfig import LmConf, SetApplicationStyle
 from LiveboxMonitor.dlg.LmPrefs import PrefsDialog
+from LiveboxMonitor.dlg.LmEmailSetup import EmailSetupDialog
 from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
 from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
@@ -583,7 +584,7 @@ class LmActions:
     def email_setup_button_click(self):
         email_setup_dialog = EmailSetupDialog(self)
         if email_setup_dialog.exec():
-            LmConf.setEmailSetup(email_setup_dialog.getSetup())
+            LmConf.setEmailSetup(email_setup_dialog.get_setup())
             LmConf.save()
 
 

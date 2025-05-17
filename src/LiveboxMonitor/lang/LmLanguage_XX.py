@@ -1045,7 +1045,9 @@ LABELS = {
         'Save passwords': '',
         'Preferences': '',
         'OK': '',
-        'Cancel': ''
+        'Cancel': '',
+        'Create Profile': '',
+        'Profile name:': ''
     },
 
     # Config - Connection
@@ -1103,9 +1105,7 @@ LABELS = {
         '<None>': '',
         'No Livebox detected at profile\'s URL.': '',
         'Detected MAC will be associated to this profile.': '',
-        'Warning: another Livebox is associated to this profile.': '',
-        'Create Profile': '',
-        'Profile name:': ''
+        'Warning: another Livebox is associated to this profile.': ''
     },
 
     # Config - Release warning
