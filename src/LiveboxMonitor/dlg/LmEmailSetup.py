@@ -4,7 +4,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
-from LiveboxMonitor.api.LmLiveboxInfoApi import LiveboxInfoApi
 from LiveboxMonitor.lang.LmLanguages import get_config_email_label as lx,  get_config_message as mx
 
 

@@ -7,7 +7,6 @@ import requests
 import json
 import base64
 import hashlib
-import webbrowser
 
 from enum import IntEnum
 
@@ -18,13 +17,11 @@ from LiveboxMonitor.app import LmTools
 from LiveboxMonitor.api.LmSession import DEFAULT_TIMEOUT
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmLiveboxInfoApi import LiveboxInfoApi
+from LiveboxMonitor.dlg.LmReleaseWarning import ReleaseWarningDialog
 from LiveboxMonitor.lang import LmLanguages
-from LiveboxMonitor.lang.LmLanguages import (get_config_prefs_label as lx,
-											 get_config_message as mx,
-											 get_config_email_label as lex,
-											 get_release_warning_label as lrx)
+from LiveboxMonitor.lang.LmLanguages import get_config_prefs_label as lx, get_config_message as mx
 
-from LiveboxMonitor.__init__ import __url__, __version__, __build__
+from LiveboxMonitor.__init__ import __build__
 
 
 # ################################ VARS & DEFS ################################
@@ -1280,52 +1277,3 @@ class LmConf:
 			LmTools.error('Cannot encrypt email password.')
 			iEmailSetup['Password'] = ''
 		LmConf.Email = iEmailSetup
-
-
-
-# ################################ New release warning dialog ################################
-class ReleaseWarningDialog(QtWidgets.QDialog):
-	def __init__(self, iNewRelease, iParent = None):
-		super(ReleaseWarningDialog, self).__init__(iParent)
-		self.resize(450, 150)
-
-		aWarnBox = QtWidgets.QVBoxLayout()
-		aWarnBox.setSpacing(4)
-		aNewReleaseLabel = QtWidgets.QLabel(lrx('New release {0} has been published.').format(iNewRelease), objectName = 'nreal')
-		aNewReleaseLabel.setFont(LmTools.BOLD_FONT)
-		aWarnBox.addWidget(aNewReleaseLabel)
-		aCurrReleaseLabel = QtWidgets.QLabel(lrx('You are using release {0}.').format(__version__), objectName = 'creal')
-		aWarnBox.addWidget(aCurrReleaseLabel)
-		aDownloadURL = QtWidgets.QLabel(__url__, objectName = 'downloadURL')
-		aDownloadURL.setStyleSheet('QLabel { color : blue }')
-		aDownloadURL.mousePressEvent = self.downloadUrlClick
-		aWarnBox.addWidget(aDownloadURL, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
-
-		aButtonBar = QtWidgets.QHBoxLayout()
-		aOkButton = QtWidgets.QPushButton(lrx('OK'), objectName = 'ok')
-		aOkButton.clicked.connect(self.accept)
-		aOkButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lrx('Don\'t warn me again'), objectName = 'nowarning')
-		aCancelButton.clicked.connect(self.reject)
-		aButtonBar.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aButtonBar.setSpacing(10)
-		aButtonBar.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aButtonBar.addWidget(aOkButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.setSpacing(15)
-		aVBox.addLayout(aWarnBox, 0)
-		aVBox.addLayout(aButtonBar, 1)
-
-		SetToolTips(self, 'rwarn')
-
-		self.setWindowTitle(lrx('You are not using the latest release'))
-
-		self.setModal(True)
-		self.show()
-
-
-	### Project's URL web button
-	def downloadUrlClick(self, iEvent):
-		webbrowser.open_new_tab(__url__)
-
