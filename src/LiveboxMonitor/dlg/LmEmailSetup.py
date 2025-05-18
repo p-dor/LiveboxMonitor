@@ -160,13 +160,13 @@ class EmailSetupDialog(QtWidgets.QDialog):
 	### Click on test button
 	def test_button_click(self):
 		app = self.parentWidget()
-		app.startTask(lx('Sending test email...'))
+		app._task.start(lx('Sending test email...'))
 		c = self.get_setup()
 		if LmTools.send_email(c, lx('Test Message'), lx('This is a test email from LiveboxMonitor.')):
 			app.display_status(mx('Message sent successfully.', 'emailSuccess'))
 		else:
 			app.display_error(mx('Message send failure. Check your setup.', 'emailFail'))
-		app.endTask()
+		app._task.end()
 
 
 	def starttls_changed(self, iState):

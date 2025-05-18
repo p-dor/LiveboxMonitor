@@ -227,9 +227,9 @@ class LmDeviceInfo:
 		if aCurrentSelection >= 0:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 
-			self.startTask(lx('Loading device icons...'))
+			self._task.start(lx('Loading device icons...'))
 			LmConf.load_device_icons(self._liveboxSoftwareVersion)
-			self.endTask()
+			self._task.end()
 
 			aSetDeviceTypeDialog = SetDeviceTypeDialog(aKey, self._currentDeviceType, self)
 			if (aSetDeviceTypeDialog.exec()):
@@ -376,7 +376,7 @@ class LmDeviceInfo:
 
 	### Update device infos list
 	def updateDeviceInfo(self, iDeviceKey):
-		self.startTask(lx('Getting device information...'))
+		self._task.start(lx('Getting device information...'))
 
 		try:
 			d = self._session.request('Devices.Device.' + iDeviceKey, 'get')
@@ -386,7 +386,7 @@ class LmDeviceInfo:
 		if (d is not None):
 			d = d.get('status')
 		if (d is None):
-			self.endTask()
+			self._task.end()
 			self.display_error(mx('Error getting device information.', 'devInfoErr'))
 			return
 
@@ -516,7 +516,7 @@ class LmDeviceInfo:
 			i = self.addInfoLine(self._infoAList, i, lx('Supports 5GHz'), LmTools.fmt_bool(aSysSoftwareStd.get('Supports5GHz')))
 			i = self.addInfoLine(self._infoAList, i, lx('Supports 6GHz'), LmTools.fmt_bool(aSysSoftwareStd.get('Supports6GHz')))
 
-		self.endTask()
+		self._task.end()
 
 
 

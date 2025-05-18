@@ -402,98 +402,98 @@ class LmInfo:
 
 	### Click on Livebox infos button
 	def liveboxInfoButtonClick(self):
-		self.startTask(lx('Getting Livebox information...'))
+		self._task.start(lx('Getting Livebox information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadLiveboxInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on Internet infos button
 	def internetInfoButtonClick(self):
-		self.startTask(lx('Getting Internet information...'))
+		self._task.start(lx('Getting Internet information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadInternetInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on Wifi infos button
 	def wifiInfoButtonClick(self):
-		self.startTask(lx('Getting Wifi information...'))
+		self._task.start(lx('Getting Wifi information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadWifiInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on LAN infos button
 	def lanInfoButtonClick(self):
-		self.startTask(lx('Getting LAN information...'))
+		self._task.start(lx('Getting LAN information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadLanInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on ONT infos button
 	def ontInfoButtonClick(self):
-		self.startTask(lx('Getting ONT information...'))
+		self._task.start(lx('Getting ONT information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadOntInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on VoIP infos button
 	def voipInfoButtonClick(self):
-		self.startTask(lx('Getting VoIP information...'))
+		self._task.start(lx('Getting VoIP information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadVoipInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on IPTV infos button
 	def iptvInfoButtonClick(self):
-		self.startTask(lx('Getting IPTV information...'))
+		self._task.start(lx('Getting IPTV information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadIptvInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on USB infos button
 	def usbInfoButtonClick(self):
-		self.startTask(lx('Getting USB information...'))
+		self._task.start(lx('Getting USB information...'))
 
 		self._liveboxAList.clearContents()
 		self._liveboxAList.setRowCount(0)
 
 		self.loadUsbInfo()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Click on Export infos button
@@ -510,7 +510,7 @@ class LmInfo:
 			self.display_error(mx('Cannot create the file.', 'createFileErr'))
 			return
 
-		self.startTask(lx('Exporting all information...'))
+		self._task.start(lx('Exporting all information...'))
 
 		i = 0
 		i = self.loadLiveboxInfo(i)
@@ -523,7 +523,7 @@ class LmInfo:
 		i = self.loadIptvInfo(i)
 		i = self.loadUsbInfo(i)
 
-		self.endTask()
+		self._task.end()
 
 		try:
 			self._exportFile.close()

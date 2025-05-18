@@ -289,10 +289,10 @@ class LmRepeater:
 
 	### Sign in to all repeaters
 	def signinRepeaters(self):
-		self.startTask(lx('Signing in to repeaters...'))
+		self._task.start(lx('Signing in to repeaters...'))
 		for r in self._repeaters:
 			r.signin()
-		self.endTask()
+		self._task.end()
 
 
 	### Sign out for all repeaters
@@ -512,12 +512,12 @@ class LmRepHandler:
 				self._signed = False
 				break
 
-			self._app.suspendTask()
+			self._app._task.suspend()
 			aPassword, aOK = QtWidgets.QInputDialog.getText(self._app, lx('Wrong repeater password'),
 															lx('Please enter password for repeater {0} ({1}):').format(self._name, self._ipAddr),
 															QtWidgets.QLineEdit.EchoMode.Password,
 															text = aPassword)
-			self._app.resumeTask()
+			self._app._task.resume()
 			if aOK:
 				# Remove unwanted characters from password (can be set via Paste action)
 				aPassword = re.sub('[\n\t]', '', aPassword)
@@ -663,14 +663,14 @@ class LmRepHandler:
 	### Click on Repeater infos button
 	def repeaterInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Getting repeater information...'))
+			self._app._task.start(lx('Getting repeater information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
 
 			self.loadRepeaterInfo()
 
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -678,14 +678,14 @@ class LmRepHandler:
 	### Click on Wifi infos button
 	def wifiInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Getting Wifi information...'))
+			self._app._task.start(lx('Getting Wifi information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
 
 			self.loadWifiInfo()
 
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -693,14 +693,14 @@ class LmRepHandler:
 	### Click on LAN infos button
 	def lanInfoButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Getting LAN information...'))
+			self._app._task.start(lx('Getting LAN information...'))
 
 			self._repeaterAList.clearContents()
 			self._repeaterAList.setRowCount(0)
 
 			self.loadLanInfo()
 
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -720,7 +720,7 @@ class LmRepHandler:
 				self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
-			self._app.startTask(lx('Exporting all information...'))
+			self._app._task.start(lx('Exporting all information...'))
 
 			i = 0
 			i = self.loadRepeaterInfo(i)
@@ -735,7 +735,7 @@ class LmRepHandler:
 
 			self._app._exportFile = None
 
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -743,7 +743,7 @@ class LmRepHandler:
 	### Click on Wifi ON button
 	def wifiOnButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Activating Repeater Wifi...'))
+			self._app._task.start(lx('Activating Repeater Wifi...'))
 			try:
 				d = self._session.request('NMC.Wifi', 'set', { 'Enable': True, 'Status' : True })
 				if d is None:
@@ -753,7 +753,7 @@ class LmRepHandler:
 			except BaseException as e:
 				LmTools.error(str(e))
 				self._app.display_error('NMC.Wifi:set service error')
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -761,7 +761,7 @@ class LmRepHandler:
 	### Click on Wifi OFF button
 	def wifiOffButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Deactivating Repeater Wifi...'))
+			self._app._task.start(lx('Deactivating Repeater Wifi...'))
 			try:
 				d = self._session.request('NMC.Wifi', 'set', { 'Enable': False, 'Status' : False })
 				if d is None:
@@ -771,7 +771,7 @@ class LmRepHandler:
 			except BaseException as e:
 				LmTools.error(str(e))
 				self._app.display_error('NMC.Wifi:set service error')
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -779,7 +779,7 @@ class LmRepHandler:
 	### Click on Wifi Scheduler ON button
 	def schedulerOnButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Activating Repeater Scheduler...'))
+			self._app._task.start(lx('Activating Repeater Scheduler...'))
 
 			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
@@ -794,7 +794,7 @@ class LmRepHandler:
 			except BaseException as e:
 				LmTools.error(str(e))
 				self._app.display_error('Scheduler:enableSchedule service error')
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -802,7 +802,7 @@ class LmRepHandler:
 	### Click on Wifi Scheduler OFF button
 	def schedulerOffButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Deactivating Repeater Scheduler...'))
+			self._app._task.start(lx('Deactivating Repeater Scheduler...'))
 
 			# ID has to remain 'wl0' - it is NOT corresponding to an intf key
 			try:
@@ -817,7 +817,7 @@ class LmRepHandler:
 			except BaseException as e:
 				LmTools.error(str(e))
 				self._app.display_error('Scheduler:enableSchedule service error')
-			self._app.endTask()
+			self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -826,7 +826,7 @@ class LmRepHandler:
 	def rebootRepeaterButtonClick(self):
 		if self.isSigned():
 			if self._app.ask_question(mx('Are you sure you want to reboot the Repeater?', 'reboot')):
-				self._app.startTask(lx('Rebooting Repeater...'))
+				self._app._task.start(lx('Rebooting Repeater...'))
 				try:
 					d = self._session.request('NMC', 'reboot', { 'reason': 'WebUI reboot' })
 					if (d is not None) and (d.get('status', False)):
@@ -836,7 +836,7 @@ class LmRepHandler:
 				except BaseException as e:
 					LmTools.error(str(e))
 					self._app.display_error('NMC:reboot service error')
-				self._app.endTask()
+				self._app._task.end()
 		else:
 			self._app.display_error(mx('Not signed to repeater.', 'noSign'))
 
@@ -844,7 +844,7 @@ class LmRepHandler:
 	### Click on Reboot History button
 	def rebootHistoryButtonClick(self):
 		if self.isSigned():
-			self._app.startTask(lx('Getting Reboot History...'))
+			self._app._task.start(lx('Getting Reboot History...'))
 
 			try:
 				d = self._session.request('NMC.Reboot.Reboot', 'get')
@@ -854,7 +854,7 @@ class LmRepHandler:
 			if d is not None:
 				d = d.get('status')
 
-			self._app.endTask()
+			self._app._task.end()
 
 			if d is None:
 				self._app.display_error('NMC.Reboot.Reboot:get service error')
@@ -877,9 +877,9 @@ class LmRepHandler:
 			aDoIt = self._app.ask_question(mx('Repeater is inactive. Do you want to force signin?', 'forceResign'))
 			aForceIt = True
 		if aDoIt:
-			self._app.startTask(lx('Signing in to repeater...'))
+			self._app._task.start(lx('Signing in to repeater...'))
 			self.signin(aForceIt)
-			self._app.endTask()
+			self._app._task.end()
 
 			# Sometimes the active event isn't raised
 			if self.isSigned():

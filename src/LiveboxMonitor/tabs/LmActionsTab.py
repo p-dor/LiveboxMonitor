@@ -287,113 +287,113 @@ class LmActions:
 
     ### Click on Wifi config button
     def wifi_config_button_click(self):
-        self.startTask(lx('Getting Wifi Configuration...'))
+        self._task.start(lx('Getting Wifi Configuration...'))
         c = self._api._wifi.get_config()
-        self.endTask()
+        self._task.end()
         if (c is None) or (not len(c['Intf'])):
             self.display_error(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
         else:
             wifi_config_dialog = WifiConfigDialog(self, c, False)
             if wifi_config_dialog.exec():
-                self.startTask(lx('Setting Wifi Configuration...'))
+                self._task.start(lx('Setting Wifi Configuration...'))
                 n = wifi_config_dialog.get_config()
                 if not self._api._wifi.set_config(c, n):
                     self.display_error(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
-                self.endTask()
+                self._task.end()
 
 
     ### Click on Wifi guest config button
     def wifi_guest_config_button_click(self):
-        self.startTask(lx('Getting Guest Wifi Configuration...'))
+        self._task.start(lx('Getting Guest Wifi Configuration...'))
         c = self._api._wifi.get_guest_config()
-        self.endTask()
+        self._task.end()
         if (c is None) or (not len(c['Intf'])):
             self.display_error(mx('Something failed while trying to get wifi configuration.', 'wifiGetConfErr'))
         else:
             wifi_config_dialog = WifiConfigDialog(self, c, True)
             if wifi_config_dialog.exec():
-                self.startTask(lx('Setting Guest Wifi Configuration...'))
+                self._task.start(lx('Setting Guest Wifi Configuration...'))
                 n = wifi_config_dialog.get_config()
                 if not self._api._wifi.set_guest_config(c, n):
                     self.display_error(mx('Something failed while trying to set wifi configuration.', 'wifiSetConfErr'))
-                self.endTask()
+                self._task.end()
 
 
     ### Click on Wifi ON button
     def wifi_on_button_click(self):
-        self.startTask(lx('Activating Wifi...'))
+        self._task.start(lx('Activating Wifi...'))
         try:
             self._api._wifi.set_enable(True)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Wifi activated.', 'wifiOn'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on Wifi OFF button
     def wifi_off_button_click(self):
-        self.startTask(lx('Deactivating Wifi...'))
+        self._task.start(lx('Deactivating Wifi...'))
         try:
             self._api._wifi.set_enable(False)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Wifi deactivated.', 'wifiOff'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on guest Wifi ON button
     def guest_wifi_on_button_click(self):
-        self.startTask(lx('Activating Guest Wifi...'))
+        self._task.start(lx('Activating Guest Wifi...'))
         try:
             self._api._wifi.set_guest_enable(True)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Guest Wifi activated. Reactivate Scheduler if required.', 'gwifiOn'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on guest Wifi OFF button
     def guest_wifi_off_button_click(self):
-        self.startTask(lx('Deactivating Guest Wifi...'))
+        self._task.start(lx('Deactivating Guest Wifi...'))
         try:
             self._api._wifi.set_guest_enable(False)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Guest Wifi deactivated.', 'gwifiOff'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on Scheduler ON button
     def scheduler_on_button_click(self):
-        self.startTask(lx('Activating Wifi Scheduler...'))
+        self._task.start(lx('Activating Wifi Scheduler...'))
         try:
             self._api._wifi.set_scheduler_enable(True)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Scheduler activated.', 'schedOn'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on Scheduler OFF button
     def scheduler_off_button_click(self):
-        self.startTask(lx('Deactivating Wifi Scheduler...'))
+        self._task.start(lx('Deactivating Wifi Scheduler...'))
         try:
             self._api._wifi.set_scheduler_enable(False)
         except BaseException as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Scheduler deactivated.', 'schedOff'))
-        self.endTask()
+        self._task.end()
 
 
     ### Click on Global Wifi Status button
     def wifi_global_status_button_click(self):
-        self.startTask(lx('Getting Wifi Global Status...'))
+        self._task.start(lx('Getting Wifi Global Status...'))
 
         # Getting Livebox status
         livebox_status = self._api._wifi.get_global_wifi_status()
@@ -402,7 +402,7 @@ class LmActions:
         global_status = self.getRepeatersWifiStatus()
         global_status.insert(0, livebox_status)
 
-        self.endTask()
+        self._task.end()
 
         status_dialog = WifiGlobalStatusDialog(self, global_status, self._liveboxModel)
         status_dialog.exec()
@@ -425,7 +425,7 @@ class LmActions:
 
         screen_dialog = ScreenDialog(orange_led_level, show_wifi_password, self)
         if screen_dialog.exec():
-            self.startTask(lx('Setting LEDs & Screen Setup...'))
+            self._task.start(lx('Setting LEDs & Screen Setup...'))
 
             # Set orange LED level if changed
             new_orange_led_level = screen_dialog.get_orange_led_level()
@@ -443,37 +443,37 @@ class LmActions:
                 except BaseException as e:
                     self.display_error(str(e))
 
-            self.endTask()
+            self._task.end()
 
 
     ### Click on Reboot Livebox button
     def reboot_livebox_button_click(self):
         if self.ask_question(mx('Are you sure you want to reboot the Livebox?', 'lbReboot')):
-            self.startTask(lx('Rebooting Livebox...'))
+            self._task.start(lx('Rebooting Livebox...'))
             try:
                 self._api._reboot.reboot_livebox()
             except BaseException as e:
-                self.endTask()
+                self._task.end()
                 self.display_error(str(e))
                 return
 
-            self.endTask()
+            self._task.end()
             self.display_status(mx('Application will now quit.', 'appQuit'))
             self.close()
 
 
     ### Click on Reboot History button
     def reboot_history_button_click(self):
-        self.startTask(lx('Getting Reboot History...'))
+        self._task.start(lx('Getting Reboot History...'))
 
         try:
             d = self._api._reboot.get_reboot_history()
         except BaseException as e:
-            self.endTask()
+            self._task.end()
             self.display_error(str(e))
             return
 
-        self.endTask()
+        self._task.end()
 
         history_dialog = RebootHistoryDialog('Livebox', self)
         history_dialog.load_history(d)
@@ -491,7 +491,7 @@ class LmActions:
 
         firewall_level_dialog = FirewallLevelDialog(firewall_ipv4_level, firewall_ipv6_level, self)
         if firewall_level_dialog.exec():
-            self.startTask(lx('Setting Firewall Levels...'))
+            self._task.start(lx('Setting Firewall Levels...'))
 
             # Set new IPv4 firewall level if changed
             new_firewall_ipv4_level = firewall_level_dialog.get_ipv4_level()
@@ -509,7 +509,7 @@ class LmActions:
                 except BaseException as e:
                     self.display_error(str(e))
 
-            self.endTask()
+            self._task.end()
 
 
     ### Click on Ping Response button
@@ -531,7 +531,7 @@ class LmActions:
             new_ipv4_ping = ping_response_dialog.get_ipv4()
             new_ipv6_ping = ping_response_dialog.get_ipv6()
             if (new_ipv4_ping != ipv4_ping) or (new_ipv6_ping != ipv6_ping):
-                self.startTask(lx('Set Ping Responses...'))
+                self._task.start(lx('Set Ping Responses...'))
                 p = {}
                 p['enableIPv4'] = new_ipv4_ping
                 p['enableIPv6'] = new_ipv6_ping
@@ -539,7 +539,7 @@ class LmActions:
                     self._api._firewall.set_respond_to_ping(p)
                 except BaseException as e:
                     self.display_error(str(e))
-                self.endTask()
+                self._task.end()
 
 
     ### Click on DynDNS button
@@ -623,12 +623,12 @@ class LmActions:
                 modifiers = QtGui.QGuiApplication.queryKeyboardModifiers()
                 filter_values = modifiers == QtCore.Qt.KeyboardModifier.ControlModifier
 
-            self.startTask(lx('Generating API document files...'))
+            self._task.start(lx('Generating API document files...'))
             g = LmGenApiDocumentation.LmGenApiDoc(self, folder, filter_values)
             g.gen_module_files()
             g.gen_full_file()
             g.gen_process_list_file()
-            self.endTask()
+            self._task.end()
 
 
     ### Click on Quit Application button

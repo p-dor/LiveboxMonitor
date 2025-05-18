@@ -76,7 +76,7 @@ class ExportTableDialog(QtWidgets.QDialog):
             self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
             return
 
-        self._app.startTask(lx('Exporting data...'))
+        self._app._task.start(lx('Exporting data...'))
 
         # Create CSV writer
         csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
@@ -102,7 +102,7 @@ class ExportTableDialog(QtWidgets.QDialog):
             LmTools.error(f'File saving error: {e}')
             self._app.display_error(mx('Cannot save the file.', 'saveFileErr'))
  
-        self._app.endTask()
+        self._app._task.end()
 
 
     # Return an export string for the item at the given row & column

@@ -136,19 +136,19 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
     ### Load DMZ list
     def load_dmz(self):
-        self._app.startTask(lx('Loading DMZ devices...'))
+        self._app._task.start(lx('Loading DMZ devices...'))
 
         try:
             d = self._api._firewall.get_dmz_devices()
         except BaseException as e:
             self._app.display_error(str(e))
-            self._app.endTask()
+            self._app._task.end()
             return
 
         if d:
             if not isinstance(d, dict):
                 self._app.display_error(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
-                self._app.endTask()
+                self._app._task.end()
                 return
 
             i = 0
@@ -169,7 +169,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
                 i += 1
 
             self.dmz_list_click()
-        self._app.endTask()
+        self._app._task.end()
 
 
     ### Click on DMZ list item

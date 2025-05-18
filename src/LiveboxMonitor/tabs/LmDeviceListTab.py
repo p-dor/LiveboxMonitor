@@ -198,7 +198,7 @@ class LmDeviceList:
 
 	### Click on IPv6 button
 	def ipv6ButtonClick(self):
-		self.startTask(lx('Getting IPv6 Information...'))
+		self._task.start(lx('Getting IPv6 Information...'))
 
 		# Get IPv6 status
 		aIPv6Enabled = None
@@ -212,7 +212,7 @@ class LmDeviceList:
 		if d is not None:
 			aIPv6Enabled = d.get('Enable')
 		if aIPv6Enabled is None:
-			self.endTask()
+			self._task.end()
 			self.display_error('NMC.IPv6:get service error')
 			return
 
@@ -259,7 +259,7 @@ class LmDeviceList:
 			aIPv6Prefix = d.get('IPv6DelegatedPrefix')
 			aGateway = d.get('RemoteGatewayIPv6')
 		if (aIPv6Addr is None) or (aIPv6Prefix is None):
-			self.endTask()
+			self._task.end()
 			self.display_error('NMC:getWANStatus service error')
 			return
 
@@ -273,13 +273,13 @@ class LmDeviceList:
 		if d is not None:
 			aPrefixes = d.get('status')
 		if aPrefixes is None:
-			self.endTask()
+			self._task.end()
 			self.display_error('DHCPv6.Server:getPDPrefixLeases service error')
 			return
 
 		self.loadDeviceIpNameMap()
 
-		self.endTask()
+		self._task.end()
 
 		aIPv6Dialog = IPv6Dialog(aIPv6Enabled, aCGNat, aMode, aIPv6Addr, aIPv6Prefix, aGateway, self)
 		aIPv6Dialog.loadDeviceList(self._liveboxDevices, aPrefixes)
@@ -288,9 +288,9 @@ class LmDeviceList:
 
 	### Click on DNS button
 	def dnsButtonClick(self):
-		self.startTask(lx('Getting DNS Information...'))
+		self._task.start(lx('Getting DNS Information...'))
 		self.loadDeviceIpNameMap()
-		self.endTask()
+		self._task.end()
 
 		aDnsDialog = DnsDialog(self)
 		aDnsDialog.loadDeviceList(self._liveboxDevices)
@@ -299,7 +299,7 @@ class LmDeviceList:
 
 	### Load device list
 	def loadDeviceList(self):
-		self.startTask(lx('Loading device list...'))
+		self._task.start(lx('Loading device list...'))
 
 		self._deviceList.setSortingEnabled(False)
 		self._infoDList.setSortingEnabled(False)
@@ -366,7 +366,7 @@ class LmDeviceList:
 		self._eventDList.setSortingEnabled(True)
 		self._eventList.setSortingEnabled(True)
 
-		self.endTask()
+		self._task.end()
 
 
 	### Check if device is displayable
@@ -603,19 +603,19 @@ class LmDeviceList:
 
 	### Assign LB names to all unknown devices
 	def assignLBNamesToUnkownDevices(self):
-		self.startTask(lx('Assigning names to unknown devices...'))
+		self._task.start(lx('Assigning names to unknown devices...'))
 		aDeviceList = self.getDeviceList()
 		for d in aDeviceList:
 			aLocalName = LmConf.MacAddrTable.get(d['MAC'])
 			if not aLocalName:
 				self.setDeviceName(d['MAC'], d['LBName'])
-		self.endTask()
+		self._task.end()
 
 
 	### Load device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map if need to be refreshed
 	def loadDeviceIpNameMap(self):
 		if self._deviceIpNameMapDirty:
-			self.startTask(lx('Loading devices information...'))
+			self._task.start(lx('Loading devices information...'))
 
 			d = None
 			try:
@@ -626,7 +626,7 @@ class LmDeviceList:
 			if d is not None:
 				d = d.get('status')
 			if d is None:
-				self.endTask()
+				self._task.end()
 				self.display_error(mx('Error getting device list.', 'dlistErr'))
 				return
 			self._liveboxDevices = d
@@ -634,7 +634,7 @@ class LmDeviceList:
 			self.buildDeviceIpNameMap()
 			self._deviceIpNameMapDirty = False
 
-			self.endTask()
+			self._task.end()
 
 
 	# Build device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map from currently loaded device list

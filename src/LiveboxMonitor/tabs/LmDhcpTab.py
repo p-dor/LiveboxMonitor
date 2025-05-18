@@ -311,7 +311,7 @@ class LmDhcp:
 
 	### Load DHCP bindings
 	def loadDhcpBindings(self):
-		self.startTask(lx('Getting DHCP bindings...'))
+		self._task.start(lx('Getting DHCP bindings...'))
 		self._dhcpDList.setSortingEnabled(False)
 
 		# Home domain
@@ -337,7 +337,7 @@ class LmDhcp:
 		self._dhcpDList.sortItems(DhcpCol.IP, QtCore.Qt.SortOrder.AscendingOrder)
 		self._dhcpDList.setSortingEnabled(True)
 
-		self.endTask()
+		self._task.end()
 
 
 	### Load DHCP bindings in the list
@@ -418,7 +418,7 @@ class LmDhcp:
 
 	### Load DHCP infos list
 	def loadDhcpInfo(self):
-		self.startTask(lx('Getting DHCP information...'))
+		self._task.start(lx('Getting DHCP information...'))
 
 		i = 0
 		i = self.addTitleLine(self._dhcpAList, i, lx('DHCP Home Information'))
@@ -541,7 +541,7 @@ class LmDhcp:
 				i = self.loadDhcpInfoOptions(lx('DHCPv6 Sent Options'), i, p.get('SentOption'))
 				i = self.loadDhcpInfoOptions(lx('DHCPv6 Received Options'), i, p.get('ReceivedOption'))
 
-		self.endTask()
+		self._task.end()
 
 
 	### Update DHCP infos list

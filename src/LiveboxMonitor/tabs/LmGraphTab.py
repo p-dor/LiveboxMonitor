@@ -196,17 +196,17 @@ class LmGraph:
 			self._graphDataLoaded = True	# Must be first to avoid reentrency during tab drag&drop
 
 			# Load config & data
-			self.startTask(lx('Loading configuration...'))
+			self._task.start(lx('Loading configuration...'))
 			self.loadStatParams()
 			self.loadHomeLanInterfaces()
 			self.loadHomeLanDevices()
 			self.loadGraphConfig()
-			self.endTask()
+			self._task.end()
 
 			# Plot data
-			self.startTask(lx('Plotting graphes...'))
+			self._task.start(lx('Plotting graphes...'))
 			self.plotGraph()
-			self.endTask()
+			self._task.end()
 
 			# Start graph time window update timer, to cut regularly old values
 			self._graphWindowTimer = QtCore.QTimer()
@@ -271,13 +271,13 @@ class LmGraph:
 		self.saveGraphConfig()
 
 		# Refresh interface & device lists
-		self.startTask(lx('Plotting graphes...'))
+		self._task.start(lx('Plotting graphes...'))
 		self.loadHomeLanInterfaces()
 		self.loadHomeLanDevices()
 
 		# Plot the graphs
 		self.plotGraph()
-		self.endTask()
+		self._task.end()
 
 
 	### Click on export button
@@ -311,7 +311,7 @@ class LmGraph:
 				return
 			break
 
-		self.startTask(lx('Exporting statistics...'))
+		self._task.start(lx('Exporting statistics...'))
 
 		# Write header line
 		aCsvWriter = csv.writer(aExportFile, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
@@ -329,7 +329,7 @@ class LmGraph:
 								 str(ut[i]), str(int(u[i] * UNIT_DIVIDER))])
 			i += 1
 
-		self.endTask()
+		self._task.end()
 
 		try:
 			aExportFile.close()

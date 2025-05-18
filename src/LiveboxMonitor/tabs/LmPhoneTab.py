@@ -353,15 +353,15 @@ class LmPhone:
 	### Click on delete all calls button
 	def deleteAllCallsButtonClick(self):
 		if self.ask_question(mx('Are you sure you want to delete all phone calls?', 'delAllCalls')):
-			self.startTask(lx('Deleting phone call list...'))
+			self._task.start(lx('Deleting phone call list...'))
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
 			except BaseException as e:
-				self.endTask()
+				self._task.end()
 				LmTools.error(str(e))
 				self.display_error('Delete all calls query error.')
 				return
-			self.endTask()
+			self._task.end()
 
 			if (aReply is not None) and ('status' in aReply):
 				self.refreshCallButtonClick()
@@ -416,7 +416,7 @@ class LmPhone:
 
 	### Load phone call list
 	def loadCallList(self):
-		self.startTask(lx('Loading phone call list...'))
+		self._task.start(lx('Loading phone call list...'))
 
 		self._callList.setSortingEnabled(False)
 
@@ -493,7 +493,7 @@ class LmPhone:
 		self._callList.setSortingEnabled(True)
 		self.callListClick()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Assign contacts to calls via matching context
@@ -645,15 +645,15 @@ class LmPhone:
 	### Click on delete all contacts button
 	def deleteAllContactsButtonClick(self):
 		if self.ask_question(mx('Are you sure you want to delete all contacts?', 'delAllContacts')):
-			self.startTask(lx('Deleting contact list...'))
+			self._task.start(lx('Deleting contact list...'))
 			try:
 				aReply = self._session.request('Phonebook', 'removeAllContacts')
 			except BaseException as e:
-				self.endTask()
+				self._task.end()
 				LmTools.error(str(e))
 				self.display_error('Delete all contacts query error.')
 				return
-			self.endTask()
+			self._task.end()
 
 			if (aReply is not None) and (aReply.get('status', False)):
 				self.refreshContactButtonClick()
@@ -697,7 +697,7 @@ class LmPhone:
 			self.display_error(mx('Cannot create the file.', 'createFileErr'))
 			return
 
-		self.startTask(lx('Exporting all contacts...'))
+		self._task.start(lx('Exporting all contacts...'))
 
 		aContactList = self._session.request('Phonebook', 'getAllContacts', timeout=20)
 		if aContactList is not None:
@@ -718,7 +718,7 @@ class LmPhone:
 				aExportFile.write('RINGTONE:' + aContact['ringtone'] + '\n')
 				aExportFile.write('END:VCARD\n')
 
-		self.endTask()
+		self._task.end()
 
 		try:
 			aExportFile.close()
@@ -732,7 +732,7 @@ class LmPhone:
 		aFiles = QtWidgets.QFileDialog.getOpenFileNames(self, lx('Select files to import'), '', '*.vcf')
 		aFiles = aFiles[0]
 
-		self.startTask(lx('Importing contacts...'))
+		self._task.start(lx('Importing contacts...'))
 		self._contactList.setSortingEnabled(False)
 
 		aFileError = []
@@ -746,7 +746,7 @@ class LmPhone:
 		self._contactList.setSortingEnabled(True)
 
 		self.assignContactToCalls()
-		self.endTask()
+		self._task.end()
 
 		if len(aFileError):
 			aErrorStr = lx('Cannot import file(s): ')
@@ -910,7 +910,7 @@ class LmPhone:
 
 	### Load contact list
 	def loadContactList(self):
-		self.startTask(lx('Loading contact list...'))
+		self._task.start(lx('Loading contact list...'))
 
 		self._contactList.setSortingEnabled(False)
 
@@ -934,7 +934,7 @@ class LmPhone:
 		self.assignContactToCalls()
 		self.contactListClick()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Get contact from Livebox contact structure

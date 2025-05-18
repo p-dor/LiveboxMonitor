@@ -142,7 +142,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
 
     ### Load host list
     def load_hosts(self):
-        self._app.startTask(lx('Loading DynDNS hosts...'))
+        self._app._task.start(lx('Loading DynDNS hosts...'))
 
         try:
             d = self._api._dyndns.get_hosts()
@@ -170,7 +170,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
             i += 1
 
         self.host_list_click()
-        self._app.endTask()
+        self._app._task.end()
 
 
     ### Click on host list item

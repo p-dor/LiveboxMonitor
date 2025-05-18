@@ -216,7 +216,7 @@ class LmGenApiDoc:
         if name is None:
             name = module
 
-        self._app.updateTask(name)
+        self._app._task.update(name)
 
         try:
             d = self._session.request(module, get=True, timeout=15)

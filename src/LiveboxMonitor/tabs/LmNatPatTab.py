@@ -277,25 +277,25 @@ class LmNatPat:
 		r = self.getSelectedPatRule()
 		if r is not None:
 			r['Enable'] = not r['Enable']
-			self.startTask(lx('Saving rule...'))
+			self._task.start(lx('Saving rule...'))
 			if self.savePatRule(r):
 				self.commitNatPatRuleChange()
 				i = self._patList.currentRow()
 				self._patList.setItem(i, PatCol.Enabled, self.formatActiveTableWidget(r['Enable']))
 				self.patListClick()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on add PAT rule button
 	def addPatRuleButtonClick(self):
 		aPatRuleDialog = PatRuleDialog(None, self)
 		if aPatRuleDialog.exec():
-			self.startTask(lx('Saving rule...'))
+			self._task.start(lx('Saving rule...'))
 			r = aPatRuleDialog.getRule()
 			if self.savePatRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPatList()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on edit PAT rule button
@@ -304,7 +304,7 @@ class LmNatPat:
 		if r is not None:
 			aPatRuleDialog = PatRuleDialog(r, self)
 			if aPatRuleDialog.exec():
-				self.startTask(lx('Saving rule...'))
+				self._task.start(lx('Saving rule...'))
 				# First delete current rule
 				self.delPatRule(r)
 				# Then save new one
@@ -312,25 +312,25 @@ class LmNatPat:
 				if self.savePatRule(r):
 					self.commitNatPatRuleChange()
 					self.refreshPatList()
-				self.endTask()
+				self._task.end()
 
 
 	### Click on delete PAT rule rules button
 	def delPatRuleButtonClick(self):
 		r = self.getSelectedPatRule()
 		if r is not None:
-			self.startTask(lx('Deleting rule...'))
+			self._task.start(lx('Deleting rule...'))
 			if self.delPatRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPatList()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on delete all PAT rules button
 	def delAllPatRulesButtonClick(self):
 		aTypeDialog = NatPatRuleTypeDialog(True, self)
 		if aTypeDialog.exec():
-			self.startTask(lx('Deleting rules...'))
+			self._task.start(lx('Deleting rules...'))
 			t = aTypeDialog.getTypes()
 
 			# Delete all IPv4 rules if selected
@@ -354,7 +354,7 @@ class LmNatPat:
 			# Commit & refresh
 			self.commitNatPatRuleChange()
 			self.refreshPatList()
-			self.endTask()
+			self._task.end()
 
 			self.display_status(mx('All selected rule(s) deleted.', 'delAllPat'))
 
@@ -377,7 +377,7 @@ class LmNatPat:
 				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
-			self.startTask(lx('Exporting port forwarding rules...'))
+			self._task.start(lx('Exporting port forwarding rules...'))
 
 			i = 0
 			c = 0
@@ -396,7 +396,7 @@ class LmNatPat:
 			aFile['Rules'] = aRules
 			json.dump(aFile, aExportFile, indent = 4)
 
-			self.endTask()
+			self._task.end()
 
 			try:
 				aExportFile.close()
@@ -437,14 +437,14 @@ class LmNatPat:
 				aError = True
 
 		if not aError:
-			self.startTask(lx('Importing port forwarding rules...'))
+			self._task.start(lx('Importing port forwarding rules...'))
 
 			c = 0
 			for r in aRules:
 				if self.checkPatRule(r) and self.savePatRule(r):
 					c += 1
 
-			self.endTask()
+			self._task.end()
 
 		try:
 			aImportFile.close()
@@ -487,25 +487,25 @@ class LmNatPat:
 		r = self.getSelectedPtfRule()
 		if r is not None:
 			r['Enable'] = not r['Enable']
-			self.startTask(lx('Saving rule...'))
+			self._task.start(lx('Saving rule...'))
 			if self.savePtfRule(r):
 				self.commitNatPatRuleChange()
 				i = self._ptfList.currentRow()
 				self._ptfList.setItem(i, PtfCol.Enabled, self.formatActiveTableWidget(r['Enable']))
 				self.ptfListClick()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on add PTF rule button
 	def addPtfRuleButtonClick(self):
 		aPtfRuleDialog = PtfRuleDialog(None, self)
 		if aPtfRuleDialog.exec():
-			self.startTask(lx('Saving rule...'))
+			self._task.start(lx('Saving rule...'))
 			r = aPtfRuleDialog.getRule()
 			if self.savePtfRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPtfList()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on edit PTF rule button
@@ -514,7 +514,7 @@ class LmNatPat:
 		if r is not None:
 			aPtfRuleDialog = PtfRuleDialog(r, self)
 			if aPtfRuleDialog.exec():
-				self.startTask(lx('Saving rule...'))
+				self._task.start(lx('Saving rule...'))
 				# First delete current rule
 				self.delPtfRule(r)
 				# Then save new one
@@ -522,25 +522,25 @@ class LmNatPat:
 				if self.savePtfRule(r):
 					self.commitNatPatRuleChange()
 					self.refreshPtfList()
-				self.endTask()
+				self._task.end()
 
 
 	### Click on delete PTF rule rules button
 	def delPtfRuleButtonClick(self):
 		r = self.getSelectedPtfRule()
 		if r is not None:
-			self.startTask(lx('Deleting rule...'))
+			self._task.start(lx('Deleting rule...'))
 			if self.delPtfRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPtfList()
-			self.endTask()
+			self._task.end()
 
 
 	### Click on delete all PTF rules button
 	def delAllPtfRulesButtonClick(self):
 		aTypeDialog = NatPatRuleTypeDialog(False, self)
 		if aTypeDialog.exec():
-			self.startTask(lx('Deleting rules...'))
+			self._task.start(lx('Deleting rules...'))
 			t = aTypeDialog.getTypes()
 			i = 0
 			c = 0
@@ -553,7 +553,7 @@ class LmNatPat:
 				i += 1
 			self.commitNatPatRuleChange()
 			self.refreshPtfList()
-			self.endTask()
+			self._task.end()
 
 			self.display_status(mx('{} rule(s) deleted.', 'ruleDel').format(c))
 
@@ -576,7 +576,7 @@ class LmNatPat:
 				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
 
-			self.startTask(lx('Exporting protocol forwarding rules...'))
+			self._task.start(lx('Exporting protocol forwarding rules...'))
 
 			i = 0
 			c = 0
@@ -595,7 +595,7 @@ class LmNatPat:
 			aFile['Rules'] = aRules
 			json.dump(aFile, aExportFile, indent = 4)
 
-			self.endTask()
+			self._task.end()
 
 			try:
 				aExportFile.close()
@@ -636,14 +636,14 @@ class LmNatPat:
 				aError = True
 
 		if not aError:
-			self.startTask(lx('Importing protocol forwarding rules...'))
+			self._task.start(lx('Importing protocol forwarding rules...'))
 
 			c = 0
 			for r in aRules:
 				if self.checkPtfRule(r) and self.savePtfRule(r):
 					c += 1
 
-			self.endTask()
+			self._task.end()
 
 		try:
 			aImportFile.close()
@@ -678,7 +678,7 @@ class LmNatPat:
 
 	### Load PAT rules
 	def loadPatRules(self):
-		self.startTask(lx('Loading port forwarding rules...'))
+		self._task.start(lx('Loading port forwarding rules...'))
 		self._patList.setSortingEnabled(False)
 
 		# IPv4 types (webui / upnp / others?)
@@ -693,7 +693,7 @@ class LmNatPat:
 		self._patList.setCurrentCell(-1, -1)
 		self.patListClick()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Load IPv4 (webui / upnp / others?) PAT rules
@@ -1110,7 +1110,7 @@ class LmNatPat:
 
 	### Load PTF rules
 	def loadPtfRules(self):
-		self.startTask(lx('Loading protocol forwarding rules...'))
+		self._task.start(lx('Loading protocol forwarding rules...'))
 		self._ptfList.setSortingEnabled(False)
 
 		# IPv4 types
@@ -1125,7 +1125,7 @@ class LmNatPat:
 		self._ptfList.setCurrentCell(-1, -1)
 		self.ptfListClick()
 
-		self.endTask()
+		self._task.end()
 
 
 	### Load IPv4 PTF rules
