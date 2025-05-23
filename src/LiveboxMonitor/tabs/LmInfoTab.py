@@ -133,7 +133,7 @@ class LmInfo:
 		self._liveboxStatsMapHomeLan = {}
 
 		LmConfig.set_tooltips(self._liveboxInfoTab, 'info')
-		self._tabWidget.addTab(self._liveboxInfoTab, lx('Livebox Stats/Infos'))
+		self._tab_widget.addTab(self._liveboxInfoTab, lx('Livebox Stats/Infos'))
 
 
 	### Init the Livebox stats collector thread
@@ -1063,7 +1063,7 @@ class LmInfo:
 		i = self.addTitleLine(self._liveboxAList, iIndex, lx('ONT Information'))
 
 		# Call SFP module for LB4
-		if self._liveboxModel == 4:
+		if self._api._info.get_livebox_model() == 4:
 			try:
 				d = self._session.request('SFP', 'get')
 			except BaseException as e:
@@ -1189,7 +1189,7 @@ class LmInfo:
 
 			v = d.get('Bias')
 			if v is not None:
-				if self._liveboxModel >= 6:
+				if self._api._info.get_livebox_model() >= 6:
 					v /= 10000
 				if (v < 0) or (v > 150):
 					aQual = LmTools.ValQual.Error
@@ -1257,7 +1257,7 @@ class LmInfo:
 						i = self.addInfoLine(self._liveboxAList, i, lx('{} Number').format(aName), l.get('directoryNumber'))
 
 		# No DECT on Livebox 6
-		if self._liveboxModel >= 6:
+		if self._api._info.get_livebox_model() >= 6:
 			return i
 
 		i = self.addTitleLine(self._liveboxAList, i, lx('DECT Information'))

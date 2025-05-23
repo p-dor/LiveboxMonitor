@@ -91,7 +91,7 @@ class LmDeviceInfo:
 		self._deviceInfoTab.setLayout(aVBox)
 
 		LmConfig.set_tooltips(self._deviceInfoTab, 'dinfo')
-		self._tabWidget.addTab(self._deviceInfoTab, lx('Device Infos'))
+		self._tab_widget.addTab(self._deviceInfoTab, lx('Device Infos'))
 
 		# Init context
 		self.initDeviceContext()
@@ -228,7 +228,7 @@ class LmDeviceInfo:
 			aKey = self._infoDList.item(aCurrentSelection, DSelCol.Key).text()
 
 			self._task.start(lx('Loading device icons...'))
-			LmConf.load_device_icons(self._liveboxSoftwareVersion)
+			LmConf.load_device_icons(self._api._info.get_software_version())
 			self._task.end()
 
 			aSetDeviceTypeDialog = SetDeviceTypeDialog(aKey, self._currentDeviceType, self)

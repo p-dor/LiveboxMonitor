@@ -105,7 +105,7 @@ class LmDeviceList:
 		self._deviceListTab.setLayout(aVBox)
 
 		LmConfig.set_tooltips(self._deviceListTab, 'dlist')
-		self._tabWidget.addTab(self._deviceListTab, lx('Device List'))
+		self._tab_widget.addTab(self._deviceListTab, lx('Device List'))
 
 
 	### Init the Livebox Wifi stats collector thread
@@ -183,8 +183,8 @@ class LmDeviceList:
 			aKey = self._deviceList.item(aCurrentSelection, DevCol.Key).text()
 			aLine = self.findDeviceLine(self._infoDList, aKey)
 			self._infoDList.selectRow(aLine)
-		self.switchToDeviceInfosTab()
-	
+		self.switch_to_device_infos_tab()
+
 
 	### Click on device events button
 	def deviceEventsButtonClick(self):
@@ -193,7 +193,7 @@ class LmDeviceList:
 			aKey = self._deviceList.item(aCurrentSelection, DevCol.Key).text()
 			aLine = self.findDeviceLine(self._eventDList, aKey)
 			self._eventDList.selectRow(aLine)
-		self.switchToDeviceEventsTab()
+		self.switch_to_device_events_tab()
 
 
 	### Click on IPv6 button
@@ -408,7 +408,7 @@ class LmDeviceList:
 	### Update device line
 	def updateDeviceLine(self, iLine, iDevice, iNotify):
 		aDeviceType = iDevice.get('DeviceType', '')
-		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType, self._liveboxSoftwareVersion)
+		aDeviceTypeIcon = self.formatDeviceTypeTableWidget(aDeviceType, self._api._info.get_software_version())
 		self._deviceList.setItem(iLine, DevCol.Type, aDeviceTypeIcon)
 
 		aLBName = QtWidgets.QTableWidgetItem(iDevice.get('Name', ''))

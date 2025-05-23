@@ -19,10 +19,10 @@ class LmTask:
         self._stack.append(task)
         LmTools.mouse_cursor_busy() # Stack cursor change
 
-        if self._app._statusBar is None:
-            self._app.setWindowTitle(self._app.appWindowTitle() + ' - ' + task)
+        if self._app._status_bar is None:
+            self._app.setWindowTitle(self._app.app_window_title() + ' - ' + task)
         else:
-            self._app._statusBar.showMessage(task)
+            self._app._status_bar.showMessage(task)
             QtCore.QCoreApplication.sendPostedEvents()
             QtCore.QCoreApplication.processEvents()
 
@@ -45,10 +45,10 @@ class LmTask:
     def update(self, status):
         if self._index:
             task = self._stack[self._index - 1]
-            if self._app._statusBar is None:
-                self._app.setWindowTitle(self._app.appWindowTitle() + ' - ' + task + ' ' + status + '.')
+            if self._app._status_bar is None:
+                self._app.setWindowTitle(self._app.app_window_title() + ' - ' + task + ' ' + status + '.')
             else:
-                self._app._statusBar.showMessage(task + ' ' + status + '.')
+                self._app._status_bar.showMessage(task + ' ' + status + '.')
                 QtCore.QCoreApplication.sendPostedEvents()
                 QtCore.QCoreApplication.processEvents()
 
@@ -64,18 +64,18 @@ class LmTask:
 
             if self._index:
                 task = self._stack[self._index - 1]
-                if self._app._statusBar is None:
-                    self._app.setWindowTitle(self._app.appWindowTitle() + ' - ' + task)
+                if self._app._status_bar is None:
+                    self._app.setWindowTitle(self._app.app_window_title() + ' - ' + task)
                 else:
-                    self._app._statusBar.showMessage(task)
+                    self._app._status_bar.showMessage(task)
                     QtCore.QCoreApplication.sendPostedEvents()
                     QtCore.QCoreApplication.processEvents()
             else:
                 task = '<None>'
-                if self._app._statusBar is None:
-                    self._app.setWindowTitle(self._app.appWindowTitle())
+                if self._app._status_bar is None:
+                    self._app.setWindowTitle(self._app.app_window_title())
                 else:
-                    self._app._statusBar.clearMessage()
+                    self._app._status_bar.clearMessage()
                     QtCore.QCoreApplication.processEvents()
 
             LmTools.log_debug(1, f'TASK ENDING stack={self._index} - restoring={task}')

@@ -104,7 +104,7 @@ class LmDhcp:
 		self._dhcpTab.setLayout(aHBox)
 
 		LmConfig.set_tooltips(self._dhcpTab, 'dhcp')
-		self._tabWidget.addTab(self._dhcpTab, lx('DHCP'))
+		self._tab_widget.addTab(self._dhcpTab, lx('DHCP'))
 
 		# Set default values
 		self._homeIpServer = '192.168.1.1'

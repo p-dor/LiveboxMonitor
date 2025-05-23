@@ -126,7 +126,7 @@ class LmActions:
         screen_button.clicked.connect(self.screen_button_click)
         screen_button.setMinimumWidth(BUTTON_WIDTH)
         misc_buttons.addWidget(screen_button)
-        if self._liveboxModel < 6:
+        if self._api._info.get_livebox_model() < 6:
             screen_button.setEnabled(False)
 
         misc_group_box = QtWidgets.QGroupBox(lx('Miscellaneous'), objectName='miscGroup')
@@ -201,7 +201,7 @@ class LmActions:
         app_icon.setMinimumWidth(64)
         about_widgets.addWidget(app_icon, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
-        app_name = QtWidgets.QLabel(self._applicationName, objectName='appName')
+        app_name = QtWidgets.QLabel(self._application_name, objectName='appName')
         app_name.setFont(LmTools.BOLD_FONT)
         about_widgets.addWidget(app_name, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
@@ -258,7 +258,7 @@ class LmActions:
         gen_doc_button = QtWidgets.QPushButton(lx('Generate API Documentation...'), objectName='getApiDoc')
         gen_doc_button.clicked.connect(self.get_doc_button_click)
         debug_buttons.addWidget(gen_doc_button)
-        if self._liveboxModel > 7:      # API doc generation is blocked since LB W7
+        if self._api._info.get_livebox_model() > 7:      # API doc generation is blocked since LB W7
             gen_doc_button.setEnabled(False)
 
         debug_group_box = QtWidgets.QGroupBox(lx('Debug'), objectName='debugGroup')
@@ -282,7 +282,7 @@ class LmActions:
         self._actions_tab.setLayout(hbox)
 
         LmConfig.set_tooltips(self._actions_tab, 'actions')
-        self._tabWidget.addTab(self._actions_tab, lx('Actions'))
+        self._tab_widget.addTab(self._actions_tab, lx('Actions'))
 
 
     ### Click on Wifi config button
@@ -404,7 +404,7 @@ class LmActions:
 
         self._task.end()
 
-        status_dialog = WifiGlobalStatusDialog(self, global_status, self._liveboxModel)
+        status_dialog = WifiGlobalStatusDialog(self, global_status, self._api._info.get_livebox_model())
         status_dialog.exec()
 
 
@@ -567,7 +567,7 @@ class LmActions:
             LmConf.save()
             LmConf.apply()
             set_application_style()
-            self.resetUI()
+            self.reset_ui()
 
 
     ### Change the current profile in use
@@ -575,7 +575,7 @@ class LmActions:
         r = LmConf.ask_profile()
         if r == 1:
             LmConf.assign_profile()
-            self.resetUI()
+            self.reset_ui()
         elif r == 2:
             self.prefs_button_click()
 

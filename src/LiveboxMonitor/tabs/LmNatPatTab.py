@@ -227,7 +227,7 @@ class LmNatPat:
 		self._natPatTab.setLayout(aVBox)
 
 		LmConfig.set_tooltips(self._natPatTab, 'natpat')
-		self._tabWidget.addTab(self._natPatTab, lx('NAT/PAT'))
+		self._tab_widget.addTab(self._natPatTab, lx('NAT/PAT'))
 
 		# Init context
 		self.natPatTabInit()

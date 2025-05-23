@@ -119,7 +119,7 @@ class LmEvents:
 		self._eventsTab.setLayout(aVBox)
 
 		LmConfig.set_tooltips(self._eventsTab, 'events')
-		self._tabWidget.addTab(self._eventsTab, lx('Events'))
+		self._tab_widget.addTab(self._eventsTab, lx('Events'))
 
 
 	### Init the Livebox event collector thread

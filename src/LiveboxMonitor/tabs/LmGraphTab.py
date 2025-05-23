@@ -173,7 +173,7 @@ class LmGraph:
 		self._graphTab.setLayout(aHBox)
 
 		LmConfig.set_tooltips(self._graphTab, 'graph')
-		self._tabWidget.addTab(self._graphTab, lx('Graph'))
+		self._tab_widget.addTab(self._graphTab, lx('Graph'))
 
 		# Init context
 		self.graphTabInit()

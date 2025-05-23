@@ -209,7 +209,7 @@ class LmRepeater:
 		iRepeater._tab.setLayout(aVBox)
 
 		LmConfig.set_tooltips(iRepeater._tab, 'repeater')
-		self._tabWidget.insertTab(iRepeater.tabIndexFromConfig(), iRepeater._tab, iRepeater._name)
+		self._tab_widget.insertTab(iRepeater.tabIndexFromConfig(), iRepeater._tab, iRepeater._name)
 		iRepeater.setTabIcon()
 
 
@@ -553,7 +553,7 @@ class LmRepHandler:
 	### Get tab index from configuration at creation time
 	def tabIndexFromConfig(self):
 		# If no config, append
-		n = self._app._tabWidget.count()
+		n = self._app._tab_widget.count()
 		if LmConf.Tabs is None:
 			return n
 
@@ -576,7 +576,7 @@ class LmRepHandler:
 				else:
 					k = None
 
-				aLeftTabIndex = self._app.getTabIndex(t, k)
+				aLeftTabIndex = self._app.get_tab_index(t, k)
 				if aLeftTabIndex != -1:
 					return aLeftTabIndex + 1
 			i -= 1
@@ -588,7 +588,7 @@ class LmRepHandler:
 	### Get tab index
 	def tabIndex(self):
 		if self._tab is not None:
-			return self._app._tabWidget.indexOf(self._tab)
+			return self._app._tab_widget.indexOf(self._tab)
 		return -1
 
 
@@ -596,11 +596,11 @@ class LmRepHandler:
 	def setTabIcon(self):
 		if self._tab is not None:
 			if self.isSigned():
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.TickPixmap))
+				self._app._tab_widget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.TickPixmap))
 			elif self.isActive():
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.DenyPixmap))
+				self._app._tab_widget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.DenyPixmap))
 			else:
-				self._app._tabWidget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.CrossPixmap))
+				self._app._tab_widget.setTabIcon(self.tabIndex(), QtGui.QIcon(LmIcon.CrossPixmap))
 
 
 	### Find Repeater stats line from stat key
@@ -622,7 +622,7 @@ class LmRepHandler:
 		if aNewName is None:
 			aNewName = DEFAULT_REPEATER_NAME + str(self._index + 1)
 		self._name = aNewName
-		self._app._tabWidget.setTabText(self.tabIndex(), self._name)
+		self._app._tab_widget.setTabText(self.tabIndex(), self._name)
 
 
 	### Process a device updated event

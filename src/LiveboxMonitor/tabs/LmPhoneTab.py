@@ -203,7 +203,7 @@ class LmPhone:
 		self._phoneTab.setLayout(aHBox)
 
 		LmConfig.set_tooltips(self._phoneTab, 'phone')
-		self._tabWidget.addTab(self._phoneTab, lx('Phone'))
+		self._tab_widget.addTab(self._phoneTab, lx('Phone'))
 
 		# Init context
 		self.phoneTabInit()
@@ -709,7 +709,7 @@ class LmPhone:
 				aContact = self.decodeLiveboxContact(c)
 				aExportFile.write('BEGIN:VCARD\n')
 				aExportFile.write('VERSION:3.0\n')
-				aExportFile.write('PRODID:' + self._applicationName + '\n')
+				aExportFile.write('PRODID:' + self._application_name + '\n')
 				aExportFile.write('FN:' + aContact['formattedName'] + '\n')
 				aExportFile.write('N:' + aContact['name'] + ';' + aContact['firstname'] + ';;;\n')
 				aExportFile.write('TEL;TYPE=CELL:' + aContact['cell'] + '\n')
