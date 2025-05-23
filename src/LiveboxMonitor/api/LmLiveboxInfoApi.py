@@ -89,6 +89,22 @@ class LiveboxInfoApi(LmApi):
         return self._software_version
 
 
+    ### Get WAN status
+    def get_wan_status(self):
+        d = self.call_raw('NMC', 'getWANStatus')
+        if not d.get('status'):
+            raise Exception('NMC:getWANStatus query error')
+        d = d.get('data')
+        if not d:
+            raise Exception('NMC:getWANStatus data error')
+        return d
+
+
+    ### Get connection status
+    def get_connection_status(self):
+        return self.call('NMC', 'get')
+
+
     ### It is possible to query DeviceInfo service without being logged, e.g. to get MAC address
     @staticmethod
     def get_livebox_mac_nosign(livebox_url):
