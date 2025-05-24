@@ -10,6 +10,7 @@ import ssl
 from enum import IntEnum
 from dateutil import tz
 from email.message import EmailMessage
+from email.utils import formatdate
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -260,6 +261,7 @@ def send_email(email_setup, subject, message):
     m = EmailMessage()
     m['From'] = email_setup['From']
     m['To'] = email_setup['To']
+    m['Date'] = formatdate(localtime=True)
     m['Subject'] = email_setup['Prefix'] + subject
 
     # Message body
@@ -273,12 +275,12 @@ def send_email(email_setup, subject, message):
     s = None
     try:
         if email_setup['TLS']:
-            s = smtplib.SMTP(email_setup['Server'], email_setup['Port'], timeout = SMTP_TIMEOUT)
-            s.starttls(context = ssl.create_default_context())
+            s = smtplib.SMTP(email_setup['Server'], email_setup['Port'], timeout=SMTP_TIMEOUT)
+            s.starttls(context=ssl.create_default_context())
         elif email_setup['SSL']:
-            s = smtplib.SMTP_SSL(email_setup['Server'], email_setup['Port'], timeout = SMTP_TIMEOUT, context = ssl.create_default_context())
+            s = smtplib.SMTP_SSL(email_setup['Server'], email_setup['Port'], timeout=SMTP_TIMEOUT, context=ssl.create_default_context())
         else:
-            s = smtplib.SMTP(email_setup['Server'], email_setup['Port'], timeout = SMTP_TIMEOUT)
+            s = smtplib.SMTP(email_setup['Server'], email_setup['Port'], timeout=SMTP_TIMEOUT)
     except BaseException as e:
         error(f'Cannot setup email session. Error: {e}')
         if s is not None:
