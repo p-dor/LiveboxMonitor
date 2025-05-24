@@ -158,10 +158,10 @@ class LmDeviceList:
 	def refreshDeviceListButtonClick(self):
 		self._deviceList.clearContents()
 		self._deviceList.setRowCount(0)
-		self._infoDList.clearContents()
-		self._infoDList.setRowCount(0)
-		self._infoAList.clearContents()
-		self._infoAList.setRowCount(0)
+		self._info_dlist.clearContents()
+		self._info_dlist.setRowCount(0)
+		self._info_alist.clearContents()
+		self._info_alist.setRowCount(0)
 		self._eventDList.clearContents()
 		self._eventDList.setRowCount(0)
 		self._eventList.clearContents()
@@ -181,8 +181,8 @@ class LmDeviceList:
 		aCurrentSelection = self._deviceList.currentRow()
 		if aCurrentSelection >= 0:
 			aKey = self._deviceList.item(aCurrentSelection, DevCol.Key).text()
-			aLine = self.findDeviceLine(self._infoDList, aKey)
-			self._infoDList.selectRow(aLine)
+			aLine = self.findDeviceLine(self._info_dlist, aKey)
+			self._info_dlist.selectRow(aLine)
 		self.switch_to_device_infos_tab()
 
 
@@ -302,7 +302,7 @@ class LmDeviceList:
 		self._task.start(lx('Loading device list...'))
 
 		self._deviceList.setSortingEnabled(False)
-		self._infoDList.setSortingEnabled(False)
+		self._info_dlist.setSortingEnabled(False)
 		self._eventDList.setSortingEnabled(False)
 		self._eventList.setSortingEnabled(False)
 
@@ -356,13 +356,13 @@ class LmDeviceList:
 		self._eventDList.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
 
 		self._deviceList.setCurrentCell(-1, -1)
-		self._infoDList.setCurrentCell(-1, -1)
+		self._info_dlist.setCurrentCell(-1, -1)
 		self._eventDList.setCurrentCell(-1, -1)
 
-		self.initDeviceContext()	# Init selected device context for DeviceInfo tab
+		self.init_device_context()		# Init selected device context for DeviceInfo tab
 
 		self._deviceList.setSortingEnabled(True)
-		self._infoDList.setSortingEnabled(True)
+		self._info_dlist.setSortingEnabled(True)
 		self._eventDList.setSortingEnabled(True)
 		self._eventList.setSortingEnabled(True)
 
@@ -386,14 +386,14 @@ class LmDeviceList:
 	def addDeviceLine(self, iLine, iDevice):
 		aKey = iDevice.get('Key', '')
 		self.addDeviceLineKey(self._deviceList, iLine, aKey)
-		self.addDeviceLineKey(self._infoDList, iLine, aKey)
+		self.addDeviceLineKey(self._info_dlist, iLine, aKey)
 		self.addDeviceLineKey(self._eventDList, iLine, aKey)
 
 		aMacAddr = iDevice.get('PhysAddress', '')
 		self.formatNameWidget(self._deviceList, iLine, aKey, DevCol.Name)
 		self.formatMacWidget(self._deviceList, iLine, aMacAddr, DevCol.MAC)
-		self.formatNameWidget(self._infoDList, iLine, aKey, DSelCol.Name)
-		self.formatMacWidget(self._infoDList, iLine, aMacAddr, DSelCol.MAC)
+		self.formatNameWidget(self._info_dlist, iLine, aKey, DSelCol.Name)
+		self.formatMacWidget(self._info_dlist, iLine, aMacAddr, DSelCol.MAC)
 		self.formatNameWidget(self._eventDList, iLine, aKey, DSelCol.Name)
 		self.formatMacWidget(self._eventDList, iLine, aMacAddr, DSelCol.MAC)
 
@@ -479,9 +479,9 @@ class LmDeviceList:
 		if aLine >= 0:
 			self.formatNameWidget(self._deviceList, aLine, iDeviceKey, DevCol.Name)
 
-		aLine = self.findDeviceLine(self._infoDList, iDeviceKey)
+		aLine = self.findDeviceLine(self._info_dlist, iDeviceKey)
 		if aLine >= 0:
-			self.formatNameWidget(self._infoDList, aLine, iDeviceKey, DSelCol.Name)
+			self.formatNameWidget(self._info_dlist, aLine, iDeviceKey, DSelCol.Name)
 
 		aLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 		if aLine >= 0:
@@ -608,7 +608,7 @@ class LmDeviceList:
 		for d in aDeviceList:
 			aLocalName = LmConf.MacAddrTable.get(d['MAC'])
 			if not aLocalName:
-				self.setDeviceName(d['MAC'], d['LBName'])
+				self.set_device_name(d['MAC'], d['LBName'])
 		self._task.end()
 
 
@@ -905,7 +905,7 @@ class LmDeviceList:
 	### Process a new changed event
 	def processChangedEvent(self, iDeviceKey, iHandler, iEvent):
 		# Refresh if current selected one in device info
-		self.refreshDeviceIfSelected(iDeviceKey)
+		self.refresh_device_if_selected(iDeviceKey)
 
 		# Check if device is in the UI list
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
@@ -969,10 +969,10 @@ class LmDeviceList:
 				self.formatNameWidget(self._deviceList, aListLine, aMacAddr, DevCol.Name)
 				self.formatMacWidget(self._deviceList, aListLine, aMacAddr, DevCol.MAC)
 
-				aLine = self.findDeviceLine(self._infoDList, iDeviceKey)
+				aLine = self.findDeviceLine(self._info_dlist, iDeviceKey)
 				if aLine >= 0:
-					self.formatNameWidget(self._infoDList, aLine, aMacAddr, DSelCol.Name)
-					self.formatMacWidget(self._infoDList, aLine, aMacAddr, DSelCol.MAC)
+					self.formatNameWidget(self._info_dlist, aLine, aMacAddr, DSelCol.Name)
+					self.formatMacWidget(self._info_dlist, aLine, aMacAddr, DSelCol.MAC)
 
 				aLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 				if aLine >= 0:
@@ -996,7 +996,7 @@ class LmDeviceList:
 				self.updateInterfaceMap(iDeviceKey, aName)
 
 		# Refresh if the device is the selected one in the device info tab
-		self.refreshDeviceIfSelected(iDeviceKey)
+		self.refresh_device_if_selected(iDeviceKey)
 
 
 	### Process a new device_updated, eth_device_updated or wifi_device_updated event
@@ -1024,7 +1024,7 @@ class LmDeviceList:
 			self._deviceList.setSortingEnabled(True)
 
 		# Refresh if the device is the selected one in the device info tab
-		self.refreshDeviceIfSelected(iDeviceKey)
+		self.refresh_device_if_selected(iDeviceKey)
 
 
 	### Process a new ip_address_added event
@@ -1081,7 +1081,7 @@ class LmDeviceList:
 
 			# Prevent device lines to change due to sorting
 			self._deviceList.setSortingEnabled(False)
-			self._infoDList.setSortingEnabled(False)
+			self._info_dlist.setSortingEnabled(False)
 			self._eventDList.setSortingEnabled(False)
 
 			# Update device map
@@ -1099,7 +1099,7 @@ class LmDeviceList:
 
 			# Restore sorting
 			self._deviceList.setSortingEnabled(True)
-			self._infoDList.setSortingEnabled(True)
+			self._info_dlist.setSortingEnabled(True)
 			self._eventDList.setSortingEnabled(True)
 
 
@@ -1114,9 +1114,9 @@ class LmDeviceList:
 		aListLine = self.findDeviceLine(self._deviceList, iDeviceKey)
 		if aListLine >= 0:
 			self._deviceList.removeRow(aListLine)
-		aListLine = self.findDeviceLine(self._infoDList, iDeviceKey)
+		aListLine = self.findDeviceLine(self._info_dlist, iDeviceKey)
 		if aListLine >= 0:
-			self._infoDList.removeRow(aListLine)
+			self._info_dlist.removeRow(aListLine)
 		aListLine = self.findDeviceLine(self._eventDList, iDeviceKey)
 		if aListLine >= 0:
 			self._eventDList.removeRow(aListLine)

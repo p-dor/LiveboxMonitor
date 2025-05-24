@@ -125,7 +125,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmGraphTab.TAB_NAME:
                     self.createGraphTab()
                 case LmDeviceInfoTab.TAB_NAME:
-                    self.createDeviceInfoTab()
+                    self.create_device_info_tab()
                 case LmEventsTab.TAB_NAME:
                     self.createEventsTab()
                 case LmDhcpTab.TAB_NAME:
@@ -443,7 +443,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to device infos tab
     def switch_to_device_infos_tab(self):
-        self._tab_widget.setCurrentWidget(self._deviceInfoTab)
+        self._tab_widget.setCurrentWidget(self._device_info_tab)
 
 
     ### Switch to device events tab
