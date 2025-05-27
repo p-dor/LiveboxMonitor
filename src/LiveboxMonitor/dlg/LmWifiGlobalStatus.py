@@ -11,9 +11,10 @@ from LiveboxMonitor.lang.LmLanguages import get_wifi_global_label as lx
 
 # ################################ Wifi Global Status dialog ################################
 class WifiGlobalStatusDialog(QtWidgets.QDialog):
-    def __init__(self, parent, status, livebox_model):
+    def __init__(self, parent, status):
         super(WifiGlobalStatusDialog, self).__init__(parent)
 
+        self._api = parent._api
         self._status = status
         self._status_table = LmTableWidget(objectName='statusTable')
         cols = {}
@@ -37,7 +38,7 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
         vbox.addWidget(self._status_table, 0)
         vbox.addLayout(hbox, 1)
 
-        i = self.load_status(livebox_model)
+        i = self.load_status()
         self.resize(550, 56 + LmConfig.dialog_height(i))
 
         LmConfig.set_tooltips(self, 'wglobal')
@@ -47,18 +48,20 @@ class WifiGlobalStatusDialog(QtWidgets.QDialog):
         self.show()
 
 
-    def load_status(self, livebox_model):
+    def load_status(self):
         i = 0
         i = self.add_status_line(lx('{} Enabled').format('Wifi'), WifiKey.ENABLE, i)
         i = self.add_status_line(lx('{} Active').format('Wifi'), WifiKey.STATUS, i)
         i = self.add_status_line(lx('Wifi Scheduler'), WifiKey.SCHEDULER, i)
-        i = self.add_status_line(lx('{} Enabled').format('Wifi 2.4GHz'), WifiKey.WIFI2_ENABLE, i)
-        i = self.add_status_line(lx('{} Active').format('Wifi 2.4GHz'), WifiKey.WIFI2_STATUS, i)
-        i = self.add_status_line(lx('{} VAP').format('Wifi 2.4GHz'), WifiKey.WIFI2_VAP, i)
-        i = self.add_status_line(lx('{} Enabled').format('Wifi 5GHz'), WifiKey.WIFI5_ENABLE, i)
-        i = self.add_status_line(lx('{} Active').format('Wifi 5GHz'), WifiKey.WIFI5_STATUS, i)
-        i = self.add_status_line(lx('{} VAP').format('Wifi 5GHz'), WifiKey.WIFI5_VAP, i)
-        if livebox_model >= 6:
+        if self._api._intf.has_radio_band_2():
+            i = self.add_status_line(lx('{} Enabled').format('Wifi 2.4GHz'), WifiKey.WIFI2_ENABLE, i)
+            i = self.add_status_line(lx('{} Active').format('Wifi 2.4GHz'), WifiKey.WIFI2_STATUS, i)
+            i = self.add_status_line(lx('{} VAP').format('Wifi 2.4GHz'), WifiKey.WIFI2_VAP, i)
+        if self._api._intf.has_radio_band_5():
+            i = self.add_status_line(lx('{} Enabled').format('Wifi 5GHz'), WifiKey.WIFI5_ENABLE, i)
+            i = self.add_status_line(lx('{} Active').format('Wifi 5GHz'), WifiKey.WIFI5_STATUS, i)
+            i = self.add_status_line(lx('{} VAP').format('Wifi 5GHz'), WifiKey.WIFI5_VAP, i)
+        if self._api._intf.has_radio_band_6():
             i = self.add_status_line(lx('{} Enabled').format('Wifi 6GHz'), WifiKey.WIFI6_ENABLE, i)
             i = self.add_status_line(lx('{} Active').format('Wifi 6GHz'), WifiKey.WIFI6_STATUS, i)
             i = self.add_status_line(lx('{} VAP').format('Wifi 6GHz'), WifiKey.WIFI6_VAP, i)
