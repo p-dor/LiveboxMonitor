@@ -714,51 +714,60 @@ class WifiApi(LmApi):
             d = None
 
         if (d is None) or (b is None) or (w is None):
-            u[WifiKey.WIFI2_ENABLE] = WifiStatus.ERROR
-            u[WifiKey.WIFI2_STATUS] = WifiStatus.ERROR
-            u[WifiKey.WIFI2_VAP] = WifiStatus.ERROR
-            u[WifiKey.WIFI5_ENABLE] = WifiStatus.ERROR
-            u[WifiKey.WIFI5_STATUS] = WifiStatus.ERROR
-            u[WifiKey.WIFI5_VAP] = WifiStatus.ERROR
-            if self._api._info.get_livebox_model() >= 6:
+            if self._api._intf.has_radio_band_2():
+                u[WifiKey.WIFI2_ENABLE] = WifiStatus.ERROR
+                u[WifiKey.WIFI2_STATUS] = WifiStatus.ERROR
+                u[WifiKey.WIFI2_VAP] = WifiStatus.ERROR
+            if self._api._intf.has_radio_band_5():
+                u[WifiKey.WIFI5_ENABLE] = WifiStatus.ERROR
+                u[WifiKey.WIFI5_STATUS] = WifiStatus.ERROR
+                u[WifiKey.WIFI5_VAP] = WifiStatus.ERROR
+            if self._api._intf.has_radio_band_6():
                 u[WifiKey.WIFI6_ENABLE] = WifiStatus.ERROR
                 u[WifiKey.WIFI6_STATUS] = WifiStatus.ERROR
                 u[WifiKey.WIFI6_VAP] = WifiStatus.ERROR
         else:
-            for s in d:
+            for s in self._api._intf.get_list():
+                if s['Type'] != 'wif':
+                    continue
+
+                match s['Name']:
+                    case 'Wifi 2.4GHz':
+                        enable_key = WifiKey.WIFI2_ENABLE
+                        status_key = WifiKey.WIFI2_STATUS
+                        vap_key = WifiKey.WIFI2_VAP
+                    case 'Wifi 5GHz':
+                        enable_key = WifiKey.WIFI5_ENABLE
+                        status_key = WifiKey.WIFI5_STATUS
+                        vap_key = WifiKey.WIFI5_VAP
+                    case 'Wifi 6GHz':
+                        enable_key = WifiKey.WIFI6_ENABLE
+                        status_key = WifiKey.WIFI6_STATUS
+                        vap_key = WifiKey.WIFI6_VAP
+                    case _:
+                        continue
+
                 # Get Wifi interface key in wlanradio list
                 intf_key = None
-                base = b.get(s)
+                base = b.get(s['Key'])
                 if base is not None:
+                    u[enable_key] = WifiStatus.ENABLE if base.get('Enable', False) else WifiStatus.DISABLE
+                    u[status_key] = WifiStatus.ENABLE if base.get('Status', False) else WifiStatus.DISABLE
+
                     low_level_intf = base.get('LLIntf')
                     if low_level_intf is not None:
                         intf_key = next(iter(low_level_intf))
+                else:
+                    u[enable_key] = WifiStatus.ERROR
+                    u[status_key] = WifiStatus.ERROR
 
                 q = w.get(intf_key) if intf_key is not None else None
-                r = d.get(s)
+                r = d.get(s['Key'])
                 if (q is None) or (r is None):
-                    continue
-
-                radio_band = q.get('OperatingFrequencyBand')
-                if radio_band == '2.4GHz':
-                    enable_key = WifiKey.WIFI2_ENABLE
-                    status_key = WifiKey.WIFI2_STATUS
-                    vap_key = WifiKey.WIFI2_VAP
-                elif radio_band == '5GHz':
-                    enable_key = WifiKey.WIFI5_ENABLE
-                    status_key = WifiKey.WIFI5_STATUS
-                    vap_key = WifiKey.WIFI5_VAP
-                elif radio_band == '6GHz':
-                    enable_key = WifiKey.WIFI6_ENABLE
-                    status_key = WifiKey.WIFI6_STATUS
-                    vap_key = WifiKey.WIFI6_VAP
+                    u[vap_key] = WifiStatus.ERROR
                 else:
-                    continue
+                    u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
 
-                # Get Wifi interface key in wlanradio list
-                u[enable_key] = WifiStatus.ENABLE if base.get('Enable', False) else WifiStatus.DISABLE
-                u[status_key] = WifiStatus.ENABLE if base.get('Status', False) else WifiStatus.DISABLE
-                u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
 
         # Guest Wifi status
         try:
@@ -770,30 +779,27 @@ class WifiApi(LmApi):
             d = None
 
         if (d is None) or (b is None) or (w is None):
-            u[WifiKey.GUEST2_VAP] = WifiStatus.ERROR
-            u[WifiKey.GUEST5_VAP] = WifiStatus.ERROR
+            if self._api._intf.has_radio_band_2():
+                u[WifiKey.GUEST2_VAP] = WifiStatus.ERROR
+            if self._api._intf.has_radio_band_5():
+                u[WifiKey.GUEST5_VAP] = WifiStatus.ERROR
         else:
-            for s in d:
-                # Get Wifi interface key in wlanradio list
-                intf_key = None
-                base = b.get(s)
-                if base is not None:
-                    low_level_intf = base.get('LLIntf')
-                    if low_level_intf is not None:
-                        intf_key = next(iter(low_level_intf))
-
-                q = w.get(intf_key) if intf_key is not None else None
-                r = d.get(s)
-                if (q is None) or (r is None):
+            for s in self._api._intf.get_list():
+                if s['Type'] != 'wig':
                     continue
 
-                radio_band = q.get('OperatingFrequencyBand')
-                if radio_band == '2.4GHz':
-                    vap_key = WifiKey.GUEST2_VAP
-                elif radio_band == '5GHz':
-                    vap_key = WifiKey.GUEST5_VAP
+                match s['Name']:
+                    case 'Guest 2.4GHz':
+                        vap_key = WifiKey.GUEST2_VAP
+                    case 'Guest 5GHz':
+                        vap_key = WifiKey.GUEST5_VAP
+                    case _:
+                        continue
+
+                r = d.get(s['Key'])
+                if r is None:
+                    u[vap_key] = WifiStatus.ERROR
                 else:
-                    continue
-                u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
+                    u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
 
         return u

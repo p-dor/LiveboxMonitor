@@ -404,7 +404,7 @@ class LmActions:
 
         self._task.end()
 
-        status_dialog = WifiGlobalStatusDialog(self, global_status, self._api._info.get_livebox_model())
+        status_dialog = WifiGlobalStatusDialog(self, global_status)
         status_dialog.exec()
 
 
