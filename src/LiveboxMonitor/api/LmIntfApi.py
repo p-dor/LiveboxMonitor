@@ -28,6 +28,9 @@ class IntfApi(LmApi):
     def __init__(self, api_registry):
         super(IntfApi, self).__init__(api_registry)
         self._list = None
+        self._has_radio_band_2 = False
+        self._has_radio_band_5 = False
+        self._has_radio_band_6 = False
 
 
     ### Get interface information
@@ -94,6 +97,12 @@ class IntfApi(LmApi):
                 else:
                     i['Type'] = 'wif'
                     wif.append(i)
+                if '2.4GHz' in name:
+                    self._has_radio_band_2 = True
+                elif '5GHz' in name:
+                    self._has_radio_band_5 = True
+                elif '6GHz' in name:
+                    self._has_radio_band_6 = True
                 i['SwapStats'] = True
             elif name == 'WAN_Ethernet':
                 i = {}
@@ -135,6 +144,21 @@ class IntfApi(LmApi):
                 self._list.append(i)
 
         return True
+
+
+    ### Is 2.4GHz radio band available
+    def has_radio_band_2(self):
+        return self._has_radio_band_2
+
+
+    ### Is 5GHz radio band available
+    def has_radio_band_5(self):
+        return self._has_radio_band_5
+
+
+    ### Is 6GHz radio band available
+    def has_radio_band_6(self):
+        return self._has_radio_band_6
 
 
     ### Get wifi interface statistics
