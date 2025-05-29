@@ -45,7 +45,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
 
         LmConfig.set_tooltips(self, 'rhistory')
 
-        self.setWindowTitle(lx(f'{name} Reboot History'))
+        self.setWindowTitle(lx('{} Reboot History').format(name))
         self.setModal(True)
         self.show()
 
