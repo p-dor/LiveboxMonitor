@@ -590,12 +590,12 @@ class LmActions:
 
     ### Click on show raw device list button
     def show_raw_device_list_button_click(self):
-        self.display_infos(lx('Raw Device List'), json.dumps(self._liveboxDevices, indent=2))
+        self.display_infos(lx('Raw Device List'), json.dumps(self._livebox_devices, indent=2))
 
 
     ### Click on show raw topology button
     def show_raw_topology_button_click(self):
-        self.display_infos(lx('Raw Topology'), json.dumps(self._liveboxTopology, indent=2))
+        self.display_infos(lx('Raw Topology'), json.dumps(self._livebox_topology, indent=2))
 
 
     ### Click on set log level button

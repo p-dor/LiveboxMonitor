@@ -124,8 +124,8 @@ class LmEvents:
 
 	### Init the Livebox event collector thread
 	def initEventLoop(self):
-		self._lastEventDeviceKey = ''
-		self._statsMap = {}
+		self._last_event_device_key = ''
+		self._stats_map = {}
 		self._eventBuffer = {}
 		self._liveboxEventThread = None
 		self._liveboxEventLoop = None
@@ -311,50 +311,50 @@ class LmEvents:
 		# Try to guess device key from handler
 		aDeviceKey = LmTools.extract_mac_addr_from_string(h)
 		if len(aDeviceKey):
-			self.updateEventIndicator(aDeviceKey)
+			self.update_event_indicator(aDeviceKey)
 			if r == 'Statistics':
 				e = a.get(aDeviceKey)
 				if e is not None:
-					self.processStatisticsEvent(aDeviceKey, e)
+					self.process_statistics_event(aDeviceKey, e)
 					self.bufferizeEvent(aDeviceKey, h, r, e)
 				else:
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif r == 'changed':
-				self.processChangedEvent(aDeviceKey, h, a)
+				self.process_changed_event(aDeviceKey, h, a)
 				self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif r == 'device_name_changed':
 				e = a.get(aDeviceKey)
 				if e is not None:
-					self.processDeviceNameChangedEvent(aDeviceKey, e)
+					self.process_device_name_changed_event(aDeviceKey, e)
 					self.bufferizeEvent(aDeviceKey, h, r, e)
 				else:
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif (r == 'device_updated') or (r == 'eth_device_updated') or (r == 'wifi_device_updated'):
 				e = a.get(aDeviceKey)
 				if e is not None:
-					self.processDeviceUpdatedEvent(aDeviceKey, e)
+					self.process_device_updated_event(aDeviceKey, e)
 					self.bufferizeEvent(aDeviceKey, h, r, e)
 				else:
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif r == 'ip_address_added':
 				e = a.get(aDeviceKey)
 				if e is not None:
-					self.processIPAddressAddedEvent(aDeviceKey, a[aDeviceKey])
+					self.process_ip_address_added_event(aDeviceKey, a[aDeviceKey])
 					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
 				else:
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif (r == 'device_added') or (r == 'eth_device_added') or (r == 'wifi_device_added'):
 				e = a.get(aDeviceKey)
 				if e is not None:
-					self.processDeviceAddedEvent(aDeviceKey, a[aDeviceKey])
+					self.process_device_added_event(aDeviceKey, a[aDeviceKey])
 					self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
 				else:
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 			elif (r == 'device_deleted') or (r == 'eth_device_deleted') or (r == 'wifi_device_deleted'):
-				self.processDeviceDeletedEvent(aDeviceKey)
+				self.process_device_deleted_event(aDeviceKey)
 			else:
 				# Check if device is in the list, otherwise put the event in the None list
-				if (self.findDeviceLine(self._eventDList, aDeviceKey) >= 0):
+				if (self.find_device_line(self._eventDList, aDeviceKey) >= 0):
 					self.bufferizeEvent(aDeviceKey, h, r, a)
 				else:
 					self.bufferizeEvent(None, h, r, a)
@@ -541,7 +541,7 @@ class LmEvents:
 
 			# User notifications matching configured rules
 			r = LmEvents.notifyGetMatchingRule(e)
-			if (type(r).__name__ == 'list'):
+			if isinstance(r, list):
 				if NOTIF_EVENT_RULE_FILE in r:
 					self.notifyUserFile(e)
 				if NOTIF_EVENT_RULE_EMAIL in r:
@@ -628,7 +628,7 @@ class LmEvents:
 		for r in LmConf.NotificationRules:
 			if r.get('Key') == NOTIF_EVENT_DEVICE_ALL:
 				e = r.get('Events')
-				if (type(e).__name__ == 'list') and (t in e):
+				if isinstance(e, list) and (t in e):
 					rr += r.get('Rules')
 
 		# Find a matching rule for unknown devices in case device is unknown
@@ -638,14 +638,14 @@ class LmEvents:
 			for r in LmConf.NotificationRules:
 				if r.get('Key') == NOTIF_EVENT_DEVICE_UNKNOWN:
 					e = r.get('Events')
-					if (type(e).__name__ == 'list') and (t in e):
+					if isinstance(e, list) and (t in e):
 						rr += r.get('Rules')
 
 		# Find a matching specific rule for this device
 		for r in LmConf.NotificationRules:
 			if r.get('Key') == k:
 				e = r.get('Events')
-				if (type(e).__name__ == 'list') and (t in e):
+				if isinstance(e, list) and (t in e):
 					rr += r.get('Rules')
 
 		return rr
@@ -1046,7 +1046,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
 
 	def loadDeviceList(self):
-		aDeviceList = self.parent().getDeviceList()
+		aDeviceList = self.parent().get_device_list()
 		self._comboDeviceList = []
 
 		# Load from MacAddrTable file

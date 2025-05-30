@@ -957,7 +957,7 @@ class LmPhone:
 		aContact['home'] = ''
 		aContact['work'] = ''
 		aNumbers = iLiveboxContact.get('telephoneNumbers')
-		if type(aNumbers).__name__ == 'list':
+		if isinstance(aNumbers, list):
 			for n in aNumbers:
 				aType = n.get('type', '')
 				if aType == 'CELL':

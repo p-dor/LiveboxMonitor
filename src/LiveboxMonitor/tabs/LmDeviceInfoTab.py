@@ -173,7 +173,7 @@ class LmDeviceInfo:
         if current_name != device_name:
             LmConf.MacAddrTable[device_key] = device_name
             LmConf.save_mac_addr_table()
-            self.updateDeviceName(device_key)
+            self.update_device_name(device_key)
 
 
     ### Delete a device name from the MacAddr table
@@ -184,7 +184,7 @@ class LmDeviceInfo:
             pass
         else:
             LmConf.save_mac_addr_table()
-            self.updateDeviceName(device_key)
+            self.update_device_name(device_key)
 
 
     ### Click on assign device type button
@@ -231,7 +231,7 @@ class LmDeviceInfo:
                 else:
                     self._info_dlist.setCurrentCell(-1, -1)
                     # Call event handler directly - in some (unknown) cases, the event is not raised
-                    self.processDeviceDeletedEvent(key)
+                    self.process_device_deleted_event(key)
 
 
     ### Click on block device button

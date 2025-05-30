@@ -239,7 +239,7 @@ class LmRepeater:
 			# Determine version
 			aModelName = None
 			aSSW = iDevice.get('SSW')
-			if type(aSSW).__name__ == 'dict':
+			if isinstance(aSSW, dict):
 				aModelName = aSSW.get('ModelName')
 			if aModelName is None:
 				aModelName = aProdClass		# In some cases the model name is indicated in product class
@@ -313,7 +313,7 @@ class LmRepeater:
 	def repeaterDeviceUpdatedEvent(self, iDeviceKey, iEvent):
 		for r in self._repeaters:
 			if r._key == iDeviceKey:
-				r.processDeviceUpdatedEvent(iEvent)
+				r.process_device_updated_event(iEvent)
 				break
 
 
@@ -400,7 +400,7 @@ class LmRepeater:
 		aUpDeltaErrors = 0
 
 		# Try to find a previously received statistic record
-		aPrevStats = r._statsMap.get(aKey)
+		aPrevStats = r._stats_map.get(aKey)
 		if aPrevStats is not None:
 			aPrevTimestamp = aPrevStats['Timestamp']
 			aPrevDownBytes = aPrevStats['RxBytes']
@@ -415,7 +415,7 @@ class LmRepeater:
 			aUpDeltaErrors = aUpErrors - aPrevStats['TxErrors']
 
 		# Remember current stats
-		r._statsMap[aKey] = iStats
+		r._stats_map[aKey] = iStats
 
 		# Update UI
 		aListLine = r.findStatsLine(aKey)
@@ -470,7 +470,7 @@ class LmRepHandler:
 		self._tab = None
 		self._index = iIndex
 		self._statsList = None
-		self._statsMap = {}
+		self._stats_map = {}
 		self._repeaterAList = None
 		self.setNetIntf()
 
@@ -626,7 +626,7 @@ class LmRepHandler:
 
 
 	### Process a device updated event
-	def processDeviceUpdatedEvent(self, iEvent):
+	def process_device_updated_event(self, iEvent):
 		aIPv4Struct = LmTools.determine_ip(iEvent)
 		if aIPv4Struct is None:
 			aIPv4 = None
@@ -1414,7 +1414,7 @@ class RepeaterStatsThread(QtCore.QObject):
 								# Session has timed out on Repeater side, resign
 								r.signin()
 							aStats = aResult.get('status')
-							if type(aStats).__name__ == 'dict':
+							if isinstance(aStats, dict):
 								e = {}
 								e['Repeater'] = r
 								e['Key'] = s['Key']

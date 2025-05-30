@@ -244,7 +244,7 @@ class LmNatPat:
 		if not self._natPatDataLoaded:
 			self._natPatDataLoaded = True		# Must be first to avoid reentrency during tab drag&drop
 			self.loadProtocolNumbers()
-			self.loadDeviceIpNameMap()
+			self.load_device_ip_name_map()
 			self.loadPatRules()
 			self.loadPtfRules()
 
@@ -281,7 +281,7 @@ class LmNatPat:
 			if self.savePatRule(r):
 				self.commitNatPatRuleChange()
 				i = self._patList.currentRow()
-				self._patList.setItem(i, PatCol.Enabled, self.formatActiveTableWidget(r['Enable']))
+				self._patList.setItem(i, PatCol.Enabled, self.format_active_table_widget(r['Enable']))
 				self.patListClick()
 			self._task.end()
 
@@ -491,7 +491,7 @@ class LmNatPat:
 			if self.savePtfRule(r):
 				self.commitNatPatRuleChange()
 				i = self._ptfList.currentRow()
-				self._ptfList.setItem(i, PtfCol.Enabled, self.formatActiveTableWidget(r['Enable']))
+				self._ptfList.setItem(i, PtfCol.Enabled, self.format_active_table_widget(r['Enable']))
 				self.ptfListClick()
 			self._task.end()
 
@@ -672,7 +672,7 @@ class LmNatPat:
 	def refreshPatList(self):
 		self._patList.clearContents()
 		self._patList.setRowCount(0)
-		self.loadDeviceIpNameMap()
+		self.load_device_ip_name_map()
 		self.loadPatRules()
 
 
@@ -715,7 +715,7 @@ class LmNatPat:
 			r = d[k]
 
 			aActiveStatus = r.get('Enable', False)
-			self._patList.setItem(i, PatCol.Enabled, self.formatActiveTableWidget(aActiveStatus))
+			self._patList.setItem(i, PatCol.Enabled, self.format_active_table_widget(aActiveStatus))
 
 			aOrigin = r.get('Origin', '')
 			self._patList.setItem(i, PatCol.Type, self.formatNatPatOriginTableWidget(aOrigin, False))
@@ -737,7 +737,7 @@ class LmNatPat:
 
 			aDestinationIP = r.get('DestinationIPAddress', '')
 			self._patList.setItem(i, PatCol.DestIP, QtWidgets.QTableWidgetItem(aDestinationIP))
-			self._patList.setItem(i, PatCol.Device, QtWidgets.QTableWidgetItem(self.getDeviceNameFromIp(aDestinationIP)))
+			self._patList.setItem(i, PatCol.Device, QtWidgets.QTableWidgetItem(self.get_device_name_from_ip(aDestinationIP)))
 
 			aExternalIPs = r.get('SourcePrefix', '')
 			if len(aExternalIPs) == 0:
@@ -772,7 +772,7 @@ class LmNatPat:
 			self._patList.insertRow(i)
 
 			aActiveStatus = r.get('Enable', False)
-			self._patList.setItem(i, PatCol.Enabled, self.formatActiveTableWidget(aActiveStatus))
+			self._patList.setItem(i, PatCol.Enabled, self.format_active_table_widget(aActiveStatus))
 
 			aOrigin = r.get('Origin', '')
 			self._patList.setItem(i, PatCol.Type, self.formatNatPatOriginTableWidget(aOrigin, True))
@@ -794,7 +794,7 @@ class LmNatPat:
 
 			aDestinationIP = r.get('DestinationIPAddress', '')
 			self._patList.setItem(i, PatCol.DestIP, QtWidgets.QTableWidgetItem(aDestinationIP))
-			self._patList.setItem(i, PatCol.Device, QtWidgets.QTableWidgetItem(self.getDeviceNameFromIp(aDestinationIP)))
+			self._patList.setItem(i, PatCol.Device, QtWidgets.QTableWidgetItem(self.get_device_name_from_ip(aDestinationIP)))
 
 			aExternalIPs = r.get('SourcePrefix', '')
 			if len(aExternalIPs) == 0:
@@ -1104,7 +1104,7 @@ class LmNatPat:
 	def refreshPtfList(self):
 		self._ptfList.clearContents()
 		self._ptfList.setRowCount(0)
-		self.loadDeviceIpNameMap()
+		self.load_device_ip_name_map()
 		self.loadPtfRules()
 
 
@@ -1147,7 +1147,7 @@ class LmNatPat:
 			r = d[k]
 
 			aActiveStatus = r.get('Status', 'Disabled') == 'Enabled'
-			self._ptfList.setItem(i, PtfCol.Enabled, self.formatActiveTableWidget(aActiveStatus))
+			self._ptfList.setItem(i, PtfCol.Enabled, self.format_active_table_widget(aActiveStatus))
 
 			aOrigin = r.get('SourceInterface', '')
 			if aOrigin == 'data':
@@ -1167,7 +1167,7 @@ class LmNatPat:
 
 			aDestinationIP = r.get('DestinationIPAddress', '')
 			self._ptfList.setItem(i, PtfCol.DestIP, QtWidgets.QTableWidgetItem(aDestinationIP))
-			self._ptfList.setItem(i, PtfCol.Device, QtWidgets.QTableWidgetItem(self.getDeviceNameFromIp(aDestinationIP)))
+			self._ptfList.setItem(i, PtfCol.Device, QtWidgets.QTableWidgetItem(self.get_device_name_from_ip(aDestinationIP)))
 
 			aExternalIPs = r.get('SourcePrefix', '')
 			if len(aExternalIPs) == 0:
@@ -1202,7 +1202,7 @@ class LmNatPat:
 			self._ptfList.insertRow(i)
 
 			aActiveStatus = r.get('Status', 'Disabled') == 'Enabled'
-			self._ptfList.setItem(i, PtfCol.Enabled, self.formatActiveTableWidget(aActiveStatus))
+			self._ptfList.setItem(i, PtfCol.Enabled, self.format_active_table_widget(aActiveStatus))
 
 			aOrigin = r.get('Origin', '')
 			self._ptfList.setItem(i, PtfCol.Type, self.formatNatPatOriginTableWidget(aOrigin, True))
@@ -1221,7 +1221,7 @@ class LmNatPat:
 
 			aDestinationIP = r.get('DestinationIPAddress', '')
 			self._ptfList.setItem(i, PtfCol.DestIP, QtWidgets.QTableWidgetItem(aDestinationIP))
-			self._ptfList.setItem(i, PtfCol.Device, QtWidgets.QTableWidgetItem(self.getDeviceNameFromIp(aDestinationIP)))
+			self._ptfList.setItem(i, PtfCol.Device, QtWidgets.QTableWidgetItem(self.get_device_name_from_ip(aDestinationIP)))
 
 			aExternalIPs = r.get('SourcePrefix', '')
 			if len(aExternalIPs) == 0:
@@ -1768,7 +1768,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 
 	def loadDeviceList(self):
 		t = self.getType()
-		aDeviceMap = self.parent()._deviceIpNameMap
+		aDeviceMap = self.parent()._device_ip_name_map
 		self._deviceCombo.clear()
 
 		# If type is UPnP load IPv4 devices
@@ -1778,7 +1778,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 		# Load matching devices / IPs
 		for i in aDeviceMap:
 			if aDeviceMap[i]['IPVers'] == t:
-				self._deviceCombo.addItem(self.parent().getDeviceNameFromIp(i), userData = i)
+				self._deviceCombo.addItem(self.parent().get_device_name_from_ip(i), userData = i)
 
 		# Sort by name
 		self._deviceCombo.model().sort(0)
@@ -2131,13 +2131,13 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 	def loadDeviceList(self):
 		t = self.getType()
-		aDeviceMap = self.parent()._deviceIpNameMap
+		aDeviceMap = self.parent()._device_ip_name_map
 		self._deviceCombo.clear()
 
 		# Load matching devices / IPs
 		for i in aDeviceMap:
 			if aDeviceMap[i]['IPVers'] == t:
-				self._deviceCombo.addItem(self.parent().getDeviceNameFromIp(i), userData = i)
+				self._deviceCombo.addItem(self.parent().get_device_name_from_ip(i), userData = i)
 
 		# Sort by name
 		self._deviceCombo.model().sort(0)

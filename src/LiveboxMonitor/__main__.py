@@ -66,7 +66,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self._repeaters = []
         if not NO_THREAD:
             self.initEventLoop()
-            self.initWifiStatsLoop()
+            self.init_wifi_stats_loop()
             self.initStatsLoop()
             self.initRepeaterStatsLoop()
         self._application_name = 'Livebox Monitor v' + __version__
@@ -84,19 +84,19 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             LmConf.load_mac_addr_table()
             LmConf.load_spam_calls_table()
             QtCore.QCoreApplication.processEvents()
-            self.loadDeviceList()
+            self.load_device_list()
             self.initRepeaters()
             LmConfig.set_tooltips(self, 'main')
             self._app_ready = True
             if not NO_THREAD:
                 self.startEventLoop()
-                self.startWifiStatsLoop()
+                self.start_wifi_stats_loop()
 
             # Force tag change tasks once app is ready
             self.tab_changed_event(self._tab_widget.currentIndex())
 
             # Propose to assign local names as LB name if no name base setup yet
-            self.proposeToAssignNamesToUnkownDevices()
+            self.propose_to_assign_names_to_unkown_devices()
 
 
     ### Create main window
@@ -119,7 +119,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         for t in tab_order:
             match t:
                 case LmDeviceListTab.TAB_NAME:
-                    self.createDeviceListTab()
+                    self.create_device_list_tab()
                 case LmInfoTab.TAB_NAME:
                     self.createLiveboxInfoTab()
                 case LmGraphTab.TAB_NAME:
@@ -158,56 +158,56 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             match tab_name:
                 case LmDeviceListTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.resumeWifiStatsLoop()
+                        self.resume_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                 case LmInfoTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.resumeStatsLoop()
                         self.suspendRepeaterStatsLoop()
                 case LmGraphTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                     self.graphTabClick()
                 case LmDeviceInfoTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                 case LmEventsTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                 case LmDhcpTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                     self.dhcpTabClick()
                 case LmNatPatTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                     self.natPatTabClick()
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                     self.phoneTabClick()
                 case LmActionsTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
                 case LmRepeaterTab.TAB_NAME:
                     if not NO_THREAD:
-                        self.suspendWifiStatsLoop()
+                        self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.resumeRepeaterStatsLoop()
 
@@ -263,7 +263,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self._task.start(lx('Terminating threads...'))
             self.stopEventLoop()
             self.stopStatsLoop()
-            self.stopWifiStatsLoop()
+            self.stop_wifi_stats_loop()
             self.stopRepeaterStatsLoop()
             self._task.end()
         event.accept()
@@ -428,7 +428,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to device list tab
     def switch_to_device_list_tab(self):
-        self._tab_widget.setCurrentWidget(self._deviceListTab)
+        self._tab_widget.setCurrentWidget(self._device_list_tab)
 
 
     ### Switch to Livebox infos tab

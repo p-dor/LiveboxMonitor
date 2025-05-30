@@ -150,7 +150,7 @@ class LmDhcp:
 			i += 1
 
 		# Collecting already used IPs from active device list
-		aDeviceList = self.getDeviceList()
+		aDeviceList = self.get_device_list()
 		for d in aDeviceList:
 			if d['Active']:
 				aUsedIPs.append(d['IP'])
@@ -351,10 +351,10 @@ class LmDhcp:
 			aKey = b.get('MACAddress', '').upper()
 			aIP = b.get('IPAddress', '')
 
-			self.addDeviceLineKey(self._dhcpDList, i, aKey)
-			self.formatNameWidget(self._dhcpDList, i, aKey, DhcpCol.Name)
+			self.add_device_line_key(self._dhcpDList, i, aKey)
+			self.format_name_widget(self._dhcpDList, i, aKey, DhcpCol.Name)
 			self._dhcpDList.setItem(i, DhcpCol.Domain, QtWidgets.QTableWidgetItem(iDomain))
-			self.formatMacWidget(self._dhcpDList, i, aKey, DhcpCol.MAC)
+			self.format_mac_widget(self._dhcpDList, i, aKey, DhcpCol.MAC)
 
 			aIpItem = NumericSortItem(aIP)
 			try:
@@ -472,7 +472,7 @@ class LmDhcp:
 		if d is None:
 			i = self.addInfoLine(self._dhcpAList, i, lx('DHCPv6'), 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
 		else:
-			if (type(d).__name__ == 'list') and len(d):
+			if isinstance(d, list) and len(d):
 				aPrefix = d[0].get('Prefix')
 				if aPrefix is not None:
 					aPrefixLen = d[0].get('PrefixLen')
@@ -631,7 +631,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
 
 	def loadDeviceList(self):
-		self._deviceList = self.parent().getDeviceList()
+		self._deviceList = self.parent().get_device_list()
 		self._comboDeviceList = []
 
 		# Load from MacAddrTable file

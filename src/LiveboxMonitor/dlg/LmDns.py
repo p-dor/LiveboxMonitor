@@ -67,7 +67,7 @@ class DnsDialog(QtWidgets.QDialog):
             i = 0
             app = self.parent()
             for d in devices:
-                if app.displayableDevice(d):
+                if app.displayable_device(d):
                     # First collect DNS name
                     dns_name = None
                     name_list = d.get('Names', [])
@@ -81,17 +81,17 @@ class DnsDialog(QtWidgets.QDialog):
 
                     # Display data
                     key = d.get('Key', '')
-                    app.addDeviceLineKey(self._device_table, i, key)
+                    app.add_device_line_key(self._device_table, i, key)
 
-                    app.formatNameWidget(self._device_table, i, key, DnsCol.Name)
+                    app.format_name_widget(self._device_table, i, key, DnsCol.Name)
 
                     lb_name = QtWidgets.QTableWidgetItem(d.get('Name', ''))
                     self._device_table.setItem(i, DnsCol.LBName, lb_name)
 
-                    app.formatMacWidget(self._device_table, i, d.get('PhysAddress', ''), DnsCol.MAC)
+                    app.format_mac_widget(self._device_table, i, d.get('PhysAddress', ''), DnsCol.MAC)
 
                     active_status = d.get('Active', False)
-                    active_icon = app.formatActiveTableWidget(active_status)
+                    active_icon = app.format_active_table_widget(active_status)
                     self._device_table.setItem(i, DnsCol.Active, active_icon)
 
                     ip_struct = LmTools.determine_ip(d)
@@ -103,7 +103,7 @@ class DnsDialog(QtWidgets.QDialog):
                         ipv4 = ip_struct.get('Address', '')
                         ipv4_reacheable = ip_struct.get('Status', '')
                         ipv4_reserved = ip_struct.get('Reserved', False)
-                    ip = app.formatIPv4TableWidget(ipv4, ipv4_reacheable, ipv4_reserved)
+                    ip = app.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
                     self._device_table.setItem(i, DnsCol.IP, ip)
 
                     self._device_table.setItem(i, DnsCol.DNS, QtWidgets.QTableWidgetItem(dns_name))

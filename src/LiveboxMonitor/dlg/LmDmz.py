@@ -126,7 +126,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         self.setWindowTitle(lx('DMZ'))
         self.setModal(True)
-        self._app.loadDeviceIpNameMap()
+        self._app.load_device_ip_name_map()
         self.load_device_list()
         self.load_dmz()
         self.show()
@@ -159,7 +159,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
                 z = d[k]
                 ip = z.get('DestinationIPAddress', '')
                 self._dmz_list.setItem(i, DmzCol.IP, QtWidgets.QTableWidgetItem(ip))
-                self._dmz_list.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.getDeviceNameFromIp(ip)))
+                self._dmz_list.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.get_device_name_from_ip(ip)))
 
                 external_ips = z.get('SourcePrefix', '')
                 if len(external_ips) == 0:
@@ -190,7 +190,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         self._dmz_list.setRowCount(0)
         self._dmz_selection = -1
         self._init = True
-        self._app.loadDeviceIpNameMap()
+        self._app.load_device_ip_name_map()
         self.load_dmz()
         self._init = False
 
@@ -241,13 +241,13 @@ class DmzSetupDialog(QtWidgets.QDialog):
  
 
     def load_device_list(self):
-        device_map = self._app._deviceIpNameMap
+        device_map = self._app._device_ip_name_map
         self._device_combo.clear()
 
         # Load IPv4 devices
         for i in device_map:
             if device_map[i]['IPVers'] == 'IPv4':
-                self._device_combo.addItem(self._app.getDeviceNameFromIp(i), userData=i)
+                self._device_combo.addItem(self._app.get_device_name_from_ip(i), userData=i)
 
         # Sort by name
         self._device_combo.model().sort(0)
