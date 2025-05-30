@@ -1029,7 +1029,7 @@ class LmConf:
         try:
             with open(spam_calls_table_file_path) as f:
                 t = json.load(f)
-                if type(t).__name__ == 'list':
+                if isinstance(t, list):
                     LmConf.SpamCallsTable = t
                 else:
                     LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
