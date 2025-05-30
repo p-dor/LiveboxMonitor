@@ -9,6 +9,22 @@ class DeviceApi(LmApi):
         super(DeviceApi, self).__init__(api_registry)
 
 
+    ### Get device list
+    def get_list(self):
+        d = self.call_no_check('Devices', 'get', {'expression': 'physical and !self and !voice'}, timeout=10)
+        if isinstance(d, list):
+            return d
+        raise Exception('Devices:get query error')
+
+
+    ### Get device topology
+    def get_topology(self):
+        d = self.call_no_check('TopologyDiagnostics', 'buildTopology', {'SendXmlFile': 'false'}, timeout=20)
+        if isinstance(d, list):
+            return d
+        raise Exception('TopologyDiagnostics:buildTopology query error')
+
+
     ### Set device name - key is MAC addr
     def set_name(self, device_key, device_name):
         self.call('Devices.Device.' + device_key, 'setName', {'name': device_name}, err_str='Livebox')
@@ -37,6 +53,11 @@ class DeviceApi(LmApi):
     ### Get device info - key is MAC addr
     def get_info(self, device_key):
          return self.call('Devices.Device.' + device_key, 'get')
+
+
+    ### Get device IP address - key is MAC addr
+    def get_ip_addr(self, device_key):
+         return self.call('Devices.Device.' + device_key, 'getFirstParameter', {'parameter': 'IPAddress'})
 
 
     ### Get device schedule - key is MAC addr - return None if no schedule
