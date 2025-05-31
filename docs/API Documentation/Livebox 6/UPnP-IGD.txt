@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .UPnP-IGD - Name: .UPnP-IGD
@@ -15,6 +15,9 @@ OBJECT: .UPnP-IGD - Name: .UPnP-IGD
       Attributes: persistent
   - AllowedHostHeader (type: string)
       Attributes: persistent
+  - AlwaysStartIgdDaemon (type: bool)
+      Attributes: persistent
+  - TR064ServiceURL (type: string)
  == FUNCTIONS:
   - variant get()
   - bool set((variant parameters))

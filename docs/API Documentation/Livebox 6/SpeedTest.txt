@@ -1,8 +1,10 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .SpeedTest - Name: .SpeedTest
  == PARAMETERS:
+  - MaxRetriesPerServer (type: uint8)
+      Attributes: persistent
   - ServerConfigNumberOfEntries (type: uint32)
       Attributes: read_only
   - DiagnosticNumberOfEntries (type: uint32)

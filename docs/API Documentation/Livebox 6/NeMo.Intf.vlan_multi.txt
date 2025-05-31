@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: NeMo.Intf.vlan_multi - Name: NeMo.Intf.10

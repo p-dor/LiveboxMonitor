@@ -1,0 +1,11 @@
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
+
+=======================================================================
+OBJECT: LEDs.LED - Name: LEDs.LED
+ == PARAMETERS:
+  - Brightness (type: uint8)
+      Attributes: persistent
+      Validator: {'max': '255'}
+  - Path (type: string)
+      Attributes: read_only
+

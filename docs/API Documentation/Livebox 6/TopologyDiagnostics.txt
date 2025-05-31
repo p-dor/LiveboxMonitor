@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
@@ -16,12 +16,16 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
   - PeriodicInterval (type: uint32)
       Attributes: persistent
       Validator: {'min': '30'}
+  - UploadXML (type: bool)
+      Attributes: persistent
+  - UploadJSON (type: bool)
+      Attributes: persistent
   - LastUpdate (type: date_time)
       Attributes: read_only, persistent
   - AutomaticUpload (type: string)
       Attributes: persistent
       Validator: ['Local', 'Remote', 'Both', 'None']
-  - UploadURL (type: string)
+  - JSONUploadURL (type: string)
       Attributes: persistent
   - BootTimer (type: uint32)
       Attributes: persistent
@@ -32,7 +36,7 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
  == FUNCTIONS:
   - variant get()
   - bool set((variant data))
-  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile))
+  - variant buildTopology((uint32 Timeout), (bool LLTDIcon), (bool SendXmlFile), (bool SendJson))
   - bool uploadTopology()
   - bool enableAutomaticUpload((bool enable))
   - bool isAutomaticUploadEnabled()
@@ -43,6 +47,9 @@ OBJECT: .TopologyDiagnostics - Name: .TopologyDiagnostics
 =======================================================================
 OBJECT: TopologyDiagnostics.Results - Name: TopologyDiagnostics.Results
  == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+      Validator: ['XML', 'JSON']
   - Name (type: string)
       Attributes: read_only
   - Status (type: string)

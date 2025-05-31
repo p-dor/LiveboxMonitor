@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .NMC - Name: .NMC
@@ -65,6 +65,20 @@ OBJECT: NMC.Gpon - Name: NMC.Gpon
   - RxPowerSignalQuality (type: bool)
 
 =======================================================================
+OBJECT: NMC.Gpon.Laser - Name: NMC.Gpon.Laser
+ == PARAMETERS:
+  - FilePath (type: string)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NMC.Gpon.Laser.Attribute - Name: NMC.Gpon.Laser.Attribute
+ == PARAMETERS:
+  - Name (type: string)
+      Attributes: read_only
+  - Value (type: int32)
+      Attributes: read_only
+
+=======================================================================
 OBJECT: NMC.IPv6 - Name: NMC.IPv6
  == FUNCTIONS:
   - void set((bool Enable), (bool UserRequested), (bool IPv4UserRequested))
@@ -127,6 +141,7 @@ OBJECT: NMC.Wifi - Name: NMC.Wifi
       Attributes: persistent
   - TempEnable (type: bool)
   - Status (type: bool)
+      Attributes: read_only
   - ReadOnlyStatus (type: bool)
       Attributes: persistent
   - PairingStatus (type: string)
@@ -298,6 +313,11 @@ OBJECT: NMC.Autodetect - Name: NMC.Autodetect
   - FirstBoot (type: bool)
       Attributes: persistent
   - LastConnectionError (type: string)
+  - IPv6SwitchEnable (type: bool)
+      Attributes: persistent
+  - IPv6Mode (type: string)
+      Attributes: persistent
+      Validator: ['DualStack', 'Dslite', 'Switching_To_DualStack', 'Switching_To_Dslite']
  == FUNCTIONS:
   - variant get()
 

@@ -1,11 +1,9 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .Screen - Name: .Screen
  == FUNCTIONS:
+  - void setAnonymousDisplay(string name)
   - void setShowWifiPassword(bool Enable)
   - bool getShowWifiPassword()
-
-=======================================================================
-OBJECT: Screen.Sound - Name: Screen.Sound
 

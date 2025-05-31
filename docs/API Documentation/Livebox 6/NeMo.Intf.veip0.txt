@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: NeMo.Intf.veip0 - Name: NeMo.Intf.2
@@ -44,6 +44,7 @@ OBJECT: NeMo.Intf.veip0 - Name: NeMo.Intf.2
   - IPv6AddrDelegate (type: string)
   - RegistrationID (type: string)
       Validator: {'max': '36'}
+  - RegistrationIDIsInHexFormat (type: bool)
   - VeipPptpUni (type: bool)
       Attributes: persistent
   - MaxBitRateSupported (type: int32)
@@ -72,9 +73,6 @@ OBJECT: NeMo.Intf.veip0 - Name: NeMo.Intf.2
       Validator: {'max': '4'}
   - VendorProductCode (type: uint16)
       Attributes: read_only
-  - PonId (type: string)
-      Attributes: read_only
-      Validator: {'max': '7'}
   - ONTSoftwareVersion0 (type: string)
       Attributes: read_only
       Validator: {'max': '14'}
@@ -112,6 +110,17 @@ OBJECT: NeMo.Intf.veip0 - Name: NeMo.Intf.2
   - OnuState (type: string)
       Attributes: read_only
   - OnuId (type: uint16)
+      Attributes: read_only
+  - PonId (type: string)
+      Attributes: read_only
+      Validator: {'max': '7'}
+  - DownstreamMaxRate (type: uint32)
+      Attributes: read_only
+  - UpstreamMaxRate (type: uint32)
+      Attributes: read_only
+  - DownstreamCurrRate (type: uint32)
+      Attributes: read_only
+  - UpstreamCurrRate (type: uint32)
       Attributes: read_only
   - PhysicalInterface (type: string)
  == FUNCTIONS:

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0 - Name: NeMo.Intf.40
@@ -13,6 +13,8 @@ OBJECT: NeMo.Intf.rad5g0 - Name: NeMo.Intf.40
   - RadioStatus (type: string)
       Attributes: read_only
       Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
   - LastChangeTime (type: uint32)
       Attributes: read_only
   - LastChange (type: uint32)
@@ -220,12 +222,14 @@ OBJECT: NeMo.Intf.rad5g0 - Name: NeMo.Intf.40
   - void getRAOptions(uint8 tag, (string traverse))
   - void getRARouters((string traverse))
   - void setWLANConfig((string mibs))
+  - void setChanspec((uint16 channel), (string bandwidth), (string frequency), (string reason), (bool direct), (string reasonDetails))
   - void apDelayUpDone()
   - void startAutoChannelSelection()
   - void getSpectrumInfo((bool update))
   - void startScan((string SSID), (string channels), (string scanReason), (bool forceFast))
   - void stopScan()
-  - list scan((string SSID), (string channels), (string scanReason), (bool forceFast))
+  - list scan((string SSID), (string channels), (int minRssi), (string scanReason), (bool forceFast), (bool updateUsage))
+  - void scanCombinedData((string SSID), (string channels), (int minRssi), (string scanReason), (bool forceFast))
   - list getScanResults((variant results))
   - int32 DFS_drvdbg((string dbg_action))
   - void getProbeRequests((datetime fromTime))
@@ -233,6 +237,7 @@ OBJECT: NeMo.Intf.rad5g0 - Name: NeMo.Intf.40
   - void getRadioStats()
   - void getPerAntennaRssi()
   - variant getLatestPower()
+  - variant getStatusHistogram()
   - void startDFSclear()
   - void stopDFSclear()
 
@@ -326,8 +331,8 @@ OBJECT: NeMo.Intf.rad5g0.RadCaps - Name: NeMo.Intf.40.RadCaps
   - Status (type: string)
       Attributes: read_only
  == FUNCTIONS:
-  - void Enable((string Capability))
-  - void Disable((string Capability))
+  - void Enable((string capability))
+  - void Disable((string capability))
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.ChannelMgt - Name: NeMo.Intf.40.ChannelMgt
@@ -339,6 +344,9 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt - Name: NeMo.Intf.40.ChannelMgt
       Validator: {'min': '-1', 'max': '1'}
   - ACSVendorSupported (type: bool)
       Attributes: read_only
+  - ChanspecShowing (type: string)
+      Attributes: read_only
+      Validator: ['Current', 'Target', 'Sync']
   - ClearedDfsChannels (type: string)
       Attributes: read_only
   - RadarTriggeredDfsChannels (type: string)
@@ -348,12 +356,46 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt - Name: NeMo.Intf.40.ChannelMgt
       Validator: ['Unknown', 'Down', 'Up', 'FG_CAC', 'BG_CAC', 'BG_CAC_EXT', 'BG_CAC_NS', 'BG_CAC_EXT_NS', 'Configuring', 'Error', 'DeepPowerDown']
   - Status (type: bool)
       Attributes: read_only
+  - ChangeLogSize (type: uint32)
+      Attributes: persistent
  == FUNCTIONS:
   - void performSelection()
   - void retrievePerformanceLog((bool reset))
   - void getLatestChannelMeasurement()
   - void getAverageChannelMeasurement()
   - void getBandScores()
+
+=======================================================================
+OBJECT: NeMo.Intf.rad5g0.ChannelMgt.TargetChanspec - Name: NeMo.Intf.40.ChannelMgt.TargetChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+  - LastChangeTime (type: date_time)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.rad5g0.ChannelMgt.CurrentChanspec - Name: NeMo.Intf.40.ChannelMgt.CurrentChanspec
+ == PARAMETERS:
+  - Channel (type: uint16)
+      Attributes: read_only
+  - Bandwidth (type: string)
+      Attributes: read_only
+  - Frequency (type: string)
+      Attributes: read_only
+  - Reason (type: string)
+      Attributes: read_only
+  - ReasonExt (type: string)
+      Attributes: read_only
+  - LastChangeTime (type: date_time)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.ChannelMgt.BgDfs - Name: NeMo.Intf.40.ChannelMgt.BgDfs
@@ -384,6 +426,9 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt.BgDfs - Name: NeMo.Intf.40.ChannelMgt.BgDfs
       Attributes: read_only
   - NrClearFailOtherExt (type: uint32)
       Attributes: read_only
+ == FUNCTIONS:
+  - void startBgDfsClear((int channel), (int bandwidth))
+  - void stopBgDfsClear()
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.ChannelMgt.ChannelSelectParams - Name: NeMo.Intf.40.ChannelMgt.ChannelSelectParams
@@ -541,8 +586,6 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.40.Cha
       Attributes: persistent
   - InterferenceThreshold (type: int32)
       Attributes: persistent
-  - ChangeLogSize (type: uint32)
-      Attributes: persistent
   - MoveUpEnable (type: bool)
       Attributes: persistent
   - MoveUpSwitchMode (type: string)
@@ -552,6 +595,10 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt.ChannelSelectConfig - Name: NeMo.Intf.40.Cha
       Attributes: persistent
       Validator: ['NEVER', 'NO_STA', 'STA', 'ALWAYS']
   - PerformPreclear (type: bool)
+      Attributes: persistent
+  - PreclearNormalMaxBusyLevel (type: uint32)
+      Attributes: persistent
+  - PreclearPrioMaxBusyLevel (type: uint32)
       Attributes: persistent
   - BandwidthDowngradeEnable (type: bool)
       Attributes: persistent
@@ -656,21 +703,27 @@ OBJECT: NeMo.Intf.rad5g0.ChannelMgt.ChannelChanges - Name: NeMo.Intf.40.ChannelM
       Attributes: read_only
   - OldBandwidth (type: string)
       Attributes: read_only
-  - OldAvailability (type: uint32)
-      Attributes: read_only
-  - OldScore (type: uint32)
-      Attributes: read_only
   - NewChannel (type: uint32)
       Attributes: read_only
   - NewBandwidth (type: string)
       Attributes: read_only
-  - NewAvailability (type: uint32)
+  - ChannelChangeReason (type: string)
       Attributes: read_only
-  - NewScore (type: uint32)
+  - ChannelChangeReasonExt (type: string)
       Attributes: read_only
-  - Stations (type: uint32)
+  - NrSta (type: uint16)
       Attributes: read_only
-  - VideoStations (type: uint32)
+  - NrVideoSta (type: uint16)
+      Attributes: read_only
+  - TrafficLevel (type: uint8)
+      Attributes: read_only
+  - PrioTrafficLevel (type: uint8)
+      Attributes: read_only
+  - TargetChannel (type: uint32)
+      Attributes: read_only
+  - TargetBandwidth (type: string)
+      Attributes: read_only
+  - TargetChangeTime (type: date_time)
       Attributes: read_only
 
 =======================================================================
@@ -715,6 +768,12 @@ OBJECT: NeMo.Intf.rad5g0.Stats - Name: NeMo.Intf.40.Stats
   - Temperature (type: int32)
       Attributes: read_only
       Validator: {'min': '-274'}
+  - TotalTargetChannelChangeCount (type: uint32)
+      Attributes: read_only
+  - TotalChannelChangeCount (type: uint32)
+      Attributes: read_only
+  - DetailedChannelChangeCountList (type: string)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.Stats.WmmPacketsSent - Name: NeMo.Intf.40.Stats.WmmPacketsSent
@@ -834,8 +893,10 @@ OBJECT: NeMo.Intf.rad5g0.NaStaMonitor.RssiEventing - Name: NeMo.Intf.40.NaStaMon
       Attributes: persistent
       Validator: {'min': '1'}
   - AveragingFactor (type: uint32)
+      Attributes: persistent
       Validator: {'min': '1', 'max': '1000'}
   - Interval (type: uint32)
+      Attributes: persistent
       Validator: {'min': '100'}
 
 =======================================================================
@@ -1007,6 +1068,7 @@ OBJECT: NeMo.Intf.rad5g0.HealthMonitor.Config - Name: NeMo.Intf.40.HealthMonitor
   - AntennaCheckMaxFailNum (type: uint32)
   - FastStaReconnectTimeout (type: int32)
   - FastStaReconnectEventTimeout (type: int32)
+  - FastStaReconnectUserTime (type: uint32)
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.TrafficMonitor - Name: NeMo.Intf.40.TrafficMonitor
@@ -1016,6 +1078,13 @@ OBJECT: NeMo.Intf.rad5g0.TrafficMonitor - Name: NeMo.Intf.40.TrafficMonitor
   - PrintMode (type: string)
       Attributes: persistent
       Validator: ['Off', 'Window', 'History']
+  - NotificationMode (type: string)
+      Attributes: persistent
+      Validator: ['Off', 'Window', 'History']
+  - PrintTrafficCategories (type: bool)
+      Attributes: persistent
+  - PrintAcCategories (type: bool)
+      Attributes: persistent
   - MonitorInterval (type: uint32)
       Attributes: persistent
   - ObsPerWindow (type: uint32)
@@ -1028,36 +1097,16 @@ OBJECT: NeMo.Intf.rad5g0.TrafficMonitor - Name: NeMo.Intf.40.TrafficMonitor
       Attributes: persistent
   - TrafficBusyLevelList (type: string)
       Attributes: persistent
+  - PrintMask (type: string)
+      Attributes: persistent
+  - MinStaTrafficLevel (type: uint8)
+      Attributes: persistent
+  - MinStaTrafficLevelMCS (type: uint8)
+      Attributes: persistent
  == FUNCTIONS:
-  - variant getThroughputInfo()
   - variant getTrafficInformation()
   - variant getHistogram()
   - variant getBusyStatus()
-
-=======================================================================
-OBJECT: NeMo.Intf.rad5g0.AirstatsMonitor - Name: NeMo.Intf.40.AirstatsMonitor
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - PrintMode (type: string)
-      Attributes: persistent
-      Validator: ['Off', 'Window', 'History']
-  - PrintMask (type: string)
-      Attributes: persistent
-  - MonitorInterval (type: uint32)
-      Attributes: persistent
-  - ObsPerWindow (type: uint32)
-      Attributes: persistent
-  - NrWindows (type: uint32)
-      Attributes: persistent
-  - HistoryLength (type: uint32)
-      Attributes: persistent
- == FUNCTIONS:
-  - variant getHistograms()
-  - variant getBucketHistory()
-  - variant getAvgHistory()
-  - variant getHistory()
-  - variant getRecentAverage()
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.BackgroundScanner - Name: NeMo.Intf.40.BackgroundScanner
@@ -1074,6 +1123,8 @@ OBJECT: NeMo.Intf.rad5g0.BackgroundScanner - Name: NeMo.Intf.40.BackgroundScanne
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.DriverConfig - Name: NeMo.Intf.40.DriverConfig
  == PARAMETERS:
+  - RadioDownIfUnused (type: bool)
+      Attributes: persistent
   - TxBurst (type: int32)
       Attributes: persistent
   - Amsdu (type: int32)
@@ -1107,10 +1158,14 @@ OBJECT: NeMo.Intf.rad5g0.MACConfig - Name: NeMo.Intf.40.MACConfig
       Attributes: persistent
   - LocalGuestMacOffset (type: int64)
       Attributes: persistent
+  - GuestBaseMACAddress (type: string)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.DriverStatus - Name: NeMo.Intf.40.DriverStatus
  == PARAMETERS:
+  - DriverEnable (type: bool)
+      Attributes: read_only
   - NrTxAntenna (type: int32)
       Attributes: read_only
   - NrRxAntenna (type: int32)
@@ -1162,6 +1217,35 @@ OBJECT: NeMo.Intf.rad5g0.ScanStats.ScanReason - Name: NeMo.Intf.40.ScanStats.Sca
       Attributes: read_only
   - NrScanDone (type: uint32)
       Attributes: read_only
+  - NrScanError (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: NeMo.Intf.rad5g0.Sensing - Name: NeMo.Intf.40.Sensing
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void csiStats()
+  - void addClient((string macAddr), (uint32 interval))
+  - void delClient((string macAddr))
+  - void resetStats()
+
+=======================================================================
+OBJECT: NeMo.Intf.rad5g0.Sensing.CSIClient - Name: NeMo.Intf.40.Sensing.CSIClient
+ == PARAMETERS:
+  - MACAddress (type: string)
+  - MonitorInterval (type: uint32)
+
+=======================================================================
+OBJECT: NeMo.Intf.rad5g0.MonitorConfig - Name: NeMo.Intf.40.MonitorConfig
+ == PARAMETERS:
+  - InfoEventEnable (type: bool)
+      Attributes: persistent
+  - InfoEventBootDelay (type: uint32)
+      Attributes: persistent
+  - InfoEventInterval (type: uint32)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: NeMo.Intf.rad5g0.Vendor - Name: NeMo.Intf.40.Vendor

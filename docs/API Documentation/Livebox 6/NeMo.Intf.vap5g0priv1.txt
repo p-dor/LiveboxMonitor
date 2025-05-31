@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45
@@ -13,6 +13,8 @@ OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45
   - VAPStatus (type: string)
       Attributes: read_only
       Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - LastStatusChangeTimeStamp (type: date_time)
+      Attributes: read_only
   - LastChangeTime (type: uint32)
       Attributes: read_only
   - LastChange (type: uint32)
@@ -23,6 +25,9 @@ OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45
       Attributes: persistent
   - SSID (type: string)
       Attributes: persistent
+      Validator: {'max': '32'}
+  - RadioReference (type: string)
+      Attributes: read_only, persistent
   - SSIDAdvertisementEnabled (type: bool)
       Attributes: persistent
   - RetryLimit (type: uint32)
@@ -129,9 +134,12 @@ OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45
   - void kickStationReason((string macaddress), (int32 reason))
   - void cleanStation((string macaddress))
   - bool sendBssTransferRequest((string mac), (string target), (int class), (int channel), (int wait), (int retries), (uint32 bssidInfo), (int transitionReason))
+  - bool sendPublicAction((string mac), (string oui), (uint8 type), (uint8 subtype), (uint8 channel), (string data))
   - bool sendRemoteMeasumentRequest((string mac), (string bssid), (uint32 class), (uint32 channel), (uint32 timeout), (string ssid))
   - void getSSIDStats()
+  - variant getStatusHistogram()
   - void getStationStats()
+  - uint32 getFarAssociatedDevicesCount((int32 threshold))
   - void delNeighbourAP((string BSSID))
   - void refreshNetDev()
   - void getNetDevStats()
@@ -199,6 +207,7 @@ OBJECT: NeMo.Intf.vap5g0priv1.Security - Name: NeMo.Intf.45.Security
       Attributes: persistent
   - KeyPassPhrase (type: string)
       Attributes: persistent
+      Validator: {'min': '8', 'max': '63'}
   - RekeyingInterval (type: uint32)
       Attributes: persistent
   - OWETransitionInterface (type: string)
@@ -227,6 +236,7 @@ OBJECT: NeMo.Intf.vap5g0priv1.Security - Name: NeMo.Intf.45.Security
   - RadiusChargeableUserId (type: bool)
       Attributes: persistent
   - MFPConfig (type: string)
+      Attributes: persistent
       Validator: ['Disabled', 'Optional', 'Required']
   - SPPAmsdu (type: int32)
 
@@ -356,72 +366,84 @@ OBJECT: NeMo.Intf.vap5g0priv1.AssociatedDevice - Name: NeMo.Intf.45.AssociatedDe
   - AuthenticationState (type: bool)
       Attributes: read_only
   - LastDataDownlinkRate (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - LastDataUplinkRate (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - SignalStrength (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '-200', 'max': '0'}
   - AvgSignalStrengthByChain (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '-200', 'max': '0'}
   - SignalStrengthByChain (type: string)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - SignalStrengthHistory (type: string)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
       Validator: {'min': '0', 'max': '100'}
+  - RxErrors (type: uint32)
+      Attributes: read_only, volatile
+  - TxErrors (type: uint32)
+      Attributes: read_only, volatile
   - Rx_Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Tx_Retransmissions (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
+  - Rx_RetransmissionsFailed (type: uint32)
+      Attributes: read_only, volatile
   - Tx_RetransmissionsFailed (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
+  - RxFrameCount (type: uint32)
+      Attributes: read_only, volatile
+  - TxFrameCount (type: uint32)
+      Attributes: read_only, volatile
   - Active (type: bool)
       Attributes: read_only
   - SignalNoiseRatio (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - Noise (type: int32)
-      Attributes: read_only
+      Attributes: read_only, volatile
+  - NoiseByChain (type: string)
+      Attributes: read_only, volatile
   - Inactive (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxUnicastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxUnicastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxMulticastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxMulticastPacketCount (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - TxBytes (type: uint64)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - RxBytes (type: uint64)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkMCS (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkBandwidth (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - UplinkShortGuard (type: bool)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkMCS (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkBandwidth (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - DownlinkShortGuard (type: bool)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxDownlinkRateSupported (type: uint32)
       Attributes: read_only
   - MaxDownlinkRateReached (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxUplinkRateSupported (type: uint32)
       Attributes: read_only
   - MaxUplinkRateReached (type: uint32)
-      Attributes: read_only
+      Attributes: read_only, volatile
   - MaxBandwidthSupported (type: string)
       Attributes: read_only
       Validator: ['20MHz', '40MHz', '80MHz', '160MHz', 'Unknown']
@@ -437,11 +459,23 @@ OBJECT: NeMo.Intf.vap5g0priv1.AssociatedDevice - Name: NeMo.Intf.45.AssociatedDe
       Attributes: read_only
   - SupportedMCS (type: string)
       Attributes: read_only
-  - SupportedVhtMCS (type: string)
+  - SupportedHtMCS (type: string)
       Attributes: read_only
-  - SupportedHeMCS (type: string)
+  - RxSupportedVhtMCS (type: string)
       Attributes: read_only
-  - SupportedHe160MCS (type: string)
+  - TxSupportedVhtMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - TxSupportedHeMCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe160MCS (type: string)
+      Attributes: read_only
+  - RxSupportedHe80x80MCS (type: string)
+      Attributes: read_only
+  - TxSupportedHe80x80MCS (type: string)
       Attributes: read_only
   - VendorOUI (type: string)
       Attributes: read_only
@@ -469,6 +503,19 @@ OBJECT: NeMo.Intf.vap5g0priv1.AssociatedDevice - Name: NeMo.Intf.45.AssociatedDe
   - UNIIBandsCapabilities (type: string)
       Attributes: read_only
   - FrequencyCapabilities (type: string)
+      Attributes: read_only
+  - AssociationType (type: string)
+      Attributes: read_only
+      Validator: ['Default', 'Assoc', 'Reassoc', 'FtAssoc']
+  - ProbeTime (type: date_time)
+      Attributes: read_only
+  - AssociationStartTime (type: date_time)
+      Attributes: read_only
+  - AssociationSetupTime (type: uint32)
+      Attributes: read_only
+  - ProbeRssi (type: int32)
+      Attributes: read_only
+  - MCSConsistencyFlags (type: string)
       Attributes: read_only
 
 =======================================================================
@@ -504,6 +551,8 @@ OBJECT: NeMo.Intf.vap5g0priv1.AssociationCount - Name: NeMo.Intf.45.AssociationC
   - Fail (type: uint32)
       Attributes: read_only
   - FailSecurity (type: uint32)
+      Attributes: read_only
+  - Disconnect (type: uint32)
       Attributes: read_only
   - FastReconnects (type: uint32)
       Attributes: read_only
@@ -557,12 +606,14 @@ OBJECT: NeMo.Intf.vap5g0priv1.ErrorToggleStats - Name: NeMo.Intf.45.ErrorToggleS
 OBJECT: NeMo.Intf.vap5g0priv1.Neighbour - Name: NeMo.Intf.45.Neighbour
  == PARAMETERS:
   - BSSID (type: string)
+  - SSID (type: string)
   - Information (type: int32)
   - OperatingClass (type: int32)
   - Channel (type: int32)
   - PhyType (type: int32)
   - NASIdentifier (type: string)
   - R0KHKey (type: string)
+  - ColocatedAP (type: bool)
 
 =======================================================================
 OBJECT: NeMo.Intf.vap5g0priv1.RssiEventing - Name: NeMo.Intf.45.RssiEventing
@@ -573,8 +624,10 @@ OBJECT: NeMo.Intf.vap5g0priv1.RssiEventing - Name: NeMo.Intf.45.RssiEventing
       Attributes: persistent
       Validator: {'min': '1'}
   - AveragingFactor (type: uint32)
+      Attributes: persistent
       Validator: {'min': '1', 'max': '1000'}
   - Interval (type: uint32)
+      Attributes: persistent
       Validator: {'min': '100'}
   - HistoryEnable (type: bool)
       Attributes: persistent
@@ -641,6 +694,34 @@ OBJECT: NeMo.Intf.vap5g0priv1.DriverConfig - Name: NeMo.Intf.45.DriverConfig
   - BssMaxIdlePeriod (type: int32)
       Attributes: persistent
       Validator: {'min': '-1', 'max': '65535'}
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.StaHistogram - Name: NeMo.Intf.45.StaHistogram
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - SendPeriodicNotification (type: bool)
+      Attributes: persistent
+  - SendNotificationOnDisassoc (type: bool)
+      Attributes: persistent
+  - NrReadingsPerWindow (type: uint32)
+      Attributes: persistent
+  - NrWindows (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getCurrentStaHistograms()
+  - void getAllStaHistograms()
+  - void clearStaHistograms()
+
+=======================================================================
+OBJECT: NeMo.Intf.vap5g0priv1.ApMonitorConfig - Name: NeMo.Intf.45.ApMonitorConfig
+ == PARAMETERS:
+  - InfoEventEnable (type: bool)
+      Attributes: persistent
+  - InfoEventBootDelay (type: uint32)
+      Attributes: persistent
+  - InfoEventInterval (type: uint32)
+      Attributes: persistent
 
 =======================================================================
 OBJECT: NeMo.Intf.vap5g0priv1.IPv4Addr - Name: NeMo.Intf.45.IPv4Addr

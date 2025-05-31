@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .PowerManagement - Name: .PowerManagement
@@ -7,6 +7,9 @@ OBJECT: .PowerManagement - Name: .PowerManagement
       Attributes: persistent
   - Status (type: bool)
       Attributes: read_only
+  - ConfigurationMode (type: string)
+      Attributes: read_only
+      Validator: ['Dynamic', 'Static']
   - Power (type: uint32)
       Attributes: read_only
   - InformRandomDelay (type: uint32)

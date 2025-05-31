@@ -1,16 +1,14 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .AutoDiag - Name: .AutoDiag
  == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
   - DiagnosticsScriptFile (type: string)
       Attributes: read_only
-  - FullDateEnable (type: bool)
-      Attributes: persistent
-  - NoAuthUse (type: bool)
-      Attributes: persistent
+  - DiagnosticsState (type: string)
+      Validator: ['None', 'Requested', 'Cancel', 'Complete', 'Error_Internal', 'Error_Other']
+  - Results (type: string)
+      Attributes: read_only
   - InternalGetProperty (type: bool)
       Attributes: read_only, persistent
   - HeaderFieldNumberOfEntries (type: uint32)
@@ -20,31 +18,15 @@ OBJECT: .AutoDiag - Name: .AutoDiag
       Validator: ['Local', 'Remote', 'Firmware', '']
  == FUNCTIONS:
   - bool executeDiagnostics(string id, (bool usr))
-  - bool cancelDiagnostics()
+  - bool executeTrigger(string event)
+  - bool cancelDiagnostics((string id))
   - void getDiagnosticsState()
   - void getOpenLanDiagnosticsList()
   - void getDatamodelWhiteList()
   - void getFunctionWhiteList()
   - void getDiagnosticsList()
   - list listDiagnostics()
+  - list getContext()
+  - bool clearContext()
   - bool setUserInput(string input)
-
-=======================================================================
-OBJECT: AutoDiag.HeaderField - Name: AutoDiag.HeaderField
- == PARAMETERS:
-  - DataType (type: string)
-      Attributes: persistent
-      Validator: ['Value', 'Path']
-  - Name (type: string)
-      Attributes: persistent
-      Validator: {'max': '255'}
-  - Data (type: string)
-      Attributes: persistent
-      Validator: {'max': '255'}
-
-=======================================================================
-OBJECT: AutoDiag.Interface - Name: AutoDiag.Interface
- == PARAMETERS:
-  - FriendlyName (type: string)
-  - Name (type: string)
 

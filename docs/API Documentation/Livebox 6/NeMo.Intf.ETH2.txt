@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: NeMo.Intf.ETH2 - Name: NeMo.Intf.5
@@ -47,7 +47,7 @@ OBJECT: NeMo.Intf.ETH2 - Name: NeMo.Intf.5
   - LastChange (type: uint32)
       Attributes: read_only, volatile
   - CurrentBitRate (type: int32)
-      Validator: ['-1', '10', '100', '1000', '2500', '10000']
+      Validator: ['-1', '10', '100', '1000', '2500', '5000', '10000']
   - MaxBitRateSupported (type: int32)
       Validator: ['-1', '10', '100', '1000', '2500', '10000']
   - MaxBitRateEnabled (type: int32)

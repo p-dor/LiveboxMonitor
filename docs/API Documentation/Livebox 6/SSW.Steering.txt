@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: SSW.Steering - Name: SSW.Steering
@@ -9,6 +9,7 @@ OBJECT: SSW.Steering - Name: SSW.Steering
       Attributes: read_only
       Validator: ['Down', 'Up']
  == FUNCTIONS:
+  - void getNodeBackhaul((string MAC))
   - void getUplinkInfo((string MAC))
   - void getRoamInfo((string MAC))
   - stationInfo getStationStats((string MAC))

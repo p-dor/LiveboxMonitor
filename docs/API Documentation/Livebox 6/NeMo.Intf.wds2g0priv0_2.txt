@@ -1,11 +1,11 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 {
     "errors": [
         {
             "error": 13,
             "description": "Permission denied",
-            "info": "IEEE1905"
+            "info": "NeMo/Intf/wds2g0priv0_2"
         }
     ]
 }

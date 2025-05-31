@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG60-fr-G01.R04.C01_00
+=== LIVEBOX SOFTWARE VERSION: SG60-fr-G07.R02.C03_10
 
 =======================================================================
 OBJECT: .DeviceInfo - Name: .DeviceInfo
@@ -60,7 +60,8 @@ OBJECT: .DeviceInfo - Name: .DeviceInfo
   - ManufacturerURL (type: string)
       Attributes: read_only
   - Country (type: string)
-      Attributes: read_only
+      Attributes: persistent
+      Validator: {'max': '8'}
   - ExternalIPAddress (type: string)
       Attributes: read_only
   - DeviceStatus (type: string)
@@ -84,7 +85,6 @@ OBJECT: .DeviceInfo - Name: .DeviceInfo
   - variant get()
   - variant getPairingInfo()
   - bool update()
-  - variant getDebugInformation((bool filedesc), (debug_options_t options))
   - bool export((string fileName))
 
 =======================================================================
@@ -119,6 +119,10 @@ OBJECT: DeviceInfo.MemoryStatus - Name: DeviceInfo.MemoryStatus
   - Total (type: uint32)
       Attributes: read_only
   - Free (type: uint32)
+      Attributes: read_only
+  - Buffered (type: uint32)
+      Attributes: read_only
+  - Cached (type: uint32)
       Attributes: read_only
 
 =======================================================================
