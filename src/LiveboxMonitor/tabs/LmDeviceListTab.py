@@ -233,7 +233,7 @@ class LmDeviceList:
 
         # Get IPv6 prefix leases delegation list
         try:
-            prefixes = self._api._dhcp.get_ipv6_prefix_leases()
+            prefixes = self._api._dhcp.get_v6_prefix_leases()
         except BaseException as e:
             self.display_error(str(e))
             prefixes = None
@@ -437,9 +437,9 @@ class LmDeviceList:
         if line >= 0:
             self.format_name_widget(self._eventDList, line, device_key, DSelCol.Name)
 
-        line = self.find_device_line(self._dhcpDList, device_key)
+        line = self.find_device_line(self._dhcp_dlist, device_key)
         if line >= 0:
-            self.format_name_widget(self._dhcpDList, line, device_key, DhcpCol.Name)
+            self.format_name_widget(self._dhcp_dlist, line, device_key, DhcpCol.Name)
 
         self.graphUpdateDeviceName(device_key)
         self.repeaterUpdateDeviceName(device_key)
