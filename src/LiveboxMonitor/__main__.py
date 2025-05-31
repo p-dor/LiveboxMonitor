@@ -129,7 +129,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmEventsTab.TAB_NAME:
                     self.createEventsTab()
                 case LmDhcpTab.TAB_NAME:
-                    self.createDhcpTab()
+                    self.create_dhcp_tab()
                 case LmNatPatTab.TAB_NAME:
                     self.createNatPatTab()
                 case LmPhoneTab.TAB_NAME:
@@ -187,7 +187,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
-                    self.dhcpTabClick()
+                    self.dhcp_tab_click()
                 case LmNatPatTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
@@ -453,7 +453,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to DHCP tab
     def switch_to_dhcp_tab(self):
-        self._tab_widget.setCurrentWidget(self._dhcpTab)
+        self._tab_widget.setCurrentWidget(self._dhcp_tab)
 
 
     ### Switch to NAT/PAT tab
