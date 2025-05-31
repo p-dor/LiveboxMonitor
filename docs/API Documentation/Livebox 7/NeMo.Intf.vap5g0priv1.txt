@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
 OBJECT: NeMo.Intf.vap5g0priv1 - Name: NeMo.Intf.45

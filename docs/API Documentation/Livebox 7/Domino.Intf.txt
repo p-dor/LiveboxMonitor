@@ -1,0 +1,21 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
+
+=======================================================================
+OBJECT: Domino.Intf - Name: Domino.Intf
+ == FUNCTIONS:
+  - bool activateConnection((bool activate))
+  - bool setWifiParams((string ssid), (string password), (string enc_mode))
+  - bool enableWifi((bool enable))
+
+=======================================================================
+OBJECT: Domino.Intf.ConnectionContext - Name: Domino.Intf.ConnectionContext
+ == FUNCTIONS:
+  - bool setAdminPassword((string password))
+  - bool resetAdminPassword((string currpwd), (string newpwd))
+
+=======================================================================
+OBJECT: Domino.Intf.SIM - Name: Domino.Intf.SIM
+ == FUNCTIONS:
+  - void setPin((string pin))
+  - void resetPin((string puk), (string newpin))
+

@@ -1,0 +1,66 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
+
+=======================================================================
+OBJECT: Domino.Cellular - Name: Domino.Cellular
+
+=======================================================================
+OBJECT: Domino.Cellular.Interface - Name: Domino.Cellular.Interface
+ == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['Up', 'Down', 'Unknown', 'Dormant', 'NotPresent', 'LowerLayerDown', 'Error']
+  - SupportedAccessTechnologies (type: string)
+      Attributes: read_only
+  - PreferredAccessTechnology (type: string)
+      Attributes: persistent
+      Validator: ['Auto', 'LTE', 'WCDMA']
+  - CurrentAccessTechnology (type: string)
+      Attributes: read_only, persistent
+  - RSSI (type: int32)
+      Attributes: read_only
+  - PINCheck (type: string)
+      Attributes: persistent
+  - PIN (type: string)
+      Attributes: persistent
+  - X_ORANGE-COM_PINTry (type: uint32)
+      Attributes: persistent
+  - InterferenceMode (type: string)
+      Attributes: persistent
+      Validator: ['NONE', '3G2100', '4GB7', '3G2100+4GB7']
+  - Upstream (type: bool)
+ == FUNCTIONS:
+  - bool setTechnologyMode(string mode, string interference)
+  - bool setGlobalPin(string pin)
+
+=======================================================================
+OBJECT: Domino.Cellular.Interface.USIM - Name: Domino.Cellular.Interface.USIM
+ == PARAMETERS:
+  - Status (type: string)
+      Attributes: read_only
+      Validator: ['', 'None', 'Available', 'Valid', 'Blocked', 'Error', 'New']
+  - ICCID (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - bool authorizeICCID((bool enable))
+
+=======================================================================
+OBJECT: Domino.Cellular.AccessPoint - Name: Domino.Cellular.AccessPoint
+ == PARAMETERS:
+  - Alias (type: string)
+      Attributes: read_only
+  - Enable (type: bool)
+      Attributes: persistent
+  - APN (type: string)
+      Attributes: persistent
+  - Username (type: string)
+      Attributes: persistent
+  - Password (type: string)
+      Attributes: persistent
+  - Interface (type: string)
+ == FUNCTIONS:
+  - bool setAPSettings(string apn, string username, string password)
+

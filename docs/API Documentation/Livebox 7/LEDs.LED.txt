@@ -1,11 +1,11 @@
 === LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
-OBJECT: .HTTPService - Name: .HTTPService
+OBJECT: LEDs.LED - Name: LEDs.LED
  == PARAMETERS:
-  - EnableWebServiceStatistics (type: bool)
+  - Brightness (type: uint8)
       Attributes: persistent
- == FUNCTIONS:
-  - bool getAuthenticationModes()
-  - bool getCurrentUser()
+      Validator: {'max': '255'}
+  - Path (type: string)
+      Attributes: read_only
 

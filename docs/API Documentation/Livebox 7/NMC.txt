@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
 OBJECT: .NMC - Name: .NMC
@@ -315,6 +315,9 @@ OBJECT: NMC.Autodetect - Name: NMC.Autodetect
   - LastConnectionError (type: string)
   - IPv6SwitchEnable (type: bool)
       Attributes: persistent
+  - IPv6Mode (type: string)
+      Attributes: persistent
+      Validator: ['DualStack', 'Dslite', 'Switching_To_DualStack', 'Switching_To_Dslite']
  == FUNCTIONS:
   - variant get()
 

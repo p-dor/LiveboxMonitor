@@ -1,0 +1,25 @@
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
+
+=======================================================================
+OBJECT: .ServiceInvocation - Name: .ServiceInvocation
+ == PARAMETERS:
+  - Status (type: bool)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool export((string fileName))
+  - bool import((string fileName))
+
+=======================================================================
+OBJECT: ServiceInvocation.OnDemand - Name: ServiceInvocation.OnDemand
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - WakeUpURL (type: string)
+      Attributes: read_only
+  - Port (type: string)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void updateWakeUpURL((string host), (uint32 port))
+  - variant get()
+  - bool set((variant parameters))
+

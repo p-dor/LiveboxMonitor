@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
 OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
@@ -11,6 +11,8 @@ OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
       Attributes: persistent
   - ReleaseNotesTypes (type: string)
       Attributes: persistent
+  - ReleaseNotesPubkey (type: string)
+      Attributes: persistent
   - MinimumDelay (type: uint32)
       Attributes: persistent
   - LastSyncTime (type: date_time)
@@ -19,15 +21,17 @@ OBJECT: .WebuiupgradeService - Name: .WebuiupgradeService
       Attributes: persistent
   - NewVersion (type: string)
       Attributes: read_only
+  - UpgradeOnly (type: bool)
+      Attributes: persistent
   - Enable (type: bool)
       Attributes: persistent
   - Status (type: string)
       Attributes: read_only
  == FUNCTIONS:
-  - openfile_return_t openfile((filemap_t filemap))
+  - openfile_return_t openfile((filemap_t filemap), (bool cert))
   - bool verifyRUIVersion((string filetype), (string version))
   - void getReleaseNotes((string version), (string language), (string releaseNotes))
-  - bool isCustomFileTypeSupported((string filetype))
+  - bool isCustomFileTypeSupported((string filetype), (bool cert))
 
 =======================================================================
 OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorConfigFile
@@ -38,6 +42,8 @@ OBJECT: WebuiupgradeService.VendorConfigFile - Name: WebuiupgradeService.VendorC
       Attributes: read_only
   - Enable (type: bool)
       Attributes: persistent
+  - AlwaysAllowTLSAuthentication (type: bool)
+      Attributes: read_only
 
 =======================================================================
 OBJECT: WebuiupgradeService.AutoCheck - Name: WebuiupgradeService.AutoCheck

@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
 OBJECT: .DHCPv4 - Name: .DHCPv4
@@ -29,6 +29,8 @@ OBJECT: DHCPv4.Server.Pool - Name: DHCPv4.Server.Pool
  == PARAMETERS:
   - Enable (type: bool)
       Attributes: persistent
+  - Authoritative (type: bool)
+      Attributes: persistent
   - Name (type: string)
       Attributes: persistent
       Validator: {'max': '32'}
@@ -47,6 +49,8 @@ OBJECT: DHCPv4.Server.Pool - Name: DHCPv4.Server.Pool
   - Interface (type: string)
       Attributes: persistent
       Validator: {'max': '255'}
+  - DSCPMark (type: int8)
+      Attributes: persistent
   - MinAddress (type: string)
       Attributes: persistent
   - MaxAddress (type: string)

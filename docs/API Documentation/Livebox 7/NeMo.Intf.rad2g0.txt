@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 =======================================================================
 OBJECT: NeMo.Intf.rad2g0 - Name: NeMo.Intf.39
@@ -1277,6 +1277,7 @@ OBJECT: NeMo.Intf.rad2g0.Vendor - Name: NeMo.Intf.39.Vendor
   - PhyEDThreshold (type: int32)
       Attributes: persistent
   - PhyTxShaper (type: int8)
+  - RxChainPowerSaveQuietTime (type: uint32)
   - SignalStrengthPolicy (type: string)
       Validator: ['MaxChains', 'AvgChains']
 

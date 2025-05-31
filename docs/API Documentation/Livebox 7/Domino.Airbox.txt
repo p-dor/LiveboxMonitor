@@ -1,11 +1,11 @@
-=== LIVEBOX SOFTWARE VERSION: SG70-fr-G01.R01.C14_08
+=== LIVEBOX SOFTWARE VERSION: SG70-fr-G07.R02.C02_18
 
 {
     "errors": [
         {
             "error": 13,
             "description": "Permission denied",
-            "info": "OUI"
+            "info": "Domino/Airbox"
         }
     ]
 }
