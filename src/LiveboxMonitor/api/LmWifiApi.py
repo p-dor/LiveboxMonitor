@@ -186,13 +186,12 @@ class WifiApi(LmApi):
             raise Exception(f'Scheduler:getSchedule service failed for {intf_id} interface.')
 
         # Add schedule with proper status
-        p = {}
-        p['base'] = schedule.get('base')
-        p['def'] = schedule.get('def')
-        p['ID'] = intf_id
-        p['schedule'] = schedule.get('schedule')
-        p['enable'] = enable
-        p['override'] = ''
+        p = {'base': schedule.get('base'),
+             'def': schedule.get('def'),
+             'ID': intf_id,
+             'schedule': schedule.get('schedule'),
+             'enable': enable,
+             'override': ''}
         d = self.call('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p}, err_str=intf_id)
 
 
@@ -238,17 +237,13 @@ class WifiApi(LmApi):
                 break
 
             # Add schedule with proper status
-            p = {}
-            p['enable'] = enable
-            p['base'] = schedule.get('base')
-            p['def'] = schedule.get('def')
-            if enable:
-                p['override'] = ''
-            else:
-                p['override'] = 'Enable'
-            p['value'] = schedule.get('value')
-            p['ID'] = i
-            p['schedule'] = schedule.get('schedule')
+            p = {'enable': enable,
+                 'base': schedule.get('base'),
+                 'def': schedule.get('def'),
+                 'override': '' if enable else 'Enable',
+                 'value': schedule.get('value'),
+                 'ID': i,
+                 'schedule': schedule.get('schedule')}
             try:
                 d = self.call_no_check('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p})
             except BaseException as e:
@@ -472,7 +467,7 @@ class WifiApi(LmApi):
                 r = {}
             if (o['Enable'] != n['Enable']):
                 enable = n['Enable']
-                p = {'Enable': enable, 'PersistentEnable': enable, 'Status': enable }
+                p = {'Enable': enable, 'PersistentEnable': enable, 'Status': enable}
             else:
                 p = {}
 
