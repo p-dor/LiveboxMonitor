@@ -12,9 +12,9 @@ class LmApi:
     @staticmethod
     def err_str(package, method=None, err_str=None):
         e = package
-        if method is not None:
+        if method:
             e += ':' + method
-        if err_str is not None:
+        if err_str:
             e += ' ' + err_str
         return e
 
