@@ -34,9 +34,9 @@ from LiveboxMonitor.lang import LmLanguage_EN, LmLanguage_FR
 current_language = 'FR'
 
 # Supported languages
-LANGUAGES_KEY = [ 'FR', 'EN' ]
-LANGUAGES_NAME = [ 'Français', 'English']
-LANGUAGES_LOCALE = { 'FR': 'fr_FR', 'EN': 'en_US' }
+LANGUAGES_KEY = ['FR', 'EN']
+LANGUAGES_NAME = ['Français', 'English']
+LANGUAGES_LOCALE = {'FR': 'fr_FR', 'EN': 'en_US'}
 
 # Labels & Tooltips - to set according to current language
 labels = LmLanguage_FR.LABELS
