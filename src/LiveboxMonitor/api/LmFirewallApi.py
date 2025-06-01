@@ -58,4 +58,4 @@ class FirewallApi(LmApi):
 
     ### Delete a DMZ entry
     def delete_dmz(self, dmz_id):
-        self.call('Firewall', 'deleteDMZ', { 'id': dmz_id })
+        self.call('Firewall', 'deleteDMZ', {'id': dmz_id})
