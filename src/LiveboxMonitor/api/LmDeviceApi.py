@@ -125,4 +125,4 @@ class DeviceApi(LmApi):
 
     ### Send WOL signal to device - key is MAC addr
     def wake_on_lan(self, device_key):
-        self.call_no_check('WOL', 'sendWakeOnLan', { 'hostID': device_key, 'broadcast': True })
+        self.call_no_check('WOL', 'sendWakeOnLan', {'hostID': device_key, 'broadcast': True})
