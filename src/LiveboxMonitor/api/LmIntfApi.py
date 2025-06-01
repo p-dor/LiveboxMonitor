@@ -40,7 +40,7 @@ class IntfApi(LmApi):
 
     ### Get list of interface keys
     def get_key_list(self):
-        return self.call('NeMo.Intf.lo', 'getIntfs', { "traverse": "all" })
+        return self.call('NeMo.Intf.lo', 'getIntfs', {'traverse': 'all'})
 
 
     ### Get list of useful interfaces with key, name, type and swap stats fields
