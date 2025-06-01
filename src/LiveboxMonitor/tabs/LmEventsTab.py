@@ -38,130 +38,130 @@ class EventCol(IntEnum):
 class LmEvents:
 
     ### Create events tab
-    def createEventsTab(self):
-        self._eventsTab = QtWidgets.QWidget(objectName = TAB_NAME)
+    def create_events_tab(self):
+        self._events_tab = QtWidgets.QWidget(objectName=TAB_NAME)
 
         # Device list
-        self._eventDList = LmTableWidget(objectName = 'eventDList')
-        self._eventDList.set_columns({DSelCol.Key: ['Key', 0, None],
-                                      DSelCol.Name: [lx('Name'), 200, 'dlist_Name'],
-                                      DSelCol.MAC: [lx('MAC'), 120, 'dlist_MAC']})
-        self._eventDList.set_header_resize([DSelCol.MAC])
-        self._eventDList.set_standard_setup(self)
-        self._eventDList.setMinimumWidth(350)
-        self._eventDList.itemSelectionChanged.connect(self.eventDeviceListClick)
+        self._event_dlist = LmTableWidget(objectName='eventDList')
+        self._event_dlist.set_columns({DSelCol.Key: ['Key', 0, None],
+                                       DSelCol.Name: [lx('Name'), 200, 'dlist_Name'],
+                                       DSelCol.MAC: [lx('MAC'), 120, 'dlist_MAC']})
+        self._event_dlist.set_header_resize([DSelCol.MAC])
+        self._event_dlist.set_standard_setup(self)
+        self._event_dlist.setMinimumWidth(350)
+        self._event_dlist.itemSelectionChanged.connect(self.event_device_list_click)
 
         # Event list
-        self._eventList = LmTableWidget(objectName = 'eventList')
-        self._eventList.set_columns({EventCol.Key: ['Key', 0, None],
-                                     EventCol.Time: [lx('Time'), 80, 'elist_Time'],
-                                     EventCol.Reason: [lx('Reason'), 150, 'elist_Reason'],
-                                     EventCol.Attribute: [lx('Attributes'), 600, 'elist_Attribute']})
-        self._eventList.set_header_resize([EventCol.Attribute])
-        self._eventList.set_standard_setup(self)
-        self._eventList.doubleClicked.connect(self.displayEventButtonClick)
+        self._event_list = LmTableWidget(objectName='eventList')
+        self._event_list.set_columns({EventCol.Key: ['Key', 0, None],
+                                      EventCol.Time: [lx('Time'), 80, 'elist_Time'],
+                                      EventCol.Reason: [lx('Reason'), 150, 'elist_Reason'],
+                                      EventCol.Attribute: [lx('Attributes'), 600, 'elist_Attribute']})
+        self._event_list.set_header_resize([EventCol.Attribute])
+        self._event_list.set_standard_setup(self)
+        self._event_list.doubleClicked.connect(self.display_event_button_click)
 
         # Lists layout
-        aListBox = QtWidgets.QHBoxLayout()
-        aListBox.setSpacing(10)
-        aListBox.addWidget(self._eventDList, 0)
-        aListBox.addWidget(self._eventList, 1)
+        list_box = QtWidgets.QHBoxLayout()
+        list_box.setSpacing(10)
+        list_box.addWidget(self._event_dlist, 0)
+        list_box.addWidget(self._event_list, 1)
 
         # Button bar
-        aButtonsBox = QtWidgets.QHBoxLayout()
-        aButtonsBox.setSpacing(30)
-        aNotificationsButton = QtWidgets.QPushButton(lx('Notifications...'), objectName = 'notifications')
-        aNotificationsButton.clicked.connect(self.notificationsButtonClick)
-        aButtonsBox.addWidget(aNotificationsButton)
-        aDisplayEventButton = QtWidgets.QPushButton(lx('Display Event...'), objectName = 'displayEvent')
-        aDisplayEventButton.clicked.connect(self.displayEventButtonClick)
-        aButtonsBox.addWidget(aDisplayEventButton)
+        buttons_box = QtWidgets.QHBoxLayout()
+        buttons_box.setSpacing(30)
+        notifications_button = QtWidgets.QPushButton(lx('Notifications...'), objectName='notifications')
+        notifications_button.clicked.connect(self.notifications_button_click)
+        buttons_box.addWidget(notifications_button)
+        display_event_button = QtWidgets.QPushButton(lx('Display Event...'), objectName='displayEvent')
+        display_event_button.clicked.connect(self.display_event_button_click)
+        buttons_box.addWidget(display_event_button)
 
         # Layout
-        aVBox = QtWidgets.QVBoxLayout()
-        aVBox.setSpacing(10)
-        aVBox.addLayout(aListBox, 0)
-        aVBox.addLayout(aButtonsBox, 1)
-        self._eventsTab.setLayout(aVBox)
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.setSpacing(10)
+        vbox.addLayout(list_box, 0)
+        vbox.addLayout(buttons_box, 1)
+        self._events_tab.setLayout(vbox)
 
-        LmConfig.set_tooltips(self._eventsTab, 'events')
-        self._tab_widget.addTab(self._eventsTab, lx('Events'))
+        LmConfig.set_tooltips(self._events_tab, 'events')
+        self._tab_widget.addTab(self._events_tab, lx('Events'))
 
 
     ### Init the Livebox event collector thread
-    def initEventLoop(self):
+    def init_event_loop(self):
         self._last_event_device_key = ''
         self._stats_map = {}
-        self._eventBuffer = {}
-        self._liveboxEventLoop = None
-        self._notifyRawEventLog = []
-        self._notificationTimer = QtCore.QTimer()
-        self._notificationTimer.timeout.connect(self.notifyFlushEvents)
+        self._event_buffer = {}
+        self._livebox_event_loop = None
+        self._notify_raw_event_log = []
+        self._notification_timer = QtCore.QTimer()
+        self._notification_timer.timeout.connect(self.notify_flush_events)
 
 
     ### Start the Livebox event collector thread
-    def startEventLoop(self):
-        self._liveboxEventLoop = LiveboxEventThread(self._api)
-        self._liveboxEventLoop.connect_processor(self.processLiveboxEvent)
-        self.startNotificationTimer()
+    def start_event_loop(self):
+        self._livebox_event_loop = LiveboxEventThread(self._api)
+        self._livebox_event_loop.connect_processor(self.process_livebox_event)
+        self.start_notification_timer()
 
 
     ### Suspend the Livebox event collector thread
-    def suspendEventLoop(self):
-        if self._liveboxEventLoop is not None:
-            self._liveboxEventLoop.stop()
-        self.stopNotificationTimer()
+    def suspend_event_loop(self):
+        if self._livebox_event_loop is not None:
+            self._livebox_event_loop.stop()
+        self.stop_notification_timer()
 
 
     ### Resume the Livebox event collector thread
     def resumeEventLoop(self):
-        if self._liveboxEventLoop is None:
-            self.startEventLoop()
+        if self._livebox_event_loop is None:
+            self.start_event_loop()
         else:
-            self._liveboxEventLoop._resume.emit()
-        self.startNotificationTimer()
+            self._livebox_event_loop._resume.emit()
+        self.start_notification_timer()
 
 
     ### Stop the Livebox event collector thread
-    def stopEventLoop(self):
-        if self._liveboxEventLoop is not None:
-            self._liveboxEventLoop.quit()
-            self._liveboxEventLoop = None
-        self.stopNotificationTimer()
+    def stop_event_loop(self):
+        if self._livebox_event_loop is not None:
+            self._livebox_event_loop.quit()
+            self._livebox_event_loop = None
+        self.stop_notification_timer()
 
 
     ### Start the regular notification collector tasks
-    def startNotificationTimer(self):
+    def start_notification_timer(self):
         if LmConf.NotificationRules is not None:
-            self._notificationTimer.start(LmConf.NotificationFlushFrequency * 1000)
+            self._notification_timer.start(LmConf.NotificationFlushFrequency * 1000)
 
 
     ### Stop the regular notification collector tasks
-    def stopNotificationTimer(self):
-        self._notificationTimer.stop()
+    def stop_notification_timer(self):
+        self._notification_timer.stop()
 
 
     ### Click on event device list
-    def eventDeviceListClick(self):
-        self._eventList.clearContents()
-        self._eventList.setRowCount(0)
+    def event_device_list_click(self):
+        self._event_list.clearContents()
+        self._event_list.setRowCount(0)
 
-        aCurrentSelection = self._eventDList.currentRow()
-        if aCurrentSelection >= 0:
-            aKey = self._eventDList.item(aCurrentSelection, DSelCol.Key).text()
-            self._eventList.setSortingEnabled(False)
-            self.updateEventList(aKey)
-            self._eventList.setSortingEnabled(True)
+        current_selection = self._event_dlist.currentRow()
+        if current_selection >= 0:
+            aKey = self._event_dlist.item(current_selection, DSelCol.Key).text()
+            self._event_list.setSortingEnabled(False)
+            self.update_event_list(aKey)
+            self._event_list.setSortingEnabled(True)
 
 
     ### Click on notifications button
-    def notificationsButtonClick(self):
+    def notifications_button_click(self):
         dialog = NotificationSetupDialog(self)
         if dialog.exec():
             LmConf.save()
-            self.stopNotificationTimer()
-            self.startNotificationTimer()
-            if LmEvents.notifyHasEmailRule() and (LmConf.Email is None):
+            self.stop_notification_timer()
+            self.start_notification_timer()
+            if LmEvents.notify_has_email_rule() and (LmConf.Email is None):
                 if LmTools.ask_question(mx('You have configured at least one rule with sending emails as an action but '
                                            'you have not configured how to send emails. '
                                            'Do you want to configure how to send emails?', 'email')):
@@ -169,97 +169,94 @@ class LmEvents:
 
 
     ### Click on display event button
-    def displayEventButtonClick(self):
-        aCurrDeviceSelection = self._eventDList.currentRow()
-        if aCurrDeviceSelection < 0:
+    def display_event_button_click(self):
+        curr_device_selection = self._event_dlist.currentRow()
+        if curr_device_selection < 0:
             self.display_error(mx('Please select a device.', 'devSelect'))
             return
 
-        aDeviceKey = self._eventDList.item(aCurrDeviceSelection, DSelCol.Key).text()
+        device_key = self._event_dlist.item(curr_device_selection, DSelCol.Key).text()
 
-        aCurrEventSelection = self._eventList.currentRow()
-        if aCurrEventSelection < 0:
+        curr_event_selection = self._event_list.currentRow()
+        if curr_event_selection < 0:
             self.display_error(mx('No event selected.', 'evtSelect'))
             return
 
-        aEventKey = int(self._eventList.item(aCurrEventSelection, EventCol.Key).text())
-        aDeviceEventDict = self._eventBuffer.get(aDeviceKey, {})
-        aEventArray = aDeviceEventDict.get('Events', [])
+        event_key = int(self._event_list.item(curr_event_selection, EventCol.Key).text())
+        device_event_dict = self._event_buffer.get(device_key, {})
+        event_array = device_event_dict.get('Events', [])
 
         # Retrieve event entry in the array
-        e = next((e for e in aEventArray if e['Key'] == aEventKey), None)
+        e = next((e for e in event_array if e['Key'] == event_key), None)
         if e is None:
             self.display_error(mx('Event entry not found.', 'evtNotFound'))
             return
 
         # Display event entry
-        aTextDoc = QtGui.QTextDocument()
-        aStandardFont = QtGui.QFont('Courier New', 9)
-        aBoldFont = QtGui.QFont('Tahoma', 9, QtGui.QFont.Weight.Bold)
-        aTextDoc.setDefaultFont(aStandardFont)
-        aStandardFormat = QtGui.QTextCharFormat()
-        aStandardFormat.setFont(aStandardFont)
-        aBoldFormat = QtGui.QTextCharFormat()
-        aBoldFormat.setFont(aBoldFont)
+        text_doc = QtGui.QTextDocument()
+        standard_font = QtGui.QFont('Courier New', 9)
+        bold_font = QtGui.QFont('Tahoma', 9, QtGui.QFont.Weight.Bold)
+        text_doc.setDefaultFont(standard_font)
+        standard_format = QtGui.QTextCharFormat()
+        standard_format.setFont(standard_font)
+        bold_format = QtGui.QTextCharFormat()
+        bold_format.setFont(bold_font)
 
-        aCursor = QtGui.QTextCursor(aTextDoc)
-        aCursor.beginEditBlock()
-        aCursor.insertText('Raised: ', aBoldFormat)
-        aCursor.insertText(str(e['Timestamp']) + '\n', aStandardFormat)
-        aCursor.insertText('Handler: ', aBoldFormat)
-        aCursor.insertText(e['Handler'] + '\n', aStandardFormat)
-        aCursor.insertText('Reason: ', aBoldFormat)
-        aCursor.insertText(e['Reason'] + '\n\n', aStandardFormat)
-        aCursor.insertText('Attributes:\n', aBoldFormat)
-        aCursor.insertText(json.dumps(e['Attributes'], indent=2), aStandardFormat)
-        aCursor.endEditBlock()
+        cursor = QtGui.QTextCursor(text_doc)
+        cursor.beginEditBlock()
+        cursor.insertText('Raised: ', bold_format)
+        cursor.insertText(str(e['Timestamp']) + '\n', standard_format)
+        cursor.insertText('Handler: ', bold_format)
+        cursor.insertText(e['Handler'] + '\n', standard_format)
+        cursor.insertText('Reason: ', bold_format)
+        cursor.insertText(e['Reason'] + '\n\n', standard_format)
+        cursor.insertText('Attributes:\n', bold_format)
+        cursor.insertText(json.dumps(e['Attributes'], indent=2), standard_format)
+        cursor.endEditBlock()
 
-        self.display_infos(lx('Event Entry'), None, aTextDoc)
+        self.display_infos(lx('Event Entry'), None, text_doc)
 
 
     ### Update event list
-    def updateEventList(self, iDeviceKey):
-        aDeviceEventDict = self._eventBuffer.get(iDeviceKey, {})
-        aEventArray = aDeviceEventDict.get('Events', [])
-
-        i = 0
-        for e in aEventArray:
-            self._eventList.insertRow(i)
-            self.setEventListLine(i, e)
-            i += 1
+    def update_event_list(self, device_key):
+        device_event_dict = self._event_buffer.get(device_key, {})
+        event_array = device_event_dict.get('Events', [])
+        for i, e in enumerate(event_array):
+            self._event_list.insertRow(i)
+            self.set_event_list_line(i, e)
 
 
     ### Set event list line
-    def setEventListLine(self, iLine, iEvent):
-        self._eventList.setItem(iLine, EventCol.Key, QtWidgets.QTableWidgetItem(str(iEvent['Key'])))
-        aTime = iEvent['Timestamp']
-        aTimeStamp = f'{aTime.hour:02d}:{aTime.minute:02d}:{aTime.second:02d}'
-        aTimeItem = QtWidgets.QTableWidgetItem(aTimeStamp)
-        aTimeItem.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self._eventList.setItem(iLine, EventCol.Time, aTimeItem)
-        self._eventList.setItem(iLine, EventCol.Reason, QtWidgets.QTableWidgetItem(iEvent['Reason']))
-        aAttribute = str(iEvent['Attributes'])[0:256]
-        aAttributeItem = QtWidgets.QTableWidgetItem(aAttribute)
-        aAttributeItem.setData(LmTools.ItemDataRole.ExportRole, iEvent['Attributes'])
-        self._eventList.setItem(iLine, EventCol.Attribute, aAttributeItem)
+    def set_event_list_line(self, line, event):
+        self._event_list.setItem(line, EventCol.Key, QtWidgets.QTableWidgetItem(str(event['Key'])))
+        time = event['Timestamp']
+        time_stamp = f'{time.hour:02d}:{time.minute:02d}:{time.second:02d}'
+        time_item = QtWidgets.QTableWidgetItem(time_stamp)
+        time_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self._event_list.setItem(line, EventCol.Time, time_item)
+        self._event_list.setItem(line, EventCol.Reason, QtWidgets.QTableWidgetItem(event['Reason']))
+        attribute = str(event['Attributes'])[0:256]
+        attribute_item = QtWidgets.QTableWidgetItem(attribute)
+        attribute_item.setData(LmTools.ItemDataRole.ExportRole, event['Attributes'])
+        self._event_list.setItem(line, EventCol.Attribute, attribute_item)
 
 
     ### Process a new Livebox event
-    def processLiveboxEvent(self, iEvent):
-        d = iEvent.get('data')
-        if d is not None:
+    def process_livebox_event(self, event):
+        d = event.get('data')
+        if d:
             h = d.get('handler', '')
             if h.startswith('Devices'):
-                self.processDeviceEvent(d)
+                self.process_device_event(d)
             elif h.startswith('HomeLan'):
-                self.processHomeLanEvent(d)
+                self.process_home_lan_event(d)
 
 
     ### Process a new Device event
-    def processDeviceEvent(self, iEventData):
-        h = iEventData.get('handler', '')
-        o = iEventData.get('object')
-        if o is not None:
+    def process_device_event(self, event_data):
+        h = event_data.get('handler', '')
+        o = event_data.get('object')
+        if o:
             r = o.get('reason', '')
             a = o.get('attributes')
         else:
@@ -267,177 +264,177 @@ class LmEvents:
             a = None
 
         # Try to guess device key from handler
-        aDeviceKey = LmTools.extract_mac_addr_from_string(h)
-        if len(aDeviceKey):
-            self.update_event_indicator(aDeviceKey)
+        device_key = LmTools.extract_mac_addr_from_string(h)
+        if len(device_key):
+            self.update_event_indicator(device_key)
             if r == 'Statistics':
-                e = a.get(aDeviceKey)
-                if e is not None:
-                    self.process_statistics_event(aDeviceKey, e)
-                    self.bufferizeEvent(aDeviceKey, h, r, e)
+                e = a.get(device_key)
+                if e:
+                    self.process_statistics_event(device_key, e)
+                    self.bufferize_event(device_key, h, r, e)
                 else:
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                    self.bufferize_event(device_key, h, r, a)
             elif r == 'changed':
-                self.process_changed_event(aDeviceKey, h, a)
-                self.bufferizeEvent(aDeviceKey, h, r, a)
+                self.process_changed_event(device_key, h, a)
+                self.bufferize_event(device_key, h, r, a)
             elif r == 'device_name_changed':
-                e = a.get(aDeviceKey)
+                e = a.get(device_key)
                 if e is not None:
-                    self.process_device_name_changed_event(aDeviceKey, e)
-                    self.bufferizeEvent(aDeviceKey, h, r, e)
+                    self.process_device_name_changed_event(device_key, e)
+                    self.bufferize_event(device_key, h, r, e)
                 else:
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                    self.bufferize_event(device_key, h, r, a)
             elif (r == 'device_updated') or (r == 'eth_device_updated') or (r == 'wifi_device_updated'):
-                e = a.get(aDeviceKey)
+                e = a.get(device_key)
                 if e is not None:
-                    self.process_device_updated_event(aDeviceKey, e)
-                    self.bufferizeEvent(aDeviceKey, h, r, e)
+                    self.process_device_updated_event(device_key, e)
+                    self.bufferize_event(device_key, h, r, e)
                 else:
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                    self.bufferize_event(device_key, h, r, a)
             elif r == 'ip_address_added':
-                e = a.get(aDeviceKey)
+                e = a.get(device_key)
                 if e is not None:
-                    self.process_ip_address_added_event(aDeviceKey, a[aDeviceKey])
-                    self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+                    self.process_ip_address_added_event(device_key, a[device_key])
+                    self.bufferize_event(device_key, h, r, a[device_key])
                 else:
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                    self.bufferize_event(device_key, h, r, a)
             elif (r == 'device_added') or (r == 'eth_device_added') or (r == 'wifi_device_added'):
-                e = a.get(aDeviceKey)
+                e = a.get(device_key)
                 if e is not None:
-                    self.process_device_added_event(aDeviceKey, a[aDeviceKey])
-                    self.bufferizeEvent(aDeviceKey, h, r, a[aDeviceKey])
+                    self.process_device_added_event(device_key, a[device_key])
+                    self.bufferize_event(device_key, h, r, a[device_key])
                 else:
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                    self.bufferize_event(device_key, h, r, a)
             elif (r == 'device_deleted') or (r == 'eth_device_deleted') or (r == 'wifi_device_deleted'):
-                self.process_device_deleted_event(aDeviceKey)
+                self.process_device_deleted_event(device_key)
             else:
                 # Check if device is in the list, otherwise put the event in the None list
-                if (self.find_device_line(self._eventDList, aDeviceKey) >= 0):
-                    self.bufferizeEvent(aDeviceKey, h, r, a)
+                if (self.find_device_line(self._event_dlist, device_key) >= 0):
+                    self.bufferize_event(device_key, h, r, a)
                 else:
-                    self.bufferizeEvent(None, h, r, a)
+                    self.bufferize_event(None, h, r, a)
         else:
-            self.bufferizeEvent(None, h, r, a)
+            self.bufferize_event(None, h, r, a)
 
 
     ### Process a new HomeLan event
-    def processHomeLanEvent(self, iEventData):
-        h = iEventData.get('handler', '')
-        o = iEventData.get('object')
-        if o is not None:
+    def process_home_lan_event(self, event_data):
+        h = event_data.get('handler', '')
+        o = event_data.get('object')
+        if o:
             a = o.get('attributes')
         else:
             return
 
         if h.startswith('HomeLan.Interface.') and h.endswith('.Stats'):
-            aIntf = h[18:-6]
-            self.processIntfStatisticsEvent(aIntf, a)
+            intf = h[18:-6]
+            self.processIntfStatisticsEvent(intf, a)
 
 
     ### Store event in buffer, for the UI
-    def bufferizeEvent(self, iDeviceKey, iHandler, iReason, iAttributes):
+    def bufferize_event(self, device_key, handler, reason, attributes):
         # Find event dict for the device
-        if iDeviceKey is None:
-            iDeviceKey = '#NONE#'
-        aDeviceEventDict = self._eventBuffer.get(iDeviceKey)
-        if aDeviceEventDict is None:
-            aDeviceEventDict = {}
-            aDeviceEventDict['Sequence'] = 1
-            aDeviceEventDict['Events'] = []
-            self._eventBuffer[iDeviceKey] = aDeviceEventDict
-        aDeviceSequence = aDeviceEventDict['Sequence']
-        aEventArray = aDeviceEventDict['Events']
+        if device_key is None:
+            device_key = '#NONE#'
+        device_event_dict = self._event_buffer.get(device_key)
+        if device_event_dict is None:
+            device_event_dict = {}
+            device_event_dict['Sequence'] = 1
+            device_event_dict['Events'] = []
+            self._event_buffer[device_key] = device_event_dict
+        device_sequence = device_event_dict['Sequence']
+        event_array = device_event_dict['Events']
 
         # Create event entry
-        aEntry = {}
-        aEntry['Key'] = aDeviceSequence
-        aEntry['Timestamp'] = datetime.datetime.now()
-        aEntry['Handler'] = iHandler
-        aEntry['Reason'] = iReason
-        aEntry['Attributes'] = iAttributes
+        entry = {'Key': device_sequence,
+                 'Timestamp': datetime.datetime.now(),
+                 'Handler': handler,
+                 'Reason': reason,
+                 'Attributes': attributes}
 
         # Insert front, limit total size and update sequence
-        aEventArray.insert(0, aEntry)
-        if len(aEventArray) > MAX_EVENT_BUFFER_PER_DEVICE:
-            aEventArray.pop()
-        aDeviceEventDict['Sequence'] = aDeviceSequence + 1
+        event_array.insert(0, entry)
+        if len(event_array) > MAX_EVENT_BUFFER_PER_DEVICE:
+            event_array.pop()
+        device_event_dict['Sequence'] = device_sequence + 1
 
         # Update UI if device is selected in event tab
-        aCurrDeviceSelection = self._eventDList.currentRow()
-        if aCurrDeviceSelection >= 0:
-            aSelectedDeviceKey = self._eventDList.item(aCurrDeviceSelection, DSelCol.Key).text()
-            if aSelectedDeviceKey == iDeviceKey:
-                self._eventList.insertRow(0)
-                self.setEventListLine(0, aEntry)
+        curr_device_selection = self._event_dlist.currentRow()
+        if curr_device_selection >= 0:
+            selected_device_key = self._event_dlist.item(curr_device_selection, DSelCol.Key).text()
+            if selected_device_key == device_key:
+                self._event_list.insertRow(0)
+                self.set_event_list_line(0, entry)
 
 
     ### Notify about a device added event
-    def notifyDeviceAddedEvent(self, iMac):
-        self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_ADD})
+    def notify_device_added_event(self, mac):
+        self.notify_add_raw_event({'Key': mac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_ADD})
 
 
     ### Notify about a device deleted event
-    def notifyDeviceDeletedEvent(self, iMac):
-        self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_DELETE})
+    def notify_device_deleted_event(self, mac):
+        self.notify_add_raw_event({'Key': mac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_DELETE})
 
 
     ### Notify about a device active event
-    def notifyDeviceActiveEvent(self, iMac, iLink):
-        self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_ACTIVE,
-                                 'Link': iLink})
+    def notify_device_active_event(self, mac, link):
+        self.notify_add_raw_event({'Key': mac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_ACTIVE,
+                                   'Link': link})
 
 
     ### Notify about a device inactive event
-    def notifyDeviceInactiveEvent(self, iMac):
-        self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_INACTIVE})
+    def notify_device_inactive_event(self, mac):
+        self.notify_add_raw_event({'Key': mac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_INACTIVE})
 
 
     ### Notify about a device access link change event
-    def notifyDeviceAccessLinkEvent(self, iMac, iOldLink, iNewLink):
-        self.notifyAddRawEvent({ 'Key': iMac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_LINK_CHANGE,
-                                 'OldLink': iOldLink, 'NewLink': iNewLink})
+    def notify_device_access_link_event(self, mac, old_link, new_link):
+        self.notify_add_raw_event({'Key': mac, 'Timestamp': datetime.datetime.now(), 'Type': LmNotif.TYPE_LINK_CHANGE,
+                                   'OldLink': old_link, 'NewLink': new_link})
 
 
     ### Add a raw event notification in cache log
-    def notifyAddRawEvent(self, iEvent):
-        t = iEvent['Type']
+    def notify_add_raw_event(self, event):
+        t = event['Type']
 
         ### Debug logs
         if LmTools.get_verbosity() >= 1:
-            ts = iEvent['Timestamp'].strftime('%d/%m/%Y - %H:%M:%S')
-            k = iEvent['Key']
+            ts = event['Timestamp'].strftime('%d/%m/%Y - %H:%M:%S')
+            k = event['Key']
             if t == LmNotif.TYPE_ACTIVE:
-                LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> {iEvent["Link"]}.')
+                LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> {event["Link"]}.')
             elif t == LmNotif.TYPE_LINK_CHANGE:
-                LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> from {iEvent["OldLink"]} to {iEvent["NewLink"]}.')
+                LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t} -> from {event["OldLink"]} to {event["NewLink"]}.')
             else:
                 LmTools.log_debug(1, f'RAW EVT = {ts} - {k} DEV {t}.')
 
         # If DELETE event look for a recent DELETE event, if too close (duplicates) don't add
-        if t == LmNotif.TYPE_DELETE:
-            if not self.notifyMergeDeleteEvent(iEvent):
-                self._notifyRawEventLog.append(iEvent)
+        match t:
+            case LmNotif.TYPE_DELETE:
+                if not self.notify_merge_delete_event(event):
+                    self._notify_raw_event_log.append(event)
 
-        # If ACTIVE event look for a recent INACTIVE event, if too close (micro-cuts) remove both
-        elif t == LmNotif.TYPE_ACTIVE:
-            if not self.notifyMergeActiveEvent(iEvent):
-                self._notifyRawEventLog.append(iEvent)
+            # If ACTIVE event look for a recent INACTIVE event, if too close (micro-cuts) remove both
+            case LmNotif.TYPE_ACTIVE:
+                if not self.notify_merge_active_event(event):
+                    self._notify_raw_event_log.append(event)
 
-        # If LINK_CHANGE event look for a match with a recent LINK_CHANGE event, if too close (micro-changes) remove both or merge them
-        elif t == LmNotif.TYPE_LINK_CHANGE:
-            if not self.notifyMergeLinkChangeEvent(iEvent):
-                self._notifyRawEventLog.append(iEvent)
+            # If LINK_CHANGE event look for a match with a recent LINK_CHANGE event, if too close (micro-changes) remove both or merge them
+            case LmNotif.TYPE_LINK_CHANGE:
+                if not self.notify_merge_link_change_event(event):
+                    self._notify_raw_event_log.append(event)
 
-        # Add any other event straight
-        else:
-            self._notifyRawEventLog.append(iEvent)
+            # Add any other event straight
+            case _:
+                self._notify_raw_event_log.append(event)
 
 
     ### Find recent DELETE event matching DELETE event on input, returns true if found
-    def notifyMergeDeleteEvent(self, iEvent):
-        k = iEvent['Key']
-        ts = iEvent['Timestamp']
-        for e in reversed(self._notifyRawEventLog):
+    def notify_merge_delete_event(self, event):
+        k = event['Key']
+        ts = event['Timestamp']
+        for e in reversed(self._notify_raw_event_log):
             ets = e['Timestamp']
             if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
                 return False
@@ -447,27 +444,27 @@ class LmEvents:
 
 
     ### Find and remove a recent INACTIVE event matching ACTIVE event on input, returns true if found
-    def notifyMergeActiveEvent(self, iEvent):
-        k = iEvent['Key']
-        ts = iEvent['Timestamp']
-        for e in reversed(self._notifyRawEventLog):
+    def notify_merge_active_event(self, event):
+        k = event['Key']
+        ts = event['Timestamp']
+        for e in reversed(self._notify_raw_event_log):
             ets = e['Timestamp']
             if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
                 return False
             if (e['Key'] == k) and (e['Type'] == LmNotif.TYPE_INACTIVE):
-                self._notifyRawEventLog.remove(e)
+                self._notify_raw_event_log.remove(e)
                 return True
         return False
 
 
     ### Find a matching recent LINK_CHANGE and either remove it or merge it, returns true if no need to add new event
-    def notifyMergeLinkChangeEvent(self, ioEvent):
-        k = ioEvent['Key']
-        ts = ioEvent['Timestamp']
-        ol = ioEvent['OldLink']
-        nl = ioEvent['NewLink']
+    def notify_merge_link_change_event(self, event):
+        k = event['Key']
+        ts = event['Timestamp']
+        ol = event['OldLink']
+        nl = event['NewLink']
 
-        for e in reversed(self._notifyRawEventLog):
+        for e in reversed(self._notify_raw_event_log):
             ets = e['Timestamp']
             if (ts - ets).total_seconds() > LmConf.NotificationFlushFrequency:
                 # Reach time limit -> Add
@@ -476,21 +473,21 @@ class LmEvents:
                 # Match found
                 if (e['OldLink'] == nl):
                     # Item old link matches new link -> Merge means cancel both
-                    self._notifyRawEventLog.remove(e)
+                    self._notify_raw_event_log.remove(e)
                     return True
                 if (e['NewLink'] == ol):
                     # Item new link matches old link -> Remove item, merge old
-                    ioEvent['OldLink'] = e['OldLink']
-                    self._notifyRawEventLog.remove(e)
+                    event['OldLink'] = e['OldLink']
+                    self._notify_raw_event_log.remove(e)
                     return False
         # No match -> Add
         return False
 
 
     ### Flush events in the frequency window, triggering user notifications when matching configured rules
-    def notifyFlushEvents(self):
+    def notify_flush_events(self):
         n = datetime.datetime.now()
-        for e in self._notifyRawEventLog:
+        for e in self._notify_raw_event_log:
 
             # Always keep the most recent events that are within the frequency window
             ets = e['Timestamp']
@@ -498,89 +495,89 @@ class LmEvents:
                 break
 
             # User notifications matching configured rules
-            r = LmEvents.notifyGetMatchingRule(e)
+            r = LmEvents.notify_get_matching_rule(e)
             if isinstance(r, list):
                 if LmNotif.RULE_FILE in r:
-                    self.notifyUserFile(e)
+                    self.notify_user_file(e)
                 if LmNotif.RULE_EMAIL in r:
-                    self.notifyUserEmail(e)
+                    self.notify_user_email(e)
 
-            self._notifyRawEventLog.remove(e)
+            self._notify_raw_event_log.remove(e)
 
 
     ### Generate a user notification for an event in a CSV file
-    def notifyUserFile(self, iEvent):
-        LmTools.log_debug(1, 'Logging event in file:', str(iEvent))
+    def notify_user_file(self, event):
+        LmTools.log_debug(1, 'Logging event in file:', str(event))
 
-        k = iEvent['Key']
+        k = event['Key']
         n = LmConf.MacAddrTable.get(k, lx('### UNKNOWN ###'))
-        ts = iEvent['Timestamp']
-        t = iEvent['Type']
+        ts = event['Timestamp']
+        t = event['Type']
 
         if LmConf.NotificationFilePath is None:
-            aPath = LmConf.get_config_directory()
+            path = LmConf.get_config_directory()
         else:
-            aPath = LmConf.NotificationFilePath
-        aFileName = f'LiveboxMonitor_Events_{ts.strftime("%Y-%m-%d")}.csv'
-        aFilePath = os.path.join(aPath, aFileName)
+            path = LmConf.NotificationFilePath
+        file_name = f'LiveboxMonitor_Events_{ts.strftime("%Y-%m-%d")}.csv'
+        file_path = os.path.join(path, file_name)
 
         try:
-            with open(aFilePath, 'a', newline = '') as f:
+            with open(file_path, 'a', newline = '') as f:
                 # No translation to have CSV file readable on any platform without encoding issue
                 # (by default Excel opens CSV files with local charset, not UTF-8)
-                aType = LmNotif.HUMAN_TYPE[t]
+                type = LmNotif.HUMAN_TYPE[t]
 
-                r = [ts.strftime('%H:%M:%S'), k, n, aType]
+                r = [ts.strftime('%H:%M:%S'), k, n, type]
 
                 if t == LmNotif.TYPE_ACTIVE:
-                    r.append(iEvent['Link'])
+                    r.append(event['Link'])
                 elif t == LmNotif.TYPE_LINK_CHANGE:
-                    r.append(iEvent['OldLink'])
-                    r.append(iEvent['NewLink'])
+                    r.append(event['OldLink'])
+                    r.append(event['NewLink'])
 
-                aCsvWriter = csv.writer(f, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
-                aCsvWriter.writerow(r)
+                csv_writer = csv.writer(f, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
+                csv_writer.writerow(r)
         except BaseException as e:
             LmTools.error(f'Cannot log event. Error: {e}')
 
 
     ### Generate a user notification for an event via configured email
-    def notifyUserEmail(self, iEvent):
-        LmTools.log_debug(1, 'Emailing event:', str(iEvent))
+    def notify_user_email(self, event):
+        LmTools.log_debug(1, 'Emailing event:', str(event))
 
         c = LmConf.load_email_setup()
         if c is None:
             LmTools.error('No email setup to notify event by email.')
             return
 
-        k = iEvent['Key']
+        k = event['Key']
         n = LmConf.MacAddrTable.get(k, lx('### UNKNOWN ###'))
-        ts = iEvent['Timestamp']
-        t = iEvent['Type']
+        ts = event['Timestamp']
+        t = event['Type']
 
-        aType = lx(LmNotif.HUMAN_TYPE[t])
-        aSubject = n + ' - ' + aType
+        type = lx(LmNotif.HUMAN_TYPE[t])
+        subject = n + ' - ' + type
 
         m = lx('Date:') + ' ' + ts.strftime('%d/%m/%Y') + '\n'
         m += lx('Time:') + ' ' + ts.strftime('%H:%M:%S') + '\n'
         m += lx('Device:') + ' ' + n + '\n'
         m += lx('MAC:') + ' ' + k + '\n'
-        m += lx('Event:') + ' ' + aType + '\n'
+        m += lx('Event:') + ' ' + type + '\n'
 
         if t == LmNotif.TYPE_ACTIVE:
-            m += lx('Access link:') + ' ' + iEvent['Link'] + '\n'
+            m += lx('Access link:') + ' ' + event['Link'] + '\n'
         elif t == LmNotif.TYPE_LINK_CHANGE:
-            m += lx('Old access link:') + ' ' + iEvent['OldLink'] + '\n'
-            m += lx('New access link:') + ' ' + iEvent['NewLink'] + '\n'
+            m += lx('Old access link:') + ' ' + event['OldLink'] + '\n'
+            m += lx('New access link:') + ' ' + event['NewLink'] + '\n'
 
-        LmTools.async_send_email(c, aSubject, m)
+        LmTools.async_send_email(c, subject, m)
 
 
     ### Check if a notification event match any configured notification rules
     @staticmethod
-    def notifyGetMatchingRule(iEvent):
+    def notify_get_matching_rule(event):
         rr = []
-        t = iEvent['Type']
+        t = event['Type']
 
         # Find a matching general rule for ALL
         for r in LmConf.NotificationRules:
@@ -590,7 +587,7 @@ class LmEvents:
                     rr += r.get('Rules')
 
         # Find a matching rule for unknown devices in case device is unknown
-        k = iEvent['Key']
+        k = event['Key']
         n = LmConf.MacAddrTable.get(k)
         if n is None:
             for r in LmConf.NotificationRules:
@@ -611,7 +608,7 @@ class LmEvents:
 
     ### Check if a notification rule uses email action, returns True if yes
     @staticmethod
-    def notifyHasEmailRule():
+    def notify_has_email_rule():
         if LmConf.NotificationRules is not None:
             r = next((r for r in LmConf.NotificationRules if LmNotif.RULE_EMAIL in r['Rules']), None)
             return r is not None

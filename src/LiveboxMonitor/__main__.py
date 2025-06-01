@@ -65,7 +65,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self._status_bar = None
         self._repeaters = []
         if not NO_THREAD:
-            self.initEventLoop()
+            self.init_event_loop()
             self.init_wifi_stats_loop()
             self.initStatsLoop()
             self.initRepeaterStatsLoop()
@@ -89,7 +89,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             LmConfig.set_tooltips(self, 'main')
             self._app_ready = True
             if not NO_THREAD:
-                self.startEventLoop()
+                self.start_event_loop()
                 self.start_wifi_stats_loop()
 
             # Force tag change tasks once app is ready
@@ -127,7 +127,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmDeviceInfoTab.TAB_NAME:
                     self.create_device_info_tab()
                 case LmEventsTab.TAB_NAME:
-                    self.createEventsTab()
+                    self.create_events_tab()
                 case LmDhcpTab.TAB_NAME:
                     self.create_dhcp_tab()
                 case LmNatPatTab.TAB_NAME:
@@ -261,7 +261,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def closeEvent(self, event):
         if not NO_THREAD:
             self._task.start(lx('Terminating threads...'))
-            self.stopEventLoop()
+            self.stop_event_loop()
             self.stopStatsLoop()
             self.stop_wifi_stats_loop()
             self.stopRepeaterStatsLoop()
@@ -448,7 +448,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to device events tab
     def switch_to_device_events_tab(self):
-        self._tab_widget.setCurrentWidget(self._eventsTab)
+        self._tab_widget.setCurrentWidget(self._events_tab)
 
 
     ### Switch to DHCP tab

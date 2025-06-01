@@ -153,10 +153,10 @@ class LmDeviceList:
         self._info_dlist.setRowCount(0)
         self._info_alist.clearContents()
         self._info_alist.setRowCount(0)
-        self._eventDList.clearContents()
-        self._eventDList.setRowCount(0)
-        self._eventList.clearContents()
-        self._eventList.setRowCount(0)
+        self._event_dlist.clearContents()
+        self._event_dlist.setRowCount(0)
+        self._event_list.clearContents()
+        self._event_list.setRowCount(0)
         LmConf.load_mac_addr_table()
         self.load_device_list()
 
@@ -182,8 +182,8 @@ class LmDeviceList:
         current_selection = self._device_list.currentRow()
         if current_selection >= 0:
             key = self._device_list.item(current_selection, DevCol.Key).text()
-            line = self.find_device_line(self._eventDList, key)
-            self._eventDList.selectRow(line)
+            line = self.find_device_line(self._event_dlist, key)
+            self._event_dlist.selectRow(line)
         self.switch_to_device_events_tab()
 
 
@@ -264,8 +264,8 @@ class LmDeviceList:
 
         self._device_list.setSortingEnabled(False)
         self._info_dlist.setSortingEnabled(False)
-        self._eventDList.setSortingEnabled(False)
-        self._eventList.setSortingEnabled(False)
+        self._event_dlist.setSortingEnabled(False)
+        self._event_list.setSortingEnabled(False)
 
         # Init
         self._interface_map = []
@@ -306,20 +306,20 @@ class LmDeviceList:
 
         self._device_list.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 
-        self._eventDList.insertRow(i)
-        self._eventDList.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
-        self._eventDList.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
+        self._event_dlist.insertRow(i)
+        self._event_dlist.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
+        self._event_dlist.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
 
         self._device_list.setCurrentCell(-1, -1)
         self._info_dlist.setCurrentCell(-1, -1)
-        self._eventDList.setCurrentCell(-1, -1)
+        self._event_dlist.setCurrentCell(-1, -1)
 
         self.init_device_context()      # Init selected device context for DeviceInfo tab
 
         self._device_list.setSortingEnabled(True)
         self._info_dlist.setSortingEnabled(True)
-        self._eventDList.setSortingEnabled(True)
-        self._eventList.setSortingEnabled(True)
+        self._event_dlist.setSortingEnabled(True)
+        self._event_list.setSortingEnabled(True)
 
         self._task.end()
 
@@ -337,15 +337,15 @@ class LmDeviceList:
         key = device.get('Key', '')
         self.add_device_line_key(self._device_list, line, key)
         self.add_device_line_key(self._info_dlist, line, key)
-        self.add_device_line_key(self._eventDList, line, key)
+        self.add_device_line_key(self._event_dlist, line, key)
 
         mac_addr = device.get('PhysAddress', '')
         self.format_name_widget(self._device_list, line, key, DevCol.Name)
         self.format_mac_widget(self._device_list, line, mac_addr, DevCol.MAC)
         self.format_name_widget(self._info_dlist, line, key, DSelCol.Name)
         self.format_mac_widget(self._info_dlist, line, mac_addr, DSelCol.MAC)
-        self.format_name_widget(self._eventDList, line, key, DSelCol.Name)
-        self.format_mac_widget(self._eventDList, line, mac_addr, DSelCol.MAC)
+        self.format_name_widget(self._event_dlist, line, key, DSelCol.Name)
+        self.format_mac_widget(self._event_dlist, line, mac_addr, DSelCol.MAC)
 
 
     ### Add a line with a device key
@@ -395,7 +395,7 @@ class LmDeviceList:
         if notify and (link_name != curr_link_name):
             mac_addr = device.get('PhysAddress', None)
             if mac_addr is not None:
-                self.notifyDeviceAccessLinkEvent(mac_addr, curr_link_name, link_name)
+                self.notify_device_access_link_event(mac_addr, curr_link_name, link_name)
 
         active_status = device.get('Active', False)
         active_icon = self.format_active_table_widget(active_status)
@@ -433,9 +433,9 @@ class LmDeviceList:
         if line >= 0:
             self.format_name_widget(self._info_dlist, line, device_key, DSelCol.Name)
 
-        line = self.find_device_line(self._eventDList, device_key)
+        line = self.find_device_line(self._event_dlist, device_key)
         if line >= 0:
-            self.format_name_widget(self._eventDList, line, device_key, DSelCol.Name)
+            self.format_name_widget(self._event_dlist, line, device_key, DSelCol.Name)
 
         line = self.find_device_line(self._dhcp_dlist, device_key)
         if line >= 0:
@@ -850,9 +850,9 @@ class LmDeviceList:
                     if is_active:
                         curr_link = self._device_list.item(list_line, DevCol.Link)
                         curr_link_name = curr_link.text() if curr_link is not None else ''
-                        self.notifyDeviceActiveEvent(device_key, curr_link_name)
+                        self.notify_device_active_event(device_key, curr_link_name)
                     else:
-                        self.notifyDeviceInactiveEvent(device_key)
+                        self.notify_device_inactive_event(device_key)
                 active_icon = self.format_active_table_widget(is_active)
                 self._device_list.setItem(list_line, DevCol.Active, active_icon)
                 self.repeaterActiveEvent(device_key, is_active)
@@ -894,10 +894,10 @@ class LmDeviceList:
                     self.format_name_widget(self._info_dlist, line, mac_addr, DSelCol.Name)
                     self.format_mac_widget(self._info_dlist, line, mac_addr, DSelCol.MAC)
 
-                line = self.find_device_line(self._eventDList, device_key)
+                line = self.find_device_line(self._event_dlist, device_key)
                 if line >= 0:
-                    self.format_name_widget(self._eventDList, line, mac_addr, DSelCol.Name)
-                    self.format_mac_widget(self._eventDList, line, mac_addr, DSelCol.MAC)
+                    self.format_name_widget(self._event_dlist, line, mac_addr, DSelCol.Name)
+                    self.format_mac_widget(self._event_dlist, line, mac_addr, DSelCol.MAC)
 
             # Restore sorting
             self._device_list.setSortingEnabled(True)
@@ -990,12 +990,12 @@ class LmDeviceList:
             self._device_ip_name_map_dirty = True
 
             # Notify
-            self.notifyDeviceAddedEvent(device_key)
+            self.notify_device_added_event(device_key)
 
             # Prevent device lines to change due to sorting
             self._device_list.setSortingEnabled(False)
             self._info_dlist.setSortingEnabled(False)
-            self._eventDList.setSortingEnabled(False)
+            self._event_dlist.setSortingEnabled(False)
 
             # Update device map
             map_entry = {}
@@ -1013,7 +1013,7 @@ class LmDeviceList:
             # Restore sorting
             self._device_list.setSortingEnabled(True)
             self._info_dlist.setSortingEnabled(True)
-            self._eventDList.setSortingEnabled(True)
+            self._event_dlist.setSortingEnabled(True)
 
 
     ### Process a new device_deleted, eth_device_deleted or wifi_device_deleted event
@@ -1021,7 +1021,7 @@ class LmDeviceList:
         self._device_ip_name_map_dirty = True
 
         # Notify
-        self.notifyDeviceDeletedEvent(device_key)
+        self.notify_device_deleted_event(device_key)
 
         # Remove from all UI lists
         list_line = self.find_device_line(self._device_list, device_key)
@@ -1030,9 +1030,9 @@ class LmDeviceList:
         list_line = self.find_device_line(self._info_dlist, device_key)
         if list_line >= 0:
             self._info_dlist.removeRow(list_line)
-        list_line = self.find_device_line(self._eventDList, device_key)
+        list_line = self.find_device_line(self._event_dlist, device_key)
         if list_line >= 0:
-            self._eventDList.removeRow(list_line)
+            self._event_dlist.removeRow(list_line)
 
         # Remove repeater if it is one
         self.removePotentialRepeater(device_key)
@@ -1044,7 +1044,7 @@ class LmDeviceList:
 
         # Cleanup event buffer
         try:
-            del self._eventBuffer[device_key]
+            del self._event_buffer[device_key]
         except:
             pass
 
