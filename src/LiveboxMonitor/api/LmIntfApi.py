@@ -66,7 +66,7 @@ class IntfApi(LmApi):
         # Call Homeland package to get interface list
         try:
             d = self.call('HomeLan.Interface', 'get')
-        except:
+        except BaseException as e:
             LmTools.error(str(e))
             return False
 

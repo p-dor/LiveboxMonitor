@@ -88,7 +88,7 @@ class WifiApi(LmApi):
                 self.set_guest_activation_timer(timer)
             else:
                 self.disable_guest_activation_timer()
-        except:
+        except BaseException as e:
             LmTools.error(str(e))
 
 

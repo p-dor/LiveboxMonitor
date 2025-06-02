@@ -373,7 +373,7 @@ def release_check():
         patch = '00'
     try:
         r = int(major.zfill(2) + minor.zfill(2) + patch.zfill(2), 16)
-    except:
+    except BaseException as e:
         LmTools.error(f'Cannot decode latest release infos. Error: {e}')
         return
 
