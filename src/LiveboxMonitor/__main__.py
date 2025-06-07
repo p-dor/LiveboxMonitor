@@ -123,7 +123,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmInfoTab.TAB_NAME:
                     self.createLiveboxInfoTab()
                 case LmGraphTab.TAB_NAME:
-                    self.createGraphTab()
+                    self.create_graph_tab()
                 case LmDeviceInfoTab.TAB_NAME:
                     self.create_device_info_tab()
                 case LmEventsTab.TAB_NAME:
@@ -171,7 +171,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_wifi_stats_loop()
                         self.suspendStatsLoop()
                         self.suspendRepeaterStatsLoop()
-                    self.graphTabClick()
+                    self.graph_tab_click()
                 case LmDeviceInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
@@ -400,6 +400,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     # Display an error popup
     def display_error(self, error_msg):
         self._task.suspend()
+        LmTools.error(error_msg)
         LmTools.display_error(error_msg, self)
         self._task.resume()
 
@@ -438,7 +439,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to graph tab
     def switch_to_graph_tab(self):
-        self._tab_widget.setCurrentWidget(self._graphTab)
+        self._tab_widget.setCurrentWidget(self._graph_tab)
 
 
     ### Switch to device infos tab
