@@ -11,9 +11,8 @@ import pyqtgraph as pg
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
-from LiveboxMonitor.lang.LmLanguages import (get_graph_label as lx,
-											 get_graph_message as mx,
-											 get_add_graph_label as lgx)
+from LiveboxMonitor.dlg.LmAddGraph import AddGraphDialog, GraphType
+from LiveboxMonitor.lang.LmLanguages import get_graph_label as lx, get_graph_message as mx
 
 
 # ################################ VARS & DEFS ################################
@@ -24,22 +23,9 @@ TAB_NAME = 'graphTab'
 # Config default
 DCFG_WINDOW = 24	# 1 day
 DCFG_BACKGROUND_COLOR = '#000000' 		# (0, 0, 0)
-DCFG_OBJECT_COLOR = [ '#E26043',		# (226, 96, 67)
-					  '#626DF4',		# (98, 109, 244)
-					  '#65F4B4',		# (101, 244, 180)
-					  '#EDF465',		# (237, 244, 101)
-					  '#B474F4',		# (180, 116, 244)
-					  '#42F4F4',		# (66, 244, 244)
-					  '#FF0000',		# (255, 0, 0)
-					  '#00FF00',		# (0, 255, 0)
-					  '#0000FF',		# (0, 0, 255)
-					  '#FFFF00',		# (255, 255, 0)
-					  '#FF00FF' ]		# (255, 0, 255)
 DCFG_STAT_FREQUENCY = 30	# In case the service doesn't work, 30 secs is the normal value
 
 # Constants
-TYPE_INTERFACE = 'inf'		# Must be 3 chars
-TYPE_DEVICE = 'dvc'			# Must be 3 chars
 UNIT_DIVIDER = 1048576		# To convert bytes in megabytes
 WIND_UPDATE_FREQ = 60000	# 1mn - frequency of the window update task, cutting old values
 
@@ -216,13 +202,13 @@ class LmGraph:
 
 	### Click on add graph button
 	def addGraphButtonClick(self):
-		aAddGraphDialog = AddGraphDialog(self)
-		if aAddGraphDialog.exec():
-			self.addGraphObject(aAddGraphDialog.getType(),
-								aAddGraphDialog.getObjectKey(),
-								aAddGraphDialog.getObjectName(),
-								aAddGraphDialog.getObjectID(),
-								aAddGraphDialog.getColor())
+		dialog = AddGraphDialog(self)
+		if dialog.exec():
+			self.addGraphObject(dialog.get_type(),
+								dialog.get_object_key(),
+								dialog.get_object_name(),
+								dialog.get_object_id(),
+								dialog.get_color())
 
 
 	### Add a graph object in the list
@@ -234,7 +220,7 @@ class LmGraph:
 		self._graphList.setItem(i, GraphCol.Key, QtWidgets.QTableWidgetItem(iKey))
 		self._graphList.setItem(i, GraphCol.Name, QtWidgets.QTableWidgetItem(iName))
 
-		if iType == TYPE_INTERFACE:
+		if iType == GraphType.INTERFACE:
 			iType = lx('Interface')
 		else:
 			iType = lx('Device')
@@ -395,7 +381,7 @@ class LmGraph:
 					continue
 				else:
 					aColor = p
-				if aType == TYPE_INTERFACE:
+				if aType == GraphType.INTERFACE:
 					e = next((e for e in self._graphValidInterfaces if e[0] == aKey), None)
 					if e is None:
 						continue
@@ -403,7 +389,7 @@ class LmGraph:
 					if i is None:
 						continue
 					self.addGraphObject(aType, aKey, i['Name'], e[2], aColor)
-				elif aType == TYPE_DEVICE:
+				elif aType == GraphType.DEVICE:
 					e = next((e for e in self._graphValidDevices if e[0] == aKey), None)
 					if e is None:
 						continue
@@ -484,7 +470,7 @@ class LmGraph:
 			aEndTime = 0
 
 		aSwapStats = False
-		if iType == TYPE_INTERFACE:
+		if iType == GraphType.INTERFACE:
 			aStatsData = self.loadStatsInterface(iID, aStartTime, aEndTime)
 			aIntf = next((i for i in self._api._intf.get_list() if i['Key'] == iKey), None)
 			if aIntf is not None:
@@ -534,7 +520,7 @@ class LmGraph:
 	### Update graph according to interface stats event
 	def graphUpdateInterfaceEvent(self, iIntfKey, iTimestamp, iDownBytes, iUpBytes):
 		# Lookup for a stat object matching interface
-		o = next((o for o in self._graphData if (o['Type'] == TYPE_INTERFACE) and (o['Key'] == iIntfKey)), None)
+		o = next((o for o in self._graphData if (o['Type'] == GraphType.INTERFACE) and (o['Key'] == iIntfKey)), None)
 		if o is not None:
 			self.graphUpdateObjectEvent(o, iTimestamp, iDownBytes, iUpBytes)
 
@@ -542,7 +528,7 @@ class LmGraph:
 	### Update graph according to device stats event
 	def graphUpdateDeviceEvent(self, iDeviceKey, iTimestamp, iDownBytes, iUpBytes):
 		# Lookup for a stat object matching interface
-		o = next((o for o in self._graphData if (o['Type'] == TYPE_DEVICE) and (o['Key'] == iDeviceKey)), None)
+		o = next((o for o in self._graphData if (o['Type'] == GraphType.DEVICE) and (o['Key'] == iDeviceKey)), None)
 		if o is not None:
 			self.graphUpdateObjectEvent(o, iTimestamp, iDownBytes, iUpBytes)
 
@@ -607,7 +593,7 @@ class LmGraph:
 
 	### Update graph list with new device name
 	def graphUpdateDeviceName(self, iDeviceKey):
-		i = self.findGraphObjectLine(TYPE_DEVICE, iDeviceKey)
+		i = self.findGraphObjectLine(GraphType.DEVICE, iDeviceKey)
 		if i > -1:
 			try:
 				aName = LmConf.MacAddrTable[iDeviceKey]
@@ -743,179 +729,3 @@ class LmGraph:
 				return i
 			i += 1
 		return -1
-
-
-
-# ############# Add Graph dialog #############
-class AddGraphDialog(QtWidgets.QDialog):
-	def __init__(self, iParent):
-		super(AddGraphDialog, self).__init__(iParent)
-		self.resize(250, 150)
-
-		self._app = iParent
-
-		aTypeLabel = QtWidgets.QLabel(lgx('Type'), objectName = 'typeLabel')
-		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
-		self._typeCombo.addItem(lgx('Interface'))
-		self._typeCombo.addItem(lgx('Device'))
-		self._typeCombo.activated.connect(self.typeSelected)
-
-		aObjectLabel = QtWidgets.QLabel(lgx('Object'), objectName = 'objectLabel')
-		self._objectCombo = QtWidgets.QComboBox(objectName = 'objectCombo')
-		self._objectCombo.activated.connect(self.objectSelected)
-		self.loadObjectList()
-
-		aColorLabel = QtWidgets.QLabel(lgx('Color'), objectName = 'colorLabel')
-		self._colorEdit = LmTools.ColorButton(objectName = 'colorEdit')
-		self._colorEdit.set_color(DCFG_OBJECT_COLOR[self._app._graphList.rowCount() % len(DCFG_OBJECT_COLOR)])
-		self._colorEdit._color_changed.connect(self.colorSelected)
-
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(aTypeLabel, 0, 0)
-		aGrid.addWidget(self._typeCombo, 0, 1)
-		aGrid.addWidget(aObjectLabel, 1, 0)
-		aGrid.addWidget(self._objectCombo, 1, 1)
-		aGrid.addWidget(aColorLabel, 2, 0)
-		aGrid.addWidget(self._colorEdit, 2, 1)
-		aGrid.setColumnStretch(1, 1)
-
-		aSeparator = QtWidgets.QFrame()
-		aSeparator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-		aSeparator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-
-		aIDLabel = QtWidgets.QLabel(lgx('ID:'), objectName = 'IDLabel')
-		self._id = QtWidgets.QLabel(objectName = 'IDValue')
-		aMeasureNbLabel = QtWidgets.QLabel(lgx('Measures number:'), objectName = 'measureLabel')
-		self._measureNb = QtWidgets.QLabel(objectName = 'measureValue')
-		aHistoryLabel = QtWidgets.QLabel(lgx('History:'), objectName = 'historyLabel')
-		self._history = QtWidgets.QLabel(objectName = 'historyValue')
-
-		aInfoGrid = QtWidgets.QGridLayout()
-		aInfoGrid.setSpacing(8)
-		aInfoGrid.addWidget(aIDLabel, 0, 0)
-		aInfoGrid.addWidget(self._id, 0, 1)
-		aInfoGrid.addWidget(aMeasureNbLabel, 1, 0)
-		aInfoGrid.addWidget(self._measureNb, 1, 1)
-		aInfoGrid.addWidget(aHistoryLabel, 2, 0)
-		aInfoGrid.addWidget(self._history, 2, 1)
-		aInfoGrid.setColumnStretch(1, 1)
-
-		self._okButton = QtWidgets.QPushButton(lgx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lgx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.setSpacing(18)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addWidget(aSeparator)
-		aVBox.addLayout(aInfoGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.set_tooltips(self, 'addgraph')
-
-		self.setWindowTitle(lgx('Add a graph'))
-		self.udpdateInfos()
-		self.setOkButtonState()
-		self.setModal(True)
-		self.show()
-
-
-	def loadObjectList(self):
-		self._objectCombo.clear()
-
-		if self.getType() == TYPE_DEVICE:
-			self.loadDeviceList()
-		else:
-			self.loadInterfaceList()
-
-
-	def loadInterfaceList(self):
-		for i in self._app._graphValidInterfaces:
-			k = i[0]
-			# Look if not already in the graph list
-			if self._app.findGraphObjectLine(TYPE_INTERFACE, k) == -1:
-				aIntf = next((j for j in self._app._api._intf.get_list() if j['Key'] == k), None)
-				if aIntf is not None:
-					self._objectCombo.addItem(aIntf['Name'], userData = k)
-
-
-	def loadDeviceList(self):
-		for d in self._app._graphValidDevices:
-			k = d[0]
-			# Look if not already in the graph list
-			if self._app.findGraphObjectLine(TYPE_DEVICE, k) == -1:
-				try:
-					aName = LmConf.MacAddrTable[k]
-				except Exception:
-					aName = k
-				self._objectCombo.addItem(aName, userData = k)
-
-
-	def typeSelected(self, iIndex):
-		self.loadObjectList()
-		self.udpdateInfos()
-		self.setOkButtonState()
-
-
-	def objectSelected(self, iIndex):
-		self.udpdateInfos()
-
-
-	def colorSelected(self, iColor):
-		self.setOkButtonState()
-
-
-	def udpdateInfos(self):
-		# Update infos according to selected object
-		aType = self.getType()
-		aKey = self.getObjectKey()
-		if aType == TYPE_INTERFACE:
-			aTable = self._app._graphValidInterfaces
-			aFrequency = self._app._statFrequencyInterfaces
-		else:
-			aTable = self._app._graphValidDevices
-			aFrequency = self._app._statFrequencyDevices
-
-		# Search key in the table
-		aEntry = next((o for o in aTable if o[0] == aKey), ['', 0, ''])
-		aMeasureNb = aEntry[1]
-		aHistory = aMeasureNb / ( 60 / aFrequency) / 60
-
-		# Update infos
-		self._id.setText(aEntry[2])
-		self._measureNb.setText(str(aMeasureNb))
-		self._history.setText(lgx('{:.1f} hours').format(aHistory))
-
-
-	def setOkButtonState(self):
-		self._okButton.setDisabled((self._objectCombo.count() == 0) or (self.getColor() is None))
-
-
-	def getType(self):
-		if self._typeCombo.currentIndex():
-			return TYPE_DEVICE
-		return TYPE_INTERFACE
-
-
-	def getObjectKey(self):
-		return self._objectCombo.currentData()
-
-
-	def getObjectID(self):
-		return self._id.text()
-
-
-	def getObjectName(self):
-		return self._objectCombo.currentText()
-
-
-	def getColor(self):
-		return self._colorEdit.get_color()
