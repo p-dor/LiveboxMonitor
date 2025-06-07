@@ -372,7 +372,7 @@ class LmNatPat:
 
 			try:
 				aExportFile = open(aFileName, 'w')
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
@@ -400,7 +400,7 @@ class LmNatPat:
 
 			try:
 				aExportFile.close()
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
@@ -416,7 +416,7 @@ class LmNatPat:
 
 		try:
 			aImportFile = open(aFileName, 'r')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot open the file.', 'openFileErr'))
 			return
@@ -424,7 +424,7 @@ class LmNatPat:
 		aError = False
 		try:
 			aFile = json.load(aImportFile)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(f'Error loading file: {e}')
 			self.display_error(mx('Wrong file format.', 'fileFormatErr'))
 			aError = True
@@ -448,7 +448,7 @@ class LmNatPat:
 
 		try:
 			aImportFile.close()
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot close the file.', 'closeFileErr'))
 
@@ -571,7 +571,7 @@ class LmNatPat:
 
 			try:
 				aExportFile = open(aFileName, 'w')
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
@@ -599,7 +599,7 @@ class LmNatPat:
 
 			try:
 				aExportFile.close()
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
@@ -615,7 +615,7 @@ class LmNatPat:
 
 		try:
 			aImportFile = open(aFileName, 'r')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot open the file.', 'openFileErr'))
 			return
@@ -623,7 +623,7 @@ class LmNatPat:
 		aError = False
 		try:
 			aFile = json.load(aImportFile)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(f'Error loading file: {e}')
 			self.display_error(mx('Wrong file format.', 'fileFormatErr'))
 			aError = True
@@ -647,7 +647,7 @@ class LmNatPat:
 
 		try:
 			aImportFile.close()
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot close the file.', 'closeFileErr'))
 
@@ -700,7 +700,7 @@ class LmNatPat:
 	def loadIPv4PatRules(self):
 		try:
 			d = self._session.request('Firewall', 'getPortForwarding')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			d = None
 		if d is not None:
@@ -751,7 +751,7 @@ class LmNatPat:
 	def loadIPv6PatRules(self):
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			d = None
 		if d is not None:
@@ -949,7 +949,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'setPortForwarding', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			if not iSilent:
 				self.display_error('Firewall:setPortForwarding query error.')
@@ -993,7 +993,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:setPinhole query error.')
 			return False
@@ -1031,7 +1031,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:deletePortForwarding query error.')
 			return False
@@ -1057,7 +1057,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:deletePinhole query error.')
 			return False
@@ -1084,7 +1084,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'deletePortForwarding', { 'origin': o })
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:deletePortForwarding query error.')
 			return False
@@ -1132,7 +1132,7 @@ class LmNatPat:
 	def loadIPv4PtfRules(self):
 		try:
 			d = self._session.request('Firewall', 'getProtocolForwarding')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			d = None
 		if d is not None:
@@ -1181,7 +1181,7 @@ class LmNatPat:
 	def loadIPv6PtfRules(self):
 		try:
 			d = self._session.request('Firewall', 'getPinhole')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			d = None
 		if d is not None:
@@ -1353,7 +1353,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'setProtocolForwarding', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			if not iSilent:
 				self.display_error('Firewall:setProtocolForwarding query error.')
@@ -1393,7 +1393,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'setPinhole', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:setPinhole query error.')
 			return False
@@ -1421,7 +1421,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'deleteProtocolForwarding', { 'id': iRule['Name'] })
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:deleteProtocolForwarding query error.')
 			return False
@@ -1447,7 +1447,7 @@ class LmNatPat:
 		# Call Livebox API
 		try:
 			aReply = self._session.request('Firewall', 'deletePinhole', r)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Firewall:deletePinhole query error.')
 			return False
@@ -1467,7 +1467,7 @@ class LmNatPat:
 	def commitNatPatRuleChange(self):
 		try:
 			aReply = self._session.request('Firewall', 'commit')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			LmTools.error('Firewall commit query error.')
 			return False
@@ -1524,7 +1524,7 @@ class LmNatPat:
 		p = iPort.split('-')[0]		# If range is used, sort with the first port
 		try:
 			i = int(p)
-		except:
+		except Exception:
 			i = 0
 		aPort.setData(QtCore.Qt.ItemDataRole.UserRole, i)
 		return aPort

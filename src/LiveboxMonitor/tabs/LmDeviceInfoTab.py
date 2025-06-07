@@ -156,7 +156,7 @@ class LmDeviceInfo:
                             self._api._device.del_dns_name(key)
                     else:
                         self._api._device.set_dns_name(key, name)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
 
@@ -180,7 +180,7 @@ class LmDeviceInfo:
     def del_device_name(self, device_key):
         try:
             del LmConf.MacAddrTable[device_key]
-        except:
+        except Exception:
             pass
         else:
             LmConf.save_mac_addr_table()
@@ -200,7 +200,7 @@ class LmDeviceInfo:
                 type = set_device_type_dialog.get_type_key()
                 try:
                     self._api._device.set_type(key, type)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
                 else:
                     self.info_device_list_click()
@@ -213,7 +213,7 @@ class LmDeviceInfo:
         if key:
             try:
                 self._api._device.wake_on_lan(key)
-            except BaseException as e:
+            except Exception as e:
                 self.display_error(str(e))
             else:
                 self.display_status(mx('Wake on LAN signal sent to device [{}].', 'devWOL').format(key))
@@ -226,7 +226,7 @@ class LmDeviceInfo:
             if self.ask_question(mx('Are you sure you want to forget device [{}]?', 'devForget').format(key)):
                 try:
                     self._api._device.delete(key)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
                 else:
                     self._info_dlist.setCurrentCell(-1, -1)
@@ -240,7 +240,7 @@ class LmDeviceInfo:
         if key:
             try:
                 self._api._device.block(key)
-            except BaseException as e:
+            except Exception as e:
                 self.display_error(str(e))
             else:
                 self.display_status(mx('Device [{}] now blocked.', 'devBlocked').format(key))
@@ -252,7 +252,7 @@ class LmDeviceInfo:
         if key:
             try:
                 r = self._api._device.unblock(key)
-            except BaseException as e:
+            except Exception as e:
                 self.display_error(str(e))
             else:
                 if r:
@@ -267,7 +267,7 @@ class LmDeviceInfo:
 
         try:
             d = self._api._device.get_info(device_key)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self._task.end()
             self.display_error(mx('Error getting device information.', 'devInfoErr'))
@@ -281,7 +281,7 @@ class LmDeviceInfo:
         try:
             blocked = self._api._device.is_blocked(device_key)
             i = self.addInfoLine(self._info_alist, i, lx('Blocked'), LmTools.fmt_bool(blocked))
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             i = self.addInfoLine(self._info_alist, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
 
@@ -352,7 +352,7 @@ class LmDeviceInfo:
                 if comp_details is not None:
                     manufacturer = comp_details.get('companyName', '') + ' - ' + comp_details.get('countryCode', '')
                 i = self.addInfoLine(self._info_alist, i, lx('Manufacturer'), manufacturer)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 i = self.addInfoLine(self._info_alist, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
 

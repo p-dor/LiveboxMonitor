@@ -156,7 +156,7 @@ class LmGenApiDoc:
         # Generate for all interfaces
         try:
             d = self._api._intf.get_key_list()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
         else:
             if isinstance(d, list):
@@ -183,7 +183,7 @@ class LmGenApiDoc:
 
         try:
             d = self._session.request(module, get=True, timeout=15)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return
 
@@ -197,7 +197,7 @@ class LmGenApiDoc:
         file_path = os.path.join(self._folder, name + '_json.txt')
         try:
             self._file = open(file_path, 'w')
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return
 
@@ -206,7 +206,7 @@ class LmGenApiDoc:
 
         try:
             self._file.close()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
         self._file = None
 
@@ -220,7 +220,7 @@ class LmGenApiDoc:
 
         try:
             d = self._session.request(module, get=True, timeout=15)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return
 
@@ -234,7 +234,7 @@ class LmGenApiDoc:
         file_path = os.path.join(self._folder, name + '.txt')
         try:
             self._file = open(file_path, 'w')
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return
 
@@ -247,7 +247,7 @@ class LmGenApiDoc:
 
         try:
             self._file.close()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
         self._file = None
 

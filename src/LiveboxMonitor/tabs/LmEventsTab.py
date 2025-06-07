@@ -537,7 +537,7 @@ class LmEvents:
 
                 csv_writer = csv.writer(f, dialect = 'excel', delimiter = LmConf.CsvDelimiter)
                 csv_writer.writerow(r)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot log event. Error: {e}')
 
 

@@ -66,7 +66,7 @@ class LmSession:
                     raise Exception('Source redirection URL already declared.')
                 URL_REDIRECTIONS[url_from] = url_to
                 LmTools.log_debug(1, 'Added redirection', url_from, 'to', url_to)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Error while processing redirections: {e}')
 
 
@@ -119,7 +119,7 @@ class LmSession:
                                            headers=self._sah_service_headers,
                                            timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
                                            verify=self._verify)
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(str(e))
                     self._session = None
                     return -1
@@ -156,7 +156,7 @@ class LmSession:
                                        headers=self._sah_service_headers,
                                        timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
                                        verify=self._verify)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 LmTools.error('Authentification check query failed.')
                 os.remove(state_file_path)
@@ -214,7 +214,7 @@ class LmSession:
                 if not silent:
                     LmTools.error(f'Request timeout error: {e}')
                 return None
-            except BaseException as e:
+            except Exception as e:
                 if not silent:
                     LmTools.error(f'Request error: {e}')
                 return {'errors': 'Request exception'}
@@ -254,7 +254,7 @@ class LmSession:
                 if not silent:
                     LmTools.error(f'Request timeout error: {e}')
                 return None
-            except BaseException as e:
+            except Exception as e:
                 if not silent:
                     LmTools.error(f'Request error: {e}')
                 return {'errors': 'Request exception'}
@@ -263,7 +263,7 @@ class LmSession:
 
         try:
             r = json.loads(t)
-        except:
+        except Exception:
             if not silent:
                 LmTools.error(sys.exc_info()[0])
                 LmTools.error('Bad json:', t)
@@ -311,7 +311,7 @@ class LmSession:
             if not silent:
                 LmTools.log_debug(2, f'Event request timeout error: {e}')
             return None
-        except BaseException as e:
+        except Exception as e:
             if not silent:
                 LmTools.error(f'Event request error: {e}')
             return {'errors': 'Event request exception'}

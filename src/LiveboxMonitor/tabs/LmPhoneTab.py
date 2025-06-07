@@ -337,7 +337,7 @@ class LmPhone:
 			aKey = self._callList.item(aCurrentSelection, CallCol.Key).text()
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList', { 'callId': aKey })
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error('Phone call delete query error.')
 				return
@@ -356,7 +356,7 @@ class LmPhone:
 			self._task.start(lx('Deleting phone call list...'))
 			try:
 				aReply = self._session.request('VoiceService.VoiceApplication', 'clearCallList')
-			except BaseException as e:
+			except Exception as e:
 				self._task.end()
 				LmTools.error(str(e))
 				self.display_error('Delete all calls query error.')
@@ -593,7 +593,7 @@ class LmPhone:
 					return aSpam != 0
 				else:
 					LmTools.error('CallFilter response error: no blocked field')
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(f'CallFilter error: {e}')
 		return False
 
@@ -626,7 +626,7 @@ class LmPhone:
 			aKey = self._contactList.item(aCurrentSelection, ContactCol.Key).text()
 			try:
 				aReply = self._session.request('Phonebook', 'removeContactByUniqueID', { 'uniqueID': aKey })
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error('Contact delete query error.')
 				return
@@ -648,7 +648,7 @@ class LmPhone:
 			self._task.start(lx('Deleting contact list...'))
 			try:
 				aReply = self._session.request('Phonebook', 'removeAllContacts')
-			except BaseException as e:
+			except Exception as e:
 				self._task.end()
 				LmTools.error(str(e))
 				self.display_error('Delete all contacts query error.')
@@ -672,7 +672,7 @@ class LmPhone:
 		LmTools.mouse_cursor_busy()
 		try:
 			d = self._session.request('VoiceService.VoiceApplication', 'ring', aParams)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			d = None
 		LmTools.mouse_cursor_normal()
@@ -692,7 +692,7 @@ class LmPhone:
 
 		try:
 			aExportFile = open(aFileName, 'w', encoding = 'utf-8')	# VCF standard charset is UTF-8
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot create the file.', 'createFileErr'))
 			return
@@ -722,7 +722,7 @@ class LmPhone:
 
 		try:
 			aExportFile.close()
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
@@ -761,7 +761,7 @@ class LmPhone:
 	def importVcfFile(self, iFile):
 		try:
 			f = open(iFile, 'r', encoding = 'utf-8')	# VCF standard charset is UTF-8
-		except:
+		except Exception:
 			return 0
 
 		c = None
@@ -820,7 +820,7 @@ class LmPhone:
 						c = None
 				else:
 					LmPhone.importVcfTag(c, aTag, aTagParams, l)
-		except BaseException as aExcept:
+		except Exception as aExcept:
 			LmTools.error(str(aExcept))
 			f.close()
 			return 0
@@ -1048,7 +1048,7 @@ class LmPhone:
 
 		try:
 			aReply = self._session.request('Phonebook', 'addContactAndGenUUID', { 'contact': aData })
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Contact creation query error.')
 			return False
@@ -1072,7 +1072,7 @@ class LmPhone:
 		# First retrieve a fresh copy of the contact
 		try:
 			aReply = self._session.request('Phonebook', 'getContactByUniqueID', { 'uniqueID': aKey })
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Contact query error.')
 			return
@@ -1111,7 +1111,7 @@ class LmPhone:
 			# Perform updates
 			try:
 				aReply = self._session.request('Phonebook', 'modifyContactByUniqueID', { 'uniqueID': aKey, 'contact': aLBContact })
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error('Contact update query error.')
 				return
@@ -1161,7 +1161,7 @@ class LmPhone:
 			if aPhoneEntry is not None:
 				try:
 					self._contactMatching[iPhoneNumber].remove(iContactEntry)
-				except:
+				except Exception:
 					pass
 
 

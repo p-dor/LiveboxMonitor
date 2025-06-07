@@ -355,7 +355,7 @@ def release_check():
         d = requests.get(GITRELEASE_URL.format(GIT_REPO), timeout=1)
         d = json.loads(d.content)
         v = d['tag_name']
-    except BaseException as e:
+    except Exception as e:
         LmTools.error(f'Cannot get latest release infos. Error: {e}')
         return
 
@@ -373,7 +373,7 @@ def release_check():
         patch = '00'
     try:
         r = int(major.zfill(2) + minor.zfill(2) + patch.zfill(2), 16)
-    except BaseException as e:
+    except Exception as e:
         LmTools.error(f'Cannot decode latest release infos. Error: {e}')
         return
 
@@ -460,7 +460,7 @@ class LmConf:
         except OSError:
             LmTools.error('No configuration file, creating one.')
             dirty_config = True
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             if LmTools.ask_question(mx('Wrong {} file, fully reset it?', 'wrongFile').format(CONFIG_FILE)):
                 dirty_config = True
@@ -616,7 +616,7 @@ class LmConf:
         except OSError:
             LmTools.error('No key file, creating one.')
             key = None
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             LmTools.display_error(mx('Cannot read key file.', 'keyFileErr'))
             if key_file is not None:
@@ -626,7 +626,7 @@ class LmConf:
             # Decrypt key to get secret
             try:
                 LmConf.Secret = Fernet(hw_key.encode('utf-8')).decrypt(key).decode('utf-8')
-            except:
+            except Exception:
                 LmTools.error('Invalid key file, recreating it.')
             else:
                 return True
@@ -636,7 +636,7 @@ class LmConf:
             LmTools.log_debug(1, 'Creating config directory', config_path)
             try:
                 os.makedirs(config_path)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'Cannot create configuration folder. Error: {e}')
                 LmTools.display_error(mx('Cannot create configuration folder.', 'configFolderErr'))
                 return False
@@ -648,7 +648,7 @@ class LmConf:
         try:
             with open(key_file_path, 'wb') as key_file:
                 key_file.write(key)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot save key file. Error: {e}')
 
         return True
@@ -760,7 +760,7 @@ class LmConf:
         if p is not None:
             try:
                 LmConf.LiveboxPassword = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
-            except:
+            except Exception:
                 LmTools.error('Cannot decrypt Livebox password.')
                 LmConf.LiveboxPassword = DCFG_LIVEBOX_PASSWORD
         else:
@@ -844,7 +844,7 @@ class LmConf:
             LmTools.log_debug(1, 'Creating config directory', config_path)
             try:
                 os.makedirs(config_path)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'Cannot create configuration folder. Error: {e}')
                 return
 
@@ -897,7 +897,7 @@ class LmConf:
                 config['Prevent Sleep'] = LmConf.PreventSleep
                 config['Save Passwords'] = LmConf.SavePasswords
                 json.dump(config, config_file, indent=4)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot save configuration file. Error: {e}')
 
 
@@ -950,7 +950,7 @@ class LmConf:
                 else:
                     try:
                         password = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
-                    except:
+                    except Exception:
                         LmTools.error('Cannot decrypt repeater password.')
                         password = LmConf.LiveboxPassword
                 return user, password
@@ -996,7 +996,7 @@ class LmConf:
                 LmConf.MacAddrTable = json.load(mac_table_file)
         except OSError:     # No file
             LmConf.MacAddrTable = {}
-        except BaseException as e:
+        except Exception as e:
             LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongMacFile').format(LmConf.MacAddrTableFile))
             LmConf.MacAddrTable = {}
 
@@ -1010,7 +1010,7 @@ class LmConf:
         if not os.path.exists(config_path):
             try:
                 os.makedirs(config_path)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'Cannot create configuration folder. Error: {e}')
                 return
 
@@ -1018,7 +1018,7 @@ class LmConf:
         try:
             with open(mac_addr_table_file_path, 'w') as mac_table_file:
                 json.dump(LmConf.MacAddrTable, mac_table_file, indent=4)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot save MacAddress file. Error: {e}')
 
 
@@ -1036,7 +1036,7 @@ class LmConf:
                     LmConf.SpamCallsTable = []
         except OSError:     # No file
             LmConf.SpamCallsTable = []
-        except BaseException as e:
+        except Exception as e:
             LmTools.display_error(mx('Wrong {} file format, cannot use.', 'wrongSpamCallsFile').format(SPAMCALLS_FILE))
             LmConf.SpamCallsTable = []
 
@@ -1066,7 +1066,7 @@ class LmConf:
         if not os.path.exists(config_path):
             try:
                 os.makedirs(config_path)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'Cannot create configuration folder. Error: {e}')
                 return
 
@@ -1074,7 +1074,7 @@ class LmConf:
         try:
             with open(spam_calls_table_file_path, 'w') as f:
                 json.dump(LmConf.SpamCallsTable, f, indent = 4)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot save spam calls file. Error: {e}')
 
 
@@ -1125,7 +1125,7 @@ class LmConf:
         if not os.path.isdir(icon_dir_path):
             try:
                 os.makedirs(icon_dir_path)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'Cannot create icon cache folder {icon_dir_path}. Error: {e}')
                 return
 
@@ -1133,7 +1133,7 @@ class LmConf:
         try:
             with open(icon_file_path, 'wb') as icon_file:
                 icon_file.write(content)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'Cannot save icon cache file {icon_file_path}. Error: {e}')
 
 
@@ -1163,7 +1163,7 @@ class LmConf:
                         LmTools.error(f'Cannot load device icon {device["Icon"]}.')
                 except requests.exceptions.Timeout as e:
                     LmTools.error(f'Device icon {device["Icon"]} request timeout error: {e}.')
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(f'{e}. Cannot request device icon {device["Icon"]}.')
 
                 # If successfully loaded, try to store in local cache file for faster further loads
@@ -1260,7 +1260,7 @@ class LmConf:
         if p is not None:
             try:
                 password = Fernet(LmConf.Secret.encode('utf-8')).decrypt(p.encode('utf-8')).decode('utf-8')
-            except:
+            except Exception:
                 LmTools.error('Cannot decrypt email password.')
         e['Password'] = password
 
@@ -1273,7 +1273,7 @@ class LmConf:
         p = email_setup['Password']
         try:
             email_setup['Password'] = Fernet(LmConf.Secret.encode('utf-8')).encrypt(p.encode('utf-8')).decode('utf-8')
-        except:
+        except Exception:
             LmTools.error('Cannot encrypt email password.')
             email_setup['Password'] = ''
         LmConf.Email = email_setup

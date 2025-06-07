@@ -147,7 +147,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
 		c['Server'] = self._smtp_server.text()
 		try:
 			c['Port'] = int(self._smtp_port.text())
-		except:
+		except Exception:
 			c['Port'] = 0
 		c['TLS'] = self._use_starttls.isChecked()
 		c['SSL'] = self._use_tls.isChecked()

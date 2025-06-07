@@ -324,7 +324,7 @@ class LmActions:
         self._task.start(lx('Activating Wifi...'))
         try:
             self._api._wifi.set_enable(True)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Wifi activated.', 'wifiOn'))
@@ -336,7 +336,7 @@ class LmActions:
         self._task.start(lx('Deactivating Wifi...'))
         try:
             self._api._wifi.set_enable(False)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Wifi deactivated.', 'wifiOff'))
@@ -348,7 +348,7 @@ class LmActions:
         self._task.start(lx('Activating Guest Wifi...'))
         try:
             self._api._wifi.set_guest_enable(True)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Guest Wifi activated. Reactivate Scheduler if required.', 'gwifiOn'))
@@ -360,7 +360,7 @@ class LmActions:
         self._task.start(lx('Deactivating Guest Wifi...'))
         try:
             self._api._wifi.set_guest_enable(False)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Guest Wifi deactivated.', 'gwifiOff'))
@@ -372,7 +372,7 @@ class LmActions:
         self._task.start(lx('Activating Wifi Scheduler...'))
         try:
             self._api._wifi.set_scheduler_enable(True)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Scheduler activated.', 'schedOn'))
@@ -384,7 +384,7 @@ class LmActions:
         self._task.start(lx('Deactivating Wifi Scheduler...'))
         try:
             self._api._wifi.set_scheduler_enable(False)
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
         else:
             self.display_status(mx('Scheduler deactivated.', 'schedOff'))
@@ -419,7 +419,7 @@ class LmActions:
         try:
             orange_led_level = self._api._screen.get_orange_led_level()
             show_wifi_password = self._api._screen.get_show_wifi_password()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             return
 
@@ -432,7 +432,7 @@ class LmActions:
             if new_orange_led_level != orange_led_level:
                 try:
                     self._api._screen.set_orange_led_level(new_orange_led_level)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
             # Set show wifi password if changed
@@ -440,7 +440,7 @@ class LmActions:
             if new_show_wifi_password != show_wifi_password:
                 try:
                     self._api._screen.set_show_wifi_password(new_show_wifi_password)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
             self._task.end()
@@ -452,7 +452,7 @@ class LmActions:
             self._task.start(lx('Rebooting Livebox...'))
             try:
                 self._api._reboot.reboot_livebox()
-            except BaseException as e:
+            except Exception as e:
                 self._task.end()
                 self.display_error(str(e))
                 return
@@ -468,7 +468,7 @@ class LmActions:
 
         try:
             d = self._api._reboot.get_reboot_history()
-        except BaseException as e:
+        except Exception as e:
             self._task.end()
             self.display_error(str(e))
             return
@@ -485,7 +485,7 @@ class LmActions:
         try:
             firewall_ipv4_level = self._api._firewall.get_ipv4_firewall_level()
             firewall_ipv6_level = self._api._firewall.get_ipv6_firewall_level()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             return
 
@@ -498,7 +498,7 @@ class LmActions:
             if new_firewall_ipv4_level != firewall_ipv4_level:
                 try:
                     self._api._firewall.set_ipv4_firewall_level(new_firewall_ipv4_level)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
             # Set new IPv6 firewall level if changed
@@ -506,7 +506,7 @@ class LmActions:
             if new_firewall_ipv6_level != firewall_ipv6_level:
                 try:
                     self._api._firewall.set_ipv6_firewall_level(new_firewall_ipv6_level)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
             self._task.end()
@@ -517,7 +517,7 @@ class LmActions:
         # Get current ping reponses
         try:
             d = self._api._firewall.get_respond_to_ping()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             return
         ipv4_ping = d.get('enableIPv4')
@@ -537,7 +537,7 @@ class LmActions:
                 p['enableIPv6'] = new_ipv6_ping
                 try:
                     self._api._firewall.set_respond_to_ping(p)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
                 self._task.end()
 

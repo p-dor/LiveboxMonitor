@@ -1,6 +1,11 @@
 ### Livebox Monitor APIs base class ###
 
 
+# ################################ Exceptions ################################
+class LmApiException(Exception):
+    """Livebox Monitor APIs exception."""
+
+
 # ################################ Livebox Monitor APIs ################################
 class LmApi:
     def __init__(self, api_registry):
@@ -59,16 +64,16 @@ class LmApi:
                 d = self._session.request(package, method, args)
             else:
                 d = self._session.request(package, method, args, timeout=timeout)
-        except BaseException as e:
-            raise Exception(f'{self.err_str(package, method, err_str)}: {e}.') from e
+        except Exception as e:
+            raise LmApiException(f'{self.err_str(package, method, err_str)}: {e}.') from e
         if d is not None:
             e = self.get_errors(d)
             if e:
-                raise Exception(f'{self.err_str(package, method, err_str)}: {e}')
+                raise LmApiException(f'{self.err_str(package, method, err_str)}: {e}')
             if 'status' in d:
                 return d
 
-        raise Exception(self.err_str(package, method, err_str) + ' service error.')
+        raise LmApiException(self.err_str(package, method, err_str) + ' service error.')
 
 
     ### Call a Livebox API - raise exception or return 'status' value, can be None
@@ -80,5 +85,5 @@ class LmApi:
     def call(self, package, method=None, args=None, timeout=None, err_str=None):
         d = self.call_no_check(package, method, args, timeout, err_str)
         if not d:
-            raise Exception(self.err_str(package, method, err_str) + ' service failed.')
+            raise LmApiException(self.err_str(package, method, err_str) + ' service failed.')
         return d

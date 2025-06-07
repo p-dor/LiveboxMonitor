@@ -194,7 +194,7 @@ class LmDeviceList:
         # Get IPv6 status
         try:
             d = self._api._info.get_ipv6_status()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             ipv6_enabled = None
         else:
@@ -203,7 +203,7 @@ class LmDeviceList:
         # Get CGNat status
         try:
             d = self._api._info.get_cgnat_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             cgnat = None
         else:
@@ -212,7 +212,7 @@ class LmDeviceList:
         # Get IPv6Mode
         try:
             d = self._api._info.get_ipv6_mode()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             mode = None
         else:
@@ -221,7 +221,7 @@ class LmDeviceList:
         # Get IPv6 address and prefix
         try:
             d = self._api._info.get_wan_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             ipv6_addr = None
             ipv6_prefix = None
@@ -234,7 +234,7 @@ class LmDeviceList:
         # Get IPv6 prefix leases delegation list
         try:
             prefixes = self._api._dhcp.get_v6_prefix_leases()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             prefixes = None
 
@@ -276,7 +276,7 @@ class LmDeviceList:
         # Get device infos from Livebox & build IP -> name map
         try:
             self._livebox_devices = self._api._device.get_list()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self.display_error(mx('Error getting device list.', 'dlistErr'))
             self._livebox_devices = None            
@@ -287,7 +287,7 @@ class LmDeviceList:
         # Get topology infos from Livebox & build link & device maps
         try:
             self._livebox_topology = self._api._device.get_topology()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self.display_error(mx('Error getting device topology.', 'topoErr'))
             self._livebox_topology = None
@@ -468,7 +468,7 @@ class LmDeviceList:
     def format_name_widget(table, line, mac_addr, name_col):
         try:
             name = QtWidgets.QTableWidgetItem(LmConf.MacAddrTable[mac_addr])
-        except:
+        except Exception:
             name = QtWidgets.QTableWidgetItem(lx('UNKNOWN'))
             name.setBackground(QtCore.Qt.GlobalColor.red)
         table.setItem(line, name_col, name)
@@ -557,7 +557,7 @@ class LmDeviceList:
 
             try:
                 self._livebox_devices = self._api._device.get_list()
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 self._task.end()
                 self.display_error(mx('Error getting device list.', 'dlistErr'))
@@ -611,7 +611,7 @@ class LmDeviceList:
                 return ip
             try:
                 return LmConf.MacAddrTable[device_info['MAC']]
-            except:
+            except Exception:
                 return device_info['LBName']
         return ''
 
@@ -962,7 +962,7 @@ class LmDeviceList:
                 # Get current device IP
                 try:
                     curr_ip = self._api._device.get_ip_addr(device_key)
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(str(e))
                     curr_ip = known_ip
 
@@ -1045,7 +1045,7 @@ class LmDeviceList:
         # Cleanup event buffer
         try:
             del self._event_buffer[device_key]
-        except:
+        except Exception:
             pass
 
 
@@ -1173,7 +1173,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
                 continue
             try:
                 d = self._api._intf.get_wifi_stats(s['Key'])
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
             else:
                 if isinstance(d, list):

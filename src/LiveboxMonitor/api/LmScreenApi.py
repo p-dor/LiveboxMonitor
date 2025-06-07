@@ -14,7 +14,7 @@ class ScreenApi(LmApi):
         d = self.call('LEDs.LED.Orange', 'get')
         brightness = d.get('Brightness')
         if brightness is None:
-            raise Exception('LEDs.LED.Orange:get error: no Brightness field')
+            raise LmApiException('LEDs.LED.Orange:get error: no Brightness field')
         return brightness
 
 
@@ -23,7 +23,7 @@ class ScreenApi(LmApi):
         d = self.call('LEDs.LED.White', 'get')
         brightness = d.get('Brightness')
         if brightness is None:
-            raise Exception('LEDs.LED.White:get error: no Brightness field')
+            raise LmApiException('LEDs.LED.White:get error: no Brightness field')
         return brightness
 
 

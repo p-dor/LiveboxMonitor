@@ -283,7 +283,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self._session = LmSession(LmConf.LiveboxURL, 'LiveboxMonitor_' + LmConf.CurrProfile['Name'])
             try:
                 r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 r = -1
             self._task.end()
@@ -346,7 +346,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         # Determine link type
         try:
             d = self._api._info.get_wan_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self._linkType = 'UNKNOWN'
         else:
@@ -370,7 +370,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def determine_livebox_pro(self):
         try:
             d = self._api._info.get_connection_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self._liveboxPro = False
         else:
@@ -522,7 +522,7 @@ def main(native_run=False):
             # Assign Python locale to selected preference (useful e.g. for pyqtgraph time axis localization)
             try:
                 locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(f'setlocale() error: {e}')
 
             # Set Qt language to selected preference

@@ -267,7 +267,7 @@ def send_email(email_setup, subject, message):
     # Message body
     try:
         m.set_content(message)
-    except BaseException as e:
+    except Exception as e:
         error(f'Cannot set email content. Error: {e}')
         return False
 
@@ -281,7 +281,7 @@ def send_email(email_setup, subject, message):
             s = smtplib.SMTP_SSL(email_setup['Server'], email_setup['Port'], timeout=SMTP_TIMEOUT, context=ssl.create_default_context())
         else:
             s = smtplib.SMTP(email_setup['Server'], email_setup['Port'], timeout=SMTP_TIMEOUT)
-    except BaseException as e:
+    except Exception as e:
         error(f'Cannot setup email session. Error: {e}')
         if s is not None:
             try:
@@ -294,7 +294,7 @@ def send_email(email_setup, subject, message):
     if email_setup['Authentication']:
         try:
             s.login(email_setup['User'], email_setup['Password'])
-        except BaseException as e:
+        except Exception as e:
             error(f'Authentication to SMTP server failed. Error: {e}')
             try:
                 s.quit()
@@ -305,7 +305,7 @@ def send_email(email_setup, subject, message):
     # Send the message
     try:
         s.send_message(m)
-    except BaseException as e:
+    except Exception as e:
         error(f'Cannot send email. Error: {e}')
         try:
             s.quit()
@@ -335,7 +335,7 @@ def async_send_email(email_setup, subject, message):
     try:
         if not QtCore.QThreadPool.globalInstance().tryStart(AsyncEmail(email_setup, subject, message)):
             error('Cannot send email. No free thread in the pool.')
-    except BaseException as e:
+    except Exception as e:
         error(f'Cannot send email. Error: {e}')
 
 
@@ -425,7 +425,7 @@ def livebox_timestamp(timestamp, utc=True):
             return datetime.datetime.fromisoformat(timestamp.replace('Z','+00:00')).replace(tzinfo = tz.tzutc()).astimezone(tz.tzlocal())
         else:
             return datetime.datetime.fromisoformat(timestamp.replace('Z','+00:00'))
-    except:
+    except Exception:
         return None
 
 

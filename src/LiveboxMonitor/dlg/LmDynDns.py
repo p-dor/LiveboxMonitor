@@ -146,7 +146,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
 
         try:
             d = self._api._dyndns.get_hosts()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
 
@@ -189,7 +189,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
     def load_service_combo(self):
         try:
             d = self._api._dyndns.get_services()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
 
@@ -239,7 +239,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         hostname = self._host_list.item(i, HostCol.HostName).text()
         try:
             self._api._dyndns.delete_host(hostname)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self._app.display_error(mx('Cannot delete DynDNS host.', 'dynDnsDelErr'))
             return
@@ -277,7 +277,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         # Call Livebox API
         try:
             self._api._dyndns.add_host(service, username, hostname, password)
-        except BaseException as e:
+        except Exception as e:
             self._app.display_error(str(e))
             return
 
@@ -291,7 +291,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
     def get_global_enable_status(self):
         try:
             d = self._api._dyndns.get_enable()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return False
         if d is None:
@@ -305,7 +305,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         enable = not self.get_global_enable_status()
         try:
             self._api._dyndns.set_enable(enable)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
 
         self._disable_button.setText(self.get_disable_button_title())

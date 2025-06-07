@@ -26,7 +26,7 @@ class DhcpApi(LmApi):
         d = self.call_no_check('DHCPv4.Server.Pool.' + domain, 'getStaticLeases', domain)
         if isinstance(d, list):
             return d
-        raise Exception(f'DHCPv4.Server.Pool.{domain}:getStaticLeases query error')
+        raise LmApiException(f'DHCPv4.Server.Pool.{domain}:getStaticLeases query error')
 
 
     ### Add a DHCP lease - default to standard domain
@@ -58,7 +58,7 @@ class DhcpApi(LmApi):
         d = self.call_no_check('DHCPv6.Server', 'getPDPrefixInformation')
         if isinstance(d, list):
             return d
-        raise Exception('DHCPv6.Server:getPDPrefixInformation query error')
+        raise LmApiException('DHCPv6.Server:getPDPrefixInformation query error')
 
 
     ### Get IPv6 prefix leases
@@ -66,7 +66,7 @@ class DhcpApi(LmApi):
         d = self.call_no_check('DHCPv6.Server', 'getPDPrefixLeases')
         if isinstance(d, list):
             return d
-        raise Exception('DHCPv6.Server:getPDPrefixLeases query error')
+        raise LmApiException('DHCPv6.Server:getPDPrefixLeases query error')
 
 
     ### Get DHCP MIBs information
@@ -79,4 +79,4 @@ class DhcpApi(LmApi):
         mibs = ' '.join(p) or None
         if mibs:
             return self.call('NeMo.Intf.data', 'getMIBs', {'mibs': mibs})
-        raise Exception('At least one MIB must be selected')
+        raise LmApiException('At least one MIB must be selected')

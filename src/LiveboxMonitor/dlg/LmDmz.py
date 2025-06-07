@@ -140,7 +140,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         try:
             d = self._api._firewall.get_dmz_devices()
-        except BaseException as e:
+        except Exception as e:
             self._app.display_error(str(e))
             self._app._task.end()
             return
@@ -205,7 +205,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         dmz_id = self._dmz_list.item(i, DmzCol.ID).text()
         try:
             self._api._firewall.delete_dmz(dmz_id)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             self._app.display_error(mx('Cannot delete DMZ device.', 'dmzDelErr'))
             return
@@ -230,7 +230,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         # Call Livebox API
         try:
             self._api._firewall.add_dmz(dmz_id, dest_ip, ext_ips=ext_ips)
-        except BaseException as e:
+        except Exception as e:
             self._app.display_error(str(e))
             return
 

@@ -71,7 +71,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         # Open file
         try:
             export_file = open(file_name, 'w', newline='')
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'File creation error: {e}')
             self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
             return
@@ -98,7 +98,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         # Close file
         try:
             export_file.close()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'File saving error: {e}')
             self._app.display_error(mx('Cannot save the file.', 'saveFileErr'))
  

@@ -210,7 +210,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
         try:
             new_index = MAC_FILTERING_MODES.index(i['MACFiltering'])
-        except:
+        except Exception:
             MAC_FILTERING_MODES.append(i['MACFiltering'])
             self._mac_filtering_combo.addItem(i['MACFiltering'])
             new_index = self._mac_filtering_combo.count() - 1

@@ -627,7 +627,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
             if LmTools.ask_question(mx('Configured log file directory does not exist. Do you want to create it?', 'logDirExist')):
                 try:
                     os.makedirs(p)
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(f'Cannot create log file directory. Error: {e}')
                     LmTools.display_error(mx('Cannot create log file directory.\nError: {}.', 'logDirErr').format(e))
                     return False

@@ -14,7 +14,7 @@ class DeviceApi(LmApi):
         d = self.call_no_check('Devices', 'get', {'expression': 'physical and !self and !voice'}, timeout=10)
         if isinstance(d, list):
             return d
-        raise Exception('Devices:get query error')
+        raise LmApiException('Devices:get query error')
 
 
     ### Get device topology
@@ -22,7 +22,7 @@ class DeviceApi(LmApi):
         d = self.call_no_check('TopologyDiagnostics', 'buildTopology', {'SendXmlFile': 'false'}, timeout=20)
         if isinstance(d, list) and len(d):
             return d
-        raise Exception('TopologyDiagnostics:buildTopology query error')
+        raise LmApiException('TopologyDiagnostics:buildTopology query error')
 
 
     ### Set device name - key is MAC addr

@@ -305,7 +305,7 @@ class LmGraph:
 				n += 1
 				aSuffix = '_' + str(n)
 				continue
-			except BaseException as e:
+			except Exception as e:
 				LmTools.error(str(e))
 				self.display_error(mx('Cannot create the file.', 'createFileErr'))
 				return
@@ -333,7 +333,7 @@ class LmGraph:
 
 		try:
 			aExportFile.close()
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
@@ -342,7 +342,7 @@ class LmGraph:
 	def loadStatParams(self):
 		try:
 			aReply = self._session.request('HomeLan', 'getReadingInterval')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('HomeLan:getReadingInterval query error.')
 			aReply = None
@@ -354,7 +354,7 @@ class LmGraph:
 
 		try:
 			aReply = self._session.request('HomeLan', 'getDevicesReadingInterval')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('HomeLan:getDevicesReadingInterval query error.')
 			aReply = None
@@ -409,7 +409,7 @@ class LmGraph:
 						continue
 					try:
 						aName = LmConf.MacAddrTable[aKey]
-					except:
+					except Exception:
 						aName = aKey
 					self.addGraphObject(aType, aKey, aName, e[2], aColor)
 				else:
@@ -611,7 +611,7 @@ class LmGraph:
 		if i > -1:
 			try:
 				aName = LmConf.MacAddrTable[iDeviceKey]
-			except:
+			except Exception:
 				aName = iDeviceKey
 			self._graphList.setItem(i, GraphCol.Name, QtWidgets.QTableWidgetItem(aName))
 
@@ -620,7 +620,7 @@ class LmGraph:
 	def loadHomeLanInterfaces(self):
 		try:
 			aReply = self._session.request('HomeLan.Interface', 'get')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('HomeLan interfaces query error.')
 			return
@@ -656,7 +656,7 @@ class LmGraph:
 	def loadHomeLanDevices(self):
 		try:
 			aReply = self._session.request('HomeLan.Device', 'get')
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('HomeLan devices query error.')
 			return
@@ -692,7 +692,7 @@ class LmGraph:
 											   timeout=15)
 			else:
 				aReply = self._session.request('HomeLan', 'getResults', { 'InterfaceName': iID }, timeout=15)
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Interface statistics query error.')
 			return
@@ -717,7 +717,7 @@ class LmGraph:
 											   timeout=15)
 			else:
 				aReply = self._session.request('HomeLan', 'getDeviceResults', { 'DeviceName': iID }, timeout=15)				
-		except BaseException as e:
+		except Exception as e:
 			LmTools.error(str(e))
 			self.display_error('Device statistics query error.')
 			return
@@ -854,7 +854,7 @@ class AddGraphDialog(QtWidgets.QDialog):
 			if self._app.findGraphObjectLine(TYPE_DEVICE, k) == -1:
 				try:
 					aName = LmConf.MacAddrTable[k]
-				except:
+				except Exception:
 					aName = k
 				self._objectCombo.addItem(aName, userData = k)
 

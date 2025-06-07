@@ -42,7 +42,7 @@ class LiveboxInfoApi(LmApi):
     def set_livebox_info_cache(self):
         try:
             d = self.get_livebox_info()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             LmTools.error('Cannot determine Livebox model.')
             self._livebox_mac = ''
@@ -93,10 +93,10 @@ class LiveboxInfoApi(LmApi):
     def get_wan_status(self):
         d = self.call_raw('NMC', 'getWANStatus')
         if not d.get('status'):
-            raise Exception('NMC:getWANStatus query error')
+            raise LmApiException('NMC:getWANStatus query error')
         d = d.get('data')
         if not d:
-            raise Exception('NMC:getWANStatus data error')
+            raise LmApiException('NMC:getWANStatus data error')
         return d
 
 
@@ -130,7 +130,7 @@ class LiveboxInfoApi(LmApi):
                            data='{"service":"sysbus.DeviceInfo", "method":"get", "parameters":{}}',
                            headers={'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
                            timeout=LIVEBOX_SCAN_TIMEOUT + LmSession.TimeoutMargin)
-            except:
+            except Exception:
                 r = None
             if r is not None:
                 s = r.json().get('status')

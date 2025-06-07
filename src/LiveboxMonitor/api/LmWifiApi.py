@@ -49,7 +49,7 @@ class WifiApi(LmApi):
         radio = d.get('wlanradio')
         vap = d.get('wlanvap')
         if (base is None) or (radio is None) or (vap is None):
-            raise Exception('NeMo.Intf.' + i + ':getMIBs service failed.')
+            raise LmApiException('NeMo.Intf.' + i + ':getMIBs service failed.')
         return base, radio, vap
 
 
@@ -88,7 +88,7 @@ class WifiApi(LmApi):
                 self.set_guest_activation_timer(timer)
             else:
                 self.disable_guest_activation_timer()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
 
 
@@ -121,7 +121,7 @@ class WifiApi(LmApi):
     def get_scheduler_enable(self):
         try:
             d = self.call('PowerManagement', 'getProfiles')
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             # If failed, try legacy method
             return self.get_scheduler_enable_legacy()
@@ -164,7 +164,7 @@ class WifiApi(LmApi):
                 self.call('PowerManagement', 'setScheduledProfiles', {'profiles': p})
             else:
                 self.call('PowerManagement', 'setProfiles', {'profiles': [{'profile': 'WiFi', 'activate': False}]})
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(f'PowerManagement method failed with error={e}, trying legacy method.')
             return self.set_scheduler_enable_legacy(enable)
 
@@ -183,7 +183,7 @@ class WifiApi(LmApi):
         if d:
             schedule = d
         else:
-            raise Exception(f'Scheduler:getSchedule service failed for {intf_id} interface.')
+            raise LmApiException(f'Scheduler:getSchedule service failed for {intf_id} interface.')
 
         # Add schedule with proper status
         p = {'base': schedule.get('base'),
@@ -208,7 +208,7 @@ class WifiApi(LmApi):
         d = self.call('NeMo.Intf.lan', 'getMIBs', {'mibs': 'wlanvap'}, timeout=25)
         w = d.get('wlanvap')
         if w is None:
-            raise Exception('NeMo.Intf.lan:getMIBs service failed.')
+            raise LmApiException('NeMo.Intf.lan:getMIBs service failed.')
 
         # Loop on each Wifi interface
         n = 0
@@ -216,7 +216,7 @@ class WifiApi(LmApi):
             # Get current schedule info
             try:
                 d = self.call_raw('Scheduler', 'getSchedule', {'type': 'WLAN', 'ID': i}, err_str=i)
-            except BaseException as e:
+            except Exception as e:
                 err_msg = str(e)
                 LmTools.error(err_msg)
                 failed = True
@@ -246,7 +246,7 @@ class WifiApi(LmApi):
                  'schedule': schedule.get('schedule')}
             try:
                 d = self.call_no_check('Scheduler', 'addSchedule', {'type': 'WLAN', 'info': p})
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 d = None
             if not d:
@@ -268,7 +268,7 @@ class WifiApi(LmApi):
             for i in w:
                 try:
                     d = self.call_no_check('Scheduler', 'enableSchedule', {'type': 'WLAN', 'ID': i, 'enable': enable}, err_str=i)
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(str(e))
                     d = None
                 if not d:
@@ -277,7 +277,7 @@ class WifiApi(LmApi):
                     failed = True
 
         if failed:
-            raise Exception(err_msg)
+            raise LmApiException(err_msg)
 
 
     ### Determine if Livebox model supports MLO Wifi 7 technology - returns True if yes
@@ -286,7 +286,7 @@ class WifiApi(LmApi):
             try:
                 mlo = self.get_mlo_enable()
                 self._has_mlo = mlo is not None
-            except:
+            except Exception:
                 self._has_mlo = False
         return self._has_mlo
 
@@ -314,7 +314,7 @@ class WifiApi(LmApi):
         try:
             config['Enable'] = self.get_enable()
             b, w, d = self.get_intf()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return None
 
@@ -322,7 +322,7 @@ class WifiApi(LmApi):
         if self.has_mlo():
             try:
                 config['MLO'] = self.get_mlo_enable()
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 config['MLO'] = False
 
@@ -389,7 +389,7 @@ class WifiApi(LmApi):
             intf_key = c['LLIntf']
             try:
                 d = self._api._intf.get_info(intf_key)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
             else:
                 m = {}
@@ -432,7 +432,7 @@ class WifiApi(LmApi):
         if old_unique_ssid != new_unique_ssid:
             try:
                 self.set_configuration_mode(new_unique_ssid)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 status = False
 
@@ -488,7 +488,7 @@ class WifiApi(LmApi):
                 params['wlanradio'] = radio
             try:
                 self.set_wlan_config(params)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 status = False
 
@@ -496,7 +496,7 @@ class WifiApi(LmApi):
         if (old_config['Enable'] != new_config['Enable']):
             try:
                 self.set_enable(new_config['Enable'])
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 status = False             
 
@@ -504,7 +504,7 @@ class WifiApi(LmApi):
         if self.has_mlo() and (old_config['MLO'] != new_config['MLO']):
             try:
                 self.set_mlo_enable(new_config['MLO'])
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 status = False             
 
@@ -519,7 +519,7 @@ class WifiApi(LmApi):
         try:
             s = self.get_guest_status()
             b, w, d = self.get_intf(True)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             return None
 
@@ -540,7 +540,7 @@ class WifiApi(LmApi):
         # Get activation remaining time
         try:
             config['Timer'] = self.get_guest_activation_timer()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             config['Timer'] = 0
 
@@ -643,7 +643,7 @@ class WifiApi(LmApi):
                 params['wlanvap'] = vap
             try:
                 self.set_wlan_config(params)
-            except BaseException as e:
+            except Exception as e:
                 LmTools.error(str(e))
                 status = False
 
@@ -653,7 +653,7 @@ class WifiApi(LmApi):
                 self.set_guest_enable(new_config['Enable'], new_config['Duration'] // 3600)
             elif new_config['Enable']:
                 self.set_guest_activation_timer(new_config['Duration'] // 3600)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             status = False
 
@@ -669,7 +669,7 @@ class WifiApi(LmApi):
         wifi_scheduler_status = None
         try:
             d = self.get_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
         if d is None:
@@ -683,7 +683,7 @@ class WifiApi(LmApi):
         # Wifi scheduler status
         try:
             status = self.get_scheduler_enable()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             status = None
 
@@ -702,7 +702,7 @@ class WifiApi(LmApi):
         # Wifi interfaces status
         try:
             b, w, d = self.get_intf()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             b = None
             w = None
@@ -767,7 +767,7 @@ class WifiApi(LmApi):
         # Guest Wifi status
         try:
             b, w, d = self.get_intf(True)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             b = None
             w = None

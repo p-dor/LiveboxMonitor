@@ -209,7 +209,7 @@ class PrefsDialog(QtWidgets.QDialog):
 		# Load paramaters
 		try:
 			i = LmLanguages.LANGUAGES_KEY.index(LmConf.Language)
-		except:
+		except Exception:
 			i = 0
 		self._language_combo.setCurrentIndex(i)
 		self._tooltips.setChecked(LmConf.Tooltips)

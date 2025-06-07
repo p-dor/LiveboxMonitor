@@ -161,7 +161,7 @@ class LmDhcp:
             guest = dialog.get_domain() == 'Guest'
             try:
                 self._api._dhcp.add_lease(mac_addr, ip_addr, guest)
-            except BaseException as e:
+            except Exception as e:
                 self.display_error(str(e))
             self.refresh_dhcp_binding_button_click()
 
@@ -174,7 +174,7 @@ class LmDhcp:
             guest = self._dhcp_dlist.item(current_selection, DhcpCol.Domain).text() == 'Guest'
             try:
                 self._api._dhcp.delete_lease(mac_addr, guest)
-            except BaseException as e:
+            except Exception as e:
                 self.display_error(str(e))
             self.refresh_dhcp_binding_button_click()
         else:
@@ -193,7 +193,7 @@ class LmDhcp:
         # Retrieve current values
         try:
             d = self._api._dhcp.get_setup()
-        except BaseException as e:
+        except Exception as e:
             self.display_error(str(e))
             return
 
@@ -245,7 +245,7 @@ class LmDhcp:
                 i = new_dhcp_address.split('.')
                 try:
                     network = IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + new_dhcp_mask)
-                except BaseException as e:
+                except Exception as e:
                     LmTools.error(str(e))
                     self.display_error(mx('Wrong values. Error: {}', 'dhcpValErr').format(e))
                     return
@@ -259,7 +259,7 @@ class LmDhcp:
                      'PrefixLength': new_dhcp_prefix_len}
                 try:
                     self._api._dhcp.set_setup(p)
-                except BaseException as e:
+                except Exception as e:
                     self.display_error(str(e))
 
 
@@ -271,7 +271,7 @@ class LmDhcp:
         # Home domain
         try:
             d = self._api._dhcp.get_leases()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
         self.load_dhcp_bindings_in_list(d, 'Home')
@@ -279,7 +279,7 @@ class LmDhcp:
         # Guest domain
         try:
             d = self._api._dhcp.get_leases(True)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
         self.load_dhcp_bindings_in_list(d, 'Guest')
@@ -309,7 +309,7 @@ class LmDhcp:
             ip_item = NumericSortItem(ip)
             try:
                 ip_item.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(ip)))
-            except:
+            except Exception:
                 ip_item.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
             self._dhcp_dlist.setItem(i, DhcpCol.IP, ip_item)
 
@@ -342,7 +342,7 @@ class LmDhcp:
             return False
         try:    # Due to a LB firmware issue the IP can be empty even if the device is active
             return IPv4Address(ip) in network
-        except:
+        except Exception:
             return False
 
 
@@ -361,7 +361,7 @@ class LmDhcp:
             i = server.split('.')
             try:
                 return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + mask)
-            except:
+            except Exception:
                 return None
         return None
 
@@ -377,7 +377,7 @@ class LmDhcp:
         g = None
         try:
             d = self._api._dhcp.get_info()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             d = None
         if d:
@@ -400,7 +400,7 @@ class LmDhcp:
 
         try:
             d = self._api._dhcp.get_v6_server_status()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
         else:
@@ -408,7 +408,7 @@ class LmDhcp:
 
         try:
             d = self._api._dhcp.get_v6_prefix()
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
         else:
@@ -442,7 +442,7 @@ class LmDhcp:
 
         try:
             d = self._api._dhcp.get_mibs(True, True)
-        except BaseException as e:
+        except Exception as e:
             LmTools.error(str(e))
             i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4'), 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
         else:
