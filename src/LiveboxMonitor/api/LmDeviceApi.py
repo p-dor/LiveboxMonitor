@@ -20,7 +20,7 @@ class DeviceApi(LmApi):
     ### Get device topology
     def get_topology(self):
         d = self.call_no_check('TopologyDiagnostics', 'buildTopology', {'SendXmlFile': 'false'}, timeout=20)
-        if isinstance(d, list):
+        if isinstance(d, list) and len(d):
             return d
         raise Exception('TopologyDiagnostics:buildTopology query error')
 
