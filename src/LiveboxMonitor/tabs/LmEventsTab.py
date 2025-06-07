@@ -12,6 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig, LmNotif
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmThread import LmThread
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.dlg.LmNotificationSetup import NotificationSetupDialog
@@ -617,55 +618,19 @@ class LmEvents:
 
 
 # ############# Livebox events collector thread #############
-class LiveboxEventThread(QtCore.QObject):
+class LiveboxEventThread(LmThread):
     _event_received = QtCore.pyqtSignal(dict)
     _resume = QtCore.pyqtSignal()
 
     def __init__(self, api):
-        super(LiveboxEventThread, self).__init__()
-        self._session = api._session
-        self._timer = None
-        self._loop = None
-        self._is_running = False
-        self._thread = QtCore.QThread()
-        self.moveToThread(self._thread)
-        self._thread.started.connect(self.run)
-        self._resume.connect(self.resume)
-        self._thread.start()
+        super(LiveboxEventThread, self).__init__(api)
 
 
     def connect_processor(self, processor):
         self._event_received.connect(processor)
 
 
-    def run(self):
-        self._timer = QtCore.QTimer()
-        self._timer.timeout.connect(self.collect_events)
-        self._loop = QtCore.QEventLoop()
-        self.resume()
-
-
-    def resume(self):
-        if not self._is_running:
-            self._timer.start(0)
-            self._is_running = True
-            self._loop.exec()
-            self._timer.stop()
-            self._is_running = False
-
-
-    def stop(self):
-        if self._is_running:
-            self._loop.exit()
-
-
-    def quit(self):
-        self._thread.quit()
-        self._thread.wait()
-        self._thread = None
-
-
-    def collect_events(self):
+    def task(self):
         d = self._session.event_request(['Devices.Device', 'HomeLan'], timeout=2)
         if d:
             if d.get('errors'):
