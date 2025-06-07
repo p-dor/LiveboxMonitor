@@ -43,6 +43,11 @@ class IntfApi(LmApi):
         return self.call('NeMo.Intf.lo', 'getIntfs', {'traverse': 'all'})
 
 
+    ### Get interface list from HomeLan package
+    def get_raw_list(self):
+        return self.call('HomeLan.Interface', 'get')
+
+
     ### Get list of useful interfaces with key, name, type and swap stats fields
     def get_list(self):
         if self._list is None:
@@ -65,7 +70,7 @@ class IntfApi(LmApi):
 
         # Call Homeland package to get interface list
         try:
-            d = self.call('HomeLan.Interface', 'get')
+            d = self.get_raw_list()
         except Exception as e:
             LmTools.error(str(e))
             return False
@@ -159,14 +164,3 @@ class IntfApi(LmApi):
     ### Is 6GHz radio band available
     def has_radio_band_6(self):
         return self._has_radio_band_6
-
-
-    ### Get wifi interface statistics
-    def get_wifi_stats(self, wifi_intf_key):
-        return self.call('NeMo.Intf.' + wifi_intf_key, 'getStationStats')
-
-
-    ### Get interface statistics
-    # WARNING counters are recycling at 4Gb only:
-    def get_stats(self, intf_key):
-        return self.call('NeMo.Intf.' + intf_key, 'getNetDevStats')

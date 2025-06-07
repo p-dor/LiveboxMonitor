@@ -441,7 +441,7 @@ class LmDeviceList:
         if line >= 0:
             self.format_name_widget(self._dhcp_dlist, line, device_key, DhcpCol.Name)
 
-        self.graphUpdateDeviceName(device_key)
+        self.graph_update_device_name(device_key)
         self.repeaterUpdateDeviceName(device_key)
 
 
@@ -770,9 +770,9 @@ class LmDeviceList:
                 up_rate_bytes = int((up_bytes - prev_up_bytes) / elapsed)
 
             # Update potential running graph
-            self.graphUpdateDeviceEvent(device_key, int(timestamp.timestamp()),
-                                        down_bytes - prev_down_bytes,
-                                        up_bytes  - prev_up_bytes)
+            self.graph_update_device_event(device_key, int(timestamp.timestamp()),
+                                           down_bytes - prev_down_bytes,
+                                           up_bytes - prev_up_bytes)
 
         # Remember current stats
         stats = {}
@@ -1172,7 +1172,7 @@ class LiveboxWifiStatsThread(QtCore.QObject):
             if s['Type'] != 'wif':
                 continue
             try:
-                d = self._api._intf.get_wifi_stats(s['Key'])
+                d = self._api._stats.get_wifi_intf(s['Key'])
             except Exception as e:
                 LmTools.error(str(e))
             else:

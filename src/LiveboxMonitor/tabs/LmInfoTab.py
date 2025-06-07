@@ -247,7 +247,7 @@ class LmInfo:
 				s['TxBytes'] = aBytesSent
 				self._homeLanIntfStatsMap[iIntf] = s
 
-				self.graphUpdateInterfaceEvent(iIntf, int(e['Timestamp'].timestamp()), aDeltaReceived, aDeltaSent)
+				self.graph_update_interface_event(iIntf, int(e['Timestamp'].timestamp()), aDeltaReceived, aDeltaSent)
 				break
 
 
@@ -1533,7 +1533,7 @@ class LiveboxStatsThread(QtCore.QObject):
 		# WARNING counters are recycling at 4Gb only:
 		for s in self._api._intf.get_list():
 			try:
-				d = self._api._intf.get_stats(s['Key'])
+				d = self._api._stats.get_intf(s['Key'])
 			except Exception as e:
 				LmTools.error(str(e))
 			else:

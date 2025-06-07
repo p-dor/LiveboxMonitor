@@ -49,7 +49,7 @@ class AddGraphDialog(QtWidgets.QDialog):
 
 		color_label = QtWidgets.QLabel(lx('Color'), objectName='colorLabel')
 		self._color_edit = LmTools.ColorButton(objectName='colorEdit')
-		self._color_edit.set_color(DCFG_OBJECT_COLOR[self._app._graphList.rowCount() % len(DCFG_OBJECT_COLOR)])
+		self._color_edit.set_color(DCFG_OBJECT_COLOR[self._app._graph_list.rowCount() % len(DCFG_OBJECT_COLOR)])
 		self._color_edit._color_changed.connect(self.color_selected)
 
 		grid = QtWidgets.QGridLayout()
@@ -120,20 +120,20 @@ class AddGraphDialog(QtWidgets.QDialog):
 
 
 	def load_interface_list(self):
-		for i in self._app._graphValidInterfaces:
+		for i in self._app._graph_valid_interfaces:
 			k = i[0]
 			# Look if not already in the graph list
-			if self._app.findGraphObjectLine(GraphType.INTERFACE, k) == -1:
+			if self._app.find_graph_object_line(GraphType.INTERFACE, k) == -1:
 				intf = next((j for j in self._app._api._intf.get_list() if j['Key'] == k), None)
 				if intf is not None:
 					self._object_combo.addItem(intf['Name'], userData=k)
 
 
 	def load_device_list(self):
-		for d in self._app._graphValidDevices:
+		for d in self._app._graph_valid_devices:
 			k = d[0]
 			# Look if not already in the graph list
-			if self._app.findGraphObjectLine(GraphType.DEVICE, k) == -1:
+			if self._app.find_graph_object_line(GraphType.DEVICE, k) == -1:
 				try:
 					name = LmConf.MacAddrTable[k]
 				except Exception:
@@ -160,11 +160,11 @@ class AddGraphDialog(QtWidgets.QDialog):
 		type = self.get_type()
 		key = self.get_object_key()
 		if type == GraphType.INTERFACE:
-			table = self._app._graphValidInterfaces
-			frequency = self._app._statFrequencyInterfaces
+			table = self._app._graph_valid_interfaces
+			frequency = self._app._stat_frequency_interfaces
 		else:
-			table = self._app._graphValidDevices
-			frequency = self._app._statFrequencyDevices
+			table = self._app._graph_valid_devices
+			frequency = self._app._stat_frequency_devices
 
 		# Search key in the table
 		entry = next((o for o in table if o[0] == key), ['', 0, ''])
