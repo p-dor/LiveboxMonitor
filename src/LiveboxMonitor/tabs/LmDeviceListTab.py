@@ -9,6 +9,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
+from LiveboxMonitor.app.LmThread import LmThread
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmDhcpTab import DhcpCol
@@ -1119,55 +1120,19 @@ class LmDeviceList:
 
 # ############# Livebox Wifi device stats collector thread #############
 # WARNING: for an unknown reason, moving this class to a submodule causes the application to hang
-class LiveboxWifiStatsThread(QtCore.QObject):
+class LiveboxWifiStatsThread(LmThread):
     _wifi_stats_received = QtCore.pyqtSignal(dict)
     _resume = QtCore.pyqtSignal()
 
     def __init__(self, api):
-        super(LiveboxWifiStatsThread, self).__init__()
-        self._api = api
-        self._timer = None
-        self._loop = None
-        self._is_running = False
-        self._thread = QtCore.QThread()
-        self.moveToThread(self._thread)
-        self._thread.started.connect(self.run)
-        self._resume.connect(self.resume)
-        self._thread.start()
+        super(LiveboxWifiStatsThread, self).__init__(api, LmConf.StatsFrequency)
 
 
     def connect_processor(self, processor):
         self._wifi_stats_received.connect(processor)
 
 
-    def run(self):
-        self._timer = QtCore.QTimer()
-        self._timer.timeout.connect(self.collect_stats)
-        self._loop = QtCore.QEventLoop()
-        self.resume()
-
-
-    def resume(self):
-        if not self._is_running:
-            self._timer.start(LmConf.StatsFrequency)
-            self._is_running = True
-            self._loop.exec()
-            self._timer.stop()
-            self._is_running = False
-
-
-    def stop(self):
-        if self._is_running:
-            self._loop.exit()
-
-
-    def quit(self):
-        self._thread.quit()
-        self._thread.wait()
-        self._thread = None
-
-
-    def collect_stats(self):
+    def task(self):
         for s in self._api._intf.get_list():
             if s['Type'] != 'wif':
                 continue
