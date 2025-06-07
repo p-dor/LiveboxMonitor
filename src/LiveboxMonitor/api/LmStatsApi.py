@@ -1,4 +1,4 @@
-### Livebox Monitor screen & LEDs APIs ###
+### Livebox Monitor statistics APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi
 
