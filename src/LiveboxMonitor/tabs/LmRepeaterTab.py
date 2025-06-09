@@ -421,13 +421,13 @@ class LmRepeater:
 		aListLine = r.findStatsLine(aKey)
 		if aListLine >= 0:
 			aDown = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aDownBytes))
-			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+			aDown.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 			if aDownErrors:
 				aDown.setForeground(QtCore.Qt.GlobalColor.red)
 			r._statsList.setItem(aListLine, StatsCol.Down, aDown)
 
 			aUp = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aUpBytes))
-			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+			aUp.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 			if aUpErrors:
 				aUp.setForeground(QtCore.Qt.GlobalColor.red)
 			r._statsList.setItem(aListLine, StatsCol.Up, aUp)
@@ -436,7 +436,7 @@ class LmRepeater:
 				aDownRate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aDownRateBytes) + '/s')
 				if aDownDeltaErrors:
 					aDownRate.setForeground(QtCore.Qt.GlobalColor.red)
-				aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				aDownRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 			else:
 				aDownRate = QtWidgets.QTableWidgetItem('')
 			r._statsList.setItem(aListLine, StatsCol.DownRate, aDownRate)
@@ -445,7 +445,7 @@ class LmRepeater:
 				aUpRate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(aUpRateBytes) + '/s')
 				if aUpDeltaErrors:
 					aUpRate.setForeground(QtCore.Qt.GlobalColor.red)
-				aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				aUpRate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 			else:
 				aUpRate = QtWidgets.QTableWidgetItem('')
 			r._statsList.setItem(aListLine, StatsCol.UpRate, aUpRate)

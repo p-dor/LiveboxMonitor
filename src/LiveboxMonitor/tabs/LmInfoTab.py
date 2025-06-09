@@ -304,14 +304,14 @@ class LmInfo:
         if list_line >= 0:
             if down_bytes is not None:
                 down = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(down_bytes))
-                down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
                 if down_errors:
                     down.setForeground(QtCore.Qt.GlobalColor.red)
                 self._stats_list.setItem(list_line, StatsCol.Down, down)
 
             if up_bytes is not None:
                 up = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(up_bytes))
-                up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
                 if up_errors:
                     up.setForeground(QtCore.Qt.GlobalColor.red)
                 self._stats_list.setItem(list_line, StatsCol.Up, up)
@@ -321,7 +321,7 @@ class LmInfo:
                     down_rate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(down_rate_bytes) + '/s')
                     if down_delta_errors:
                         down_rate.setForeground(QtCore.Qt.GlobalColor.red)
-                    down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                    down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
                 else:
                     down_rate = QtWidgets.QTableWidgetItem('')
                 self._stats_list.setItem(list_line, StatsCol.DownRate, down_rate)
@@ -330,7 +330,7 @@ class LmInfo:
                     up_rate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(up_rate_bytes) + '/s')
                     if up_delta_errors:
                         up_rate.setForeground(QtCore.Qt.GlobalColor.red)
-                    up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                    up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
                 else:
                     up_rate = QtWidgets.QTableWidgetItem('')
                 self._stats_list.setItem(list_line, StatsCol.UpRate, up_rate)
@@ -966,7 +966,7 @@ class LmInfo:
             d = self._api._intf.get_ont_mibs()
         except Exception as e:
             LmTools.error(str(e))
-            i = self.add_info_line(self._livebox_alist, i, lx('ONT'), 'NeMo.Intf.' + ont_intf + ':getMIBs query error', LmTools.ValQual.Error)
+            i = self.add_info_line(self._livebox_alist, i, lx('ONT'), 'ONT MIBs query error', LmTools.ValQual.Error)
         else:
             i = self.add_info_line(self._livebox_alist, i, lx('VEIP PPTP UNI'), LmTools.fmt_bool(d.get('VeipPptpUni')))
             i = self.add_info_line(self._livebox_alist, i, lx('OMCI Is Tm Owner'), LmTools.fmt_bool(d.get('OmciIsTmOwner')))

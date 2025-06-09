@@ -468,7 +468,7 @@ class LmPhone:
 				aSeconds = c.get('duration')
 				aDuration = NumericSortItem(LmTools.fmt_time(aSeconds, True))
 				aDuration.setData(QtCore.Qt.ItemDataRole.UserRole, aSeconds)
-				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+				aDuration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 
 				if aMissedCall:
 					aTime.setForeground(QtGui.QBrush(QtGui.QColor(255, 0, 0)))

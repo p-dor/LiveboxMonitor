@@ -790,14 +790,14 @@ class LmDeviceList:
 
             down = NumericSortItem(LmTools.fmt_bytes(down_bytes))
             down.setData(QtCore.Qt.ItemDataRole.UserRole, down_bytes)
-            down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+            down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if down_errors:
                 down.setForeground(QtCore.Qt.GlobalColor.red)
             self._device_list.setItem(list_line, DevCol.Down, down)
 
             up = NumericSortItem(LmTools.fmt_bytes(up_bytes))
             up.setData(QtCore.Qt.ItemDataRole.UserRole, up_bytes)
-            up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+            up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if up_errors:
                 up.setForeground(QtCore.Qt.GlobalColor.red)
             self._device_list.setItem(list_line, DevCol.Up, up)
@@ -807,7 +807,7 @@ class LmDeviceList:
                 down_rate.setData(QtCore.Qt.ItemDataRole.UserRole, down_rate_bytes)
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
-                down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
                 down_rate = QtWidgets.QTableWidgetItem('')
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
@@ -817,7 +817,7 @@ class LmDeviceList:
                 up_rate.setData(QtCore.Qt.ItemDataRole.UserRole, up_rate_bytes)
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
-                up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
                 up_rate = QtWidgets.QTableWidgetItem('')
             self._device_list.setItem(list_line, DevCol.UpRate, up_rate)
@@ -1096,7 +1096,7 @@ class LmDeviceList:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 else:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.blue)
-                down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
                 down_rate = QtWidgets.QTableWidgetItem('')
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
@@ -1108,7 +1108,7 @@ class LmDeviceList:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 else:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.blue)
-                up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVertical_Mask)
+                up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
                 up_rate = QtWidgets.QTableWidgetItem('')
             self._device_list.setItem(list_line, DevCol.UpRate, up_rate)
