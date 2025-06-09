@@ -152,6 +152,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
 
         if not isinstance(d, list):
             self._app.display_error(mx('Cannot load DynDNS host list.', 'dynDnsLoadErr'))
+            self._app._task.end()
             return
 
         i = 0
