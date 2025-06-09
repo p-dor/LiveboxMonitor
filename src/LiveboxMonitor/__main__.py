@@ -67,7 +67,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         if not NO_THREAD:
             self.init_event_loop()
             self.init_wifi_stats_loop()
-            self.initStatsLoop()
+            self.init_stats_loop()
             self.initRepeaterStatsLoop()
         self._application_name = 'Livebox Monitor v' + __version__
         self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
@@ -121,7 +121,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmDeviceListTab.TAB_NAME:
                     self.create_device_list_tab()
                 case LmInfoTab.TAB_NAME:
-                    self.createLiveboxInfoTab()
+                    self.create_livebox_info_tab()
                 case LmGraphTab.TAB_NAME:
                     self.create_graph_tab()
                 case LmDeviceInfoTab.TAB_NAME:
@@ -159,56 +159,56 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmDeviceListTab.TAB_NAME:
                     if not NO_THREAD:
                         self.resume_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                 case LmInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.resumeStatsLoop()
+                        self.resume_stats_loop()
                         self.suspendRepeaterStatsLoop()
                 case LmGraphTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                     self.graph_tab_click()
                 case LmDeviceInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                 case LmEventsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                 case LmDhcpTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                     self.dhcp_tab_click()
                 case LmNatPatTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                     self.natPatTabClick()
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                     self.phoneTabClick()
                 case LmActionsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
                 case LmRepeaterTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
-                        self.suspendStatsLoop()
+                        self.suspend_stats_loop()
                         self.resumeRepeaterStatsLoop()
 
 
@@ -262,7 +262,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         if not NO_THREAD:
             self._task.start(lx('Terminating threads...'))
             self.stop_event_loop()
-            self.stopStatsLoop()
+            self.stop_stats_loop()
             self.stop_wifi_stats_loop()
             self.stopRepeaterStatsLoop()
             self._task.end()
@@ -348,22 +348,22 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             d = self._api._info.get_wan_status()
         except Exception as e:
             LmTools.error(str(e))
-            self._linkType = 'UNKNOWN'
+            self._link_type = 'UNKNOWN'
         else:
-            self._linkType = d.get('LinkType', 'UNKNOWN').upper()
+            self._link_type = d.get('LinkType', 'UNKNOWN').upper()
 
         # Determine fiber link
         model = self._api._info.get_livebox_model()
         if model >= 5:
-            self._fiberLink = True
+            self._fiber_link = True
         elif model <= 3:
-            self._fiberLink = False
+            self._fiber_link = False
         else:
             # Check link type for Livebox 4
-            self._fiberLink = (self._linkType == 'SFP')
+            self._fiber_link = (self._link_type == 'SFP')
 
-        LmTools.log_debug(1, f'Identified link type: {self._linkType}')
-        LmTools.log_debug(1, f'Identified fiber link: {self._fiberLink}')
+        LmTools.log_debug(1, f'Identified link type: {self._link_type}')
+        LmTools.log_debug(1, f'Identified fiber link: {self._fiber_link}')
 
 
     ### Determine if Pro or Residential subscription
@@ -372,16 +372,16 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             d = self._api._info.get_connection_status()
         except Exception as e:
             LmTools.error(str(e))
-            self._liveboxPro = False
+            self._livebox_pro = False
         else:
             offer_type = d.get('OfferType')
             if offer_type is None:
                 LmTools.error('Missing offer type in NMC:get, cannot determine Livebox Pro model')
-                self._liveboxPro = False
+                self._livebox_pro = False
             else:
-                self._liveboxPro = 'PRO' in offer_type.upper()
+                self._livebox_pro = 'PRO' in offer_type.upper()
 
-        LmTools.log_debug(1, f'Identified Livebox Pro: {self._liveboxPro}')
+        LmTools.log_debug(1, f'Identified Livebox Pro: {self._livebox_pro}')
 
 
     ### Exit with escape
@@ -415,9 +415,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     # Ask a question and return True if OK clicked
     def ask_question(self, question_msg):
         self._task.suspend()
-        aAnswer = LmTools.ask_question(question_msg, self)
+        answer = LmTools.ask_question(question_msg, self)
         self._task.resume()
-        return aAnswer
+        return answer
 
 
     # Display an info text popup
@@ -434,7 +434,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to Livebox infos tab
     def switch_to_livebox_infos_tab(self):
-        self._tab_widget.setCurrentWidget(self._liveboxInfoTab)
+        self._tab_widget.setCurrentWidget(self._livebox_info_tab)
 
 
     ### Switch to graph tab
