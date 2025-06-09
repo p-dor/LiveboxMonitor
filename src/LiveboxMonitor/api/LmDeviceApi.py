@@ -17,6 +17,14 @@ class DeviceApi(LmApi):
         raise LmApiException('Devices:get query error')
 
 
+    ### Get USB setup and plugged device list
+    def get_usb(self):
+        d = self.call_no_check('Devices', 'get', {'expression': 'usb'}, timeout=10)
+        if isinstance(d, list) and len(d):
+            return d
+        raise LmApiException('Devices:get query error')
+
+
     ### Get device topology
     def get_topology(self):
         d = self.call_no_check('TopologyDiagnostics', 'buildTopology', {'SendXmlFile': 'false'}, timeout=20)
