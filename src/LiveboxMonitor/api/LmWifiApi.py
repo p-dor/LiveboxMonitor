@@ -43,14 +43,7 @@ class WifiApi(LmApi):
 
     ### Get Wifi or Guest Interfaces setup - returns base, radio and vap
     def get_intf(self, guest=False):
-        i = 'guest' if guest else 'lan'
-        d = self.call('NeMo.Intf.' + i, 'getMIBs', {'mibs': 'base wlanradio wlanvap'}, timeout=25)
-        base = d.get('base')
-        radio = d.get('wlanradio')
-        vap = d.get('wlanvap')
-        if (base is None) or (radio is None) or (vap is None):
-            raise LmApiException('NeMo.Intf.' + i + ':getMIBs service failed.')
-        return base, radio, vap
+        return self._api._intf.get_wifi_mibs(guest)
 
 
     ### Get Wifi status
