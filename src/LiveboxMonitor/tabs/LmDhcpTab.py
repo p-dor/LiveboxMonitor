@@ -371,7 +371,7 @@ class LmDhcp:
         self._task.start(lx('Getting DHCP information...'))
 
         i = 0
-        i = self.addTitleLine(self._dhcp_alist, i, lx('DHCP Home Information'))
+        i = self.add_title_line(self._dhcp_alist, i, lx('DHCP Home Information'))
 
         # Home domain + DHCPv6 infos
         g = None
@@ -384,33 +384,33 @@ class LmDhcp:
             g = d.get('guest')
             d = d.get('default')
         if d:
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Enabled'), LmTools.fmt_bool(d.get('Enable')))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Status'), d.get('Status'))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Gateway'), d.get('Server'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Enabled'), LmTools.fmt_bool(d.get('Enable')))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Status'), d.get('Status'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Gateway'), d.get('Server'))
             self._home_ip_server = d.get('Server')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('Subnet Mask'), d.get('SubnetMask'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('Subnet Mask'), d.get('SubnetMask'))
             self._home_ip_mask = d.get('SubnetMask')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Start'), d.get('MinAddress'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Start'), d.get('MinAddress'))
             self._home_ip_start = d.get('MinAddress')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 End'), d.get('MaxAddress'))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Lease Time'), LmTools.fmt_time(d.get('LeaseTime')))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DNS Servers'), d.get('DNSServers'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 End'), d.get('MaxAddress'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Lease Time'), LmTools.fmt_time(d.get('LeaseTime')))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DNS Servers'), d.get('DNSServers'))
         else:
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4'), 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4'), 'DHCPv4.Server:getDHCPServerPool query error', LmTools.ValQual.Error)
 
         try:
             d = self._api._dhcp.get_v6_server_status()
         except Exception as e:
             LmTools.error(str(e))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getDHCPv6ServerStatus query error', LmTools.ValQual.Error)
         else:
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6 Status'), d)
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv6 Status'), d)
 
         try:
             d = self._api._dhcp.get_v6_prefix()
         except Exception as e:
             LmTools.error(str(e))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv6'), 'DHCPv6.Server:getPDPrefixInformation query error', LmTools.ValQual.Error)
         else:
             if d:
                 prefix = d[0].get('Prefix')
@@ -418,62 +418,62 @@ class LmDhcp:
                     prefix_len = d[0].get('PrefixLen')
                     if prefix_len is not None:
                         prefix += '/' + str(prefix_len)
-                    i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv6 Prefix'), prefix)
+                    i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv6 Prefix'), prefix)
 
         # Guest domain
         if g is not None:
-            i = self.addTitleLine(self._dhcp_alist, i, lx('DHCP Guest Information'))
+            i = self.add_title_line(self._dhcp_alist, i, lx('DHCP Guest Information'))
 
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Enabled'), LmTools.fmt_bool(g.get('Enable')))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Status'), g.get('Status'))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Gateway'), g.get('Server'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Enabled'), LmTools.fmt_bool(g.get('Enable')))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Status'), g.get('Status'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Gateway'), g.get('Server'))
             self._guest_ip_server = g.get('Server')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('Subnet Mask'), g.get('SubnetMask'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('Subnet Mask'), g.get('SubnetMask'))
             self._guest_ip_mask = g.get('SubnetMask')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Start'), g.get('MinAddress'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Start'), g.get('MinAddress'))
             self._guest_ip_start = g.get('MinAddress')
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 End'), g.get('MaxAddress'))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4 Lease Time'), LmTools.fmt_time(g.get('LeaseTime')))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DNS Servers'), g.get('DNSServers'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 End'), g.get('MaxAddress'))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4 Lease Time'), LmTools.fmt_time(g.get('LeaseTime')))
+            i = self.add_info_line(self._dhcp_alist, i, lx('DNS Servers'), g.get('DNSServers'))
 
 
         # DHCPv4
-        i = self.addTitleLine(self._dhcp_alist, i, lx('DHCPv4'))
+        i = self.add_title_line(self._dhcp_alist, i, lx('DHCPv4'))
 
         try:
             d = self._api._dhcp.get_mibs(True, True)
         except Exception as e:
             LmTools.error(str(e))
-            i = self.addInfoLine(self._dhcp_alist, i, lx('DHCPv4'), 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
+            i = self.add_info_line(self._dhcp_alist, i, lx('DHCPv4'), 'NeMo.Intf.data:getMIBs query error', LmTools.ValQual.Error)
         else:
             p = d.get('dhcp')
 
             if p is not None:
                 p = p.get('dhcp_data')
             if p is not None:
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Status'), p.get('DHCPStatus'))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Lease Time'), LmTools.fmt_time(p.get('LeaseTime')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Lease Time Remaining'), LmTools.fmt_time(p.get('LeaseTimeRemaining')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Check Authentication'), LmTools.fmt_bool(p.get('CheckAuthentication')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Authentication Information'), p.get('AuthenticationInformation'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Status'), p.get('DHCPStatus'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Lease Time'), LmTools.fmt_time(p.get('LeaseTime')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Lease Time Remaining'), LmTools.fmt_time(p.get('LeaseTimeRemaining')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Check Authentication'), LmTools.fmt_bool(p.get('CheckAuthentication')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Authentication Information'), p.get('AuthenticationInformation'))
                 i = self.load_dhcp_info_options(lx('DHCPv4 Sent Options'), i, p.get('SentOption'))
                 i = self.load_dhcp_info_options(lx('DHCPv4 Received Options'), i, p.get('ReqOption'))
 
             # DHCPv6
-            i = self.addTitleLine(self._dhcp_alist, i, lx('DHCPv6'))
+            i = self.add_title_line(self._dhcp_alist, i, lx('DHCPv6'))
 
             p = d.get('dhcpv6')
 
             if p is not None:
                 p = p.get('dhcpv6_data')
             if p is not None:
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Status'), p.get('DHCPStatus'))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('DUID'), p.get('DUID'))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Request Addresses'), LmTools.fmt_bool(p.get('RequestAddresses')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Request Prefixes'), LmTools.fmt_bool(p.get('RequestPrefixes')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Requested Options'), p.get('RequestedOptions'))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Check Authentication'), LmTools.fmt_bool(p.get('CheckAuthentication')))
-                i = self.addInfoLine(self._dhcp_alist, i, lx('Authentication Information'), p.get('AuthenticationInfo'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Status'), p.get('DHCPStatus'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('DUID'), p.get('DUID'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Request Addresses'), LmTools.fmt_bool(p.get('RequestAddresses')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Request Prefixes'), LmTools.fmt_bool(p.get('RequestPrefixes')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Requested Options'), p.get('RequestedOptions'))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Check Authentication'), LmTools.fmt_bool(p.get('CheckAuthentication')))
+                i = self.add_info_line(self._dhcp_alist, i, lx('Authentication Information'), p.get('AuthenticationInfo'))
                 i = self.load_dhcp_info_options(lx('DHCPv6 Sent Options'), i, p.get('SentOption'))
                 i = self.load_dhcp_info_options(lx('DHCPv6 Received Options'), i, p.get('ReceivedOption'))
 
@@ -483,9 +483,9 @@ class LmDhcp:
     ### Update DHCP infos list
     def load_dhcp_info_options(self, title, index, options):
         if options is not None:
-            index = self.addTitleLine(self._dhcp_alist, index, title)
+            index = self.add_title_line(self._dhcp_alist, index, title)
             for k in options:
                 o = options[k]
-                index = self.addInfoLine(self._dhcp_alist, index, str(o.get('Tag', '?')), o.get('Value'))
+                index = self.add_info_line(self._dhcp_alist, index, str(o.get('Tag', '?')), o.get('Value'))
 
         return index
