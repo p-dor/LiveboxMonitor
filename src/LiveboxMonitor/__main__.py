@@ -70,7 +70,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self.init_wifi_stats_loop()
             self.init_stats_loop()
             self.initRepeaterStatsLoop()
-        self._application_name = 'Livebox Monitor v' + __version__
+        self._application_name = f'Livebox Monitor v{__version__}'
         self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
         self.setGeometry(100, 100, 1300, 102 + LmConfig.window_height(21))
         self.show()
@@ -104,7 +104,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def init_ui(self):
         # Status bar
         self._status_bar = QtWidgets.QStatusBar()
-        self._status_bar_profile = QtWidgets.QLabel('[' + LmConf.CurrProfile['Name'] + ']')
+        self._status_bar_profile = QtWidgets.QLabel(f'[{LmConf.CurrProfile["Name"]}]')
         self._status_bar_profile.mousePressEvent = self.status_bar_profile_click
         self._status_bar.addPermanentWidget(self._status_bar_profile)
         self.setStatusBar(self._status_bar)
@@ -242,7 +242,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             tab = self._tab_widget.widget(i)
             key = tab.property('Key')
             if key is not None:
-                LmConf.Tabs.append(tab.objectName() + '_' + key)
+                LmConf.Tabs.append(f'{tab.objectName()}_{key}')
             else:
                 LmConf.Tabs.append(tab.objectName())
         LmConf.save()
@@ -280,7 +280,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def signin(self):
         while True:
             self._task.start(lx('Signing in...'))
-            self._session = LmSession(LmConf.LiveboxURL, 'LiveboxMonitor_' + LmConf.CurrProfile['Name'])
+            self._session = LmSession(LmConf.LiveboxURL, f'LiveboxMonitor_{LmConf.CurrProfile["Name"]}')
             try:
                 r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
             except Exception as e:
@@ -393,7 +393,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Return window base title to use
     def app_window_title(self):
         if (self._status_bar is None) and (len(LmConf.Profiles) > 1):
-            return self._application_name + ' [' + LmConf.CurrProfile['Name'] + ']'
+            return f'{self._application_name} [{LmConf.CurrProfile["Name"]}]'
         return self._application_name
 
 
@@ -484,7 +484,7 @@ def except_hook(type, value, trace_back):
     msg_box = QtWidgets.QMessageBox()
     msg_box.setWindowTitle(lx('Fatal Error'))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-    msg_box.setText(trace_back + '\nApplication will now quit.')
+    msg_box.setText(f'{trace_back}\nApplication will now quit.')
     msg_box.exec()
 
     QtWidgets.QApplication.quit()

@@ -612,7 +612,7 @@ class LmDeviceList:
                 return ip
             try:
                 return LmConf.MacAddrTable[device_info['MAC']]
-            except Exception:
+            except KeyError:
                 return device_info['LBName']
         return ''
 
@@ -665,7 +665,7 @@ class LmDeviceList:
                     else:
                         wifi_band = d.get('OperatingFrequencyBand', '')
                         if len(wifi_band):
-                            node_interface_name = 'Wifi ' + wifi_band
+                            node_interface_name = f'Wifi {wifi_band}'
                         else:
                             node_interface_name = d.get('Name', node_interface_key)
 
@@ -717,7 +717,7 @@ class LmDeviceList:
         for i in self._interface_map:
             if i['DevKey'] == device_key:
                 i['DevName'] = device_name
-                link_name = device_name + ' ' + i['IntName']
+                link_name = f'{device_name} {i["IntName"]}'
                 i['Name'] = link_name
 
                 # Then update each device connected to that interface
@@ -1046,7 +1046,7 @@ class LmDeviceList:
         # Cleanup event buffer
         try:
             del self._event_buffer[device_key]
-        except Exception:
+        except KeyError:
             pass
 
 
@@ -1143,12 +1143,14 @@ class LiveboxWifiStatsThread(LmThread):
             else:
                 if isinstance(d, list):
                     for stat in d:
-                        e = {}
-                        e['DeviceKey'] = stat.get('MACAddress', '')
-                        e['Key'] = e['DeviceKey'] + '_' + s['Key']
-                        e['Timestamp'] = datetime.datetime.now()
-                        e['RxBytes'] = stat.get('TxBytes', 0)
-                        e['TxBytes'] = stat.get('RxBytes', 0)
-                        e['RxErrors'] = stat.get('TxErrors', 0)
-                        e['TxErrors'] = stat.get('RxErrors', 0)
-                        self._wifi_stats_received.emit(e)
+                        mac_addr = stat.get('MACAddress', '')
+                        event = {
+                            'DeviceKey': mac_addr,
+                            'Key': f'{mac_addr}_{s["Key"]}',
+                            'Timestamp': datetime.datetime.now(),
+                            'RxBytes': stat.get('TxBytes', 0),      # Must be swapped
+                            'TxBytes': stat.get('RxBytes', 0),      # Must be swapped
+                            'RxErrors': stat.get('TxErrors', 0),    # Must be swapped
+                            'TxErrors': stat.get('RxErrors', 0)     # Must be swapped
+                        }
+                        self._wifi_stats_received.emit(event)
