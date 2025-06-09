@@ -365,9 +365,8 @@ class LmNatPat:
 		if aTypeDialog.exec():
 			t = aTypeDialog.getTypes()
 
-			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Port Forwarding Rules') + '.txt', '*.txt')
-			aFileName = aFileName[0]
-			if aFileName == '':
+			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Port Forwarding Rules') + '.txt', '*.txt')[0]
+			if not aFileName:
 				return
 
 			try:
@@ -564,9 +563,8 @@ class LmNatPat:
 		if aTypeDialog.exec():
 			t = aTypeDialog.getTypes()
 
-			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Protocol Forwarding Rules') + '.txt', '*.txt')
-			aFileName = aFileName[0]
-			if aFileName == '':
+			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Protocol Forwarding Rules') + '.txt', '*.txt')[0]
+			if not aFileName:
 				return
 
 			try:
