@@ -1,5 +1,14 @@
 ### Livebox Monitor APIs base class ###
 
+import os
+import json
+
+from LiveboxMonitor.app import LmTools
+
+
+# ################################ VARS & DEFS ################################
+TEST_MODE = None    # Set to the name of the test folder containing matching call signatures
+
 
 # ################################ Exceptions ################################
 class LmApiException(Exception):
@@ -58,14 +67,37 @@ class LmApi:
 
     ### Call a Livebox API - raise exception or return the full reply, cannot be None and contains 'status'
     def call_raw(self, package, method=None, args=None, timeout=None, err_str=None):
+        if TEST_MODE:
+            signature = self.get_call_signature(package, method, args)
+            # Look for a file in test folder matching call signature
+            test_file_path = os.path.join('test', TEST_MODE, f'{signature}.json')
+            test_file = None
+            try:
+                test_file = open(test_file_path)
+                d = json.load(test_file)
+                LmTools.log_debug(1, f'Testing with: {test_file_path}')
+            except OSError:
+                d = None    # No test file found
+            except Exception as e:
+                LmTools.error(f'Wrong JSON {signature}.json: {e}')
+                raise LmApiException(f'{self.err_str(package, method, err_str)}: bad test driver json')
+            finally:
+                if test_file is not None:
+                    test_file.close()
+        else:
+            d = None
+
         # Call Livebox API
-        try:
-            if timeout is None:
-                d = self._session.request(package, method, args)
-            else:
-                d = self._session.request(package, method, args, timeout=timeout)
-        except Exception as e:
-            raise LmApiException(f'{self.err_str(package, method, err_str)}: {e}.') from e
+        if not d:
+            try:
+                if timeout is None:
+                    d = self._session.request(package, method, args)
+                else:
+                    d = self._session.request(package, method, args, timeout=timeout)
+            except Exception as e:
+                raise LmApiException(f'{self.err_str(package, method, err_str)}: {e}.') from e
+
+        # Check reply
         if d is not None:
             e = self.get_errors(d)
             if e:
@@ -87,3 +119,15 @@ class LmApi:
         if not d:
             raise LmApiException(self.err_str(package, method, err_str) + ' service failed.')
         return d
+
+
+    ### Test mode - get API call signature
+    @staticmethod
+    def get_call_signature(package, method, args):
+        signature = package
+        if method:
+            signature += f'_{method}'
+        if args:
+            for arg in args:
+                signature += f'_{arg}-{str(args[arg]).replace(" ", "_")}'
+        return signature
