@@ -1,0 +1,157 @@
+{
+    "status": [
+        {
+            "Key": "sysbus_USBHost",
+            "DiscoverySource": "selfusb",
+            "Name": "USBHost",
+            "DeviceType": "",
+            "Active": true,
+            "Tags": "self usb interface sysbus",
+            "FirstSeen": "2022-07-04T00:17:43Z",
+            "LastConnection": "2022-07-04T00:17:43Z",
+            "LastChanged": "0001-01-01T00:00:00Z",
+            "Master": "",
+            "BusName": "sysbus",
+            "Index": "28",
+            "Names": [
+                {
+                    "Name": "USBHost",
+                    "Source": "default",
+                    "Suffix": "",
+                    "Id": "default"
+                }
+            ],
+            "DeviceTypes": []
+        },
+        {
+            "Key": "Port1",
+            "DiscoverySource": "selfusb",
+            "Name": "Port1",
+            "DeviceType": "",
+            "Active": true,
+            "Tags": "self usb port interface sysbus",
+            "FirstSeen": "2022-07-04T00:17:43Z",
+            "LastConnection": "2022-07-04T00:17:43Z",
+            "LastChanged": "2022-07-17T16:22:59Z",
+            "Master": "",
+            "BusName": "sysbus",
+            "Port": 1,
+            "USBHost": "sysbus.USBHosts.Host.1",
+            "Index": "40",
+            "Names": [
+                {
+                    "Name": "Port1",
+                    "Source": "default",
+                    "Suffix": "",
+                    "Id": "default"
+                }
+            ],
+            "DeviceTypes": []
+        },
+        {
+            "Key": "USB_1_2",
+            "DiscoverySource": "usb_dev",
+            "Name": "Mass Storage",
+            "DeviceType": "Disk",
+            "Active": true,
+            "Tags": "bus usb physical storage edev",
+            "FirstSeen": "2022-07-17T16:22:58Z",
+            "LastConnection": "2022-07-17T16:22:58Z",
+            "LastChanged": "2022-07-17T16:23:01Z",
+            "Master": "",
+            "BusName": "sysbus",
+            "Location": "",
+            "Owner": "",
+            "USBVersion": "2.00",
+            "DeviceVersion": 260,
+            "DeviceProtocol": "0x00",
+            "ProductID": 25479,
+            "VendorID": 1423,
+            "Manufacturer": "",
+            "SerialNumber": "2D7C3C69",
+            "Port": 1,
+            "Rate": "High",
+            "Index": "660",
+            "Names": [
+                {
+                    "Name": "usb_disk_1",
+                    "Source": "default",
+                    "Suffix": "",
+                    "Id": "default"
+                },
+                {
+                    "Name": "Mass Storage",
+                    "Source": "usb-prod",
+                    "Suffix": "",
+                    "Id": "usb-prod"
+                }
+            ],
+            "DeviceTypes": [
+                {
+                    "Type": "Disk",
+                    "Source": "usb",
+                    "Id": "usb"
+                }
+            ],
+            "Locations": [],
+            "Groups": []
+        },
+        {
+            "Key": "8AC9-A830",
+            "DiscoverySource": "usb_storage",
+            "Name": "USB1",
+            "DeviceType": "Partition",
+            "Active": true,
+            "Tags": "bus usb storage logical volume",
+            "FirstSeen": "2022-07-17T16:23:00Z",
+            "LastConnection": "2022-07-17T16:23:01Z",
+            "LastChanged": "2022-07-17T16:23:04Z",
+            "Master": "",
+            "BusName": "sysbus",
+            "FileSystem": "FAT32",
+            "Capacity": 956,
+            "UsedSpace": 194,
+            "LogicalVolumeIndex": 1,
+            "Index": "661",
+            "Actions": [
+                {
+                    "Function": "setName",
+                    "Name": "Edit Name",
+                    "Arguments": [
+                        {
+                            "Name": "name",
+                            "Type": "string",
+                            "Mandatory": true
+                        },
+                        {
+                            "Name": "source",
+                            "Type": "string",
+                            "Mandatory": false
+                        }
+                    ]
+                }
+            ],
+            "Names": [
+                {
+                    "Name": "USB1",
+                    "Source": "default",
+                    "Suffix": "",
+                    "Id": "default"
+                },
+                {
+                    "Name": "USB1",
+                    "Source": "storage",
+                    "Suffix": "",
+                    "Id": "storage"
+                }
+            ],
+            "DeviceTypes": [
+                {
+                    "Type": "Partition",
+                    "Source": "storage",
+                    "Id": "storage"
+                }
+            ]
+        }
+    ]
+}
