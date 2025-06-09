@@ -38,6 +38,14 @@ class LiveboxInfoApi(LmApi):
         return self.call('DeviceInfo', 'get')
 
 
+    ### Get Livebox device info
+    def get_device_info(self):
+        livebox_mac = self.get_livebox_mac()
+        if livebox_mac:
+            return self.call('Devices.Device.' + livebox_mac, 'get')
+        raise LmApiException('Cannot determine Livebox MAC address')
+
+
     ### Set Livebox basic info cache
     def set_livebox_info_cache(self):
         try:
@@ -89,6 +97,32 @@ class LiveboxInfoApi(LmApi):
         return self._software_version
 
 
+    ### Get Livebox model info
+    def get_model_info(self):
+        return self.call('UPnP-IGD', 'get')
+
+
+    ### Get Livebox reboot info
+    def get_reboot_info(self):
+        return self.call('NMC.Reboot', 'get')
+
+
+    ### Get memory status
+    def get_memory_status(self):
+        return self.call('DeviceInfo.MemoryStatus', 'get')
+
+
+    ### Get time
+    def get_time(self):
+        d = self.call_raw('Time', 'getTime')
+        if not d.get('status'):
+            raise LmApiException('Time:getTime query error')
+        d = d.get('data')
+        if not d:
+            raise LmApiException('Time:getTime data error')
+        return d
+
+
     ### Get WAN status
     def get_wan_status(self):
         d = self.call_raw('NMC', 'getWANStatus')
@@ -103,6 +137,16 @@ class LiveboxInfoApi(LmApi):
     ### Get connection status
     def get_connection_status(self):
         return self.call('NMC', 'get')
+
+
+    ### Get VLAN ID
+    def get_vlan_id(self):
+        return int(self.call_no_check('NeMo.Intf.data', 'getFirstParameter', {'name': 'VLANID'}))
+
+
+    ### Get MTU
+    def get_mtu(self):
+        return int(self.call_no_check('NeMo.Intf.data', 'getFirstParameter', {'name': 'MTU'}))
 
 
     ### Get IPv6 status
