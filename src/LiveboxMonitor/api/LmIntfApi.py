@@ -38,6 +38,50 @@ class IntfApi(LmApi):
         return self.call('NeMo.Intf.' + intf, 'get')
 
 
+    ### Get Ethernet Interfaces setup - returns base, eth
+    def get_eth_mibs(self):
+        d = self.call('NeMo.Intf.lan', 'getMIBs', {'mibs': 'base eth'}, timeout=25)
+        base = d.get('base')
+        eth = d.get('eth')
+        if (base is None) or (eth is None):
+            raise LmApiException('NeMo.Intf.lan:getMIBs service failed.')
+        return base, eth
+
+
+    ### Get Wifi or Guest Interfaces setup - returns base, radio and vap
+    def get_wifi_mibs(self, guest=False):
+        i = 'guest' if guest else 'lan'
+        d = self.call('NeMo.Intf.' + i, 'getMIBs', {'mibs': 'base wlanradio wlanvap'}, timeout=25)
+        base = d.get('base')
+        radio = d.get('wlanradio')
+        vap = d.get('wlanvap')
+        if (base is None) or (radio is None) or (vap is None):
+            raise LmApiException('NeMo.Intf.' + i + ':getMIBs service failed.')
+        return base, radio, vap
+
+
+    ### Get ONT Interface setup - if ONT intf not given will take the first one found
+    def get_ont_mibs(self, ont_intf=None):
+        if not ont_intf:
+            try:
+                ont_intf = next(i['Key'] for i in self.get_list() if i['Type'] == 'ont')
+            except StopIteration:
+                raise LmApiException('No ONT interface found.')
+
+        d = self.call('NeMo.Intf.' + ont_intf, 'getMIBs', {'mibs': 'gpon'})
+        d = d.get('gpon')
+        if d:
+            d = d.get(ont_intf)
+        if not d:
+            raise LmApiException('NeMo.Intf.' + ont_intf + ':getMIBs service failed.')
+        return d
+
+
+    ### Get SFP ONT module infos (only for Livebox 4)
+    def get_sfp_info(self):
+        return self.call('SFP', 'get')
+
+
     ### Get list of interface keys
     def get_key_list(self):
         return self.call('NeMo.Intf.lo', 'getIntfs', {'traverse': 'all'})
