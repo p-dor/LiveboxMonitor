@@ -17,7 +17,7 @@ class DhcpApi(LmApi):
 
     ### Set DHCP setup
     def set_setup(self, setup):
-        d = self.call_raw('NetMaster.LAN.default.Bridge.lan', 'setIPv4', setup)
+        self.call_raw('NetMaster.LAN.default.Bridge.lan', 'setIPv4', setup)
 
 
     ### Get DHCP leases list - default to standard domain
@@ -41,7 +41,7 @@ class DhcpApi(LmApi):
         self.call_no_check('DHCPv4.Server.Pool.' + domain, 'deleteStaticLease', {'MACAddress': mac_addr})
 
 
-    ### Get DHCP infos = domain can be default or guest or bridge_ctr, get all if None
+    ### Get DHCP infos - domain can be default or guest or bridge_ctr, get all if None
     def get_info(self, domain=None):
         if domain:
             return self.call('DHCPv4.Server', 'getDHCPServerPool', {'id': domain})
