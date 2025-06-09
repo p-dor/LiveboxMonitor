@@ -685,9 +685,8 @@ class LmPhone:
 
 	### Click on export contacts button
 	def exportContactsButtonClick(self):
-		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Livebox Contacts') + '.vcf', '*.vcf')
-		aFileName = aFileName[0]
-		if aFileName == '':
+		aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Livebox Contacts') + '.vcf', '*.vcf')[0]
+		if not aFileName:
 			return
 
 		try:
