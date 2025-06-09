@@ -63,9 +63,8 @@ class ExportTableDialog(QtWidgets.QDialog):
     # Export the table content in a CSV file
     def do_export_table(self):
         # Select file
-        file_name = QtWidgets.QFileDialog.getSaveFileName(self, lx('Save File'), '.csv', '*.csv')
-        file_name = file_name[0]
-        if file_name == '':
+        file_name = QtWidgets.QFileDialog.getSaveFileName(self, lx('Save File'), '.csv', '*.csv')[0]
+        if not file_name:
             return
 
         # Open file
