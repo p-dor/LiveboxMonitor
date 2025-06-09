@@ -2,6 +2,7 @@
 ### Python program to monitor & administrate a Livebox 4, 5, 6, 7, W7 or S ###
 
 import sys
+import os
 import re
 import traceback
 import locale
@@ -251,7 +252,6 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def get_tab_index(self, name, key):
         for i in range(self._tab_widget.count()):
             tab = self._tab_widget.widget(i)
-            key = tab.property('Key')
             if (name == tab.objectName()) and (key == tab.property('Key')):
                 return i
         return -1
