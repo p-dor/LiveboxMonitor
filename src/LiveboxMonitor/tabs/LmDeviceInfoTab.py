@@ -132,10 +132,10 @@ class LmDeviceInfo:
         if key:
             name = LmConf.MacAddrTable.get(key)
 
-            set_device_name_dialog = SetDeviceNameDialog(key, name, self._current_device_livebox_name, self._current_device_dns_name, self)
-            if set_device_name_dialog.exec():
+            dialog = SetDeviceNameDialog(key, name, self._current_device_livebox_name, self._current_device_dns_name, self)
+            if dialog.exec():
                 # Updade local name
-                name = set_device_name_dialog.get_name()
+                name = dialog.get_name()
                 if name is None:
                     self.del_device_name(key)
                 else:
@@ -143,14 +143,14 @@ class LmDeviceInfo:
 
                 try:
                     # Update Livebox name
-                    name = set_device_name_dialog.get_livebox_name()
+                    name = dialog.get_livebox_name()
                     if name is None:
                         self._api._device.del_name(key)
                     else:
                         self._api._device.set_name(key, name)
 
                     # Update DNS name
-                    name = set_device_name_dialog.get_dns_name()
+                    name = dialog.get_dns_name()
                     if name is None:
                         if self._current_device_dns_name is not None:
                             self._api._device.del_dns_name(key)
@@ -167,7 +167,7 @@ class LmDeviceInfo:
             self.info_device_list_click()
 
 
-    ### Set a device name stored in the the MacAddr table
+    ### Set a device name stored in the MacAddr table
     def set_device_name(self, device_key, device_name):
         current_name = LmConf.MacAddrTable.get(device_key)
         if current_name != device_name:
@@ -180,7 +180,7 @@ class LmDeviceInfo:
     def del_device_name(self, device_key):
         try:
             del LmConf.MacAddrTable[device_key]
-        except Exception:
+        except KeyError:
             pass
         else:
             LmConf.save_mac_addr_table()
@@ -195,16 +195,16 @@ class LmDeviceInfo:
             LmConf.load_device_icons(self._api._info.get_software_version())
             self._task.end()
 
-            set_device_type_dialog = SetDeviceTypeDialog(key, self._current_device_type, self)
-            if set_device_type_dialog.exec():
-                type = set_device_type_dialog.get_type_key()
+            dialog = SetDeviceTypeDialog(key, self._current_device_type, self)
+            if dialog.exec():
+                device_type = dialog.get_type_key()
                 try:
-                    self._api._device.set_type(key, type)
+                    self._api._device.set_type(key, device_type)
                 except Exception as e:
                     self.display_error(str(e))
                 else:
                     self.info_device_list_click()
-                    self._current_device_type = type     # LB device type update is async and refresh screen might be too fast
+                    self._current_device_type = device_type     # LB device type update is async and refresh screen might be too fast
 
 
     ### Click on WakeOnLAN button
@@ -300,30 +300,27 @@ class LmDeviceInfo:
             source = name.get('Source', '')
             if source == 'dns':
                 self._current_device_dns_name = name_str
-            i = self.add_info_line(self._info_alist, i, lx('Name'), name_str + ' (' + source + ')')
-        
+            i = self.add_info_line(self._info_alist, i, lx('Name'), f'{name_str} ({source})')
+
         dns_list = d.get('mDNSService', [])
         for dns_name in dns_list:
-            i = self.add_info_line(self._info_alist, i, lx('DNS Name'), dns_name.get('Name', '') + ' (' + dns_name.get('ServiceName', '') + ')')
+            i = self.add_info_line(self._info_alist, i, lx('DNS Name'), f'{dns_name.get("Name", "")} ({dns_name.get("ServiceName", "")})')
 
         self._current_device_type = d.get('DeviceType', '')
 
         type_list = d.get('DeviceTypes', [])
         for type in type_list:
-            i = self.add_info_line(self._info_alist, i, lx('Type'), type.get('Type', '') + ' (' + type.get('Source', '') + ')')
+            i = self.add_info_line(self._info_alist, i, lx('Type'), f'{type.get("Type", "")} ({type.get("Source", "")})')
 
         active_ip_struct = LmTools.determine_ip(d)
-        if active_ip_struct is not None:
-            active_ip = active_ip_struct.get('Address', '')
-        else:
-            active_ip = ''
+        active_ip = active_ip_struct.get('Address', '') if active_ip_struct else ''
         ipv4_list = d.get('IPv4Address', [])
         for ipv4 in ipv4_list:
             ip = ipv4.get('Address', '')
-            s = ip + ' ('
+            s = f'{ip} ('
             if (len(active_ip) > 0) and (active_ip == ip):
                 s += 'active, '
-            s += ipv4.get('Status', '') + ')'
+            s += f'{ipv4.get("Status", "")})'
 
             if ipv4.get('Reserved', False):
                 s += ' - Reserved'
@@ -331,21 +328,18 @@ class LmDeviceInfo:
 
         ipv6_list = d.get('IPv6Address', [])
         for ipv6 in ipv6_list:
-            i = self.add_info_line(self._info_alist, i, lx('IPv6 Address'), ipv6.get('Address', '') +
-                                                                            ' [' + ipv6.get('Scope', '') + ']' +
-                                                                            ' (' + ipv6.get('Status', '') + ')')
+            i = self.add_info_line(self._info_alist, i, lx('IPv6 Address'),
+                                   f'{ipv6.get("Address", "")} [{ipv6.get("Scope", "")}] ({ipv6.get("Status", "")})')
 
-        mac_addr = d.get('PhysAddress', '')
-        if len(mac_addr) == 0:
+        mac_addr = d.get('PhysAddress')
+        if not mac_addr:
             mac_addr = device_key
-        manufacturer = ''
-        if (len(LmConf.MacAddrApiKey)) and (len(mac_addr)):
+        if LmConf.MacAddrApiKey and mac_addr:
             try:
                 data = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
                 data = json.loads(data.content)
-                comp_details = data.get('vendorDetails')
-                if comp_details is not None:
-                    manufacturer = comp_details.get('companyName', '') + ' - ' + comp_details.get('countryCode', '')
+                details = data.get('vendorDetails')
+                manufacturer = f'{details.get("companyName", "")} - {details.get("countryCode", "")}' if details else ''
                 i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), manufacturer)
             except Exception as e:
                 LmTools.error(str(e))
