@@ -11,13 +11,13 @@ class StatsApi(LmApi):
 
     ### Get wifi interface statistics
     def get_wifi_intf(self, wifi_intf_key):
-        return self.call('NeMo.Intf.' + wifi_intf_key, 'getStationStats')
+        return self.call(f'NeMo.Intf.{wifi_intf_key}', 'getStationStats')
 
 
     ### Get interface statistics
     # WARNING counters are recycling at 4Gb only
     def get_intf(self, intf_key):
-        return self.call('NeMo.Intf.' + intf_key, 'getNetDevStats')
+        return self.call(f'NeMo.Intf.{intf_key}', 'getNetDevStats')
 
 
     ### Get interface statistics frequency in seconds
@@ -32,7 +32,7 @@ class StatsApi(LmApi):
 
     ### Get interface list with nb of stats samples
     def get_intf_list(self):
-        return self.call('HomeLan.Interface', 'get')
+        return self._api._intf.get_raw_list()
 
 
     ### Get device list with nb of stats samples
@@ -62,3 +62,15 @@ class StatsApi(LmApi):
             d = self.call('HomeLan', 'getDeviceResults', {'DeviceName': device_id}, timeout=15)
         d = d.get(device_id, {})
         return d.get('Traffic', [])
+
+
+    ### Get WAN counters
+    # WARNING: works but generates wrong HomeLan veip0 stats events
+    def get_wan_counters(self):
+        return self.call('HomeLan', 'getWANCounters')
+
+
+    ### Get interface counters
+    # WARNING: counters look 64bits but are recycling chaotically, after 512Gb, or 3Gb, ...
+    def get_intf_counters(self, intf_id):
+        return self.call(f'HomeLan.Interface.{intf_id}.Stats', 'get')
