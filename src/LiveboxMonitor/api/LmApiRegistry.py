@@ -6,6 +6,8 @@ from LiveboxMonitor.api.LmWifiApi import WifiApi
 from LiveboxMonitor.api.LmDeviceApi import DeviceApi
 from LiveboxMonitor.api.LmStatsApi import StatsApi
 from LiveboxMonitor.api.LmDhcpApi import DhcpApi
+from LiveboxMonitor.api.LmVoipApi import VoipApi
+from LiveboxMonitor.api.LmIptvApi import IptvApi
 from LiveboxMonitor.api.LmRebootApi import RebootApi
 from LiveboxMonitor.api.LmFirewallApi import FirewallApi
 from LiveboxMonitor.api.LmDynDnsApi import DynDnsApi
@@ -23,6 +25,8 @@ class ApiRegistry:
         self._device = DeviceApi(self)
         self._stats = StatsApi(self)
         self._dhcp = DhcpApi(self)
+        self._voip = VoipApi(self)
+        self._iptv = IptvApi(self)
         self._reboot = RebootApi(self)
         self._firewall = FirewallApi(self)
         self._dyndns = DynDnsApi(self)
