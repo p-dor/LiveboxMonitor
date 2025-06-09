@@ -329,7 +329,7 @@ class LmEvents:
 
         if h.startswith('HomeLan.Interface.') and h.endswith('.Stats'):
             intf = h[18:-6]
-            self.processIntfStatisticsEvent(intf, a)
+            self.process_intf_statistics_event(intf, a)
 
 
     ### Store event in buffer, for the UI
