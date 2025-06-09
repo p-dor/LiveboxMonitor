@@ -7,7 +7,6 @@ from ipaddress import IPv4Address
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
-from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol
@@ -244,7 +243,7 @@ class LmDhcp:
                 # Determine network prefix length
                 i = new_dhcp_address.split('.')
                 try:
-                    network = IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + new_dhcp_mask)
+                    network = IPv4Network(f'{i[0]}.{i[1]}.{i[2]}.0/{new_dhcp_mask}')
                 except Exception as e:
                     LmTools.error(str(e))
                     self.display_error(mx('Wrong values. Error: {}', 'dhcpValErr').format(e))
@@ -316,7 +315,7 @@ class LmDhcp:
             i += 1
 
 
-    ### First first available IP in the IP range
+    ### Find first available IP in the IP range
     def find_first_available_ip(self, domain, used_ips):
         # Get network
         network = self.get_domain_network(domain)
@@ -324,15 +323,10 @@ class LmDhcp:
             return ''
 
         # Setup minimum address
-        if domain == 'Home':
-            min_ip = IPv4Address(self._home_ip_start)
-        else:
-            min_ip = IPv4Address(self._guest_ip_start)
+        min_ip = IPv4Address(self._home_ip_start) if domain == 'Home' else IPv4Address(self._guest_ip_start)
 
-        # Create iterator
-        iterator = (ip for ip in network.hosts() if (str(ip) not in used_ips) and (ip >= min_ip))
-
-        return str(next(iterator))
+        # Return first available IP
+        return str(next((ip for ip in network.hosts() if (str(ip) not in used_ips) and (ip >= min_ip)), ''))
 
 
     ### Find if an IP is in domain network
@@ -360,7 +354,7 @@ class LmDhcp:
         if LmTools.is_ipv4(server):
             i = server.split('.')
             try:
-                return IPv4Network(i[0] + '.' + i[1] + '.' + i[2] + '.0/' + mask)
+                return IPv4Network(f'{i[0]}.{i[1]}.{i[2]}.0/{mask}')
             except Exception:
                 return None
         return None
