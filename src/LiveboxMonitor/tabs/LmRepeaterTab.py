@@ -708,13 +708,12 @@ class LmRepHandler:
 	### Click on Export infos button
 	def exportInfoButtonClick(self):
 		if self.isSigned():
-			aFileName = QtWidgets.QFileDialog.getSaveFileName(self._app, lx('Save File'), lx('{} Infos.txt').format(self._name), '*.txt')
-			aFileName = aFileName[0]
-			if aFileName == '':
+			aFileName = QtWidgets.QFileDialog.getSaveFileName(self._app, lx('Save File'), lx('{} Infos.txt').format(self._name), '*.txt')[0]
+			if not aFileName:
 				return
 
 			try:
-				self._app._exportFile = open(aFileName, 'w')
+				self._app._export_file = open(aFileName, 'w')
 			except Exception as e:
 				LmTools.error(str(e))
 				self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
@@ -728,12 +727,12 @@ class LmRepHandler:
 			i = self.loadLanInfo(i)
 
 			try:
-				self._app._exportFile.close()
+				self._app._export_file.close()
 			except Exception as e:
 				LmTools.error(str(e))
 				self._app.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
-			self._app._exportFile = None
+			self._app._export_file = None
 
 			self._app._task.end()
 		else:
@@ -920,12 +919,12 @@ class LmRepHandler:
 
 	### Add a title line in an info attribute/value list
 	def addTitleLine(self, iLine, iTitle):
-		return self._app.addTitleLine(self._repeaterAList, iLine, iTitle)
+		return self._app.add_title_line(self._repeaterAList, iLine, iTitle)
 
 
 	### Add a line in an info attribute/value list
 	def addInfoLine(self, iLine, iAttribute, iValue, iQualifier = LmTools.ValQual.Default):
-		return self._app.addInfoLine(self._repeaterAList, iLine, iAttribute, iValue, iQualifier)
+		return self._app.add_info_line(self._repeaterAList, iLine, iAttribute, iValue, iQualifier)
 
 
 	### Load Repeater infos
