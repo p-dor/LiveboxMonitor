@@ -172,7 +172,7 @@ class PatRuleDialog(QtWidgets.QDialog):
             'Name': self.get_name(),
             'Desc': self.get_description(),
             'ProtoNames': p,
-            'ProtoNumbers': self.parent().translateNatPatProtocols(p),
+            'ProtoNumbers': self.parent().translate_nat_pat_protocols(p),
             'IntPort': self.get_int_port(),
             'ExtPort': self.get_ext_port(),
             'IP': self.get_ip(),

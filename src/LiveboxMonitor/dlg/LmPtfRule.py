@@ -175,7 +175,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
             'Name': self.get_name(),
             'Desc': self.get_description(),
             'ProtoNames': p,
-            'ProtoNumbers': self.parent().translateNatPatProtocols(p),
+            'ProtoNumbers': self.parent().translate_nat_pat_protocols(p),
             'IP': self.get_ip(),
             'ExtIPs': self.get_ext_ips()        
         }

@@ -754,7 +754,7 @@ class LmNatPat:
             r['Desc'] = self._pat_list.item(index, PatCol.Description).text()
             p = self._pat_list.item(index, PatCol.Protocols).text()
             r['ProtoNames'] = p
-            r['ProtoNumbers'] = self.translateNatPatProtocols(p)
+            r['ProtoNumbers'] = self.translate_nat_pat_protocols(p)
             p = self._pat_list.item(index, PatCol.IntPort).text()
             r['IntPort'] = p if len(p) else None
             p = self._pat_list.item(index, PatCol.ExtPort).text()
@@ -1082,7 +1082,7 @@ class LmNatPat:
             r['Desc'] = self._ptf_list.item(index, PtfCol.Description).text()
             p = self._ptf_list.item(index, PtfCol.Protocols).text()
             r['ProtoNames'] = p
-            r['ProtoNumbers'] = self.translateNatPatProtocols(p)
+            r['ProtoNumbers'] = self.translate_nat_pat_protocols(p)
             r['IP'] = self._ptf_list.item(index, PtfCol.DestIP).text()
             e = self._ptf_list.item(index, PtfCol.ExtIPs).text()
             r['ExtIPs'] = '' if e == lx('All') else e
@@ -1259,7 +1259,7 @@ class LmNatPat:
 
 
     ### Translate Protocols for Livebox API
-    def translateNatPatProtocols(self, protocols):
+    def translate_nat_pat_protocols(self, protocols):
         t = [self._protocol_numbers[p] for p in protocols.split('/') if p in self._protocol_numbers]
         return ','.join(t)
 
