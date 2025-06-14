@@ -6,15 +6,14 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmTools, LmConfig, LmPatPtf
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
-from LiveboxMonitor.lang.LmLanguages import (get_nat_pat_label as lx,
-											 get_nat_pat_message as mx,
-											 get_pat_rule_label as lrx,
-											 get_ptf_rule_label as lfx,
-											 get_nat_pat_rule_type_label as ltx)
+from LiveboxMonitor.dlg.LmPatRule import PatRuleDialog
+from LiveboxMonitor.dlg.LmPtfRule import PtfRuleDialog
+from LiveboxMonitor.dlg.LmNatPatRuleType import NatPatRuleTypeDialog
+from LiveboxMonitor.lang.LmLanguages import get_nat_pat_label as lx, get_nat_pat_message as mx
 
 from LiveboxMonitor.__init__ import __build__
 
@@ -23,7 +22,6 @@ from LiveboxMonitor.__init__ import __build__
 
 # Tab name
 TAB_NAME = 'natPatTab'
-IPV6_SOURCE_PORT_WORKING = False		# SourcePort is available in the API but not working, at least for a LB5
 
 # List columns
 class PatCol(IntEnum):
@@ -52,60 +50,6 @@ class PtfCol(IntEnum):
 	ExtIPs = 8
 PTF_ICON_COLUMNS = [PtfCol.Enabled]
 
-RULE_TYPE_IPv4 = 'IPv4'
-RULE_TYPE_IPv6 = 'IPv6'
-RULE_TYPE_UPnP = 'UPnP'
-RULE_PAT_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6, RULE_TYPE_UPnP]
-RULE_PTF_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6]
-
-# Protocols - https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
-# Numbers
-class Protocols(IntEnum):
-	ICMP = 1
-	TCP = 6
-	UDP = 17
-	GRE = 47
-	ESP = 50
-	AH = 51
-	ICMPv6 = 58
-
-# Names
-PROTOCOL_NAMES = {
-	'1':	'ICMP',
-	'2':	'IGMP',
-	'3':	'GGP',
-	'4': 	'IPv4',
-	'5': 	'ST',
-	'6':	'TCP',
-	'7':	'CBT',
-	'8':	'EGP',
-	'9':	'IGP',
-	'10':	'BBN',
-	'11':	'NVP',
-	'12':	'PUP',
-	'17':	'UDP',
-	'18':	'MUX',
-	'20':	'HMP',
-	'27':	'RDP',
-	'33':	'DCCP',
-	'37':	'DDP',
-	'40':	'IL',
-	'41':	'IPv6',
-	'46':	'RSVP',
-	'47':	'GRE',
-	'48':	'DSR',
-	'49':	'BNA',
-	'50':	'ESP',
-	'51':	'AH',
-	'58':	'ICMPv6',
-	'75':	'PVP',
-	'84':	'IPTM',
-	'86':	'DGP',
-	'87':	'TCF',
-	'88':	'EIGRP',
-	'89':	'OSPF',
-	'92':	'MTP'
-}
 
 
 # ################################ LmNatPat class ################################
@@ -288,10 +232,10 @@ class LmNatPat:
 
 	### Click on add PAT rule button
 	def addPatRuleButtonClick(self):
-		aPatRuleDialog = PatRuleDialog(None, self)
-		if aPatRuleDialog.exec():
+		dialog = PatRuleDialog(None, self)
+		if dialog.exec():
 			self._task.start(lx('Saving rule...'))
-			r = aPatRuleDialog.getRule()
+			r = dialog.get_rule()
 			if self.savePatRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPatList()
@@ -302,13 +246,13 @@ class LmNatPat:
 	def editPatRuleButtonClick(self):
 		r = self.getSelectedPatRule()
 		if r is not None:
-			aPatRuleDialog = PatRuleDialog(r, self)
-			if aPatRuleDialog.exec():
+			dialog = PatRuleDialog(r, self)
+			if dialog.exec():
 				self._task.start(lx('Saving rule...'))
 				# First delete current rule
 				self.delPatRule(r)
 				# Then save new one
-				r = aPatRuleDialog.getRule()
+				r = dialog.get_rule()
 				if self.savePatRule(r):
 					self.commitNatPatRuleChange()
 					self.refreshPatList()
@@ -328,26 +272,26 @@ class LmNatPat:
 
 	### Click on delete all PAT rules button
 	def delAllPatRulesButtonClick(self):
-		aTypeDialog = NatPatRuleTypeDialog(True, self)
-		if aTypeDialog.exec():
+		dialog = NatPatRuleTypeDialog(True, self)
+		if dialog.exec():
 			self._task.start(lx('Deleting rules...'))
-			t = aTypeDialog.getTypes()
+			t = dialog.get_types()
 
 			# Delete all IPv4 rules if selected
-			if t[RULE_TYPE_IPv4]:
+			if t[LmPatPtf.RULE_TYPE_IPv4]:
 				self.delAllIPv4PatRule(False)
 
 			# Delete all UPnP rules if selected
-			if t[RULE_TYPE_UPnP]:
+			if t[LmPatPtf.RULE_TYPE_UPnP]:
 				self.delAllIPv4PatRule(True)
 
 			# Delete one by one IPv6 rules if selected
-			if t[RULE_TYPE_IPv6]:
+			if t[LmPatPtf.RULE_TYPE_IPv6]:
 				i = 0
 				n = self._patList.rowCount()
 				while (i < n):
 					r = self.getPatRuleFromList(i)
-					if (r is not None) and (r['Type'] == RULE_TYPE_IPv6):
+					if (r is not None) and (r['Type'] == LmPatPtf.RULE_TYPE_IPv6):
 						self.delPatRule(r)
 					i += 1
 
@@ -361,9 +305,9 @@ class LmNatPat:
 
 	### Click on export PAT rules button
 	def exportPatRulesButtonClick(self):
-		aTypeDialog = NatPatRuleTypeDialog(True, self)
-		if aTypeDialog.exec():
-			t = aTypeDialog.getTypes()
+		dialog = NatPatRuleTypeDialog(True, self)
+		if dialog.exec():
+			t = dialog.get_types()
 
 			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Port Forwarding Rules') + '.txt', '*.txt')[0]
 			if not aFileName:
@@ -497,10 +441,10 @@ class LmNatPat:
 
 	### Click on add PTF rule button
 	def addPtfRuleButtonClick(self):
-		aPtfRuleDialog = PtfRuleDialog(None, self)
-		if aPtfRuleDialog.exec():
+		dialog = PtfRuleDialog(None, self)
+		if dialog.exec():
 			self._task.start(lx('Saving rule...'))
-			r = aPtfRuleDialog.getRule()
+			r = dialog.get_rule()
 			if self.savePtfRule(r):
 				self.commitNatPatRuleChange()
 				self.refreshPtfList()
@@ -511,13 +455,13 @@ class LmNatPat:
 	def editPtfRuleButtonClick(self):
 		r = self.getSelectedPtfRule()
 		if r is not None:
-			aPtfRuleDialog = PtfRuleDialog(r, self)
-			if aPtfRuleDialog.exec():
+			dialog = PtfRuleDialog(r, self)
+			if dialog.exec():
 				self._task.start(lx('Saving rule...'))
 				# First delete current rule
 				self.delPtfRule(r)
 				# Then save new one
-				r = aPtfRuleDialog.getRule()
+				r = dialog.get_rule()
 				if self.savePtfRule(r):
 					self.commitNatPatRuleChange()
 					self.refreshPtfList()
@@ -537,10 +481,10 @@ class LmNatPat:
 
 	### Click on delete all PTF rules button
 	def delAllPtfRulesButtonClick(self):
-		aTypeDialog = NatPatRuleTypeDialog(False, self)
-		if aTypeDialog.exec():
+		dialog = NatPatRuleTypeDialog(False, self)
+		if dialog.exec():
 			self._task.start(lx('Deleting rules...'))
-			t = aTypeDialog.getTypes()
+			t = dialog.get_types()
 			i = 0
 			c = 0
 			n = self._ptfList.rowCount()
@@ -559,9 +503,9 @@ class LmNatPat:
 
 	### Click on export PTF rules button
 	def exportPtfRulesButtonClick(self):
-		aTypeDialog = NatPatRuleTypeDialog(False, self)
-		if aTypeDialog.exec():
-			t = aTypeDialog.getTypes()
+		dialog = NatPatRuleTypeDialog(False, self)
+		if dialog.exec():
+			t = dialog.get_types()
 
 			aFileName = QtWidgets.QFileDialog.getSaveFileName(self, lx('Export File'), lx('Protocol Forwarding Rules') + '.txt', '*.txt')[0]
 			if not aFileName:
@@ -662,8 +606,8 @@ class LmNatPat:
 		self._protocolNumber = {}
 
 		# Build reverse map
-		for k in PROTOCOL_NAMES:
-			self._protocolNumbers[PROTOCOL_NAMES[k]] = k
+		for k in LmPatPtf.PROTOCOL_NAMES:
+			self._protocolNumbers[LmPatPtf.PROTOCOL_NAMES[k]] = k
 
 
 	### Refresh PAT list
@@ -846,7 +790,7 @@ class LmNatPat:
 			return False
 
 		t = iRule.get('Type', 'UNK')
-		if t not in RULE_PAT_TYPES:
+		if t not in LmPatPtf.RULE_PAT_TYPES:
 			LmTools.error(f'Rule has unknown {t} type.')
 			return False
 
@@ -860,12 +804,12 @@ class LmNatPat:
 			return False
 
 		for p in aProtocols.split(','):
-			n = PROTOCOL_NAMES.get(p)
+			n = LmPatPtf.PROTOCOL_NAMES.get(p)
 			if n is None:
 				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 			n = int(p)
-			if (n != Protocols.TCP) and (n != Protocols.UDP):
+			if (n != LmPatPtf.Protocols.TCP) and (n != LmPatPtf.Protocols.UDP):
 				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 
@@ -884,7 +828,7 @@ class LmNatPat:
 		aIP = iRule.get('IP', '')
 		if len(aIP) == 0:
 			return False
-		if t == RULE_TYPE_IPv6:
+		if t == LmPatPtf.RULE_TYPE_IPv6:
 			if not LmTools.is_ipv6(aIP):
 				LmTools.error(f'Rule has wrong IPv6 {aIP} set.')
 				return False
@@ -901,7 +845,7 @@ class LmNatPat:
 					LmTools.error('Rule external IPs has an empty IP address.')
 					return False
 
-				if t == RULE_TYPE_IPv6:
+				if t == LmPatPtf.RULE_TYPE_IPv6:
 					if not LmTools.is_ipv6(aIP):
 						LmTools.error(f'Rule external IPs has a wrong IPv6 {aIP} set.')
 						return False
@@ -915,7 +859,7 @@ class LmNatPat:
 
 	### Save a PAT rule in Livebox, return True if successful
 	def savePatRule(self, iRule, iSilent = False):
-		if iRule['Type'] == RULE_TYPE_IPv6:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv6:
 			return self.saveIPv6PatRule(iRule, iSilent)
 		return self.saveIPv4PatRule(iRule, iSilent)
 
@@ -935,7 +879,7 @@ class LmNatPat:
 		r['protocol'] = iRule['ProtoNumbers']
 		r['description'] = iRule['Desc']
 		r['sourceInterface'] = 'data'
-		if iRule['Type'] == RULE_TYPE_IPv4:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv4:
 			r['origin'] = 'webui'
 		else:
 			r['origin'] = 'upnp'
@@ -974,7 +918,7 @@ class LmNatPat:
 		r['origin'] = 'webui'
 		r['sourceInterface'] = 'data'
 		p = iRule['ExtPort']
-		if IPV6_SOURCE_PORT_WORKING and (p is not None):
+		if LmPatPtf.IPV6_SOURCE_PORT_WORKING and (p is not None):
 			r['sourcePort'] = p
 		else:
 			r['sourcePort'] = ''
@@ -1009,7 +953,7 @@ class LmNatPat:
 
 	### Delete a PAT rule from Livebox, return True if successful
 	def delPatRule(self, iRule):
-		if iRule['Type'] == RULE_TYPE_IPv6:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv6:
 			return self.delIPv6PatRule(iRule)
 		return self.delIPv4PatRule(iRule)
 
@@ -1018,7 +962,7 @@ class LmNatPat:
 	def delIPv4PatRule(self, iRule):
 		# Build parameters
 		r = {}
-		if iRule['Type'] == RULE_TYPE_IPv4:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv4:
 			o = 'webui'
 		else:
 			o = 'upnp'
@@ -1149,7 +1093,7 @@ class LmNatPat:
 
 			aOrigin = r.get('SourceInterface', '')
 			if aOrigin == 'data':
-				aType = RULE_TYPE_IPv4
+				aType = LmPatPtf.RULE_TYPE_IPv4
 			else:
 				aType = aOrigin
 			self._ptfList.setItem(i, PtfCol.Type, QtWidgets.QTableWidgetItem(aType))
@@ -1263,7 +1207,7 @@ class LmNatPat:
 			return False
 
 		t = iRule.get('Type', 'UNK')
-		if t not in RULE_PTF_TYPES:
+		if t not in LmPatPtf.RULE_PTF_TYPES:
 			LmTools.error(f'Rule has unknown {t} type.')
 			return False
 
@@ -1277,20 +1221,20 @@ class LmNatPat:
 			return False
 
 		for p in aProtocols.split(','):
-			n = PROTOCOL_NAMES.get(p)
+			n = LmPatPtf.PROTOCOL_NAMES.get(p)
 			if n is None:
 				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
 			n = int(p)
-			if t == RULE_TYPE_IPv6:
-				aICMP = Protocols.ICMPv6
+			if t == LmPatPtf.RULE_TYPE_IPv6:
+				aICMP = LmPatPtf.Protocols.ICMPv6
 			else:
-				aICMP = Protocols.ICMP
-			if ((n != Protocols.TCP) and
-				(n != Protocols.UDP) and
-				(n != Protocols.AH) and
-				(n != Protocols.GRE) and
-				(n != Protocols.ESP) and
+				aICMP = LmPatPtf.Protocols.ICMP
+			if ((n != LmPatPtf.Protocols.TCP) and
+				(n != LmPatPtf.Protocols.UDP) and
+				(n != LmPatPtf.Protocols.AH) and
+				(n != LmPatPtf.Protocols.GRE) and
+				(n != LmPatPtf.Protocols.ESP) and
 				(n != aICMP)):
 				LmTools.error(f'Rule has wrong protocol {p} set.')
 				return False
@@ -1298,7 +1242,7 @@ class LmNatPat:
 		aIP = iRule.get('IP', '')
 		if len(aIP) == 0:
 			return False
-		if t == RULE_TYPE_IPv6:
+		if t == LmPatPtf.RULE_TYPE_IPv6:
 			if not LmTools.is_ipv6_pfix(aIP):
 				LmTools.error(f'Rule has wrong IPv6 {aIP} set.')
 				return False
@@ -1315,7 +1259,7 @@ class LmNatPat:
 					LmTools.error('Rule external IPs has an empty IP address.')
 					return False
 
-				if t == RULE_TYPE_IPv6:
+				if t == LmPatPtf.RULE_TYPE_IPv6:
 					if not LmTools.is_ipv6(aIP):
 						LmTools.error(f'Rule external IPs has a wrong IPv6 {aIP} set.')
 						return False
@@ -1329,7 +1273,7 @@ class LmNatPat:
 
 	### Save a PTF rule in Livebox, return True if successful
 	def savePtfRule(self, iRule, iSilent = False):
-		if iRule['Type'] == RULE_TYPE_IPv6:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv6:
 			return self.saveIPv6PtfRule(iRule, iSilent)
 		return self.saveIPv4PtfRule(iRule, iSilent)
 
@@ -1409,7 +1353,7 @@ class LmNatPat:
 
 	### Delete a PTF rule from Livebox, return True if successful
 	def delPtfRule(self, iRule):
-		if iRule['Type'] == RULE_TYPE_IPv6:
+		if iRule['Type'] == LmPatPtf.RULE_TYPE_IPv6:
 			return self.delIPv6PtfRule(iRule)
 		return self.delIPv4PtfRule(iRule)
 
@@ -1492,14 +1436,14 @@ class LmNatPat:
 	### Format Origin cell
 	@staticmethod
 	def formatNatPatOriginTableWidget(iOrigin, iIPv6):
-		###WARNING### : names must match those set by NatPatRuleTypeDialog.getTypes() method
+		###WARNING### : names must match those set by NatPatRuleTypeDialog.get_types() method
 		if iOrigin == 'webui':
 			if iIPv6:
-				return QtWidgets.QTableWidgetItem(RULE_TYPE_IPv6)
+				return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_IPv6)
 			else:
-				return QtWidgets.QTableWidgetItem(RULE_TYPE_IPv4)
+				return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_IPv4)
 		elif iOrigin == 'upnp':
-			return QtWidgets.QTableWidgetItem(RULE_TYPE_UPnP)
+			return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_UPnP)
 		else:
 			return QtWidgets.QTableWidgetItem(iOrigin)
 
@@ -1511,7 +1455,7 @@ class LmNatPat:
 		for p in iProtocols.split(','):
 			if len(r):
 				r += '/'
-			r += PROTOCOL_NAMES.get(p, 'UNK')
+			r += LmPatPtf.PROTOCOL_NAMES.get(p, 'UNK')
 		return QtWidgets.QTableWidgetItem(r)
 
 
@@ -1526,804 +1470,3 @@ class LmNatPat:
 			i = 0
 		aPort.setData(QtCore.Qt.ItemDataRole.UserRole, i)
 		return aPort
-
-
-
-# ############# PAT rule dialog #############
-class PatRuleDialog(QtWidgets.QDialog):
-	def __init__(self, iRule = None, iParent = None):
-		super(PatRuleDialog, self).__init__(iParent)
-		self.resize(390, 420)
-
-		self._ignoreSignal = False
-
-		self._enableCheckBox = QtWidgets.QCheckBox(lrx('Enabled'), objectName = 'enableCheckbox')
-
-		aTypeLabel = QtWidgets.QLabel(lrx('Type'), objectName = 'typeLabel')
-		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
-		self._typeCombo.addItems(RULE_PAT_TYPES)
-		self._typeCombo.activated.connect(self.typeSelected)
-
-		aNameLabel = QtWidgets.QLabel(lrx('Name'), objectName = 'nameLabel')
-		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
-		self._nameEdit.textChanged.connect(self.nameTyped)
-
-		aDescLabel = QtWidgets.QLabel(lrx('Description'), objectName = 'descLabel')
-		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
-		self._descEdit.setTabChangesFocus(True)
-		self._descEdit.setLineNumber(2)
-
-		aProtocolsLabel = QtWidgets.QLabel(lrx('Protocols'), objectName = 'protocolsLabel')
-		self._tcpCheckBox = QtWidgets.QCheckBox(lrx('TCP'), objectName = 'tcpCheckbox')
-		self._tcpCheckBox.clicked.connect(self.protocolClick)
-		self._udpCheckBox = QtWidgets.QCheckBox(lrx('UDP'), objectName = 'udpCheckbox')
-		self._udpCheckBox.clicked.connect(self.protocolClick)
-		aProtocolsBox = QtWidgets.QHBoxLayout()
-		aProtocolsBox.setSpacing(10)
-		aProtocolsBox.addWidget(self._tcpCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._udpCheckBox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		aPortRegExp = QtCore.QRegularExpression(LmTools.PORTS_RS)
-		aPortValidator = QtGui.QRegularExpressionValidator(aPortRegExp)
-
-		aIntPortLabel = QtWidgets.QLabel(lrx('Internal Port'), objectName = 'intPortLabel')
-		self._intPortEdit = QtWidgets.QLineEdit(objectName = 'intPortEdit')
-		self._intPortEdit.setValidator(aPortValidator)
-
-		aExtPortLabel = QtWidgets.QLabel(lrx('External Port'), objectName = 'extPortLabel')
-		self._extPortEdit = QtWidgets.QLineEdit(objectName = 'extPortEdit')
-		self._extPortEdit.setValidator(aPortValidator)
-
-		aPortBox = QtWidgets.QHBoxLayout()
-		aPortBox.addWidget(self._intPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aPortBox.addWidget(aExtPortLabel, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aPortBox.addWidget(self._extPortEdit, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		aDeviceLabel = QtWidgets.QLabel(lrx('Device'), objectName = 'deviceLabel')
-		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
-		self._deviceCombo.activated.connect(self.deviceSelected)
-
-		aIpLabel = QtWidgets.QLabel(lrx('IP Address'), objectName = 'ipLabel')
-		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
-		self._ipEdit.textChanged.connect(self.ipTyped)
-
-		aExtIPsLabel = QtWidgets.QLabel(lrx('External IPs'), objectName = 'extIPsLabel')
-		self._extIPsEdit = LmTools.MultiLinesEdit(objectName = 'extIPsEdit')
-		self._extIPsEdit.setTabChangesFocus(True)
-		self._extIPsEdit.setLineNumber(2)
-
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(self._enableCheckBox, 0, 0)
-		aGrid.addWidget(aTypeLabel, 1, 0)
-		aGrid.addWidget(self._typeCombo, 1, 1)
-		aGrid.addWidget(aNameLabel, 2, 0)
-		aGrid.addWidget(self._nameEdit, 2, 1)
-		aGrid.addWidget(aDescLabel, 3, 0)
-		aGrid.addWidget(self._descEdit, 3, 1)
-		aGrid.addWidget(aProtocolsLabel, 4, 0)
-		aGrid.addLayout(aProtocolsBox, 4, 1)
-		aGrid.addWidget(aIntPortLabel, 5, 0)
-		aGrid.addLayout(aPortBox, 5, 1)
-		aGrid.addWidget(aDeviceLabel, 6, 0)
-		aGrid.addWidget(self._deviceCombo, 6, 1)
-		aGrid.addWidget(aIpLabel, 7, 0)
-		aGrid.addWidget(self._ipEdit, 7, 1)
-		aGrid.addWidget(aExtIPsLabel, 8, 0)
-		aGrid.addWidget(self._extIPsEdit, 8, 1)
-
-		self._okButton = QtWidgets.QPushButton(lrx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lrx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.set_tooltips(self, 'patrule')
-
-		self.setWindowTitle(lrx('Port Forwarding Rule'))
-
-		if iRule is None:
-			self.setDefault()
-		else:
-			self.setRule(iRule)
-
-		self._nameEdit.setFocus()
-		self.setModal(True)
-		self.show()
-
-
-	# Set default values, for rule creation
-	def setDefault(self):
-		self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		i = RULE_PAT_TYPES.index(RULE_TYPE_IPv4)
-		self._typeCombo.setCurrentIndex(i)
-		self.typeSelected(i)
-		self._nameEdit.setText('')
-		self._descEdit.setPlainText('')
-		self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._intPortEdit.setText('1000')
-		self._extPortEdit.setText('1000')
-		self._deviceCombo.setCurrentIndex(0)
-		self._ipEdit.setText('')
-		self._extIPsEdit.setPlainText('')
-		self.setOkButtonState()
-
-
-	# Set values to existing rule, for edition
-	def setRule(self, iRule):
-		if iRule['Enable']:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		i = RULE_PAT_TYPES.index(iRule['Type'])
-		self._typeCombo.setCurrentIndex(i)
-		self.typeSelected(i)
-
-		self._nameEdit.setText(iRule['Name'])
-		self._descEdit.setPlainText(iRule['Desc'])
-
-		p = iRule['ProtoNames'].split('/')
-
-		if PROTOCOL_NAMES[str(Protocols.TCP.value)] in p:
-			self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if PROTOCOL_NAMES[str(Protocols.UDP.value)] in p:
-			self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		self._intPortEdit.setText(iRule['IntPort'])
-		self._extPortEdit.setText(iRule['ExtPort'])
-
-		aIP = iRule['IP']
-		self._ipEdit.setText(aIP)
-		self.ipTyped(aIP)
-
-		self._extIPsEdit.setPlainText(iRule['ExtIPs'])
-
-		self.setOkButtonState()
-
-
-	def getRule(self):
-		r = {}
-		r['Enable'] = self.getEnabled()
-		r['Type'] = self.getType()
-		r['Name'] = self.getName()
-		r['Desc'] = self.getDescription()
-		p = self.getProtocols()
-		r['ProtoNames'] = p
-		r['ProtoNumbers'] = self.parent().translateNatPatProtocols(p)
-		r['IntPort'] = self.getIntPort()
-		r['ExtPort'] = self.getExtPort()
-		r['IP'] = self.getIP()
-		r['ExtIPs'] = self.getExtIPs()
-		return r
-
-
-	def typeSelected(self, iIndex):
-		# Load corresponding devices
-		self.loadDeviceList()
-
-		# Adjust IP field validator
-		if self.getType() == RULE_TYPE_IPv6:
-			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6_RS + '$')
-			if not IPV6_SOURCE_PORT_WORKING:
-				self._extPortEdit.setEnabled(False)
-				self._extPortEdit.setText('')
-		else:
-			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
-			if not IPV6_SOURCE_PORT_WORKING:
-				self._extPortEdit.setEnabled(True)
-		aIPValidator = QtGui.QRegularExpressionValidator(aIPRegExp)
-		self._ipEdit.setValidator(aIPValidator)
-
-
-	def nameTyped(self, iText):
-		self.setOkButtonState()
-
-
-	def protocolClick(self):
-		self.setOkButtonState()
-
-
-	def deviceSelected(self, iIndex):
-		if not self._ignoreSignal:
-			self._ignoreSignal = True
-			self._ipEdit.setText(self._deviceCombo.currentData())
-			self._ignoreSignal = False
-
-
-	def ipTyped(self, iText):
-		if not self._ignoreSignal:
-			self._ignoreSignal = True
-			i = self._deviceCombo.findData(iText)
-			if i < 0:
-				i = 0
-			self._deviceCombo.setCurrentIndex(i)
-			self._ignoreSignal = False
-
-		self.setOkButtonState()
-
-
-	def setOkButtonState(self):
-		self._okButton.setDisabled((len(self.getName()) == 0) or
-								   (len(self.getIP()) == 0) or
-								   (len(self.getProtocols()) == 0))
-
-
-	def loadDeviceList(self):
-		t = self.getType()
-		aDeviceMap = self.parent()._device_ip_name_map
-		self._deviceCombo.clear()
-
-		# If type is UPnP load IPv4 devices
-		if t == RULE_TYPE_UPnP:
-			t = RULE_TYPE_IPv4
-
-		# Load matching devices / IPs
-		for i in aDeviceMap:
-			if aDeviceMap[i]['IPVers'] == t:
-				self._deviceCombo.addItem(self.parent().get_device_name_from_ip(i), userData = i)
-
-		# Sort by name
-		self._deviceCombo.model().sort(0)
-
-		# Insert unknown device at the beginning
-		self._deviceCombo.insertItem(0, lrx('-Unknown-'), userData = '')
-		self._deviceCombo.setCurrentIndex(0)
-		self.deviceSelected(0)
-
-
-	def accept(self):
-		t = self.getType()
-
-		# Validate IP address
-		aIP = self.getIP()
-		if t == RULE_TYPE_IPv6:
-			if not LmTools.is_ipv6(aIP):
-				self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
-				self._ipEdit.setFocus()
-				return
-		else:
-			if not LmTools.is_ipv4(aIP):
-				self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
-				self._ipEdit.setFocus()
-				return
-
-		# Validate external IP addresses
-		e = self.getExtIPs()
-		if len(e):
-			aExtIPs = e.split(',')
-			for aIP in aExtIPs:
-				if len(aIP) == 0:
-					self.parent().display_error(mx('Empty IP address.', 'emptyAddr'))
-					self._extIPsEdit.setFocus()
-					return
-
-				if t == RULE_TYPE_IPv6:
-					if not LmTools.is_ipv6(aIP):
-						self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
-						self._extIPsEdit.setFocus()
-						return
-				else:
-					if not LmTools.is_ipv4(aIP):
-						self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
-						self._extIPsEdit.setFocus()
-						return
-
-		super().accept()
-
-
-	def getEnabled(self):
-		return self._enableCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-
-
-	def getType(self):
-		return self._typeCombo.currentText()
-
-
-	def getName(self):
-		return self._nameEdit.text()
-
-
-	def getDescription(self):
-		return self._descEdit.toPlainText()
-
-
-	def getProtocols(self):
-		if self._tcpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if self._udpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-				return PROTOCOL_NAMES[str(Protocols.TCP.value)] + '/' + PROTOCOL_NAMES[str(Protocols.UDP.value)]
-			else:
-				return PROTOCOL_NAMES[str(Protocols.TCP.value)]
-		elif self._udpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			return PROTOCOL_NAMES[str(Protocols.UDP.value)]
-		else:
-			return ''
-
-
-	def getIntPort(self):
-		p = self._intPortEdit.text()
-		if len(p):
-			return p
-		return None
-
-
-	def getExtPort(self):
-		p = self._extPortEdit.text()
-		if len(p):
-			return p
-		return None
-
-
-	def getIP(self):
-		return self._ipEdit.text()
-
-
-	def getExtIPs(self):
-		return self._extIPsEdit.toPlainText()
-
-
-
-# ############# PTF rule dialog #############
-class PtfRuleDialog(QtWidgets.QDialog):
-	def __init__(self, iRule = None, iParent = None):
-		super(PtfRuleDialog, self).__init__(iParent)
-		self.resize(390, 380)
-
-		self._ignoreSignal = False
-
-		self._enableCheckBox = QtWidgets.QCheckBox(lfx('Enabled'), objectName = 'enableCheckbox')
-
-		aTypeLabel = QtWidgets.QLabel(lfx('Type'), objectName = 'typeLabel')
-		self._typeCombo = QtWidgets.QComboBox(objectName = 'typeCombo')
-		self._typeCombo.addItems(RULE_PTF_TYPES)
-		self._typeCombo.activated.connect(self.typeSelected)
-
-		aNameLabel = QtWidgets.QLabel(lfx('Name'), objectName = 'nameLabel')
-		self._nameEdit = QtWidgets.QLineEdit(objectName = 'nameEdit')
-		self._nameEdit.textChanged.connect(self.nameTyped)
-
-		aDescLabel = QtWidgets.QLabel(lfx('Description'), objectName = 'descLabel')
-		self._descEdit = LmTools.MultiLinesEdit(objectName = 'descEdit')
-		self._descEdit.setTabChangesFocus(True)
-		self._descEdit.setLineNumber(2)
-
-		aProtocolsLabel = QtWidgets.QLabel(lfx('Protocols'), objectName = 'protocolsLabel')
-		self._tcpCheckBox = QtWidgets.QCheckBox(lfx('TCP'), objectName = 'tcpCheckbox')
-		self._tcpCheckBox.clicked.connect(self.protocolClick)
-		self._udpCheckBox = QtWidgets.QCheckBox(lfx('UDP'), objectName = 'udpCheckbox')
-		self._udpCheckBox.clicked.connect(self.protocolClick)
-		self._ahCheckBox = QtWidgets.QCheckBox(lfx('AH'), objectName = 'ahCheckbox')
-		self._ahCheckBox.clicked.connect(self.protocolClick)
-		self._greCheckBox = QtWidgets.QCheckBox(lfx('GRE'), objectName = 'greCheckbox')
-		self._greCheckBox.clicked.connect(self.protocolClick)
-		self._espCheckBox = QtWidgets.QCheckBox(lfx('ESP'), objectName = 'espCheckbox')
-		self._espCheckBox.clicked.connect(self.protocolClick)
-		self._icmpCheckBox = QtWidgets.QCheckBox(lfx('ICMP'), objectName = 'icmpCheckbox')
-		self._icmpCheckBox.clicked.connect(self.protocolClick)
-		aProtocolsBox = QtWidgets.QHBoxLayout()
-		aProtocolsBox.setSpacing(10)
-		aProtocolsBox.addWidget(self._tcpCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._udpCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._ahCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._greCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._espCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aProtocolsBox.addWidget(self._icmpCheckBox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		aPortBox = QtWidgets.QHBoxLayout()
-		aPortBox.setSpacing(25)
-
-		aDeviceLabel = QtWidgets.QLabel(lfx('Device'), objectName = 'deviceLabel')
-		self._deviceCombo = QtWidgets.QComboBox(objectName = 'deviceCombo')
-		self._deviceCombo.activated.connect(self.deviceSelected)
-
-		aIpLabel = QtWidgets.QLabel(lfx('IP Address'), objectName = 'ipLabel')
-		self._ipEdit = QtWidgets.QLineEdit(objectName = 'ipEdit')
-		self._ipEdit.textChanged.connect(self.ipTyped)
-
-		aExtIPsLabel = QtWidgets.QLabel(lfx('External IPs'), objectName = 'extIPsLabel')
-		self._extIPsEdit = LmTools.MultiLinesEdit(objectName = 'extIPsEdit')
-		self._extIPsEdit.setTabChangesFocus(True)
-		self._extIPsEdit.setLineNumber(2)
-
-		aGrid = QtWidgets.QGridLayout()
-		aGrid.setSpacing(10)
-		aGrid.addWidget(self._enableCheckBox, 0, 0)
-		aGrid.addWidget(aTypeLabel, 1, 0)
-		aGrid.addWidget(self._typeCombo, 1, 1)
-		aGrid.addWidget(aNameLabel, 2, 0)
-		aGrid.addWidget(self._nameEdit, 2, 1)
-		aGrid.addWidget(aDescLabel, 3, 0)
-		aGrid.addWidget(self._descEdit, 3, 1)
-		aGrid.addWidget(aProtocolsLabel, 4, 0)
-		aGrid.addLayout(aProtocolsBox, 4, 1)
-		aGrid.addWidget(aDeviceLabel, 5, 0)
-		aGrid.addWidget(self._deviceCombo, 5, 1)
-		aGrid.addWidget(aIpLabel, 6, 0)
-		aGrid.addWidget(self._ipEdit, 6, 1)
-		aGrid.addWidget(aExtIPsLabel, 7, 0)
-		aGrid.addWidget(self._extIPsEdit, 7, 1)
-
-		self._okButton = QtWidgets.QPushButton(lfx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(lfx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aGrid, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.set_tooltips(self, 'ptfrule')
-
-		self.setWindowTitle(lfx('Protocol Forwarding Rule'))
-
-		if iRule is None:
-			self.setDefault()
-		else:
-			self.setRule(iRule)
-
-		self._nameEdit.setFocus()
-		self.setModal(True)
-		self.show()
-
-
-	# Set default values, for rule creation
-	def setDefault(self):
-		self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		i = RULE_PTF_TYPES.index(RULE_TYPE_IPv4)
-		self._typeCombo.setCurrentIndex(i)
-		self.typeSelected(i)
-		self._nameEdit.setText('')
-		self._descEdit.setPlainText('')
-		self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._ahCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		self._greCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._espCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._icmpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self._deviceCombo.setCurrentIndex(0)
-		self._ipEdit.setText('')
-		self._extIPsEdit.setPlainText('')
-		self.setOkButtonState()
-
-
-	# Set values to existing rule, for edition
-	def setRule(self, iRule):
-		if iRule['Enable']:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._enableCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		t = iRule['Type']
-		i = RULE_PTF_TYPES.index(t)
-		self._typeCombo.setCurrentIndex(i)
-		self.typeSelected(i)
-
-		self._nameEdit.setText(iRule['Name'])
-		self._descEdit.setPlainText(iRule['Desc'])
-
-		p = iRule['ProtoNames'].split('/')
-
-		if PROTOCOL_NAMES[str(Protocols.TCP.value)] in p:
-			self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._tcpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if PROTOCOL_NAMES[str(Protocols.UDP.value)] in p:
-			self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._udpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if PROTOCOL_NAMES[str(Protocols.AH.value)] in p:
-			self._ahCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._ahCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if PROTOCOL_NAMES[str(Protocols.GRE.value)] in p:
-			self._greCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._greCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if PROTOCOL_NAMES[str(Protocols.ESP.value)] in p:
-			self._espCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._espCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		if t == RULE_TYPE_IPv6:
-			aICMP = Protocols.ICMPv6.value
-		else:
-			aICMP = Protocols.ICMP.value
-		if PROTOCOL_NAMES[str(aICMP)] in p:
-			self._icmpCheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		else:
-			self._icmpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-		aIP = iRule['IP']
-		self._ipEdit.setText(aIP)
-		self.ipTyped(aIP)
-
-		self._extIPsEdit.setPlainText(iRule['ExtIPs'])
-
-		self.setOkButtonState()
-
-
-	def getRule(self):
-		r = {}
-		r['Enable'] = self.getEnabled()
-		r['Type'] = self.getType()
-		r['Name'] = self.getName()
-		r['Desc'] = self.getDescription()
-		p = self.getProtocols()
-		r['ProtoNames'] = p
-		r['ProtoNumbers'] = self.parent().translateNatPatProtocols(p)
-		r['IP'] = self.getIP()
-		r['ExtIPs'] = self.getExtIPs()
-		return r
-
-
-	def typeSelected(self, iIndex):
-		# Load corresponding devices
-		self.loadDeviceList()
-
-		# Adjust IP field validator
-		if self.getType() == RULE_TYPE_IPv6:
-			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv6Pfix_RS + '$')
-		else:
-			aIPRegExp = QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$')
-		aIPValidator = QtGui.QRegularExpressionValidator(aIPRegExp)
-		self._ipEdit.setValidator(aIPValidator)
-
-
-	def nameTyped(self, iText):
-		self.setOkButtonState()
-
-
-	def protocolClick(self):
-		self.setOkButtonState()
-
-
-	def deviceSelected(self, iIndex):
-		if not self._ignoreSignal:
-			self._ignoreSignal = True
-			self._ipEdit.setText(self._deviceCombo.currentData())
-			self._ignoreSignal = False
-
-
-	def ipTyped(self, iText):
-		if not self._ignoreSignal:
-			self._ignoreSignal = True
-			i = self._deviceCombo.findData(iText)
-			if i < 0:
-				i = 0
-			self._deviceCombo.setCurrentIndex(i)
-			self._ignoreSignal = False
-
-		self.setOkButtonState()
-
-
-	def setOkButtonState(self):
-		self._okButton.setDisabled((len(self.getName()) == 0) or
-								   (len(self.getIP()) == 0) or
-								   (len(self.getProtocols()) == 0))
-
-
-	def loadDeviceList(self):
-		t = self.getType()
-		aDeviceMap = self.parent()._device_ip_name_map
-		self._deviceCombo.clear()
-
-		# Load matching devices / IPs
-		for i in aDeviceMap:
-			if aDeviceMap[i]['IPVers'] == t:
-				self._deviceCombo.addItem(self.parent().get_device_name_from_ip(i), userData = i)
-
-		# Sort by name
-		self._deviceCombo.model().sort(0)
-
-		# Insert unknown device at the beginning
-		self._deviceCombo.insertItem(0, lfx('-Unknown-'), userData = '')
-		self._deviceCombo.setCurrentIndex(0)
-		self.deviceSelected(0)
-
-
-	def accept(self):
-		t = self.getType()
-
-		# Validate IP address
-		aIP = self.getIP()
-		if t == RULE_TYPE_IPv6:
-
-			if not LmTools.is_ipv6_pfix(aIP):
-				self.parent().display_error(mx('{} is not a valid IPv6 address or prefix.', 'ipv6AddrErr').format(aIP))
-				self._ipEdit.setFocus()
-				return
-		else:
-			if not LmTools.is_ipv4(aIP):
-				self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
-				self._ipEdit.setFocus()
-				return
-
-		# Validate external IP addresses
-		e = self.getExtIPs()
-		if len(e):
-			aExtIPs = e.split(',')
-			for aIP in aExtIPs:
-				if len(aIP) == 0:
-					self.parent().display_error(mx('Empty IP address.', 'emptyAddr'))
-					self._extIPsEdit.setFocus()
-					return
-
-				if t == RULE_TYPE_IPv6:
-					if not LmTools.is_ipv6(aIP):
-						self.parent().display_error(mx('{} is not a valid IPv6 address.', 'ipv6AddrErr').format(aIP))
-						self._extIPsEdit.setFocus()
-						return
-				else:
-					if not LmTools.is_ipv4(aIP):
-						self.parent().display_error(mx('{} is not a valid IPv4 address.', 'ipv4AddrErr').format(aIP))
-						self._extIPsEdit.setFocus()
-						return
-
-		super().accept()
-
-
-	def getEnabled(self):
-		return self._enableCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-
-
-	def getType(self):
-		return self._typeCombo.currentText()
-
-
-	def getName(self):
-		return self._nameEdit.text()
-
-
-	def getDescription(self):
-		return self._descEdit.toPlainText()
-
-
-	def getProtocols(self):
-		p = ''
-
-		if self._tcpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			p += PROTOCOL_NAMES[str(Protocols.TCP.value)]
-
-		if self._udpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if len(p):
-				p += '/'
-			p += PROTOCOL_NAMES[str(Protocols.UDP.value)]
-
-		if self._ahCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if len(p):
-				p += '/'
-			p += PROTOCOL_NAMES[str(Protocols.AH.value)]
-
-		if self._greCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if len(p):
-				p += '/'
-			p += PROTOCOL_NAMES[str(Protocols.GRE.value)]
-
-		if self._espCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if len(p):
-				p += '/'
-			p += PROTOCOL_NAMES[str(Protocols.ESP.value)]
-
-		if self._icmpCheckBox.checkState() == QtCore.Qt.CheckState.Checked:
-			if len(p):
-				p += '/'
-			if self.getType() == RULE_TYPE_IPv6:
-				aICMP = Protocols.ICMPv6.value
-			else:
-				aICMP = Protocols.ICMP.value
-			p += PROTOCOL_NAMES[str(aICMP)]
-
-		return p
-
-
-	def getIP(self):
-		return self._ipEdit.text()
-
-
-	def getExtIPs(self):
-		return self._extIPsEdit.toPlainText()
-
-
-
-# ############# NAT/PAT rule type selection dialog #############
-class NatPatRuleTypeDialog(QtWidgets.QDialog):
-	def __init__(self, iUPnP, iParent = None):
-		super(NatPatRuleTypeDialog, self).__init__(iParent)
-		self.setMinimumWidth(230)
-		self.resize(230, 150)
-
-		self._upnp = iUPnP
-
-		self._ipV4CheckBox = QtWidgets.QCheckBox(RULE_TYPE_IPv4, objectName = 'ipV4Checkbox')
-		self._ipV4CheckBox.clicked.connect(self.setOkButtonState)
-		self._ipV6CheckBox = QtWidgets.QCheckBox(RULE_TYPE_IPv6, objectName = 'ipV6Checkbox')
-		self._ipV6CheckBox.clicked.connect(self.setOkButtonState)
-		if iUPnP:
-			self._upnpCheckBox = QtWidgets.QCheckBox(RULE_TYPE_UPnP, objectName = 'upnpCheckbox')
-			self._upnpCheckBox.clicked.connect(self.setOkButtonState)
-
-		aVCBox = QtWidgets.QVBoxLayout()
-		aVCBox.setSpacing(10)
-		aVCBox.addWidget(self._ipV4CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		aVCBox.addWidget(self._ipV6CheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-		if iUPnP:
-			aVCBox.addWidget(self._upnpCheckBox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-
-		self._okButton = QtWidgets.QPushButton(ltx('OK'), objectName = 'ok')
-		self._okButton.clicked.connect(self.accept)
-		self._okButton.setDefault(True)
-		aCancelButton = QtWidgets.QPushButton(ltx('Cancel'), objectName = 'cancel')
-		aCancelButton.clicked.connect(self.reject)
-		aHBox = QtWidgets.QHBoxLayout()
-		aHBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.setSpacing(10)
-		aHBox.addWidget(self._okButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-		aHBox.addWidget(aCancelButton, 0, QtCore.Qt.AlignmentFlag.AlignRight)
-
-		aVBox = QtWidgets.QVBoxLayout(self)
-		aVBox.addLayout(aVCBox, 0)
-		aVBox.addLayout(aHBox, 1)
-
-		LmConfig.set_tooltips(self, 'nprtype')
-
-		self.setWindowTitle(ltx('Select rule types'))
-
-		self.setDefault()
-
-		self.setModal(True)
-		self.show()
-
-
-	# Set default values
-	def setDefault(self):
-		self._ipV4CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		self._ipV6CheckBox.setCheckState(QtCore.Qt.CheckState.Checked)
-		if self._upnp:
-			self._upnpCheckBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
-		self.setOkButtonState()
-
-
-	def getTypes(self):
-		t = {}
-		t[RULE_TYPE_IPv4] = self._ipV4CheckBox.checkState() == QtCore.Qt.CheckState.Checked
-		t[RULE_TYPE_IPv6] = self._ipV6CheckBox.checkState() == QtCore.Qt.CheckState.Checked
-		if self._upnp:
-			t[RULE_TYPE_UPnP] = self._upnpCheckBox.checkState() == QtCore.Qt.CheckState.Checked
-		return t
-
-
-	def setOkButtonState(self):
-		if self._upnp:
-			aState = ((self._ipV4CheckBox.checkState() == QtCore.Qt.CheckState.Unchecked) and
-					  (self._ipV6CheckBox.checkState() == QtCore.Qt.CheckState.Unchecked) and
-					  (self._upnpCheckBox.checkState() == QtCore.Qt.CheckState.Unchecked))
-		else:
-			aState = ((self._ipV4CheckBox.checkState() == QtCore.Qt.CheckState.Unchecked) and
-					  (self._ipV6CheckBox.checkState() == QtCore.Qt.CheckState.Unchecked))
-
-		self._okButton.setDisabled(aState)
