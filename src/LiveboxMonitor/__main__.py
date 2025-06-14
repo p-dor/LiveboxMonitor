@@ -132,7 +132,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmDhcpTab.TAB_NAME:
                     self.create_dhcp_tab()
                 case LmNatPatTab.TAB_NAME:
-                    self.createNatPatTab()
+                    self.create_nat_pat_tab()
                 case LmPhoneTab.TAB_NAME:
                     self.createPhoneTab()
                 case LmActionsTab.TAB_NAME:
@@ -194,7 +194,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
-                    self.natPatTabClick()
+                    self.nat_pat_tab_click()
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
@@ -257,11 +257,13 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def closeEvent(self, event):
         if not NO_THREAD:
             self._task.start(lx('Terminating threads...'))
-            self.stop_event_loop()
-            self.stop_stats_loop()
-            self.stop_wifi_stats_loop()
-            self.stopRepeaterStatsLoop()
-            self._task.end()
+            try:
+                self.stop_event_loop()
+                self.stop_stats_loop()
+                self.stop_wifi_stats_loop()
+                self.stopRepeaterStatsLoop()
+            finally:
+                self._task.end()
         event.accept()
 
 
@@ -282,7 +284,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             except Exception as e:
                 LmTools.error(str(e))
                 r = -1
-            self._task.end()
+            finally:
+                self._task.end()
             if r > 0:
                 return True
             self._session = None
@@ -394,33 +397,43 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 
     # Display an error popup
-    def display_error(self, error_msg):
-        self._task.suspend()
-        LmTools.error(error_msg)
-        LmTools.display_error(error_msg, self)
-        self._task.resume()
+    def display_error(self, error_msg, silent=False):
+        LmTools.error(error_msg.rstrip())
+
+        if not silent:
+            self._task.suspend()
+            try:
+                LmTools.display_error(error_msg, self)
+            finally:
+                self._task.resume()
 
 
     # Display a status popup
     def display_status(self, status_msg):
         self._task.suspend()
-        LmTools.display_status(status_msg, self)
-        self._task.resume()
+        try:
+            LmTools.display_status(status_msg, self)
+        finally:
+            self._task.resume()
 
 
     # Ask a question and return True if OK clicked
     def ask_question(self, question_msg):
         self._task.suspend()
-        answer = LmTools.ask_question(question_msg, self)
-        self._task.resume()
+        try:
+            answer = LmTools.ask_question(question_msg, self)
+        finally:
+            self._task.resume()
         return answer
 
 
     # Display an info text popup
     def display_infos(self, title, info_msg, info_doc=None):
         self._task.suspend()
-        LmTools.display_infos(title, info_msg, info_doc, self)
-        self._task.resume()
+        try:
+            LmTools.display_infos(title, info_msg, info_doc, self)
+        finally:
+            self._task.resume()
 
 
     ### Switch to device list tab
@@ -455,7 +468,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to NAT/PAT tab
     def switch_to_nat_pat_tab(self):
-        self._tab_widget.setCurrentWidget(self._natPatTab)
+        self._tab_widget.setCurrentWidget(self._nat_pat_tab)
 
 
     ### Switch to phone tab
