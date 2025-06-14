@@ -390,96 +390,112 @@ class LmInfo:
     def livebox_info_button_click(self):
         self._task.start(lx('Getting Livebox information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_livebox_info()
+            self.load_livebox_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on Internet infos button
     def internet_info_button_click(self):
         self._task.start(lx('Getting Internet information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_internet_info()
+            self.load_internet_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on Wifi infos button
     def wifi_info_button_click(self):
         self._task.start(lx('Getting Wifi information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_wifi_info()
+            self.load_wifi_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on LAN infos button
     def lan_info_button_click(self):
         self._task.start(lx('Getting LAN information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_lan_info()
+            self.load_lan_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on ONT infos button
     def ont_info_button_click(self):
         self._task.start(lx('Getting ONT information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_ont_info()
+            self.load_ont_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on VoIP infos button
     def voip_info_button_click(self):
         self._task.start(lx('Getting VoIP information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_voip_info()
+            self.load_voip_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on IPTV infos button
     def iptv_info_button_click(self):
         self._task.start(lx('Getting IPTV information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_iptv_info()
+            self.load_iptv_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on USB infos button
     def usb_info_button_click(self):
         self._task.start(lx('Getting USB information...'))
 
-        self._livebox_alist.clearContents()
-        self._livebox_alist.setRowCount(0)
+        try:
+            self._livebox_alist.clearContents()
+            self._livebox_alist.setRowCount(0)
 
-        self.load_usb_info()
+            self.load_usb_info()
 
-        self._task.end()
+        finally:
+            self._task.end()
 
 
     ### Click on Export infos button
@@ -497,18 +513,20 @@ class LmInfo:
 
         self._task.start(lx('Exporting all information...'))
 
-        i = 0
-        i = self.load_livebox_info(i)
-        i = self.load_internet_info(i)
-        i = self.load_wifi_info(i)
-        i = self.load_lan_info(i)
-        if self._fiber_link:
-            i = self.load_ont_info(i)
-        i = self.load_voip_info(i)
-        i = self.load_iptv_info(i)
-        i = self.load_usb_info(i)
+        try:
+            i = 0
+            i = self.load_livebox_info(i)
+            i = self.load_internet_info(i)
+            i = self.load_wifi_info(i)
+            i = self.load_lan_info(i)
+            if self._fiber_link:
+                i = self.load_ont_info(i)
+            i = self.load_voip_info(i)
+            i = self.load_iptv_info(i)
+            i = self.load_usb_info(i)
 
-        self._task.end()
+        finally:
+            self._task.end()
 
         try:
             self._export_file.close()

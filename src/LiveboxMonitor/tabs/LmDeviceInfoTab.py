@@ -336,8 +336,9 @@ class LmDeviceInfo:
             mac_addr = device_key
         if LmConf.MacAddrApiKey and mac_addr:
             try:
-                data = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
-                data = json.loads(data.content)
+                resp = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
+                resp.raise_for_status()     # Check HTTP status code
+                data = resp.json()
                 details = data.get('vendorDetails')
                 manufacturer = f'{details.get("companyName", "")} - {details.get("countryCode", "")}' if details else ''
                 i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), manufacturer)

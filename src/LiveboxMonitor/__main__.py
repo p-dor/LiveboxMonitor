@@ -223,16 +223,12 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         # If nothing in config return the standard order
         if LmConf.Tabs is None:
             return TAB_ORDER
-        else:
-            # Rebuild the list by checking in case it would be corrupted / incomplete
-            o = []
-            for t in LmConf.Tabs:
-                if t in TAB_ORDER:
-                    o.append(t)
-            for t in TAB_ORDER:
-                if t not in LmConf.Tabs:
-                    o.append(t)
-            return o
+
+        # Rebuild the list by checking in case it would be corrupted / incomplete
+        # Keep the order from config for known tabs, then add any missing standard tabs
+        tabs = [t for t in LmConf.Tabs if t in TAB_ORDER]
+        tabs += [t for t in TAB_ORDER if t not in tabs]
+        return tabs
 
 
     ### Save tabs order in configuration

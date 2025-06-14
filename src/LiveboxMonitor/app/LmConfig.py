@@ -352,8 +352,9 @@ def set_livebox_model(model):
 def release_check():
     # Call GitHub API to fetch latest release infos
     try:
-        d = requests.get(GITRELEASE_URL.format(GIT_REPO), timeout=1)
-        d = json.loads(d.content)
+        resp = requests.get(GITRELEASE_URL.format(GIT_REPO), timeout=1)
+        resp.raise_for_status()     # Check HTTP status code
+        d = resp.json()
         v = d['tag_name']
     except Exception as e:
         LmTools.error(f'Cannot get latest release infos. Error: {e}')

@@ -586,11 +586,12 @@ class LmPhone:
 	def isSpam(iPhoneNumber):
 		if len(LmConf.CallFilterApiKey) and len(iPhoneNumber):
 			try:
-				aData = requests.get(CALLFILTER_URL.format(LmConf.CallFilterApiKey, iPhoneNumber), timeout = 2)
-				aData = json.loads(aData.content)
-				aSpam = aData.get('blocked')
-				if aSpam is not None:
-					return aSpam != 0
+				resp = requests.get(CALLFILTER_URL.format(LmConf.CallFilterApiKey, iPhoneNumber), timeout=2)
+				resp.raise_for_status()     # Check HTTP status code
+				data = resp.json()
+				spam = data.get('blocked')
+				if spam is not None:
+					return spam != 0
 				else:
 					LmTools.error('CallFilter response error: no blocked field')
 			except Exception as e:
