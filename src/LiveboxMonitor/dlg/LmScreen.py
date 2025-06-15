@@ -26,10 +26,7 @@ class ScreenDialog(QtWidgets.QDialog):
         self._orange_value.setMinimumWidth(20)
 
         self._show_wifi_password_checkbox = QtWidgets.QCheckBox(lx('Show Wifi Password'), objectName='showWifiPasswordCheckbox')
-        if show_wifi_password:
-            self._show_wifi_password_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-            self._show_wifi_password_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._show_wifi_password_checkbox.setChecked(show_wifi_password)
 
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
@@ -70,4 +67,4 @@ class ScreenDialog(QtWidgets.QDialog):
 
 
     def get_show_wifi_password(self):
-        return self._show_wifi_password_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+        return self._show_wifi_password_checkbox.isChecked()

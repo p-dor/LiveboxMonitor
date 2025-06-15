@@ -19,7 +19,7 @@ class ExportTableDialog(QtWidgets.QDialog):
 
         options_label = QtWidgets.QLabel(lx('Options'), objectName='optionsLabel')
         self._export_header_checkbox = QtWidgets.QCheckBox(lx('Export Header'), objectName='exportHeaderCheckbox')
-        self._export_header_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+        self._export_header_checkbox.setChecked(True)
 
         columns_label = QtWidgets.QLabel(lx('Columns'), objectName='columnsLabel')
 
@@ -32,7 +32,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         self._col_checkboxes = []
         for col in range(table_widget.columnCount()):
             self._col_checkbox = QtWidgets.QCheckBox(table_widget.horizontalHeaderItem(col).text())
-            self._col_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
+            self._col_checkbox.setChecked(True)
             self._col_checkboxes.append(self._col_checkbox)
             grid.addWidget(self._col_checkbox, col + 1, 1)
 
@@ -81,17 +81,17 @@ class ExportTableDialog(QtWidgets.QDialog):
         csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
 
         # Write header if necessary
-        if self._export_header_checkbox.checkState() == QtCore.Qt.CheckState.Checked:
+        if self._export_header_checkbox.isChecked():
             header = [self._table_widget.horizontalHeaderItem(col).text()
                       for col in range(len(self._col_checkboxes))
-                      if self._col_checkboxes[col].checkState() == QtCore.Qt.CheckState.Checked]
+                      if self._col_checkboxes[col].isChecked()]
             csv_writer.writerow(header)
 
         # Write each row
         for row in range(self._table_widget.rowCount()):
             line = [self.do_export_item(row, col)
                     for col in range(len(self._col_checkboxes))
-                    if self._col_checkboxes[col].checkState() == QtCore.Qt.CheckState.Checked]
+                    if self._col_checkboxes[col].isChecked()]
             csv_writer.writerow(line)
 
         # Close file

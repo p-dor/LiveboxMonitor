@@ -14,16 +14,10 @@ class PingResponseDialog(QtWidgets.QDialog):
         self.resize(230, 150)
 
         self._ipv4_checkbox = QtWidgets.QCheckBox(lx('Respond to IPv4 ping'), objectName='ipV4Checkbox')
-        if ipv4:
-                self._ipv4_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-                self._ipv4_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._ipv4_checkbox.setChecked(ipv4)
 
         self._ipv6_checkbox = QtWidgets.QCheckBox(lx('Respond to IPv6 ping'), objectName='ipV6Checkbox')
-        if ipv6:
-                self._ipv6_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
-        else:
-                self._ipv6_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        self._ipv6_checkbox.setChecked(ipv6)
 
         vcbox = QtWidgets.QVBoxLayout()
         vcbox.setSpacing(10)
@@ -54,8 +48,8 @@ class PingResponseDialog(QtWidgets.QDialog):
 
 
     def get_ipv4(self):
-        return self._ipv4_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+        return self._ipv4_checkbox.isChecked()
 
 
     def get_ipv6(self):
-        return self._ipv6_checkbox.checkState() == QtCore.Qt.CheckState.Checked
+        return self._ipv6_checkbox.isChecked()
