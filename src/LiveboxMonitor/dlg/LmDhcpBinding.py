@@ -10,7 +10,7 @@ from LiveboxMonitor.lang.LmLanguages import get_dhcp_binding_label as lx
 # ################################ Add DHCP binding setup dialog ################################
 class AddDhcpBindingDialog(QtWidgets.QDialog):
     def __init__(self, home_ip_suggest, guest_ip_suggest, parent=None):
-        super(AddDhcpBindingDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(350, 180)
 
         self._home_ip_suggest = home_ip_suggest

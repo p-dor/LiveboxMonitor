@@ -26,7 +26,7 @@ DEFAULT_MODEL = 'Livebox 7'
 # ################################ Livebox Info APIs ################################
 class LiveboxInfoApi(LmApi):
     def __init__(self, api_registry):
-        super(LiveboxInfoApi, self).__init__(api_registry)
+        super().__init__(api_registry)
         self._livebox_mac = None
         self._livebox_model = None
         self._livebox_model_name = None

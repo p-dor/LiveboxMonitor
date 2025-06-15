@@ -11,7 +11,7 @@ from LiveboxMonitor.lang.LmLanguages import get_select_profile_label as lx
 # ################################ Profile selection dialog ################################
 class SelectProfileDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        super(SelectProfileDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(350, 130)
 
         main_label = QtWidgets.QLabel(lx('Please select a profile to use:'), objectName='mainLabel')

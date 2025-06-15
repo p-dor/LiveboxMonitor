@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_dhcp_setup_label as lx
 # ################################ DHCP Setup dialog ################################
 class DhcpSetupDialog(QtWidgets.QDialog):
     def __init__(self, enabled, address, mask, min_addr, max_addr, parent=None):
-        super(DhcpSetupDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(300, 225)
 
         self._enable_checkbox = QtWidgets.QCheckBox(lx('DHCP Enabled'), objectName='enableCheckbox')

@@ -1374,7 +1374,7 @@ class RepeaterStatsThread(QtCore.QObject):
 	_resume = QtCore.pyqtSignal()
 
 	def __init__(self, iRepeaters):
-		super(RepeaterStatsThread, self).__init__()
+		super().__init__()
 		self._repeaters = iRepeaters
 		self._timer = None
 		self._loop = None

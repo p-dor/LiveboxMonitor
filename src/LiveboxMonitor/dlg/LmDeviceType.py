@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_device_type_label as lx
 # ################################ Set device type dialog ################################
 class SetDeviceTypeDialog(QtWidgets.QDialog):
     def __init__(self, device_key, device_type_key, parent=None):
-        super(SetDeviceTypeDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(320, 170)
 
         self._ignore_signal = False

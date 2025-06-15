@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Statistics APIs ################################
 class StatsApi(LmApi):
     def __init__(self, api_registry):
-        super(StatsApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get wifi interface statistics

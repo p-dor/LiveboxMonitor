@@ -433,7 +433,7 @@ def livebox_timestamp(timestamp, utc=True):
 # ############# Display text dialog #############
 class TextDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        super(TextDialog, self).__init__(parent)
+        super().__init__(parent)
 
         vbox = QtWidgets.QVBoxLayout(self)
 
@@ -470,7 +470,7 @@ class ColorButton(QtWidgets.QPushButton):
     _color_changed = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, color=None, **kwargs):
-        super(ColorButton, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self._color = None
         self._default = color
@@ -511,7 +511,7 @@ class ColorButton(QtWidgets.QPushButton):
         if event.button() == QtCore.Qt.MouseButton.RightButton:
             self.set_color(self._default)
 
-        return super(ColorButton, self).mousePressEvent(event)
+        return super().mousePressEvent(event)
 
 
 

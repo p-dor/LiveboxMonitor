@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_ptf_rule_label as lx, get_nat_pa
 # ################################ PTF rule dialog ################################
 class PtfRuleDialog(QtWidgets.QDialog):
     def __init__(self, rule=None, parent=None):
-        super(PtfRuleDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(390, 380)
 
         self._ignore_signal = False

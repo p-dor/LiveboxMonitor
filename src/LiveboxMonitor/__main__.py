@@ -59,7 +59,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Initialize the application
     def __init__(self):
-        super(LiveboxMonitorUI, self).__init__()
+        super().__init__()
         self._task = LmTask(self)
         self._reset_flag = False
         self._app_ready = False

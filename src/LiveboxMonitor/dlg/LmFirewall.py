@@ -15,7 +15,7 @@ FIREWALL_LEVELS = ['High', 'Medium', 'Low', 'Custom']
 # ################################ Firewall Level dialog ################################
 class FirewallLevelDialog(QtWidgets.QDialog):
     def __init__(self, ipv4_level, ipv6_level, parent=None):
-        super(FirewallLevelDialog, self).__init__(parent)
+        super().__init__(parent)
         self.setMinimumWidth(230)
         self.resize(300, 150)
 

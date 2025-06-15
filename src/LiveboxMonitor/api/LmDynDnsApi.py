@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ DynDNS APIs ################################
 class DynDnsApi(LmApi):
     def __init__(self, api_registry):
-        super(DynDnsApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get DynDNS enable status

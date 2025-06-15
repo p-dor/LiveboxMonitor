@@ -10,7 +10,7 @@ from LiveboxMonitor.lang.LmLanguages import get_config_signin_label as lx
 # ################################ Livebox signin dialog ################################
 class LiveboxSigninDialog(QtWidgets.QDialog):
 	def __init__(self, user, password, save_passwords, parent=None):
-		super(LiveboxSigninDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(450, 130)
 
 		user_label = QtWidgets.QLabel(lx('User'), objectName='userLabel')

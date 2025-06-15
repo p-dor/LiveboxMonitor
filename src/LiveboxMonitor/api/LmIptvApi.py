@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Livebox IPTV APIs ################################
 class IptvApi(LmApi):
     def __init__(self, api_registry):
-        super(IptvApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get IPTV status

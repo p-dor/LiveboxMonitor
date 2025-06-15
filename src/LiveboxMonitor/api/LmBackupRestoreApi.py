@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Backup & Restore APIs ################################
 class BackupRestoreApi(LmApi):
     def __init__(self, api_registry):
-        super(BackupRestoreApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get status

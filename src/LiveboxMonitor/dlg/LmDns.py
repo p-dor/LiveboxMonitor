@@ -26,7 +26,7 @@ DNS_ICON_COLUMNS = [DnsCol.Active]
 # ################################ DNS dialog ################################
 class DnsDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        super(DnsDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(850, 56 + LmConfig.dialog_height(12))
 
         # Device table

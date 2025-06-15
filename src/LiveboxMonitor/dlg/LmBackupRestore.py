@@ -10,7 +10,7 @@ from LiveboxMonitor.lang.LmLanguages import get_backup_restore_label as lx, get_
 # ################################ Backup & Restore setup dialog ################################
 class BackupRestoreDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        super(BackupRestoreDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(400, 300)
 
         self._app = parent

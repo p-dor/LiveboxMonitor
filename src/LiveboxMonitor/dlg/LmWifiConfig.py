@@ -17,7 +17,7 @@ MAC_FILTERING_MODES = ['Off', 'WhiteList', 'BlackList']
 # ################################ Wifi Configuration dialog ################################
 class WifiConfigDialog(QtWidgets.QDialog):
     def __init__(self, parent, config, guest):
-        super(WifiConfigDialog, self).__init__(parent)
+        super().__init__(parent)
 
         self._guest = guest
         if self._guest:

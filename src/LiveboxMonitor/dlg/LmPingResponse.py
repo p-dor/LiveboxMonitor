@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_ping_response_label as lx
 # ################################ Ping Response setup dialog ################################
 class PingResponseDialog(QtWidgets.QDialog):
     def __init__(self, ipv4, ipv6, parent=None):
-        super(PingResponseDialog, self).__init__(parent)
+        super().__init__(parent)
         self.setMinimumWidth(230)
         self.resize(230, 150)
 

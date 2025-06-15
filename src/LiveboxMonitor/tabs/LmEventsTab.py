@@ -623,7 +623,7 @@ class LiveboxEventThread(LmThread):
     _resume = QtCore.pyqtSignal()
 
     def __init__(self, api):
-        super(LiveboxEventThread, self).__init__(api)
+        super().__init__(api)
 
 
     def connect_processor(self, processor):

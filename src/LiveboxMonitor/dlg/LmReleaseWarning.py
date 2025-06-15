@@ -13,7 +13,7 @@ from LiveboxMonitor.__init__ import __url__, __version__
 # ################################ New release warning dialog ################################
 class ReleaseWarningDialog(QtWidgets.QDialog):
 	def __init__(self, new_release, parent=None):
-		super(ReleaseWarningDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(450, 150)
 
 		warn_box = QtWidgets.QVBoxLayout()

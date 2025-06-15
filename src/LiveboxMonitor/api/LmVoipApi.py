@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Livebox VoIP APIs ################################
 class VoipApi(LmApi):
     def __init__(self, api_registry):
-        super(VoipApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get VoIP info

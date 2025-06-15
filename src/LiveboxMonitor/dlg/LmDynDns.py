@@ -25,7 +25,7 @@ class HostCol(IntEnum):
 class DynDnsSetupDialog(QtWidgets.QDialog):
     ### Constructor
     def __init__(self, parent=None):
-        super(DynDnsSetupDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(720, 400)
 
         self._app = parent

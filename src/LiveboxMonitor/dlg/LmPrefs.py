@@ -11,7 +11,7 @@ from LiveboxMonitor.lang.LmLanguages import get_config_prefs_label as lx,  get_c
 # ################################ Preferences dialog ################################
 class PrefsDialog(QtWidgets.QDialog):
 	def __init__(self, parent=None):
-		super(PrefsDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(620, 510)
 
 		# Profiles box

@@ -10,7 +10,7 @@ from LiveboxMonitor.lang.LmLanguages import get_config_cnx_label as lx
 # ################################ Livebox connection dialog ################################
 class LiveboxCnxDialog(QtWidgets.QDialog):
 	def __init__(self, url, parent=None):
-		super(LiveboxCnxDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(450, 150)
 
 		warn_box = QtWidgets.QVBoxLayout()

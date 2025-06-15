@@ -112,7 +112,7 @@ class NumericSortItem(QtWidgets.QTableWidgetItem):
 ### Drawing centered icons
 class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent, column_list):
-        super(CenteredIconsDelegate, self).__init__(parent)
+        super().__init__(parent)
         self._column_list = column_list
 
     def paint(self, painter, option, index):
@@ -121,13 +121,13 @@ class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
             if icon is not None:
                 icon.paint(painter, option.rect)
         else:
-            super(CenteredIconsDelegate, self).paint(painter, option, index)
+            super().paint(painter, option, index)
 
 
 ### Drawing centered icons in QHeaderView
 class CenteredIconHeaderView(QtWidgets.QHeaderView):
     def __init__(self, parent, column_list):
-        super(CenteredIconHeaderView, self).__init__(QtCore.Qt.Orientation.Horizontal, parent)
+        super().__init__(QtCore.Qt.Orientation.Horizontal, parent)
         self._column_list = column_list
 
     def paintSection(self, painter, rect, index):
@@ -137,7 +137,7 @@ class CenteredIconHeaderView(QtWidgets.QHeaderView):
             title = model.headerData(index, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.DisplayRole)
             model.setHeaderData(index, QtCore.Qt.Orientation.Horizontal, '', QtCore.Qt.ItemDataRole.DisplayRole)
             painter.save()
-            super(CenteredIconHeaderView, self).paintSection(painter, rect, index)
+            super().paintSection(painter, rect, index)
             painter.restore()
             model.setHeaderData(index, QtCore.Qt.Orientation.Horizontal, title, QtCore.Qt.ItemDataRole.DisplayRole)
 
@@ -146,4 +146,4 @@ class CenteredIconHeaderView(QtWidgets.QHeaderView):
             if icon is not None:
                 icon.paint(painter, rect)
         else:
-            super(CenteredIconHeaderView, self).paintSection(painter, rect, index)
+            super().paintSection(painter, rect, index)

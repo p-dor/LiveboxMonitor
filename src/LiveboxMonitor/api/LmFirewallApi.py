@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Firewall APIs ################################
 class FirewallApi(LmApi):
     def __init__(self, api_registry):
-        super(FirewallApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get IPv4 firewall level

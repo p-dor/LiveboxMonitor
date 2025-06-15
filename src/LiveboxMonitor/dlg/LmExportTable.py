@@ -12,7 +12,7 @@ from LiveboxMonitor.lang.LmLanguages import get_export_table_label as lx, get_ma
 # ################################ Export table dialog ################################
 class ExportTableDialog(QtWidgets.QDialog):
     def __init__(self, table_widget, app, parent=None):
-        super(ExportTableDialog, self).__init__(parent)
+        super().__init__(parent)
 
         self._table_widget = table_widget
         self._app = app

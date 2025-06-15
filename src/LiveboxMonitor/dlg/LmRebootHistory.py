@@ -22,7 +22,7 @@ class RebootCol(IntEnum):
 # ################################ Reboot History dialog ################################
 class RebootHistoryDialog(QtWidgets.QDialog):
     def __init__(self, name, parent=None):
-        super(RebootHistoryDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(550, 56 + LmConfig.dialog_height(10))
 
         self._history_table = LmTableWidget(objectName='historyTable')

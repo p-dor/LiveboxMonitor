@@ -12,7 +12,7 @@ from LiveboxMonitor.lang.LmLanguages import get_wifi_global_label as lx
 # ################################ Wifi Global Status dialog ################################
 class WifiGlobalStatusDialog(QtWidgets.QDialog):
     def __init__(self, parent, status):
-        super(WifiGlobalStatusDialog, self).__init__(parent)
+        super().__init__(parent)
 
         self._api = parent._api
         self._status = status

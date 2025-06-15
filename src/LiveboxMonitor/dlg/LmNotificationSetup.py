@@ -34,7 +34,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
     ### Constructor
     def __init__(self, parent=None):
-        super(NotificationSetupDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(720, 400)
 
         self._rule_selection = -1

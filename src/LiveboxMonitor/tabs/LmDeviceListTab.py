@@ -1125,7 +1125,7 @@ class LiveboxWifiStatsThread(LmThread):
     _resume = QtCore.pyqtSignal()
 
     def __init__(self, api):
-        super(LiveboxWifiStatsThread, self).__init__(api, LmConf.StatsFrequency)
+        super().__init__(api, LmConf.StatsFrequency)
 
 
     def connect_processor(self, processor):

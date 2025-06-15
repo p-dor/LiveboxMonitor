@@ -6,7 +6,7 @@ from PyQt6 import QtCore
 # ################################ LmThread class ################################
 class LmThread(QtCore.QObject):
     def __init__(self, api, frequency=0):
-        super(LmThread, self).__init__()
+        super().__init__()
         self._api = api
         self._session = api._session
         self._frequency = frequency

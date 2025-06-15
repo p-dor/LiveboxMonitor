@@ -37,7 +37,7 @@ class WifiStatus:
 # ################################ Wifi APIs ################################
 class WifiApi(LmApi):
     def __init__(self, api_registry):
-        super(WifiApi, self).__init__(api_registry)
+        super().__init__(api_registry)
         self._has_mlo = None
 
 

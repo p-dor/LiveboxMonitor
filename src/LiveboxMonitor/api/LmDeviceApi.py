@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Device APIs ################################
 class DeviceApi(LmApi):
     def __init__(self, api_registry):
-        super(DeviceApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get device list

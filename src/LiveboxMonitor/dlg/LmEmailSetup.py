@@ -10,7 +10,7 @@ from LiveboxMonitor.lang.LmLanguages import get_config_email_label as lx,  get_c
 # ################################ Email setup dialog ################################
 class EmailSetupDialog(QtWidgets.QDialog):
 	def __init__(self, parent=None):
-		super(EmailSetupDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(515, 310)
 
 		self._init = True

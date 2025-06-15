@@ -6,7 +6,7 @@ from LiveboxMonitor.api.LmApi import LmApi
 # ################################ Livebox DHCP APIs ################################
 class DhcpApi(LmApi):
     def __init__(self, api_registry):
-        super(DhcpApi, self).__init__(api_registry)
+        super().__init__(api_registry)
 
 
     ### Get DHCP setup

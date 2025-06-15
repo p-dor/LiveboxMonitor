@@ -31,7 +31,7 @@ class GraphType:
 # ################################ Add Graph dialog ################################
 class AddGraphDialog(QtWidgets.QDialog):
 	def __init__(self, parent):
-		super(AddGraphDialog, self).__init__(parent)
+		super().__init__(parent)
 		self.resize(250, 150)
 
 		self._app = parent

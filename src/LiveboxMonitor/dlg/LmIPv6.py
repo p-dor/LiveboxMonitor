@@ -28,7 +28,7 @@ IPV6_ICON_COLUMNS = [IPv6Col.Active]
 # ################################ IPv6 dialog ################################
 class IPv6Dialog(QtWidgets.QDialog):
     def __init__(self, enabled, cgnat, mode, addr, prefix, gateway, parent=None):
-        super(IPv6Dialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(1005, 110 + LmConfig.dialog_height(12))
 
         # IPv6 info box

@@ -23,7 +23,7 @@ class DmzCol(IntEnum):
 class DmzSetupDialog(QtWidgets.QDialog):
     ### Constructor
     def __init__(self, parent=None):
-        super(DmzSetupDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(720, 400)
 
         self._app = parent

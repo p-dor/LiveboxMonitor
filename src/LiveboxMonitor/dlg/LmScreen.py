@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_screen_label as lx
 # ################################ Screen setup dialog ################################
 class ScreenDialog(QtWidgets.QDialog):
     def __init__(self, orange_led_level, show_wifi_password, parent=None):
-        super(ScreenDialog, self).__init__(parent)
+        super().__init__(parent)
         self.setMinimumWidth(300)
         self.resize(350, 150)
 

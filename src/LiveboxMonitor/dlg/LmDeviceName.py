@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_device_name_label as lx
 # ################################ Set device name dialog ################################
 class SetDeviceNameDialog(QtWidgets.QDialog):
     def __init__(self, device_key, name, livebox_name, dns_name, parent=None):
-        super(SetDeviceNameDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(350, 200)
 
         label = QtWidgets.QLabel(lx('Names for [{}] device:').format(device_key), objectName='mainLabel')

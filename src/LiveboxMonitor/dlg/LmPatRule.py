@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_pat_rule_label as lx, get_nat_pa
 # ################################ PAT rule dialog ################################
 class PatRuleDialog(QtWidgets.QDialog):
     def __init__(self, rule=None, parent=None):
-        super(PatRuleDialog, self).__init__(parent)
+        super().__init__(parent)
         self.resize(390, 420)
 
         self._ignore_signal = False

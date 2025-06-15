@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_nat_pat_rule_type_label as lx
 # ################################ NAT/PAT rule type selection dialog ################################
 class NatPatRuleTypeDialog(QtWidgets.QDialog):
     def __init__(self, upnp, parent=None):
-        super(NatPatRuleTypeDialog, self).__init__(parent)
+        super().__init__(parent)
         self.setMinimumWidth(230)
         self.resize(230, 150)
 
