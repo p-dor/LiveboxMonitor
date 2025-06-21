@@ -134,7 +134,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 case LmNatPatTab.TAB_NAME:
                     self.create_nat_pat_tab()
                 case LmPhoneTab.TAB_NAME:
-                    self.createPhoneTab()
+                    self.create_phone_tab()
                 case LmActionsTab.TAB_NAME:
                     self.create_actions_tab()
 
@@ -200,7 +200,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspendRepeaterStatsLoop()
-                    self.phoneTabClick()
+                    self.phone_tab_click()
                 case LmActionsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
@@ -473,7 +473,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Switch to phone tab
     def switch_to_phone_tab(self):
-        self._tab_widget.setCurrentWidget(self._phoneTab)
+        self._tab_widget.setCurrentWidget(self._phone_tab)
 
 
     ### Switch to actions tab
