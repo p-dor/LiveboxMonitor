@@ -3,7 +3,6 @@
 import os
 import webbrowser
 import requests
-import json
 
 from enum import IntEnum
 
