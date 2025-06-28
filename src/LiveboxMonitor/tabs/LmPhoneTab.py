@@ -642,14 +642,14 @@ class LmPhone:
         if ringtone == '-':
             ringtone = None
 
-        LmTools.mouse_cursor_busy()
+        self._task.start()
         try:
             self._api._voip.ring(ringtone)
-            LmTools.mouse_cursor_normal()
             self.display_status(mx('Phone should be ringing.', 'ring'))
         except Exception as e:
-            LmTools.mouse_cursor_normal()
             self.display_error(str(e))
+        finally:
+            self._task.end()
 
 
     ### Click on export contacts button
