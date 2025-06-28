@@ -93,8 +93,10 @@ class SelectProfileDialog(QtWidgets.QDialog):
             self._ass_mac.setStyleSheet('QLabel { color : black }')
 
         LmTools.mouse_cursor_busy()
-        detected_livebox_mac = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
-        LmTools.mouse_cursor_normal()
+        try:
+            detected_livebox_mac = LiveboxInfoApi.get_livebox_mac_nosign(p.get('Livebox URL'))
+        finally:
+            LmTools.mouse_cursor_normal()
         if detected_livebox_mac is None:
             self._det_mac.setText(lx('<None>'))
             self._det_mac.setStyleSheet('QLabel { color : red }')
