@@ -136,7 +136,7 @@ class AddGraphDialog(QtWidgets.QDialog):
 			if self._app.find_graph_object_line(GraphType.DEVICE, k) == -1:
 				try:
 					name = LmConf.MacAddrTable[k]
-				except Exception:
+				except KeyError:
 					name = k
 				self._object_combo.addItem(name, userData=k)
 
