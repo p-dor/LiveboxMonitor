@@ -376,7 +376,7 @@ class LmGraph:
                             continue
                         try:
                             name = LmConf.MacAddrTable[key]
-                        except Exception:
+                        except KeyError:
                             name = key
                         self.add_graph_object(type, key, name, e[2], color)
                     case _:
@@ -569,7 +569,7 @@ class LmGraph:
         if i > -1:
             try:
                 name = LmConf.MacAddrTable[device_key]
-            except Exception:
+            except KeyError:
                 name = device_key
             self._graph_list.setItem(i, GraphCol.Name, QtWidgets.QTableWidgetItem(name))
 
