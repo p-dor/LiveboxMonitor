@@ -69,7 +69,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self.init_event_loop()
             self.init_wifi_stats_loop()
             self.init_stats_loop()
-            self.initRepeaterStatsLoop()
+            self.init_repeater_stats_loop()
         self._application_name = f'Livebox Monitor v{__version__}'
         self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
         self.setGeometry(100, 100, 1300, 102 + LmConfig.window_height(21))
@@ -86,7 +86,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             LmConf.load_spam_calls_table()
             QtCore.QCoreApplication.processEvents()
             self.load_device_list()
-            self.initRepeaters()
+            self.init_repeaters()
             LmConfig.set_tooltips(self, 'main')
             self._app_ready = True
             if not NO_THREAD:
@@ -161,56 +161,56 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                     if not NO_THREAD:
                         self.resume_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                 case LmInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.resume_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                 case LmGraphTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                     self.graph_tab_click()
                 case LmDeviceInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                 case LmEventsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                 case LmDhcpTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                     self.dhcp_tab_click()
                 case LmNatPatTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                     self.nat_pat_tab_click()
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                     self.phone_tab_click()
                 case LmActionsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.suspendRepeaterStatsLoop()
+                        self.suspend_repeater_stats_loop()
                 case LmRepeaterTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
-                        self.resumeRepeaterStatsLoop()
+                        self.resume_repeater_stats_loop()
 
 
     ### Handle move of tab event
@@ -261,7 +261,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 self.stop_event_loop()
                 self.stop_stats_loop()
                 self.stop_wifi_stats_loop()
-                self.stopRepeaterStatsLoop()
+                self.stop_repeater_stats_loop()
             finally:
                 self._task.end()
         event.accept()
@@ -269,7 +269,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Last chance to release resources
     def app_terminate(self):
-        self.signoutRepeaters()
+        self.signout_repeaters()
         self.signout()
         self._app_ready = False
 
@@ -331,13 +331,13 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Adjust configuration to Livebox model
     def adjust_to_livebox_model(self):
-        LmConf.set_livebox_mac(self._api._info.get_livebox_mac())
+        LmConf.set_livebox_mac(self._api._info.get_mac())
 
-        LmTools.log_debug(1, f'Identified Livebox model: {self._api._info.get_livebox_model()} ({self._api._info.get_livebox_model_name()})')
+        LmTools.log_debug(1, f'Identified Livebox model: {self._api._info.get_model()} ({self._api._info.get_model_name()})')
 
         self.determine_fiber_link()
         self.determine_livebox_pro()
-        set_livebox_model(self._api._info.get_livebox_model())
+        set_livebox_model(self._api._info.get_model())
 
 
     ### Determine link type and if fiber or not
@@ -352,7 +352,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self._link_type = d.get('LinkType', 'UNKNOWN').upper()
 
         # Determine fiber link
-        model = self._api._info.get_livebox_model()
+        model = self._api._info.get_model()
         if model >= 5:
             self._fiber_link = True
         elif model <= 3:
