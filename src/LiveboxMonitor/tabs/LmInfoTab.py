@@ -528,13 +528,13 @@ class LmInfo:
         finally:
             self._task.end()
 
-        try:
-            self._export_file.close()
-        except Exception as e:
-            LmTools.error(f'File saving error: {e}')
-            self.display_error(mx('Cannot save the file.', 'saveFileErr'))
+            try:
+                self._export_file.close()
+            except Exception as e:
+                LmTools.error(f'File saving error: {e}')
+                self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
-        self._export_file = None
+            self._export_file = None
 
 
     ### Load Livebox infos
@@ -554,7 +554,7 @@ class LmInfo:
             i = self.add_info_line(self._livebox_alist, i, lx('Allowed Host Headers'), d.get('AllowedHostHeader'))
 
         try:
-            d = self._api._info.get_reboot_info()
+            d = self._api._reboot.get_info()
         except Exception as e:
             LmTools.error(str(e))
             i = self.add_info_line(self._livebox_alist, i, lx('Livebox Infos'), 'NMC.Reboot:get query error', LmTools.ValQual.Error)
@@ -563,7 +563,7 @@ class LmInfo:
             total_reboot = d.get('BootCounter')
 
         try:
-            d = self._api._info.get_livebox_info()
+            d = self._api._info.get_device_info()
         except Exception as e:
             LmTools.error(str(e))
             i = self.add_info_line(self._livebox_alist, i, lx('Livebox Infos'), 'DeviceInfo:get query error', LmTools.ValQual.Error)
@@ -583,7 +583,7 @@ class LmInfo:
             i = self.add_info_line(self._livebox_alist, i, lx('Spec Version'), d.get('SpecVersion'))
             i = self.add_info_line(self._livebox_alist, i, lx('Provisioning Code'), d.get('ProvisioningCode'))
             i = self.add_info_line(self._livebox_alist, i, lx('Country'), LmTools.fmt_str_upper(d.get('Country')))
-            i = self.add_info_line(self._livebox_alist, i, lx('MAC Address'), self._api._info.get_livebox_mac())
+            i = self.add_info_line(self._livebox_alist, i, lx('MAC Address'), self._api._info.get_mac())
             i = self.add_info_line(self._livebox_alist, i, lx('External IP Address'), d.get('ExternalIPAddress'))
             if total_reboot is not None:
                 i = self.add_info_line(self._livebox_alist, i, lx('Total Number Of Reboots'), LmTools.fmt_int(total_reboot))
@@ -593,7 +593,7 @@ class LmInfo:
             i = self.add_info_line(self._livebox_alist, i, lx('Restore Occurred'), LmTools.fmt_bool(d.get('RestoreOccurred')))
 
         try:
-            d = self._api._info.get_device_info()
+            d = self._api._info.get_device_config()
         except Exception as e:
             LmTools.error(str(e))
             i = self.add_info_line(self._livebox_alist, i, lx('Livebox Infos'), 'Devices.Device:get query error', LmTools.ValQual.Error)
@@ -671,7 +671,7 @@ class LmInfo:
             i = self.add_info_line(self._livebox_alist, i, lx('IPv6 Prefix'), d.get('IPv6DelegatedPrefix'))
 
         try:
-            d = self._api._info.get_device_info()
+            d = self._api._info.get_device_config()
         except Exception as e:
             LmTools.error(str(e))
             i = self.add_info_line(self._livebox_alist, i, lx('Internet Infos'), 'Devices.Device:get query error', LmTools.ValQual.Error)
@@ -946,7 +946,7 @@ class LmInfo:
         i = self.add_title_line(self._livebox_alist, index, lx('ONT Information'))
 
         # Call SFP module for LB4
-        if self._api._info.get_livebox_model() == 4:
+        if self._api._info.get_model() == 4:
             try:
                 d = self._api._intf.get_sfp_info()
             except Exception as e:
@@ -1053,7 +1053,7 @@ class LmInfo:
 
             v = d.get('Bias')
             if v is not None:
-                if self._api._info.get_livebox_model() >= 6:
+                if self._api._info.get_model() >= 6:
                     v /= 10000
                 if (v < 0) or (v > 150):
                     aQual = LmTools.ValQual.Error
@@ -1117,7 +1117,7 @@ class LmInfo:
                         i = self.add_info_line(self._livebox_alist, i, lx('{} Number').format(aName), l.get('directoryNumber'))
 
         # No DECT from Livebox 6
-        if self._api._info.get_livebox_model() >= 6:
+        if self._api._info.get_model() >= 6:
             return i
 
         i = self.add_title_line(self._livebox_alist, i, lx('DECT Information'))
