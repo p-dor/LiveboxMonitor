@@ -9,11 +9,16 @@ class RebootApi(LmApi):
         super().__init__(api_registry)
 
 
-    ### Reboot the Livebox
-    def reboot_livebox(self):
-        self.call('NMC', 'reboot', {'reason': 'GUI_Reboot'})
+    ### Get device reboot info
+    def get_info(self):
+        return self.call('NMC.Reboot', 'get')
 
 
     ### Get reboot history
-    def get_reboot_history(self):
+    def get_history(self):
         return self.call('NMC.Reboot.Reboot', 'get')
+
+
+    ### Reboot the device
+    def reboot_device(self, reason='GUI_Reboot'):
+        self.call('NMC', 'reboot', {'reason': reason})
