@@ -77,6 +77,16 @@ class IntfApi(LmApi):
         return d
 
 
+    ### Get raw MIBs lan
+    def get_raw_mibs_lan(self):
+        return self.call('NeMo.Intf.lan', 'getMIBs', timeout=25)
+
+
+    ### Get raw MIBs data
+    def get_raw_mibs_data(self):
+        return self.call('NeMo.Intf.data', 'getMIBs', timeout=25)
+
+
     ### Get SFP ONT module infos (only for Livebox 4)
     def get_sfp_info(self):
         return self.call('SFP', 'get')
@@ -98,6 +108,23 @@ class IntfApi(LmApi):
             if not self._api._intf.build_list():
                 LmTools.error('Failed to build interface list.')
         return self._list
+
+
+    ### Set list of useful interfaces when known statically (repeater)
+    def set_list(self, intf_list):
+        self._list = intf_list
+        self._has_radio_band_2 = False
+        self._has_radio_band_5 = False
+        self._has_radio_band_6 = False
+        for i in intf_list:
+            if i['Type'] == 'wif':
+                name = i['Name']
+                if '2.4GHz' in name:
+                    self._has_radio_band_2 = True
+                elif '5GHz' in name:
+                    self._has_radio_band_5 = True
+                elif '6GHz' in name:
+                    self._has_radio_band_6 = True
 
 
     ### Build interface list - return True if successful
