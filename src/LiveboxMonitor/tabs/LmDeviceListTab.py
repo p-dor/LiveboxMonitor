@@ -300,7 +300,7 @@ class LmDeviceList:
         if self._livebox_devices is not None:
             for d in self._livebox_devices:
                 if self.displayable_device(d):
-                    self.identifyRepeater(d)
+                    self.identify_repeater(d)
                     self.add_device_line(i, d)
                     self.update_device_line(i, d, False)
                     i += 1
@@ -443,7 +443,7 @@ class LmDeviceList:
             self.format_name_widget(self._dhcp_dlist, line, device_key, DhcpCol.Name)
 
         self.graph_update_device_name(device_key)
-        self.repeaterUpdateDeviceName(device_key)
+        self.repeater_update_device_name(device_key)
 
 
     ### Format device type cell
@@ -469,7 +469,7 @@ class LmDeviceList:
     def format_name_widget(table, line, mac_addr, name_col):
         try:
             name = QtWidgets.QTableWidgetItem(LmConf.MacAddrTable[mac_addr])
-        except Exception:
+        except KeyError:
             name = QtWidgets.QTableWidgetItem(lx('UNKNOWN'))
             name.setBackground(QtCore.Qt.GlobalColor.red)
         table.setItem(line, name_col, name)
@@ -856,7 +856,7 @@ class LmDeviceList:
                         self.notify_device_inactive_event(device_key)
                 active_icon = self.format_active_table_widget(is_active)
                 self._device_list.setItem(list_line, DevCol.Active, active_icon)
-                self.repeaterActiveEvent(device_key, is_active)
+                self.repeater_active_event(device_key, is_active)
 
             # Check if IP reachable status changed
             ipv4_reacheable = event.get('Status')
@@ -873,7 +873,7 @@ class LmDeviceList:
                 ip = self._device_list.item(list_line, DevCol.IP)
                 ip.setText(ipv4)
                 ip.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(ipv4)))
-                self.repeaterIPAddressEvent(device_key, ipv4)
+                self.repeater_ip_address_event(device_key, ipv4)
 
             # Check if name changed
             name = event.get('Name')
@@ -939,7 +939,7 @@ class LmDeviceList:
             self.update_device_line(list_line, event, True)
 
             # Update potential repeater infos
-            self.repeaterDeviceUpdatedEvent(device_key, event)
+            self.repeater_device_updated_event(device_key, event)
 
             # Restore sorting
             self._device_list.setSortingEnabled(True)
@@ -976,7 +976,7 @@ class LmDeviceList:
                         ipv4_reserved = event.get('Reserved', False)
                         ip = self.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
                         self._device_list.setItem(list_line, DevCol.IP, ip)
-                        self.repeaterIPAddressEvent(device_key, ipv4)
+                        self.repeater_ip_address_event(device_key, ipv4)
 
 
     ### Process a new device_added, eth_device_added or wifi_device_added event
@@ -1009,7 +1009,7 @@ class LmDeviceList:
             self.update_device_line(0, event, True)
 
             # Add as repeater if it is one
-            self.addPotentialRepeater(event)
+            self.add_potential_repeater(event)
 
             # Restore sorting
             self._device_list.setSortingEnabled(True)
@@ -1036,7 +1036,7 @@ class LmDeviceList:
             self._event_dlist.removeRow(list_line)
 
         # Remove repeater if it is one
-        self.removePotentialRepeater(device_key)
+        self.remove_potential_repeater(device_key)
 
         # Cleanup device map
         for d in self._device_map:
