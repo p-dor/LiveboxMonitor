@@ -8,7 +8,7 @@ class LmThread(QtCore.QObject):
     def __init__(self, api, frequency=0):
         super().__init__()
         self._api = api
-        self._session = api._session
+        self._session = api._session if api else None
         self._frequency = frequency
         self._timer = None
         self._loop = None
