@@ -532,7 +532,7 @@ class LmRepHandler:
         if self.is_signed():
             self._signed = False
             if self._api:
-                self._api._session.close()
+                self._api.close()
                 self._api = None
             self.set_tab_icon()
 
