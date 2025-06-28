@@ -48,6 +48,12 @@ class WifiApi(LmApi):
 
     ### Get Wifi status
     def get_status(self):
+        if self._api._is_repeater:
+            d = self.call_raw('NMC.Wifi', 'get', timeout=15)
+            d = d.get('data')
+            if d:
+                return d
+            raise LmApiException('NMC.Wifi:get query error')
         return self.call('NMC.Wifi', 'get', timeout=15)
 
 
@@ -58,7 +64,10 @@ class WifiApi(LmApi):
 
     ### Activate/Deactivate Wifi
     def set_enable(self, enable):
-        self.call('NMC.Wifi', 'set', {'Enable': enable, 'Status': enable}, err_str='Enable')
+        if self._api._is_repeater:
+            self.call_no_check('NMC.Wifi', 'set', {'Enable': enable, 'Status': enable}, err_str='Enable')
+        else:
+            self.call('NMC.Wifi', 'set', {'Enable': enable, 'Status': enable}, err_str='Enable')
 
 
     ### Get guest status
@@ -110,8 +119,17 @@ class WifiApi(LmApi):
         self.call_no_check('NeMo.Intf.lan', 'setWLANConfig', {'mibs': mibs}, timeout=35)
 
 
+    ### Check if Wifi scheduler is present
+    def has_scheduler(self):
+        if self._api._is_repeater:
+            return self._api._info.get_model() >= 6    # Scheduler available only starting WR6
+        return True
+
+
     ### Get Wifi Scheduler enable status
     def get_scheduler_enable(self):
+        if self._api._is_repeater:
+            return self.get_scheduler_enable_legacy()
         try:
             d = self.call('PowerManagement', 'getProfiles')
         except Exception as e:
@@ -130,16 +148,22 @@ class WifiApi(LmApi):
     ### Get Wifi Scheduler enable status - legacy method
     def get_scheduler_enable_legacy(self):
         d = self.call_raw('Scheduler', 'getCompleteSchedules', {'type': 'WLAN'})
+        if not d.get('status', False):
+            raise LmApiException(f'Scheduler:getCompleteSchedules service failed.')
         d = d.get('data')
-        if d is not None:
+        if d:
             d = d.get('scheduleInfo', [])
-            if len(d):
+            if d and isinstance(d, list):
                 return d[0].get('enable')
         return None
 
 
     ### Set Wifi Scheduler enable status
     def set_scheduler_enable(self, enable):
+        if self._api._is_repeater:
+            self.set_scheduler_enable_repeater(enable)
+            return
+
         # Set PowerManagement profile
         try:
             if enable:
@@ -271,6 +295,12 @@ class WifiApi(LmApi):
 
         if failed:
             raise LmApiException(err_msg)
+
+
+    ### Set Wifi Scheduler on or off for a Wifi repeater
+    def set_scheduler_enable_repeater(self, enable):
+        # ID has to remain 'wl0' - it is NOT corresponding to an intf key
+        self.call('Scheduler', 'enableSchedule', {'type': 'WLAN', 'ID': 'wl0', 'enable': enable})
 
 
     ### Determine if Livebox model supports MLO Wifi 7 technology - returns True if yes
@@ -654,9 +684,45 @@ class WifiApi(LmApi):
 
 
     ### Get Global Wifi status
-    def get_global_wifi_status(self):
+    def get_global_wifi_status(self, name=None, active=True, signed=True):
         u = {}
-        u[WifiKey.ACCESS_POINT] = 'Livebox'
+        u[WifiKey.ACCESS_POINT] = name if name else 'Livebox'
+
+        if not active:
+            u[WifiKey.ENABLE] = WifiStatus.INACTIVE
+            u[WifiKey.STATUS] = WifiStatus.INACTIVE
+            u[WifiKey.SCHEDULER] = WifiStatus.INACTIVE
+            if self._api._intf.has_radio_band_2():
+                u[WifiKey.WIFI2_ENABLE] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI2_STATUS] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI2_VAP] = WifiStatus.INACTIVE
+            if self._api._intf.has_radio_band_5():
+                u[WifiKey.WIFI5_ENABLE] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI5_STATUS] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI5_VAP] = WifiStatus.INACTIVE
+            if self._api._intf.has_radio_band_6():
+                u[WifiKey.WIFI6_ENABLE] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI6_STATUS] = WifiStatus.INACTIVE
+                u[WifiKey.WIFI6_VAP] = WifiStatus.INACTIVE
+            return u
+
+        if not signed:
+            u[WifiKey.ENABLE] = WifiStatus.UNSIGNED
+            u[WifiKey.STATUS] = WifiStatus.UNSIGNED
+            u[WifiKey.SCHEDULER] = WifiStatus.UNSIGNED
+            if self._api._intf.has_radio_band_2():
+                u[WifiKey.WIFI2_ENABLE] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI2_STATUS] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI2_VAP] = WifiStatus.UNSIGNED
+            if self._api._intf.has_radio_band_5():
+                u[WifiKey.WIFI5_ENABLE] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI5_STATUS] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI5_VAP] = WifiStatus.UNSIGNED
+            if self._api._intf.has_radio_band_6():
+                u[WifiKey.WIFI6_ENABLE] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI6_STATUS] = WifiStatus.UNSIGNED
+                u[WifiKey.WIFI6_VAP] = WifiStatus.UNSIGNED
+            return u
 
         # General Wifi status
         wifi_scheduler_status = None
@@ -674,23 +740,24 @@ class WifiApi(LmApi):
             wifi_scheduler_status = d.get('SchedulingEnabled')
 
         # Wifi scheduler status
-        try:
-            status = self.get_scheduler_enable()
-        except Exception as e:
-            LmTools.error(str(e))
-            status = None
+        if self.has_scheduler():
+            try:
+                status = self.get_scheduler_enable()
+            except Exception as e:
+                LmTools.error(str(e))
+                status = None
 
-        # Agregate result
-        if status is None:
-            if wifi_scheduler_status is None:
-                u[WifiKey.SCHEDULER] = WifiStatus.ERROR
+            # Agregate result
+            if status is None:
+                if wifi_scheduler_status is None:
+                    u[WifiKey.SCHEDULER] = WifiStatus.ERROR
+                else:
+                    u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if wifi_scheduler_status else WifiStatus.DISABLE
             else:
-                u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if wifi_scheduler_status else WifiStatus.DISABLE
-        else:
-            if wifi_scheduler_status is None:
-                u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if status else WifiStatus.DISABLE
-            else:
-                u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if (status and wifi_scheduler_status) else WifiStatus.DISABLE
+                if wifi_scheduler_status is None:
+                    u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if status else WifiStatus.DISABLE
+                else:
+                    u[WifiKey.SCHEDULER] = WifiStatus.ENABLE if (status and wifi_scheduler_status) else WifiStatus.DISABLE
 
         # Wifi interfaces status
         try:
@@ -758,36 +825,37 @@ class WifiApi(LmApi):
 
 
         # Guest Wifi status
-        try:
-            b, w, d = self.get_intf(True)
-        except Exception as e:
-            LmTools.error(str(e))
-            b = None
-            w = None
-            d = None
+        if not self._api._is_repeater:
+            try:
+                b, w, d = self.get_intf(True)
+            except Exception as e:
+                LmTools.error(str(e))
+                b = None
+                w = None
+                d = None
 
-        if (d is None) or (b is None) or (w is None):
-            if self._api._intf.has_radio_band_2():
-                u[WifiKey.GUEST2_VAP] = WifiStatus.ERROR
-            if self._api._intf.has_radio_band_5():
-                u[WifiKey.GUEST5_VAP] = WifiStatus.ERROR
-        else:
-            for s in self._api._intf.get_list():
-                if s['Type'] != 'wig':
-                    continue
-
-                match s['Name']:
-                    case 'Guest 2.4GHz':
-                        vap_key = WifiKey.GUEST2_VAP
-                    case 'Guest 5GHz':
-                        vap_key = WifiKey.GUEST5_VAP
-                    case _:
+            if (d is None) or (b is None) or (w is None):
+                if self._api._intf.has_radio_band_2():
+                    u[WifiKey.GUEST2_VAP] = WifiStatus.ERROR
+                if self._api._intf.has_radio_band_5():
+                    u[WifiKey.GUEST5_VAP] = WifiStatus.ERROR
+            else:
+                for s in self._api._intf.get_list():
+                    if s['Type'] != 'wig':
                         continue
 
-                r = d.get(s['Key'])
-                if r is None:
-                    u[vap_key] = WifiStatus.ERROR
-                else:
-                    u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
+                    match s['Name']:
+                        case 'Guest 2.4GHz':
+                            vap_key = WifiKey.GUEST2_VAP
+                        case 'Guest 5GHz':
+                            vap_key = WifiKey.GUEST5_VAP
+                        case _:
+                            continue
+
+                    r = d.get(s['Key'])
+                    if r is None:
+                        u[vap_key] = WifiStatus.ERROR
+                    else:
+                        u[vap_key] = WifiStatus.ENABLE if (r.get('VAPStatus', 'Down') == 'Up') else WifiStatus.DISABLE
 
         return u
