@@ -76,7 +76,6 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self.show()
         QtCore.QCoreApplication.processEvents()
         if self.signin():
-            self._api = ApiRegistry(self._session)
             if not self._api._intf.build_list():
                 LmTools.error('Failed to build interface list.')
             self.adjust_to_livebox_model()
@@ -278,17 +277,18 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def signin(self):
         while True:
             self._task.start(lx('Signing in...'))
-            self._session = LmSession(LmConf.LiveboxURL, f'LiveboxMonitor_{LmConf.CurrProfile["Name"]}')
+            session = LmSession(LmConf.LiveboxURL, f'LiveboxMonitor_{LmConf.CurrProfile["Name"]}')
             try:
-                r = self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
+                r = session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
             except Exception as e:
                 LmTools.error(str(e))
                 r = -1
             finally:
                 self._task.end()
             if r > 0:
+                self._api = ApiRegistry(session)
                 return True
-            self._session = None
+            self._api = None
             self.close()
 
             if r < 0:
@@ -319,14 +319,14 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     ### Check if signed to Livebox
     def is_signed(self):
-        return self._session is not None
+        return self._api is not None
 
 
     ### Sign out from Livebox
     def signout(self):
         if self.is_signed():
-            self._session.close()
-            self._session = None
+            self._api.close()
+            self._api = None
 
 
     ### Adjust configuration to Livebox model
