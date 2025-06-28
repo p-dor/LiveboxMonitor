@@ -183,16 +183,20 @@ class LmGraph:
 
             # Load config & data
             self._task.start(lx('Loading configuration...'))
-            self.load_stat_params()
-            self.load_home_lan_interfaces()
-            self.load_home_lan_devices()
-            self.load_graph_config()
-            self._task.end()
+            try:
+                self.load_stat_params()
+                self.load_home_lan_interfaces()
+                self.load_home_lan_devices()
+                self.load_graph_config()
+            finally:
+                self._task.end()
 
             # Plot data
             self._task.start(lx('Plotting graphes...'))
-            self.plot_graph()
-            self._task.end()
+            try:
+                self.plot_graph()
+            finally:
+                self._task.end()
 
             # Start graph time window update timer, to cut regularly old values
             self._graph_window_timer = QtCore.QTimer()
@@ -255,12 +259,14 @@ class LmGraph:
 
         # Refresh interface & device lists
         self._task.start(lx('Plotting graphes...'))
-        self.load_home_lan_interfaces()
-        self.load_home_lan_devices()
+        try:
+            self.load_home_lan_interfaces()
+            self.load_home_lan_devices()
 
-        # Plot the graphs
-        self.plot_graph()
-        self._task.end()
+            # Plot the graphs
+            self.plot_graph()
+        finally:
+            self._task.end()
 
 
     ### Click on export button
@@ -295,27 +301,28 @@ class LmGraph:
             break
 
         self._task.start(lx('Exporting statistics...'))
-
-        # Write header line
-        csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
-        csv_writer.writerow(['Download Timestamp', 'Download Bytes', 'Upload Timestamp', 'Upload Bytes'])
-
-        dt = graph_object['DownTime']
-        d = graph_object['Down']
-        ut = graph_object['UpTime']
-        u = graph_object['Up']
-
-        for i in range(min(len(dt), len(ut))):
-            csv_writer.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER)),
-                                 str(ut[i]), str(int(u[i] * UNIT_DIVIDER))])
-
-        self._task.end()
-
         try:
-            export_file.close()
-        except Exception as e:
-            LmTools.error(str(e))
-            self.display_error(mx('Cannot save the file.', 'saveFileErr'))
+            # Write header line
+            csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
+            csv_writer.writerow(['Download Timestamp', 'Download Bytes', 'Upload Timestamp', 'Upload Bytes'])
+
+            dt = graph_object['DownTime']
+            d = graph_object['Down']
+            ut = graph_object['UpTime']
+            u = graph_object['Up']
+
+            for i in range(min(len(dt), len(ut))):
+                csv_writer.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER)),
+                                     str(ut[i]), str(int(u[i] * UNIT_DIVIDER))])
+
+        finally:
+            self._task.end()
+
+            try:
+                export_file.close()
+            except Exception as e:
+                LmTools.error(str(e))
+                self.display_error(mx('Cannot save the file.', 'saveFileErr'))
 
 
     ### Load stats parameters

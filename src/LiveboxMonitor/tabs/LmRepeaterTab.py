@@ -477,7 +477,7 @@ class LmRepHandler:
         user, password = LmConf.get_repeater_user_password(self._mac_addr)
 
         while True:
-            session = LmSession('http://' + self._ip_addr + '/', self._name)
+            session = LmSession(f'http://{self._ip_addr}/', self._name)
             try:
                 # Need to ignore cookie as sessions opened with >1h cookie generate errors
                 r = session.signin(user, password, True)
@@ -698,13 +698,11 @@ class LmRepHandler:
                 return
 
             self._app._task.start(lx('Exporting all information...'))
-
             try:
                 i = 0
                 i = self.load_repeater_info(i)
                 i = self.load_wifi_info(i)
                 i = self.load_lan_info(i)
-
             finally:
                 self._app._task.end()
 

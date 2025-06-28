@@ -191,57 +191,57 @@ class LmDeviceList:
     ### Click on IPv6 button
     def ipv6_button_click(self):
         self._task.start(lx('Getting IPv6 Information...'))
-
-        # Get IPv6 status
         try:
-            d = self._api._info.get_ipv6_status()
-        except Exception as e:
-            self.display_error(str(e))
-            ipv6_enabled = None
-        else:
-            ipv6_enabled = d.get('Enable')
+            # Get IPv6 status
+            try:
+                d = self._api._info.get_ipv6_status()
+            except Exception as e:
+                self.display_error(str(e))
+                ipv6_enabled = None
+            else:
+                ipv6_enabled = d.get('Enable')
 
-        # Get CGNat status
-        try:
-            d = self._api._info.get_cgnat_status()
-        except Exception as e:
-            LmTools.error(str(e))
-            cgnat = None
-        else:
-            cgnat = d.get('Demand')
+            # Get CGNat status
+            try:
+                d = self._api._info.get_cgnat_status()
+            except Exception as e:
+                LmTools.error(str(e))
+                cgnat = None
+            else:
+                cgnat = d.get('Demand')
 
-        # Get IPv6Mode
-        try:
-            d = self._api._info.get_ipv6_mode()
-        except Exception as e:
-            LmTools.error(str(e))
-            mode = None
-        else:
-            mode = d.get('IPv6Mode')
+            # Get IPv6Mode
+            try:
+                d = self._api._info.get_ipv6_mode()
+            except Exception as e:
+                LmTools.error(str(e))
+                mode = None
+            else:
+                mode = d.get('IPv6Mode')
 
-        # Get IPv6 address and prefix
-        try:
-            d = self._api._info.get_wan_status()
-        except Exception as e:
-            LmTools.error(str(e))
-            ipv6_addr = None
-            ipv6_prefix = None
-            gateway = None
-        else:
-            ipv6_addr = d.get('IPv6Address')
-            ipv6_prefix = d.get('IPv6DelegatedPrefix')
-            gateway = d.get('RemoteGatewayIPv6')
+            # Get IPv6 address and prefix
+            try:
+                d = self._api._info.get_wan_status()
+            except Exception as e:
+                LmTools.error(str(e))
+                ipv6_addr = None
+                ipv6_prefix = None
+                gateway = None
+            else:
+                ipv6_addr = d.get('IPv6Address')
+                ipv6_prefix = d.get('IPv6DelegatedPrefix')
+                gateway = d.get('RemoteGatewayIPv6')
 
-        # Get IPv6 prefix leases delegation list
-        try:
-            prefixes = self._api._dhcp.get_v6_prefix_leases()
-        except Exception as e:
-            self.display_error(str(e))
-            prefixes = None
+            # Get IPv6 prefix leases delegation list
+            try:
+                prefixes = self._api._dhcp.get_v6_prefix_leases()
+            except Exception as e:
+                self.display_error(str(e))
+                prefixes = None
 
-        self.load_device_ip_name_map()
-
-        self._task.end()
+            self.load_device_ip_name_map()
+        finally:
+            self._task.end()
 
         ipv6_dialog = IPv6Dialog(ipv6_enabled, cgnat, mode, ipv6_addr, ipv6_prefix, gateway, self)
         ipv6_dialog.load_device_list(self._livebox_devices, prefixes)
@@ -251,8 +251,10 @@ class LmDeviceList:
     ### Click on DNS button
     def dns_button_click(self):
         self._task.start(lx('Getting DNS Information...'))
-        self.load_device_ip_name_map()
-        self._task.end()
+        try:
+            self.load_device_ip_name_map()
+        finally:
+            self._task.end()
 
         dns_dialog = DnsDialog(self)
         dns_dialog.load_device_list(self._livebox_devices)
@@ -262,67 +264,67 @@ class LmDeviceList:
     ### Load device list
     def load_device_list(self):
         self._task.start(lx('Loading device list...'))
-
-        self._device_list.setSortingEnabled(False)
-        self._info_dlist.setSortingEnabled(False)
-        self._event_dlist.setSortingEnabled(False)
-        self._event_list.setSortingEnabled(False)
-
-        # Init
-        self._interface_map = []
-        self._device_map = []
-        self._device_ip_name_map = {}
-        self._device_ip_name_map_dirty = True
-
-        # Get device infos from Livebox & build IP -> name map
         try:
-            self._livebox_devices = self._api._device.get_list()
-        except Exception as e:
-            LmTools.error(str(e))
-            self.display_error(mx('Error getting device list.', 'dlistErr'))
-            self._livebox_devices = None            
-        else:
-            self.build_device_ip_name_map()
-            self._device_ip_name_map_dirty = False
+            self._device_list.setSortingEnabled(False)
+            self._info_dlist.setSortingEnabled(False)
+            self._event_dlist.setSortingEnabled(False)
+            self._event_list.setSortingEnabled(False)
 
-        # Get topology infos from Livebox & build link & device maps
-        try:
-            self._livebox_topology = self._api._device.get_topology()
-        except Exception as e:
-            LmTools.error(str(e))
-            self.display_error(mx('Error getting device topology.', 'topoErr'))
-            self._livebox_topology = None
-        else:
-            self.build_link_maps()
+            # Init
+            self._interface_map = []
+            self._device_map = []
+            self._device_ip_name_map = {}
+            self._device_ip_name_map_dirty = True
 
-        # Load devices in list, trying to identify Wifi repeaters on the fly
-        i = 0
-        if self._livebox_devices is not None:
-            for d in self._livebox_devices:
-                if self.displayable_device(d):
-                    self.identify_repeater(d)
-                    self.add_device_line(i, d)
-                    self.update_device_line(i, d, False)
-                    i += 1
+            # Get device infos from Livebox & build IP -> name map
+            try:
+                self._livebox_devices = self._api._device.get_list()
+            except Exception as e:
+                LmTools.error(str(e))
+                self.display_error(mx('Error getting device list.', 'dlistErr'))
+                self._livebox_devices = None            
+            else:
+                self.build_device_ip_name_map()
+                self._device_ip_name_map_dirty = False
 
-        self._device_list.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
+            # Get topology infos from Livebox & build link & device maps
+            try:
+                self._livebox_topology = self._api._device.get_topology()
+            except Exception as e:
+                LmTools.error(str(e))
+                self.display_error(mx('Error getting device topology.', 'topoErr'))
+                self._livebox_topology = None
+            else:
+                self.build_link_maps()
 
-        self._event_dlist.insertRow(i)
-        self._event_dlist.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
-        self._event_dlist.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
+            # Load devices in list, trying to identify Wifi repeaters on the fly
+            i = 0
+            if self._livebox_devices is not None:
+                for d in self._livebox_devices:
+                    if self.displayable_device(d):
+                        self.identify_repeater(d)
+                        self.add_device_line(i, d)
+                        self.update_device_line(i, d, False)
+                        i += 1
 
-        self._device_list.setCurrentCell(-1, -1)
-        self._info_dlist.setCurrentCell(-1, -1)
-        self._event_dlist.setCurrentCell(-1, -1)
+            self._device_list.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 
-        self.init_device_context()      # Init selected device context for DeviceInfo tab
+            self._event_dlist.insertRow(i)
+            self._event_dlist.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
+            self._event_dlist.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
 
-        self._device_list.setSortingEnabled(True)
-        self._info_dlist.setSortingEnabled(True)
-        self._event_dlist.setSortingEnabled(True)
-        self._event_list.setSortingEnabled(True)
+            self._device_list.setCurrentCell(-1, -1)
+            self._info_dlist.setCurrentCell(-1, -1)
+            self._event_dlist.setCurrentCell(-1, -1)
 
-        self._task.end()
+            self.init_device_context()      # Init selected device context for DeviceInfo tab
+
+            self._device_list.setSortingEnabled(True)
+            self._info_dlist.setSortingEnabled(True)
+            self._event_dlist.setSortingEnabled(True)
+            self._event_list.setSortingEnabled(True)
+        finally:
+            self._task.end()
 
 
     ### Check if device is displayable
@@ -545,29 +547,30 @@ class LmDeviceList:
     ### Assign LB names to all unknown devices
     def assign_lb_names_to_unkown_devices(self):
         self._task.start(lx('Assigning names to unknown devices...'))
-        for d in self.get_device_list():
-            if not LmConf.MacAddrTable.get(d['MAC']):
-                self.set_device_name(d['MAC'], d['LBName'])
-        self._task.end()
+        try:
+            for d in self.get_device_list():
+                if not LmConf.MacAddrTable.get(d['MAC']):
+                    self.set_device_name(d['MAC'], d['LBName'])
+        finally:
+            self._task.end()
 
 
     ### Load device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map if need to be refreshed
     def load_device_ip_name_map(self):
         if self._device_ip_name_map_dirty:
             self._task.start(lx('Loading devices information...'))
-
             try:
-                self._livebox_devices = self._api._device.get_list()
-            except Exception as e:
-                LmTools.error(str(e))
+                try:
+                    self._livebox_devices = self._api._device.get_list()
+                except Exception as e:
+                    LmTools.error(str(e))
+                    self.display_error(mx('Error getting device list.', 'dlistErr'))
+                    return
+
+                self.build_device_ip_name_map()
+                self._device_ip_name_map_dirty = False
+            finally:
                 self._task.end()
-                self.display_error(mx('Error getting device list.', 'dlistErr'))
-                return
-
-            self.build_device_ip_name_map()
-            self._device_ip_name_map_dirty = False
-
-            self._task.end()
 
 
     # Build device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map from currently loaded device list

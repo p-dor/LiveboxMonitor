@@ -192,8 +192,10 @@ class LmDeviceInfo:
         key = self.get_selected_device_key()
         if key:
             self._task.start(lx('Loading device icons...'))
-            LmConf.load_device_icons(self._api._info.get_software_version())
-            self._task.end()
+            try:
+                LmConf.load_device_icons(self._api._info.get_software_version())
+            finally:
+                self._task.end()
 
             dialog = SetDeviceTypeDialog(key, self._current_device_type, self)
             if dialog.exec():
@@ -264,121 +266,122 @@ class LmDeviceInfo:
     ### Update device infos list
     def update_device_info(self, device_key):
         self._task.start(lx('Getting device information...'))
-
         try:
-            d = self._api._device.get_info(device_key)
-        except Exception as e:
-            LmTools.error(str(e))
-            self._task.end()
-            self.display_error(mx('Error getting device information.', 'devInfoErr'))
-            return
-
-        i = 0
-        i = self.add_info_line(self._info_alist, i, lx('Key'), device_key)
-        i = self.add_info_line(self._info_alist, i, lx('Active'), LmTools.fmt_bool(d.get('Active')))
-        i = self.add_info_line(self._info_alist, i, lx('Authenticated'), LmTools.fmt_bool(d.get('AuthenticationState')))
-
-        try:
-            blocked = self._api._device.is_blocked(device_key)
-            i = self.add_info_line(self._info_alist, i, lx('Blocked'), LmTools.fmt_bool(blocked))
-        except Exception as e:
-            LmTools.error(str(e))
-            i = self.add_info_line(self._info_alist, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
-
-        i = self.add_info_line(self._info_alist, i, lx('First connection'), LmTools.fmt_livebox_timestamp(d.get('FirstSeen')))
-        i = self.add_info_line(self._info_alist, i, lx('Last connection'), LmTools.fmt_livebox_timestamp(d.get('LastConnection')))
-        i = self.add_info_line(self._info_alist, i, lx('Last changed'), LmTools.fmt_livebox_timestamp(d.get('LastChanged')))
-        i = self.add_info_line(self._info_alist, i, lx('Source'), d.get('DiscoverySource'))
-
-        self._current_device_livebox_name = d.get('Name')
-        i = self.add_info_line(self._info_alist, i, lx('Livebox Name'), self._current_device_livebox_name)
-
-        self._current_device_dns_name = None
-        name_list = d.get('Names', [])
-        for name in name_list:
-            name_str = name.get('Name', '')
-            source = name.get('Source', '')
-            if source == 'dns':
-                self._current_device_dns_name = name_str
-            i = self.add_info_line(self._info_alist, i, lx('Name'), f'{name_str} ({source})')
-
-        dns_list = d.get('mDNSService', [])
-        for dns_name in dns_list:
-            i = self.add_info_line(self._info_alist, i, lx('DNS Name'), f'{dns_name.get("Name", "")} ({dns_name.get("ServiceName", "")})')
-
-        self._current_device_type = d.get('DeviceType', '')
-
-        type_list = d.get('DeviceTypes', [])
-        for type in type_list:
-            i = self.add_info_line(self._info_alist, i, lx('Type'), f'{type.get("Type", "")} ({type.get("Source", "")})')
-
-        active_ip_struct = LmTools.determine_ip(d)
-        active_ip = active_ip_struct.get('Address', '') if active_ip_struct else ''
-        ipv4_list = d.get('IPv4Address', [])
-        for ipv4 in ipv4_list:
-            ip = ipv4.get('Address', '')
-            s = f'{ip} ('
-            if (len(active_ip) > 0) and (active_ip == ip):
-                s += 'active, '
-            s += f'{ipv4.get("Status", "")})'
-
-            if ipv4.get('Reserved', False):
-                s += ' - Reserved'
-            i = self.add_info_line(self._info_alist, i, lx('IPv4 Address'), s)
-
-        ipv6_list = d.get('IPv6Address', [])
-        for ipv6 in ipv6_list:
-            i = self.add_info_line(self._info_alist, i, lx('IPv6 Address'),
-                                   f'{ipv6.get("Address", "")} [{ipv6.get("Scope", "")}] ({ipv6.get("Status", "")})')
-
-        mac_addr = d.get('PhysAddress')
-        if not mac_addr:
-            mac_addr = device_key
-        if LmConf.MacAddrApiKey and mac_addr:
             try:
-                resp = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
-                resp.raise_for_status()     # Check HTTP status code
-                data = resp.json()
-                details = data.get('vendorDetails')
-                manufacturer = f'{details.get("companyName", "")} - {details.get("countryCode", "")}' if details else ''
-                i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), manufacturer)
+                d = self._api._device.get_info(device_key)
             except Exception as e:
                 LmTools.error(str(e))
-                i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
+                self._task.end()
+                self.display_error(mx('Error getting device information.', 'devInfoErr'))
+                return
 
-        i = self.add_info_line(self._info_alist, i, lx('Vendor ID'), d.get('VendorClassID'))
-        i = self.add_info_line(self._info_alist, i, lx('Serial Number'), d.get('SerialNumber'))
-        i = self.add_info_line(self._info_alist, i, lx('Product Class'), d.get('ProductClass'))
-        i = self.add_info_line(self._info_alist, i, lx('Model Name'), d.get('ModelName'))
-        i = self.add_info_line(self._info_alist, i, lx('Software Version'), d.get('SoftwareVersion'))
-        i = self.add_info_line(self._info_alist, i, lx('Hardware Version'), d.get('HardwareVersion'))
-        i = self.add_info_line(self._info_alist, i, lx('DHCP Option 55'), d.get('DHCPOption55'))
+            i = 0
+            i = self.add_info_line(self._info_alist, i, lx('Key'), device_key)
+            i = self.add_info_line(self._info_alist, i, lx('Active'), LmTools.fmt_bool(d.get('Active')))
+            i = self.add_info_line(self._info_alist, i, lx('Authenticated'), LmTools.fmt_bool(d.get('AuthenticationState')))
 
-        sys_software = d.get('SSW')
-        if sys_software is not None:
-            i = self.add_info_line(self._info_alist, i, lx('Full Software Version'), sys_software.get('SoftwareVersion'))
-            i = self.add_info_line(self._info_alist, i, lx('State'), sys_software.get('State'))
-            i = self.add_info_line(self._info_alist, i, lx('Protocol'), sys_software.get('Protocol'))
-            i = self.add_info_line(self._info_alist, i, lx('Current Mode'), sys_software.get('CurrentMode'))
-            i = self.add_info_line(self._info_alist, i, lx('Pairing Time'), LmTools.fmt_livebox_timestamp(sys_software.get('PairingTime')))
-            i = self.add_info_line(self._info_alist, i, lx('Uplink Type'), sys_software.get('UplinkType'))
+            try:
+                blocked = self._api._device.is_blocked(device_key)
+                i = self.add_info_line(self._info_alist, i, lx('Blocked'), LmTools.fmt_bool(blocked))
+            except Exception as e:
+                LmTools.error(str(e))
+                i = self.add_info_line(self._info_alist, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
 
-        signal_strength = LmTools.fmt_int(d.get('SignalStrength'))
-        if len(signal_strength):
-            signal_strength += ' dBm'
-        i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Strength'), signal_strength)
-        i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Noise Ratio'), LmTools.fmt_int(d.get('SignalNoiseRatio')))
-        i = self.add_info_line(self._info_alist, i, lx('Encryption Mode'), d.get('EncryptionMode'))
-        i = self.add_info_line(self._info_alist, i, lx('Security Mode'), d.get('SecurityModeEnabled'))
-        i = self.add_info_line(self._info_alist, i, lx('Link Bandwidth'), d.get('LinkBandwidth'))
-        i = self.add_info_line(self._info_alist, i, lx('Operating Standard'), d.get('OperatingStandard'))
-        i = self.add_info_line(self._info_alist, i, lx('Operating Band'), d.get('OperatingFrequencyBand'))
+            i = self.add_info_line(self._info_alist, i, lx('First connection'), LmTools.fmt_livebox_timestamp(d.get('FirstSeen')))
+            i = self.add_info_line(self._info_alist, i, lx('Last connection'), LmTools.fmt_livebox_timestamp(d.get('LastConnection')))
+            i = self.add_info_line(self._info_alist, i, lx('Last changed'), LmTools.fmt_livebox_timestamp(d.get('LastChanged')))
+            i = self.add_info_line(self._info_alist, i, lx('Source'), d.get('DiscoverySource'))
 
-        sys_software_std = d.get('SSWSta')
-        if sys_software_std is not None:
-            i = self.add_info_line(self._info_alist, i, lx('Supported Standards'), sys_software_std.get('SupportedStandards'))
-            i = self.add_info_line(self._info_alist, i, lx('Supports 2.4GHz'), LmTools.fmt_bool(sys_software_std.get('Supports24GHz')))
-            i = self.add_info_line(self._info_alist, i, lx('Supports 5GHz'), LmTools.fmt_bool(sys_software_std.get('Supports5GHz')))
-            i = self.add_info_line(self._info_alist, i, lx('Supports 6GHz'), LmTools.fmt_bool(sys_software_std.get('Supports6GHz')))
+            self._current_device_livebox_name = d.get('Name')
+            i = self.add_info_line(self._info_alist, i, lx('Livebox Name'), self._current_device_livebox_name)
 
-        self._task.end()
+            self._current_device_dns_name = None
+            name_list = d.get('Names', [])
+            for name in name_list:
+                name_str = name.get('Name', '')
+                source = name.get('Source', '')
+                if source == 'dns':
+                    self._current_device_dns_name = name_str
+                i = self.add_info_line(self._info_alist, i, lx('Name'), f'{name_str} ({source})')
+
+            dns_list = d.get('mDNSService', [])
+            for dns_name in dns_list:
+                i = self.add_info_line(self._info_alist, i, lx('DNS Name'), f'{dns_name.get("Name", "")} ({dns_name.get("ServiceName", "")})')
+
+            self._current_device_type = d.get('DeviceType', '')
+
+            type_list = d.get('DeviceTypes', [])
+            for type in type_list:
+                i = self.add_info_line(self._info_alist, i, lx('Type'), f'{type.get("Type", "")} ({type.get("Source", "")})')
+
+            active_ip_struct = LmTools.determine_ip(d)
+            active_ip = active_ip_struct.get('Address', '') if active_ip_struct else ''
+            ipv4_list = d.get('IPv4Address', [])
+            for ipv4 in ipv4_list:
+                ip = ipv4.get('Address', '')
+                s = f'{ip} ('
+                if (len(active_ip) > 0) and (active_ip == ip):
+                    s += 'active, '
+                s += f'{ipv4.get("Status", "")})'
+
+                if ipv4.get('Reserved', False):
+                    s += ' - Reserved'
+                i = self.add_info_line(self._info_alist, i, lx('IPv4 Address'), s)
+
+            ipv6_list = d.get('IPv6Address', [])
+            for ipv6 in ipv6_list:
+                i = self.add_info_line(self._info_alist, i, lx('IPv6 Address'),
+                                       f'{ipv6.get("Address", "")} [{ipv6.get("Scope", "")}] ({ipv6.get("Status", "")})')
+
+            mac_addr = d.get('PhysAddress')
+            if not mac_addr:
+                mac_addr = device_key
+            if LmConf.MacAddrApiKey and mac_addr:
+                try:
+                    resp = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
+                    resp.raise_for_status()     # Check HTTP status code
+                    data = resp.json()
+                    details = data.get('vendorDetails')
+                    manufacturer = f'{details.get("companyName", "")} - {details.get("countryCode", "")}' if details else ''
+                    i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), manufacturer)
+                except Exception as e:
+                    LmTools.error(str(e))
+                    i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
+
+            i = self.add_info_line(self._info_alist, i, lx('Vendor ID'), d.get('VendorClassID'))
+            i = self.add_info_line(self._info_alist, i, lx('Serial Number'), d.get('SerialNumber'))
+            i = self.add_info_line(self._info_alist, i, lx('Product Class'), d.get('ProductClass'))
+            i = self.add_info_line(self._info_alist, i, lx('Model Name'), d.get('ModelName'))
+            i = self.add_info_line(self._info_alist, i, lx('Software Version'), d.get('SoftwareVersion'))
+            i = self.add_info_line(self._info_alist, i, lx('Hardware Version'), d.get('HardwareVersion'))
+            i = self.add_info_line(self._info_alist, i, lx('DHCP Option 55'), d.get('DHCPOption55'))
+
+            sys_software = d.get('SSW')
+            if sys_software is not None:
+                i = self.add_info_line(self._info_alist, i, lx('Full Software Version'), sys_software.get('SoftwareVersion'))
+                i = self.add_info_line(self._info_alist, i, lx('State'), sys_software.get('State'))
+                i = self.add_info_line(self._info_alist, i, lx('Protocol'), sys_software.get('Protocol'))
+                i = self.add_info_line(self._info_alist, i, lx('Current Mode'), sys_software.get('CurrentMode'))
+                i = self.add_info_line(self._info_alist, i, lx('Pairing Time'), LmTools.fmt_livebox_timestamp(sys_software.get('PairingTime')))
+                i = self.add_info_line(self._info_alist, i, lx('Uplink Type'), sys_software.get('UplinkType'))
+
+            signal_strength = LmTools.fmt_int(d.get('SignalStrength'))
+            if len(signal_strength):
+                signal_strength += ' dBm'
+            i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Strength'), signal_strength)
+            i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Noise Ratio'), LmTools.fmt_int(d.get('SignalNoiseRatio')))
+            i = self.add_info_line(self._info_alist, i, lx('Encryption Mode'), d.get('EncryptionMode'))
+            i = self.add_info_line(self._info_alist, i, lx('Security Mode'), d.get('SecurityModeEnabled'))
+            i = self.add_info_line(self._info_alist, i, lx('Link Bandwidth'), d.get('LinkBandwidth'))
+            i = self.add_info_line(self._info_alist, i, lx('Operating Standard'), d.get('OperatingStandard'))
+            i = self.add_info_line(self._info_alist, i, lx('Operating Band'), d.get('OperatingFrequencyBand'))
+
+            sys_software_std = d.get('SSWSta')
+            if sys_software_std is not None:
+                i = self.add_info_line(self._info_alist, i, lx('Supported Standards'), sys_software_std.get('SupportedStandards'))
+                i = self.add_info_line(self._info_alist, i, lx('Supports 2.4GHz'), LmTools.fmt_bool(sys_software_std.get('Supports24GHz')))
+                i = self.add_info_line(self._info_alist, i, lx('Supports 5GHz'), LmTools.fmt_bool(sys_software_std.get('Supports5GHz')))
+                i = self.add_info_line(self._info_alist, i, lx('Supports 6GHz'), LmTools.fmt_bool(sys_software_std.get('Supports6GHz')))
+
+        finally:
+            self._task.end()
