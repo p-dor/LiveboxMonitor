@@ -27,20 +27,20 @@ DEFAULT_MODEL = 'Livebox 7'
 class LiveboxInfoApi(LmApi):
     def __init__(self, api_registry):
         super().__init__(api_registry)
-        self._livebox_mac = None
-        self._livebox_model = None
-        self._livebox_model_name = None
+        self._mac_addr = None
+        self._model = None
+        self._model_name = None
         self._software_version = None
 
 
-    ### Get Livebox basic info
-    def get_livebox_info(self):
+    ### Get Livebox / Repeater basic info
+    def get_device_info(self):
         return self.call('DeviceInfo', 'get')
 
 
     ### Get Livebox device info
-    def get_device_info(self):
-        livebox_mac = self.get_livebox_mac()
+    def get_device_config(self):
+        livebox_mac = self.get_mac()
         if livebox_mac:
             return self.call('Devices.Device.' + livebox_mac, 'get')
         raise LmApiException('Cannot determine Livebox MAC address')
@@ -49,48 +49,63 @@ class LiveboxInfoApi(LmApi):
     ### Set Livebox basic info cache
     def set_livebox_info_cache(self):
         try:
-            d = self.get_livebox_info()
+            d = self.get_device_info()
         except Exception as e:
             LmTools.error(str(e))
             LmTools.error('Cannot determine Livebox model.')
-            self._livebox_mac = ''
-            self._livebox_model = 0
-            self._livebox_model_name = ''
+            self._mac_addr = ''
+            self._model = 0
+            self._model_name = ''
             self._software_version = ''
         else:
-            self._livebox_mac = d.get('BaseMAC', '').upper()
+            self._mac_addr = d.get('BaseMAC', '').upper()
             model = d.get('ProductClass', '')
             if model:
-                self._livebox_model = LIVEBOX_MODEL_MAP.get(model)
-                self._livebox_model_name = model
-            if self._livebox_model is None:
+                self._model = LIVEBOX_MODEL_MAP.get(model)
+                self._model_name = model
+            if self._model is None:
                 LmTools.error(f'Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.')
-                self._livebox_model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
+                self._model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
             self._software_version = d.get('SoftwareVersion', '')
 
 
-    ### Get Livebox MAC
-    def get_livebox_mac(self):
-        if not self._livebox_mac:
+    ### Get Livebox / Repeater MAC
+    def get_mac(self):
+        if not self._mac_addr:
             self.set_livebox_info_cache()
-        return self._livebox_mac
+        return self._mac_addr
 
 
-    ### Get Livebox model
-    def get_livebox_model(self):
-        if not self._livebox_model:
+    ### Set Livebox / Repeater MAC
+    def set_mac(self, mac_addr):
+        self._mac_addr = mac_addr
+
+
+    ### Get Livebox / Repeater model
+    def get_model(self):
+        if not self._model:
             self.set_livebox_info_cache()
-        return self._livebox_model
+        return self._model
 
 
-    ### Get Livebox model name
-    def get_livebox_model_name(self):
-        if not self._livebox_model_name:
+    ### Set Livebox / Repeater model
+    def set_model(self, model):
+        self._model = model
+
+
+    ### Get Livebox / Repeater model name
+    def get_model_name(self):
+        if not self._model_name:
             self.set_livebox_info_cache()
-        return self._livebox_model_name
+        return self._model_name
 
 
-    ### Get Livebox software version
+    ### Set Livebox / Repeater model name
+    def set_model_name(self, model_name):
+        self._model_name = model_name
+
+
+    ### Get Livebox / Repeater software version
     def get_software_version(self):
         if not self._software_version:
             self.set_livebox_info_cache()
@@ -100,11 +115,6 @@ class LiveboxInfoApi(LmApi):
     ### Get Livebox model info
     def get_model_info(self):
         return self.call('UPnP-IGD', 'get')
-
-
-    ### Get Livebox reboot info
-    def get_reboot_info(self):
-        return self.call('NMC.Reboot', 'get')
 
 
     ### Get memory status
@@ -147,6 +157,11 @@ class LiveboxInfoApi(LmApi):
     ### Get MTU
     def get_mtu(self):
         return int(self.call_no_check('NeMo.Intf.data', 'getFirstParameter', {'name': 'MTU'}))
+
+
+    ### Get uplink info
+    def get_uplink_info(self):
+        return self.call('UplinkMonitor.DefaultGateway', 'get')
 
 
     ### Get IPv6 status
