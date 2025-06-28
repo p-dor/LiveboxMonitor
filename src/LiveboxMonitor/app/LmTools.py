@@ -195,25 +195,6 @@ def clean_url(url):
     return url
 
 
-### Collect error descriptions from Livebox replies
-def get_errors_from_livebox_reply(reply):
-    d = ''
-    if reply is not None:
-        errors = reply.get('errors')
-        if isinstance(errors, list):
-            for e in errors:
-                desc = e.get('description', '')
-                info = e.get('info', '')
-                if len(desc):
-                    if len(info):
-                        d += desc + ' -> ' + info + '.\n'
-                    else:
-                        d += desc + '.\n'
-                elif len(info):
-                    d += info + '.\n'
-
-    return d
-
 
 ### Determine device IPv4 address info from IPv4 list, return the struct, none if nothing found
 def determine_ip(device):
