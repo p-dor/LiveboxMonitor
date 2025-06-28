@@ -27,18 +27,18 @@ class LmApi:
     def err_str(package, method=None, err_str=None):
         e = package
         if method:
-            e += ':' + method
+            e += f':{method}'
         if err_str:
-            e += ' ' + err_str
+            e += f' {err_str}'
         return e
 
 
     ### Compute error description from Livebox reply
     @staticmethod
-    def get_error_str(desc, info, id=None):
+    def get_error_str(desc, info, err_id=None):
         parts = []
-        if id is not None:
-            parts.append(f'[{id}]')
+        if err_id is not None:
+            parts.append(f'[{err_id}]')
         if desc:
             parts.append(desc)
         if info:
@@ -47,7 +47,7 @@ class LmApi:
             else:
                 parts.append(info)
         if parts:
-            return ' '.join(parts) + '.\n'
+            return ' '.join(parts) + '.'
         return ''
 
 
@@ -57,7 +57,7 @@ class LmApi:
         if reply:
             errors = reply.get('errors')
             if isinstance(errors, list):
-                return ''.join(LmApi.get_error_str(e.get('description'), e.get('info')) for e in errors)
+                return '\n'.join(LmApi.get_error_str(e.get('description'), e.get('info')) for e in errors)
             else:
                 e = reply.get('error')
                 if e is not None:
@@ -89,11 +89,13 @@ class LmApi:
 
         # Call Livebox API
         if not d:
+            if not self._session:
+                raise LmApiException('No session')
             try:
-                if timeout is None:
-                    d = self._session.request(package, method, args)
-                else:
+                if timeout:
                     d = self._session.request(package, method, args, timeout=timeout)
+                else:
+                    d = self._session.request(package, method, args)
             except Exception as e:
                 raise LmApiException(f'{self.err_str(package, method, err_str)}: {e}.') from e
 
@@ -105,7 +107,7 @@ class LmApi:
             if 'status' in d:
                 return d
 
-        raise LmApiException(self.err_str(package, method, err_str) + ' service error.')
+        raise LmApiException(self.err_str(package, method, err_str) + ' service error')
 
 
     ### Call a Livebox API - raise exception or return 'status' value, can be None
@@ -117,8 +119,13 @@ class LmApi:
     def call(self, package, method=None, args=None, timeout=None, err_str=None):
         d = self.call_no_check(package, method, args, timeout, err_str)
         if not d:
-            raise LmApiException(self.err_str(package, method, err_str) + ' service failed.')
+            raise LmApiException(self.err_str(package, method, err_str) + ' service failed')
         return d
+
+
+    ### Notification that the session has been closed
+    def session_closed(self):
+        self._session = None
 
 
     ### Test mode - get API call signature
