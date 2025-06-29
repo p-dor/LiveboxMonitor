@@ -1,6 +1,6 @@
 ### Livebox Monitor Wifi APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 from LiveboxMonitor.app import LmTools
 
 

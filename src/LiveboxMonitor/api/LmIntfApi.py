@@ -1,6 +1,6 @@
 ### Livebox Monitor Interface APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 from LiveboxMonitor.app import LmTools
 
 

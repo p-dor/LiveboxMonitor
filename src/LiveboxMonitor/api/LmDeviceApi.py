@@ -1,6 +1,6 @@
 ### Livebox Monitor Device APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 
 
 # ################################ Device APIs ################################

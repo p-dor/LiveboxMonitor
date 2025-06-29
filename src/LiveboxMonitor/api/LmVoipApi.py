@@ -1,6 +1,6 @@
 ### Livebox Monitor VoIP APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 
 
 # ################################ Livebox VoIP APIs ################################

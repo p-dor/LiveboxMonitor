@@ -1,6 +1,6 @@
 ### Livebox Monitor screen & LEDs APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 
 
 # ################################ Screen APIs ################################

@@ -1,6 +1,6 @@
 ### Livebox Monitor IPTV APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 
 
 # ################################ Livebox IPTV APIs ################################

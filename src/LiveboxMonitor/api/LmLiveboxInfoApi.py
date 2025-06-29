@@ -2,7 +2,7 @@
 
 import requests
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.app import LmTools
 
