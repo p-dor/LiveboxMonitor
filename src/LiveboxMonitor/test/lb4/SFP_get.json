@@ -1,0 +1,28 @@
+{
+    "status": {
+        "Status": "ONT_Ready",
+        "LocalRegistrationID": "9731832466",
+        "DeviceState": 0,
+        "FirmwareUpgrade": 0,
+        "ModelName": "FGS202              ",
+        "HardwareVersion": "SCOMFGS202v1  ",
+        "ProductClass": 1,
+        "Orange": true,
+        "Software1Version": "SCOMFGS202112",
+        "Software1Status": 0,
+        "Software2Version": "SCOMFGS202112",
+        "Software2Status": 3,
+        "Manufacturer": "SERCOMM         ",
+        "SerialNumber": "SCOM23081977    ",
+        "ONTReady": true,
+        "OperatingState": 5,
+        "HostCommunication": 0,
+        "PonID": "",
+        "RegistrationID": "9731832466",
+        "OpticalSignalLevel": -20808,
+        "TransmitOpticalLevel": 2306,
+        "ChipsetTemperature": 56,
+        "Timer": 5,
+        "Retry": 7
+    }
+}
