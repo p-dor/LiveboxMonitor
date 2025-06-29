@@ -2,6 +2,8 @@
 
 import os
 import json
+import hashlib
+import base64
 
 from LiveboxMonitor.app import LmTools
 
@@ -71,6 +73,7 @@ class LmApi:
             signature = self.get_call_signature(package, method, args)
             # Look for a file in test folder matching call signature
             test_file_path = os.path.join('test', TEST_MODE, f'{signature}.json')
+            # LmTools.log_debug(1, f'Looking for testing with: {test_file_path}')
             test_file = None
             try:
                 test_file = open(test_file_path)
@@ -131,10 +134,42 @@ class LmApi:
     ### Test mode - get API call signature
     @staticmethod
     def get_call_signature(package, method, args):
-        signature = package
+        sign_list = [package.replace('.', '_')]
         if method:
-            signature += f'_{method}'
+            sign_list.append(method)
         if args:
-            for arg in args:
-                signature += f'_{arg}-{str(args[arg]).replace(" ", "_")}'
-        return signature
+            arg_sign = '_'.join(LmApi.get_arg_signature(args))
+            if len(arg_sign) > 50:
+                arg_sign = LmApi.hash_arguments(arg_sign)
+            sign_list.append(arg_sign)
+        return '_'.join(sign_list)
+
+
+    ### Test mode - get arg signature
+    @staticmethod
+    def get_arg_signature(arg):
+        items = []
+        if isinstance(arg, dict):
+            for k, v in arg.items():
+                items.append(k)
+                items.extend(LmApi.get_arg_signature(v))
+        elif isinstance(arg, (list, tuple)):
+            for v in arg:
+                items.extend(LmApi.get_arg_signature(v))
+        else:
+            items.append(str(arg).replace(' ', '_'))
+        return items
+
+
+    ### Test mode - hash arguments for API call signature
+    @staticmethod
+    def hash_arguments(string, algorithm='sha256'):
+        # Use the specified hash algorithm
+        h = hashlib.new(algorithm)
+        h.update(string.encode('utf-8'))
+        # Use base64 for compactness, but make it filesystem-safe
+        hash_bytes = h.digest()
+        hash_b64 = base64.urlsafe_b64encode(hash_bytes).decode('utf-8')
+        return hash_b64
+
+
