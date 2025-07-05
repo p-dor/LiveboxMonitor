@@ -1,0 +1,11 @@
+{"status": {
+	"Alias": "privMlo",
+	"GroupName": "lan",
+	"MLOEnable": true,
+	"SingleMLDUnit": 0,
+	"EMLSREnable": true,
+	"EMLMREnable": true,
+	"STREnable": true,
+	"SplitMLDMode": "AllMatch"
+	}
+}
