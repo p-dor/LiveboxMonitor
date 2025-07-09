@@ -43,6 +43,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 19. [Actions - Boutons d'actions et de contrôle](#actions)
 20. [Onglets répéteurs Wifi](#repeaters)
 21. [Gestion et personnalisation des icônes d'appareil](#icons)
+22. [Utiliser les APIs Livebox dans votre propre programme Python](#codingguide)
 
 
 ## Installation <a id="install"></a>
@@ -784,3 +785,11 @@ Ce répertoire est créé automatiquement dans [le répertoire de configuration 
 Il est aussi possible de modifier ces icônes, et aussi de créer de nouveaux types d'appareils avec leur propre icône.
 Une page d'explication dédiée à ces possibilités est disponible [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/CustomIcons.md).
 
+
+## Utiliser les APIs Livebox dans votre propre programme Python <a id="codingguide"></a>
+
+L'intégralité des APIs utilisées par le programme pour s'interfacer avec la Livebox sont accessibles via une couche logicielle totalement indépendante du programme lui même.
+
+Vous pouvez utiliser ces APIs dans votre propre programme Python très facilement en suivant ce petit guide en anglais [ici](https://github.com/p-dor/LiveboxMonitor/blob/main/docs/APICodingGuide.md).
+
+La documentation (générée) des APIs de la Livebox est disponible dans [ce répertoire](https://github.com/p-dor/LiveboxMonitor/tree/main/docs/API%20Documentation). Beaucoup ne sont pas implémentées par le programme mais il est très facile d'en rajouter.
