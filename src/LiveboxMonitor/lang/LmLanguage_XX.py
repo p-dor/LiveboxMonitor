@@ -727,6 +727,7 @@ LABELS = {
         'LEDs and Screen...': '',
         'Miscellaneous': '',
         'Reboot Livebox...': '',
+        'Factory Reset Livebox...': '',
         'Reboot History...': '',
         'Reboots': '',
         'Firewall Levels...': '',
@@ -768,7 +769,8 @@ LABELS = {
         'Deactivating Guest Wifi...': '',
         'Activating Wifi Scheduler...': '',
         'Deactivating Wifi Scheduler...': '',
-        'Rebooting Livebox...': ''
+        'Rebooting Livebox...': '',
+        'Reseting Livebox...': ''
     },
 
     # Actions - Reboot history
@@ -1565,6 +1567,7 @@ TOOLTIPS = {
         'screen': '',
         'miscGroup': '',
         'rebootLivebox': '',
+        'resetLivebox': '',
         'rebootHistory': '',
         'rebootGroup': '',
         'firewallLevel': '',
@@ -1987,6 +1990,8 @@ MESSAGES = {
         'restoreSvcOk' : '',
         'restoreSvcErr' : '',
         'lbReboot': '',
+        'lbReset': '',
+        'autoRestore': '',
         'appQuit': '',
         'dynDnsLoadErr': '',
         'dynDnsSvcErr': '',

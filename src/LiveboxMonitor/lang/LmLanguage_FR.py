@@ -624,6 +624,7 @@ LABELS = {
         'LEDs and Screen...': 'LEDs et Écran...',
         'Miscellaneous': 'Divers',
         'Reboot Livebox...': 'Redémarrer la Livebox...',
+        'Factory Reset Livebox...': 'Réinitialiser la Livebox...',
         'Reboot History...': 'Historique Redémarrages...',
         'Reboots': 'Redémarrages',
         'Firewall Levels...': 'Niveaux de pare-feu...',
@@ -662,7 +663,8 @@ LABELS = {
         'Deactivating Guest Wifi...': 'Désactivation du Wifi Invité...',
         'Activating Wifi Scheduler...': 'Activation du Planificateur Wifi...',
         'Deactivating Wifi Scheduler...': 'Désactivation du Planificateur Wifi...',
-        'Rebooting Livebox...': 'Redémarrage de la Livebox...'
+        'Rebooting Livebox...': 'Redémarrage de la Livebox...',
+        'Reseting Livebox...': 'Réinitialisation de la Livebox...'
     },
 
     # Actions - Reboot history
@@ -1481,6 +1483,9 @@ TOOLTIPS = {
         'screen': 'Permet de régler le niveau des LEDs et l\'affichage du mot de passe\n'
                   'Wifi sur l\'écran. Fonctionalité uniquement à partir de la Livebox 6.',
         'rebootLivebox': 'Permet de forcer un redémarrage de la Livebox.',
+        'resetLivebox': 'Permet de réinitialiser la Livebox aux paramètres d\'usine.\n'
+                        'Si la restauration automatique de votre configuration est activée un dialogue\n'
+                        'vous permettra de la désactiver.',
         'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
                          'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.',
         'firewallLevel': 'Permet de régler les niveaux des pares-feux IPv4 et IPv6.',
@@ -1909,7 +1914,9 @@ MESSAGES = {
         'backupSvcErr' : 'La demande de sauvegarde a échoué.',
         'restoreSvcOk' : 'La restauration a été demandée. La Livebox va redémarrer.',
         'restoreSvcErr' : 'La demande de restauration a échoué.',
-        'lbReboot': 'Etes-vous sûr de vouloir redémarrer la Livebox ?',
+        'lbReboot': 'Êtes-vous sûr de vouloir redémarrer la Livebox ?',
+        'lbReset': 'Êtes-vous sûr de vouloir réinitialiser la Livebox ?',
+        'autoRestore': 'Voulez-vous désactiver la restauration automatique de votre configuration ?',
         'appQuit': 'L\'application va maintenant se fermer.',
         'dynDnsLoadErr': 'Impossible de charger la liste des domaines DynDNS.',
         'dynDnsSvcErr': 'Impossible de charger la liste des services DynDNS.',

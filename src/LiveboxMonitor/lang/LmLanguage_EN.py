@@ -504,6 +504,8 @@ TOOLTIPS = {
         'screen': 'Allows you to set the LED level and display the Wifi password\n'
                   'on the screen. Feature available only from Livebox 6 onwards.',
         'rebootLivebox': 'Allows you to force a reboot of the Livebox.',
+        'resetLivebox': 'Allows you to reset the Livebox to factory settings.\n'
+                        'If automatic configuration restoration is enabled, a dialog will allow you to disable it.',
         'rebootHistory': 'Allows you to display the history of the latest reboots.\n'
                          'Useful to detect reboots forced by Orange to update the Livebox software.',
         'firewallLevel': 'Allows you to set the levels of the IPv4 and IPv6 firewalls.',

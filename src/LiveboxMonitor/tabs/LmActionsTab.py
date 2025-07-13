@@ -148,6 +148,11 @@ class LmActions:
         reboot_livebox_button.setMinimumWidth(BUTTON_WIDTH)
         reboot_buttons.addWidget(reboot_livebox_button)
 
+        reset_livebox_button = QtWidgets.QPushButton(lx('Factory Reset Livebox...'), objectName='resetLivebox')
+        reset_livebox_button.clicked.connect(self.reset_livebox_button_click)
+        reset_livebox_button.setMinimumWidth(BUTTON_WIDTH)
+        reboot_buttons.addWidget(reset_livebox_button)
+
         reboot_history_button = QtWidgets.QPushButton(lx('Reboot History...'), objectName='rebootHistory')
         reboot_history_button.clicked.connect(self.reboot_history_button_click)
         reboot_history_button.setMinimumWidth(BUTTON_WIDTH)
@@ -467,6 +472,37 @@ class LmActions:
             self._task.start(lx('Rebooting Livebox...'))
             try:
                 self._api._reboot.reboot_device()
+            except Exception as e:
+                self.display_error(str(e))
+                return
+            finally:
+                self._task.end()
+            self.display_status(mx('Application will now quit.', 'appQuit'))
+            self.close()
+
+
+    ### Click on Factory Reset Livebox button
+    def reset_livebox_button_click(self):
+        if self.ask_question(mx('Are you sure you want to reset the Livebox to factory settings?', 'lbReset')):
+            # Warn in case auto restore is enabled
+            try:
+                d = self._api._backup.get_status()
+            except Exception as e:
+                LmTools.error(str(e))
+                auto_restore_enabled = False
+            else:
+                auto_restore_enabled = d.get('Enable', False)
+            if auto_restore_enabled:
+                if self.ask_question(mx('Do you want to disable automatic restoration of your configuration?', 'autoRestore')):
+                    try:
+                        self._api._backup.set_auto_backup_enable(False)
+                    except Exception as e:
+                        self._app.display_error(str(e))
+
+            # Apply reset
+            self._task.start(lx('Reset Livebox...'))
+            try:
+                self._api._reboot.factory_reset()
             except Exception as e:
                 self.display_error(str(e))
                 return
