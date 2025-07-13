@@ -22,3 +22,8 @@ class RebootApi(LmApi):
     ### Reboot the device
     def reboot_device(self, reason='GUI_Reboot'):
         self.call('NMC', 'reboot', {'reason': reason})
+
+
+    ### Factory reset
+    def factory_reset(self, reason='GUI_Reset'):
+        self.call('NMC', 'reset', {'reason': reason})
