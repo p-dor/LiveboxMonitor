@@ -120,14 +120,18 @@ class LmRepeater:
         reboot_repeater_button.clicked.connect(repeater.reboot_repeater_button_click)
         buttons_set3.addWidget(reboot_repeater_button)
 
-        if repeater._model >= 6:     # Reboot history available only starting WR6
-            reboot_history_button = QtWidgets.QPushButton(lx('Reboot History...'), objectName='rebootHistory')
-            reboot_history_button.clicked.connect(repeater.reboot_history_button_click)
-            buttons_set3.addWidget(reboot_history_button)
+        reset_repeater_button = QtWidgets.QPushButton(lx('Reset Repeater...'), objectName='resetRepeater')
+        reset_repeater_button.clicked.connect(repeater.reset_repeater_button_click)
+        buttons_set3.addWidget(reset_repeater_button)
 
         # 4nd action buttons line
         buttons_set4 = QtWidgets.QHBoxLayout()
         buttons_set4.setSpacing(20)
+
+        if repeater._model >= 6:     # Reboot history available only starting WR6
+            reboot_history_button = QtWidgets.QPushButton(lx('Reboot History...'), objectName='rebootHistory')
+            reboot_history_button.clicked.connect(repeater.reboot_history_button_click)
+            buttons_set4.addWidget(reboot_history_button)
 
         resign_button = QtWidgets.QPushButton(lx('Resign...'), objectName='resign')
         resign_button.clicked.connect(repeater.resign_button_click)
@@ -792,6 +796,23 @@ class LmRepHandler:
                     self._app.display_error(str(e))
                 else:
                     self._app.display_status(mx('Repeater is now restarting.', 'rebooting'))
+                finally:
+                    self._app._task.end()
+        else:
+            self._app.display_error(mx('Not signed to repeater.', 'noSign'))
+
+
+    ### Click on Reset Repeater button
+    def reset_repeater_button_click(self):
+        if self.is_signed():
+            if self._app.ask_question(mx('Are you sure you want to reset the Repeater?', 'reset')):
+                self._app._task.start(lx('Reseting Repeater...'))
+                try:
+                    self._api._reboot.factory_reset(reason='WebUI reset')
+                except Exception as e:
+                    self._app.display_error(str(e))
+                else:
+                    self._app.display_status(mx('The repeater is being reset.', 'reseting'))
                 finally:
                     self._app._task.end()
         else:

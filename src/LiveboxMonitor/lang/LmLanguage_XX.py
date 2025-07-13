@@ -920,6 +920,7 @@ LABELS = {
         'Wifi Scheduler ON': '',
         'Wifi Scheduler OFF': '',
         'Reboot Repeater...': '',
+        'Reset Repeater...': '',
         'Reboot History...': '',
         'Resign...': '',
         'Actions': '',
@@ -1014,6 +1015,7 @@ LABELS = {
         'Activating Repeater Scheduler...': '',
         'Deactivating Repeater Scheduler...': '',
         'Rebooting Repeater...': '',
+        'Reseting Repeater...': '',
         'Getting Reboot History...': '',
         'Signing in to repeater...': ''
     },
@@ -1742,6 +1744,7 @@ TOOLTIPS = {
         'schedulerOn': '',
         'schedulerOff': '',
         'rebootRepeater': '',
+        'resetRepeater': '',
         'rebootHistory': '',
         'resign': '',
         'actionsGroup': '',
@@ -2014,6 +2017,8 @@ MESSAGES = {
         'schedOff': '',
         'reboot': '',
         'rebooting': '',
+        'reset': '',
+        'reseting': '',
         'resign': '',
         'forceResign': ''
     },

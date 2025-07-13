@@ -789,6 +789,7 @@ LABELS = {
         'Wifi Scheduler ON': 'Planificateur Wifi ON',
         'Wifi Scheduler OFF': 'Planificateur Wifi OFF',
         'Reboot Repeater...': 'Redémarrer le Répéteur...',
+        'Reset Repeater...': 'Réinitialiser le Répéteur...',
         'Reboot History...': 'Historique Redémarrages...',
         'Resign...': 'Réauthentifier...',
         'Attribute': 'Attribut',
@@ -874,6 +875,7 @@ LABELS = {
         'Activating Repeater Scheduler...': 'Activation du Planificateur Wifi du répéteur...',
         'Deactivating Repeater Scheduler...': 'Désactivation du Planificateur Wifi du répéteur...',
         'Rebooting Repeater...': 'Redémarrage du répéteur...',
+        'Reseting Repeater...': 'Réinitialisation du répéteur...',
         'Getting Reboot History...': 'Chargement de l\'historique de redémarrages...',
         'Signing in to repeater...': 'Authentification au répéteur...'
     },
@@ -1646,6 +1648,7 @@ TOOLTIPS = {
                        'Ce planificateur doit être configuré depuis l\'interface Web du répéteur.',
         'schedulerOff': 'Permet de désactiver le planificateur Wifi du répéteur.',
         'rebootRepeater': 'Permet de forcer un redémarrage du répéteur.',
+        'resetRepeater': 'Permet de réinitialiser le répéteur aux paramètres d\'usine.',
         'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
                          'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel du répéteur.',
         'resign': 'Pour forcer la création d\'une nouvelle session avec le répéteur.\n'
@@ -1937,8 +1940,10 @@ MESSAGES = {
         'wifiOff': 'Wifi désactivé.',
         'schedOn': 'Planificateur activé.',
         'schedOff': 'Planificateur désactivé.',
-        'reboot': 'Etes-vous sûr de vouloir redémarrer le répéteur ?',
+        'reboot': 'Êtes-vous sûr de vouloir redémarrer le répéteur ?',
         'rebooting': 'Le répéteur est maintenant en train de redémarrer.',
+        'reset': 'Êtes-vous sûr de vouloir réinitialiser le répéteur ?',
+        'reseting': 'Le répéteur est en cours de réinitialisation.',
         'resign': 'Êtes-vous sûr de vouloir vous reconnecter au répéteur ?',
         'forceResign': 'Le répéteur est inactif. Voulez-vous forcer la connexion ?'
     },

@@ -666,6 +666,7 @@ TOOLTIPS = {
                        'This scheduler must be configured from the repeater\'s web interface.',
         'schedulerOff': 'Allows you to disable the Wifi scheduler of the repeater.',
         'rebootRepeater': 'Allows you to force a reboot of the repeater.',
+        'resetRepeater': 'Allows you to reset the repeater to factory settings.',
         'rebootHistory': 'Allows you to display the history of the latest reboots.\n'
                          'Useful for detecting reboots forced by Orange to update the repeater\'s software.',
         'resign': 'To force the creation of a new session with the repeater.\n'
