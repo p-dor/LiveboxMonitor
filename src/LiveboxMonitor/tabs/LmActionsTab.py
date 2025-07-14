@@ -500,7 +500,7 @@ class LmActions:
                         self._app.display_error(str(e))
 
             # Apply reset
-            self._task.start(lx('Reset Livebox...'))
+            self._task.start(lx('Reseting Livebox...'))
             try:
                 self._api._reboot.factory_reset()
             except Exception as e:
