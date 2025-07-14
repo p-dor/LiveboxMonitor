@@ -1623,6 +1623,7 @@ TOOLTIPS = {
         'secuCombo': '',
         'passLabel': '',
         'passEdit': '',
+        'passShow': '',
         'chanLabel': '',
         'chanCombo': '',
         'modeLabel': '',

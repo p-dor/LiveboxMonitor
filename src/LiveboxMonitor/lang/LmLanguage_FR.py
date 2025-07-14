@@ -1546,6 +1546,7 @@ TOOLTIPS = {
         'secuCombo': 'Type de sécurité pour la bande radio sélectionnée.\n'
                      'Sélectionner \'None\' pour un accès libre sans mot de passe.',
         'passEdit': 'Mot de passe pour la bande radio sélectionnée.',
+        'passShow': 'Permet d\'afficher/masquer le mot de passe.',
         'chanCombo': 'Canal à utiliser pour la bande radio sélectionnée.\n'
                      'Sélectionner \'Auto\' pour une sélection automatique.',
         'modeCombo': 'Mode de connexion pour la bande radio sélectionnée.'

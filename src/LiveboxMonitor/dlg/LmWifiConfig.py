@@ -71,7 +71,16 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
         pass_label = QtWidgets.QLabel(lx('Password'), objectName='passLabel')
         self._pass_edit = QtWidgets.QLineEdit(objectName='passEdit')
+        self._pass_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        pass_show_button = QtWidgets.QPushButton('👁️', objectName='passShow')
+        pass_show_button.setCheckable(True)
+        pass_show_button.setMaximumWidth(30)
+        pass_show_button.toggled.connect(self.pass_show_toggle)
         self._pass_edit.textChanged.connect(self.pass_typed)
+        pass_box = QtWidgets.QHBoxLayout()
+        pass_box.setSpacing(5)
+        pass_box.addWidget(self._pass_edit, 1)
+        pass_box.addWidget(pass_show_button, 0)
 
         if not self._guest:
             chan_label = QtWidgets.QLabel(lx('Channel'), objectName='chanLabel')
@@ -100,7 +109,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             grid.addWidget(secu_label, 7, 0)
             grid.addWidget(self._secu_combo, 7, 1, 1, 4)
             grid.addWidget(pass_label, 8, 0)
-            grid.addWidget(self._pass_edit, 8, 1, 1, 4)
+            grid.addLayout(pass_box, 8, 1, 1, 4)
 
             # Cannot be changed on guest interfaces
             self._broadcast_checkbox.setEnabled(False)
@@ -122,7 +131,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             grid.addWidget(secu_label, 6, 0)
             grid.addWidget(self._secu_combo, 6, 1)
             grid.addWidget(pass_label, 7, 0)
-            grid.addWidget(self._pass_edit, 7, 1)
+            grid.addLayout(pass_box, 7, 1)
             grid.addWidget(chan_label, 8, 0)
             grid.addWidget(self._chan_combo, 8, 1)
             grid.addWidget(mode_label, 9, 0)
@@ -247,6 +256,13 @@ class WifiConfigDialog(QtWidgets.QDialog):
                     i['ChannelAuto'] = False
                     i['Channel'] = int(chan)
                 i['Mode'] = self._mode_combo.currentText()
+
+
+    def pass_show_toggle(self, checked):
+        if checked:
+            self._pass_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Normal)
+        else:
+            self._pass_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
 
 
     def pass_typed(self, text):

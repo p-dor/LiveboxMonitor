@@ -564,6 +564,7 @@ TOOLTIPS = {
         'secuCombo': 'Type of security for the selected radio band.\n'
                      'Select \'None\' for open access without a password.',
         'passEdit': 'Password for the selected radio band.',
+        'passShow': 'Allows you to show/hide the password.',
         'chanCombo': 'Channel to use for the selected radio band.\n'
                      'Select \'Auto\' for automatic selection.',
         'modeCombo': 'Connection mode for the selected radio band.'
