@@ -744,6 +744,7 @@ LABELS = {
         'Raw Device List...': '',
         'Raw Topology...': '',
         'Set Log Level...': '',
+        'Call APIs...': '',
         'Generate API Documentation...': '',
         'Debug': '',
         'Quit Application': '',
@@ -908,6 +909,15 @@ LABELS = {
         '-Unknown-': ''
     },
 
+    # Actions - Call API
+    'callapi': {
+        'Package:': '',
+        'Module:': '',
+        'Parameters (JSON):': '',
+        'Call': '',
+        'OK': ''
+    },
+
     # Repeater
     'repeater': {
         'Name': '',
@@ -922,6 +932,7 @@ LABELS = {
         'Reboot Repeater...': '',
         'Reset Repeater...': '',
         'Reboot History...': '',
+        'Call APIs...': '',
         'Resign...': '',
         'Actions': '',
         'Attribute': '',
@@ -1588,6 +1599,7 @@ TOOLTIPS = {
         'showRawDeviceList': '',
         'showRawTopology': '',
         'setLogLevel': '',
+        'callApis': '',
         'getApiDoc': '',
         'debugGroup': '',
         'quit': ''
@@ -1731,6 +1743,19 @@ TOOLTIPS = {
         'ok': ''
     },
 
+    # Actions - Call API
+    'callapi': {
+        'packageLabel': '',
+        'package': '',
+        'moduleLabel': '',
+        'module': '',
+        'parametersLabel': '',
+        'parametersEdit': '',
+        'call': '',
+        'replyEdit': '',
+        'ok': ''
+    },
+
     # Repeater
     'repeater': {
         'stats_Name': '',
@@ -1747,6 +1772,7 @@ TOOLTIPS = {
         'rebootRepeater': '',
         'resetRepeater': '',
         'rebootHistory': '',
+        'callApis': '',
         'resign': '',
         'actionsGroup': '',
         'repeaterInfo': '',

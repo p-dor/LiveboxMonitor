@@ -639,6 +639,7 @@ LABELS = {
         'Raw Device List...': 'JSON Liste Appareils...',
         'Raw Topology...': 'JSON Topologie...',
         'Set Log Level...': 'Niveau de log...',
+        'Call APIs...': 'Appel APIs...',
         'Generate API Documentation...': 'Générer documentation APIs...',
         'Debug': 'Débogage',
         'Quit Application': 'Quitter l\'application',
@@ -781,6 +782,9 @@ LABELS = {
         '-Unknown-': '-Inconnu-'
     },
 
+    # Actions - Call API - no translation required
+    'callapi': {},
+
     # Repeater
     'repeater': {
         'Name': 'Nom',
@@ -791,6 +795,7 @@ LABELS = {
         'Reboot Repeater...': 'Redémarrer le Répéteur...',
         'Reset Repeater...': 'Réinitialiser le Répéteur...',
         'Reboot History...': 'Historique Redémarrages...',
+        'Call APIs...': 'Appel APIs...',
         'Resign...': 'Réauthentifier...',
         'Attribute': 'Attribut',
         'Value': 'Valeur',
@@ -1509,6 +1514,7 @@ TOOLTIPS = {
                            'Utile pour avoir plus d\'informations ou pour le débogage.',
         'setLogLevel': 'Permet de changer le niveau de logs dans la console.\n'
                        'Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.',
+        'callApis': 'Permet d\'appeler les APIs REST/JSON de la Livebox.',
         'getApiDoc': 'Permet d\'exporter dans un ensemble de fichiers la documentation disponible\n'
                      'sur les API REST/JSON de la Livebox. Fonctionalité bloquée sur les Livebox W7 et S.',
         'quit': 'Pour quitter l\'application. Strictement équivalent à fermer la fenêtre de l\'application.'
@@ -1626,6 +1632,15 @@ TOOLTIPS = {
         'ok': 'Ferme cet écran.'
     },
 
+    # Actions - Call API
+    'callapi': {
+        'package': 'Indiquer le nom du package, par exemple "NMC".',
+        'module': 'Indiquer le nom du service, par exemple "get".',
+        'parametersEdit': 'Indiquer les paramètres à utiliser, au format JSON.',
+        'call': 'Appelle l\'API correspondante.',
+        'replyEdit': 'Affiche la réponse de l\'appel.'
+    },
+
     # Repeater
     'repeater': {
         'stats_Name': 'Nom de l\'interface réseau.\n'
@@ -1652,6 +1667,7 @@ TOOLTIPS = {
         'resetRepeater': 'Permet de réinitialiser le répéteur aux paramètres d\'usine.',
         'rebootHistory': 'Permet d\'afficher l\'historique des derniers redémarrages.\n'
                          'Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel du répéteur.',
+        'callApis': 'Permet d\'appeler les APIs REST/JSON du répéteur.',
         'resign': 'Pour forcer la création d\'une nouvelle session avec le répéteur.\n'
                   'Si vous laissez trop longtemps le programme tourner sans visualiser les statistiques du répéteur ni\n'
                   'effectuer la moindre action, la session sera automatiquement libérée par le répéteur.\n'

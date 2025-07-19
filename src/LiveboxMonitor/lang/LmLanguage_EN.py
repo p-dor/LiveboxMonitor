@@ -527,6 +527,7 @@ TOOLTIPS = {
                            'Useful for getting more information or for debugging.',
         'setLogLevel': 'Allows you to change the log level in the console.\n'
                        'This level is stored in the program configuration and will be retained at the next launch.',
+        'callApis': 'Allows you to call the REST/JSON Livebox APIs.',
         'getApiDoc': 'Allows you to export the available documentation on the Livebox REST/JSON APIs\n'
                      'into a set of files. This feature is blocked on Livebox W7 & S.',
         'quit': 'To quit the application. Strictly equivalent to closing the application window.'
@@ -644,6 +645,15 @@ TOOLTIPS = {
         'ok': 'Closes this screen.'
     },
 
+    # Actions - Call API
+    'callapi': {
+        'package': 'Package name, for example "NMC".',
+        'module': 'Service name, for example "get".',
+        'parametersEdit': 'Parameters to use, JSON format.',
+        'call': 'Trigger the corresponding API call.',
+        'replyEdit': 'Displays API call response, JSON format.'
+    },
+
     # Repeater
     'repeater': {
         'stats_Name': 'Network interface name.\n'
@@ -670,6 +680,7 @@ TOOLTIPS = {
         'resetRepeater': 'Allows you to reset the repeater to factory settings.',
         'rebootHistory': 'Allows you to display the history of the latest reboots.\n'
                          'Useful for detecting reboots forced by Orange to update the repeater\'s software.',
+        'callApis': 'Allows you to call the REST/JSON repeater APIs.',
         'resign': 'To force the creation of a new session with the repeater.\n'
                   'If you leave the program running too long without viewing the repeater\'s statistics or\n'
                   'performing any action, the session will be automatically released by the repeater.\n'

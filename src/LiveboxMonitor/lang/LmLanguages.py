@@ -149,6 +149,7 @@ def get_firewall_level_label(string): return get_label('fwlevel', string)
 def get_ping_response_label(string): return get_label('pingr', string)
 def get_dyndns_label(string): return get_label('dyndns', string)
 def get_dmz_label(string): return get_label('dmz', string)
+def call_api_label(string): return get_label('callapi', string)
 
 # Repeater
 def get_repeater_label(string): return get_label('repeater', string)
