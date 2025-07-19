@@ -20,6 +20,7 @@ from LiveboxMonitor.dlg.LmDynDns import DynDnsSetupDialog
 from LiveboxMonitor.dlg.LmDmz import DmzSetupDialog
 from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
+from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
 from LiveboxMonitor.lang.LmLanguages import get_actions_label as lx, get_actions_message as mx
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
@@ -260,6 +261,9 @@ class LmActions:
         set_log_level_button = QtWidgets.QPushButton(lx('Set Log Level...'), objectName='setLogLevel')
         set_log_level_button.clicked.connect(self.set_log_level_button_click)
         debug_buttons.addWidget(set_log_level_button)
+        call_api_button = QtWidgets.QPushButton(lx('Call APIs...'), objectName='callApis')
+        call_api_button.clicked.connect(self.call_api_button_click)
+        debug_buttons.addWidget(call_api_button)
         gen_doc_button = QtWidgets.QPushButton(lx('Generate API Documentation...'), objectName='getApiDoc')
         gen_doc_button.clicked.connect(self.get_doc_button_click)
         debug_buttons.addWidget(gen_doc_button)
@@ -654,6 +658,12 @@ class LmActions:
                                                    levels, LmConf.LogLevel, False)
         if ok:
             LmConf.set_log_level(int(level))
+
+
+    ### Click on call APIs button
+    def call_api_button_click(self):
+        dialog = CallApiDialog(self._api._session, self)
+        dialog.exec()
 
 
     ### Click on generate API documentation button
