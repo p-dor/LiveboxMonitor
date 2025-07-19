@@ -14,6 +14,7 @@ from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
+from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
 from LiveboxMonitor.lang.LmLanguages import get_repeater_label as lx, get_repeater_message as mx
 
@@ -125,17 +126,25 @@ class LmRepeater:
         buttons_set3.addWidget(reset_repeater_button)
 
         # 4nd action buttons line
-        buttons_set4 = QtWidgets.QHBoxLayout()
-        buttons_set4.setSpacing(20)
-
         if repeater._model >= 6:     # Reboot history available only starting WR6
+            buttons_set4 = QtWidgets.QHBoxLayout()
+            buttons_set4.setSpacing(20)
+
             reboot_history_button = QtWidgets.QPushButton(lx('Reboot History...'), objectName='rebootHistory')
             reboot_history_button.clicked.connect(repeater.reboot_history_button_click)
             buttons_set4.addWidget(reboot_history_button)
 
+        # 5th action buttons line
+        buttons_set5 = QtWidgets.QHBoxLayout()
+        buttons_set5.setSpacing(20)
+
+        call_api_button = QtWidgets.QPushButton(lx('Call APIs...'), objectName='callApis')
+        call_api_button.clicked.connect(repeater.call_api_button_click)
+        buttons_set5.addWidget(call_api_button)
+
         resign_button = QtWidgets.QPushButton(lx('Resign...'), objectName='resign')
         resign_button.clicked.connect(repeater.resign_button_click)
-        buttons_set4.addWidget(resign_button)
+        buttons_set5.addWidget(resign_button)
 
         # Debug Button
         if DEBUG_BUTTON:
@@ -151,7 +160,9 @@ class LmRepeater:
         if repeater._model >= 6:     # Scheduler available only starting WR6
             group_box_layout.addLayout(buttons_set2, 0)
         group_box_layout.addLayout(buttons_set3, 0)
-        group_box_layout.addLayout(buttons_set4, 0)
+        if repeater._model >= 6:     # Reboot history available only starting WR6
+            group_box_layout.addLayout(buttons_set4, 0)
+        group_box_layout.addLayout(buttons_set5, 0)
         if DEBUG_BUTTON:
             group_box_layout.addWidget(debug_button)
         group_box.setLayout(group_box_layout)
@@ -836,6 +847,12 @@ class LmRepHandler:
             history_dialog.exec()
         else:
             self._app.display_error(mx('Not signed to repeater.', 'noSign'))
+
+
+    ### Click on call APIs button
+    def call_api_button_click(self):
+        dialog = CallApiDialog(self._api._session, self._app)
+        dialog.exec()
 
 
     ### Click on Resign button
