@@ -25,5 +25,5 @@ class RebootApi(LmApi):
 
 
     ### Factory reset
-    def factory_reset(self, reason='GUI_Reset'):
+    def factory_reset(self, reason='GUI_Reset', timeout=30):
         self.call('NMC', 'reset', {'reason': reason})
