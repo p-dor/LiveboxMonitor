@@ -17,11 +17,11 @@ class ExportTableDialog(QtWidgets.QDialog):
         self._table_widget = table_widget
         self._app = app
 
-        options_label = QtWidgets.QLabel(lx('Options'), objectName='optionsLabel')
-        self._export_header_checkbox = QtWidgets.QCheckBox(lx('Export Header'), objectName='exportHeaderCheckbox')
+        options_label = QtWidgets.QLabel(lx("Options"), objectName="optionsLabel")
+        self._export_header_checkbox = QtWidgets.QCheckBox(lx("Export Header"), objectName="exportHeaderCheckbox")
         self._export_header_checkbox.setChecked(True)
 
-        columns_label = QtWidgets.QLabel(lx('Columns'), objectName='columnsLabel')
+        columns_label = QtWidgets.QLabel(lx("Columns"), objectName="columnsLabel")
 
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(5)
@@ -36,10 +36,10 @@ class ExportTableDialog(QtWidgets.QDialog):
             self._col_checkboxes.append(self._col_checkbox)
             grid.addWidget(self._col_checkbox, col + 1, 1)
 
-        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
         self._ok_button.setDefault(True)
-        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button = QtWidgets.QPushButton(lx("Cancel"), objectName="cancel")
         cancel_button.clicked.connect(self.reject)
         hbox = QtWidgets.QHBoxLayout()
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -52,9 +52,9 @@ class ExportTableDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'export_table')
+        LmConfig.set_tooltips(self, "export_table")
 
-        self.setWindowTitle(lx('Export Table'))
+        self.setWindowTitle(lx("Export Table"))
 
         self.setModal(True)
         self.show()
@@ -63,22 +63,22 @@ class ExportTableDialog(QtWidgets.QDialog):
     # Export the table content in a CSV file
     def do_export_table(self):
         # Select file
-        file_name = QtWidgets.QFileDialog.getSaveFileName(self, lx('Save File'), '.csv', '*.csv')[0]
+        file_name = QtWidgets.QFileDialog.getSaveFileName(self, lx("Save File"), ".csv", "*.csv")[0]
         if not file_name:
             return
 
         # Open file
         try:
-            export_file = open(file_name, 'w', newline='')
+            export_file = open(file_name, "w", newline="")
         except Exception as e:
-            LmTools.error(f'File creation error: {e}')
-            self._app.display_error(mx('Cannot create the file.', 'createFileErr'))
+            LmTools.error(f"File creation error: {e}")
+            self._app.display_error(mx("Cannot create the file.", "createFileErr"))
             return
 
-        self._app._task.start(lx('Exporting data...'))
+        self._app._task.start(lx("Exporting data..."))
 
         # Create CSV writer
-        csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
+        csv_writer = csv.writer(export_file, dialect="excel", delimiter=LmConf.CsvDelimiter)
 
         # Write header if necessary
         if self._export_header_checkbox.isChecked():
@@ -98,8 +98,8 @@ class ExportTableDialog(QtWidgets.QDialog):
         try:
             export_file.close()
         except Exception as e:
-            LmTools.error(f'File saving error: {e}')
-            self._app.display_error(mx('Cannot save the file.', 'saveFileErr'))
+            LmTools.error(f"File saving error: {e}")
+            self._app.display_error(mx("Cannot save the file.", "saveFileErr"))
  
         self._app._task.end()
 
@@ -109,7 +109,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         # Retrieve item, return empty string if None
         item = self._table_widget.item(row, col)
         if not item:
-            return ''
+            return ""
 
         # First try a ExportDataRole data
         data = item.data(LmTools.ItemDataRole.ExportRole)

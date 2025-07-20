@@ -18,10 +18,10 @@ from LiveboxMonitor.lang.LmLanguages import get_device_info_label as lx, get_dev
 # ################################ VARS & DEFS ################################
 
 # Tab name
-TAB_NAME = 'deviceInfoTab'
+TAB_NAME = "deviceInfoTab"
 
 # Static Config
-MACADDR_URL = 'https://api.macaddress.io/v1?apiKey={0}&output=json&search={1}'
+MACADDR_URL = "https://api.macaddress.io/v1?apiKey={0}&output=json&search={1}"
 
 
 
@@ -33,19 +33,19 @@ class LmDeviceInfo:
         self._device_info_tab = QtWidgets.QWidget(objectName=TAB_NAME)
 
         # Device list
-        self._info_dlist = LmTableWidget(objectName='infoDList')
-        self._info_dlist.set_columns({DSelCol.Key: ['Key', 0, None],
-                                     DSelCol.Name: [lx('Name'), 200, 'dlist_Name'],
-                                     DSelCol.MAC: [lx('MAC'), 120, 'dlist_MAC']})
+        self._info_dlist = LmTableWidget(objectName="infoDList")
+        self._info_dlist.set_columns({DSelCol.Key: ["Key", 0, None],
+                                     DSelCol.Name: [lx("Name"), 200, "dlist_Name"],
+                                     DSelCol.MAC: [lx("MAC"), 120, "dlist_MAC"]})
         self._info_dlist.set_header_resize([DSelCol.MAC])
         self._info_dlist.set_standard_setup(self)
         self._info_dlist.setMinimumWidth(350)
         self._info_dlist.itemSelectionChanged.connect(self.info_device_list_click)
 
         # Attribute list
-        self._info_alist = LmTableWidget(objectName='infoAList')
-        self._info_alist.set_columns({InfoCol.Attribute: [lx('Attribute'), 200, 'alist_Attribute'],
-                                     InfoCol.Value: [lx('Value'), 600, 'alist_Value']})
+        self._info_alist = LmTableWidget(objectName="infoAList")
+        self._info_alist.set_columns({InfoCol.Attribute: [lx("Attribute"), 200, "alist_Attribute"],
+                                     InfoCol.Value: [lx("Value"), 600, "alist_Value"]})
         self._info_alist.set_header_resize([InfoCol.Value])
         self._info_alist.set_standard_setup(self, allow_sel=False, allow_sort=False)
 
@@ -58,25 +58,25 @@ class LmDeviceInfo:
         # Button bar
         buttons_box = QtWidgets.QHBoxLayout()
         buttons_box.setSpacing(30)
-        refresh_device_info_button = QtWidgets.QPushButton(lx('Refresh'), objectName='refresh')
+        refresh_device_info_button = QtWidgets.QPushButton(lx("Refresh"), objectName="refresh")
         refresh_device_info_button.clicked.connect(self.refresh_device_info_button_click)
         buttons_box.addWidget(refresh_device_info_button)
-        assign_name_button = QtWidgets.QPushButton(lx('Assign Name...'), objectName='assignName')
+        assign_name_button = QtWidgets.QPushButton(lx("Assign Name..."), objectName="assignName")
         assign_name_button.clicked.connect(self.assign_name_button_click)
         buttons_box.addWidget(assign_name_button)
-        assign_type_button = QtWidgets.QPushButton(lx('Assign Type...'), objectName='assignType')
+        assign_type_button = QtWidgets.QPushButton(lx("Assign Type..."), objectName="assignType")
         assign_type_button.clicked.connect(self.assign_type_button_click)
         buttons_box.addWidget(assign_type_button)
-        forget_button = QtWidgets.QPushButton(lx('Forget...'), objectName='forget')
+        forget_button = QtWidgets.QPushButton(lx("Forget..."), objectName="forget")
         forget_button.clicked.connect(self.forget_button_click)
         buttons_box.addWidget(forget_button)
-        wol_button = QtWidgets.QPushButton(lx('WakeOnLAN'), objectName='wol')
+        wol_button = QtWidgets.QPushButton(lx("WakeOnLAN"), objectName="wol")
         wol_button.clicked.connect(self.wol_button_click)
         buttons_box.addWidget(wol_button)
-        block_device_button = QtWidgets.QPushButton(lx('Block'), objectName='block')
+        block_device_button = QtWidgets.QPushButton(lx("Block"), objectName="block")
         block_device_button.clicked.connect(self.block_device_button_click)
         buttons_box.addWidget(block_device_button)
-        unblock_device_button = QtWidgets.QPushButton(lx('Unblock'), objectName='unblock')
+        unblock_device_button = QtWidgets.QPushButton(lx("Unblock"), objectName="unblock")
         unblock_device_button.clicked.connect(self.unblock_device_button_click)
         buttons_box.addWidget(unblock_device_button)
 
@@ -87,8 +87,8 @@ class LmDeviceInfo:
         vbox.addLayout(buttons_box, 1)
         self._device_info_tab.setLayout(vbox)
 
-        LmConfig.set_tooltips(self._device_info_tab, 'dinfo')
-        self._tab_widget.addTab(self._device_info_tab, lx('Device Infos'))
+        LmConfig.set_tooltips(self._device_info_tab, "dinfo")
+        self._tab_widget.addTab(self._device_info_tab, lx("Device Infos"))
 
         # Init context
         self.init_device_context()
@@ -98,7 +98,7 @@ class LmDeviceInfo:
     def init_device_context(self):
         self._current_device_livebox_name = None
         self._current_device_dns_name = None
-        self._current_device_type = ''
+        self._current_device_type = ""
 
 
     ### Get selected device key - returns None if no selection
@@ -107,7 +107,7 @@ class LmDeviceInfo:
         if current_selection >= 0:
             return self._info_dlist.item(current_selection, DSelCol.Key).text()
         if display_error:
-            self.display_error(mx('Please select a device.', 'devSelect'))
+            self.display_error(mx("Please select a device.", "devSelect"))
         return None
 
 
@@ -191,7 +191,7 @@ class LmDeviceInfo:
     def assign_type_button_click(self):
         key = self.get_selected_device_key()
         if key:
-            self._task.start(lx('Loading device icons...'))
+            self._task.start(lx("Loading device icons..."))
             try:
                 LmConf.load_device_icons(self._api._info.get_software_version())
             finally:
@@ -218,14 +218,14 @@ class LmDeviceInfo:
             except Exception as e:
                 self.display_error(str(e))
             else:
-                self.display_status(mx('Wake on LAN signal sent to device [{}].', 'devWOL').format(key))
+                self.display_status(mx("Wake on LAN signal sent to device [{}].", "devWOL").format(key))
 
 
     ### Click on forget device button
     def forget_button_click(self):
         key = self.get_selected_device_key()
         if key:
-            if self.ask_question(mx('Are you sure you want to forget device [{}]?', 'devForget').format(key)):
+            if self.ask_question(mx("Are you sure you want to forget device [{}]?", "devForget").format(key)):
                 try:
                     self._api._device.delete(key)
                 except Exception as e:
@@ -245,7 +245,7 @@ class LmDeviceInfo:
             except Exception as e:
                 self.display_error(str(e))
             else:
-                self.display_status(mx('Device [{}] now blocked.', 'devBlocked').format(key))
+                self.display_status(mx("Device [{}] now blocked.", "devBlocked").format(key))
 
 
     ### Click on unblock device button
@@ -258,82 +258,82 @@ class LmDeviceInfo:
                 self.display_error(str(e))
             else:
                 if r:
-                    self.display_status(mx('Device [{}] now unblocked.', 'devUnblocked').format(key))
+                    self.display_status(mx("Device [{}] now unblocked.", "devUnblocked").format(key))
                 else:
-                    self.display_status(mx('Device [{}] is not blocked.', 'devNotBlocked').format(key))
+                    self.display_status(mx("Device [{}] is not blocked.", "devNotBlocked").format(key))
 
 
     ### Update device infos list
     def update_device_info(self, device_key):
-        self._task.start(lx('Getting device information...'))
+        self._task.start(lx("Getting device information..."))
         try:
             try:
                 d = self._api._device.get_info(device_key)
             except Exception as e:
                 LmTools.error(str(e))
                 self._task.end()
-                self.display_error(mx('Error getting device information.', 'devInfoErr'))
+                self.display_error(mx("Error getting device information.", "devInfoErr"))
                 return
 
             i = 0
-            i = self.add_info_line(self._info_alist, i, lx('Key'), device_key)
-            i = self.add_info_line(self._info_alist, i, lx('Active'), LmTools.fmt_bool(d.get('Active')))
-            i = self.add_info_line(self._info_alist, i, lx('Authenticated'), LmTools.fmt_bool(d.get('AuthenticationState')))
+            i = self.add_info_line(self._info_alist, i, lx("Key"), device_key)
+            i = self.add_info_line(self._info_alist, i, lx("Active"), LmTools.fmt_bool(d.get("Active")))
+            i = self.add_info_line(self._info_alist, i, lx("Authenticated"), LmTools.fmt_bool(d.get("AuthenticationState")))
 
             try:
                 blocked = self._api._device.is_blocked(device_key)
-                i = self.add_info_line(self._info_alist, i, lx('Blocked'), LmTools.fmt_bool(blocked))
+                i = self.add_info_line(self._info_alist, i, lx("Blocked"), LmTools.fmt_bool(blocked))
             except Exception as e:
                 LmTools.error(str(e))
-                i = self.add_info_line(self._info_alist, i, lx('Blocked'), 'Scheduler:getSchedule query error', LmTools.ValQual.Error)
+                i = self.add_info_line(self._info_alist, i, lx("Blocked"), "Scheduler:getSchedule query error", LmTools.ValQual.Error)
 
-            i = self.add_info_line(self._info_alist, i, lx('First connection'), LmTools.fmt_livebox_timestamp(d.get('FirstSeen')))
-            i = self.add_info_line(self._info_alist, i, lx('Last connection'), LmTools.fmt_livebox_timestamp(d.get('LastConnection')))
-            i = self.add_info_line(self._info_alist, i, lx('Last changed'), LmTools.fmt_livebox_timestamp(d.get('LastChanged')))
-            i = self.add_info_line(self._info_alist, i, lx('Source'), d.get('DiscoverySource'))
+            i = self.add_info_line(self._info_alist, i, lx("First connection"), LmTools.fmt_livebox_timestamp(d.get("FirstSeen")))
+            i = self.add_info_line(self._info_alist, i, lx("Last connection"), LmTools.fmt_livebox_timestamp(d.get("LastConnection")))
+            i = self.add_info_line(self._info_alist, i, lx("Last changed"), LmTools.fmt_livebox_timestamp(d.get("LastChanged")))
+            i = self.add_info_line(self._info_alist, i, lx("Source"), d.get("DiscoverySource"))
 
-            self._current_device_livebox_name = d.get('Name')
-            i = self.add_info_line(self._info_alist, i, lx('Livebox Name'), self._current_device_livebox_name)
+            self._current_device_livebox_name = d.get("Name")
+            i = self.add_info_line(self._info_alist, i, lx("Livebox Name"), self._current_device_livebox_name)
 
             self._current_device_dns_name = None
-            name_list = d.get('Names', [])
+            name_list = d.get("Names", [])
             for name in name_list:
-                name_str = name.get('Name', '')
-                source = name.get('Source', '')
-                if source == 'dns':
+                name_str = name.get("Name", "")
+                source = name.get("Source", "")
+                if source == "dns":
                     self._current_device_dns_name = name_str
-                i = self.add_info_line(self._info_alist, i, lx('Name'), f'{name_str} ({source})')
+                i = self.add_info_line(self._info_alist, i, lx("Name"), f"{name_str} ({source})")
 
-            dns_list = d.get('mDNSService', [])
+            dns_list = d.get("mDNSService", [])
             for dns_name in dns_list:
-                i = self.add_info_line(self._info_alist, i, lx('DNS Name'), f'{dns_name.get("Name", "")} ({dns_name.get("ServiceName", "")})')
+                i = self.add_info_line(self._info_alist, i, lx("DNS Name"), f"{dns_name.get('Name', '')} ({dns_name.get('ServiceName', '')})")
 
-            self._current_device_type = d.get('DeviceType', '')
+            self._current_device_type = d.get("DeviceType", "")
 
-            type_list = d.get('DeviceTypes', [])
+            type_list = d.get("DeviceTypes", [])
             for type in type_list:
-                i = self.add_info_line(self._info_alist, i, lx('Type'), f'{type.get("Type", "")} ({type.get("Source", "")})')
+                i = self.add_info_line(self._info_alist, i, lx("Type"), f"{type.get('Type', '')} ({type.get('Source', '')})")
 
             active_ip_struct = LmTools.determine_ip(d)
-            active_ip = active_ip_struct.get('Address', '') if active_ip_struct else ''
-            ipv4_list = d.get('IPv4Address', [])
+            active_ip = active_ip_struct.get("Address", "") if active_ip_struct else ""
+            ipv4_list = d.get("IPv4Address", [])
             for ipv4 in ipv4_list:
-                ip = ipv4.get('Address', '')
-                s = f'{ip} ('
+                ip = ipv4.get("Address", "")
+                s = f"{ip} ("
                 if (len(active_ip) > 0) and (active_ip == ip):
-                    s += 'active, '
-                s += f'{ipv4.get("Status", "")})'
+                    s += "active, "
+                s += f"{ipv4.get('Status', '')})"
 
-                if ipv4.get('Reserved', False):
-                    s += ' - Reserved'
-                i = self.add_info_line(self._info_alist, i, lx('IPv4 Address'), s)
+                if ipv4.get("Reserved", False):
+                    s += " - Reserved"
+                i = self.add_info_line(self._info_alist, i, lx("IPv4 Address"), s)
 
-            ipv6_list = d.get('IPv6Address', [])
+            ipv6_list = d.get("IPv6Address", [])
             for ipv6 in ipv6_list:
-                i = self.add_info_line(self._info_alist, i, lx('IPv6 Address'),
-                                       f'{ipv6.get("Address", "")} [{ipv6.get("Scope", "")}] ({ipv6.get("Status", "")})')
+                i = self.add_info_line(self._info_alist, i, lx("IPv6 Address"),
+                                       f"{ipv6.get('Address', '')} [{ipv6.get('Scope', '')}] ({ipv6.get('Status', '')})")
 
-            mac_addr = d.get('PhysAddress')
+            mac_addr = d.get("PhysAddress")
             if not mac_addr:
                 mac_addr = device_key
             if LmConf.MacAddrApiKey and mac_addr:
@@ -341,47 +341,47 @@ class LmDeviceInfo:
                     resp = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
                     resp.raise_for_status()     # Check HTTP status code
                     data = resp.json()
-                    details = data.get('vendorDetails')
-                    manufacturer = f'{details.get("companyName", "")} - {details.get("countryCode", "")}' if details else ''
-                    i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), manufacturer)
+                    details = data.get("vendorDetails")
+                    manufacturer = f"{details.get('companyName', '')} - {details.get('countryCode', '')}" if details else ""
+                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), manufacturer)
                 except Exception as e:
                     LmTools.error(str(e))
-                    i = self.add_info_line(self._info_alist, i, lx('Manufacturer'), 'Web query error', LmTools.ValQual.Error)
+                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), "Web query error", LmTools.ValQual.Error)
 
-            i = self.add_info_line(self._info_alist, i, lx('Vendor ID'), d.get('VendorClassID'))
-            i = self.add_info_line(self._info_alist, i, lx('Serial Number'), d.get('SerialNumber'))
-            i = self.add_info_line(self._info_alist, i, lx('Product Class'), d.get('ProductClass'))
-            i = self.add_info_line(self._info_alist, i, lx('Model Name'), d.get('ModelName'))
-            i = self.add_info_line(self._info_alist, i, lx('Software Version'), d.get('SoftwareVersion'))
-            i = self.add_info_line(self._info_alist, i, lx('Hardware Version'), d.get('HardwareVersion'))
-            i = self.add_info_line(self._info_alist, i, lx('DHCP Option 55'), d.get('DHCPOption55'))
+            i = self.add_info_line(self._info_alist, i, lx("Vendor ID"), d.get("VendorClassID"))
+            i = self.add_info_line(self._info_alist, i, lx("Serial Number"), d.get("SerialNumber"))
+            i = self.add_info_line(self._info_alist, i, lx("Product Class"), d.get("ProductClass"))
+            i = self.add_info_line(self._info_alist, i, lx("Model Name"), d.get("ModelName"))
+            i = self.add_info_line(self._info_alist, i, lx("Software Version"), d.get("SoftwareVersion"))
+            i = self.add_info_line(self._info_alist, i, lx("Hardware Version"), d.get("HardwareVersion"))
+            i = self.add_info_line(self._info_alist, i, lx("DHCP Option 55"), d.get("DHCPOption55"))
 
-            sys_software = d.get('SSW')
+            sys_software = d.get("SSW")
             if sys_software is not None:
-                i = self.add_info_line(self._info_alist, i, lx('Full Software Version'), sys_software.get('SoftwareVersion'))
-                i = self.add_info_line(self._info_alist, i, lx('State'), sys_software.get('State'))
-                i = self.add_info_line(self._info_alist, i, lx('Protocol'), sys_software.get('Protocol'))
-                i = self.add_info_line(self._info_alist, i, lx('Current Mode'), sys_software.get('CurrentMode'))
-                i = self.add_info_line(self._info_alist, i, lx('Pairing Time'), LmTools.fmt_livebox_timestamp(sys_software.get('PairingTime')))
-                i = self.add_info_line(self._info_alist, i, lx('Uplink Type'), sys_software.get('UplinkType'))
+                i = self.add_info_line(self._info_alist, i, lx("Full Software Version"), sys_software.get("SoftwareVersion"))
+                i = self.add_info_line(self._info_alist, i, lx("State"), sys_software.get("State"))
+                i = self.add_info_line(self._info_alist, i, lx("Protocol"), sys_software.get("Protocol"))
+                i = self.add_info_line(self._info_alist, i, lx("Current Mode"), sys_software.get("CurrentMode"))
+                i = self.add_info_line(self._info_alist, i, lx("Pairing Time"), LmTools.fmt_livebox_timestamp(sys_software.get("PairingTime")))
+                i = self.add_info_line(self._info_alist, i, lx("Uplink Type"), sys_software.get("UplinkType"))
 
-            signal_strength = LmTools.fmt_int(d.get('SignalStrength'))
+            signal_strength = LmTools.fmt_int(d.get("SignalStrength"))
             if len(signal_strength):
-                signal_strength += ' dBm'
-            i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Strength'), signal_strength)
-            i = self.add_info_line(self._info_alist, i, lx('Wifi Signal Noise Ratio'), LmTools.fmt_int(d.get('SignalNoiseRatio')))
-            i = self.add_info_line(self._info_alist, i, lx('Encryption Mode'), d.get('EncryptionMode'))
-            i = self.add_info_line(self._info_alist, i, lx('Security Mode'), d.get('SecurityModeEnabled'))
-            i = self.add_info_line(self._info_alist, i, lx('Link Bandwidth'), d.get('LinkBandwidth'))
-            i = self.add_info_line(self._info_alist, i, lx('Operating Standard'), d.get('OperatingStandard'))
-            i = self.add_info_line(self._info_alist, i, lx('Operating Band'), d.get('OperatingFrequencyBand'))
+                signal_strength += " dBm"
+            i = self.add_info_line(self._info_alist, i, lx("Wifi Signal Strength"), signal_strength)
+            i = self.add_info_line(self._info_alist, i, lx("Wifi Signal Noise Ratio"), LmTools.fmt_int(d.get("SignalNoiseRatio")))
+            i = self.add_info_line(self._info_alist, i, lx("Encryption Mode"), d.get("EncryptionMode"))
+            i = self.add_info_line(self._info_alist, i, lx("Security Mode"), d.get("SecurityModeEnabled"))
+            i = self.add_info_line(self._info_alist, i, lx("Link Bandwidth"), d.get("LinkBandwidth"))
+            i = self.add_info_line(self._info_alist, i, lx("Operating Standard"), d.get("OperatingStandard"))
+            i = self.add_info_line(self._info_alist, i, lx("Operating Band"), d.get("OperatingFrequencyBand"))
 
-            sys_software_std = d.get('SSWSta')
+            sys_software_std = d.get("SSWSta")
             if sys_software_std is not None:
-                i = self.add_info_line(self._info_alist, i, lx('Supported Standards'), sys_software_std.get('SupportedStandards'))
-                i = self.add_info_line(self._info_alist, i, lx('Supports 2.4GHz'), LmTools.fmt_bool(sys_software_std.get('Supports24GHz')))
-                i = self.add_info_line(self._info_alist, i, lx('Supports 5GHz'), LmTools.fmt_bool(sys_software_std.get('Supports5GHz')))
-                i = self.add_info_line(self._info_alist, i, lx('Supports 6GHz'), LmTools.fmt_bool(sys_software_std.get('Supports6GHz')))
+                i = self.add_info_line(self._info_alist, i, lx("Supported Standards"), sys_software_std.get("SupportedStandards"))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 2.4GHz"), LmTools.fmt_bool(sys_software_std.get("Supports24GHz")))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 5GHz"), LmTools.fmt_bool(sys_software_std.get("Supports5GHz")))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 6GHz"), LmTools.fmt_bool(sys_software_std.get("Supports6GHz")))
 
         finally:
             self._task.end()

@@ -13,8 +13,8 @@ class ScreenDialog(QtWidgets.QDialog):
         self.setMinimumWidth(300)
         self.resize(350, 150)
 
-        orange_label = QtWidgets.QLabel(lx('LED Brightness'), objectName='orangeLabel')
-        self._orange_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, objectName='orangeSlider')
+        orange_label = QtWidgets.QLabel(lx("LED Brightness"), objectName="orangeLabel")
+        self._orange_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, objectName="orangeSlider")
         self._orange_slider.setRange(0, 255)
         self._orange_slider.setValue(orange_led_level)
         self._orange_slider.setSingleStep(5)
@@ -22,10 +22,10 @@ class ScreenDialog(QtWidgets.QDialog):
         self._orange_slider.setTickPosition(QtWidgets.QSlider.TickPosition.TicksAbove)
         self._orange_slider.setTickInterval(15)
         self._orange_slider.valueChanged.connect(self.orange_level_changed)
-        self._orange_value = QtWidgets.QLabel(str(orange_led_level), objectName='orangeValue')
+        self._orange_value = QtWidgets.QLabel(str(orange_led_level), objectName="orangeValue")
         self._orange_value.setMinimumWidth(20)
 
-        self._show_wifi_password_checkbox = QtWidgets.QCheckBox(lx('Show Wifi Password'), objectName='showWifiPasswordCheckbox')
+        self._show_wifi_password_checkbox = QtWidgets.QCheckBox(lx("Show Wifi Password"), objectName="showWifiPasswordCheckbox")
         self._show_wifi_password_checkbox.setChecked(show_wifi_password)
 
         grid = QtWidgets.QGridLayout()
@@ -35,10 +35,10 @@ class ScreenDialog(QtWidgets.QDialog):
         grid.addWidget(self._orange_value, 0, 2)
         grid.addWidget(self._show_wifi_password_checkbox, 1, 0, 1, 3)
 
-        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
         self._ok_button.setDefault(True)
-        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button = QtWidgets.QPushButton(lx("Cancel"), objectName="cancel")
         cancel_button.clicked.connect(self.reject)
         hbox = QtWidgets.QHBoxLayout()
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -50,9 +50,9 @@ class ScreenDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'screen')
+        LmConfig.set_tooltips(self, "screen")
 
-        self.setWindowTitle(lx('LEDs & Screen Setup'))
+        self.setWindowTitle(lx("LEDs & Screen Setup"))
 
         self.setModal(True)
         self.show()

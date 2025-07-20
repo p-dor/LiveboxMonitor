@@ -7,19 +7,19 @@ from LiveboxMonitor.app import LmTools
 # ################################ VARS & DEFS ################################
 # Friendly name map
 FRIENDLY_NAME_MAP = {
-    'WAN_Ethernet':         'WAN',
-    'WAN_GPON':             'Fiber',
-    'eth1':                 'Ethernet 1',
-    'eth2':                 'Ethernet 2',
-    'eth3':                 'Ethernet 3',
-    'eth4':                 'Ethernet 4',
-    '2.4GHz-Private_SSID':  'Wifi 2.4GHz',
-    '5GHz-Private_SSID':    'Wifi 5GHz',
-    '6GHz-Private_SSID':    'Wifi 6GHz',
-    '2.4GHz-Guest_SSID':    'Guest 2.4GHz',
-    '5GHz-Guest_SSID':      'Guest 5GHz',
-    'LAN-2.5G':             'Ether 2.5G',
-    'LAN-10G':              'Ether 10G'
+    "WAN_Ethernet":         "WAN",
+    "WAN_GPON":             "Fiber",
+    "eth1":                 "Ethernet 1",
+    "eth2":                 "Ethernet 2",
+    "eth3":                 "Ethernet 3",
+    "eth4":                 "Ethernet 4",
+    "2.4GHz-Private_SSID":  "Wifi 2.4GHz",
+    "5GHz-Private_SSID":    "Wifi 5GHz",
+    "6GHz-Private_SSID":    "Wifi 6GHz",
+    "2.4GHz-Guest_SSID":    "Guest 2.4GHz",
+    "5GHz-Guest_SSID":      "Guest 5GHz",
+    "LAN-2.5G":             "Ether 2.5G",
+    "LAN-10G":              "Ether 10G"
 }
 
 
@@ -35,28 +35,28 @@ class IntfApi(LmApi):
 
     ### Get interface information
     def get_info(self, intf):
-        return self.call('NeMo.Intf.' + intf, 'get')
+        return self.call("NeMo.Intf." + intf, "get")
 
 
     ### Get Ethernet Interfaces setup - returns base, eth
     def get_eth_mibs(self):
-        d = self.call('NeMo.Intf.lan', 'getMIBs', {'mibs': 'base eth'}, timeout=25)
-        base = d.get('base')
-        eth = d.get('eth')
+        d = self.call("NeMo.Intf.lan", "getMIBs", {"mibs": "base eth"}, timeout=25)
+        base = d.get("base")
+        eth = d.get("eth")
         if (base is None) or (eth is None):
-            raise LmApiException('NeMo.Intf.lan:getMIBs service failed.')
+            raise LmApiException("NeMo.Intf.lan:getMIBs service failed.")
         return base, eth
 
 
     ### Get Wifi or Guest Interfaces setup - returns base, radio and vap
     def get_wifi_mibs(self, guest=False):
-        i = 'guest' if guest else 'lan'
-        d = self.call('NeMo.Intf.' + i, 'getMIBs', {'mibs': 'base wlanradio wlanvap'}, timeout=25)
-        base = d.get('base')
-        radio = d.get('wlanradio')
-        vap = d.get('wlanvap')
+        i = "guest" if guest else "lan"
+        d = self.call("NeMo.Intf." + i, "getMIBs", {"mibs": "base wlanradio wlanvap"}, timeout=25)
+        base = d.get("base")
+        radio = d.get("wlanradio")
+        vap = d.get("wlanvap")
         if (base is None) or (radio is None) or (vap is None):
-            raise LmApiException('NeMo.Intf.' + i + ':getMIBs service failed.')
+            raise LmApiException("NeMo.Intf." + i + ":getMIBs service failed.")
         return base, radio, vap
 
 
@@ -64,49 +64,49 @@ class IntfApi(LmApi):
     def get_ont_mibs(self, ont_intf=None):
         if not ont_intf:
             try:
-                ont_intf = next(i['Key'] for i in self.get_list() if i['Type'] == 'ont')
+                ont_intf = next(i["Key"] for i in self.get_list() if i["Type"] == "ont")
             except StopIteration:
-                raise LmApiException('No ONT interface found.')
+                raise LmApiException("No ONT interface found.")
 
-        d = self.call('NeMo.Intf.' + ont_intf, 'getMIBs', {'mibs': 'gpon'})
-        d = d.get('gpon')
+        d = self.call("NeMo.Intf." + ont_intf, "getMIBs", {"mibs": "gpon"})
+        d = d.get("gpon")
         if d:
             d = d.get(ont_intf)
         if not d:
-            raise LmApiException('NeMo.Intf.' + ont_intf + ':getMIBs service failed.')
+            raise LmApiException("NeMo.Intf." + ont_intf + ":getMIBs service failed.")
         return d
 
 
     ### Get raw MIBs lan
     def get_raw_mibs_lan(self):
-        return self.call('NeMo.Intf.lan', 'getMIBs', timeout=25)
+        return self.call("NeMo.Intf.lan", "getMIBs", timeout=25)
 
 
     ### Get raw MIBs data
     def get_raw_mibs_data(self):
-        return self.call('NeMo.Intf.data', 'getMIBs', timeout=25)
+        return self.call("NeMo.Intf.data", "getMIBs", timeout=25)
 
 
     ### Get SFP ONT module infos (only for Livebox 4)
     def get_sfp_info(self):
-        return self.call('SFP', 'get')
+        return self.call("SFP", "get")
 
 
     ### Get list of interface keys
     def get_key_list(self):
-        return self.call('NeMo.Intf.lo', 'getIntfs', {'traverse': 'all'})
+        return self.call("NeMo.Intf.lo", "getIntfs", {"traverse": "all"})
 
 
     ### Get interface list from HomeLan package
     def get_raw_list(self):
-        return self.call('HomeLan.Interface', 'get')
+        return self.call("HomeLan.Interface", "get")
 
 
     ### Get list of useful interfaces with key, name, type and swap stats fields
     def get_list(self):
         if self._list is None:
             if not self._api._intf.build_list():
-                LmTools.error('Failed to build interface list.')
+                LmTools.error("Failed to build interface list.")
         return self._list
 
 
@@ -117,13 +117,13 @@ class IntfApi(LmApi):
         self._has_radio_band_5 = False
         self._has_radio_band_6 = False
         for i in intf_list:
-            if i['Type'] == 'wif':
-                name = i['Name']
-                if '2.4GHz' in name:
+            if i["Type"] == "wif":
+                name = i["Name"]
+                if "2.4GHz" in name:
                     self._has_radio_band_2 = True
-                elif '5GHz' in name:
+                elif "5GHz" in name:
                     self._has_radio_band_5 = True
-                elif '6GHz' in name:
+                elif "6GHz" in name:
                     self._has_radio_band_6 = True
 
 
@@ -154,45 +154,45 @@ class IntfApi(LmApi):
         wig = []
         for k in d:
             e = d.get(k)
-            type = e.get('Alias')
-            name = e.get('FriendlyName')
-            if type == 'Eth':
+            type = e.get("Alias")
+            name = e.get("FriendlyName")
+            if type == "Eth":
                 i = {}
-                i['Key'] = k
-                i['Name'] = FRIENDLY_NAME_MAP.get(name, name)
-                i['Type'] = 'eth'
-                i['SwapStats'] = True
+                i["Key"] = k
+                i["Name"] = FRIENDLY_NAME_MAP.get(name, name)
+                i["Type"] = "eth"
+                i["SwapStats"] = True
                 eth.append(i)
-            elif type == 'WiFi':
+            elif type == "WiFi":
                 i = {}
-                i['Key'] = k
-                i['Name'] = FRIENDLY_NAME_MAP.get(name, name)
-                if 'Guest' in name:
-                    i['Type'] = 'wig'
+                i["Key"] = k
+                i["Name"] = FRIENDLY_NAME_MAP.get(name, name)
+                if "Guest" in name:
+                    i["Type"] = "wig"
                     wig.append(i)
                 else:
-                    i['Type'] = 'wif'
+                    i["Type"] = "wif"
                     wif.append(i)
-                if '2.4GHz' in name:
+                if "2.4GHz" in name:
                     self._has_radio_band_2 = True
-                elif '5GHz' in name:
+                elif "5GHz" in name:
                     self._has_radio_band_5 = True
-                elif '6GHz' in name:
+                elif "6GHz" in name:
                     self._has_radio_band_6 = True
-                i['SwapStats'] = True
-            elif name == 'WAN_Ethernet':
+                i["SwapStats"] = True
+            elif name == "WAN_Ethernet":
                 i = {}
-                i['Key'] = k
-                i['Name'] = FRIENDLY_NAME_MAP.get(name, name)
-                i['Type'] = 'wan'
-                i['SwapStats'] = False
+                i["Key"] = k
+                i["Name"] = FRIENDLY_NAME_MAP.get(name, name)
+                i["Type"] = "wan"
+                i["SwapStats"] = False
                 wan.append(i)
-            elif name == 'WAN_GPON':
+            elif name == "WAN_GPON":
                 i = {}
-                i['Key'] = k
-                i['Name'] = FRIENDLY_NAME_MAP.get(name, name)
-                i['Type'] = 'ont'
-                i['SwapStats'] = False
+                i["Key"] = k
+                i["Name"] = FRIENDLY_NAME_MAP.get(name, name)
+                i["Type"] = "ont"
+                i["SwapStats"] = False
                 ont.append(i)
 
         # Build correctly sorted list
@@ -206,7 +206,7 @@ class IntfApi(LmApi):
                 self._list.append(i)
 
         # All Livebox have bridge intf as LAN interface
-        i = {'Key': 'bridge', 'Name': 'LAN', 'Type': 'lan', 'SwapStats': True}
+        i = {"Key": "bridge", "Name": "LAN", "Type": "lan", "SwapStats": True}
         self._list.append(i)
 
         if eth:

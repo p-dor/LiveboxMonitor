@@ -11,32 +11,32 @@ class DynDnsApi(LmApi):
 
     ### Get DynDNS enable status
     def get_enable(self):
-        return self.call_no_check('DynDNS', 'getGlobalEnable')
+        return self.call_no_check("DynDNS", "getGlobalEnable")
 
 
     ### Set DynDNS enable status
     def set_enable(self, enable):
-        self.call('DynDNS', 'setGlobalEnable', {'enable': enable})
+        self.call("DynDNS", "setGlobalEnable", {"enable": enable})
 
 
    ### Get DynDNS hosts
     def get_hosts(self):
-        return self.call_no_check('DynDNS', 'getHosts')
+        return self.call_no_check("DynDNS", "getHosts")
 
 
     ### Get DynDNS services
     def get_services(self):
-        return self.call_no_check('DynDNS', 'getServices')
+        return self.call_no_check("DynDNS", "getServices")
 
 
     ### Add a host entry.
     def add_host(self, service, username, hostname, password):
-        self.call('DynDNS', 'addHost', {'service': service,
-                                        'username': username,
-                                        'hostname': hostname,
-                                        'password': password})
+        self.call("DynDNS", "addHost", {"service": service,
+                                        "username": username,
+                                        "hostname": hostname,
+                                        "password": password})
 
 
     ### Delete a host entry
     def delete_host(self, hostname):
-        self.call('DynDNS', 'delHost', {'hostname': hostname})
+        self.call("DynDNS", "delHost", {"hostname": hostname})

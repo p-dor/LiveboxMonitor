@@ -22,7 +22,7 @@ from LiveboxMonitor.lang.LmLanguages import get_device_list_label as lx, get_dev
 # ################################ VARS & DEFS ################################
 
 # Tab name
-TAB_NAME = 'deviceListTab'
+TAB_NAME = "deviceListTab"
 
 # List columns
 class DevCol(IntEnum):
@@ -56,21 +56,21 @@ class LmDeviceList:
         self._device_list_tab = QtWidgets.QWidget(objectName=TAB_NAME)
 
         # Device list columns
-        self._device_list = LmTableWidget(objectName='deviceList')
-        self._device_list.set_columns({DevCol.Key: ['Key', 0, None],
-                                       DevCol.Type: [lx('T'), 48, 'dlist_Type'],
-                                       DevCol.Name: [lx('Name'), 400, 'dlist_Name'],
-                                       DevCol.LBName: [lx('Livebox Name'), 400, 'dlist_LBName'],
-                                       DevCol.MAC: [lx('MAC'), 120, 'dlist_MAC'],
-                                       DevCol.IP: [lx('IP'), 105, 'dlist_IP'],
-                                       DevCol.Link: [lx('Link'), 150, 'dlist_Link'],
-                                       DevCol.Active: [lx('A'), 10, 'dlist_Active'],
-                                       DevCol.Wifi: [lx('Wifi'), 70, 'dlist_Wifi'],
-                                       DevCol.Event: [lx('E'), 10, 'dlist_Event'],
-                                       DevCol.Down: [lx('Rx'), 75, 'dlist_Rx'],
-                                       DevCol.Up: [lx('Tx'), 75, 'dlist_Tx'],
-                                       DevCol.DownRate: [lx('RxRate'), 75, 'dlist_RxRate'],
-                                       DevCol.UpRate: [lx('TxRate'), 75, 'dlist_TxRate']})
+        self._device_list = LmTableWidget(objectName="deviceList")
+        self._device_list.set_columns({DevCol.Key: ["Key", 0, None],
+                                       DevCol.Type: [lx("T"), 48, "dlist_Type"],
+                                       DevCol.Name: [lx("Name"), 400, "dlist_Name"],
+                                       DevCol.LBName: [lx("Livebox Name"), 400, "dlist_LBName"],
+                                       DevCol.MAC: [lx("MAC"), 120, "dlist_MAC"],
+                                       DevCol.IP: [lx("IP"), 105, "dlist_IP"],
+                                       DevCol.Link: [lx("Link"), 150, "dlist_Link"],
+                                       DevCol.Active: [lx("A"), 10, "dlist_Active"],
+                                       DevCol.Wifi: [lx("Wifi"), 70, "dlist_Wifi"],
+                                       DevCol.Event: [lx("E"), 10, "dlist_Event"],
+                                       DevCol.Down: [lx("Rx"), 75, "dlist_Rx"],
+                                       DevCol.Up: [lx("Tx"), 75, "dlist_Tx"],
+                                       DevCol.DownRate: [lx("RxRate"), 75, "dlist_RxRate"],
+                                       DevCol.UpRate: [lx("TxRate"), 75, "dlist_TxRate"]})
         self._device_list.set_header_resize([DevCol.Name, DevCol.LBName, DevCol.Link])
         self._device_list.set_standard_setup(self)
         self._device_list.setItemDelegate(CenteredIconsDelegate(self, ICON_COLUMNS))
@@ -78,22 +78,22 @@ class LmDeviceList:
         # Button bar
         hbox = QtWidgets.QHBoxLayout()
         hbox.setSpacing(30)
-        refresh_device_list_button = QtWidgets.QPushButton(lx('Refresh'), objectName='refresh')
+        refresh_device_list_button = QtWidgets.QPushButton(lx("Refresh"), objectName="refresh")
         refresh_device_list_button.clicked.connect(self.refresh_device_list_button_click)
         hbox.addWidget(refresh_device_list_button)
-        assign_names_button = QtWidgets.QPushButton(lx('Assign Names...'), objectName='assignNames')
+        assign_names_button = QtWidgets.QPushButton(lx("Assign Names..."), objectName="assignNames")
         assign_names_button.clicked.connect(self.assign_names_button_click)
         hbox.addWidget(assign_names_button)
-        device_info_button = QtWidgets.QPushButton(lx('Device Infos'), objectName='deviceInfo')
+        device_info_button = QtWidgets.QPushButton(lx("Device Infos"), objectName="deviceInfo")
         device_info_button.clicked.connect(self.device_info_button_click)
         hbox.addWidget(device_info_button)
-        device_events_button = QtWidgets.QPushButton(lx('Device Events'), objectName='deviceEvents')
+        device_events_button = QtWidgets.QPushButton(lx("Device Events"), objectName="deviceEvents")
         device_events_button.clicked.connect(self.device_events_button_click)
         hbox.addWidget(device_events_button)
-        ipv6_button = QtWidgets.QPushButton(lx('IPv6...'), objectName='ipv6')
+        ipv6_button = QtWidgets.QPushButton(lx("IPv6..."), objectName="ipv6")
         ipv6_button.clicked.connect(self.ipv6_button_click)
         hbox.addWidget(ipv6_button)
-        dns_button = QtWidgets.QPushButton(lx('DNS...'), objectName='dns')
+        dns_button = QtWidgets.QPushButton(lx("DNS..."), objectName="dns")
         dns_button.clicked.connect(self.dns_button_click)
         hbox.addWidget(dns_button)
 
@@ -104,8 +104,8 @@ class LmDeviceList:
         vbox.addLayout(hbox, 1)
         self._device_list_tab.setLayout(vbox)
 
-        LmConfig.set_tooltips(self._device_list_tab, 'dlist')
-        self._tab_widget.addTab(self._device_list_tab, lx('Device List'))
+        LmConfig.set_tooltips(self._device_list_tab, "dlist")
+        self._tab_widget.addTab(self._device_list_tab, lx("Device List"))
 
 
     ### Init the Livebox Wifi stats collector thread
@@ -164,7 +164,7 @@ class LmDeviceList:
 
     ### Click on assign names button
     def assign_names_button_click(self):
-        if self.ask_question(mx('This will assign the Livebox name as the local name for all unknown devices. Continue?', 'aName')):
+        if self.ask_question(mx("This will assign the Livebox name as the local name for all unknown devices. Continue?", "aName")):
             self.assign_lb_names_to_unkown_devices()
 
 
@@ -190,7 +190,7 @@ class LmDeviceList:
 
     ### Click on IPv6 button
     def ipv6_button_click(self):
-        self._task.start(lx('Getting IPv6 Information...'))
+        self._task.start(lx("Getting IPv6 Information..."))
         try:
             # Get IPv6 status
             try:
@@ -199,7 +199,7 @@ class LmDeviceList:
                 self.display_error(str(e))
                 ipv6_enabled = None
             else:
-                ipv6_enabled = d.get('Enable')
+                ipv6_enabled = d.get("Enable")
 
             # Get CGNat status
             try:
@@ -208,7 +208,7 @@ class LmDeviceList:
                 LmTools.error(str(e))
                 cgnat = None
             else:
-                cgnat = d.get('Demand')
+                cgnat = d.get("Demand")
 
             # Get IPv6Mode
             try:
@@ -217,7 +217,7 @@ class LmDeviceList:
                 LmTools.error(str(e))
                 mode = None
             else:
-                mode = d.get('IPv6Mode')
+                mode = d.get("IPv6Mode")
 
             # Get IPv6 address and prefix
             try:
@@ -228,9 +228,9 @@ class LmDeviceList:
                 ipv6_prefix = None
                 gateway = None
             else:
-                ipv6_addr = d.get('IPv6Address')
-                ipv6_prefix = d.get('IPv6DelegatedPrefix')
-                gateway = d.get('RemoteGatewayIPv6')
+                ipv6_addr = d.get("IPv6Address")
+                ipv6_prefix = d.get("IPv6DelegatedPrefix")
+                gateway = d.get("RemoteGatewayIPv6")
 
             # Get IPv6 prefix leases delegation list
             try:
@@ -250,7 +250,7 @@ class LmDeviceList:
 
     ### Click on DNS button
     def dns_button_click(self):
-        self._task.start(lx('Getting DNS Information...'))
+        self._task.start(lx("Getting DNS Information..."))
         try:
             self.load_device_ip_name_map()
         finally:
@@ -263,7 +263,7 @@ class LmDeviceList:
 
     ### Load device list
     def load_device_list(self):
-        self._task.start(lx('Loading device list...'))
+        self._task.start(lx("Loading device list..."))
         try:
             self._device_list.setSortingEnabled(False)
             self._info_dlist.setSortingEnabled(False)
@@ -281,7 +281,7 @@ class LmDeviceList:
                 self._livebox_devices = self._api._device.get_list()
             except Exception as e:
                 LmTools.error(str(e))
-                self.display_error(mx('Error getting device list.', 'dlistErr'))
+                self.display_error(mx("Error getting device list.", "dlistErr"))
                 self._livebox_devices = None            
             else:
                 self.build_device_ip_name_map()
@@ -292,7 +292,7 @@ class LmDeviceList:
                 self._livebox_topology = self._api._device.get_topology()
             except Exception as e:
                 LmTools.error(str(e))
-                self.display_error(mx('Error getting device topology.', 'topoErr'))
+                self.display_error(mx("Error getting device topology.", "topoErr"))
                 self._livebox_topology = None
             else:
                 self.build_link_maps()
@@ -310,8 +310,8 @@ class LmDeviceList:
             self._device_list.sortItems(DevCol.Active, QtCore.Qt.SortOrder.DescendingOrder)
 
             self._event_dlist.insertRow(i)
-            self._event_dlist.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem('#NONE#'))
-            self._event_dlist.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx('<None>')))
+            self._event_dlist.setItem(i, DSelCol.Key, QtWidgets.QTableWidgetItem("#NONE#"))
+            self._event_dlist.setItem(i, DSelCol.Name, QtWidgets.QTableWidgetItem(lx("<None>")))
 
             self._device_list.setCurrentCell(-1, -1)
             self._info_dlist.setCurrentCell(-1, -1)
@@ -330,19 +330,19 @@ class LmDeviceList:
     ### Check if device is displayable
     def displayable_device(self, device):
         # If Filter Devices option is on, do not display active devices without Layer2Intf
-        if LmConf.FilterDevices and device.get('Active', False):
-            return len(device.get('Layer2Interface', '')) > 0
+        if LmConf.FilterDevices and device.get("Active", False):
+            return len(device.get("Layer2Interface", "")) > 0
         return True
 
 
     ### Add device line
     def add_device_line(self, line, device):
-        key = device.get('Key', '')
+        key = device.get("Key", "")
         self.add_device_line_key(self._device_list, line, key)
         self.add_device_line_key(self._info_dlist, line, key)
         self.add_device_line_key(self._event_dlist, line, key)
 
-        mac_addr = device.get('PhysAddress', '')
+        mac_addr = device.get("PhysAddress", "")
         self.format_name_widget(self._device_list, line, key, DevCol.Name)
         self.format_mac_widget(self._device_list, line, mac_addr, DevCol.MAC)
         self.format_name_widget(self._info_dlist, line, key, DSelCol.Name)
@@ -360,35 +360,35 @@ class LmDeviceList:
 
     ### Update device line
     def update_device_line(self, line, device, notify):
-        device_type = device.get('DeviceType', '')
+        device_type = device.get("DeviceType", "")
         device_type_icon = self.format_device_type_table_widget(device_type, self._api._info.get_software_version())
         self._device_list.setItem(line, DevCol.Type, device_type_icon)
 
-        lb_name = QtWidgets.QTableWidgetItem(device.get('Name', ''))
+        lb_name = QtWidgets.QTableWidgetItem(device.get("Name", ""))
         self._device_list.setItem(line, DevCol.LBName, lb_name)
 
         ip_struct = LmTools.determine_ip(device)
         if ip_struct is None:
-            ipv4 = ''
-            ipv4_reacheable = ''
+            ipv4 = ""
+            ipv4_reacheable = ""
             ipv4_reserved = False
         else:
-            ipv4 = ip_struct.get('Address', '')
-            ipv4_reacheable = ip_struct.get('Status', '')
-            ipv4_reserved = ip_struct.get('Reserved', False)
+            ipv4 = ip_struct.get("Address", "")
+            ipv4_reacheable = ip_struct.get("Status", "")
+            ipv4_reserved = ip_struct.get("Reserved", False)
         ip = self.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
         self._device_list.setItem(line, DevCol.IP, ip)
 
-        link_intf = self.find_device_link(device.get('Key', ''))
+        link_intf = self.find_device_link(device.get("Key", ""))
         if link_intf is None:
-            link_name = lx('Unknown')
-            link_type = ''
+            link_name = lx("Unknown")
+            link_type = ""
         else:
-            link_name = link_intf['Name']
-            link_type = link_intf['Type']
+            link_name = link_intf["Name"]
+            link_type = link_intf["Type"]
         curr_link = self._device_list.item(line, DevCol.Link)
         if curr_link is None:
-            curr_link_name = ''
+            curr_link_name = ""
         else:
             curr_link_name = curr_link.text()
         link = QtWidgets.QTableWidgetItem(link_name)
@@ -396,16 +396,16 @@ class LmDeviceList:
 
         # Notify
         if notify and (link_name != curr_link_name):
-            mac_addr = device.get('PhysAddress', None)
+            mac_addr = device.get("PhysAddress", None)
             if mac_addr is not None:
                 self.notify_device_access_link_event(mac_addr, curr_link_name, link_name)
 
-        active_status = device.get('Active', False)
+        active_status = device.get("Active", False)
         active_icon = self.format_active_table_widget(active_status)
         self._device_list.setItem(line, DevCol.Active, active_icon)
 
-        if active_status and (link_type == 'wif'):
-            wifi_signal = device.get('SignalNoiseRatio')
+        if active_status and (link_type == "wif"):
+            wifi_signal = device.get("SignalNoiseRatio")
             if wifi_signal is not None:
                 wifi_icon = NumericSortItem()
                 if wifi_signal >= 40:
@@ -455,9 +455,9 @@ class LmDeviceList:
         device_type_name = device_type
 
         for i, d in enumerate(LmConfig.DEVICE_TYPES):
-            if device_type == d['Key']:
+            if device_type == d["Key"]:
                 device_type_icon.setIcon(QtGui.QIcon(LmConf.get_device_icon(d, lb_soft_version)))
-                device_type_name = d['Name']
+                device_type_name = d["Name"]
                 break
 
         device_type_icon.setData(QtCore.Qt.ItemDataRole.UserRole, i)
@@ -472,7 +472,7 @@ class LmDeviceList:
         try:
             name = QtWidgets.QTableWidgetItem(LmConf.MacAddrTable[mac_addr])
         except KeyError:
-            name = QtWidgets.QTableWidgetItem(lx('UNKNOWN'))
+            name = QtWidgets.QTableWidgetItem(lx("UNKNOWN"))
             name.setBackground(QtCore.Qt.GlobalColor.red)
         table.setItem(line, name_col, name)
         
@@ -508,7 +508,7 @@ class LmDeviceList:
             ip.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(ipv4)))
         else:
             ip.setData(QtCore.Qt.ItemDataRole.UserRole, 0)
-        if reacheable_status != 'reachable':
+        if reacheable_status != "reachable":
             ip.setForeground(QtCore.Qt.GlobalColor.red)
         if reserved:
             ip.setFont(LmTools.BOLD_FONT)
@@ -527,10 +527,10 @@ class LmDeviceList:
     def get_device_list(self):
         return [
             {
-                'MAC': self._device_list.item(i, DevCol.MAC).text(),
-                'LBName': self._device_list.item(i, DevCol.LBName).text(),
-                'IP': self._device_list.item(i, DevCol.IP).text(),
-                'Active': self._device_list.item(i, DevCol.Active).data(QtCore.Qt.ItemDataRole.UserRole) == 1
+                "MAC": self._device_list.item(i, DevCol.MAC).text(),
+                "LBName": self._device_list.item(i, DevCol.LBName).text(),
+                "IP": self._device_list.item(i, DevCol.IP).text(),
+                "Active": self._device_list.item(i, DevCol.Active).data(QtCore.Qt.ItemDataRole.UserRole) == 1
             }
             for i in range(self._device_list.rowCount())
         ]
@@ -539,18 +539,18 @@ class LmDeviceList:
     ### Propose to assign LB names to all unknown devices
     def propose_to_assign_names_to_unkown_devices(self):
         if not LmConf.MacAddrTable:
-            if self.ask_question(mx('Do you trust all connected devices and do you want to name them all based on their Livebox name?\n'
-                                    'You can still do that action later.', 'aNameStartup')):
+            if self.ask_question(mx("Do you trust all connected devices and do you want to name them all based on their Livebox name?\n"
+                                    "You can still do that action later.", "aNameStartup")):
                 self.assign_lb_names_to_unkown_devices()
 
 
     ### Assign LB names to all unknown devices
     def assign_lb_names_to_unkown_devices(self):
-        self._task.start(lx('Assigning names to unknown devices...'))
+        self._task.start(lx("Assigning names to unknown devices..."))
         try:
             for d in self.get_device_list():
-                if not LmConf.MacAddrTable.get(d['MAC']):
-                    self.set_device_name(d['MAC'], d['LBName'])
+                if not LmConf.MacAddrTable.get(d["MAC"]):
+                    self.set_device_name(d["MAC"], d["LBName"])
         finally:
             self._task.end()
 
@@ -558,13 +558,13 @@ class LmDeviceList:
     ### Load device IPv4 & IPv6 -> MAC/LBName/Active/IPVers map if need to be refreshed
     def load_device_ip_name_map(self):
         if self._device_ip_name_map_dirty:
-            self._task.start(lx('Loading devices information...'))
+            self._task.start(lx("Loading devices information..."))
             try:
                 try:
                     self._livebox_devices = self._api._device.get_list()
                 except Exception as e:
                     LmTools.error(str(e))
-                    self.display_error(mx('Error getting device list.', 'dlistErr'))
+                    self.display_error(mx("Error getting device list.", "dlistErr"))
                     return
 
                 self.build_device_ip_name_map()
@@ -585,24 +585,24 @@ class LmDeviceList:
 
             # Base device infos to map for all its IP entries
             base_info = {
-                'MAC': d.get('PhysAddress', ''),
-                'LBName': d.get('Name', ''),
-                'Active': d.get('Active', False)
+                "MAC": d.get("PhysAddress", ""),
+                "LBName": d.get("Name", ""),
+                "Active": d.get("Active", False)
             }
 
             # Map IPv4 address to device infos
             ipv4_struct = LmTools.determine_ip(d)
             if ipv4_struct:
-                ipv4 = ipv4_struct.get('Address', '')
+                ipv4 = ipv4_struct.get("Address", "")
                 if ipv4:
-                    self._device_ip_name_map[ipv4] = {**base_info, 'IPVers': 'IPv4'}
+                    self._device_ip_name_map[ipv4] = {**base_info, "IPVers": "IPv4"}
 
             # Map IPv6 address(es) to device infos
-            for ipv6_entry in d.get('IPv6Address') or []:
-                if ipv6_entry.get('Scope', 'link') != 'link':
-                    ipv6 = ipv6_entry.get('Address', '')
+            for ipv6_entry in d.get("IPv6Address") or []:
+                if ipv6_entry.get("Scope", "link") != "link":
+                    ipv6 = ipv6_entry.get("Address", "")
                     if ipv6:
-                        self._device_ip_name_map[ipv6] = {**base_info, 'IPVers': 'IPv6'}           
+                        self._device_ip_name_map[ipv6] = {**base_info, "IPVers": "IPv6"}           
 
 
     ### Get device name from IPv4 or IPv6
@@ -614,17 +614,17 @@ class LmDeviceList:
             if device_info is None:
                 return ip
             try:
-                return LmConf.MacAddrTable[device_info['MAC']]
+                return LmConf.MacAddrTable[device_info["MAC"]]
             except KeyError:
-                return device_info['LBName']
-        return ''
+                return device_info["LBName"]
+        return ""
 
 
     ### Build link map
     def build_link_maps(self):
         root_node = self._livebox_topology[0]
-        device_key = root_node.get('Key', '')
-        self.build_links_map_node(root_node.get('Children', []), device_key, 'Livebox', '', '')
+        device_key = root_node.get("Key", "")
+        self.build_links_map_node(root_node.get("Children", []), device_key, "Livebox", "", "")
 #DBG    self.display_infos('Interface map', str(self._interface_map))
 #DBG    self.display_infos('Device map', str(self._device_map))
 
@@ -633,7 +633,7 @@ class LmDeviceList:
     def build_links_map_node(self, node, device_key, device_name, interface_key, interface_name):
         intf_list = self._api._intf.get_list()
         for d in node:
-            tags = d.get('Tags', '').split()
+            tags = d.get("Tags", "").split()
 
             # Init
             node_device_key = device_key
@@ -642,15 +642,15 @@ class LmDeviceList:
             node_interface_name = interface_name
 
             # Handle interface end points
-            if 'interface' in tags:
-                node_interface_key = d.get('Key', '')
-                interface_type = d.get('InterfaceType', '')
-                if interface_type == 'Ethernet':
-                    interface_type = 'eth'
-                    node_interface_name = d.get('Name', '').capitalize()
+            if "interface" in tags:
+                node_interface_key = d.get("Key", "")
+                interface_type = d.get("InterfaceType", "")
+                if interface_type == "Ethernet":
+                    interface_type = "eth"
+                    node_interface_name = d.get("Name", "").capitalize()
                     if len(node_interface_name) == 0:
-                        node_interface_name = d.get('NetDevName', '').capitalize()
-                    if device_name == 'Livebox':
+                        node_interface_name = d.get("NetDevName", "").capitalize()
+                    if device_name == "Livebox":
                         name_map = LmConfig.INTF_NAME_MAP
                     else:
                         name_map = INTF_NAME_MAP_WR
@@ -658,75 +658,75 @@ class LmDeviceList:
                     if mapped_name is not None:
                         node_interface_name = mapped_name
                 else:
-                    interface_type = 'wif'
-                    if device_name == 'Livebox':
-                        i = next((i for i in intf_list if i['Key'] == node_interface_key), None)
+                    interface_type = "wif"
+                    if device_name == "Livebox":
+                        i = next((i for i in intf_list if i["Key"] == node_interface_key), None)
                         if i is None:
-                            node_interface_name = d.get('Name', node_interface_key)
+                            node_interface_name = d.get("Name", node_interface_key)
                         else:
-                            node_interface_name = i['Name']
+                            node_interface_name = i["Name"]
                     else:
-                        wifi_band = d.get('OperatingFrequencyBand', '')
+                        wifi_band = d.get("OperatingFrequencyBand", "")
                         if len(wifi_band):
-                            node_interface_name = f'Wifi {wifi_band}'
+                            node_interface_name = f"Wifi {wifi_band}"
                         else:
-                            node_interface_name = d.get('Name', node_interface_key)
+                            node_interface_name = d.get("Name", node_interface_key)
 
                 map_entry = {
-                    'Key': node_interface_key,
-                    'Type': interface_type,
-                    'DevKey': node_device_key,
-                    'DevName': node_device_name,
-                    'IntName': node_interface_name,
-                    'Name': f'{node_device_name} {lx(node_interface_name)}'
+                    "Key": node_interface_key,
+                    "Type": interface_type,
+                    "DevKey": node_device_key,
+                    "DevName": node_device_name,
+                    "IntName": node_interface_name,
+                    "Name": f"{node_device_name} {lx(node_interface_name)}"
                 }
                 self._interface_map.append(map_entry)
 
             # Handle devices
-            if 'physical' in tags:
-                node_device_key = d.get('Key', '')
-                node_device_name = d.get('Name', '')
+            if "physical" in tags:
+                node_device_key = d.get("Key", "")
+                node_device_name = d.get("Name", "")
                 map_entry = {
-                    'Key': node_device_key,
-                    'InterfaceKey': node_interface_key
+                    "Key": node_device_key,
+                    "InterfaceKey": node_interface_key
                 }
                 self._device_map.append(map_entry)
 
-            self.build_links_map_node(d.get('Children', []), node_device_key, node_device_name, node_interface_key, node_interface_name)
+            self.build_links_map_node(d.get("Children", []), node_device_key, node_device_name, node_interface_key, node_interface_name)
 
 
     ### Find device link name from device key
     def find_device_link(self, device_key):
         # Find the interface key for the device
-        device = next((d for d in self._device_map if d['Key'] == device_key), None)
+        device = next((d for d in self._device_map if d["Key"] == device_key), None)
         if not device:
             return None
-        interface_key = device['InterfaceKey']
+        interface_key = device["InterfaceKey"]
 
         # Find and return the interface map entry
-        return next((i for i in self._interface_map if i['Key'] == interface_key), None)
+        return next((i for i in self._interface_map if i["Key"] == interface_key), None)
 
 
     ### Update device link interface key
     def update_device_link_interface(self, device_key, interface_key):
-        device = next((d for d in self._device_map if d['Key'] == device_key), None)
+        device = next((d for d in self._device_map if d["Key"] == device_key), None)
         if device:
-            device['InterfaceKey'] = interface_key
+            device["InterfaceKey"] = interface_key
 
 
     ### Update interface map when a device name changes, and refresh the UI
     def update_interface_map(self, device_key, device_name):
         # Loop on interface map and update each matching entries
         for i in self._interface_map:
-            if i['DevKey'] == device_key:
-                i['DevName'] = device_name
-                link_name = f'{device_name} {i["IntName"]}'
-                i['Name'] = link_name
+            if i["DevKey"] == device_key:
+                i["DevName"] = device_name
+                link_name = f"{device_name} {i['IntName']}"
+                i["Name"] = link_name
 
                 # Then update each device connected to that interface
                 for d in self._device_map:
-                    if d['InterfaceKey'] == i['Key']:
-                        line = self.find_device_line(self._device_list, d['Key'])
+                    if d["InterfaceKey"] == i["Key"]:
+                        line = self.find_device_line(self._device_list, d["Key"])
                         if line >= 0:
                             self._device_list.setItem(line, DevCol.Link, QtWidgets.QTableWidgetItem(link_name))
 
@@ -752,22 +752,22 @@ class LmDeviceList:
     ### Process a new statistics event
     def process_statistics_event(self, device_key, event):
         # Get event data
-        down_bytes = event.get('RxBytes', 0)
-        up_bytes = event.get('TxBytes', 0)
-        down_errors = event.get('RxErrors', 0)
-        up_errors = event.get('TxErrors', 0)
+        down_bytes = event.get("RxBytes", 0)
+        up_bytes = event.get("TxBytes", 0)
+        down_errors = event.get("RxErrors", 0)
+        up_errors = event.get("TxErrors", 0)
         down_rate_bytes = 0
         up_rate_bytes = 0
-        down_delta_errors = event.get('DeltaRxErrors', 0)
-        up_delta_errors = event.get('DeltaTxErrors', 0)
-        timestamp = LmTools.livebox_timestamp(event.get('Timestamp', ''))
+        down_delta_errors = event.get("DeltaRxErrors", 0)
+        up_delta_errors = event.get("DeltaTxErrors", 0)
+        timestamp = LmTools.livebox_timestamp(event.get("Timestamp", ""))
 
         # Try to find a previously received statistic record
         prev_stats = self._stats_map.get(device_key)
         if prev_stats is not None:
-            prev_down_bytes = prev_stats['Rx']
-            prev_up_bytes = prev_stats['Tx']
-            prev_timestamp = prev_stats['Time']
+            prev_down_bytes = prev_stats["Rx"]
+            prev_up_bytes = prev_stats["Tx"]
+            prev_timestamp = prev_stats["Time"]
             elapsed = int((timestamp - prev_timestamp).total_seconds())
             if elapsed > 0:
                 down_rate_bytes = int((down_bytes - prev_down_bytes) / elapsed)
@@ -780,9 +780,9 @@ class LmDeviceList:
 
         # Remember current stats
         stats = {}
-        stats['Rx'] = down_bytes
-        stats['Tx'] = up_bytes
-        stats['Time'] = timestamp
+        stats["Rx"] = down_bytes
+        stats["Tx"] = up_bytes
+        stats["Time"] = timestamp
         self._stats_map[device_key] = stats
 
         # Update UI
@@ -806,23 +806,23 @@ class LmDeviceList:
             self._device_list.setItem(list_line, DevCol.Up, up)
 
             if down_rate_bytes:
-                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + '/s')
+                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + "/s")
                 down_rate.setData(QtCore.Qt.ItemDataRole.UserRole, down_rate_bytes)
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
-                down_rate = QtWidgets.QTableWidgetItem('')
+                down_rate = QtWidgets.QTableWidgetItem("")
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
 
             if up_rate_bytes:
-                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + '/s')
+                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + "/s")
                 up_rate.setData(QtCore.Qt.ItemDataRole.UserRole, up_rate_bytes)
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
-                up_rate = QtWidgets.QTableWidgetItem('')
+                up_rate = QtWidgets.QTableWidgetItem("")
             self._device_list.setItem(list_line, DevCol.UpRate, up_rate)
 
             # Restore sorting
@@ -841,10 +841,10 @@ class LmDeviceList:
             self._device_list.setSortingEnabled(False)
 
             # Check if active status changed
-            active_status = event.get('Active')
+            active_status = event.get("Active")
             if active_status is not None:
                 self._device_ip_name_map_dirty = True
-                is_active = active_status != '0'
+                is_active = active_status != "0"
                 curr_active = self._device_list.item(list_line, DevCol.Active)
                 if curr_active is not None:
                     is_currently_active = curr_active.data(QtCore.Qt.ItemDataRole.UserRole) == 1
@@ -853,7 +853,7 @@ class LmDeviceList:
                 if is_active != is_currently_active:
                     if is_active:
                         curr_link = self._device_list.item(list_line, DevCol.Link)
-                        curr_link_name = curr_link.text() if curr_link is not None else ''
+                        curr_link_name = curr_link.text() if curr_link is not None else ""
                         self.notify_device_active_event(device_key, curr_link_name)
                     else:
                         self.notify_device_inactive_event(device_key)
@@ -862,15 +862,15 @@ class LmDeviceList:
                 self.repeater_active_event(device_key, is_active)
 
             # Check if IP reachable status changed
-            ipv4_reacheable = event.get('Status')
-            if (ipv4_reacheable is not None) and ('IPv4Address' in handler):
+            ipv4_reacheable = event.get("Status")
+            if (ipv4_reacheable is not None) and ("IPv4Address" in handler):
                 curr_ip = self._device_list.item(list_line, DevCol.IP)
                 reserved = curr_ip.font().bold()
                 ip = self.format_ipv4_table_widget(curr_ip.text(), ipv4_reacheable, reserved)
                 self._device_list.setItem(list_line, DevCol.IP, ip)
 
             # Check if IPv4 changed
-            ipv4 = event.get('IPAddress')
+            ipv4 = event.get("IPAddress")
             if (ipv4 is not None) and (LmTools.is_ipv4(ipv4)):
                 self._device_ip_name_map_dirty = True
                 ip = self._device_list.item(list_line, DevCol.IP)
@@ -879,14 +879,14 @@ class LmDeviceList:
                 self.repeater_ip_address_event(device_key, ipv4)
 
             # Check if name changed
-            name = event.get('Name')
+            name = event.get("Name")
             if name is not None:
                 self._device_ip_name_map_dirty = True
                 self._device_list.setItem(list_line, DevCol.LBName, QtWidgets.QTableWidgetItem(name))
                 self.update_interface_map(device_key, name)
 
             # Check if MAC address assigned
-            mac_addr = event.get('PhysAddress')
+            mac_addr = event.get("PhysAddress")
             if mac_addr is not None:
                 self._device_ip_name_map_dirty = True
 
@@ -914,7 +914,7 @@ class LmDeviceList:
         # Check if device is in the UI list
         list_line = self.find_device_line(self._device_list, device_key)
         if list_line >= 0:
-            name = event.get('NewName')
+            name = event.get("NewName")
             if name is not None:
                 self._device_list.setItem(list_line, DevCol.LBName, QtWidgets.QTableWidgetItem(name))
                 self.update_interface_map(device_key, name)
@@ -934,7 +934,7 @@ class LmDeviceList:
             self._device_list.setSortingEnabled(False)
 
             # Update the link interface
-            link = event.get('ULinks', [])
+            link = event.get("ULinks", [])
             if len(link):
                 self.update_device_link_interface(device_key, link[0])
 
@@ -958,10 +958,10 @@ class LmDeviceList:
         # Check if device is in the UI list
         list_line = self.find_device_line(self._device_list, device_key)
         if list_line >= 0:
-            if event.get('Family', '') == 'ipv4':
+            if event.get("Family", "") == "ipv4":
                 # Get IP known by the program
                 known_ip_item = self._device_list.item(list_line, DevCol.IP)
-                known_ip = known_ip_item.text() if known_ip_item is not None else ''
+                known_ip = known_ip_item.text() if known_ip_item is not None else ""
 
                 # Get current device IP
                 try:
@@ -973,10 +973,10 @@ class LmDeviceList:
                 # Proceed only if there is a change
                 if known_ip != curr_ip:
                     # If current IP is the one of the event, take it, overwise wait for next device update event
-                    ipv4 = event.get('Address', '')
+                    ipv4 = event.get("Address", "")
                     if LmTools.is_ipv4(ipv4) and (curr_ip == ipv4):
-                        ipv4_reacheable = event.get('Status', '')
-                        ipv4_reserved = event.get('Reserved', False)
+                        ipv4_reacheable = event.get("Status", "")
+                        ipv4_reserved = event.get("Reserved", False)
                         ip = self.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
                         self._device_list.setItem(list_line, DevCol.IP, ip)
                         self.repeater_ip_address_event(device_key, ipv4)
@@ -989,8 +989,8 @@ class LmDeviceList:
         if list_line >= 0:
             return
 
-        tags = event.get('Tags', '').split()
-        if ('physical' in tags) and (not 'self' in tags) and (not 'voice' in tags) and self.displayable_device(event):
+        tags = event.get("Tags", "").split()
+        if ("physical" in tags) and (not "self" in tags) and (not "voice" in tags) and self.displayable_device(event):
             self._device_ip_name_map_dirty = True
 
             # Notify
@@ -1003,8 +1003,8 @@ class LmDeviceList:
 
             # Update device map
             map_entry = {}
-            map_entry['Key'] = device_key
-            map_entry['InterfaceKey'] = None
+            map_entry["Key"] = device_key
+            map_entry["InterfaceKey"] = None
             self._device_map.append(map_entry)
 
             # Update UI
@@ -1043,7 +1043,7 @@ class LmDeviceList:
 
         # Cleanup device map
         for d in self._device_map:
-            if d['Key'] == device_key:
+            if d["Key"] == device_key:
                 self._device_map.remove(d)
 
         # Cleanup event buffer
@@ -1056,13 +1056,13 @@ class LmDeviceList:
     ### Process a new Livebox Wifi stats
     def process_livebox_wifi_stats(self, stats):
         # Get stats data
-        key = stats['Key']
-        device_key = stats['DeviceKey']
-        timestamp = stats['Timestamp']
-        down_bytes = stats['RxBytes']
-        up_bytes = stats['TxBytes']
-        down_errors = stats['RxErrors']
-        up_errors = stats['TxErrors']
+        key = stats["Key"]
+        device_key = stats["DeviceKey"]
+        timestamp = stats["Timestamp"]
+        down_bytes = stats["RxBytes"]
+        up_bytes = stats["TxBytes"]
+        down_errors = stats["RxErrors"]
+        up_errors = stats["TxErrors"]
         down_rate_bytes = 0
         up_rate_bytes = 0
         down_delta_errors = 0
@@ -1071,17 +1071,17 @@ class LmDeviceList:
         # Try to find a previously received statistic record
         prev_stats = self._livebox_wifi_stats_map.get(key)
         if prev_stats is not None:
-            prev_timestamp = prev_stats['Timestamp']
-            prev_down_bytes = prev_stats['RxBytes']
-            prev_up_bytes = prev_stats['TxBytes']
+            prev_timestamp = prev_stats["Timestamp"]
+            prev_down_bytes = prev_stats["RxBytes"]
+            prev_up_bytes = prev_stats["TxBytes"]
             elapsed = int((timestamp - prev_timestamp).total_seconds())
             if elapsed > 0:
                 if down_bytes > prev_down_bytes:
                     down_rate_bytes = int((down_bytes - prev_down_bytes) / elapsed)
                 if up_bytes > prev_up_bytes:
                     up_rate_bytes = int((up_bytes - prev_up_bytes) / elapsed)
-            down_delta_errors = down_errors - prev_stats['RxErrors']
-            up_delta_errors = up_errors - prev_stats['TxErrors']
+            down_delta_errors = down_errors - prev_stats["RxErrors"]
+            up_delta_errors = up_errors - prev_stats["TxErrors"]
 
         # Remember current stats
         self._livebox_wifi_stats_map[key] = stats
@@ -1093,7 +1093,7 @@ class LmDeviceList:
             self._device_list.setSortingEnabled(False)
 
             if down_rate_bytes:
-                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + '/s')
+                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + "/s")
                 down_rate.setData(QtCore.Qt.ItemDataRole.UserRole, down_rate_bytes)
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1101,11 +1101,11 @@ class LmDeviceList:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.blue)
                 down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
-                down_rate = QtWidgets.QTableWidgetItem('')
+                down_rate = QtWidgets.QTableWidgetItem("")
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
 
             if up_rate_bytes:
-                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + '/s')
+                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + "/s")
                 up_rate.setData(QtCore.Qt.ItemDataRole.UserRole, up_rate_bytes)
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1113,7 +1113,7 @@ class LmDeviceList:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.blue)
                 up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             else:
-                up_rate = QtWidgets.QTableWidgetItem('')
+                up_rate = QtWidgets.QTableWidgetItem("")
             self._device_list.setItem(list_line, DevCol.UpRate, up_rate)
 
             # Restore sorting
@@ -1137,23 +1137,23 @@ class LiveboxWifiStatsThread(LmThread):
 
     def task(self):
         for s in self._api._intf.get_list():
-            if s['Type'] != 'wif':
+            if s["Type"] != "wif":
                 continue
             try:
-                d = self._api._stats.get_wifi_intf(s['Key'])
+                d = self._api._stats.get_wifi_intf(s["Key"])
             except Exception as e:
                 LmTools.error(str(e))
             else:
                 if isinstance(d, list):
                     for stat in d:
-                        mac_addr = stat.get('MACAddress', '')
+                        mac_addr = stat.get("MACAddress", "")
                         event = {
-                            'DeviceKey': mac_addr,
-                            'Key': f'{mac_addr}_{s["Key"]}',
-                            'Timestamp': datetime.datetime.now(),
-                            'RxBytes': stat.get('TxBytes', 0),      # Must be swapped
-                            'TxBytes': stat.get('RxBytes', 0),      # Must be swapped
-                            'RxErrors': stat.get('TxErrors', 0),    # Must be swapped
-                            'TxErrors': stat.get('RxErrors', 0)     # Must be swapped
+                            "DeviceKey": mac_addr,
+                            "Key": f"{mac_addr}_{s['Key']}",
+                            "Timestamp": datetime.datetime.now(),
+                            "RxBytes": stat.get("TxBytes", 0),      # Must be swapped
+                            "TxBytes": stat.get("RxBytes", 0),      # Must be swapped
+                            "RxErrors": stat.get("TxErrors", 0),    # Must be swapped
+                            "TxErrors": stat.get("RxErrors", 0)     # Must be swapped
                         }
                         self._wifi_stats_received.emit(event)

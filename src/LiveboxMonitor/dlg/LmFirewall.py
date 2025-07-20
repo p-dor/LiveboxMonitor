@@ -9,7 +9,7 @@ from LiveboxMonitor.lang.LmLanguages import get_firewall_level_label as lx
 # ################################ VARS & DEFS ################################
 
 # Firewall levels
-FIREWALL_LEVELS = ['High', 'Medium', 'Low', 'Custom']
+FIREWALL_LEVELS = ["High", "Medium", "Low", "Custom"]
 
 
 # ################################ Firewall Level dialog ################################
@@ -19,14 +19,14 @@ class FirewallLevelDialog(QtWidgets.QDialog):
         self.setMinimumWidth(230)
         self.resize(300, 150)
 
-        ipv4_level_label = QtWidgets.QLabel(lx('IPv4 Firewall Level'), objectName='ipV4Label')
-        self._ipv4_level_combo = QtWidgets.QComboBox(objectName='ipV4Combo')
+        ipv4_level_label = QtWidgets.QLabel(lx("IPv4 Firewall Level"), objectName="ipV4Label")
+        self._ipv4_level_combo = QtWidgets.QComboBox(objectName="ipV4Combo")
         for l in FIREWALL_LEVELS:
             self._ipv4_level_combo.addItem(lx(l), userData=l)
         self._ipv4_level_combo.setCurrentIndex(FIREWALL_LEVELS.index(ipv4_level))
 
-        ipv6_level_label = QtWidgets.QLabel(lx('IPv6 Firewall Level'), objectName='ipV6Label')
-        self._ipv6_level_combo = QtWidgets.QComboBox(objectName='ipV6Combo')
+        ipv6_level_label = QtWidgets.QLabel(lx("IPv6 Firewall Level"), objectName="ipV6Label")
+        self._ipv6_level_combo = QtWidgets.QComboBox(objectName="ipV6Combo")
         for l in FIREWALL_LEVELS:
             self._ipv6_level_combo.addItem(lx(l), userData = l)
         self._ipv6_level_combo.setCurrentIndex(FIREWALL_LEVELS.index(ipv6_level))
@@ -40,10 +40,10 @@ class FirewallLevelDialog(QtWidgets.QDialog):
         grid.setColumnStretch(0, 0)
         grid.setColumnStretch(1, 1)
 
-        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
         self._ok_button.setDefault(True)
-        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button = QtWidgets.QPushButton(lx("Cancel"), objectName="cancel")
         cancel_button.clicked.connect(self.reject)
         hbox = QtWidgets.QHBoxLayout()
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -55,9 +55,9 @@ class FirewallLevelDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'fwlevel')
+        LmConfig.set_tooltips(self, "fwlevel")
 
-        self.setWindowTitle(lx('Firewall Levels'))
+        self.setWindowTitle(lx("Firewall Levels"))
 
         self.setModal(True)
         self.show()

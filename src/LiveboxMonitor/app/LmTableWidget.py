@@ -84,7 +84,7 @@ class LmTableWidget(QtWidgets.QTableWidget):
     # Display context menu
     def show_table_context_menu(self, pos):
         menu = QtWidgets.QMenu(self)
-        export_action = menu.addAction(lx('Export...'))
+        export_action = menu.addAction(lx("Export..."))
         action = menu.exec(self.mapToGlobal(pos))
         if action == export_action:
             self.export_table()
@@ -135,7 +135,7 @@ class CenteredIconHeaderView(QtWidgets.QHeaderView):
             # If icon, first draw the column's normally - ensure title is an empty string during drawing
             model = self.model()
             title = model.headerData(index, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.DisplayRole)
-            model.setHeaderData(index, QtCore.Qt.Orientation.Horizontal, '', QtCore.Qt.ItemDataRole.DisplayRole)
+            model.setHeaderData(index, QtCore.Qt.Orientation.Horizontal, "", QtCore.Qt.ItemDataRole.DisplayRole)
             painter.save()
             super().paintSection(painter, rect, index)
             painter.restore()

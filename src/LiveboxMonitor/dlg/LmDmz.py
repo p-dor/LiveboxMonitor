@@ -40,11 +40,11 @@ class DmzSetupDialog(QtWidgets.QDialog):
         dmz_list_layout.setSpacing(5)
 
         # DMZ list columns
-        self._dmz_list = LmTableWidget(objectName='dmzList')
-        self._dmz_list.set_columns({DmzCol.ID: [lx('ID'), 100, 'zlist_ID'],
-                                    DmzCol.IP: [lx('IP'), 100, 'zlist_IP'],
-                                    DmzCol.Device: [lx('Device'), 150, 'zlist_Device'],
-                                    DmzCol.ExtIPs: [lx('External IPs'), 150, 'zlist_ExtIPs']})
+        self._dmz_list = LmTableWidget(objectName="dmzList")
+        self._dmz_list.set_columns({DmzCol.ID: [lx("ID"), 100, "zlist_ID"],
+                                    DmzCol.IP: [lx("IP"), 100, "zlist_IP"],
+                                    DmzCol.Device: [lx("Device"), 150, "zlist_Device"],
+                                    DmzCol.ExtIPs: [lx("External IPs"), 150, "zlist_ExtIPs"]})
         self._dmz_list.set_header_resize([DmzCol.Device, DmzCol.ExtIPs])
         self._dmz_list.set_standard_setup(parent, allow_sort=False)
         self._dmz_list.setMinimumWidth(680)
@@ -56,36 +56,36 @@ class DmzSetupDialog(QtWidgets.QDialog):
         dmz_button_box = QtWidgets.QHBoxLayout()
         dmz_button_box.setSpacing(5)
 
-        refresh_button = QtWidgets.QPushButton(lx('Refresh'), objectName='refresh')
+        refresh_button = QtWidgets.QPushButton(lx("Refresh"), objectName="refresh")
         refresh_button.clicked.connect(self.refresh_button_click)
         dmz_button_box.addWidget(refresh_button)
-        self._del_dmz_button = QtWidgets.QPushButton(lx('Delete'), objectName='delDmz')
+        self._del_dmz_button = QtWidgets.QPushButton(lx("Delete"), objectName="delDmz")
         self._del_dmz_button.clicked.connect(self.del_dmz_button_click)
         dmz_button_box.addWidget(self._del_dmz_button)
         dmz_list_layout.addLayout(dmz_button_box, 0)
         dmz_layout.addLayout(dmz_list_layout, 0)
 
-        dmz_group_box = QtWidgets.QGroupBox(lx('DMZ Devices'), objectName='dmzGroup')
+        dmz_group_box = QtWidgets.QGroupBox(lx("DMZ Devices"), objectName="dmzGroup")
         dmz_group_box.setLayout(dmz_layout)
 
         # Add DMZ box
-        id_label = QtWidgets.QLabel(lx('ID'), objectName='idLabel')
-        self._id = QtWidgets.QLineEdit(objectName='id')
-        self._id.setText('webui')
+        id_label = QtWidgets.QLabel(lx("ID"), objectName="idLabel")
+        self._id = QtWidgets.QLineEdit(objectName="id")
+        self._id.setText("webui")
         self._id.textChanged.connect(self.id_typed)
-        device_label = QtWidgets.QLabel(lx('Device'), objectName='deviceLabel')
-        self._device_combo = QtWidgets.QComboBox(objectName='deviceCombo')
+        device_label = QtWidgets.QLabel(lx("Device"), objectName="deviceLabel")
+        self._device_combo = QtWidgets.QComboBox(objectName="deviceCombo")
         self._device_combo.activated.connect(self.device_selected)
-        ip_label = QtWidgets.QLabel(lx('IP Address'), objectName='ipLabel')
-        self._ip = QtWidgets.QLineEdit(objectName='ipEdit')
+        ip_label = QtWidgets.QLabel(lx("IP Address"), objectName="ipLabel")
+        self._ip = QtWidgets.QLineEdit(objectName="ipEdit")
         self._ip.textChanged.connect(self.ip_typed)
-        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression('^' + LmTools.IPv4_RS + '$'))
+        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$"))
         self._ip.setValidator(ip_validator)
-        ext_ips_label = QtWidgets.QLabel(lx('External IPs'), objectName='extIPsLabel')
-        self._ext_ips = LmTools.MultiLinesEdit(objectName='extIPsEdit')
+        ext_ips_label = QtWidgets.QLabel(lx("External IPs"), objectName="extIPsLabel")
+        self._ext_ips = LmTools.MultiLinesEdit(objectName="extIPsEdit")
         self._ext_ips.setTabChangesFocus(True)
         self._ext_ips.setLineNumber(2)
-        self._add_dmz_button = QtWidgets.QPushButton(lx('Add'), objectName='addDmz')
+        self._add_dmz_button = QtWidgets.QPushButton(lx("Add"), objectName="addDmz")
         self._add_dmz_button.clicked.connect(self.add_dmz_button_click)
         self._add_dmz_button.setDisabled(True)
 
@@ -102,11 +102,11 @@ class DmzSetupDialog(QtWidgets.QDialog):
         dmz_edit_grid.addWidget(self._ext_ips, 0, 3, 1, 2)
         dmz_edit_grid.addWidget(self._add_dmz_button, 2, 4)
 
-        dmz_edit_group_box = QtWidgets.QGroupBox(lx('Add DMZ'), objectName='addDmzGroup')
+        dmz_edit_group_box = QtWidgets.QGroupBox(lx("Add DMZ"), objectName="addDmzGroup")
         dmz_edit_group_box.setLayout(dmz_edit_grid)
 
         # Button bar
-        ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         ok_button.clicked.connect(self.accept)
         ok_button.setDefault(True)
         button_bar = QtWidgets.QHBoxLayout()
@@ -122,9 +122,9 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         self._ip.setFocus()
 
-        LmConfig.set_tooltips(self, 'dmz')
+        LmConfig.set_tooltips(self, "dmz")
 
-        self.setWindowTitle(lx('DMZ'))
+        self.setWindowTitle(lx("DMZ"))
         self.setModal(True)
         self._app.load_device_ip_name_map()
         self.load_device_list()
@@ -136,7 +136,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
     ### Load DMZ list
     def load_dmz(self):
-        self._app._task.start(lx('Loading DMZ devices...'))
+        self._app._task.start(lx("Loading DMZ devices..."))
 
         try:
             d = self._api._firewall.get_dmz_devices()
@@ -147,7 +147,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         if d:
             if not isinstance(d, dict):
-                self._app.display_error(mx('Cannot load DMZ device list.', 'dmzLoadErr'))
+                self._app.display_error(mx("Cannot load DMZ device list.", "dmzLoadErr"))
                 self._app._task.end()
                 return
 
@@ -157,13 +157,13 @@ class DmzSetupDialog(QtWidgets.QDialog):
                 self._dmz_list.setItem(i, DmzCol.ID, QtWidgets.QTableWidgetItem(k))
 
                 z = d[k]
-                ip = z.get('DestinationIPAddress', '')
+                ip = z.get("DestinationIPAddress", "")
                 self._dmz_list.setItem(i, DmzCol.IP, QtWidgets.QTableWidgetItem(ip))
                 self._dmz_list.setItem(i, DmzCol.Device, QtWidgets.QTableWidgetItem(self._app.get_device_name_from_ip(ip)))
 
-                external_ips = z.get('SourcePrefix', '')
+                external_ips = z.get("SourcePrefix", "")
                 if len(external_ips) == 0:
-                    external_ips = lx('All')
+                    external_ips = lx("All")
                 self._dmz_list.setItem(i, DmzCol.ExtIPs, QtWidgets.QTableWidgetItem(external_ips))
 
                 i += 1
@@ -207,7 +207,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
             self._api._firewall.delete_dmz(dmz_id)
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Cannot delete DMZ device.', 'dmzDelErr'))
+            self._app.display_error(mx("Cannot delete DMZ device.", "dmzDelErr"))
             return
 
         # Delete the list line
@@ -235,9 +235,9 @@ class DmzSetupDialog(QtWidgets.QDialog):
             return
 
         self.refresh_button_click()
-        self._id.setText('webui')
-        self._ip.setText('')
-        self._ext_ips.setPlainText('')
+        self._id.setText("webui")
+        self._ip.setText("")
+        self._ext_ips.setPlainText("")
  
 
     def load_device_list(self):
@@ -246,14 +246,14 @@ class DmzSetupDialog(QtWidgets.QDialog):
 
         # Load IPv4 devices
         for i in device_map:
-            if device_map[i]['IPVers'] == 'IPv4':
+            if device_map[i]["IPVers"] == "IPv4":
                 self._device_combo.addItem(self._app.get_device_name_from_ip(i), userData=i)
 
         # Sort by name
         self._device_combo.model().sort(0)
 
         # Insert unknown device at the beginning
-        self._device_combo.insertItem(0, lx('-Unknown-'), userData='')
+        self._device_combo.insertItem(0, lx("-Unknown-"), userData="")
         self._device_combo.setCurrentIndex(0)
 
 

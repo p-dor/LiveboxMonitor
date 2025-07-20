@@ -18,11 +18,11 @@ from LiveboxMonitor.lang.LmLanguages import get_graph_label as lx, get_graph_mes
 # ################################ VARS & DEFS ################################
 
 # Tab name
-TAB_NAME = 'graphTab'
+TAB_NAME = "graphTab"
 
 # Config default
 DCFG_WINDOW = 24    # 1 day
-DCFG_BACKGROUND_COLOR = '#000000'       # (0, 0, 0)
+DCFG_BACKGROUND_COLOR = "#000000"       # (0, 0, 0)
 DCFG_STAT_FREQUENCY = 30    # In case the service doesn't work, 30 secs is the normal value
 
 # Constants
@@ -50,16 +50,16 @@ class LmGraph:
         graph_list_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         graph_list_layout.setSpacing(5)
 
-        select_label = QtWidgets.QLabel(lx('Interfaces and devices to display'), objectName='selectLabel')
+        select_label = QtWidgets.QLabel(lx("Interfaces and devices to display"), objectName="selectLabel")
         graph_list_layout.addWidget(select_label, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
         # Interface / device graph list
-        self._graph_list = LmTableWidget(objectName='graphList')
-        self._graph_list.set_columns({GraphCol.Key: ['Key', 0, None],
-                                      GraphCol.Name: [lx('Name'), 150, 'graphList_Name'],
-                                      GraphCol.Type: [lx('Type'), 55, 'graphList_Type'],
-                                      GraphCol.ID: [lx('ID'), 120, 'graphList_ID'],
-                                      GraphCol.Color: [lx('Color'), 55, 'graphList_Color']})
+        self._graph_list = LmTableWidget(objectName="graphList")
+        self._graph_list.set_columns({GraphCol.Key: ["Key", 0, None],
+                                      GraphCol.Name: [lx("Name"), 150, "graphList_Name"],
+                                      GraphCol.Type: [lx("Type"), 55, "graphList_Type"],
+                                      GraphCol.ID: [lx("ID"), 120, "graphList_ID"],
+                                      GraphCol.Color: [lx("Color"), 55, "graphList_Color"]})
         self._graph_list.set_header_resize([GraphCol.Name])
         self._graph_list.set_standard_setup(self)
 
@@ -72,24 +72,24 @@ class LmGraph:
         # Interface / device graph list button bar
         graph_list_button_box = QtWidgets.QHBoxLayout()
         graph_list_button_box.setSpacing(5)
-        add_graph_button = QtWidgets.QPushButton(lx('Add...'), objectName='addGraph')
+        add_graph_button = QtWidgets.QPushButton(lx("Add..."), objectName="addGraph")
         add_graph_button.clicked.connect(self.add_graph_button_click)
         graph_list_button_box.addWidget(add_graph_button)
-        del_graph_button = QtWidgets.QPushButton(lx('Delete'), objectName='delGraph')
+        del_graph_button = QtWidgets.QPushButton(lx("Delete"), objectName="delGraph")
         del_graph_button.clicked.connect(self.del_graph_button_click)
         graph_list_button_box.addWidget(del_graph_button)
         graph_list_layout.addLayout(graph_list_button_box, 0)
 
         # Setup grid
-        window_label = QtWidgets.QLabel(lx('Window:'), objectName='windowLabel')
+        window_label = QtWidgets.QLabel(lx("Window:"), objectName="windowLabel")
         int_validator = QtGui.QIntValidator()
         int_validator.setRange(0, 99)
-        self._graph_window_edit = QtWidgets.QLineEdit(objectName='windowEdit')
+        self._graph_window_edit = QtWidgets.QLineEdit(objectName="windowEdit")
         self._graph_window_edit.setValidator(int_validator)
-        window_unit = QtWidgets.QLabel(lx('hours (0 = max)'), objectName='windowUnit')
+        window_unit = QtWidgets.QLabel(lx("hours (0 = max)"), objectName="windowUnit")
 
-        back_color_label = QtWidgets.QLabel(lx('Background color:'), objectName='backColorLabel')
-        self._graph_back_color_edit = LmTools.ColorButton(objectName='backColor')
+        back_color_label = QtWidgets.QLabel(lx("Background color:"), objectName="backColorLabel")
+        self._graph_back_color_edit = LmTools.ColorButton(objectName="backColor")
 
         setup_grid = QtWidgets.QGridLayout()
         setup_grid.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -102,11 +102,11 @@ class LmGraph:
         setup_grid.setColumnStretch(2, 1)
 
         # Apply button
-        apply_button = QtWidgets.QPushButton(lx('Apply'), objectName='apply')
+        apply_button = QtWidgets.QPushButton(lx("Apply"), objectName="apply")
         apply_button.clicked.connect(self.apply_graph_button_click)
 
         # Export button
-        export_button = QtWidgets.QPushButton(lx('Export...'), objectName='export')
+        export_button = QtWidgets.QPushButton(lx("Export..."), objectName="export")
         export_button.clicked.connect(self.export_graph_button_click)
 
         # Control box
@@ -120,23 +120,23 @@ class LmGraph:
 
         # Graph box
         graph_box = QtWidgets.QVBoxLayout()
-        styles = {'color': '#FF0000', 'font-size': '11px'}
+        styles = {"color": "#FF0000", "font-size": "11px"}
 
         self._down_graph = pg.PlotWidget()   # Setting objectName on input doesn't work
-        self._down_graph.setObjectName('downGraph')
-        self._down_graph.setTitle(lx('Download'))
-        self._down_graph.setLabel('left', lx('Traffic (MB)'), **styles)
-        self._down_graph.setLabel('bottom', lx('Time'), **styles)
+        self._down_graph.setObjectName("downGraph")
+        self._down_graph.setTitle(lx("Download"))
+        self._down_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._down_graph.setLabel("bottom", lx("Time"), **styles)
         down_axis = pg.DateAxisItem()
-        self._down_graph.setAxisItems({'bottom':down_axis})
+        self._down_graph.setAxisItems({"bottom":down_axis})
 
         self._up_graph = pg.PlotWidget()     # Setting objectName on input doesn't work
-        self._up_graph.setObjectName('upGraph')
-        self._up_graph.setTitle(lx('Upload'))
-        self._up_graph.setLabel('left', lx('Traffic (MB)'), **styles)
-        self._up_graph.setLabel('bottom', lx('Time'), **styles)
+        self._up_graph.setObjectName("upGraph")
+        self._up_graph.setTitle(lx("Upload"))
+        self._up_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._up_graph.setLabel("bottom", lx("Time"), **styles)
         up_axis = pg.DateAxisItem()
-        self._up_graph.setAxisItems({'bottom':up_axis})
+        self._up_graph.setAxisItems({"bottom":up_axis})
 
         # To inhibit useless "skipping QEventPoint" logs on MacOS when moving the mouse on graphs
         # -> https://stackoverflow.com/questions/75746637/how-to-suppress-qt-pointer-dispatch-warning
@@ -158,8 +158,8 @@ class LmGraph:
         hbox.addLayout(graph_box, 1)
         self._graph_tab.setLayout(hbox)
 
-        LmConfig.set_tooltips(self._graph_tab, 'graph')
-        self._tab_widget.addTab(self._graph_tab, lx('Graph'))
+        LmConfig.set_tooltips(self._graph_tab, "graph")
+        self._tab_widget.addTab(self._graph_tab, lx("Graph"))
 
         # Init context
         self.graph_tab_init()
@@ -182,7 +182,7 @@ class LmGraph:
             self._graph_data_loaded = True    # Must be first to avoid reentrency during tab drag&drop
 
             # Load config & data
-            self._task.start(lx('Loading configuration...'))
+            self._task.start(lx("Loading configuration..."))
             try:
                 self.load_stat_params()
                 self.load_home_lan_interfaces()
@@ -192,7 +192,7 @@ class LmGraph:
                 self._task.end()
 
             # Plot data
-            self._task.start(lx('Plotting graphes...'))
+            self._task.start(lx("Plotting graphes..."))
             try:
                 self.plot_graph()
             finally:
@@ -217,14 +217,14 @@ class LmGraph:
 
     ### Add a graph object in the list
     def add_graph_object(self, type, key, name, object_id, color):
-        key = type + '_' + key
+        key = type + "_" + key
 
         i = self._graph_list.rowCount()
         self._graph_list.insertRow(i)
         self._graph_list.setItem(i, GraphCol.Key, QtWidgets.QTableWidgetItem(key))
         self._graph_list.setItem(i, GraphCol.Name, QtWidgets.QTableWidgetItem(name))
 
-        type = lx('Interface') if type == GraphType.INTERFACE else lx('Device')
+        type = lx("Interface") if type == GraphType.INTERFACE else lx("Device")
         self._graph_list.setItem(i, GraphCol.Type, QtWidgets.QTableWidgetItem(type))
 
         self._graph_list.setItem(i, GraphCol.ID, QtWidgets.QTableWidgetItem(object_id))
@@ -241,7 +241,7 @@ class LmGraph:
         if current_selection >= 0:
             self._graph_list.removeRow(current_selection)
         else:
-            self.display_error(mx('Please select a line.', 'lineSelect'))
+            self.display_error(mx("Please select a line.", "lineSelect"))
 
 
     ### Click on apply button
@@ -258,7 +258,7 @@ class LmGraph:
         self.save_graph_config()
 
         # Refresh interface & device lists
-        self._task.start(lx('Plotting graphes...'))
+        self._task.start(lx("Plotting graphes..."))
         try:
             self.load_home_lan_interfaces()
             self.load_home_lan_devices()
@@ -272,44 +272,44 @@ class LmGraph:
     ### Click on export button
     def export_graph_button_click(self):
         if len(self._graph_data):
-            folder = QtWidgets.QFileDialog.getExistingDirectory(self, lx('Select Export Folder'))
+            folder = QtWidgets.QFileDialog.getExistingDirectory(self, lx("Select Export Folder"))
             if len(folder):
                 folder = QtCore.QDir.toNativeSeparators(folder)
                 for o in self._graph_data:
                     self.export_graph_object(folder, o)
         else:
-            self.display_error(mx('No graph to export.', 'noGraph'))
+            self.display_error(mx("No graph to export.", "noGraph"))
 
 
     ### Export a graph object to a file
     def export_graph_object(self, folder, graph_object):
-        suffix = ''
+        suffix = ""
         n = 0
 
         while True:
-            file_path = os.path.join(folder, 'StatExport_' + graph_object['Name'] + suffix + '.csv')
+            file_path = os.path.join(folder, "StatExport_" + graph_object["Name"] + suffix + ".csv")
             try:
-                export_file = open(file_path, 'x', newline='')
+                export_file = open(file_path, "x", newline="")
             except FileExistsError:
                 n += 1
-                suffix = '_' + str(n)
+                suffix = "_" + str(n)
                 continue
             except Exception as e:
                 LmTools.error(str(e))
-                self.display_error(mx('Cannot create the file.', 'createFileErr'))
+                self.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
             break
 
-        self._task.start(lx('Exporting statistics...'))
+        self._task.start(lx("Exporting statistics..."))
         try:
             # Write header line
-            csv_writer = csv.writer(export_file, dialect='excel', delimiter=LmConf.CsvDelimiter)
-            csv_writer.writerow(['Download Timestamp', 'Download Bytes', 'Upload Timestamp', 'Upload Bytes'])
+            csv_writer = csv.writer(export_file, dialect="excel", delimiter=LmConf.CsvDelimiter)
+            csv_writer.writerow(["Download Timestamp", "Download Bytes", "Upload Timestamp", "Upload Bytes"])
 
-            dt = graph_object['DownTime']
-            d = graph_object['Down']
-            ut = graph_object['UpTime']
-            u = graph_object['Up']
+            dt = graph_object["DownTime"]
+            d = graph_object["Down"]
+            ut = graph_object["UpTime"]
+            u = graph_object["Up"]
 
             for i in range(min(len(dt), len(ut))):
                 csv_writer.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER)),
@@ -322,7 +322,7 @@ class LmGraph:
                 export_file.close()
             except Exception as e:
                 LmTools.error(str(e))
-                self.display_error(mx('Cannot save the file.', 'saveFileErr'))
+                self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
 
     ### Load stats parameters
@@ -344,26 +344,26 @@ class LmGraph:
         self._graph_back_color = DCFG_BACKGROUND_COLOR
         if LmConf.Graph is not None:
             c = LmConf.Graph
-            p = c.get('Window')
+            p = c.get("Window")
             if p is not None:
                 self._graph_window = int(p)
-            p = c.get('BackColor')
+            p = c.get("BackColor")
             if p is not None:
                 self._graph_back_color = p
 
-            t = c['Objects']
+            t = c["Objects"]
             for o in t:
-                p = o.get('Type')
+                p = o.get("Type")
                 if p is None:
                     continue
                 else:
                     type = p
-                p = o.get('Key')
+                p = o.get("Key")
                 if p is None:
                     continue
                 else:
                     key = p
-                p = o.get('Color')
+                p = o.get("Color")
                 if p is None:
                     continue
                 else:
@@ -373,10 +373,10 @@ class LmGraph:
                         e = next((e for e in self._graph_valid_interfaces if e[0] == key), None)
                         if e is None:
                             continue
-                        i = next((i for i in self._api._intf.get_list() if i['Key'] == key), None)
+                        i = next((i for i in self._api._intf.get_list() if i["Key"] == key), None)
                         if i is None:
                             continue
-                        self.add_graph_object(type, key, i['Name'], e[2], color)
+                        self.add_graph_object(type, key, i["Name"], e[2], color)
                     case GraphType.DEVICE:
                         e = next((e for e in self._graph_valid_devices if e[0] == key), None)
                         if e is None:
@@ -395,17 +395,17 @@ class LmGraph:
 
     ### Save configuration
     def save_graph_config(self):
-        c = {'Window': self._graph_window,
-             'BackColor': self._graph_back_color}
+        c = {"Window": self._graph_window,
+             "BackColor": self._graph_back_color}
 
         t = []
         for i in range(self._graph_list.rowCount()):
             key = self._graph_list.item(i, GraphCol.Key).text()
-            o = {'Type': key[0:3],
-                  'Key': key[4:],
-                  'Color': self._graph_list.item(i, GraphCol.Color).background().color().name()}
+            o = {"Type": key[0:3],
+                  "Key": key[4:],
+                  "Color": self._graph_list.item(i, GraphCol.Color).background().color().name()}
             t.append(o)
-        c['Objects'] = t
+        c["Objects"] = t
 
         LmConf.Graph = c
         LmConf.save()
@@ -435,10 +435,10 @@ class LmGraph:
 
     ### Plot an object
     def plot_object(self, type, key, name, object_id, color):
-        o = {'Type': type,
-              'Key': key,
-              'Name': name,
-              'ID': object_id}
+        o = {"Type": type,
+              "Key": key,
+              "Name": name,
+              "ID": object_id}
 
         # Set time window
         if self._graph_window:
@@ -451,9 +451,9 @@ class LmGraph:
         swap_stats = False
         if type == GraphType.INTERFACE:
             stats_data = self.load_stats_interface(object_id, start_time, end_time)
-            intf = next((i for i in self._api._intf.get_list() if i['Key'] == key), None)
+            intf = next((i for i in self._api._intf.get_list() if i["Key"] == key), None)
             if intf is not None:
-                swap_stats = intf['SwapStats']
+                swap_stats = intf["SwapStats"]
         else:
             stats_data = self.load_stats_device(object_id, start_time, end_time)
 
@@ -463,35 +463,35 @@ class LmGraph:
         u = []  # Upload data
 
         for e in reversed(stats_data):
-            timestamp = e.get('Timestamp')
+            timestamp = e.get("Timestamp")
             if timestamp is not None:
                 dt.append(timestamp)
                 ut.append(timestamp)
 
                 if swap_stats:
-                    down_bits = e.get('Tx_Counter')
+                    down_bits = e.get("Tx_Counter")
                 else:
-                    down_bits = e.get('Rx_Counter')
+                    down_bits = e.get("Rx_Counter")
                 if down_bits is None:
                     down_bits = 0
                 d.append((down_bits / 8) / UNIT_DIVIDER)    # Convert bits to MBytes
 
                 if swap_stats:
-                    up_bits = e.get('Rx_Counter')
+                    up_bits = e.get("Rx_Counter")
                 else:
-                    up_bits = e.get('Tx_Counter')
+                    up_bits = e.get("Tx_Counter")
                 if up_bits is None:
                     up_bits = 0
                 u.append((up_bits / 8) / UNIT_DIVIDER)      # Convert bits to MBytes
 
-        o['DownTime'] = dt
-        o['Down'] = d
-        o['UpTime'] = ut
-        o['Up'] = u
+        o["DownTime"] = dt
+        o["Down"] = d
+        o["UpTime"] = ut
+        o["Up"] = u
 
         pen = pg.mkPen(color=color, width=1)
-        o['DownLine'] = self._down_graph.plot(dt, d, name=object_id, pen=pen)
-        o['UpLine'] = self._up_graph.plot(ut, u, name=object_id, pen=pen)
+        o["DownLine"] = self._down_graph.plot(dt, d, name=object_id, pen=pen)
+        o["UpLine"] = self._up_graph.plot(ut, u, name=object_id, pen=pen)
 
         self._graph_data.append(o)
 
@@ -499,7 +499,7 @@ class LmGraph:
     ### Update graph according to interface stats event
     def graph_update_interface_event(self, intf_key, timestamp, down_bytes, up_bytes):
         # Lookup for a stat object matching interface
-        o = next((o for o in self._graph_data if (o['Type'] == GraphType.INTERFACE) and (o['Key'] == intf_key)), None)
+        o = next((o for o in self._graph_data if (o["Type"] == GraphType.INTERFACE) and (o["Key"] == intf_key)), None)
         if o is not None:
             self.graph_update_object_event(o, timestamp, down_bytes, up_bytes)
 
@@ -507,7 +507,7 @@ class LmGraph:
     ### Update graph according to device stats event
     def graph_update_device_event(self, device_key, timestamp, down_bytes, up_bytes):
         # Lookup for a stat object matching interface
-        o = next((o for o in self._graph_data if (o['Type'] == GraphType.DEVICE) and (o['Key'] == device_key)), None)
+        o = next((o for o in self._graph_data if (o["Type"] == GraphType.DEVICE) and (o["Key"] == device_key)), None)
         if o is not None:
             self.graph_update_object_event(o, timestamp, down_bytes, up_bytes)
 
@@ -517,28 +517,28 @@ class LmGraph:
         # Update download part
         if down_bytes is not None:
             # Update timestamp array
-            dt = graph_object['DownTime']
+            dt = graph_object["DownTime"]
             dt.append(timestamp)
 
             # Update data
-            d = graph_object['Down']
+            d = graph_object["Down"]
             d.append(down_bytes / UNIT_DIVIDER)     # Convert to MBs
 
             # Update graph
-            graph_object['DownLine'].setData(dt, d)
+            graph_object["DownLine"].setData(dt, d)
 
         # Update upload part
         if up_bytes is not None:
             # Update timestamp array
-            ut = graph_object['UpTime']
+            ut = graph_object["UpTime"]
             ut.append(timestamp)
 
             # Update data
-            u = graph_object['Up']
+            u = graph_object["Up"]
             u.append(up_bytes / UNIT_DIVIDER)       # Convert to MBs
 
             # Update graph
-            graph_object['UpLine'].setData(ut, u)
+            graph_object["UpLine"].setData(ut, u)
 
 
     # Cut old values to match graph time window
@@ -553,8 +553,8 @@ class LmGraph:
 
         # Loop on each drawn object
         for o in self._graph_data:
-            self.graph_window_update_line(o['DownLine'], o['DownTime'], o['Down'], max_older_value)
-            self.graph_window_update_line(o['UpLine'], o['UpTime'], o['Up'], max_older_value)
+            self.graph_window_update_line(o["DownLine"], o["DownTime"], o["Down"], max_older_value)
+            self.graph_window_update_line(o["UpLine"], o["UpTime"], o["Up"], max_older_value)
 
 
     # Cut old values to match graph time window
@@ -595,11 +595,11 @@ class LmGraph:
         # Iterate over all valid interfaces
         for i in self._api._intf.get_list():
             # Check if key exists in the returned interfaces
-            k = i['Key']
+            k = i["Key"]
             intf_data = interfaces.get(k)
             if intf_data:
-                m = int(intf_data.get('NumberOfStoredMeasures', 0))
-                intf_id = intf_data.get('FriendlyName', k)
+                m = int(intf_data.get("NumberOfStoredMeasures", 0))
+                intf_id = intf_data.get("FriendlyName", k)
                 self._graph_valid_interfaces.append([k, m, intf_id])
 
 
@@ -616,9 +616,9 @@ class LmGraph:
 
         for d in devices:
             d = devices[d]
-            device_id = d.get('MacAddress')
+            device_id = d.get("MacAddress")
             if (device_id is not None) and len(device_id):
-                m = int(d.get('NumberOfStoredMeasures', 0))
+                m = int(d.get("NumberOfStoredMeasures", 0))
                 self._graph_valid_devices.append([device_id, m, device_id])
 
 
@@ -642,7 +642,7 @@ class LmGraph:
 
     ### Find object line in graph list from object type & key, return -1 if not found
     def find_graph_object_line(self, type, key):
-        key = type + '_' + key
+        key = type + "_" + key
         for i in range(self._graph_list.rowCount()):
             if self._graph_list.item(i, GraphCol.Key).text() == key:
                 return i

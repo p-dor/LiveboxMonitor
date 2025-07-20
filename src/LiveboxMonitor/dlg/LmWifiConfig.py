@@ -11,7 +11,7 @@ from LiveboxMonitor.lang.LmLanguages import get_wifi_config_label as lx
 # ################################ VARS & DEFS ################################
 
 # Wifi MAC Filtering modes
-MAC_FILTERING_MODES = ['Off', 'WhiteList', 'BlackList']
+MAC_FILTERING_MODES = ["Off", "WhiteList", "BlackList"]
 
 
 # ################################ Wifi Configuration dialog ################################
@@ -25,54 +25,54 @@ class WifiConfigDialog(QtWidgets.QDialog):
         else:
             self.resize(390, 380)
 
-        self._enable_checkbox = QtWidgets.QCheckBox(lx('Enabled'), objectName='enableCheckbox')
+        self._enable_checkbox = QtWidgets.QCheckBox(lx("Enabled"), objectName="enableCheckbox")
         self._enable_checkbox.clicked.connect(self.enable_click)
 
-        self._mlo = config.get('MLO') is not None
+        self._mlo = config.get("MLO") is not None
         if self._mlo:
-            self._mlo_checkbox = QtWidgets.QCheckBox(lx('MLO'), objectName='mloCheckbox')
+            self._mlo_checkbox = QtWidgets.QCheckBox(lx("MLO"), objectName="mloCheckbox")
 
         if self._guest:
-            duration_label = QtWidgets.QLabel(lx('Duration'), objectName='durationLabel')
+            duration_label = QtWidgets.QLabel(lx("Duration"), objectName="durationLabel")
             int_validator = QtGui.QIntValidator()
             int_validator.setRange(0, 999)
-            self._duration_edit = QtWidgets.QLineEdit(objectName='durationEdit')
+            self._duration_edit = QtWidgets.QLineEdit(objectName="durationEdit")
             self._duration_edit.setValidator(int_validator)
-            duration_unit = QtWidgets.QLabel(lx('hours (0 = unlimited).'), objectName='durationUnit')
+            duration_unit = QtWidgets.QLabel(lx("hours (0 = unlimited)."), objectName="durationUnit")
 
         separator = QtWidgets.QFrame()
         separator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
         separator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 
-        freq_label = QtWidgets.QLabel(lx('Radio Band'), objectName='freqLabel')
-        self._freq_combo = QtWidgets.QComboBox(objectName='freqCombo')
+        freq_label = QtWidgets.QLabel(lx("Radio Band"), objectName="freqLabel")
+        self._freq_combo = QtWidgets.QComboBox(objectName="freqCombo")
         self._freq_combo.activated.connect(self.freq_selected)
 
-        ssid_label = QtWidgets.QLabel(lx('SSID'), objectName='ssidLabel')
-        self._ssid_edit = QtWidgets.QLineEdit(objectName='ssidEdit')
+        ssid_label = QtWidgets.QLabel(lx("SSID"), objectName="ssidLabel")
+        self._ssid_edit = QtWidgets.QLineEdit(objectName="ssidEdit")
 
-        options_label = QtWidgets.QLabel(lx('Options'), objectName='optionsLabel')
-        self._freq_enabled_checkbox = QtWidgets.QCheckBox(lx('Enabled'), objectName='freqEnabledCheckbox')
-        self._broadcast_checkbox = QtWidgets.QCheckBox(lx('SSID Broadcast'), objectName='broadcastCheckbox')
-        self._wps_checkbox = QtWidgets.QCheckBox(lx('WPS'), objectName='wpsCheckbox')
+        options_label = QtWidgets.QLabel(lx("Options"), objectName="optionsLabel")
+        self._freq_enabled_checkbox = QtWidgets.QCheckBox(lx("Enabled"), objectName="freqEnabledCheckbox")
+        self._broadcast_checkbox = QtWidgets.QCheckBox(lx("SSID Broadcast"), objectName="broadcastCheckbox")
+        self._wps_checkbox = QtWidgets.QCheckBox(lx("WPS"), objectName="wpsCheckbox")
         options_box = QtWidgets.QHBoxLayout()
         options_box.setSpacing(10)
         options_box.addWidget(self._freq_enabled_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         options_box.addWidget(self._broadcast_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         options_box.addWidget(self._wps_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-        mac_filtering_label = QtWidgets.QLabel(lx('MAC Filtering'), objectName='macFilteringLabel')
-        self._mac_filtering_combo = QtWidgets.QComboBox(objectName='macFilteringCombo')
+        mac_filtering_label = QtWidgets.QLabel(lx("MAC Filtering"), objectName="macFilteringLabel")
+        self._mac_filtering_combo = QtWidgets.QComboBox(objectName="macFilteringCombo")
         self._mac_filtering_combo.addItems(MAC_FILTERING_MODES)
 
-        secu_label = QtWidgets.QLabel(lx('Security'), objectName='secuLabel')
-        self._secu_combo = QtWidgets.QComboBox(objectName='secuCombo')
+        secu_label = QtWidgets.QLabel(lx("Security"), objectName="secuLabel")
+        self._secu_combo = QtWidgets.QComboBox(objectName="secuCombo")
         self._secu_combo.activated.connect(self.secu_selected)
 
-        pass_label = QtWidgets.QLabel(lx('Password'), objectName='passLabel')
-        self._pass_edit = QtWidgets.QLineEdit(objectName='passEdit')
+        pass_label = QtWidgets.QLabel(lx("Password"), objectName="passLabel")
+        self._pass_edit = QtWidgets.QLineEdit(objectName="passEdit")
         self._pass_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-        pass_show_button = QtWidgets.QPushButton('👁️', objectName='passShow')
+        pass_show_button = QtWidgets.QPushButton("👁️", objectName="passShow")
         pass_show_button.setCheckable(True)
         pass_show_button.setMaximumWidth(30)
         pass_show_button.toggled.connect(self.pass_show_toggle)
@@ -83,11 +83,11 @@ class WifiConfigDialog(QtWidgets.QDialog):
         pass_box.addWidget(pass_show_button, 0)
 
         if not self._guest:
-            chan_label = QtWidgets.QLabel(lx('Channel'), objectName='chanLabel')
-            self._chan_combo = QtWidgets.QComboBox(objectName='chanCombo')
+            chan_label = QtWidgets.QLabel(lx("Channel"), objectName="chanLabel")
+            self._chan_combo = QtWidgets.QComboBox(objectName="chanCombo")
 
-            mode_label = QtWidgets.QLabel(lx('Mode'), objectName='modeLabel')
-            self._mode_combo = QtWidgets.QComboBox(objectName='modeCombo')
+            mode_label = QtWidgets.QLabel(lx("Mode"), objectName="modeLabel")
+            self._mode_combo = QtWidgets.QComboBox(objectName="modeCombo")
 
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
@@ -137,10 +137,10 @@ class WifiConfigDialog(QtWidgets.QDialog):
             grid.addWidget(mode_label, 9, 0)
             grid.addWidget(self._mode_combo, 9, 1)
 
-        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
         self._ok_button.setDefault(True)
-        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button = QtWidgets.QPushButton(lx("Cancel"), objectName="cancel")
         cancel_button.clicked.connect(self.reject)
         hbox = QtWidgets.QHBoxLayout()
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -152,12 +152,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
         vbox.addLayout(grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'wconfig')
+        LmConfig.set_tooltips(self, "wconfig")
 
         if self._guest:
-            self.setWindowTitle(lx('Guest Wifi Configuration'))
+            self.setWindowTitle(lx("Guest Wifi Configuration"))
         else:
-            self.setWindowTitle(lx('Wifi Configuration'))
+            self.setWindowTitle(lx("Wifi Configuration"))
 
         self.set_config(config)
 
@@ -170,15 +170,15 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self._config = copy.deepcopy(config)
         self._current_freq = None
 
-        self._enable_checkbox.setChecked(self._config['Enable'])
+        self._enable_checkbox.setChecked(self._config["Enable"])
         if self._mlo:
-            self._mlo_checkbox.setChecked(self._config['MLO'])
+            self._mlo_checkbox.setChecked(self._config["MLO"])
 
         if self._guest:
-            self._duration_edit.setText(str(self._config['Duration'] // 3600))
-            timer = self._config['Timer']
+            self._duration_edit.setText(str(self._config["Duration"] // 3600))
+            timer = self._config["Timer"]
             if timer:
-                self._enable_checkbox.setText(lx(f'Enabled for {LmTools.fmt_time(timer, True)}'))
+                self._enable_checkbox.setText(lx(f"Enabled for {LmTools.fmt_time(timer, True)}"))
 
         self.enable_click()      
         self.load_freq_combo()
@@ -188,17 +188,17 @@ class WifiConfigDialog(QtWidgets.QDialog):
     def enable_click(self):
         if self._guest:
             if self._enable_checkbox.isChecked():
-                self._duration_edit.setText(str(self._config['Duration'] // 3600))
+                self._duration_edit.setText(str(self._config["Duration"] // 3600))
                 self._duration_edit.setEnabled(True)
             else:
-                self._duration_edit.setText('0')
+                self._duration_edit.setText("0")
                 self._duration_edit.setEnabled(False)
 
 
     def load_freq_combo(self):
-        c = self._config['Intf']
+        c = self._config["Intf"]
         for f in c:
-            self._freq_combo.addItem(f['Name'], userData = f['Key'])
+            self._freq_combo.addItem(f["Name"], userData = f["Key"])
 
 
     def freq_selected(self, index):
@@ -211,17 +211,17 @@ class WifiConfigDialog(QtWidgets.QDialog):
             return
         self._current_freq = key
 
-        self._ssid_edit.setText(i['SSID'])
-        self._pass_edit.setText(i['KeyPass'])
-        self._freq_enabled_checkbox.setChecked(i['Enable'])
-        self._broadcast_checkbox.setChecked(i['Broadcast'])
-        self._wps_checkbox.setChecked(i['WPS'])
+        self._ssid_edit.setText(i["SSID"])
+        self._pass_edit.setText(i["KeyPass"])
+        self._freq_enabled_checkbox.setChecked(i["Enable"])
+        self._broadcast_checkbox.setChecked(i["Broadcast"])
+        self._wps_checkbox.setChecked(i["WPS"])
 
         try:
-            new_index = MAC_FILTERING_MODES.index(i['MACFiltering'])
+            new_index = MAC_FILTERING_MODES.index(i["MACFiltering"])
         except ValueError:
-            MAC_FILTERING_MODES.append(i['MACFiltering'])
-            self._mac_filtering_combo.addItem(i['MACFiltering'])
+            MAC_FILTERING_MODES.append(i["MACFiltering"])
+            self._mac_filtering_combo.addItem(i["MACFiltering"])
             new_index = self._mac_filtering_combo.count() - 1
         self._mac_filtering_combo.setCurrentIndex(new_index)
 
@@ -234,28 +234,28 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
     def save_freq_config(self):
         if self._current_freq is not None:
-            i = next((i for i in self._config['Intf'] if i['Key'] == self._current_freq), None)
+            i = next((i for i in self._config["Intf"] if i["Key"] == self._current_freq), None)
             if i is None:
-                LmTools.error('Internal error, unconsistent configuration - intf not found')
+                LmTools.error("Internal error, unconsistent configuration - intf not found")
                 self.reject()
                 return
-            i['SSID'] = self._ssid_edit.text()
-            i['Enable'] = self._freq_enabled_checkbox.isChecked()
-            i['Broadcast'] = self._broadcast_checkbox.isChecked()
-            i['WPS'] = self._wps_checkbox.isChecked()
-            i['MACFiltering'] = self._mac_filtering_combo.currentText()
-            i['Secu'] = self._secu_combo.currentText()
-            if i['Secu'] != 'None':
-                i['KeyPass'] = self._pass_edit.text()
+            i["SSID"] = self._ssid_edit.text()
+            i["Enable"] = self._freq_enabled_checkbox.isChecked()
+            i["Broadcast"] = self._broadcast_checkbox.isChecked()
+            i["WPS"] = self._wps_checkbox.isChecked()
+            i["MACFiltering"] = self._mac_filtering_combo.currentText()
+            i["Secu"] = self._secu_combo.currentText()
+            if i["Secu"] != "None":
+                i["KeyPass"] = self._pass_edit.text()
 
             if not self._guest:
                 chan = self._chan_combo.currentText()
-                if chan == 'Auto':
-                    i['ChannelAuto'] = True
+                if chan == "Auto":
+                    i["ChannelAuto"] = True
                 else:
-                    i['ChannelAuto'] = False
-                    i['Channel'] = int(chan)
-                i['Mode'] = self._mode_combo.currentText()
+                    i["ChannelAuto"] = False
+                    i["Channel"] = int(chan)
+                i["Mode"] = self._mode_combo.currentText()
 
 
     def pass_show_toggle(self, checked):
@@ -273,17 +273,17 @@ class WifiConfigDialog(QtWidgets.QDialog):
         key, i = self.get_current_key_intf()
         if i is None:
             return
-        secu = i['Secu']
-        secu_list = i['SecuAvail']
+        secu = i["Secu"]
+        secu_list = i["SecuAvail"]
         if secu_list is None:
-            LmTools.error('Internal error, unconsistent configuration - no security list')
+            LmTools.error("Internal error, unconsistent configuration - no security list")
             self.reject()
-        secu_list = secu_list.split(',')
+        secu_list = secu_list.split(",")
         self._secu_combo.clear()
         n = 0
         selection = -1
         for s in secu_list:
-            if not 'WEP' in s:
+            if not "WEP" in s:
                 if s == secu:
                     selection = n
                 self._secu_combo.addItem(s)
@@ -293,12 +293,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             if secu is not None:
                 self._secu_combo.addItem(secu)
                 selection = n
-                LmTools.log_debug(1, f'Warning - security {secu} not in list')
+                LmTools.log_debug(1, f"Warning - security {secu} not in list")
             elif n == 0:
-                LmTools.error('Internal error, unconsistent configuration - no security')
+                LmTools.error("Internal error, unconsistent configuration - no security")
                 self.reject()
             else:
-                LmTools.log_debug(1, 'Warning - no security, defaulting to first')
+                LmTools.log_debug(1, "Warning - no security, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -312,15 +312,15 @@ class WifiConfigDialog(QtWidgets.QDialog):
             return
 
         secu = self._secu_combo.currentText()
-        if secu == 'None':
+        if secu == "None":
             # Save pass key in case secu is reselected
-            i['KeyPass'] = self._pass_edit.text()
+            i["KeyPass"] = self._pass_edit.text()
             self._pass_edit.setEnabled(False)
-            self._pass_edit.setText('')
+            self._pass_edit.setText("")
         else:
             self._pass_edit.setEnabled(True)
             if len(self._pass_edit.text()) == 0:
-                self._pass_edit.setText(i['KeyPass'])
+                self._pass_edit.setText(i["KeyPass"])
 
         self.set_ok_button_state()
 
@@ -329,33 +329,33 @@ class WifiConfigDialog(QtWidgets.QDialog):
         key, i = self.get_current_key_intf()
         if i is None:
             return
-        intf = i['LLIntf']
+        intf = i["LLIntf"]
 
-        modes = self._config['Modes'].get(intf)
+        modes = self._config["Modes"].get(intf)
         if modes is not None:
-            channels = modes.get('Channels')
-            channels_in_use = modes.get('ChannelsInUse')
+            channels = modes.get("Channels")
+            channels_in_use = modes.get("ChannelsInUse")
         else:
             channels = None
             channels_in_use = None
         if channels is None:
-            LmTools.error('Internal error, unconsistent configuration - no channel list')
+            LmTools.error("Internal error, unconsistent configuration - no channel list")
             self.reject()
             return
-        channels = channels.split(',')
+        channels = channels.split(",")
         if channels_in_use is None:
             channels_in_use = []
         else:
-            channels_in_use = channels_in_use.split(',')
+            channels_in_use = channels_in_use.split(",")
 
-        current_channel = str(i['Channel'])
+        current_channel = str(i["Channel"])
 
         self._chan_combo.clear()
         n = 0
         selection = -1
-        if i['ChannelAutoSupport']:
-            self._chan_combo.addItem('Auto')
-            if i['ChannelAuto']:
+        if i["ChannelAutoSupport"]:
+            self._chan_combo.addItem("Auto")
+            if i["ChannelAuto"]:
                 selection = n
             n += 1
         for c in channels:
@@ -366,15 +366,15 @@ class WifiConfigDialog(QtWidgets.QDialog):
                 n += 1
 
         if selection == -1:
-            if current_channel != 'None':
+            if current_channel != "None":
                 self._chan_combo.addItem(current_channel)
                 selection = n
-                LmTools.log_debug(1, f'Warning - channel {secu} not in list')
+                LmTools.log_debug(1, f"Warning - channel {secu} not in list")
             elif n == 0:
-                LmTools.error('Internal error, unconsistent configuration - no channel')
+                LmTools.error("Internal error, unconsistent configuration - no channel")
                 self.reject()
             else:
-                LmTools.log_debug(1, 'Warning - no channel, defaulting to first')
+                LmTools.log_debug(1, "Warning - no channel, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -385,18 +385,18 @@ class WifiConfigDialog(QtWidgets.QDialog):
         key, i = self.get_current_key_intf()
         if i is None:
             return
-        intf = i['LLIntf']
+        intf = i["LLIntf"]
 
-        modes = self._config['Modes'].get(intf)
+        modes = self._config["Modes"].get(intf)
         if modes is not None:
-            modes = modes.get('Modes')
+            modes = modes.get("Modes")
         if modes is None:
-            LmTools.error('Internal error, unconsistent configuration - no mode list')
+            LmTools.error("Internal error, unconsistent configuration - no mode list")
             self.reject()
             return
-        modes = modes.split(',')
+        modes = modes.split(",")
 
-        current_mode = i['Mode']
+        current_mode = i["Mode"]
 
         self._mode_combo.clear()
         n = 0
@@ -411,12 +411,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             if current_mode is not None:
                 self._mode_combo.addItem(current_mode)
                 selection = n
-                LmTools.log_debug(1, f'Warning - mode {current_mode} not in list')
+                LmTools.log_debug(1, f"Warning - mode {current_mode} not in list")
             elif n == 0:
-                LmTools.error('Internal error, unconsistent configuration - no mode')
+                LmTools.error("Internal error, unconsistent configuration - no mode")
                 self.reject()
             else:
-                LmTools.log_debug(1, 'Warning - no mode, defaulting to first')
+                LmTools.log_debug(1, "Warning - no mode, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -425,19 +425,19 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
     def get_current_key_intf(self):
         key = self._freq_combo.currentData()
-        i = next((i for i in self._config['Intf'] if i['Key'] == key), None)
+        i = next((i for i in self._config["Intf"] if i["Key"] == key), None)
         if i is None:
-            LmTools.error(f'Internal error, unconsistent configuration - intf {key} not found')
+            LmTools.error(f"Internal error, unconsistent configuration - intf {key} not found")
             self.reject()
         return key, i
 
 
     def get_config(self):
-        self._config['Enable'] = self._enable_checkbox.isChecked()
+        self._config["Enable"] = self._enable_checkbox.isChecked()
         if self._mlo:
-            self._config['MLO'] = self._mlo_checkbox.isChecked()
+            self._config["MLO"] = self._mlo_checkbox.isChecked()
         if self._guest:
-            self._config['Duration'] = int(self._duration_edit.text()) * 3600
+            self._config["Duration"] = int(self._duration_edit.text()) * 3600
         self.save_freq_config()
         return self._config
 
@@ -445,16 +445,16 @@ class WifiConfigDialog(QtWidgets.QDialog):
     def set_ok_button_state(self):
         # Check if another frequency is in background with no passkey
         disable = False
-        for i in self._config['Intf']:
-            if i['Key'] == self._current_freq:
+        for i in self._config["Intf"]:
+            if i["Key"] == self._current_freq:
                 continue
-            if (i['Secu'] != 'None') and (len(i['KeyPass']) == 0):
+            if (i["Secu"] != "None") and (len(i["KeyPass"]) == 0):
                 disable = True
                 break
 
         # Check current frequency
         if not disable:
-            if (self._secu_combo.currentText() != 'None') and (len(self._pass_edit.text()) == 0):
+            if (self._secu_combo.currentText() != "None") and (len(self._pass_edit.text()) == 0):
                 disable = True
 
         self._ok_button.setDisabled(disable)

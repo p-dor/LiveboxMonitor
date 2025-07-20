@@ -12,15 +12,15 @@ LIVEBOX_SCAN_TIMEOUT = 0.6
 
 # Livebox versions map
 LIVEBOX_MODEL_MAP = {
-    'Livebox 3': 3,
-    'Livebox 4': 4,
-    'Livebox Fibre': 5,
-    'Livebox 6': 6,
-    'Livebox 7': 7,
-    'Livebox W7': 7.1,
-    'Livebox S': 7.2
+    "Livebox 3": 3,
+    "Livebox 4": 4,
+    "Livebox Fibre": 5,
+    "Livebox 6": 6,
+    "Livebox 7": 7,
+    "Livebox W7": 7.1,
+    "Livebox S": 7.2
     }
-DEFAULT_MODEL = 'Livebox 7'
+DEFAULT_MODEL = "Livebox 7"
 
 
 # ################################ Livebox Info APIs ################################
@@ -35,15 +35,15 @@ class LiveboxInfoApi(LmApi):
 
     ### Get Livebox / Repeater basic info
     def get_device_info(self):
-        return self.call('DeviceInfo', 'get')
+        return self.call("DeviceInfo", "get")
 
 
     ### Get Livebox device info
     def get_device_config(self):
         livebox_mac = self.get_mac()
         if livebox_mac:
-            return self.call('Devices.Device.' + livebox_mac, 'get')
-        raise LmApiException('Cannot determine Livebox MAC address')
+            return self.call("Devices.Device." + livebox_mac, "get")
+        raise LmApiException("Cannot determine Livebox MAC address")
 
 
     ### Set Livebox basic info cache
@@ -52,21 +52,21 @@ class LiveboxInfoApi(LmApi):
             d = self.get_device_info()
         except Exception as e:
             LmTools.error(str(e))
-            LmTools.error('Cannot determine Livebox model.')
-            self._mac_addr = ''
+            LmTools.error("Cannot determine Livebox model.")
+            self._mac_addr = ""
             self._model = 0
-            self._model_name = ''
-            self._software_version = ''
+            self._model_name = ""
+            self._software_version = ""
         else:
-            self._mac_addr = d.get('BaseMAC', '').upper()
-            model = d.get('ProductClass', '')
+            self._mac_addr = d.get("BaseMAC", "").upper()
+            model = d.get("ProductClass", "")
             if model:
                 self._model = LIVEBOX_MODEL_MAP.get(model)
                 self._model_name = model
             if self._model is None:
-                LmTools.error(f'Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.')
+                LmTools.error(f"Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.")
                 self._model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
-            self._software_version = d.get('SoftwareVersion', '')
+            self._software_version = d.get("SoftwareVersion", "")
 
 
     ### Get Livebox / Repeater MAC
@@ -114,70 +114,70 @@ class LiveboxInfoApi(LmApi):
 
     ### Get Livebox model info
     def get_model_info(self):
-        return self.call('UPnP-IGD', 'get')
+        return self.call("UPnP-IGD", "get")
 
 
     ### Get memory status
     def get_memory_status(self):
-        return self.call('DeviceInfo.MemoryStatus', 'get')
+        return self.call("DeviceInfo.MemoryStatus", "get")
 
 
     ### Get time
     def get_time(self):
-        d = self.call_raw('Time', 'getTime')
-        if not d.get('status'):
-            raise LmApiException('Time:getTime query error')
-        d = d.get('data')
+        d = self.call_raw("Time", "getTime")
+        if not d.get("status"):
+            raise LmApiException("Time:getTime query error")
+        d = d.get("data")
         if not d:
-            raise LmApiException('Time:getTime data error')
+            raise LmApiException("Time:getTime data error")
         return d
 
 
     ### Get WAN status
     def get_wan_status(self):
-        d = self.call_raw('NMC', 'getWANStatus')
-        if not d.get('status'):
-            raise LmApiException('NMC:getWANStatus query error')
-        d = d.get('data')
+        d = self.call_raw("NMC", "getWANStatus")
+        if not d.get("status"):
+            raise LmApiException("NMC:getWANStatus query error")
+        d = d.get("data")
         if not d:
-            raise LmApiException('NMC:getWANStatus data error')
+            raise LmApiException("NMC:getWANStatus data error")
         return d
 
 
     ### Get connection status
     def get_connection_status(self):
-        return self.call('NMC', 'get')
+        return self.call("NMC", "get")
 
 
     ### Get VLAN ID
     def get_vlan_id(self):
-        return int(self.call_no_check('NeMo.Intf.data', 'getFirstParameter', {'name': 'VLANID'}))
+        return int(self.call_no_check("NeMo.Intf.data", "getFirstParameter", {"name": "VLANID"}))
 
 
     ### Get MTU
     def get_mtu(self):
-        return int(self.call_no_check('NeMo.Intf.data', 'getFirstParameter', {'name': 'MTU'}))
+        return int(self.call_no_check("NeMo.Intf.data", "getFirstParameter", {"name": "MTU"}))
 
 
     ### Get uplink info
     def get_uplink_info(self):
-        return self.call('UplinkMonitor.DefaultGateway', 'get')
+        return self.call("UplinkMonitor.DefaultGateway", "get")
 
 
     ### Get IPv6 status
     def get_ipv6_status(self):
-        d = self.call_raw('NMC.IPv6', 'get')
-        return d.get('data')
+        d = self.call_raw("NMC.IPv6", "get")
+        return d.get("data")
 
 
     ### Get IPv6 mode
     def get_ipv6_mode(self):
-        return self.call('NMC.Autodetect', 'get')
+        return self.call("NMC.Autodetect", "get")
 
 
     ### Get CGNat status
     def get_cgnat_status(self):
-        return self.call('NMC.ServiceEligibility.DSLITE', 'get')
+        return self.call("NMC.ServiceEligibility.DSLITE", "get")
 
 
     ### It is possible to query DeviceInfo service without being logged, e.g. to get MAC address
@@ -185,16 +185,16 @@ class LiveboxInfoApi(LmApi):
     def get_livebox_mac_nosign(livebox_url):
         if livebox_url is not None:
             try:
-                r = requests.Session().post(livebox_url  + 'ws',
+                r = requests.Session().post(livebox_url  + "ws",
                            data='{"service":"sysbus.DeviceInfo", "method":"get", "parameters":{}}',
-                           headers={'Accept':'*/*', 'Content-Type':'application/x-sah-ws-4-call+json'},
+                           headers={"Accept":"*/*", "Content-Type":"application/x-sah-ws-4-call+json"},
                            timeout=LIVEBOX_SCAN_TIMEOUT + LmSession.TimeoutMargin)
             except Exception:
                 r = None
             if r is not None:
-                s = r.json().get('status')
+                s = r.json().get("status")
                 if s is not None:
-                    s = s.get('BaseMAC')
+                    s = s.get("BaseMAC")
                     if s is not None:
                         return s.upper()
 

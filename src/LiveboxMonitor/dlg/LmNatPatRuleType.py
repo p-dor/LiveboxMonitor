@@ -15,12 +15,12 @@ class NatPatRuleTypeDialog(QtWidgets.QDialog):
 
         self._upnp = upnp
 
-        self._ipv4_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_IPv4, objectName='ipV4Checkbox')
+        self._ipv4_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_IPv4, objectName="ipV4Checkbox")
         self._ipv4_checkbox.clicked.connect(self.set_ok_button_state)
-        self._ipv6_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_IPv6, objectName='ipV6Checkbox')
+        self._ipv6_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_IPv6, objectName="ipV6Checkbox")
         self._ipv6_checkbox.clicked.connect(self.set_ok_button_state)
         if upnp:
-            self._upnp_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_UPnP, objectName='upnpCheckbox')
+            self._upnp_checkbox = QtWidgets.QCheckBox(LmPatPtf.RULE_TYPE_UPnP, objectName="upnpCheckbox")
             self._upnp_checkbox.clicked.connect(self.set_ok_button_state)
 
         vcbox = QtWidgets.QVBoxLayout()
@@ -30,10 +30,10 @@ class NatPatRuleTypeDialog(QtWidgets.QDialog):
         if upnp:
             vcbox.addWidget(self._upnp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-        self._ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
         self._ok_button.setDefault(True)
-        cancel_button = QtWidgets.QPushButton(lx('Cancel'), objectName='cancel')
+        cancel_button = QtWidgets.QPushButton(lx("Cancel"), objectName="cancel")
         cancel_button.clicked.connect(self.reject)
         hbox = QtWidgets.QHBoxLayout()
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -45,9 +45,9 @@ class NatPatRuleTypeDialog(QtWidgets.QDialog):
         vbox.addLayout(vcbox, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'nprtype')
+        LmConfig.set_tooltips(self, "nprtype")
 
-        self.setWindowTitle(lx('Select rule types'))
+        self.setWindowTitle(lx("Select rule types"))
 
         self.set_default()
 

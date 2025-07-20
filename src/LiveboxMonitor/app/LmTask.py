@@ -19,7 +19,7 @@ class LmTask:
         self._stack.append(task)
         LmTools.mouse_cursor_busy() # Stack cursor change
         self.display(task)
-        LmTools.log_debug(1, f'TASK STARTING stack={self._index} task={task}')
+        LmTools.log_debug(1, f"TASK STARTING stack={self._index} task={task}")
 
 
     ### Suspend a potential running task
@@ -38,8 +38,8 @@ class LmTask:
     def update(self, status):
         if self._index:
             task = self._stack[self._index - 1]
-            self.display(f'{task} {status}.' if task else f'{status}.')
-            LmTools.log_debug(1, f'TASK UPDATE stack={self._index} - task={task} - status={status}')
+            self.display(f"{task} {status}." if task else f"{status}.")
+            LmTools.log_debug(1, f"TASK UPDATE stack={self._index} - task={task} - status={status}")
 
 
     ### End a (nested) task
@@ -53,17 +53,17 @@ class LmTask:
                 task = self._stack[self._index - 1]
                 self.display(task)
             else:
-                task = '<None>'
+                task = "<None>"
                 self.display(None)
 
-            LmTools.log_debug(1, f'TASK ENDING stack={self._index} - restoring={task}')
+            LmTools.log_debug(1, f"TASK ENDING stack={self._index} - restoring={task}")
 
 
     ### Display task / erase status is None
     def display(self, task):
         if task:
             if self._app._status_bar is None:
-                self._app.setWindowTitle(f'{self._app.app_window_title()} - {task}')
+                self._app.setWindowTitle(f"{self._app.app_window_title()} - {task}")
             else:
                 self._app._status_bar.showMessage(task)
                 QtCore.QCoreApplication.sendPostedEvents()

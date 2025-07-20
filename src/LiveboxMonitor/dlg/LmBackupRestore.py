@@ -17,14 +17,14 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         self._api = parent._api
 
         # Backup info box
-        auto_backup_enabled_label = QtWidgets.QLabel(lx('Auto backup enabled:'), objectName='autoBackEnabledLabel')
-        self._auto_backup_enabled = QtWidgets.QLabel(objectName='autoBackEnabled')
+        auto_backup_enabled_label = QtWidgets.QLabel(lx("Auto backup enabled:"), objectName="autoBackEnabledLabel")
+        self._auto_backup_enabled = QtWidgets.QLabel(objectName="autoBackEnabled")
 
-        status_label = QtWidgets.QLabel(lx('Status:'), objectName='statusLabel')
-        self._status = QtWidgets.QLabel(objectName='status')
+        status_label = QtWidgets.QLabel(lx("Status:"), objectName="statusLabel")
+        self._status = QtWidgets.QLabel(objectName="status")
 
-        last_backup_label = QtWidgets.QLabel(lx('Last Backup:'), objectName='lastBackupLabel')
-        self._last_backup = QtWidgets.QLabel(objectName='lastBackup')
+        last_backup_label = QtWidgets.QLabel(lx("Last Backup:"), objectName="lastBackupLabel")
+        self._last_backup = QtWidgets.QLabel(objectName="lastBackup")
 
         info_grid = QtWidgets.QGridLayout()
         info_grid.setSpacing(5)
@@ -35,19 +35,19 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         info_grid.addWidget(last_backup_label, 2, 0)
         info_grid.addWidget(self._last_backup, 2, 1)
 
-        refresh_button = QtWidgets.QPushButton(lx('Refresh'), objectName='refresh')
+        refresh_button = QtWidgets.QPushButton(lx("Refresh"), objectName="refresh")
         refresh_button.clicked.connect(self.refresh_status)
 
-        enable_auto_backup_button = QtWidgets.QPushButton(lx('Enable Auto Backup'), objectName='enaAutoBack')
+        enable_auto_backup_button = QtWidgets.QPushButton(lx("Enable Auto Backup"), objectName="enaAutoBack")
         enable_auto_backup_button.clicked.connect(self.enable_auto_backup)
 
-        disable_auto_backup_button = QtWidgets.QPushButton(lx('Disable Auto Backup'), objectName='disAutoBack')
+        disable_auto_backup_button = QtWidgets.QPushButton(lx("Disable Auto Backup"), objectName="disAutoBack")
         disable_auto_backup_button.clicked.connect(self.disable_auto_backup)
 
-        force_backup_button = QtWidgets.QPushButton(lx('Force Backup'), objectName='forceBackup')
+        force_backup_button = QtWidgets.QPushButton(lx("Force Backup"), objectName="forceBackup")
         force_backup_button.clicked.connect(self.force_backup)
 
-        force_restore_button = QtWidgets.QPushButton(lx('Force Restore'), objectName='forceRestore')
+        force_restore_button = QtWidgets.QPushButton(lx("Force Restore"), objectName="forceRestore")
         force_restore_button.clicked.connect(self.force_restore)
 
         button_grid = QtWidgets.QGridLayout()
@@ -59,7 +59,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         button_grid.addWidget(force_restore_button, 4, 0)
 
         hbox = QtWidgets.QHBoxLayout()
-        ok_button = QtWidgets.QPushButton(lx('OK'), objectName='ok')
+        ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         ok_button.clicked.connect(self.accept)
         ok_button.setDefault(True)
         hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -72,11 +72,11 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         vbox.addLayout(button_grid, 0)
         vbox.addLayout(hbox, 1)
 
-        LmConfig.set_tooltips(self, 'backrest')
+        LmConfig.set_tooltips(self, "backrest")
 
         self.refresh_status()
 
-        self.setWindowTitle(lx('Backup and Restore Setup'))
+        self.setWindowTitle(lx("Backup and Restore Setup"))
         self.setModal(True)
         self.show()
 
@@ -86,23 +86,23 @@ class BackupRestoreDialog(QtWidgets.QDialog):
             d = self._api._backup.get_status()
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Cannot load backup and restore status.', 'backRestSvcErr'))
+            self._app.display_error(mx("Cannot load backup and restore status.", "backRestSvcErr"))
             return
 
-        enabled = d.get('Enable', False)
+        enabled = d.get("Enable", False)
         if enabled:
             self._auto_backup_enabled.setPixmap(LmIcon.TickPixmap)
         else:
             self._auto_backup_enabled.setPixmap(LmIcon.CrossPixmap)
 
-        status = d.get('Status', '-')
+        status = d.get("Status", "-")
         self._status.setText(status)
 
-        last_backup = d.get('ConfigDate')
+        last_backup = d.get("ConfigDate")
         if last_backup:
             self._last_backup.setText(LmTools.fmt_livebox_timestamp(last_backup, False))
         else:
-            self._last_backup.setText('-')
+            self._last_backup.setText("-")
 
 
     def enable_auto_backup(self):
@@ -110,7 +110,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
             self._api._backup.set_auto_backup_enable(True)
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Cannot enable auto backup.', 'backEnableSvcErr'))
+            self._app.display_error(mx("Cannot enable auto backup.", "backEnableSvcErr"))
         else:
             self.refresh_status()
 
@@ -120,7 +120,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
             self._api._backup.set_auto_backup_enable(False)
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Cannot disable auto backup.', 'backDisableSvcErr'))
+            self._app.display_error(mx("Cannot disable auto backup.", "backDisableSvcErr"))
         else:
             self.refresh_status()
 
@@ -130,9 +130,9 @@ class BackupRestoreDialog(QtWidgets.QDialog):
             self._api._backup.do_backup()
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Backup request failed.', 'backupSvcErr'))
+            self._app.display_error(mx("Backup request failed.", "backupSvcErr"))
         else:
-            self._app.display_status(mx('Backup requested.', 'backupSvcOk'))
+            self._app.display_status(mx("Backup requested.", "backupSvcOk"))
             self.refresh_status()
 
 
@@ -141,6 +141,6 @@ class BackupRestoreDialog(QtWidgets.QDialog):
             self._api._backup.do_restore()
         except Exception as e:
             LmTools.error(str(e))
-            self._app.display_error(mx('Restore request failed.', 'restoreSvcErr'))
+            self._app.display_error(mx("Restore request failed.", "restoreSvcErr"))
         else:
-            self._app.display_status(mx('Restore requested. Livebox will restart.', 'restoreSvcOk'))
+            self._app.display_status(mx("Restore requested. Livebox will restart.", "restoreSvcOk"))

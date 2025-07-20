@@ -70,14 +70,14 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self.init_wifi_stats_loop()
             self.init_stats_loop()
             self.init_repeater_stats_loop()
-        self._application_name = f'Livebox Monitor v{__version__}'
+        self._application_name = f"Livebox Monitor v{__version__}"
         self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
         self.setGeometry(100, 100, 1300, 102 + LmConfig.window_height(21))
         self.show()
         QtCore.QCoreApplication.processEvents()
         if self.signin():
             if not self._api._intf.build_list():
-                LmTools.error('Failed to build interface list.')
+                LmTools.error("Failed to build interface list.")
             self.adjust_to_livebox_model()
             self.init_ui()
             self.setWindowTitle(self.app_window_title())
@@ -86,7 +86,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             QtCore.QCoreApplication.processEvents()
             self.load_device_list()
             self.init_repeaters()
-            LmConfig.set_tooltips(self, 'main')
+            LmConfig.set_tooltips(self, "main")
             self._app_ready = True
             if not NO_THREAD:
                 self.start_event_loop()
@@ -103,14 +103,14 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def init_ui(self):
         # Status bar
         self._status_bar = QtWidgets.QStatusBar()
-        self._status_bar_profile = QtWidgets.QLabel(f'[{LmConf.CurrProfile["Name"]}]')
+        self._status_bar_profile = QtWidgets.QLabel(f"[{LmConf.CurrProfile['Name']}]")
         self._status_bar_profile.mousePressEvent = self.status_bar_profile_click
         self._status_bar.addPermanentWidget(self._status_bar_profile)
         self.setStatusBar(self._status_bar)
         QtCore.QCoreApplication.processEvents()
 
         # Tab Widgets
-        self._tab_widget = QtWidgets.QTabWidget(self, objectName='tabWidget')
+        self._tab_widget = QtWidgets.QTabWidget(self, objectName="tabWidget")
         self._tab_widget.setMovable(True)
         self._tab_widget.currentChanged.connect(self.tab_changed_event)
         self._tab_widget.tabBar().tabMoved.connect(self.tab_moved_event)
@@ -235,9 +235,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         LmConf.Tabs = []    # Reset
         for i in range(self._tab_widget.count()):
             tab = self._tab_widget.widget(i)
-            key = tab.property('Key')
+            key = tab.property("Key")
             if key is not None:
-                LmConf.Tabs.append(f'{tab.objectName()}_{key}')
+                LmConf.Tabs.append(f"{tab.objectName()}_{key}")
             else:
                 LmConf.Tabs.append(tab.objectName())
         LmConf.save()
@@ -247,7 +247,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def get_tab_index(self, name, key):
         for i in range(self._tab_widget.count()):
             tab = self._tab_widget.widget(i)
-            if (name == tab.objectName()) and (key == tab.property('Key')):
+            if (name == tab.objectName()) and (key == tab.property("Key")):
                 return i
         return -1
 
@@ -255,7 +255,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Window close event - called by PyQT
     def closeEvent(self, event):
         if not NO_THREAD:
-            self._task.start(lx('Terminating threads...'))
+            self._task.start(lx("Terminating threads..."))
             try:
                 self.stop_event_loop()
                 self.stop_stats_loop()
@@ -276,8 +276,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Sign in to Livebox
     def signin(self):
         while True:
-            self._task.start(lx('Signing in...'))
-            session = LmSession(LmConf.LiveboxURL, f'LiveboxMonitor_{LmConf.CurrProfile["Name"]}')
+            self._task.start(lx("Signing in..."))
+            session = LmSession(LmConf.LiveboxURL, f"LiveboxMonitor_{LmConf.CurrProfile['Name']}")
             try:
                 r = session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
             except Exception as e:
@@ -296,24 +296,24 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 if dialog.exec():
                     url = dialog.get_url()
                     # Remove unwanted characters (can be set via Paste action) + cleanup
-                    url = LmTools.clean_url(re.sub('[\n\t]', '', url))
+                    url = LmTools.clean_url(re.sub("[\n\t]", "", url))
                     LmConf.set_livebox_url(url)
                     self.show()
                     continue
                 else:
-                    self.display_error(mx('Cannot connect to the Livebox.', 'cnx'))
+                    self.display_error(mx("Cannot connect to the Livebox.", "cnx"))
                     return False
 
             dialog = LiveboxSigninDialog(LmConf.LiveboxUser, LmConf.LiveboxPassword, LmConf.SavePasswords, self)
             if dialog.exec():
                 # Remove unwanted characters (can be set via Paste action)
-                user = re.sub('[\n\t]', '', dialog.get_user())
-                password = re.sub('[\n\t]', '', dialog.get_password())
+                user = re.sub("[\n\t]", "", dialog.get_user())
+                password = re.sub("[\n\t]", "", dialog.get_password())
                 LmConf.SavePasswords = dialog.get_save_passwords()
                 LmConf.set_livebox_user_password(user, password)
                 self.show()
             else:
-                self.display_error(mx('Livebox authentication failed.', 'auth'))
+                self.display_error(mx("Livebox authentication failed.", "auth"))
                 return False
 
 
@@ -333,7 +333,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def adjust_to_livebox_model(self):
         LmConf.set_livebox_mac(self._api._info.get_mac())
 
-        LmTools.log_debug(1, f'Identified Livebox model: {self._api._info.get_model()} ({self._api._info.get_model_name()})')
+        LmTools.log_debug(1, f"Identified Livebox model: {self._api._info.get_model()} ({self._api._info.get_model_name()})")
 
         self.determine_fiber_link()
         self.determine_livebox_pro()
@@ -347,9 +347,9 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             d = self._api._info.get_wan_status()
         except Exception as e:
             LmTools.error(str(e))
-            self._link_type = 'UNKNOWN'
+            self._link_type = "UNKNOWN"
         else:
-            self._link_type = d.get('LinkType', 'UNKNOWN').upper()
+            self._link_type = d.get("LinkType", "UNKNOWN").upper()
 
         # Determine fiber link
         model = self._api._info.get_model()
@@ -359,10 +359,10 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             self._fiber_link = False
         else:
             # Check link type for Livebox 4
-            self._fiber_link = (self._link_type == 'SFP')
+            self._fiber_link = (self._link_type == "SFP")
 
-        LmTools.log_debug(1, f'Identified link type: {self._link_type}')
-        LmTools.log_debug(1, f'Identified fiber link: {self._fiber_link}')
+        LmTools.log_debug(1, f"Identified link type: {self._link_type}")
+        LmTools.log_debug(1, f"Identified fiber link: {self._fiber_link}")
 
 
     ### Determine if Pro or Residential subscription
@@ -373,14 +373,14 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             LmTools.error(str(e))
             self._livebox_pro = False
         else:
-            offer_type = d.get('OfferType')
+            offer_type = d.get("OfferType")
             if offer_type is None:
-                LmTools.error('Missing offer type in NMC:get, cannot determine Livebox Pro model')
+                LmTools.error("Missing offer type in NMC:get, cannot determine Livebox Pro model")
                 self._livebox_pro = False
             else:
-                self._livebox_pro = 'PRO' in offer_type.upper()
+                self._livebox_pro = "PRO" in offer_type.upper()
 
-        LmTools.log_debug(1, f'Identified Livebox Pro: {self._livebox_pro}')
+        LmTools.log_debug(1, f"Identified Livebox Pro: {self._livebox_pro}")
 
 
     ### Exit with escape
@@ -392,7 +392,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Return window base title to use
     def app_window_title(self):
         if (self._status_bar is None) and (len(LmConf.Profiles) > 1):
-            return f'{self._application_name} [{LmConf.CurrProfile["Name"]}]'
+            return f"{self._application_name} [{LmConf.CurrProfile['Name']}]"
         return self._application_name
 
 
@@ -483,17 +483,17 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 # ### wakepy error handler
 def wake_py_failure(result):
-    LmTools.error(f'Failed to keep system awake mode={result.mode_name} active={result.active_method} success={result.success} err={result.get_failure_text()}')
+    LmTools.error(f"Failed to keep system awake mode={result.mode_name} active={result.active_method} success={result.success} err={result.get_failure_text()}")
 
 
 # ### Fatal error handler
 def except_hook(type, value, trace_back):
-    trace_back = ''.join(traceback.format_exception(type, value, trace_back))
+    trace_back = "".join(traceback.format_exception(type, value, trace_back))
 
     msg_box = QtWidgets.QMessageBox()
-    msg_box.setWindowTitle(lx('Fatal Error'))
+    msg_box.setWindowTitle(lx("Fatal Error"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-    msg_box.setText(f'{trace_back}\nApplication will now quit.')
+    msg_box.setText(f"{trace_back}\nApplication will now quit.")
     msg_box.exec()
 
     QtWidgets.QApplication.quit()
@@ -503,9 +503,9 @@ def except_hook(type, value, trace_back):
 def main(native_run=False):
     # Prevent logging to fail if running without console
     if sys.stderr is None:
-        sys.stderr = open(os.devnull, 'w')
+        sys.stderr = open(os.devnull, "w")
     if sys.stdout is None:
-        sys.stdout = open(os.devnull, 'w')
+        sys.stdout = open(os.devnull, "w")
 
     LmConf.set_native_run(native_run)
 
@@ -518,7 +518,7 @@ def main(native_run=False):
 
         # Command line parameters
         arg_parser = argparse.ArgumentParser()
-        arg_parser.add_argument('--redir', '-r', help='add a url redirection, REDIR format must be "url1=url2"', action='append')
+        arg_parser.add_argument("--redir", "-r", help="add a url redirection, REDIR format must be url1=url2", action="append")
         args = arg_parser.parse_args()
         if args.redir:
             LmSession.load_url_redirections(args.redir)
@@ -531,9 +531,9 @@ def main(native_run=False):
 
             # Assign Python locale to selected preference (useful e.g. for pyqtgraph time axis localization)
             try:
-                locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], 'UTF-8'))
+                locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], "UTF-8"))
             except Exception as e:
-                LmTools.error(f'setlocale() error: {e}')
+                LmTools.error(f"setlocale() error: {e}")
 
             # Set Qt language to selected preference
             translator = QtCore.QTranslator()
@@ -556,5 +556,5 @@ def main(native_run=False):
                 break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(True)
