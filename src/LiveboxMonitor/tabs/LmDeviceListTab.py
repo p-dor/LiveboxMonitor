@@ -620,6 +620,14 @@ class LmDeviceList:
         return ""
 
 
+    ### Returns True if device uses a Wifi connection
+    def is_wifi_device(self, device_key):
+        link_intf = self.find_device_link(device_key)
+        if link_intf:
+            return link_intf["Type"] == "wif"
+        return False
+
+
     ### Build link map
     def build_link_maps(self):
         root_node = self._livebox_topology[0]
