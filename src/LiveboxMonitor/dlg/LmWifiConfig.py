@@ -5,6 +5,7 @@ import copy
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_wifi_config_label as lx
 
 
@@ -19,6 +20,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
     def __init__(self, parent, config, guest):
         super().__init__(parent)
 
+        self._app = parent
         self._guest = guest
         if self._guest:
             self.resize(390, 350)
@@ -64,6 +66,10 @@ class WifiConfigDialog(QtWidgets.QDialog):
         mac_filtering_label = QtWidgets.QLabel(lx("MAC Filtering"), objectName="macFilteringLabel")
         self._mac_filtering_combo = QtWidgets.QComboBox(objectName="macFilteringCombo")
         self._mac_filtering_combo.addItems(MAC_FILTERING_MODES)
+
+        if not self._guest:
+            self._mac_filtering_entries_combo = LmTools.CheckableComboBox(objectName="macFilteringEntriesCombo")
+            self._mac_filtering_entries_combo.setPlaceholderText(lx("Devices"))
 
         secu_label = QtWidgets.QLabel(lx("Security"), objectName="secuLabel")
         self._secu_combo = QtWidgets.QComboBox(objectName="secuCombo")
@@ -126,8 +132,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             grid.addWidget(self._ssid_edit, 3, 1)
             grid.addWidget(options_label, 4, 0)
             grid.addLayout(options_box, 4, 1)
+            filtering_box = QtWidgets.QHBoxLayout()
+            filtering_box.setSpacing(10)
+            filtering_box.addWidget(self._mac_filtering_combo, 0)
+            filtering_box.addWidget(self._mac_filtering_entries_combo, 1)
             grid.addWidget(mac_filtering_label, 5, 0)
-            grid.addWidget(self._mac_filtering_combo, 5, 1)          
+            grid.addLayout(filtering_box, 5, 1)          
             grid.addWidget(secu_label, 6, 0)
             grid.addWidget(self._secu_combo, 6, 1)
             grid.addWidget(pass_label, 7, 0)
@@ -179,6 +189,8 @@ class WifiConfigDialog(QtWidgets.QDialog):
             timer = self._config["Timer"]
             if timer:
                 self._enable_checkbox.setText(lx(f"Enabled for {LmTools.fmt_time(timer, True)}"))
+        else:
+            self.load_filtering_entries_combo()
 
         self.enable_click()      
         self.load_freq_combo()
@@ -195,10 +207,64 @@ class WifiConfigDialog(QtWidgets.QDialog):
                 self._duration_edit.setEnabled(False)
 
 
+    def load_filtering_entries_combo(self):
+        # Add device action first
+        self._mac_filtering_entries_combo.addSelectableItem(lx("Add..."), self.add_filtering_mac)
+
+        # Put known wifi devices first
+        device_list = self._app.get_device_list()
+        device_names = []
+        device_macs = []
+        for d in device_list:
+            mac = d["MAC"]
+            if self._app.is_wifi_device(mac):
+                try:
+                    name = LmConf.MacAddrTable[mac]
+                except KeyError:
+                    name = d["LBName"]
+                    if not name:
+                        name = mac
+                device_names.append(name)
+                device_macs.append(mac)
+
+        # Add all listed MACs not known
+        for i in self._config["Intf"]:
+            entries = i["MACFilteringEntries"]
+            for mac in entries:
+                if mac not in device_macs:
+                    try:
+                        name = LmConf.MacAddrTable[mac]
+                    except KeyError:
+                        name = mac
+                    device_names.append(name)
+                    device_macs.append(mac)
+
+        self._mac_filtering_entries_combo.addItems(device_names, device_macs)
+
+
+    def add_filtering_mac(self):
+        mac, ok = QtWidgets.QInputDialog.getText(self._app, lx("MAC Filtering"), lx("Enter MAC address to filter:"))
+        if ok and mac:
+            if LmTools.is_mac_addr(mac):
+                # Search if mac address is not already in the list
+                index = self._mac_filtering_entries_combo.findData(mac)
+                if index >= 0:
+                    name = self._mac_filtering_entries_combo.itemText(index)
+                    self._app.display_status(lx("Already in the list: {}").format(name))
+                else:
+                    try:
+                        name = LmConf.MacAddrTable[mac]
+                    except KeyError:
+                        name = mac
+                    self._mac_filtering_entries_combo.addItem(name, mac, selected=True)
+            else:
+                self._app.display_error(lx("Invalid MAC address: {}").format(mac))
+
+
     def load_freq_combo(self):
         c = self._config["Intf"]
         for f in c:
-            self._freq_combo.addItem(f["Name"], userData = f["Key"])
+            self._freq_combo.addItem(f["Name"], userData=f["Key"])
 
 
     def freq_selected(self, index):
@@ -228,6 +294,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self.load_secu_combo()
 
         if not self._guest:
+            self._mac_filtering_entries_combo.setSelection(i["MACFilteringEntries"])
             self.load_chan_combo()
             self.load_mode_combo()
 
@@ -249,6 +316,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
                 i["KeyPass"] = self._pass_edit.text()
 
             if not self._guest:
+                i["MACFilteringEntries"] = self._mac_filtering_entries_combo.currentData()
                 chan = self._chan_combo.currentText()
                 if chan == "Auto":
                     i["ChannelAuto"] = True

@@ -562,6 +562,9 @@ TOOLTIPS = {
                              "connection only to listed devices.\n"
                              "'BlackList' to enable MAC filtering and allow\n"
                              "connection to all devices except those listed.",
+        "macFilteringEntriesCombo": "Select the devices to be filtered.\n"
+                                    "The 'Add...' option allows you to enter a new physical address\n"
+                                    "(MAC address) to the list.",
         "secuCombo": "Type of security for the selected radio band.\n"
                      "Select 'None' for open access without a password.",
         "passEdit": "Password for the selected radio band.",

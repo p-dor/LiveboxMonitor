@@ -692,7 +692,11 @@ LABELS = {
         "Cancel": "Annuler",
         "Guest Wifi Configuration": "Configuration du Wifi Invité",
         "Wifi Configuration": "Configuration du Wifi",
-        "Enabled for {}": "Activé pour {}"
+        "Enabled for {}": "Activé pour {}",
+        "Add...": "Ajouter...",
+        "Enter MAC address to filter:": "Entrez une adresse MAC à filter:",
+        "Already in the list: {}": "Déjà dans la liste : {}",
+        "Invalid MAC address: {}": "Adresse MAC invalide : {}"
     },
 
     # Actions - Wifi global status
@@ -1546,9 +1550,12 @@ TOOLTIPS = {
                        "(Wi-Fi Protected Setup) pour la bande radio sélectionnée.",
         "macFilteringCombo": "Sélectionner 'Off' pour désactiver le filtrage MAC.\n"
                              "'WhiteList' pour activer le filtrage MAC et ne permettre la\n"
-                             "connexion uniquement aux appareils listés.\n"
+                             "connexion uniquement qu'aux appareils listés.\n"
                              "'BlackList' pour activer le filtrage MAC et permettre la\n"
                               "connexion à tous les appareils sauf ceux listés.",
+        "macFilteringEntriesCombo": "Sélectionnez les appareils concernés par le filtrage.\n"
+                                    "L'option 'Ajouter...' permet d'entrer une nouvelle adresse physique\n"
+                                    "à la liste (adresse MAC).",
         "secuCombo": "Type de sécurité pour la bande radio sélectionnée.\n"
                      "Sélectionner 'None' pour un accès libre sans mot de passe.",
         "passEdit": "Mot de passe pour la bande radio sélectionnée.",

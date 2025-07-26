@@ -803,7 +803,11 @@ LABELS = {
         "Cancel": "",
         "Guest Wifi Configuration": "",
         "Wifi Configuration": "",
-        "Enabled for {}": ""
+        "Enabled for {}": "",
+        "Add...": "",
+        "Enter MAC address to filter:": "",
+        "Already in the list: {}": "",
+        "Invalid MAC address: {}": ""
     },
 
     # Actions - Wifi global status
@@ -1630,6 +1634,7 @@ TOOLTIPS = {
         "wpsCheckbox": "",
         "macFilteringLabel": "",
         "macFilteringCombo": "",
+        "macFilteringEntriesCombo": "",
         "secuLabel": "",
         "secuCombo": "",
         "passLabel": "",
