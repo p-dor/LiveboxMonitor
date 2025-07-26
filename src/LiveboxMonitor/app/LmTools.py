@@ -496,6 +496,7 @@ class ColorButton(QtWidgets.QPushButton):
 
 # ############# Multi lines edit #############
 # Custom QtWidget to type a text on multilines without carriage return.
+
 class MultiLinesEdit(QtWidgets.QPlainTextEdit):
     ### Prevent carriage return, e.g. in plain text fields
     def keyPressEvent(self, event):
@@ -511,3 +512,177 @@ class MultiLinesEdit(QtWidgets.QPlainTextEdit):
         d = (int(self.document().documentMargin()) + 1) * 2
 
         self.setFixedHeight((lines * f.lineSpacing()) + m.top() + m.bottom() + d)
+
+
+
+# ############# Checkable ComboBox #############
+# Custom QComboBox to select multiple items 
+# Sources:
+# https://gis.stackexchange.com/questions/350148/qcombobox-multiple-selection-pyqt5
+# https://github.com/user0706/pyqt6-multiselect-combobox/blob/main/pyqt6_multiselect_combobox/multiselect_combobox.py
+
+class CheckableComboBox(QtWidgets.QComboBox):
+
+    # Subclass Delegate to increase item height
+    class Delegate(QtWidgets.QStyledItemDelegate):
+        def sizeHint(self, option, index):
+            size = super().sizeHint(option, index)
+            size.setHeight(20)
+            return size
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # No placeholder text by default
+        self._placeholder_text = ""
+
+        # Make the combo editable to set a custom text, but readonly
+        self.setEditable(True)
+        self.lineEdit().setReadOnly(True)
+
+        # Make the lineedit the same color as QPushButton
+        palette = self.lineEdit().palette()
+        palette.setBrush(QtGui.QPalette.ColorRole.Base, palette.brush(QtGui.QPalette.ColorRole.Button))
+        self.lineEdit().setPalette(palette)
+
+        # Use custom delegate
+        self.setItemDelegate(CheckableComboBox.Delegate())
+
+        # Update the text when an item is toggled
+        self.model().dataChanged.connect(self.updateText)
+
+        # Hide and show popup when clicking the line edit
+        self.lineEdit().installEventFilter(self)
+        self.closeOnLineEditClick = False
+
+        # Prevent popup from closing when clicking on an item
+        self.view().viewport().installEventFilter(self)
+
+
+    def resizeEvent(self, event):
+        # Recompute text to elide as needed
+        self.updateText()
+        super().resizeEvent(event)
+
+
+    def eventFilter(self, obj, event):
+        if obj == self.lineEdit() and event.type() == QtCore.QEvent.Type.MouseButtonRelease:
+            if self.closeOnLineEditClick:
+                self.hidePopup()
+            else:
+                self.showPopup()
+            return True
+        if obj == self.view().viewport() and event.type() == QtCore.QEvent.Type.MouseButtonRelease:
+            index = self.view().indexAt(event.position().toPoint())
+            item = self.model().itemFromIndex(index)
+            if item.flags() & QtCore.Qt.ItemFlag.ItemIsUserCheckable:
+                if item.checkState() == QtCore.Qt.CheckState.Checked:
+                    item.setCheckState(QtCore.Qt.CheckState.Unchecked)
+                else:
+                    item.setCheckState(QtCore.Qt.CheckState.Checked)
+                return True
+            else:
+                call_back = item.data()
+                if call_back:
+                    call_back()
+                    return True
+        return False
+
+
+    def showPopup(self):
+        super().showPopup()
+        # When the popup is displayed, a click on the lineedit should close it
+        self.closeOnLineEditClick = True
+
+
+    def hidePopup(self):
+        super().hidePopup()
+        # Used to prevent immediate reopening when clicking on the lineEdit
+        self.startTimer(100)
+
+
+    def timerEvent(self, event):
+        # After timeout, kill timer, and reenable click on line edit
+        self.killTimer(event.timerId())
+        self.closeOnLineEditClick = False
+
+
+    def updateText(self):
+        texts = [self.model().item(i).text() for i in range(self.model().rowCount()) if self.model().item(i).checkState() == QtCore.Qt.CheckState.Checked]
+        text = ", ".join(texts) if texts else self._placeholder_text
+
+        # Compute elided text (with "...")
+        metrics = QtGui.QFontMetrics(self.lineEdit().font())
+        elidedText = metrics.elidedText(text, QtCore.Qt.TextElideMode.ElideRight, self.lineEdit().width())
+        self.lineEdit().setText(elidedText)
+
+
+    def addItem(self, text, data=None, selected=False):
+        item = QtGui.QStandardItem()
+        item.setText(text)
+        item.setData(data or text)
+        item.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
+        if selected:
+            item.setData(QtCore.Qt.CheckState.Checked, QtCore.Qt.ItemDataRole.CheckStateRole)
+        else:
+            item.setData(QtCore.Qt.CheckState.Unchecked, QtCore.Qt.ItemDataRole.CheckStateRole)
+        self.model().appendRow(item)
+
+
+    def addItems(self, text_list, data_list=None):
+        for i, text in enumerate(text_list):
+            try:
+                data = data_list[i]
+            except (TypeError, IndexError):
+                data = None
+            self.addItem(text, data)
+
+
+    def addSelectableItem(self, text, call_back):
+        item = QtGui.QStandardItem()
+        item.setText(text)
+        item.setData(call_back)
+        self.model().appendRow(item)
+
+
+    def currentData(self):
+        return [self.model().item(i).data() for i in range(self.model().rowCount()) if self.model().item(i).checkState() == QtCore.Qt.CheckState.Checked]
+
+
+    def findData(self, data):
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if (item.flags() & QtCore.Qt.ItemFlag.ItemIsUserCheckable) and (item.data() == data):
+                return i
+        return -1
+
+
+    def setCurrentIndexes(self, indexes):
+        if indexes is None:
+            indexes = []
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if item.flags() & QtCore.Qt.ItemFlag.ItemIsUserCheckable:
+                item.setCheckState(QtCore.Qt.CheckState.Checked if i in indexes else QtCore.Qt.CheckState.Unchecked)
+        self.updateText()
+
+
+    def setSelection(self, data_list):
+        if data_list is None:
+            data_list = []
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if item.flags() & QtCore.Qt.ItemFlag.ItemIsUserCheckable:
+                item.setCheckState(QtCore.Qt.CheckState.Checked if self.model().item(i).data() in data_list else QtCore.Qt.CheckState.Unchecked)
+        self.updateText()
+
+
+    def setPlaceholderText(self, text):
+        self._placeholder_text = text
+        self.updateText()
+
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.updateText()
