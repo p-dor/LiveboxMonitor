@@ -395,8 +395,14 @@ class WifiApi(LmApi):
             t = r.get("MACFiltering")
             if t is not None:
                 c["MACFiltering"] = t.get("Mode")
+                entries = t.get("Entry")
+                if entries:
+                    c["MACFilteringEntries"] = [entries[k].get("MACAddress", None) for k in entries]
+                else:
+                    c["MACFilteringEntries"] = None
             else:
                 c["MACFiltering"] = None
+                c["MACFilteringEntries"] = None
 
             c["Mode"] = q.get("OperatingStandards")
             c["ChannelAutoSupport"] = q.get("AutoChannelSupported")
@@ -477,8 +483,14 @@ class WifiApi(LmApi):
                 v["Security"] = {"KeyPassPhrase": n["KeyPass"]}
             if (o["WPS"] != n["WPS"]):
                 v["WPS"] = {"Enable": n["WPS"]}
+            filtering = {}
             if (o["MACFiltering"] != n["MACFiltering"]):
-                v["MACFiltering"] = {"Mode": n["MACFiltering"]}
+                filtering["Mode"] = n["MACFiltering"]
+            if (o["MACFilteringEntries"] != n["MACFilteringEntries"]):
+                entries = n["MACFilteringEntries"]
+                filtering["Entry"] = {f"MAC{i+1}": {"MACAddress": mac} for i, mac in enumerate(entries)} if entries else {}
+            if filtering:
+                v["MACFiltering"] = filtering
             if ((o["ChannelAuto"] != n["ChannelAuto"]) or 
                 (o["Channel"] != n["Channel"]) or
                 (o["Mode"] != n["Mode"])):
