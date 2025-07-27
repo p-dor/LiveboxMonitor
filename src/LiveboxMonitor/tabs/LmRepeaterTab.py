@@ -851,7 +851,7 @@ class LmRepHandler:
 
     ### Click on call APIs button
     def call_api_button_click(self):
-        dialog = CallApiDialog(self._api._session, self._app)
+        dialog = CallApiDialog(self._api, self._app)
         dialog.exec()
 
 

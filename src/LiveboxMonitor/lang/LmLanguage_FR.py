@@ -636,8 +636,6 @@ LABELS = {
         "Change Profile...": "Changer de profil...",
         "Email Setup...": "Réglages Email...",
         "Setup": "Réglages",
-        "Raw Device List...": "JSON Liste Appareils...",
-        "Raw Topology...": "JSON Topologie...",
         "Set Log Level...": "Niveau de log...",
         "Call APIs...": "Appel APIs...",
         "Generate API Documentation...": "Générer documentation APIs...",
@@ -652,8 +650,6 @@ LABELS = {
         "Setting LEDs & Screen Setup...": "Changement des réglages des LEDs et de l'écran...",
         "Setting Firewall Levels...": "Changement des niveaux de pare-feu...",
         "Set Ping Responses...": "Changement des réponses aux pings...",
-        "Raw Device List": "JSON Liste Appareils",
-        "Raw Topology": "JSON Topologie",
         "Log level selection": "Niveau de log",
         "Please select a log level:": "Sélectionnez un niveau de log :",
         "Select Export Folder": "Sélectionnez le dossier d'export",
@@ -1512,10 +1508,6 @@ TOOLTIPS = {
         "prefs": "Permet d'afficher l'écran des préférences du programme.",
         "changeProfile": "Permet de changer le profil en cours et de relancer le programme.",
         "emailSetup": "Permet de configurer l'envoi d'emails automatique, par exemple pour les notifications.",
-        "showRawDeviceList": "Permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus.\n"
-                             "Utile pour avoir plus d'informations ou pour le débogage.",
-        "showRawTopology": "Permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus.\n"
-                           "Utile pour avoir plus d'informations ou pour le débogage.",
         "setLogLevel": "Permet de changer le niveau de logs dans la console.\n"
                        "Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement.",
         "callApis": "Permet d'appeler les APIs REST/JSON de la Livebox.",
@@ -1641,8 +1633,9 @@ TOOLTIPS = {
 
     # Actions - Call API
     "callapi": {
+        "presetCombo": "Liste d'appels prédéfinis.",
         "package": "Indiquer le nom du package, par exemple \"NMC\".",
-        "module": "Indiquer le nom du service, par exemple \"get\".",
+        "service": "Indiquer le nom du service, par exemple \"get\".",
         "parametersEdit": "Indiquer les paramètres à utiliser, au format JSON.",
         "call": "Appelle l'API correspondante.",
         "replyEdit": "Affiche la réponse de l'appel."

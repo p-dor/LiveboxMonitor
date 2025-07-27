@@ -252,12 +252,6 @@ class LmActions:
         debug_buttons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         debug_buttons.setSpacing(10)
 
-        show_raw_device_list_button = QtWidgets.QPushButton(lx("Raw Device List..."), objectName="showRawDeviceList")
-        show_raw_device_list_button.clicked.connect(self.show_raw_device_list_button_click)
-        debug_buttons.addWidget(show_raw_device_list_button)
-        show_raw_topology_button = QtWidgets.QPushButton(lx("Raw Topology..."), objectName="showRawTopology")
-        show_raw_topology_button.clicked.connect(self.show_raw_topology_button_click)
-        debug_buttons.addWidget(show_raw_topology_button)
         set_log_level_button = QtWidgets.QPushButton(lx("Set Log Level..."), objectName="setLogLevel")
         set_log_level_button.clicked.connect(self.set_log_level_button_click)
         debug_buttons.addWidget(set_log_level_button)
@@ -640,16 +634,6 @@ class LmActions:
             LmConf.save()
 
 
-    ### Click on show raw device list button
-    def show_raw_device_list_button_click(self):
-        self.display_infos(lx("Raw Device List"), json.dumps(self._livebox_devices, indent=2))
-
-
-    ### Click on show raw topology button
-    def show_raw_topology_button_click(self):
-        self.display_infos(lx("Raw Topology"), json.dumps(self._livebox_topology, indent=2))
-
-
     ### Click on set log level button
     def set_log_level_button_click(self):
         levels = ["0", "1", "2"]
@@ -662,7 +646,7 @@ class LmActions:
 
     ### Click on call APIs button
     def call_api_button_click(self):
-        dialog = CallApiDialog(self._api._session, self)
+        dialog = CallApiDialog(self._api, self)
         dialog.exec()
 
 

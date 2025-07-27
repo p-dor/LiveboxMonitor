@@ -521,10 +521,6 @@ TOOLTIPS = {
         "prefs": "Allows you to display the program preferences screen.",
         "changeProfile": "Allows you to change the current profile and restart the program.",
         "emailSetup": "Allows you to configure automatic email sending, for example for notifications.",
-        "showRawDeviceList": "Allows you to display the raw JSON response from the Livebox regarding the list of known devices.\n"
-                             "Useful for getting more information or for debugging.",
-        "showRawTopology": "Allows you to display the raw JSON response from the Livebox regarding the connection topology of known devices.\n"
-                           "Useful for getting more information or for debugging.",
         "setLogLevel": "Allows you to change the log level in the console.\n"
                        "This level is stored in the program configuration and will be retained at the next launch.",
         "callApis": "Allows you to call the REST/JSON Livebox APIs.",
@@ -650,8 +646,9 @@ TOOLTIPS = {
 
     # Actions - Call API
     "callapi": {
+        "presetCombo": "List of predefined calls.",
         "package": "Package name, for example \"NMC\".",
-        "module": "Service name, for example \"get\".",
+        "service": "Service name, for example \"get\".",
         "parametersEdit": "Parameters to use, JSON format.",
         "call": "Trigger the corresponding API call.",
         "replyEdit": "Displays API call response, JSON format."

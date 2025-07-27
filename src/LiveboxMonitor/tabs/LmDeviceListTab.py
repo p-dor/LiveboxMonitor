@@ -289,13 +289,12 @@ class LmDeviceList:
 
             # Get topology infos from Livebox & build link & device maps
             try:
-                self._livebox_topology = self._api._device.get_topology()
+                topology = self._api._device.get_topology()
             except Exception as e:
                 LmTools.error(str(e))
                 self.display_error(mx("Error getting device topology.", "topoErr"))
-                self._livebox_topology = None
             else:
-                self.build_link_maps()
+                self.build_link_maps(topology)
 
             # Load devices in list, trying to identify Wifi repeaters on the fly
             i = 0
@@ -630,8 +629,8 @@ class LmDeviceList:
 
 
     ### Build link map
-    def build_link_maps(self):
-        root_node = self._livebox_topology[0]
+    def build_link_maps(self, topology):
+        root_node = topology[0]
         device_key = root_node.get("Key", "")
         self.build_links_map_node(root_node.get("Children", []), device_key, "Livebox", "", "")
 #DBG    self.display_infos('Interface map', str(self._interface_map))

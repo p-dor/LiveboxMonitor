@@ -740,8 +740,6 @@ LABELS = {
         "Change Profile...": "",
         "Email Setup...": "",
         "Setup": "",
-        "Raw Device List...": "",
-        "Raw Topology...": "",
         "Set Log Level...": "",
         "Call APIs...": "",
         "Generate API Documentation...": "",
@@ -757,8 +755,6 @@ LABELS = {
         "Setting LEDs & Screen Setup...": "",
         "Setting Firewall Levels...": "",
         "Set Ping Responses...": "",
-        "Raw Device List": "",
-        "Raw Topology": "",
         "Log level selection": "",
         "Please select a log level:": "",
         "Select Export Folder": "",
@@ -914,8 +910,9 @@ LABELS = {
 
     # Actions - Call API
     "callapi": {
+        "Preset:": "",
         "Package:": "",
-        "Module:": "",
+        "Service:": "",
         "Parameters (JSON):": "",
         "Call": "",
         "OK": ""
@@ -1599,8 +1596,6 @@ TOOLTIPS = {
         "changeProfile": "",
         "emailSetup": "",
         "setupGroup": "",
-        "showRawDeviceList": "",
-        "showRawTopology": "",
         "setLogLevel": "",
         "callApis": "",
         "getApiDoc": "",
@@ -1749,10 +1744,12 @@ TOOLTIPS = {
 
     # Actions - Call API
     "callapi": {
+        "presetLabel": "",
+        "presetCombo": "",
         "packageLabel": "",
         "package": "",
-        "moduleLabel": "",
-        "module": "",
+        "serviceLabel": "",
+        "service": "",
         "parametersLabel": "",
         "parametersEdit": "",
         "call": "",
