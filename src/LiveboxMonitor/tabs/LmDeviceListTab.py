@@ -404,6 +404,7 @@ class LmDeviceList:
         active_icon = self.format_active_table_widget(active_status)
         self._device_list.setItem(line, DevCol.Active, active_icon)
 
+        wifi_icon = None
         if active_status and (link_type == "wif"):
             wifi_signal = device.get("SignalNoiseRatio")
             if wifi_signal is not None:
@@ -423,7 +424,7 @@ class LmDeviceList:
                 else:
                     wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
                 wifi_icon.setData(QtCore.Qt.ItemDataRole.UserRole, wifi_signal)
-                self._device_list.setItem(line, DevCol.Wifi, wifi_icon)
+        self._device_list.setItem(line, DevCol.Wifi, wifi_icon)
 
 
     ### Update device name in all lists & tabs
@@ -942,8 +943,8 @@ class LmDeviceList:
             self._device_list.setSortingEnabled(False)
 
             # Update the link interface
-            link = event.get("ULinks", [])
-            if len(link):
+            link = event.get("ULinks")
+            if link:
                 self.update_device_link_interface(device_key, link[0])
 
             # Update the device line
@@ -966,7 +967,7 @@ class LmDeviceList:
         # Check if device is in the UI list
         list_line = self.find_device_line(self._device_list, device_key)
         if list_line >= 0:
-            if event.get("Family", "") == "ipv4":
+            if event.get("Family") == "ipv4":
                 # Get IP known by the program
                 known_ip_item = self._device_list.item(list_line, DevCol.IP)
                 known_ip = known_ip_item.text() if known_ip_item is not None else ""
