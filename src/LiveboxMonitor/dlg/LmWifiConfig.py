@@ -230,14 +230,15 @@ class WifiConfigDialog(QtWidgets.QDialog):
         # Add all listed MACs not known
         for i in self._config["Intf"]:
             entries = i["MACFilteringEntries"]
-            for mac in entries:
-                if mac not in device_macs:
-                    try:
-                        name = LmConf.MacAddrTable[mac]
-                    except KeyError:
-                        name = mac
-                    device_names.append(name)
-                    device_macs.append(mac)
+            if entries:
+                for mac in entries:
+                    if mac not in device_macs:
+                        try:
+                            name = LmConf.MacAddrTable[mac]
+                        except KeyError:
+                            name = mac
+                        device_names.append(name)
+                        device_macs.append(mac)
 
         self._mac_filtering_entries_combo.addItems(device_names, device_macs)
 
