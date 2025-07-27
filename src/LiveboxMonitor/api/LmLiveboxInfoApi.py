@@ -125,8 +125,6 @@ class LiveboxInfoApi(LmApi):
     ### Get time
     def get_time(self):
         d = self.call_raw("Time", "getTime")
-        if not d.get("status"):
-            raise LmApiException("Time:getTime query error")
         d = d.get("data")
         if not d:
             raise LmApiException("Time:getTime data error")
@@ -136,8 +134,6 @@ class LiveboxInfoApi(LmApi):
     ### Get WAN status
     def get_wan_status(self):
         d = self.call_raw("NMC", "getWANStatus")
-        if not d.get("status"):
-            raise LmApiException("NMC:getWANStatus query error")
         d = d.get("data")
         if not d:
             raise LmApiException("NMC:getWANStatus data error")
