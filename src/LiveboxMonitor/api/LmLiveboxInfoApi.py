@@ -176,6 +176,11 @@ class LiveboxInfoApi(LmApi):
         return self.call("NMC.ServiceEligibility.DSLITE", "get")
 
 
+    ### Set CGNat enable
+    def set_cgnat_enable(self, enable):
+        self.call("NMC.ServiceEligibility.DSLITE", "set", {"Demand": enable})
+
+
     ### It is possible to query DeviceInfo service without being logged, e.g. to get MAC address
     @staticmethod
     def get_livebox_mac_nosign(livebox_url):
