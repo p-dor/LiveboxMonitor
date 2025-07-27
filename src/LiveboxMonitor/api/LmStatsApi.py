@@ -11,7 +11,7 @@ class StatsApi(LmApi):
 
     ### Get wifi interface statistics
     def get_wifi_intf(self, wifi_intf_key):
-        return self.call(f"NeMo.Intf.{wifi_intf_key}", "getStationStats")
+        return self.call_no_check(f"NeMo.Intf.{wifi_intf_key}", "getStationStats")
 
 
     ### Get interface statistics
