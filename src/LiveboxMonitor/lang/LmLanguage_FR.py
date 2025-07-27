@@ -48,13 +48,17 @@ LABELS = {
     # Device list - IPv6 dialog
     "ipv6": {
         "IPv6 enabled:": "IPv6 activé :",
+        "CGNat:": "CGNat :",
+        "Mode:": "Mode :",
         "IPv6 address:": "Adresse IPv6 :",
         "IPv6 prefix:": "Préfixe IPv6 :",
         "IPv6 gateway:": "Passerelle IPv6",
         "Name": "Nom",
         "Livebox Name": "Nom Livebox",
         "Prefix": "Préfixe",
-        "IPv6 Devices": "Appareils IPv6"
+        "IPv6 Devices": "Appareils IPv6",
+        "Disable CGNat": "Désactiver CGNat",
+        "Enable CGNat": "Activer CGNat"
     },
 
     # Device list - DNS dialog
@@ -1080,7 +1084,9 @@ TOOLTIPS = {
         "ipv6Mode": "Mode de connexion.",
         "addr": "Adresse IPv6 de la Livebox.",
         "prefix": "Préfixe IPv6 de la Livebox.",
-        "gateway": "Passerelle IPv6 de la Livebox."
+        "gateway": "Passerelle IPv6 de la Livebox.",
+        "cgNatButton": "Permet d'activer ou de désactiver le mode CGNat, c'est à dire la\n"
+                       "mutualisation de l'adresse IPv4 avec d'autres utilisateurs."
     },
 
     # Device list - DNS dialog

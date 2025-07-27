@@ -1,5 +1,7 @@
 ### Livebox Monitor IPv6 dialog ###
 
+import time
+
 from enum import IntEnum
 
 from PyQt6 import QtCore, QtWidgets
@@ -27,9 +29,11 @@ IPV6_ICON_COLUMNS = [IPv6Col.Active]
 
 # ################################ IPv6 dialog ################################
 class IPv6Dialog(QtWidgets.QDialog):
-    def __init__(self, enabled, cgnat, mode, addr, prefix, gateway, parent=None):
+    def __init__(self, enabled, cgnat, mode, addr, prefix, gateway, parent):
         super().__init__(parent)
         self.resize(1005, 110 + LmConfig.dialog_height(12))
+
+        self._app = parent 
 
         # IPv6 info box
         ipv6_enabled_label = QtWidgets.QLabel(lx("IPv6 enabled:"), objectName="ipv6EnabledLabel")
@@ -40,11 +44,9 @@ class IPv6Dialog(QtWidgets.QDialog):
             ipv6_enabled.setPixmap(LmIcon.CrossPixmap)
 
         cgnat_enabled_label = QtWidgets.QLabel(lx("CGNat:"), objectName="cgNatLabel")
-        cgnat_icon = QtWidgets.QLabel(objectName="cgNat")
-        if cgnat:
-            cgnat_icon.setPixmap(LmIcon.TickPixmap)
-        else:
-            cgnat_icon.setPixmap(LmIcon.CrossPixmap)
+        self._cgnat_icon = QtWidgets.QLabel(objectName="cgNat")
+        self._cgnat_enabled = cgnat
+        self.set_cgnat_icon()
 
         ipv6_mode_label = QtWidgets.QLabel(lx("Mode:"), objectName="ipv6ModeLabel")
         ipv6_mode = QtWidgets.QLabel(mode, objectName="ipv6Mode")
@@ -66,7 +68,7 @@ class IPv6Dialog(QtWidgets.QDialog):
         ipv6_info_grid.addWidget(ipv6_enabled_label, 0, 0)
         ipv6_info_grid.addWidget(ipv6_enabled, 0, 1)
         ipv6_info_grid.addWidget(cgnat_enabled_label, 0, 2)
-        ipv6_info_grid.addWidget(cgnat_icon, 0, 3)
+        ipv6_info_grid.addWidget(self._cgnat_icon, 0, 3)
         ipv6_info_grid.addWidget(ipv6_mode_label, 0, 4)
         ipv6_info_grid.addWidget(ipv6_mode, 0, 5)
         ipv6_info_grid.addWidget(addr_label, 1, 0)
@@ -91,11 +93,16 @@ class IPv6Dialog(QtWidgets.QDialog):
         self._device_table.setItemDelegate(CenteredIconsDelegate(self, IPV6_ICON_COLUMNS))
 
         # Button bar
-        hbox = QtWidgets.QHBoxLayout()
+        self._cgnat_button = QtWidgets.QPushButton(self.get_cgnat_button_title(), objectName="cgNatButton")
+        self._cgnat_button.setStyleSheet("padding-left: 15px; padding-right: 15px; padding-top: 3px; padding-bottom: 3px;")
+        self._cgnat_button.clicked.connect(self.cgnat_button_click)
         ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         ok_button.clicked.connect(self.accept)
         ok_button.setDefault(True)
-        hbox.addWidget(ok_button, 1, QtCore.Qt.AlignmentFlag.AlignRight)
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.setSpacing(10)
+        hbox.addWidget(self._cgnat_button, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        hbox.addWidget(ok_button, 0, QtCore.Qt.AlignmentFlag.AlignRight)
 
         vbox = QtWidgets.QVBoxLayout(self)
         vbox.addLayout(ipv6_info_grid, 0)
@@ -107,6 +114,34 @@ class IPv6Dialog(QtWidgets.QDialog):
         self.setWindowTitle(lx("IPv6 Devices"))
         self.setModal(True)
         self.show()
+
+
+    def set_cgnat_icon(self):
+        if self._cgnat_enabled:
+            self._cgnat_icon.setPixmap(LmIcon.TickPixmap)
+        else:
+            self._cgnat_icon.setPixmap(LmIcon.CrossPixmap)
+
+
+    def get_cgnat_button_title(self):
+        if self._cgnat_enabled:
+            return lx("Disable CGNat")
+        else:
+            return lx("Enable CGNat")
+
+
+    def cgnat_button_click(self):
+        self._app._task.start()
+        try:
+            self._app._api._info.set_cgnat_enable(not self._cgnat_enabled)
+            self._cgnat_enabled = not self._cgnat_enabled
+        except Exception as e:
+            LmTools.error(str(e))
+        finally:
+            self._app._task.end()
+
+        self.set_cgnat_icon()
+        self._cgnat_button.setText(self.get_cgnat_button_title())
 
 
     def load_device_list(self, devices, prefixes):

@@ -96,7 +96,9 @@ TOOLTIPS = {
         "ipv6Mode": "Connection mode.",
         "addr": "Livebox IPv6 address.",
         "prefix": "Livebox IPv6 prefix.",
-        "gateway": "Livebox IPv6 gateway."
+        "gateway": "Livebox IPv6 gateway.",
+        "cgNatButton": "Allows you to enable or disable CGNat mode, i.e. sharing\n"
+                       "the IPv4 address with other users."
     },
 
     # Device list - DNS dialog

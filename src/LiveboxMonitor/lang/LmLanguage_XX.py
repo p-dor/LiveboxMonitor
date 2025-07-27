@@ -73,7 +73,9 @@ LABELS = {
         "IPv6": "",
         "Prefix": "",
         "OK": "",
-        "IPv6 Devices": ""
+        "IPv6 Devices": "",
+        "Disable CGNat": "",
+        "Enable CGNat": ""
     },
 
     # Device list - DNS dialog
@@ -910,9 +912,9 @@ LABELS = {
 
     # Actions - Call API
     "callapi": {
-        "Preset:": "",
-        "Package:": "",
-        "Service:": "",
+        "Preset": "",
+        "Package": "",
+        "Service": "",
         "Parameters (JSON):": "",
         "Call": "",
         "OK": ""
@@ -1215,6 +1217,8 @@ TOOLTIPS = {
         "prefix": "",
         "gatewayLabel": "",
         "gateway": "",
+        "ipv6Table": "",
+        "cgNatButton": "",
         "ok": ""
     },
 
