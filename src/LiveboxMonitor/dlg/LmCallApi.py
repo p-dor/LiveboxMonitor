@@ -197,15 +197,15 @@ class CallApiDialog(QtWidgets.QDialog):
         self._api = api_registry
 
         # Preset combo
-        preset_label = QtWidgets.QLabel(lx("Preset:"), objectName="presetLabel")
+        preset_label = QtWidgets.QLabel(lx("Preset"), objectName="presetLabel")
         self._preset_combo = QtWidgets.QComboBox(objectName="presetCombo")
         self.load_presets()
         self._preset_combo.activated.connect(self.preset_selected)
 
         # Package/Service box
-        package_label = QtWidgets.QLabel(lx("Package:"), objectName="packageLabel")
+        package_label = QtWidgets.QLabel(lx("Package"), objectName="packageLabel")
         self._package = QtWidgets.QLineEdit(objectName="package")
-        service_label = QtWidgets.QLabel(lx("Service:"), objectName="serviceLabel")
+        service_label = QtWidgets.QLabel(lx("Service"), objectName="serviceLabel")
         self._service = QtWidgets.QLineEdit(objectName="service")
 
         grid = QtWidgets.QGridLayout()
