@@ -162,6 +162,18 @@ PRESET_CALLS = {
          "Parm": '{"mibs": "base wlanradio wlanvap"}',
          "Lbox": True , "Wrep": False},
 
+    "Data MIBs":
+        {"Serv": "NeMo.Intf.data",
+         "Meth": "getMIBs",
+         "Parm": "{}",
+         "Lbox": True , "Wrep": True},
+
+    "LAN MIBs":
+        {"Serv": "NeMo.Intf.lan",
+         "Meth": "getMIBs",
+         "Parm": "{}",
+         "Lbox": True , "Wrep": True},
+
     "Reboot Information":
         {"Serv": "NMC.Reboot",
          "Meth": "get",
