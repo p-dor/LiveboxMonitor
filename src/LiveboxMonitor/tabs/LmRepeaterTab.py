@@ -32,7 +32,6 @@ WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
 WIFI_REPEATER_MODEL_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6}
 WIFI_REPEATER_DEFAULT_MODEL = 6
 DEFAULT_REPEATER_NAME = "RW #"
-DEBUG_BUTTON = False
 
 #  Wifi Repeater 5 Interfaces
 NET_INTF_WR5 = [
@@ -146,11 +145,6 @@ class LmRepeater:
         resign_button.clicked.connect(repeater.resign_button_click)
         buttons_set5.addWidget(resign_button)
 
-        # Debug Button
-        if DEBUG_BUTTON:
-            debug_button = QtWidgets.QPushButton("Debug...", objectName="debug")
-            debug_button.clicked.connect(repeater.debug_button_click)
-
         # Action buttons group box
         group_box = QtWidgets.QGroupBox(lx("Actions"), objectName="actionsGroup")
         group_box_layout = QtWidgets.QVBoxLayout()
@@ -163,8 +157,6 @@ class LmRepeater:
         if repeater._model >= 6:     # Reboot history available only starting WR6
             group_box_layout.addLayout(buttons_set4, 0)
         group_box_layout.addLayout(buttons_set5, 0)
-        if DEBUG_BUTTON:
-            group_box_layout.addWidget(debug_button)
         group_box.setLayout(group_box_layout)
 
         # Stats & actions box
@@ -874,32 +866,6 @@ class LmRepHandler:
             # Sometimes the active event isn't raised
             if self.is_signed():
                 self._active = True
-
-
-    ### Click on Debug button
-    def debug_button_click(self):
-        if self.is_signed():
-            self._app._task.start()
-            try:
-                d = self._api._intf.get_raw_mibs_data()
-            except Exception as e:
-                self._app.display_error(str(e))
-            else:
-                self._app.display_infos("NeMo.Intf.data:getMIBs", json.dumps(d, indent=2))
-            finally:
-                self._app._task.end()
-
-            self._app._task.start()
-            try:
-                d = self._api._intf.get_raw_mibs_lan()
-            except Exception as e:
-                self._app.display_error(str(e))
-            else:
-                self._app.display_infos("NeMo.Intf.lan:getMIBs", json.dumps(d, indent=2))
-            finally:
-                self._app._task.end()
-        else:
-            self._app.display_error(mx("Not signed to repeater.", "noSign"))
 
 
     ### Add a title line in an info attribute/value list
