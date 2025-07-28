@@ -184,7 +184,7 @@ class LmSession:
 
 
     ### Send service request
-    def request(self, package, method=None, args=None, get=False, silent=False, timeout=DEFAULT_TIMEOUT):
+    def request(self, service, method=None, args=None, get=False, silent=False, timeout=DEFAULT_TIMEOUT):
         # Check session is established
         if self._session is None:
             if self.signin(self._user, self._password) <= 0:
@@ -192,7 +192,7 @@ class LmSession:
 
         if get:
             # Build request path
-            c = "sysbus/" + package.replace(".", "/")
+            c = "sysbus/" + service.replace(".", "/")
             if method is not None:
                 c += ":" + method
 
@@ -229,7 +229,7 @@ class LmSession:
         else:
             # Setup request parameters
             data = {}
-            data["service"] = "sysbus." + package
+            data["service"] = "sysbus." + service
 
             if method is not None:
                 data["method"] = method

@@ -913,8 +913,8 @@ LABELS = {
     # Actions - Call API
     "callapi": {
         "Preset": "",
-        "Package": "",
         "Service": "",
+        "Method": "",
         "Parameters (JSON):": "",
         "Call": "",
         "OK": ""
@@ -1750,10 +1750,10 @@ TOOLTIPS = {
     "callapi": {
         "presetLabel": "",
         "presetCombo": "",
-        "packageLabel": "",
-        "package": "",
         "serviceLabel": "",
         "service": "",
+        "methodLabel": "",
+        "method": "",
         "parametersLabel": "",
         "parametersEdit": "",
         "call": "",

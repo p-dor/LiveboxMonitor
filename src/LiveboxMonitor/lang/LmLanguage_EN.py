@@ -649,8 +649,8 @@ TOOLTIPS = {
     # Actions - Call API
     "callapi": {
         "presetCombo": "List of predefined calls.",
-        "package": "Package name, for example \"NMC\".",
-        "service": "Service name, for example \"get\".",
+        "service": "Service name, for example \"NMC\".",
+        "method": "Method name, for example \"get\".",
         "parametersEdit": "Parameters to use, JSON format.",
         "call": "Trigger the corresponding API call.",
         "replyEdit": "Displays API call response, JSON format."

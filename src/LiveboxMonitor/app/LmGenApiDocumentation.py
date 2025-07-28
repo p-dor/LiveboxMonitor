@@ -7,7 +7,7 @@ from LiveboxMonitor.app import LmTools
 
 
 # ################################ VARS & DEFS ################################
-MODULES = [
+SERVICES = [
     "AccountManager",
     "Audiphone",
     "AutoDiag",
@@ -147,11 +147,11 @@ class LmGenApiDoc:
         self._file = None
 
 
-    ### Generate files for each known module
-    def gen_module_files(self):
-        # Generate for each known module
-        for m in MODULES:
-            self.gen_module_file(m)
+    ### Generate files for each known service
+    def gen_service_files(self):
+        # Generate for each known service
+        for s in SERVICES:
+            self.gen_service_file(s)
 
         # Generate for all interfaces
         try:
@@ -161,28 +161,28 @@ class LmGenApiDoc:
         else:
             if isinstance(d, list):
                 for m in d:
-                    self.gen_module_file("NeMo.Intf." + m)
+                    self.gen_service_file("NeMo.Intf." + m)
             else:
                 LmTools.error("Bad return from interface list API.")
 
 
-    ### Generate all modules in a flat file
+    ### Generate all services in a flat file
     def gen_full_file(self):
-        self.gen_module_file(".", "_ALL MODULES_")
+        self.gen_service_file(".", "_ALL SERVICES_")
 
 
     ### Generate process list file
     def gen_process_list_file(self):
-        self.gen_module_file("*", "_PROCESSES_")
+        self.gen_service_file("*", "_PROCESSES_")
 
 
-    ### Generate JSON result file for a module - useful only to get raw results
-    def gen_module_json_file(self, module, name=None):
+    ### Generate JSON result file for a service - useful only to get raw results
+    def gen_service_json_file(self, service, name=None):
         if name is None:
-            name = module
+            name = service
 
         try:
-            d = self._session.request(module, get=True, timeout=15)
+            d = self._session.request(service, get=True, timeout=15)
         except Exception as e:
             LmTools.error(str(e))
             return
@@ -190,7 +190,7 @@ class LmGenApiDoc:
         if d is None:
             return
 
-        # Module doesn't exist error
+        # Service doesn't exist error
         if isinstance(d, dict) and (d.get("error", 0) == 196618):
             return
 
@@ -211,15 +211,15 @@ class LmGenApiDoc:
         self._file = None
 
 
-    ### Generate document file for a module
-    def gen_module_file(self, module, name=None):
+    ### Generate document file for a service
+    def gen_service_file(self, service, name=None):
         if name is None:
-            name = module
+            name = service
 
         self._app._task.update(name)
 
         try:
-            d = self._session.request(module, get=True, timeout=15)
+            d = self._session.request(service, get=True, timeout=15)
         except Exception as e:
             LmTools.error(str(e))
             return
@@ -227,7 +227,7 @@ class LmGenApiDoc:
         if d is None:
             return
 
-        # Module doesn't exist error
+        # Service doesn't exist error
         if isinstance(d, dict) and (d.get("error", 0) == 196618):  
             return
 
@@ -390,25 +390,25 @@ class LmGenApiDoc:
 
     ### Test GET request on some characters
 #   def doTest(self):
-#       self.gen_module_json_file(".", "DOT")
-#       self.gen_module_json_file("*", "STAR")
-#       self.gen_module_json_file("!", "EXCLAM")
-#       self.gen_module_json_file("#", "HASH")
-#       self.gen_module_json_file("`", "QUOTE")
-#       self.gen_module_json_file("+", "PLUS")
-#       self.gen_module_json_file("@", "AT")
-#       self.gen_module_json_file("?", "QUESTION")
-#       self.gen_module_json_file("/", "SLASH")
-#       self.gen_module_json_file("-", "MINUS")
-#       self.gen_module_json_file("~", "TILDA")
-#       self.gen_module_json_file("$", "DOLLAR")
-#       self.gen_module_json_file("%", "PERCENT")
-#       self.gen_module_json_file("^", "HAT")
-#       self.gen_module_json_file("&", "AND")
-#       self.gen_module_json_file("(", "LEFTPAR")
-#       self.gen_module_json_file(")", "RIGHTPAR")
-#       self.gen_module_json_file("_", "UNDERSCORE")
-#       self.gen_module_json_file("=", "EGUAL")
-#       self.gen_module_json_file(",", "COMMA")
-#       self.gen_module_json_file(":", "COLONN")
-#       self.gen_module_json_file(";", "SEMICOLONN")
+#       self.gen_service_json_file(".", "DOT")
+#       self.gen_service_json_file("*", "STAR")
+#       self.gen_service_json_file("!", "EXCLAM")
+#       self.gen_service_json_file("#", "HASH")
+#       self.gen_service_json_file("`", "QUOTE")
+#       self.gen_service_json_file("+", "PLUS")
+#       self.gen_service_json_file("@", "AT")
+#       self.gen_service_json_file("?", "QUESTION")
+#       self.gen_service_json_file("/", "SLASH")
+#       self.gen_service_json_file("-", "MINUS")
+#       self.gen_service_json_file("~", "TILDA")
+#       self.gen_service_json_file("$", "DOLLAR")
+#       self.gen_service_json_file("%", "PERCENT")
+#       self.gen_service_json_file("^", "HAT")
+#       self.gen_service_json_file("&", "AND")
+#       self.gen_service_json_file("(", "LEFTPAR")
+#       self.gen_service_json_file(")", "RIGHTPAR")
+#       self.gen_service_json_file("_", "UNDERSCORE")
+#       self.gen_service_json_file("=", "EGUAL")
+#       self.gen_service_json_file(",", "COMMA")
+#       self.gen_service_json_file(":", "COLONN")
+#       self.gen_service_json_file(";", "SEMICOLONN")

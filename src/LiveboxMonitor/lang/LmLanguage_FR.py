@@ -1640,8 +1640,8 @@ TOOLTIPS = {
     # Actions - Call API
     "callapi": {
         "presetCombo": "Liste d'appels prédéfinis.",
-        "package": "Indiquer le nom du package, par exemple \"NMC\".",
-        "service": "Indiquer le nom du service, par exemple \"get\".",
+        "service": "Indiquer le nom du service, par exemple \"NMC\".",
+        "method": "Indiquer le nom de la méthode, par exemple \"get\".",
         "parametersEdit": "Indiquer les paramètres à utiliser, au format JSON.",
         "call": "Appelle l'API correspondante.",
         "replyEdit": "Affiche la réponse de l'appel."

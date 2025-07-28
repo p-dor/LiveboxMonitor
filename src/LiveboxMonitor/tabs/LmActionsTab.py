@@ -668,7 +668,7 @@ class LmActions:
             self._task.start(lx("Generating API document files..."))
             try:
                 g = LmGenApiDocumentation.LmGenApiDoc(self, folder, filter_values)
-                g.gen_module_files()
+                g.gen_service_files()
                 g.gen_full_file()
                 g.gen_process_list_file()
             finally:

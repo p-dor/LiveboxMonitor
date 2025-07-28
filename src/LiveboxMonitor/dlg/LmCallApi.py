@@ -13,176 +13,176 @@ from LiveboxMonitor.lang.LmLanguages import call_api_label as lx
 # Preset calls
 PRESET_CALLS = {
     "Device Information":
-        {"Pack": "DeviceInfo",
-         "Serv": "get",
+        {"Serv": "DeviceInfo",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "Livebox Configuration":
-        {"Pack": "Devices.Device.[MAC]",
-         "Serv": "get",
+        {"Serv": "Devices.Device.[MAC]",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Device Model":
-        {"Pack": "UPnP-IGD",
-         "Serv": "get",
+        {"Serv": "UPnP-IGD",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Interface List":
-        {"Pack": "HomeLan.Interface",
-         "Serv": "get",
+        {"Serv": "HomeLan.Interface",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Interface Keys":
-        {"Pack": "NeMo.Intf.lo",
-         "Serv": "getIntfs",
+        {"Serv": "NeMo.Intf.lo",
+         "Meth": "getIntfs",
          "Parm": '{"traverse": "all"}',
          "Lbox": True , "Wrep": False},
 
     "Device List":
-        {"Pack": "Devices",
-         "Serv": "get",
+        {"Serv": "Devices",
+         "Meth": "get",
          "Parm": '{"expression": "physical and !self and !voice"}',
          "Lbox": True , "Wrep": False},
 
     "Device Topology":
-        {"Pack": "TopologyDiagnostics",
-         "Serv": "buildTopology",
+        {"Serv": "TopologyDiagnostics",
+         "Meth": "buildTopology",
          "Parm": '{"SendXmlFile": "false"}',
          "Lbox": True , "Wrep": False},
 
     "Wifi Status":
-        {"Pack": "NMC.Wifi",
-         "Serv": "get",
+        {"Serv": "NMC.Wifi",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "Guest Wifi Status":
-        {"Pack": "NMC.Guest",
-         "Serv": "get",
+        {"Serv": "NMC.Guest",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Wifi Scheduler":
-        {"Pack": "Scheduler",
-         "Serv": "getCompleteSchedules",
+        {"Serv": "Scheduler",
+         "Meth": "getCompleteSchedules",
          "Parm": '{"type": "WLAN"}',
          "Lbox": True , "Wrep": True},
 
     "Power Management Profiles":
-        {"Pack": "PowerManagement",
-         "Serv": "getProfiles",
+        {"Serv": "PowerManagement",
+         "Meth": "getProfiles",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Memory Status":
-        {"Pack": "DeviceInfo.MemoryStatus",
-         "Serv": "get",
+        {"Serv": "DeviceInfo.MemoryStatus",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Time":
-        {"Pack": "Time",
-         "Serv": "getTime",
+        {"Serv": "Time",
+         "Meth": "getTime",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "WAN Status":
-        {"Pack": "NMC",
-         "Serv": "getWANStatus",
+        {"Serv": "NMC",
+         "Meth": "getWANStatus",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "Connection Status":
-        {"Pack": "NMC",
-         "Serv": "get",
+        {"Serv": "NMC",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Uplink Information":
-        {"Pack": "UplinkMonitor.DefaultGateway",
-         "Serv": "get",
+        {"Serv": "UplinkMonitor.DefaultGateway",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "MTU":
-        {"Pack": "NeMo.Intf.data",
-         "Serv": "getFirstParameter",
+        {"Serv": "NeMo.Intf.data",
+         "Meth": "getFirstParameter",
          "Parm": '{"name": "MTU"}',
          "Lbox": True , "Wrep": True},
 
     "IPv6 Status":
-        {"Pack": "NMC.IPv6",
-         "Serv": "get",
+        {"Serv": "NMC.IPv6",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "IPv6 Mode":
-        {"Pack": "NMC.Autodetect",
-         "Serv": "get",
+        {"Serv": "NMC.Autodetect",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "CGNat Status":
-        {"Pack": "NMC.ServiceEligibility.DSLITE",
-         "Serv": "get",
+        {"Serv": "NMC.ServiceEligibility.DSLITE",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "DHCP Setup":
-        {"Pack": "NMC",
-         "Serv": "getLANIP",
+        {"Serv": "NMC",
+         "Meth": "getLANIP",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "DHCP MIBs":
-        {"Pack": "NeMo.Intf.data",
-         "Serv": "getMIBs",
+        {"Serv": "NeMo.Intf.data",
+         "Meth": "getMIBs",
          "Parm": '{"mibs": "dhcp dhcpv6"}',
          "Lbox": True , "Wrep": False},
 
     "Ethernet MIBs":
-        {"Pack": "NeMo.Intf.lan",
-         "Serv": "getMIBs",
+        {"Serv": "NeMo.Intf.lan",
+         "Meth": "getMIBs",
          "Parm": '{"mibs": "base eth"}',
          "Lbox": True , "Wrep": True},
 
     "Wifi MIBs":
-        {"Pack": "NeMo.Intf.lan",
-         "Serv": "getMIBs",
+        {"Serv": "NeMo.Intf.lan",
+         "Meth": "getMIBs",
          "Parm": '{"mibs": "base wlanradio wlanvap"}',
          "Lbox": True , "Wrep": True},
 
     "Guest Wifi MIBs":
-        {"Pack": "NeMo.Intf.guest",
-         "Serv": "getMIBs",
+        {"Serv": "NeMo.Intf.guest",
+         "Meth": "getMIBs",
          "Parm": '{"mibs": "base wlanradio wlanvap"}',
          "Lbox": True , "Wrep": False},
 
     "Reboot Information":
-        {"Pack": "NMC.Reboot",
-         "Serv": "get",
+        {"Serv": "NMC.Reboot",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "Reboot History":
-        {"Pack": "NMC.Reboot.Reboot",
-         "Serv": "get",
+        {"Serv": "NMC.Reboot.Reboot",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": True},
 
     "Backup Status":
-        {"Pack": "NMC.NetworkConfig",
-         "Serv": "get",
+        {"Serv": "NMC.NetworkConfig",
+         "Meth": "get",
          "Parm": "{}",
          "Lbox": True , "Wrep": False},
 
     "Start Backup":
-        {"Pack": "NMC.NetworkConfig",
-         "Serv": "launchNetworkBackup",
+        {"Serv": "NMC.NetworkConfig",
+         "Meth": "launchNetworkBackup",
          "Parm": '{"delay" : True}',
          "Lbox": True , "Wrep": False}
 }
@@ -202,20 +202,20 @@ class CallApiDialog(QtWidgets.QDialog):
         self.load_presets()
         self._preset_combo.activated.connect(self.preset_selected)
 
-        # Package/Service box
-        package_label = QtWidgets.QLabel(lx("Package"), objectName="packageLabel")
-        self._package = QtWidgets.QLineEdit(objectName="package")
+        # Service/Method box
         service_label = QtWidgets.QLabel(lx("Service"), objectName="serviceLabel")
         self._service = QtWidgets.QLineEdit(objectName="service")
+        method_label = QtWidgets.QLabel(lx("Method"), objectName="methodLabel")
+        self._method = QtWidgets.QLineEdit(objectName="method")
 
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
         grid.addWidget(preset_label, 0, 0)
         grid.addWidget(self._preset_combo, 0, 1, 1, 3)
-        grid.addWidget(package_label, 1, 0)
-        grid.addWidget(self._package, 1, 1)
-        grid.addWidget(service_label, 1, 2)
-        grid.addWidget(self._service, 1, 3)
+        grid.addWidget(service_label, 1, 0)
+        grid.addWidget(self._service, 1, 1)
+        grid.addWidget(method_label, 1, 2)
+        grid.addWidget(self._method, 1, 3)
 
         # Parameters
         parameters_label = QtWidgets.QLabel(lx("Parameters (JSON):"), objectName="parametersLabel")
@@ -266,20 +266,20 @@ class CallApiDialog(QtWidgets.QDialog):
         entry = PRESET_CALLS.get(preset)
         if entry:
             mac = self._api._info.get_mac()
-            self._package.setText(entry["Pack"].replace('[MAC]', mac))
-            self._service.setText(entry["Serv"])
+            self._service.setText(entry["Serv"].replace('[MAC]', mac))
+            self._method.setText(entry["Meth"])
             self.set_parameters(entry["Parm"].replace('[MAC]', mac))
 
 
     def call(self):
-        # Get package name
-        package = self._package.text().strip()
-        if not package:
-            self.set_reply("You must specify a package name.")
-            return
-
         # Get service name
         service = self._service.text().strip()
+        if not service:
+            self.set_reply("You must specify a service name.")
+            return
+
+        # Get method name
+        method = self._method.text().strip()
 
         # Get parameters
         args_text = self._parameters.toPlainText().strip()
@@ -295,7 +295,7 @@ class CallApiDialog(QtWidgets.QDialog):
         self.set_reply("")
         self._app._task.start()
         try:
-            d = self._api._session.request(package, service or None, args or None, timeout=30)
+            d = self._api._session.request(service, method or None, args or None, timeout=30)
         except Exception as e:
             self.set_reply(str(e))
             return

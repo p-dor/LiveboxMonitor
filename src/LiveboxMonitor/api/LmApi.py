@@ -26,8 +26,8 @@ class LmApi:
 
     ### Compute error string
     @staticmethod
-    def err_str(package, method=None, err_str=None):
-        e = package
+    def err_str(service, method=None, err_str=None):
+        e = service
         if method:
             e += f":{method}"
         if err_str:
@@ -68,9 +68,9 @@ class LmApi:
 
 
     ### Call a Livebox API - raise exception or return the full reply, cannot be None and contains 'status'
-    def call_raw(self, package, method=None, args=None, timeout=None, err_str=None):
+    def call_raw(self, service, method=None, args=None, timeout=None, err_str=None):
         if TEST_MODE:
-            signature = self.get_call_signature(package, method, args)
+            signature = self.get_call_signature(service, method, args)
             # Look for a file in test folder matching call signature
             test_file_path = os.path.join("test", TEST_MODE, f"{signature}.json")
             # LmTools.log_debug(1, f'Looking for testing with: {test_file_path}')
@@ -83,7 +83,7 @@ class LmApi:
                 d = None    # No test file found
             except Exception as e:
                 LmTools.error(f"Wrong JSON {signature}.json: {e}")
-                raise LmApiException(f"{self.err_str(package, method, err_str)}: bad test driver json")
+                raise LmApiException(f"{self.err_str(service, method, err_str)}: bad test driver json")
             finally:
                 if test_file is not None:
                     test_file.close()
@@ -96,33 +96,33 @@ class LmApi:
                 raise LmApiException("No session")
             try:
                 if timeout:
-                    d = self._session.request(package, method, args, timeout=timeout)
+                    d = self._session.request(service, method, args, timeout=timeout)
                 else:
-                    d = self._session.request(package, method, args)
+                    d = self._session.request(service, method, args)
             except Exception as e:
-                raise LmApiException(f"{self.err_str(package, method, err_str)}: {e}.") from e
+                raise LmApiException(f"{self.err_str(service, method, err_str)}: {e}.") from e
 
         # Check reply
         if d is not None:
             e = self.get_errors(d)
             if e:
-                raise LmApiException(f"{self.err_str(package, method, err_str)}: {e}")
+                raise LmApiException(f"{self.err_str(service, method, err_str)}: {e}")
             if "status" in d:
                 return d
 
-        raise LmApiException(self.err_str(package, method, err_str) + " service error")
+        raise LmApiException(self.err_str(service, method, err_str) + " service error")
 
 
     ### Call a Livebox API - raise exception or return 'status' value, can be None
-    def call_no_check(self, package, method=None, args=None, timeout=None, err_str=None):
-        return self.call_raw(package, method, args, timeout, err_str).get("status")
+    def call_no_check(self, service, method=None, args=None, timeout=None, err_str=None):
+        return self.call_raw(service, method, args, timeout, err_str).get("status")
 
 
     ### Call a Livebox API - raise exception or return 'status' value if not '', 0, False or None
-    def call(self, package, method=None, args=None, timeout=None, err_str=None):
-        d = self.call_no_check(package, method, args, timeout, err_str)
+    def call(self, service, method=None, args=None, timeout=None, err_str=None):
+        d = self.call_no_check(service, method, args, timeout, err_str)
         if not d:
-            raise LmApiException(self.err_str(package, method, err_str) + " service failed")
+            raise LmApiException(self.err_str(service, method, err_str) + " service failed")
         return d
 
 
@@ -133,8 +133,8 @@ class LmApi:
 
     ### Test mode - get API call signature
     @staticmethod
-    def get_call_signature(package, method, args):
-        sign_list = [package.replace(".", "_")]
+    def get_call_signature(service, method, args):
+        sign_list = [service.replace(".", "_")]
         if method:
             sign_list.append(method)
         if args:

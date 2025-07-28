@@ -97,7 +97,7 @@ class IntfApi(LmApi):
         return self.call("NeMo.Intf.lo", "getIntfs", {"traverse": "all"})
 
 
-    ### Get interface list from HomeLan package
+    ### Get interface list from HomeLan service
     def get_raw_list(self):
         return self.call("HomeLan.Interface", "get")
 
@@ -139,7 +139,7 @@ class IntfApi(LmApi):
         - SwapStats -> True is stats must be swapped when displayed (R <-> T)
         '''
 
-        # Call Homeland package to get interface list
+        # Call Homeland service to get interface list
         try:
             d = self.get_raw_list()
         except Exception as e:
