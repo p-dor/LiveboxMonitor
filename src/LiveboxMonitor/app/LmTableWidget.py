@@ -101,12 +101,8 @@ class LmTableWidget(QtWidgets.QTableWidget):
 class NumericSortItem(QtWidgets.QTableWidgetItem):
     def __lt__(self, other):
         x =  self.data(QtCore.Qt.ItemDataRole.UserRole)
-        if x is None:
-            x = 0
         y = other.data(QtCore.Qt.ItemDataRole.UserRole)
-        if y is None:
-            y = 0
-        return x < y
+        return (x or 0) < (y or 0)
 
 
 ### Drawing centered icons
@@ -120,8 +116,8 @@ class CenteredIconsDelegate(QtWidgets.QStyledItemDelegate):
             icon = index.data(QtCore.Qt.ItemDataRole.DecorationRole)
             if icon is not None:
                 icon.paint(painter, option.rect)
-        else:
-            super().paint(painter, option, index)
+                return
+        super().paint(painter, option, index)
 
 
 ### Drawing centered icons in QHeaderView
