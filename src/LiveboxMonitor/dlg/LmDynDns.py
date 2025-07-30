@@ -24,7 +24,7 @@ class HostCol(IntEnum):
 # ################################ DynDNS setup dialog ################################
 class DynDnsSetupDialog(QtWidgets.QDialog):
     ### Constructor
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent)
         self.resize(720, 400)
 
@@ -145,33 +145,29 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         self._app._task.start(lx("Loading DynDNS hosts..."))
 
         try:
-            d = self._api._dyndns.get_hosts()
-        except Exception as e:
-            LmTools.error(str(e))
-            d = None
+            try:
+                d = self._api._dyndns.get_hosts()
+            except Exception as e:
+                LmTools.error(str(e))
+                self._app.display_error(mx("Cannot load DynDNS host list.", "dynDnsLoadErr"))
+                return
 
-        if not isinstance(d, list):
-            self._app.display_error(mx("Cannot load DynDNS host list.", "dynDnsLoadErr"))
+            for i, h in enumerate(d):
+                self._host_list.insertRow(i)
+                self._host_list.setItem(i, HostCol.Service, QtWidgets.QTableWidgetItem(h.get("service", "")))
+                self._host_list.setItem(i, HostCol.HostName, QtWidgets.QTableWidgetItem(h.get("hostname", "")))
+                self._host_list.setItem(i, HostCol.UserName, QtWidgets.QTableWidgetItem(h.get("username", "")))
+                if self._show_passwords:
+                    self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem(h.get("password", "")))
+                else:
+                    self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem("******"))
+                self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(h.get("last_update"))))
+                self._host_list.setItem(i, HostCol.Status, QtWidgets.QTableWidgetItem(h.get("status", "")))
+
+            self.host_list_click()
+
+        finally:
             self._app._task.end()
-            return
-
-        i = 0
-        for h in d:
-            self._host_list.insertRow(i)
-            self._host_list.setItem(i, HostCol.Service, QtWidgets.QTableWidgetItem(h.get("service", "")))
-            self._host_list.setItem(i, HostCol.HostName, QtWidgets.QTableWidgetItem(h.get("hostname", "")))
-            self._host_list.setItem(i, HostCol.UserName, QtWidgets.QTableWidgetItem(h.get("username", "")))
-            if self._show_passwords:
-                self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem(h.get("password", "")))
-            else:
-                self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem("******"))
-            self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(h.get("last_update"))))
-            self._host_list.setItem(i, HostCol.Status, QtWidgets.QTableWidgetItem(h.get("status", "")))
-
-            i += 1
-
-        self.host_list_click()
-        self._app._task.end()
 
 
     ### Click on host list item
@@ -192,13 +188,11 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
             d = self._api._dyndns.get_services()
         except Exception as e:
             LmTools.error(str(e))
-            d = None
-
-        if isinstance(d, list):
-            for s in d:
-                self._service_combo.addItem(s)
-        else:
             self._app.display_error(mx("Cannot load DynDNS services.", "dynDnsSvcErr"))
+            return
+
+        for s in d:
+            self._service_combo.addItem(s)
 
 
     ### Text changed in host edit box field
@@ -252,6 +246,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         self._init = False
 
         # Update selection
+        self._host_list.setFocus()  # To ensure new selection is highlighted with focus
         self._host_selection = self._host_list.currentRow()
 
 
@@ -261,18 +256,15 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         hostname = self._hostname.text()
         if not len(hostname):
             return
-        i = 0
-        n = self._host_list.rowCount()
-        while (i < n):
+
+        for i in range(self._host_list.rowCount()):
             if self._host_list.item(i, HostCol.HostName).text() == hostname:
                 self._app.display_error(mx("Host name {} is already used.", "dynDnsHostName").format(hostname))
                 return
-            i += 1
 
         # Set parameters
         service = self._service_combo.currentText()
         username = self._username.text()
-        hostname = hostname
         password = self._password.text()
 
         # Call Livebox API
