@@ -1,6 +1,6 @@
 ### Livebox Monitor DynDNS APIs ###
 
-from LiveboxMonitor.api.LmApi import LmApi
+from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 
 
 # ################################ DynDNS APIs ################################
@@ -21,12 +21,18 @@ class DynDnsApi(LmApi):
 
    ### Get DynDNS hosts
     def get_hosts(self):
-        return self.call_no_check("DynDNS", "getHosts")
+        d = self.call_no_check("DynDNS", "getHosts")
+        if isinstance(d, list):
+            return d
+        raise LmApiException("DynDNS:getHosts query error")
 
 
     ### Get DynDNS services
     def get_services(self):
-        return self.call_no_check("DynDNS", "getServices")
+        d = self.call_no_check("DynDNS", "getServices")
+        if isinstance(d, list):
+            return d
+        raise LmApiException("DynDNS:getServices query error")
 
 
     ### Add a host entry.
