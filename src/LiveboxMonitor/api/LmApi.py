@@ -69,26 +69,7 @@ class LmApi:
 
     ### Call a Livebox API - raise exception or return the full reply, cannot be None and contains 'status'
     def call_raw(self, service, method=None, args=None, timeout=None, err_str=None):
-        if TEST_MODE:
-            signature = self.get_call_signature(service, method, args)
-            # Look for a file in test folder matching call signature
-            test_file_path = os.path.join("test", TEST_MODE, f"{signature}.json")
-            # LmTools.log_debug(1, f'Looking for testing with: {test_file_path}')
-            test_file = None
-            try:
-                test_file = open(test_file_path)
-                d = json.load(test_file)
-                LmTools.log_debug(1, f"Testing with: {test_file_path}")
-            except OSError:
-                d = None    # No test file found
-            except Exception as e:
-                LmTools.error(f"Wrong JSON {signature}.json: {e}")
-                raise LmApiException(f"{self.err_str(service, method, err_str)}: bad test driver json")
-            finally:
-                if test_file is not None:
-                    test_file.close()
-        else:
-            d = None
+        d = self.get_mockup(service, method, args) if TEST_MODE else None
 
         # Call Livebox API
         if not d:
@@ -129,6 +110,43 @@ class LmApi:
     ### Notification that the session has been closed
     def session_closed(self):
         self._session = None
+
+
+    ### Test mode - try to find a call mockup
+    @staticmethod
+    def get_mockup(service, method, args):
+        if args: # If args, try with full signature then simple
+            mockup = LmApi.find_mockup(service, method, args)
+            if mockup:
+                return mockup
+        return LmApi.find_mockup(service, method, None)
+
+
+    ### Test mode - find a call mockup file matching criteria
+    @staticmethod
+    def find_mockup(service, method, args):
+        signature = LmApi.get_call_signature(service, method, args)
+
+        # Look for a file in test folder matching call signature
+        test_file_path = os.path.join("test", TEST_MODE, f"{signature}.json")
+        # LmTools.log_debug(1, f'Looking for testing with: {test_file_path}')
+
+        test_file = None
+        mockup = None
+        try:
+            test_file = open(test_file_path)
+            mockup = json.load(test_file)
+            LmTools.log_debug(1, f"Testing with: {test_file_path}")
+        except OSError:
+            mockup = None    # No test file found
+        except Exception as e:
+            LmTools.error(f"Wrong JSON {signature}.json: {e}")
+            raise LmApiException(f"{LmApi.err_str(service, method, err_str)}: bad test driver json")
+        finally:
+            if test_file is not None:
+                test_file.close()
+
+        return mockup
 
 
     ### Test mode - get API call signature
