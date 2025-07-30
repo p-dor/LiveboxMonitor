@@ -1,0 +1,22 @@
+{
+    "status": {
+        "NPiOgoBk3b": {
+            "Enable": true,
+            "Status": "Bound",
+            "DstLen": 24,
+            "Dst": "192.168.250.0",
+            "Priority": 3001,
+            "Gateway": "192.168.1.250",
+            "MTU": 1500
+        },
+        "wzQIWEBb5G": {
+            "Enable": false,
+            "Status": "Disabled",
+            "DstLen": 24,
+            "Dst": "10.10.10.0",
+            "Priority": 3002,
+            "Gateway": "192.168.250.10",
+            "MTU": 1500
+        }
+    }
+}
