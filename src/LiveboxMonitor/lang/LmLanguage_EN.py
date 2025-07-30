@@ -519,6 +519,8 @@ TOOLTIPS = {
         "dmz": "Allows you to add a device to the DMZ.\n"
                "By adding a device to the DMZ, you make it accessible from the Internet.\n"
                "You must first assign a static IP address to this device in the DHCP tab.",
+        "routingTable": "Allows you to configure a static routing table.\n"
+                        "This option is only available for Livebox Pro.",
         "openSourceURL": "A click will open the application's web page in your browser.",
         "prefs": "Allows you to display the program preferences screen.",
         "changeProfile": "Allows you to change the current profile and restart the program.",
@@ -643,6 +645,22 @@ TOOLTIPS = {
                       "Leave empty if no external IP filtering is required.",
         "addDmz": "Adds the device to the DMZ. If a rule is already present with the same identifier,\n"
                   "it will be overwritten.",
+        "ok": "Closes this screen."
+    },
+
+    # Actions - Routing
+    "routing": {
+        "rlist_DestMask": "Destination subnet mask.",
+        "rlist_Priority": "Priority given to each route.",
+        "rlist_Enabled": "Indicates whether you have requested to activate the route.",
+        "rlist_Status": "Current rule activation status.",
+        "refresh": "Refreshes the list of routes.",
+        "enableRule": "Enables/disables the selected route.",
+        "delRule": "Deletes the selected route.",
+        "destMaskEdit": "Destination subnet mask.",
+        "priorityEdit": "Priority to be given to the route.",
+        "addRule": "Adds a new route with the specified values.",
+        "editRule": "Modifies the selected route with the specified values.",
         "ok": "Closes this screen."
     },
 

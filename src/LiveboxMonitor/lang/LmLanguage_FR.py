@@ -633,6 +633,7 @@ LABELS = {
         "Reboots": "Redémarrages",
         "Firewall Levels...": "Niveaux de pare-feu...",
         "Ping Responses...": "Réponses aux pings...",
+        "Routing Table...": "Table de routage...",
         "Network": "Réseau",
         "An Open Source project": "Un projet Open Source",
         "About": "À propos",
@@ -784,6 +785,28 @@ LABELS = {
         "Loading DMZ devices...": "Chargement des appareils dans la DMZ...",
         "All": "Toutes",
         "-Unknown-": "-Inconnu-"
+    },
+
+    # Actions - Routing
+    "routing": {
+        "Destination Network": "Réseau de destination",
+        "Mask": "Masque",
+        "Gateway": "Passerelle",
+        "Priority": "Métrique",
+        "Status": "Statut",
+        "Refresh": "Rafraîchir",
+        "Enable": "Activer",
+        "Disable": "Désactiver",
+        "Delete": "Supprimer",
+        "Rules": "Routes",
+        "Destination network": "Réseau de destination",
+        "Destination mask": "Masque de destination",
+        "Add": "Ajouter",
+        "Edit": "Modifier",
+        "Enabled": "Activé",
+        "Add/Edit Rule": "Ajouter/Modifier Route",
+        "Routing Table": "Table de routage",
+        "Loading Routing Table Rules...": "Chargement de la table de routage..."
     },
 
     # Actions - Call API - no translation required
@@ -1510,6 +1533,8 @@ TOOLTIPS = {
         "dmz": "Permet d'intégrer un appareil dans la DMZ.\n"
                "En intégrant un appareil à la DMZ vous rendez cet équipement accessible depuis Internet.\n"
                "Vous devez préalablement associer une adresse IP statique à cet équipement dans l’onglet DHCP.",
+        "routingTable": "Permet de configurer une table de routage statique.\n"
+                        "Cette option est uniquement disponible pour les Livebox Pro.",
         "openSourceURL": "Un clic ouvrira la page web de l'application sur votre navigateur.",
         "prefs": "Permet d'afficher l'écran des préférences du programme.",
         "changeProfile": "Permet de changer le profil en cours et de relancer le programme.",
@@ -1634,6 +1659,22 @@ TOOLTIPS = {
                       "Laisser vide si aucun filtrage par IP externe n'est requis.",
         "addDmz": "Ajoute l'appareil dans la DMZ. Si une règle est déjà présente avec le même identifiant\n"
                   "celle-ci sera écrasée.",
+        "ok": "Ferme cet écran."
+    },
+
+    # Actions - Routing
+    "routing": {
+        "rlist_DestMask": "Masque de sous-réseau de destination.",
+        "rlist_Priority": "Priorité donnée à chaque route.",
+        "rlist_Enabled": "Indique si vous avez demandé à activer la route.",
+        "rlist_Status": "Statut actuel d'activation de la règle.",
+        "refresh": "Rafraîchit la liste des routes.",
+        "enableRule": "Active/désactive la route sélectionnée.",
+        "delRule": "Supprime la route sélectionnée.",
+        "destMaskEdit": "Masque de sous-réseau de destination.",
+        "priorityEdit": "Priorité à donner à la route.",
+        "addRule": "Ajoute une nouvelle route avec les valeurs indiquées.",
+        "editRule": "Modifie la route sélectionnée avec les valeurs indiquées.",
         "ok": "Ferme cet écran."
     },
 
@@ -1950,7 +1991,10 @@ MESSAGES = {
         "dynDnsHostName": "Le nom de domaine {} est déjà utilisé",
         "dynDnsEnableErr": "Impossible d'obtenir l'état d'activation global du DynDNS.",
         "dmzLoadErr": "Impossible de charger la liste des appareils dans la DMZ.",
-        "dmzDelErr": "Impossible de supprimer cet appareil de la DMZ."
+        "dmzDelErr": "Impossible de supprimer cet appareil de la DMZ.",
+        "routingLoadErr": "Impossible de charger la table de routage.",
+        "addrErr": "{} n'est pas une adresse valide.",
+        "maskErr": "{} n'est pas un masque valide."
     },
 
     # Repeater

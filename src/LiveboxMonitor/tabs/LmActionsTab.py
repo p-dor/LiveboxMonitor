@@ -18,6 +18,7 @@ from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
 from LiveboxMonitor.dlg.LmPingResponse import PingResponseDialog
 from LiveboxMonitor.dlg.LmDynDns import DynDnsSetupDialog
 from LiveboxMonitor.dlg.LmDmz import DmzSetupDialog
+from LiveboxMonitor.dlg.LmRouting import RoutingSetupDialog
 from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
@@ -187,6 +188,13 @@ class LmActions:
         dmz_button.clicked.connect(self.dmz_button_click)
         dmz_button.setMinimumWidth(BUTTON_WIDTH)
         network_buttons.addWidget(dmz_button)
+
+        routing_button = QtWidgets.QPushButton(lx("Routing Table..."), objectName="routingTable")
+        routing_button.clicked.connect(self.routing_button_click)
+        routing_button.setMinimumWidth(BUTTON_WIDTH)
+        network_buttons.addWidget(routing_button)
+        if not self._livebox_pro:
+            routing_button.setEnabled(False)
 
         network_group_box = QtWidgets.QGroupBox(lx("Network"), objectName="networkGroup")
         network_group_box.setLayout(network_buttons)
@@ -598,6 +606,12 @@ class LmActions:
     def dmz_button_click(self):
         dmz_setup_dialog = DmzSetupDialog(self)
         dmz_setup_dialog.exec()
+
+
+    ### Click on Routing button
+    def routing_button_click(self):
+        routing_setup_dialog = RoutingSetupDialog(self)
+        routing_setup_dialog.exec()
 
 
     ### Open Source project web button

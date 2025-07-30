@@ -735,6 +735,7 @@ LABELS = {
         "Ping Responses...": "",
         "DynDNS...": "",
         "DMZ...": "",
+        "Routing Table...": "",
         "Network": "",
         "An Open Source project": "",
         "About": "",
@@ -908,6 +909,30 @@ LABELS = {
         "Loading DMZ devices...": "",
         "All": "",
         "-Unknown-": ""
+    },
+
+    # Actions - Routing
+    "routing": {
+        "Destination Network": "",
+        "Mask": "",
+        "Gateway": "",
+        "Priority": "",
+        "A": "",
+        "Status": "",
+        "Refresh": "",
+        "Enable": "",
+        "Disable": "",
+        "Delete": "",
+        "Rules": "",
+        "Destination network": "",
+        "Destination mask": "",
+        "Add": "",
+        "Edit": "",
+        "Enabled": "",
+        "Add/Edit Rule": "",
+        "OK": "",
+        "Routing Table": "",
+        "Loading Routing Table Rules...": ""
     },
 
     # Actions - Call API
@@ -1591,6 +1616,7 @@ TOOLTIPS = {
         "pingResponse": "",
         "dynDNS": "",
         "dmz": "",
+        "routingTable": "",
         "networkGroup": "",
         "appIcon": "",
         "appName": "",
@@ -1743,6 +1769,34 @@ TOOLTIPS = {
         "extIPsEdit": "",
         "addDmz": "",
         "addDmzGroup": "",
+        "ok": ""
+    },
+
+    # Actions - Routing
+    "routing": {
+        "ruleList": "",
+        "rlist_DestNetwork": "",
+        "rlist_DestMask": "",
+        "rlist_Gateway": "",
+        "rlist_Priority": "",
+        "rlist_Enabled": "",
+        "rlist_Status": "",
+        "refresh": "",
+        "enableRule": "",
+        "delRule": "",
+        "ruleGroup": "",
+        "destNetworkLabel": "",
+        "destNetworkEdit": "",
+        "destMaskLabel": "",
+        "destMaskEdit": "",
+        "gatewayLabel": "",
+        "gatewayEdit": "",
+        "priorityLabel": "",
+        "priorityEdit": "",
+        "addRule": "",
+        "editRule": "",
+        "enabledCheckbox": "",
+        "addEditRuleGroup": "",
         "ok": ""
     },
 
@@ -2034,7 +2088,10 @@ MESSAGES = {
         "dynDnsHostName": "",
         "dynDnsEnableErr": "",
         "dmzLoadErr": "",
-        "dmzDelErr": ""
+        "dmzDelErr": "",
+        "routingLoadErr": "",
+        "addrErr": "",
+        "maskErr": ""
     },
 
     # Repeater
