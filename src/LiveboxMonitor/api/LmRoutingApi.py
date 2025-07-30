@@ -11,23 +11,23 @@ class RoutingApi(LmApi):
 
 
     ### Get static routes
-    def get_static_routes(self):
-        d = self.call_no_check("NMC.LAN", "getStaticRoutes")
+    def get_list(self):
+        d = self.call_no_check("NMC.LAN", "getStaticRoutes", timeout=30)
         if isinstance(d, dict):
             return d
         raise LmApiException("NMC.LAN:getStaticRoutes query error")
 
 
-    ### Add static routes
-    def add_static_routes(self, route):
-        self.call_no_check("NMC.LAN", "addStaticRoute", route)
+    ### Add static route
+    def add(self, route):
+        self.call_no_check("NMC.LAN", "addStaticRoute", route, timeout=30)
 
 
-    ### Delete static routes
-    def del_static_routes(self, name):
-        self.call_no_check("NMC.LAN", "deleteStaticRoute", {"Name": name})
+    ### Delete static route
+    def delete(self, name):
+        self.call_no_check("NMC.LAN", "deleteStaticRoute", {"Name": name}, timeout=30)
 
 
     ### Enable/Disable static routes
-    def set_static_routes_enable(self, name, enable):
-        self.call(f"NMC.LAN.IPv4Route.{name}", "set", {"Enable": enable})
+    def set_enable(self, name, enable):
+        self.call(f"NMC.LAN.IPv4Route.{name}", "set", {"Enable": enable}, timeout=30)
