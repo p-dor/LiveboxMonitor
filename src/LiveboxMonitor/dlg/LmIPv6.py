@@ -136,7 +136,7 @@ class IPv6Dialog(QtWidgets.QDialog):
             self._app._api._info.set_cgnat_enable(not self._cgnat_enabled)
             self._cgnat_enabled = not self._cgnat_enabled
         except Exception as e:
-            LmTools.error(str(e))
+            self._app.display_error(str(e))
         finally:
             self._app._task.end()
 
