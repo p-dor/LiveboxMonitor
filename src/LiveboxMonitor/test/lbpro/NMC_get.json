@@ -1,0 +1,14 @@
+{
+  "status": {
+    "WanModeList": "Ethernet_PPP;Ethernet_DHCP;GPON_DHCP;GPON_PPP",
+    "WanMode": "GPON_DHCP",
+    "Username": "fti/w2voxr4",
+    "FactoryResetScheduled": false,
+    "ConnectionError": false,
+    "DefaultsLoaded": true,
+    "ProvisioningState": "done",
+    "OfferType": "Pro",
+    "OfferName": "MonoLigne",
+    "IPTVMode": "Internet"
+  }
+}
