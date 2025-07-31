@@ -638,6 +638,8 @@ class LiveboxEventThread(LmThread):
                 LmTools.log_debug(1, "Errors in event request, resign")
                 if self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword) <= 0:
                     time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
+            elif d.get("error"):
+                pass    # Errors already logged by LmSession
             else:
                 events = d.get("events")
                 if events:

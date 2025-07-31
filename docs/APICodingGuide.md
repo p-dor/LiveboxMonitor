@@ -172,8 +172,8 @@ while True:
     # Subscribing to device and statistic events
     reply = session.event_request(["Devices.Device", "HomeLan"], timeout=2)
     if reply:
-        if reply.get("errors"):
-            print("Errors in event request")
+        if reply.get("errors") or reply.get("error"):
+            print("Event request failed")
         else:
             events = reply.get("events")
             for e in events:
