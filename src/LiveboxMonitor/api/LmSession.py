@@ -16,7 +16,6 @@ from LiveboxMonitor.app import LmTools
 # ################################ VARS & DEFS ################################
 APP_NAME = "so_sdkut"
 DEFAULT_TIMEOUT = 5
-URL_REDIRECTIONS = {}
 
 
 # ################################ LmSession class ################################
@@ -24,14 +23,15 @@ URL_REDIRECTIONS = {}
 class LmSession:
     ### Setup
     TimeoutMargin = 0
+    UrlRedirections = {}
 
     ### Constructor
     def __init__(self, url, session_name="LiveboxMonitor"):
         url = url.rstrip(" /") + "/"
     
         # URL redirection handling
-        if url in URL_REDIRECTIONS:
-            self._url = URL_REDIRECTIONS[url]
+        if url in LmSession.UrlRedirections:
+            self._url = LmSession.UrlRedirections[url]
             print(f"Redirecting '{url}' to '{self._url}'.")
         else:
             self._url = url
@@ -46,25 +46,24 @@ class LmSession:
         self._sah_event_headers = None
 
 
-    ### Read a url redirection list and store it in the global dict URL_REDIRECTIONS
+    ### Read a url redirection list and store it in LmSession.UrlRedirections
     ### this fails silently
     @staticmethod
     def load_url_redirections(redirections):
-        def fixTrailingSlash(url):
+        def fix_trailing_slash(url):
             return url.rstrip(" /") + "/"
 
-        global URL_REDIRECTIONS
         if not redirections:
             return
 
         try:
             for i in redirections:
                 url_from, url_to = i.split("=", 1)
-                url_from = fixTrailingSlash(url_from)
-                url_to = fixTrailingSlash(url_to)
-                if url_from in URL_REDIRECTIONS:
+                url_from = fix_trailing_slash(url_from)
+                url_to = fix_trailing_slash(url_to)
+                if url_from in LmSession.UrlRedirections:
                     raise Exception("Source redirection URL already declared.")
-                URL_REDIRECTIONS[url_from] = url_to
+                LmSession.UrlRedirections[url_from] = url_to
                 LmTools.log_debug(1, "Added redirection", url_from, "to", url_to)
         except Exception as e:
             LmTools.error(f"Error while processing redirections: {e}")
@@ -79,7 +78,7 @@ class LmSession:
     ### Sign in - return -1 in case of connectivity issue, 0 if sign failed, 1 if sign successful
     def signin(self, user, password, new_session=False):
         # Set cookie & contextID file path
-        state_file_path = os.path.join(tempfile.gettempdir(), self._name + "_state")
+        state_file_path = os.path.join(tempfile.gettempdir(), f"{self._name}_state")
         LmTools.log_debug(1, "State file", state_file_path)
 
         # Close current session if any
@@ -105,16 +104,14 @@ class LmSession:
                 self._channel_id = 0
 
                 LmTools.log_debug(1, "Authentication")
-     
-                auth = '{"service":"sah.Device.Information","method":"createContext","parameters":{"applicationName":"%s","username":"%s","password":"%s"}}' % (APP_NAME, user, password)
-
+                auth = f'{{"service":"sah.Device.Information","method":"createContext","parameters":{{"applicationName":"{APP_NAME}","username":"{user}","password":"{password}"}}}}'
                 self._sah_service_headers = {"Accept":"*/*",
                                              "Authorization":"X-Sah-Login",
                                              "Content-Type":"application/x-sah-ws-4-call+json"}
 
                 LmTools.log_debug(2, "Auth with", auth)
                 try:
-                    r = self._session.post(self._url + "ws",
+                    r = self._session.post(f"{self._url}ws",
                                            data=auth,
                                            headers=self._sah_service_headers,
                                            timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
@@ -126,11 +123,11 @@ class LmSession:
                 LmTools.log_debug(2, "Auth return", r.text)
 
                 resp_json = r.json()
-                if "contextID" not in resp_json.get("data", {}):
+                try:
+                    context_id = resp_json["data"]["contextID"]
+                except KeyError:
                     LmTools.error("Auth error", str(r.text))
                     break
-
-                context_id = resp_json["data"]["contextID"]
 
                 # Saving cookie & contextID
                 LmTools.log_debug(1, "Setting cookies")
@@ -140,18 +137,18 @@ class LmSession:
                     pickle.dump(context_id, f, pickle.HIGHEST_PROTOCOL)
 
             self._sah_service_headers = {"Accept":"*/*",
-                                         "Authorization":"X-Sah " + context_id,
+                                         "Authorization":f"X-Sah {context_id}",
                                          "Content-Type":"application/x-sah-ws-4-call+json; charset=UTF-8",
                                          "X-Context": context_id}
 
             self._sah_event_headers = {"Accept":"*/*",
-                                       "Authorization":"X-Sah " + context_id,
+                                       "Authorization":f"X-Sah {context_id}",
                                        "Content-Type":"application/x-sah-event-4-call+json; charset=UTF-8",
                                        "X-Context": context_id}
 
-            # Check authentication
+            # Check authentication (cookie can expire)
             try:
-                r = self._session.post(self._url + "ws",
+                r = self._session.post(f"{self._url}ws",
                                        data='{"service":"Time", "method":"getTime", "parameters":{}}',
                                        headers=self._sah_service_headers,
                                        timeout=DEFAULT_TIMEOUT + LmSession.TimeoutMargin,
@@ -188,18 +185,18 @@ class LmSession:
         # Check session is established
         if self._session is None:
             if self.signin(self._user, self._password) <= 0:
-                return {"errors": "No session"}
+                return {"error": 1, "description": "No session"}
 
         if get:
             # Build request path
-            c = "sysbus/" + service.replace(".", "/")
+            c = f"sysbus/{service.replace('.', '/')}"
             if method is not None:
-                c += ":" + method
+                c += f":{method}"
 
             if args is None:
                 c += "?_restDepth=-1"
             else:
-                c += "?_restDepth=" + str(args)
+                c += f"?_restDepth={args}"
 
             LmTools.log_debug(2, f"Request: {c}")
             timestamp = datetime.datetime.now()
@@ -213,23 +210,23 @@ class LmSession:
             except requests.exceptions.Timeout as e:
                 if not silent:
                     LmTools.error(f"Request timeout error: {e}")
-                return None
+                return {"error": 2, "description": "Request timeout"}
             except Exception as e:
                 if not silent:
                     LmTools.error(f"Request error: {e}")
-                return {"errors": "Request exception"}
+                return {"error": 3, "description": "Request exception", "info": str(e)}
 
             t = t.decode("utf-8", errors="replace")
             t = t.replace("[,]", "[]")  # Some lists, like in GET '*' request, contain a failing comma
             if t.startswith(',"errors":'):
-                t = "{" + t[1:] + "}"
+                t = f"{{{t[1:]}}}"
             elif "}{" in t:
                 LmTools.log_debug(2, "Multiple json lists")
-                t = "[" + t.replace("}{", "},{") + "]"
+                t = f"[{t.replace('}{', '},{')}]"
         else:
             # Setup request parameters
             data = {}
-            data["service"] = "sysbus." + service
+            data["service"] = f"sysbus.{service}"
 
             if method is not None:
                 data["method"] = method
@@ -243,7 +240,7 @@ class LmSession:
             LmTools.log_debug(2, f"Request: {data}")
             timestamp = datetime.datetime.now()
             try:
-                t = self._session.post(self._url + "ws",
+                t = self._session.post(f"{self._url}ws",
                                        data=json.dumps(data),
                                        headers=self._sah_service_headers,
                                        timeout=timeout + LmSession.TimeoutMargin,
@@ -253,11 +250,11 @@ class LmSession:
             except requests.exceptions.Timeout as e:
                 if not silent:
                     LmTools.error(f"Request timeout error: {e}")
-                return None
+                return {"error": 2, "description": "Request timeout"}
             except Exception as e:
                 if not silent:
                     LmTools.error(f"Request error: {e}")
-                return {"errors": "Request exception"}
+                return {"error": 3, "description": "Request exception", "info": str(e)}
 
             t = t.decode("utf-8", errors="replace")
 
@@ -267,19 +264,15 @@ class LmSession:
             if not silent:
                 LmTools.error(sys.exc_info()[0])
                 LmTools.error("Bad json:", t)
-            return None
+            return {"error": 4, "description": "Bad JSON", "info": t}
 
         overview = str(r)
         if len(overview) > 128:
-            overview = overview[:128] + "..."
+            overview = f"{overview[:128]}..."
         LmTools.log_debug(2, "Reply:", overview)
 
         if not get and "result" in r:
             r = r["result"]
-            if "errors" in r:
-                if not silent:
-                    LmTools.error(t)
-                return None
 
         LmTools.log_debug(2, "-------------------------")
         return r
@@ -290,17 +283,17 @@ class LmSession:
         # Check session is established
         if self._session is None:
             if self.signin(self._user, self._password) <= 0:
-                return {"errors": "No session"}
+                return {"error": 1, "description": "No session"}
 
         data = {"events": events}
         if self._channel_id:
-            data["channelid"] = str(self._channel_id)
+            data["channelid"] = self._channel_id
 
         # Send request & headers
         LmTools.log_debug(2, f"Event Request: {data}")
         timestamp = datetime.datetime.now()
         try:
-            t = self._session.post(self._url + "ws",
+            t = self._session.post(f"{self._url}ws",
                                    data=json.dumps(data),
                                    headers=self._sah_event_headers,
                                    timeout=timeout,
@@ -310,11 +303,11 @@ class LmSession:
         except requests.exceptions.Timeout as e:
             if not silent:
                 LmTools.log_debug(2, f"Event request timeout error: {e}")
-            return None
+            return {"error": 2, "description": "Event request timeout"}
         except Exception as e:
             if not silent:
                 LmTools.error(f"Event request error: {e}")
-            return {"errors": "Event request exception"}
+            return {"error": 3, "description": "Event request exception", "info": str(e)}
 
         t = t.decode("utf-8", errors="replace")
 
@@ -327,20 +320,16 @@ class LmSession:
         except Exception:
             if not silent:
                 LmTools.error(sys.exc_info()[0])
-                LmTools.error("Bad json:", t)
-            return None
+                LmTools.error("Bad JSON:", t)
+            return {"error": 4, "description": "Bad JSON", "info": t}
 
         overview = str(r)
         if len(overview) > 50:
-            overview = overview[:50] + "..."
+            overview = f"{overview[:50]}..."
         LmTools.log_debug(2, "Reply:", overview)
 
         if "result" in r:
             r = r["result"]
-            if "errors" in r:
-                if not silent:
-                    LmTools.error(t)
-                return None
 
         LmTools.log_debug(2, "-------------------------")
         self._channel_id = r.get("channelid", 0)
