@@ -1082,7 +1082,8 @@ TOOLTIPS = {
         "deviceInfo": "Bascule dans l'onglet \"Infos Appareil\" pour l'appareil sélectionné afin de voir directement ses informations.",
         "deviceEvents": "Bascule dans l'onglet \"Événements\" pour l'appareil sélectionné afin de voir directement les événements reçus le concernant.",
         "ipv6": "Permet d'avoir le statut d'activation de l'IPv6, l'adresse IPv6 de la Livebox ainsi que son préfixe,\n"
-                "et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.",
+                "et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.\n"
+                "Permet également de visualiser le mode de connexion et de contrôler le réglage CGNat.",
         "dns": "Permet d'avoir la liste des noms DNS assignés aux appareils."
     },
 
@@ -1533,7 +1534,7 @@ TOOLTIPS = {
         "dmz": "Permet d'intégrer un appareil dans la DMZ.\n"
                "En intégrant un appareil à la DMZ vous rendez cet équipement accessible depuis Internet.\n"
                "Vous devez préalablement associer une adresse IP statique à cet équipement dans l’onglet DHCP.",
-        "routingTable": "Permet de configurer une table de routage statique.\n"
+        "routingTable": "Permet de configurer la table de routage statique.\n"
                         "Cette option est uniquement disponible pour les Livebox Pro.",
         "openSourceURL": "Un clic ouvrira la page web de l'application sur votre navigateur.",
         "prefs": "Permet d'afficher l'écran des préférences du programme.",

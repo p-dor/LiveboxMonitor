@@ -71,7 +71,8 @@ TOOLTIPS = {
         "deviceInfo": "Switches to the \"Device Info\" tab for the selected device to view its information directly.",
         "deviceEvents": "Switches to the \"Events\" tab for the selected device to view directly the events received about it.",
         "ipv6": "Allows you to get the IPv6 activation status, the Livebox IPv6 address and its prefix,\n"
-                "and the list of connected or non-connected devices with one or more assigned IPv6 addresses.",
+                "and the list of connected or non-connected devices with one or more assigned IPv6 addresses.\n"
+                "Also allows you to view the connection mode and control the CGNat setting.",
         "dns": "Allows you to get the list of DNS names assigned to devices"
     },
 
@@ -519,7 +520,7 @@ TOOLTIPS = {
         "dmz": "Allows you to add a device to the DMZ.\n"
                "By adding a device to the DMZ, you make it accessible from the Internet.\n"
                "You must first assign a static IP address to this device in the DHCP tab.",
-        "routingTable": "Allows you to configure a static routing table.\n"
+        "routingTable": "Allows you to configure the static routing table.\n"
                         "This option is only available for Livebox Pro.",
         "openSourceURL": "A click will open the application's web page in your browser.",
         "prefs": "Allows you to display the program preferences screen.",
