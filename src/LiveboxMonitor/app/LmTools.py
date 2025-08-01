@@ -119,9 +119,9 @@ def ask_question(question_msg, parent=None):
     msg_box = QtWidgets.QMessageBox(parent)
     msg_box.setWindowTitle(lx("Please confirm"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Question)
-    msg_box.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
+    msg_box.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
     msg_box.setText(question_msg)
-    return msg_box.exec() == QtWidgets.QMessageBox.StandardButton.Ok
+    return msg_box.exec() == QtWidgets.QMessageBox.StandardButton.Yes
 
 
 ### Display an info text popup
