@@ -794,6 +794,7 @@ LABELS = {
         "SSID Broadcast": "",
         "WPS": "",
         "MAC Filtering": "",
+        "Devices": "",
         "Security": "",
         "Password": "",
         "Channel": "",

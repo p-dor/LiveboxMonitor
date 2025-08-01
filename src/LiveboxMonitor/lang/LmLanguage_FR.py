@@ -687,6 +687,7 @@ LABELS = {
         "Radio Band": "Bande Radio",
         "SSID Broadcast": "Diffuser SSID",
         "MAC Filtering": "Filtrage MAC",
+        "Devices": "Appareils",
         "Security": "Sécurité",
         "Password": "Mot de passe",
         "Channel": "Canal",
