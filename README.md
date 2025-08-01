@@ -8,7 +8,7 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Obtenir beaucoup de détails sur la Livebox elle-même et contrôler la qualité de sa ligne fibre,
 - Avoir beaucoup de détails sur les appareils qui se connectent (actifs ou non),
 - Lire le journal des événements d'un appareil donné,
-- Contrôler de manière fine les réglages du serveur DHCP, des règles NAT/PAT, du DynDNS et de la DMZ,
+- Contrôler de manière fine les réglages du serveur DHCP, des règles NAT/PAT, du DynDNS, de la DMZ, et de la table de routage,
 - Configurer le réseau Wifi et contrôler son état global,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
 - Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
@@ -274,7 +274,7 @@ L'onglet `Appareils` propose les boutons suivants :
 - **`Assigner Noms...`** : permet d'assigner le même nom que celui qui a été donné à la Livebox automatiquement pour tous les appareils inconnus.
 - **`Infos Appareil`** : permet de basculer dans l'onglet `Infos Appareil` pour l'appareil sélectionné et de voir directement ses informations.
 - **`Événements Appareil`** : permet de basculer dans l'onglet `Événements` pour l'appareil sélectionné et de voir directement les événements reçus le concernant.
-- **`IPv6...`** : permet d'avoir le statut d'activation de l'IPv6, l'adresse IPv6 de la Livebox ainsi que son préfixe, et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées.
+- **`IPv6...`** : permet d'avoir le statut d'activation de l'IPv6, l'adresse IPv6 de la Livebox ainsi que son préfixe, et la liste des appareils connectés ou non ayant une ou plusieurs IPv6 assignées. Permet également de visualiser le mode de connexion et de contrôler le réglage CGNat.
 - **`DNS...`** : permet d'avoir la liste des noms DNS assignés aux appareils. Ces noms DNS peuvent être attribués, changés ou supprimés via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 
 
@@ -367,7 +367,7 @@ L'onglet `Infos Appareil` propose les boutons suivants :
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceInfos_AssignName.png)
 
-    Décocher la boite pour effacer le nom. Les deux noms peuvent être différents.
+    Décocher la boite pour effacer le nom. Les trois noms peuvent bien sûr être différents.
 - **`Assigner Type...`** : permet d'attribuer ou d'effacer le type de l'appareil sélectionné.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_DeviceInfos_AssignType.png)
@@ -583,11 +583,17 @@ Cet onglet permet une liste d'actions par catégorie.
 
 Les actions concernant le **Wifi** :
 - **`Configuration...`** : permet de configurer toutes les bandes radios du réseau Wifi.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_WifiConfig.png)
+
 - **`Wifi ON`** : permet d'activer l'interface Wifi de la Livebox.
 - **`Wifi OFF`** : permet de désactiver l'interface Wifi de la Livebox.
 - **`Invité...`** : permet de configurer toutes les bandes radios du réseau Wifi Invité.
-- **`Invité ON`** : permet d'activer l'interface Wifi invité de la Livebox.
-- **`Invité OFF`** : permet de désactiver l'interface Wifi invité de la Livebox.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_WifiConfigGuest.png)
+
+- **`Invité ON`** : permet d'activer l'interface Wifi Invité de la Livebox.
+- **`Invité OFF`** : permet de désactiver l'interface Wifi Invité de la Livebox.
 - **`Planificateur Wifi ON`** : permet d'activer le planificateur Wifi de la Livebox. Ce planificateur doit être configuré depuis l'interface Web de la Livebox.
 - **`Planificateur Wifi OFF`** : permet de désactiver le planificateur Wifi de la Livebox.
 - **`État Global Wifi...`** : permet d'afficher l'état global du Wifi, en incluant l'état Wifi de tous les répéteurs Wifi Orange potentiellement connectés.
@@ -600,8 +606,11 @@ Les actions **Diverses** :
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_BackupRestore.png)
 - **`LEDs et Écran...`** : permet de régler le niveau de luminosité des LEDs et l'affichage du mot de passe Wifi sur l'écran de la Livebox. Cette fonctionalité est disponible uniquement à partir de la Livebox 6.
 
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_Screen.png)
+
 Les actions concernant les **Redémarrages** :
 - **`Redémarrer la Livebox...`** : permet de forcer un redémarrage de la Livebox.
+- **`Réinitialiser la Livebox...`** : permet de réinitialiser la Livebox aux paramètres d'usine. Si la restauration automatique de votre configuration est activée un dialogue vous permettra de la désactiver.
 - **`Historique Redémarrages...`** : permet d'afficher l'historique des derniers redémarrages.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_RebootHistory.png)
@@ -628,6 +637,9 @@ La règle de l'application d'Orange apparaît avec l'ID `webui`, donc si on veut
 Faute de test il n'est pas garanti que cela fonctionne correctement avec plusieurs règles : **tout retour d'utilisation sera bienvenu**.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_DMZ.png)
+- **`Table de routage...`** : permet de configurer la table de routage statique. Cette option est uniquement disponible pour les Livebox Pro.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_Routing.png)
 
 Les actions concernant les **Réglages** :
 - **`Préférences...`** : permet d'afficher l'écran des préférences du programme.
@@ -705,10 +717,12 @@ Les actions concernant les **Réglages** :
     - Mot de passe -> le mot de passe créé ci dessus.  
 
 Les actions techniques de **Débogage** :
-- **`JSON Liste Appareils...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la liste des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
-- **`JSON Topologie...`** : permet d'afficher la réponse brute JSON de la Livebox concernant la topologie de connexion des appareils connus. Utile pour avoir plus d'informations ou pour le débogage.
 - **`Niveau de log...`** : permet de changer le niveau de logs dans la console. Ce niveau est stocké dans la configuration du programme et sera donc conservé au prochain lancement du programme.
-- **`Générer documentation APIs...`** : permet de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Le programme génère un fichier par module connu, un fichier "_ALL_MODULES_" contenant l'ensemble des modules en un seul fichier, et un fichier "_PROCESSES_" qui permet d'avoir la liste des tâches tournant sur la Livebox. Certains fichiers ne contiennent qu'une erreur "Permission denied" : c'est normal, ces modules sont protégés et donc non accessibles (mais qui sait dans une prochaine version du firmeware ?). Les paramètres de fonction indiqués entre parenthèses sont optionnels. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration, cependant avoir la liste des instances reste crucial pour une documentation vraiment complète.  
+- **`Appel APIs...`** : permet d'appeler directement les APIs REST/JSON de la Livebox. Une sélection d'appels est disponible en raccourci mais n'importe quel appel est possible. Pour utilisateurs avertis uniquement.
+
+    ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_CallAPIs.png)
+ 
+- **`Générer documentation APIs...`** : permet de générer dans des fichiers texte l'ensemble de la documentation accessible sur les APIs de la Livebox, par module. Le programme génère un fichier par module connu, un fichier "_ALL_MODULES_" contenant l'ensemble des modules en un seul fichier, et un fichier "_PROCESSES_" qui permet d'avoir la liste des tâches tournant sur la Livebox. Certains fichiers ne contiennent qu'une erreur "Permission denied" : c'est normal, ces modules sont protégés et donc non accessibles (mais qui sait dans une prochaine version du firmeware ?). Les paramètres de fonction indiqués entre parenthèses sont optionnels. Par défaut le programme génère l'ensemble des instances trouvées par type de ressources (ou "object") ainsi que toutes les valeurs trouvées par paramètres, mais ces valeurs sont filtrées si on maintient la touche `Ctrl` en cliquant sur le bouton. Cela permet de partager librement ces fichiers sans divulguer d'informations spécifiques à sa configuration, cependant avoir la liste des instances reste crucial pour une documentation vraiment complète. Malheureusement Orange a décidé de bloquer cette possibilité sur les dernières Livebox W7 et S.  
 
 Autres actions :
 - **Quitter l'application** : pour quitter l'application. Strictement équivalent à fermer la fenêtre de l'application.
@@ -754,6 +768,7 @@ L'état global du Wifi peut être consulté via le bouton `État Global Wifi...`
 
 Les actions concernant les **Redémarrages** :
 - **`Redémarrer le Répéteur...`** : permet de forcer un redémarrage du répéteur.
+- **`Réinitialiser le Répéteur...`** : Ppermet de réinitialiser le répéteur aux paramètres d'usine.
 - **`Historique Redémarrages...`** : permet d'afficher l'historique des derniers redémarrages.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Repeater_RebootHistory.png)
@@ -766,6 +781,7 @@ Les actions concernant les **Redémarrages** :
     - **Raison Arrêt** : la raison de cette extinction. Typiquement vide pour une coupure de courant, "Upgrade" pour une mise à jour logiciel et "WebUI reboot" pour un redémarrage demandé depuis l'interface Web ou LiveboxMonitor.
 
 Les actions diverses :
+- **`Appel APIs...`** : permet d'appeler directement les APIs REST/JSON du répéteur. Une sélection d'appels est disponible en raccourci mais n'importe quel appel est possible. Pour utilisateurs avertis uniquement.
 - **Réauthentifier...** : pour forcer la création d'une nouvelle session avec le répéteur. Si vous laissez trop longtemps le programme tourner sans visualiser les statistiques du répéteur ni effectuer la moindre action, la session sera automatiquement libérée par le répéteur. Dans ce cas des erreurs vont se produire en effectuant des actions : ce bouton permettra de recréer la session, permettant de reprendre les actions sans erreur.
 
 ### Boutons
