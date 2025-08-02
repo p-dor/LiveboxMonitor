@@ -26,6 +26,7 @@ verbosity = 1
 # Regular expressions - https://ihateregex.io/
 MAC_RS = r"(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})"
 IPv4_RS = r"(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}"
+IPv4Pfix_RS = r"((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\/(3[0-2]|[12]?[0-9]))?"
 IPv6_RS = (r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|"
            r"([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|"
            r"([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|"
@@ -48,9 +49,10 @@ EMAIL_RS = r"[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
 
 # Useful objects
 MAC_RE = re.compile(MAC_RS)
-IPv4_RE = re.compile("^" + IPv4_RS + "$")
-IPv6_RE = re.compile("^" + IPv6_RS + "$")
-IPv6Pfix_RE = re.compile("^" + IPv6Pfix_RS + "$")
+IPv4_RE = re.compile(f"^{IPv4_RS}$")
+IPv4Pfix_RE = re.compile(f"^{IPv4Pfix_RS}$")
+IPv6_RE = re.compile(f"^{IPv6_RS}$")
+IPv6Pfix_RE = re.compile(f"^{IPv6Pfix_RS}$")
 PORTS_RE = re.compile(PORTS_RS)
 EMAIL_RE = re.compile(EMAIL_RS)
 BOLD_FONT = QtGui.QFont()
@@ -167,6 +169,11 @@ def is_mac_addr(string):
 ### Check if valid IPv4 address
 def is_ipv4(string):
     return re.fullmatch(IPv4_RE, string) is not None
+
+
+### Check if valid IPv4 address or IPv4 prefix
+def is_ipv4_pfix(string):
+    return re.fullmatch(IPv4Pfix_RE, string) is not None
 
 
 ### Check if valid IPv6 address
