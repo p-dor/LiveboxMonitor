@@ -2041,6 +2041,8 @@ MESSAGES = {
         "ruleDel": "",
         "patLoadErr": "",
         "ptfLoadErr": "",
+        "ipv6AddrPfixErr": "",
+        "ipv4AddrPfixErr": "",
         "ipv6AddrErr": "",
         "ipv4AddrErr": "",
         "emptyAddr": ""

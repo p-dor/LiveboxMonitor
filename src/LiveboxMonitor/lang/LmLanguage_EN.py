@@ -427,7 +427,7 @@ TOOLTIPS = {
         "icmpCheckbox": "Redirects ICMP traffic (v4 or v6 depending on the type) or not.",
         "deviceCombo": "Device to which the traffic should be redirected.",
         "ipEdit": "IP address (v4 or v6 depending on the type) to which the traffic\n"
-                  "should be redirected. In IPv6, it is also possible to specify a prefix.",
+                  "should be redirected. It is also possible to specify a prefix.",
         "extIPsEdit": "List of external IP addresses (v4 or v6 depending on the type) concerned by the rule.\n"
                       "Each address must be separated by a comma.\n"
                       "Leave empty if no external IP filtering is required."

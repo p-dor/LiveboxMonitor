@@ -1441,7 +1441,7 @@ TOOLTIPS = {
         "icmpCheckbox": "Redirige ou pas le trafic ICMP (v4 ou v6 en fonction du type).",
         "deviceCombo": "Appareil sur lequel le trafic doit être redirigé.",
         "ipEdit": "Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n"
-                  "être redirigé. En IPv6 il est aussi possible d'indiquer un préfix.",
+                  "être redirigé. Il est aussi possible d'indiquer un préfix.",
         "extIPsEdit": "Liste des adresses IPs (v4 ou v6 en fonction du type) externes concernées\n"
                       "par la règle. Chaque adresse doit être séparée par une virgule.\n"
                       "Laisser vide si aucun filtrage par IP externe n'est requis."
@@ -1944,7 +1944,9 @@ MESSAGES = {
         "ruleDel": "{} règles ont été supprimées.",
         "patLoadErr": "Impossible de charger les règles de redirection de port IPv4.",
         "ptfLoadErr": "Impossible de charger les règles de redirection de protocole IPv4.",
-        "ipv6AddrErr": "{} n'est pas une adresse ou préfix IPv6 valide.",
+        "ipv6AddrPfixErr": "{} n'est pas une adresse ou préfix IPv6 valide.",
+        "ipv4AddrPfixErr": "{} n'est pas une adresse ou préfix IPv4 valide.",
+        "ipv6AddrErr": "{} n'est pas une adresse IPv6 valide.",
         "ipv4AddrErr": "{} n'est pas une adresse IPv4 valide.",
         "emptyAddr": "Adresse IP vide"
     },

@@ -189,7 +189,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6Pfix_RS}$")
         else:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4Pfix_RS}$")
         self._ip_edit.setValidator(QtGui.QRegularExpressionValidator(ip_reg_exp))
 
 
@@ -211,7 +211,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
     def ip_typed(self, text):
         if not self._ignore_signal:
             self._ignore_signal = True
-            i = self._device_combo.findData(text)
+            i = self._device_combo.findData(text.split('/')[0])     # split() to convert potential CIDR notation into IP addr
             if i < 0:
                 i = 0
             self._device_combo.setCurrentIndex(i)
@@ -252,12 +252,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         ip = self.get_ip()
         if t == LmPatPtf.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6_pfix(ip):
-                self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrErr").format(ip))
+                self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
         else:
-            if not LmTools.is_ipv4(ip):
-                self.parent().display_error(mx("{} is not a valid IPv4 address.", "ipv4AddrErr").format(ip))
+            if not LmTools.is_ipv4_pfix(ip):
+                self.parent().display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
 
@@ -272,13 +272,13 @@ class PtfRuleDialog(QtWidgets.QDialog):
                     return
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmTools.is_ipv6(ip):
-                        self.parent().display_error(mx("{} is not a valid IPv6 address.", "ipv6AddrErr").format(ip))
+                    if not LmTools.is_ipv6_pfix(ip):
+                        self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
                 else:
-                    if not LmTools.is_ipv4(ip):
-                        self.parent().display_error(mx("{} is not a valid IPv4 address.", "ipv4AddrErr").format(ip))
+                    if not LmTools.is_ipv4_pfix(ip):
+                        self.parent().display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
 
