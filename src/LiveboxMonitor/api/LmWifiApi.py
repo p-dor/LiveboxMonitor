@@ -59,7 +59,12 @@ class WifiApi(LmApi):
 
     ### Get enable status
     def get_enable(self):
-        return self.get_status().get("Enable")
+        if self._api._is_repeater:
+            return self.get_status().get("Enable")
+        nmc_status = self.get_status().get("Enable")
+        d = self.get_power_management_profiles("WiFi").get("WiFi")
+        power_status = d.get("Enable") if d else nmc_status
+        return (nmc_status is True) and (power_status is True)
 
 
     ### Activate/Deactivate Wifi
@@ -67,6 +72,7 @@ class WifiApi(LmApi):
         if self._api._is_repeater:
             self.call_no_check("NMC.Wifi", "set", {"Enable": enable, "Status": enable}, err_str="Enable")
         else:
+            self.set_power_management_profiles({"profile": "WiFi", "enable": enable})
             self.call("NMC.Wifi", "set", {"Enable": enable, "Status": enable}, err_str="Enable")
 
 
@@ -131,7 +137,7 @@ class WifiApi(LmApi):
         if self._api._is_repeater:
             return self.get_scheduler_enable_legacy()
         try:
-            d = self.call("PowerManagement", "getProfiles")
+            d = self.get_power_management_profiles("WiFi")
         except Exception as e:
             LmTools.error(str(e))
             # If failed, try legacy method
@@ -141,7 +147,7 @@ class WifiApi(LmApi):
             if d is not None:
                 return d.get("Activate")
             else:
-                LmTools.error("PowerManagement:getProfiles - No WiFi field")
+                LmTools.error("PowerManagement:getProfiles - No WiFi profile")
                 return self.get_scheduler_enable_legacy()
 
 
@@ -301,6 +307,16 @@ class WifiApi(LmApi):
     def set_scheduler_enable_repeater(self, enable):
         # ID has to remain 'wl0' - it is NOT corresponding to an intf key
         self.call("Scheduler", "enableSchedule", {"type": "WLAN", "ID": "wl0", "enable": enable})
+
+
+    ### Get PowerManagement profiles, by default returns all
+    def get_power_management_profiles(self, profile=None):
+        return self.call("PowerManagement", "getProfiles", {"profiles": [profile]} if profile else None)
+
+
+    ### Set a PowerManagement profile, return the resulting new profile
+    def set_power_management_profiles(self, profile):
+        return self.call("PowerManagement", "setProfiles", {"profiles": [profile]})
 
 
     ### Determine if Livebox model supports MLO Wifi 7 technology - returns True if yes
