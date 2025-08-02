@@ -240,6 +240,7 @@ class CallApiDialog(QtWidgets.QDialog):
         # Call button
         call_button = QtWidgets.QPushButton(lx("Call"), objectName="call")
         call_button.clicked.connect(self.call)
+        call_button.setDefault(True)
 
         # Reply
         self._reply = QtWidgets.QTextEdit(objectName="replyEdit")
@@ -248,7 +249,6 @@ class CallApiDialog(QtWidgets.QDialog):
         hbox = QtWidgets.QHBoxLayout()
         ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         ok_button.clicked.connect(self.accept)
-        ok_button.setDefault(True)
         hbox.addWidget(ok_button, 1, QtCore.Qt.AlignmentFlag.AlignRight)
 
         vbox = QtWidgets.QVBoxLayout(self)
