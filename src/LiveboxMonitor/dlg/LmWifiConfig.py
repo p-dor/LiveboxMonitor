@@ -295,7 +295,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self.load_secu_combo()
 
         if not self._guest:
-            self._mac_filtering_entries_combo.setSelection(i["MACFilteringEntries"])
+            self._mac_filtering_entries_combo.setDataSelection(i["MACFilteringEntries"])
             self.load_chan_combo()
             self.load_mode_combo()
 
