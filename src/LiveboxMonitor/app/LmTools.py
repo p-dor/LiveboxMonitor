@@ -653,6 +653,10 @@ class CheckableComboBox(QtWidgets.QComboBox):
         self.model().appendRow(item)
 
 
+    def currentSelection(self):
+        return [self.model().item(i).text() for i in range(self.model().rowCount()) if self.model().item(i).checkState() == QtCore.Qt.CheckState.Checked]
+
+
     def currentData(self):
         return [self.model().item(i).data() for i in range(self.model().rowCount()) if self.model().item(i).checkState() == QtCore.Qt.CheckState.Checked]
 
@@ -675,7 +679,17 @@ class CheckableComboBox(QtWidgets.QComboBox):
         self.updateText()
 
 
-    def setSelection(self, data_list):
+    def setSelection(self, text_list):
+        if text_list is None:
+            text_list = []
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if item.flags() & QtCore.Qt.ItemFlag.ItemIsUserCheckable:
+                item.setCheckState(QtCore.Qt.CheckState.Checked if self.model().item(i).text() in text_list else QtCore.Qt.CheckState.Unchecked)
+        self.updateText()
+
+
+    def setDataSelection(self, data_list):
         if data_list is None:
             data_list = []
         for i in range(self.model().rowCount()):
