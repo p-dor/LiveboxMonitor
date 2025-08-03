@@ -13,13 +13,8 @@ RULE_PTF_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6]
 # Protocols - https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 # Numbers
 class Protocols(IntEnum):
-    ICMP = 1
     TCP = 6
     UDP = 17
-    GRE = 47
-    ESP = 50
-    AH = 51
-    ICMPv6 = 58
 
 # Names
 PROTOCOL_NAMES = {
@@ -39,10 +34,14 @@ PROTOCOL_NAMES = {
     "18":   "MUX",
     "20":   "HMP",
     "27":   "RDP",
+    "28":   "IRTP",
     "33":   "DCCP",
+    "36":   "XTP",
     "37":   "DDP",
     "40":   "IL",
     "41":   "IPv6",
+    "42":   "SDRP",
+    "45":   "IDRP",
     "46":   "RSVP",
     "47":   "GRE",
     "48":   "DSR",
@@ -56,5 +55,6 @@ PROTOCOL_NAMES = {
     "87":   "TCF",
     "88":   "EIGRP",
     "89":   "OSPF",
-    "92":   "MTP"
+    "92":   "MTP",
+    "132":  "SCTP"
 }
