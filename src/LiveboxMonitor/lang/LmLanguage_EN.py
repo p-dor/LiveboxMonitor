@@ -419,12 +419,7 @@ TOOLTIPS = {
         "nameEdit": "Unique name for the rule. If a rule with the same name already exists,\n"
                     "it will be overwritten.",
         "descEdit": "Description of the rule.",
-        "tcpCheckbox": "Redirects TCP traffic or not.",
-        "udpCheckbox": "Redirects UDP traffic or not.",
-        "ahCheckbox": "Redirects AH traffic or not.",
-        "greCheckbox": "Redirects GRE traffic or not.",
-        "espCheckbox": "Redirects ESP traffic or not.",
-        "icmpCheckbox": "Redirects ICMP traffic (v4 or v6 depending on the type) or not.",
+        "protocolsCombo": "Select the protocols to redirect.",
         "deviceCombo": "Device to which the traffic should be redirected.",
         "ipEdit": "IP address (v4 or v6 depending on the type) to which the traffic\n"
                   "should be redirected. It is also possible to specify a prefix.",

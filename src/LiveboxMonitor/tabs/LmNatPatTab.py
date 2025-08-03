@@ -253,8 +253,8 @@ class LmNatPat:
                 try:
                     new_rule = dialog.get_rule()
 
-                    # Delete old rule if ID changed
-                    if rule["Name"] != new_rule["Name"]:
+                    # Delete old rule if ID or type changed
+                    if (rule["Name"] != new_rule["Name"]) or (rule["Type"] != new_rule["Type"]):
                         self.del_pat_rule(rule)
 
                     # Then save new one
@@ -464,8 +464,8 @@ class LmNatPat:
                 try:
                     new_rule = dialog.get_rule()
 
-                    # Delete old rule if ID changed
-                    if rule["Name"] != new_rule["Name"]:
+                    # Delete old rule if ID or type changed
+                    if (rule["Name"] != new_rule["Name"]) or (rule["Type"] != new_rule["Type"]):
                         self.del_ptf_rule(rule)
 
                     # Then save new one
@@ -1111,21 +1111,7 @@ class LmNatPat:
             return False
 
         for p in protocols.split(","):
-            n = LmPatPtf.PROTOCOL_NAMES.get(p)
-            if n is None:
-                LmTools.error(f"Rule has wrong protocol {p} set.")
-                return False
-            n = int(p)
-            if t == LmPatPtf.RULE_TYPE_IPv6:
-                icmp = LmPatPtf.Protocols.ICMPv6
-            else:
-                icmp = LmPatPtf.Protocols.ICMP
-            if ((n != LmPatPtf.Protocols.TCP) and
-                (n != LmPatPtf.Protocols.UDP) and
-                (n != LmPatPtf.Protocols.AH) and
-                (n != LmPatPtf.Protocols.GRE) and
-                (n != LmPatPtf.Protocols.ESP) and
-                (n != icmp)):
+            if LmPatPtf.PROTOCOL_NAMES.get(p) is None:
                 LmTools.error(f"Rule has wrong protocol {p} set.")
                 return False
 

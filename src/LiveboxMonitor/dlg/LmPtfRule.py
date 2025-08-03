@@ -8,10 +8,11 @@ from LiveboxMonitor.lang.LmLanguages import get_ptf_rule_label as lx, get_nat_pa
 
 # ################################ PTF rule dialog ################################
 class PtfRuleDialog(QtWidgets.QDialog):
-    def __init__(self, rule=None, parent=None):
+    def __init__(self, rule, parent):
         super().__init__(parent)
         self.resize(390, 380)
 
+        self._app = parent
         self._ignore_signal = False
 
         self._enable_checkbox = QtWidgets.QCheckBox(lx("Enabled"), objectName="enableCheckbox")
@@ -31,26 +32,9 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self._desc_edit.setLineNumber(2)
 
         protocols_label = QtWidgets.QLabel(lx("Protocols"), objectName="protocolsLabel")
-        self._tcp_checkbox = QtWidgets.QCheckBox(lx("TCP"), objectName="tcpCheckbox")
-        self._tcp_checkbox.clicked.connect(self.protocol_click)
-        self._udp_checkbox = QtWidgets.QCheckBox(lx("UDP"), objectName="udpCheckbox")
-        self._udp_checkbox.clicked.connect(self.protocol_click)
-        self._ah_checkbox = QtWidgets.QCheckBox(lx("AH"), objectName="ahCheckbox")
-        self._ah_checkbox.clicked.connect(self.protocol_click)
-        self._gre_checkbox = QtWidgets.QCheckBox(lx("GRE"), objectName="greCheckbox")
-        self._gre_checkbox.clicked.connect(self.protocol_click)
-        self._esp_checkbox = QtWidgets.QCheckBox(lx("ESP"), objectName="espCheckbox")
-        self._esp_checkbox.clicked.connect(self.protocol_click)
-        self._icmp_checkbox = QtWidgets.QCheckBox(lx("ICMP"), objectName="icmpCheckbox")
-        self._icmp_checkbox.clicked.connect(self.protocol_click)
-        protocols_box = QtWidgets.QHBoxLayout()
-        protocols_box.setSpacing(10)
-        protocols_box.addWidget(self._tcp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        protocols_box.addWidget(self._udp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        protocols_box.addWidget(self._ah_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        protocols_box.addWidget(self._gre_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        protocols_box.addWidget(self._esp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        protocols_box.addWidget(self._icmp_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+        self._protocols_combo = LmTools.CheckableComboBox(objectName="protocolsCombo")
+        self._protocols_combo.setPlaceholderText(lx("Protocols"))
+        self._protocols_combo.currentTextChanged.connect(self.protocols_click)
 
         device_label = QtWidgets.QLabel(lx("Device"), objectName="deviceLabel")
         self._device_combo = QtWidgets.QComboBox(objectName="deviceCombo")
@@ -75,7 +59,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         grid.addWidget(desc_label, 3, 0)
         grid.addWidget(self._desc_edit, 3, 1)
         grid.addWidget(protocols_label, 4, 0)
-        grid.addLayout(protocols_box, 4, 1)
+        grid.addWidget(self._protocols_combo, 4, 1)
         grid.addWidget(device_label, 5, 0)
         grid.addWidget(self._device_combo, 5, 1)
         grid.addWidget(ip_label, 6, 0)
@@ -120,12 +104,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self.type_selected(i)
         self._name_edit.setText("")
         self._desc_edit.setPlainText("")
-        self._tcp_checkbox.setChecked(False)
-        self._udp_checkbox.setChecked(False)
-        self._ah_checkbox.setChecked(True)
-        self._gre_checkbox.setChecked(False)
-        self._esp_checkbox.setChecked(False)
-        self._icmp_checkbox.setChecked(False)
+        self.load_protocols_combo(self._app._protocol_numbers["AH"])
         self._device_combo.setCurrentIndex(0)
         self._ip_edit.setText("")
         self._ext_ips_edit.setPlainText("")
@@ -144,19 +123,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self._name_edit.setText(rule["Name"])
         self._desc_edit.setPlainText(rule["Desc"])
 
-        p = rule["ProtoNames"].split("/")
-
-        self._tcp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.TCP.value)] in p)
-        self._udp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.UDP.value)] in p)
-        self._ah_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.AH.value)] in p)
-        self._gre_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.GRE.value)] in p)
-        self._esp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.ESP.value)] in p)
-
-        if t == LmPatPtf.RULE_TYPE_IPv6:
-            icmp = LmPatPtf.Protocols.ICMPv6.value
-        else:
-            icmp = LmPatPtf.Protocols.ICMP.value
-        self._icmp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(icmp)] in p)
+        self.load_protocols_combo(rule["ProtoNames"])
 
         ip = rule["IP"]
         self._ip_edit.setText(ip)
@@ -167,6 +134,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self.set_ok_button_state()
 
 
+    def load_protocols_combo(self, protocols):
+        protocol_numbers, protocol_names = zip(*LmPatPtf.PROTOCOL_NAMES.items())
+        self._protocols_combo.addItems(protocol_names, protocol_numbers)
+        self._protocols_combo.setSelection(protocols.split("/"))
+
+
     def get_rule(self):
         p = self.get_protocols()
         return {
@@ -175,7 +148,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
             "Name": self.get_name(),
             "Desc": self.get_description(),
             "ProtoNames": p,
-            "ProtoNumbers": self.parent().translate_nat_pat_protocols(p),
+            "ProtoNumbers": self._app.translate_nat_pat_protocols(p),
             "IP": self.get_ip(),
             "ExtIPs": self.get_ext_ips()        
         }
@@ -197,7 +170,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self.set_ok_button_state()
 
 
-    def protocol_click(self):
+    def protocols_click(self, current_text):
         self.set_ok_button_state()
 
 
@@ -228,13 +201,13 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
     def load_device_list(self):
         t = self.get_type()
-        device_map = self.parent()._device_ip_name_map
+        device_map = self._app._device_ip_name_map
         self._device_combo.clear()
 
         # Load matching devices / IPs
         for i in device_map:
             if device_map[i]["IPVers"] == t:
-                self._device_combo.addItem(self.parent().get_device_name_from_ip(i), userData=i)
+                self._device_combo.addItem(self._app.get_device_name_from_ip(i), userData=i)
 
         # Sort by name
         self._device_combo.model().sort(0)
@@ -252,12 +225,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         ip = self.get_ip()
         if t == LmPatPtf.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6_pfix(ip):
-                self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
+                self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
         else:
             if not LmTools.is_ipv4_pfix(ip):
-                self.parent().display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
+                self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
 
@@ -267,18 +240,18 @@ class PtfRuleDialog(QtWidgets.QDialog):
             ext_ips = e.split(",")
             for ip in ext_ips:
                 if len(ip) == 0:
-                    self.parent().display_error(mx("Empty IP address.", "emptyAddr"))
+                    self._app.display_error(mx("Empty IP address.", "emptyAddr"))
                     self._ext_ips_edit.setFocus()
                     return
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
                     if not LmTools.is_ipv6_pfix(ip):
-                        self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
+                        self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
                 else:
                     if not LmTools.is_ipv4_pfix(ip):
-                        self.parent().display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
+                        self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
 
@@ -302,31 +275,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 
     def get_protocols(self):
-        protocols = []
-
-        if self._tcp_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.TCP.value)])
-
-        if self._udp_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.UDP.value)])
-
-        if self._ah_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.AH.value)])
-
-        if self._gre_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.GRE.value)])
-
-        if self._esp_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.ESP.value)])
-
-        if self._icmp_checkbox.isChecked():
-            if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
-                icmp = LmPatPtf.Protocols.ICMPv6.value
-            else:
-                icmp = LmPatPtf.Protocols.ICMP.value
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(icmp)])
-
-        return "/".join(protocols)
+        return "/".join(self._protocols_combo.currentSelection())
 
 
     def get_ip(self):

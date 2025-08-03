@@ -1433,12 +1433,7 @@ TOOLTIPS = {
         "nameEdit": "Nom unique de la règle. Si une règle du même nom existe déjà elle\n"
                     "sera écrasée.",
         "descEdit": "Description de la règle.",
-        "tcpCheckbox": "Redirige ou pas le trafic TCP.",
-        "udpCheckbox": "Redirige ou pas le trafic UDP.",
-        "ahCheckbox": "Redirige ou pas le trafic AH.",
-        "greCheckbox": "Redirige ou pas le trafic GRE.",
-        "espCheckbox": "Redirige ou pas le trafic ESP.",
-        "icmpCheckbox": "Redirige ou pas le trafic ICMP (v4 ou v6 en fonction du type).",
+        "protocolsCombo": "Sélectionnez les protocoles à rediriger.",
         "deviceCombo": "Appareil sur lequel le trafic doit être redirigé.",
         "ipEdit": "Addresse IP (v4 ou v6 en fonction du type) sur laquelle le trafic doit\n"
                   "être redirigé. Il est aussi possible d'indiquer un préfix.",
