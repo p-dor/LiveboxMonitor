@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "LiveboxMonitor"
-version = "1.5"
-description = "Advanced graphical user interface to control a Livebox 4, 5, 6 or 7"
+version = "1.6"
+description = "Advanced graphical user interface to control Livebox 4, 5, 6, 7, W7 & S"
 readme = "README.md"
 authors = [{ name = "Pierre Dor", email = "dorpierre@orange.fr" }]
 license = { file = "LICENSE" }
@@ -30,7 +30,7 @@ dependencies = [
     "pyqtgraph",
     "wakepy"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = []
@@ -41,6 +41,8 @@ documentation = "https://p-dor.github.io/LiveboxMonitor"
 source = "https://github.com/p-dor/LiveboxMonitor"
 issues = "https://github.com/p-dor/LiveboxMonitor/issues"
 changelog = "https://github.com/p-dor/LiveboxMonitor/releases"
+discussions = "https://github.com/p-dor/LiveboxMonitor/discussions"
+funding = "https://www.paypal.com/donate/?hosted_button_id=U7CLQM3WGTUEJ&locale.x=fr_FR"
 
 [project.scripts]
 LiveboxMonitor = "LiveboxMonitor.__main__:main"

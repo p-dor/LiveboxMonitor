@@ -1,6 +1,72 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
 
+## v1.6 - 05/08/2025
+
+- Prise en charge des nouvelles Livebox W7 & S.
+- Évolutions des règles de redirection de protocoles :
+  - Prise en charge des préfixes IPv4 & IPv6 dans les adresses IP des règles.
+  - Sélection du protocole via une liste déroulante à cases à cocher et prise en charge d’une grande liste de protocoles.
+- Gestion du spam des appels téléphoniques entrants :
+  - Nouveaux boutons pour déclarer/annuler la déclaration des appels indésirables.
+  - Nouveau fichier local SpamCalls.txt pour stocker les numéros indésirables.
+  - Nouveaux boutons pour vérifier un numéro sur des sites web reconnus.
+  - Nouveaux boutons pour vérifier automatiquement les numéros indésirables via l’API Call Filter (nécessite de demander/configurer l'API Key).
+- Identification de la Livebox Pro.
+- Logs au démarrage pour afficher le modèle de Livebox identifié, le type de liaison, la liaison fibre et l’abonnement pro.
+- Évolutions du bouton IPv6 :
+  - Affichage du statut CGNat, du mode de connexion IPv6 et de la passerelle distante IPv6.
+  - Affichage de la liste des délégations de préfixes IPv6 par appareil.
+  - Nouveau bouton pour gérer le paramétrage CGNat.
+- Évolutions de la génération de documentation API :
+  - Ajout de nouveaux services :
+      Dms.Configuration
+      Dms.Database
+      Dms.Partition
+      Dms.Streaming
+      Domino.Cellular
+      Domino.Airbox
+      Domino.Intf
+      LEDs.LED
+  - Bouton de génération désactivé pour les LB W7 & S, car désormais bloqué par le firmware Orange :-(
+- Prise en charge complète de la configuration Wifi et Wifi Invités :
+  - Changement SSID, mot de passe + gestion des paramètres avancés.
+  - Filtrage MAC en deux modes (WhiteList et BlackList) et gestion de la liste des appareils concernés.
+  - Prise en charge de la configuration MLO pour LB W7 + affichage du paramétrage MLO dans les infos Wifi de la Livebox.
+- Nouveau bouton "LEDs & Écran" pour LB6 ou modèles plus récents pour gérer la luminosité des LEDs et afficher/masquer le mot de passe Wifi à l’écran (merci à @acut3 pour l’aide et le support).
+- Le code a été entièrement et profondément refactorisé :
+  - Toutes les fonctionnalités reposent sur une nouvelle couche API, unifiant la gestion des appels et des erreurs.
+  - La couche API peut être appelée indépendamment par d’autres logiciels. Voir le guide associé : https://github.com/p-dor/LiveboxMonitor/blob/main/docs/APICodingGuide.md
+  - Prise en charge du mockup des appels API pour simuler facilement n’importe quel modèle de Livebox.
+  - Tous les dialogues ont été découplés.
+  - Tous les fichiers sources sont désormais conformes aux normes de codage Python.
+- Suppression de la prise en charge de l’interface 6 GHz pour les répéteurs Wifi 6 (car elle n’existe pas).
+- Sauvegarde et restauration : correction de l’affichage du dernier backup en GMT au lieu de UTC.
+- Évolutions de l’envoi de notifications mail :
+  - Gestion améliorée des exceptions SSL lors de l’envoi des mails.
+  - Correction du nommage des options de sécurité (STARTTLS & TLS au lieu de TLS & SSL). Merci à @acut3 pour l'aide.
+  - La date et l’heure sont maintenant correctement définies dans les mails envoyés.
+- Les informations ONT peuvent maintenant être exportées pour les LB4 avec liaison fibre.
+- Toutes les listes du programme, y compris dans les dialogues, disposent d’un menu contextuel (clic droit) permettant d’exporter le contenu dans un fichier CSV.
+- Évolutions de la gestion de la clé de chiffrement :
+  - Le fichier Key.txt est maintenant recréé automatiquement lorsqu’il devient invalide.
+  - Amélioration de la gestion de la clé afin d’éviter les blocages.
+- Toutes les info-bulles sont désormais disponibles en anglais.
+- Évolutions de l’affichage des infos appareils :
+  - Ajout des champs Mode de chiffrement, Mode de sécurité, Bande passante de liaison, Standard opérationnel, Bande opérationnelle.
+  - Prise en charge des changements de nom et des événements de mise à jour pour rafraîchir dynamiquement les infos.
+  - Correction de l'affichage vide du niveau de signal Wifi pour les appareils Ethernet.
+- Évolutions de la liste des appareils :
+  - Amélioration de la correspondance des noms d’interfaces, y compris pour les répéteurs.
+  - Réinitialisation de l’icône de puissance Wifi dès qu’un appareil devient inactif.
+- Découverte dynamique de la liste des interfaces : offre une adaptation automatique relative à n’importe quel modèle de Livebox.
+- Nouveaux boutonx “Réinitialisation aux réglages d'usine” dans les onglets Actions et Répéteurs. Merci à @acut3 pour l'aide.
+- Nouveau bouton “Appel APIs...” dans les onglets Actions et Répéteur : permet d’appeler manuellement toute API REST/JSON de la Livebox ou du Répéteur. Quelques appels prédéfinis sont accessibles via une liste déroulante.
+- Nouveau bouton dans l’onglet Actions pour configurer la table de routage de la Livebox Pro (merci à @jfgiorgi pour l’aide).
+- Les fenêtres de confirmation AskQuestion() proposent maintenant Oui/Non au lieu de OK/Annuler.
+- Activation/désactivation Wifi plus robuste. Le Wifi peut maintenant être réactivé depuis l’application s’il a été désactivé via le bouton de la Livebox (merci à @Matrixbx pour l’info).
+
+
 ## v1.5 - 26/01/2025
 
 - Ajustement des niveaux de logs pour faciliter la lecture. Toutes les logs de l'application sont au niveau 1 et les logs de trafic au niveau 2.
