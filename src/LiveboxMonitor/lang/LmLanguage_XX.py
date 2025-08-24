@@ -1053,6 +1053,11 @@ LABELS = {
         "Signing in to repeater...": ""
     },
 
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
+    },
+
     # Config - Preferences
     "prefs": {
         "Main": "",
@@ -1830,6 +1835,11 @@ TOOLTIPS = {
         "exportInfo": ""
     },
 
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
+    },
+
     # Config - Preferences
     "prefs": {
         "profileList": "",
@@ -2102,6 +2112,11 @@ MESSAGES = {
         "reseting": "",
         "resign": "",
         "forceResign": ""
+    },
+
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
     },
 
     # Config

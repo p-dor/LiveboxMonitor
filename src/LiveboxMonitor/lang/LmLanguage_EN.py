@@ -713,6 +713,11 @@ TOOLTIPS = {
                       "Useful for sharing this information or for tracking changes."
     },
 
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
+    },
+
     # Config - Preferences
     "prefs": {
         "profileList": "The program supports managing multiple Liveboxes using different profiles.\n"

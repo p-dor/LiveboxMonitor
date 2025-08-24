@@ -913,6 +913,11 @@ LABELS = {
         "Signing in to repeater...": "Authentification au répéteur..."
     },
 
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
+    },
+
     # Config - Preferences
     "prefs": {
         "Main": "Principal",
@@ -1728,6 +1733,11 @@ TOOLTIPS = {
                       "Utile pour communiquer ces informations ou faire un suivi pour détecter les changements."
     },
 
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
+    },
+
     # Config - Preferences
     "prefs": {
         "profileList": "Le programme supporte de pouvoir gérer plusieurs Livebox à l'aide de profils différents.\n"
@@ -2012,6 +2022,11 @@ MESSAGES = {
         "reseting": "Le répéteur est en cours de réinitialisation.",
         "resign": "Êtes-vous sûr de vouloir vous reconnecter au répéteur ?",
         "forceResign": "Le répéteur est inactif. Voulez-vous forcer la connexion ?"
+    },
+
+    # TV Decoder
+    "tvdecoder": {
+        ###TODO###
     },
 
     # Config

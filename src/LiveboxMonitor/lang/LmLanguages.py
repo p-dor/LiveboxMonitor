@@ -156,6 +156,10 @@ def call_api_label(string): return get_label("callapi", string)
 def get_repeater_label(string): return get_label("repeater", string)
 def get_repeater_message(string, key): return get_message("repeater", string, key)
 
+# TV Decoder
+def get_tvdecoder_label(string): return get_label("tvdecoder", string)
+def get_tvdecoder_message(string, key): return get_message("tvdecoder", string, key)
+
 # Config
 def get_config_prefs_label(string): return get_label("prefs", string)
 def get_config_message(string, key): return get_message("prefs", string, key)
