@@ -98,6 +98,9 @@ INTF_NAME_MAP_LB6 = {"Eth0": "Eth 2.5G"}
 # With name: Eth0 -> 'Eth 10G', all others is name capitalized
 INTF_NAME_MAP_LB7 = {"Eth0": "Eth 10G"}
 
+# LBS Interface name mapping
+INTF_NAME_MAP_LBS = {"Eth0": "Eth1", "Eth1": "Eth2", "Eth2": "Eth3", "Eth3": "Eth4"}
+
 # Device types & icons
 DEVICE_TYPES = [
     {"Key": "Unknown",                     "Name": "Unknown",                    "Icon": "e_default_device.png"},
@@ -342,8 +345,10 @@ def set_livebox_model(model):
             INTF_NAME_MAP = INTF_NAME_MAP_LB5
         case 6:
             INTF_NAME_MAP = INTF_NAME_MAP_LB6
-        case 7 | 7.1 | 7.2:
+        case 7 | 7.1:
             INTF_NAME_MAP = INTF_NAME_MAP_LB7
+        case 7.2:
+            INTF_NAME_MAP = INTF_NAME_MAP_LBS
         case _:
             INTF_NAME_MAP = INTF_NAME_MAP_LB7
 
