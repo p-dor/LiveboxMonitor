@@ -296,12 +296,13 @@ class LmDeviceList:
             else:
                 self.build_link_maps(topology)
 
-            # Load devices in list, trying to identify Wifi repeaters on the fly
+            # Load devices in list, trying to identify Wifi repeaters & TV Decoders on the fly
             i = 0
             if self._livebox_devices is not None:
                 for d in self._livebox_devices:
                     if self.displayable_device(d):
                         self.identify_repeater(d)
+                        self.identify_tvdecoder(d)
                         self.add_device_line(i, d)
                         self.update_device_line(i, d, False)
                         i += 1
@@ -446,6 +447,7 @@ class LmDeviceList:
 
         self.graph_update_device_name(device_key)
         self.repeater_update_device_name(device_key)
+        self.tvdecoder_update_device_name(device_key)
 
 
     ### Format device type cell
@@ -868,6 +870,7 @@ class LmDeviceList:
                 active_icon = self.format_active_table_widget(is_active)
                 self._device_list.setItem(list_line, DevCol.Active, active_icon)
                 self.repeater_active_event(device_key, is_active)
+                self.tvdecoder_active_event(device_key, is_active)
 
             # Check if IP reachable status changed
             ipv4_reacheable = event.get("Status")
@@ -885,6 +888,7 @@ class LmDeviceList:
                 ip.setText(ipv4)
                 ip.setData(QtCore.Qt.ItemDataRole.UserRole, int(IPv4Address(ipv4)))
                 self.repeater_ip_address_event(device_key, ipv4)
+                self.tvdecoder_ip_address_event(device_key, ipv4)
 
             # Check if name changed
             name = event.get("Name")
@@ -952,6 +956,9 @@ class LmDeviceList:
             # Update potential repeater infos
             self.repeater_device_updated_event(device_key, event)
 
+            # Update potential TV Decoder infos
+            self.tvdecoder_device_updated_event(device_key, event)
+
             # Restore sorting
             self._device_list.setSortingEnabled(True)
 
@@ -988,6 +995,7 @@ class LmDeviceList:
                         ip = self.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
                         self._device_list.setItem(list_line, DevCol.IP, ip)
                         self.repeater_ip_address_event(device_key, ipv4)
+                        self.tvdecoder_ip_address_event(device_key, ipv4)
 
 
     ### Process a new device_added, eth_device_added or wifi_device_added event
@@ -1022,6 +1030,9 @@ class LmDeviceList:
             # Add as repeater if it is one
             self.add_potential_repeater(event)
 
+            # Add as TV Decoder if it is one
+            self.add_potential_tvdecoder(event)
+
             # Restore sorting
             self._device_list.setSortingEnabled(True)
             self._info_dlist.setSortingEnabled(True)
@@ -1048,6 +1059,9 @@ class LmDeviceList:
 
         # Remove repeater if it is one
         self.remove_potential_repeater(device_key)
+
+        # Remove TV Decoder if it is one
+        self.remove_potential_tvdecoder(device_key)
 
         # Cleanup device map
         for d in self._device_map:
