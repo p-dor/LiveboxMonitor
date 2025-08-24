@@ -1043,9 +1043,9 @@ class LmInfo:
             v = d.get("Voltage")
             if v is not None:
                 v /= 10000
-                if (v < 3.2) or (v > 3.4):
+                if (v < 3.0) or (v > 3.5):
                     aQual = LmTools.ValQual.Error
-                elif (v < 3.25) or (v > 3.35):
+                elif (v < 3.1) or (v > 3.4):
                     aQual = LmTools.ValQual.Warn
                 else:
                     aQual = LmTools.ValQual.Good
