@@ -18,7 +18,7 @@ from LiveboxMonitor.app.LmConfig import LmConf, set_application_style, set_liveb
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
-                                 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab)
+                                 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab, LmTvDecoderTab)
 from LiveboxMonitor.dlg.LmLiveboxCnx import LiveboxCnxDialog
 from LiveboxMonitor.dlg.LmLiveboxSignin import LiveboxSigninDialog
 from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, get_main_label as lx, get_main_message as mx
@@ -55,7 +55,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                                               LmNatPatTab.LmNatPat,
                                               LmPhoneTab.LmPhone,
                                               LmActionsTab.LmActions,
-                                              LmRepeaterTab.LmRepeater):
+                                              LmRepeaterTab.LmRepeater,
+                                              LmTvDecoderTab.LmTvDecoder):
 
     ### Initialize the application
     def __init__(self):
@@ -65,11 +66,13 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self._app_ready = False
         self._status_bar = None
         self._repeaters = []
+        self._tvdecoders = []
         if not NO_THREAD:
             self.init_event_loop()
             self.init_wifi_stats_loop()
             self.init_stats_loop()
             self.init_repeater_stats_loop()
+            self.init_tvdecoder_status_loop()
         self._application_name = f"Livebox Monitor v{__version__}"
         self.setWindowIcon(QtGui.QIcon(LmIcon.AppIconPixmap))
         self.setGeometry(100, 100, 1300, 102 + LmConfig.window_height(21))
@@ -86,6 +89,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             QtCore.QCoreApplication.processEvents()
             self.load_device_list()
             self.init_repeaters()
+            self.init_tvdecoders()
             LmConfig.set_tooltips(self, "main")
             self._app_ready = True
             if not NO_THREAD:
@@ -161,55 +165,71 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.resume_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                 case LmInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.resume_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                 case LmGraphTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                     self.graph_tab_click()
                 case LmDeviceInfoTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                 case LmEventsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                 case LmDhcpTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                     self.dhcp_tab_click()
                 case LmNatPatTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                     self.nat_pat_tab_click()
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                     self.phone_tab_click()
                 case LmActionsTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
                 case LmRepeaterTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
                         self.suspend_stats_loop()
                         self.resume_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
+                case LmTvDecoderTab.TAB_NAME:
+                    if not NO_THREAD:
+                        self.suspend_wifi_stats_loop()
+                        self.suspend_stats_loop()
+                        self.suspend_repeater_stats_loop()
+                        self.resume_tvdecoder_status_loop()
 
 
     ### Handle move of tab event
@@ -261,6 +281,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 self.stop_stats_loop()
                 self.stop_wifi_stats_loop()
                 self.stop_repeater_stats_loop()
+                self.stop_tvdecoder_status_loop()
             finally:
                 self._task.end()
         event.accept()
