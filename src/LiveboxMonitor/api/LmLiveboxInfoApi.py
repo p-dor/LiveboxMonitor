@@ -10,17 +10,29 @@ from LiveboxMonitor.app import LmTools
 # ################################ VARS & DEFS ################################
 LIVEBOX_SCAN_TIMEOUT = 0.6
 
-# Livebox versions map
+# Livebox versions name map (raw to commercial)
+LIVEBOX_MODEL_NAME_MAP = {
+    "Livebox 3": "Livebox 3",
+    "Livebox 4": "Livebox 4",
+    "Livebox Fibre": "Livebox 5",
+    "Livebox 6": "Livebox 6",
+    "Livebox 7": "Livebox 7",
+    "Livebox W7": "Livebox W7",
+    "Livebox Nautilus": "Livebox S",
+    "Livebox S": "Livebox S"
+    }
+
+# Livebox versions map (commercial to version number)
 LIVEBOX_MODEL_MAP = {
     "Livebox 3": 3,
     "Livebox 4": 4,
-    "Livebox Fibre": 5,
+    "Livebox 5": 5,
     "Livebox 6": 6,
     "Livebox 7": 7,
     "Livebox W7": 7.1,
     "Livebox S": 7.2
     }
-DEFAULT_MODEL = "Livebox 7"
+DEFAULT_RAW_MODEL = "Livebox 7"
 
 
 # ################################ Livebox Info APIs ################################
@@ -28,8 +40,9 @@ class LiveboxInfoApi(LmApi):
     def __init__(self, api_registry):
         super().__init__(api_registry)
         self._mac_addr = None
-        self._model = None
-        self._model_name = None
+        self._model = None              # Model version number
+        self._raw_model_name = None     # Raw model name as returned by Livebox
+        self._model_name = None         # Commercial model name
         self._software_version = None
 
 
@@ -55,17 +68,22 @@ class LiveboxInfoApi(LmApi):
             LmTools.error("Cannot determine Livebox model.")
             self._mac_addr = ""
             self._model = 0
+            self._raw_model_name = ""
             self._model_name = ""
             self._software_version = ""
         else:
             self._mac_addr = d.get("BaseMAC", "").upper()
             model = d.get("ProductClass", "")
             if model:
-                self._model = LIVEBOX_MODEL_MAP.get(model)
-                self._model_name = model
+                self._model_name = LIVEBOX_MODEL_NAME_MAP.get(model)
+                self._raw_model_name = model
+            if self._model_name is None:
+                LmTools.error(f"Unknown Livebox model: {model}, defaulting to {DEFAULT_RAW_MODEL}.")
+                self._model_name = LIVEBOX_MODEL_NAME_MAP.get(DEFAULT_RAW_MODEL)
+            self._model = LIVEBOX_MODEL_MAP.get(self._model_name)
             if self._model is None:
-                LmTools.error(f"Unknown Livebox model: {model}, defaulting to {DEFAULT_MODEL}.")
-                self._model = LIVEBOX_MODEL_MAP.get(DEFAULT_MODEL)
+                LmTools.error(f"Incorrect internal Livebox model setup: {self._model_name} is unknown.")
+
             self._software_version = d.get("SoftwareVersion", "")
 
 
@@ -91,6 +109,13 @@ class LiveboxInfoApi(LmApi):
     ### Set Livebox / Repeater model
     def set_model(self, model):
         self._model = model
+
+
+    ### Get Livebox raw model name
+    def get_raw_model_name(self):
+        if not self._raw_model_name:
+            self.set_livebox_info_cache()
+        return self._raw_model_name
 
 
     ### Get Livebox / Repeater model name
