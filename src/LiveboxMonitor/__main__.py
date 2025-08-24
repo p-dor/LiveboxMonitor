@@ -354,7 +354,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def adjust_to_livebox_model(self):
         LmConf.set_livebox_mac(self._api._info.get_mac())
 
-        LmTools.log_debug(1, f"Identified Livebox model: {self._api._info.get_model()} ({self._api._info.get_model_name()})")
+        LmTools.log_debug(1, f"Identified Livebox model: {self._api._info.get_model_name()} ([{self._api._info.get_model()}] {self._api._info.get_raw_model_name()})")
 
         self.determine_fiber_link()
         self.determine_livebox_pro()
