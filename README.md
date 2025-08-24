@@ -121,9 +121,9 @@ Lancement :
 
 ## Configuration minimale <a id="minimalconfig"></a>
 
-Étant donné les dépendances documentées de [Python 3.9](https://www.python.org/downloads/release/python-390/), [PyInstaller](https://pyinstaller.org/en/stable/requirements.html) et de [PyQt6](https://www.qt.io/product/qt6/technical-specifications) la configuration minimale requise pour faire tourner cette application est :
+Étant donné les dépendances documentées de [Python 3.11](https://www.python.org/downloads/release/python-3110/), [PyInstaller](https://pyinstaller.org/en/stable/requirements.html) et de [PyQt6](https://www.qt.io/product/qt6/technical-specifications) la configuration minimale requise pour faire tourner cette application est :
 - Windows : **Windows 10** ou plus récent.
-- MacOS : **10.15 (Catalina)** ou plus récent.
+- MacOS : **MacOS 13 (Ventura)** ou plus récent.
 
 
 ## À propos de l'auteur <a id="author"></a>
