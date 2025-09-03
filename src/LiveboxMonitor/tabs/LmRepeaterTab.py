@@ -843,8 +843,11 @@ class LmRepHandler:
 
     ### Click on call APIs button
     def call_api_button_click(self):
-        dialog = CallApiDialog(self._api, self._app)
-        dialog.exec()
+        if self.is_signed():
+            dialog = CallApiDialog(self._api, self._app)
+            dialog.exec()
+        else:
+            self._app.display_error(mx("Not signed to repeater.", "noSign"))
 
 
     ### Click on Resign button
