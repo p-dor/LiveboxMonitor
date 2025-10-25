@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: SSW.FeatureConfig - Name: SSW.FeatureConfig
@@ -131,4 +131,16 @@ OBJECT: SSW.FeatureConfig.LongStats - Name: SSW.FeatureConfig.LongStats
       Attributes: persistent
  == FUNCTIONS:
   - void getLongHistoryStats()
+
+=======================================================================
+OBJECT: SSW.FeatureConfig.AssocMonitor - Name: SSW.FeatureConfig.AssocMonitor
+ == PARAMETERS:
+  - Enable (type: bool)
+      Attributes: persistent
+  - Interval (type: uint32)
+      Attributes: persistent
+  - MaxNbFailuresToSend (type: uint32)
+      Attributes: persistent
+ == FUNCTIONS:
+  - void getRecentAssocFailures()
 

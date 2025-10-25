@@ -1,18 +1,8 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: .OrangeRemoteAccess - Name: .OrangeRemoteAccess
- == PARAMETERS:
-  - Enable (type: bool)
-      Attributes: persistent
-  - Activate (type: bool)
-      Attributes: persistent
-  - Status (type: bool)
-      Attributes: read_only
  == FUNCTIONS:
-  - void addUser(string username, string cookie)
-  - void removeUser(string username)
-  - void listUsers((list listOfUsers))
   - variant get()
   - bool set((variant parameters))
 

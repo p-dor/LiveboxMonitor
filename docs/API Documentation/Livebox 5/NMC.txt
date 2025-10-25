@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: .NMC - Name: .NMC
@@ -13,6 +13,8 @@ OBJECT: .NMC - Name: .NMC
       Attributes: read_only
   - ConnectionError (type: bool)
   - DefaultsLoaded (type: bool)
+  - FlushCacheEnable (type: bool)
+      Attributes: persistent
   - ProvisioningState (type: string)
       Attributes: persistent
       Validator: ['reset', 'upgrade', 'restore', 'done']
@@ -288,6 +290,10 @@ OBJECT: NMC.Reboot - Name: NMC.Reboot
       Attributes: read_only, persistent
   - WatchdogRebootCounter (type: uint32)
       Attributes: read_only, persistent
+  - RebootSinceLastUpgrade (type: uint32)
+      Attributes: read_only, persistent
+  - RebootMaxDuration (type: uint32)
+      Attributes: persistent
   - ForceRebootDuration (type: uint16)
       Attributes: persistent
  == FUNCTIONS:
@@ -300,11 +306,12 @@ OBJECT: NMC.Reboot.Reboot - Name: NMC.Reboot.Reboot
       Attributes: read_only, persistent
   - BootReason (type: string)
       Attributes: read_only, persistent
-      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported chipset', 'Oops']
+      Validator: ['POR', 'Ext.HW', 'Watchdog', 'NMC', 'WakeUp', 'PCIE', 'ERROR', 'TimedReboot', 'Unsupported', 'Oops']
   - ShutdownDate (type: date_time)
       Attributes: read_only, persistent
   - ShutdownReason (type: string)
       Attributes: read_only, persistent
+      Validator: {'max': '19'}
 
 =======================================================================
 OBJECT: NMC.Autodetect - Name: NMC.Autodetect

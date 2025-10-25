@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: NeMo.Intf.wifi0_quan - Name: NeMo.Intf.40
@@ -1210,4 +1210,7 @@ OBJECT: NeMo.Intf.wifi0_quan.ScanStats.ScanReason - Name: NeMo.Intf.40.ScanStats
 
 =======================================================================
 OBJECT: NeMo.Intf.wifi0_quan.Vendor - Name: NeMo.Intf.40.Vendor
+ == PARAMETERS:
+  - DFS_S_ReentryEnabled (type: bool)
+      Attributes: persistent
 

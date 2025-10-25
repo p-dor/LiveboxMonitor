@@ -1,4 +1,4 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: .NetMaster - Name: .NetMaster
@@ -18,8 +18,6 @@ OBJECT: .NetMaster - Name: .NetMaster
   - void addWANMode(string wanmode)
   - void delWANMode(string wanmode)
   - void renameWANMode(string wanmode, (string new_wanmode))
-  - void export((string filename))
-  - void import()
 
 =======================================================================
 OBJECT: NetMaster.LANConfig - Name: NetMaster.LANConfig

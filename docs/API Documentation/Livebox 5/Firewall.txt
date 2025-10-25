@@ -1,10 +1,16 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 =======================================================================
 OBJECT: .Firewall - Name: .Firewall
  == PARAMETERS:
   - Status (type: string)
       Attributes: read_only
+  - Config (type: string)
+      Attributes: persistent
+  - AdvancedLevel (type: string)
+      Attributes: persistent
+  - AdvancedIPv6Level (type: string)
+      Attributes: persistent
   - ExcludedOriginsPCP (type: string)
       Attributes: persistent
   - UpnpPortForwardingStatus (type: bool)
@@ -307,7 +313,6 @@ OBJECT: Firewall.PCP - Name: Firewall.PCP
       Attributes: persistent
   - Enable (type: bool)
   - WANIPAddress (type: string)
-      Attributes: persistent
   - Status (type: string)
       Attributes: read_only
       Validator: ['PCP_DISABLED', 'PCP_INIT', 'PCP_SUCCESS', 'PCP_TIMEOUT', 'PCP_ERROR']
@@ -318,6 +323,14 @@ OBJECT: Firewall.PCP - Name: Firewall.PCP
   - MAPNumberOfEntries (type: uint32)
       Attributes: read_only
   - PeerNumberOfEntries (type: uint32)
+      Attributes: read_only
+
+=======================================================================
+OBJECT: Firewall.PCP.Stats - Name: Firewall.PCP.Stats
+ == PARAMETERS:
+  - SuccessPCPMAPCount (type: uint32)
+      Attributes: read_only
+  - FailurePCPMAPCount (type: uint32)
       Attributes: read_only
 
 =======================================================================

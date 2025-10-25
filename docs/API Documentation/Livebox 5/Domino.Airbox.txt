@@ -1,11 +1,11 @@
-=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R03.C09_16
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
 
 {
     "errors": [
         {
             "error": 13,
             "description": "Permission denied",
-            "info": "IEEE1905"
+            "info": "Domino/Airbox"
         }
     ]
 }

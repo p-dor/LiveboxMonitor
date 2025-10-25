@@ -1,0 +1,26 @@
+=== LIVEBOX SOFTWARE VERSION: SGFI-fr-G06.R05.C05_16
+
+=======================================================================
+OBJECT: Domino.Intf - Name: Domino.Intf
+ == PARAMETERS:
+  - Status (type: int32)
+      Attributes: read_only
+  - StateMachine (type: string)
+      Attributes: read_only
+ == FUNCTIONS:
+  - bool activateConnection((bool activate))
+  - bool setWifiParams((string ssid), (string password), (string enc_mode))
+  - bool enableWifi((bool enable))
+
+=======================================================================
+OBJECT: Domino.Intf.ConnectionContext - Name: Domino.Intf.ConnectionContext
+ == FUNCTIONS:
+  - bool setAdminPassword((string password))
+  - bool resetAdminPassword((string currpwd), (string newpwd))
+
+=======================================================================
+OBJECT: Domino.Intf.SIM - Name: Domino.Intf.SIM
+ == FUNCTIONS:
+  - void setPin((string pin))
+  - void resetPin((string puk), (string newpin))
+
