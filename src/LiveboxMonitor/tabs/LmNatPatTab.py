@@ -6,7 +6,7 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmConfig, LmPatPtf
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
@@ -14,6 +14,7 @@ from LiveboxMonitor.dlg.LmPatRule import PatRuleDialog
 from LiveboxMonitor.dlg.LmPtfRule import PtfRuleDialog
 from LiveboxMonitor.dlg.LmNatPatRuleType import NatPatRuleTypeDialog
 from LiveboxMonitor.lang.LmLanguages import get_nat_pat_label as lx, get_nat_pat_message as mx
+from LiveboxMonitor.util import LmUtils
 
 from LiveboxMonitor.__init__ import __build__
 
@@ -323,7 +324,7 @@ class LmNatPat:
             try:
                 export_file = open(file_name, "w")
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
 
@@ -347,7 +348,7 @@ class LmNatPat:
             try:
                 export_file.close()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
             self.display_status(mx("{} rule(s) exported.", "ruleExport").format(c))
@@ -362,7 +363,7 @@ class LmNatPat:
         try:
             import_file = open(file_name, "r")
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot open the file.", "openFileErr"))
             return
 
@@ -370,7 +371,7 @@ class LmNatPat:
         try:
             file = json.load(import_file)
         except Exception as e:
-            LmTools.error(f"Error loading file: {e}")
+            LmUtils.error(f"Error loading file: {e}")
             self.display_error(mx("Wrong file format.", "fileFormatErr"))
             error = True
 
@@ -394,7 +395,7 @@ class LmNatPat:
         try:
             import_file.close()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot close the file.", "closeFileErr"))
 
         if not error:
@@ -523,7 +524,7 @@ class LmNatPat:
             try:
                 export_file = open(file_name, "w")
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
 
@@ -547,7 +548,7 @@ class LmNatPat:
             try:
                 export_file.close()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
             self.display_status(mx("{} rule(s) exported.", "ruleExport").format(c))
@@ -562,7 +563,7 @@ class LmNatPat:
         try:
             import_file = open(file_name, "r")
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot open the file.", "openFileErr"))
             return
 
@@ -570,7 +571,7 @@ class LmNatPat:
         try:
             file = json.load(import_file)
         except Exception as e:
-            LmTools.error(f"Error loading file: {e}")
+            LmUtils.error(f"Error loading file: {e}")
             self.display_error(mx("Wrong file format.", "fileFormatErr"))
             error = True
 
@@ -594,7 +595,7 @@ class LmNatPat:
         try:
             import_file.close()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot close the file.", "closeFileErr"))
 
         if not error:
@@ -644,7 +645,7 @@ class LmNatPat:
         try:
             d = self._api._firewall.get_ipv4_port_forwarding()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot load IPv4 port forwarding rules.", "patLoadErr"))
             return
 
@@ -691,8 +692,8 @@ class LmNatPat:
         try:
             d = self._api._firewall.get_ipv6_pinhole()
         except Exception as e:
-            LmTools.error(str(e))
-            LmTools.error("Cannot load IPv6 port forwarding rules.")    # Do not display a dialog as not all LB models have this API
+            LmUtils.error(str(e))
+            LmUtils.error("Cannot load IPv6 port forwarding rules.")    # Do not display a dialog as not all LB models have this API
             return
 
         i = self._pat_list.rowCount()
@@ -769,55 +770,55 @@ class LmNatPat:
     ### Check a PAT rule object consistency
     def check_pat_rule(self, rule):
         if rule.get("Enable") is None:
-            LmTools.error("Rule as no Enable tag.")
+            LmUtils.error("Rule as no Enable tag.")
             return False
 
         t = rule.get("Type", "UNK")
         if t not in LmPatPtf.RULE_PAT_TYPES:
-            LmTools.error(f"Rule has unknown {t} type.")
+            LmUtils.error(f"Rule has unknown {t} type.")
             return False
 
         if len(rule.get("Name", "")) == 0:
-            LmTools.error("Rule has no Name.")
+            LmUtils.error("Rule has no Name.")
             return False
 
         protocols = rule.get("ProtoNumbers", "")
         if len(protocols) == 0:
-            LmTools.error("Rule has no protocol.")
+            LmUtils.error("Rule has no protocol.")
             return False
 
         for p in protocols.split(","):
             n = LmPatPtf.PROTOCOL_NAMES.get(p)
             if n is None:
-                LmTools.error(f"Rule has wrong protocol {p} set.")
+                LmUtils.error(f"Rule has wrong protocol {p} set.")
                 return False
             n = int(p)
             if (n != LmPatPtf.Protocols.TCP) and (n != LmPatPtf.Protocols.UDP):
-                LmTools.error(f"Rule has wrong protocol {p} set.")
+                LmUtils.error(f"Rule has wrong protocol {p} set.")
                 return False
 
         n = rule.get("IntPort", "")
         if n:
-            if not LmTools.is_tcp_udp_port(n):
-                LmTools.error(f"Rule has wrong internal port {n} set.")
+            if not LmUtils.is_tcp_udp_port(n):
+                LmUtils.error(f"Rule has wrong internal port {n} set.")
                 return False
 
         n = rule.get("ExtPort", "")
         if n:
-            if not LmTools.is_tcp_udp_port(n):
-                LmTools.error(f"Rule has wrong external port {n} set.")
+            if not LmUtils.is_tcp_udp_port(n):
+                LmUtils.error(f"Rule has wrong external port {n} set.")
                 return False
 
         ip = rule.get("IP", "")
         if len(ip) == 0:
             return False
         if t == LmPatPtf.RULE_TYPE_IPv6:
-            if not LmTools.is_ipv6(ip):
-                LmTools.error(f"Rule has wrong IPv6 {ip} set.")
+            if not LmUtils.is_ipv6(ip):
+                LmUtils.error(f"Rule has wrong IPv6 {ip} set.")
                 return False
         else:
-            if not LmTools.is_ipv4(ip):
-                LmTools.error(f"Rule has wrong IPv4 {ip} set.")
+            if not LmUtils.is_ipv4(ip):
+                LmUtils.error(f"Rule has wrong IPv4 {ip} set.")
                 return False
 
         e = rule.get("ExtIPs", "")
@@ -825,16 +826,16 @@ class LmNatPat:
             ext_ips = e.split(",")
             for ip in ext_ips:
                 if len(ip) == 0:
-                    LmTools.error("Rule external IPs has an empty IP address.")
+                    LmUtils.error("Rule external IPs has an empty IP address.")
                     return False
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmTools.is_ipv6(ip):
-                        LmTools.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
+                    if not LmUtils.is_ipv6(ip):
+                        LmUtils.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
                         return False
                 else:
-                    if not LmTools.is_ipv4(ip):
-                        LmTools.error(f"Rule external IPs has a wrong IPv4 {ip} set.")
+                    if not LmUtils.is_ipv4(ip):
+                        LmUtils.error(f"Rule external IPs has a wrong IPv4 {ip} set.")
                         return False
 
         return True
@@ -980,7 +981,7 @@ class LmNatPat:
         try:
             d = self._api._firewall.get_ipv4_protocol_forwarding()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self.display_error(mx("Cannot load IPv4 protocol forwarding rules.", "ptfLoadErr"))
             return
 
@@ -1022,8 +1023,8 @@ class LmNatPat:
         try:
             d = self._api._firewall.get_ipv6_pinhole()
         except Exception as e:
-            LmTools.error(str(e))
-            LmTools.error("Cannot load IPv6 protocol forwarding rules.")    # Do not display a dialog as not all LB models have this API
+            LmUtils.error(str(e))
+            LmUtils.error("Cannot load IPv6 protocol forwarding rules.")    # Do not display a dialog as not all LB models have this API
             return
 
         i = self._ptf_list.rowCount()
@@ -1093,38 +1094,38 @@ class LmNatPat:
     ### Check a PTF rule object consistency
     def check_ptf_rule(self, rule):
         if rule.get("Enable") is None:
-            LmTools.error("Rule as no Enable tag.")
+            LmUtils.error("Rule as no Enable tag.")
             return False
 
         t = rule.get("Type", "UNK")
         if t not in LmPatPtf.RULE_PTF_TYPES:
-            LmTools.error(f"Rule has unknown {t} type.")
+            LmUtils.error(f"Rule has unknown {t} type.")
             return False
 
         if len(rule.get("Name", "")) == 0:
-            LmTools.error("Rule has no Name.")
+            LmUtils.error("Rule has no Name.")
             return False
 
         protocols = rule.get("ProtoNumbers", "")
         if len(protocols) == 0:
-            LmTools.error("Rule has no protocol.")
+            LmUtils.error("Rule has no protocol.")
             return False
 
         for p in protocols.split(","):
             if LmPatPtf.PROTOCOL_NAMES.get(p) is None:
-                LmTools.error(f"Rule has wrong protocol {p} set.")
+                LmUtils.error(f"Rule has wrong protocol {p} set.")
                 return False
 
         ip = rule.get("IP", "")
         if len(ip) == 0:
             return False
         if t == LmPatPtf.RULE_TYPE_IPv6:
-            if not LmTools.is_ipv6_pfix(ip):
-                LmTools.error(f"Rule has wrong IPv6 {ip} set.")
+            if not LmUtils.is_ipv6_pfix(ip):
+                LmUtils.error(f"Rule has wrong IPv6 {ip} set.")
                 return False
         else:
-            if not LmTools.is_ipv4(ip):
-                LmTools.error(f"Rule has wrong IPv4 {ip} set.")
+            if not LmUtils.is_ipv4(ip):
+                LmUtils.error(f"Rule has wrong IPv4 {ip} set.")
                 return False
 
         e = rule.get("ExtIPs", "")
@@ -1132,16 +1133,16 @@ class LmNatPat:
             ext_ips = e.split(",")
             for ip in ext_ips:
                 if len(ip) == 0:
-                    LmTools.error("Rule external IPs has an empty IP address.")
+                    LmUtils.error("Rule external IPs has an empty IP address.")
                     return False
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmTools.is_ipv6(ip):
-                        LmTools.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
+                    if not LmUtils.is_ipv6(ip):
+                        LmUtils.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
                         return False
                 else:
-                    if not LmTools.is_ipv4(ip):
-                        LmTools.error(f"Rule external IPs has a wrong IPv4 {ip} set.")
+                    if not LmUtils.is_ipv4(ip):
+                        LmUtils.error(f"Rule external IPs has a wrong IPv4 {ip} set.")
                         return False
 
         return True
@@ -1239,7 +1240,7 @@ class LmNatPat:
         try:
             self._api._firewall.commit()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             return False
         return True
 

@@ -17,6 +17,7 @@ from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.dlg.LmNotificationSetup import NotificationSetupDialog
 from LiveboxMonitor.lang.LmLanguages import get_events_label as lx, get_events_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -265,7 +266,7 @@ class LmEvents:
             a = None
 
         # Try to guess device key from handler
-        device_key = LmTools.extract_mac_addr_from_string(h)
+        device_key = LmUtils.extract_mac_addr_from_string(h)
         if len(device_key):
             self.update_event_indicator(device_key)
             if r == "Statistics":
@@ -400,15 +401,15 @@ class LmEvents:
         t = event["Type"]
 
         ### Debug logs
-        if LmTools.get_verbosity() >= 1:
+        if LmUtils.get_verbosity() >= 1:
             ts = event["Timestamp"].strftime("%d/%m/%Y - %H:%M:%S")
             k = event["Key"]
             if t == LmNotif.TYPE_ACTIVE:
-                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> {event['Link']}.")
+                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> {event['Link']}.")
             elif t == LmNotif.TYPE_LINK_CHANGE:
-                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> from {event['OldLink']} to {event['NewLink']}.")
+                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> from {event['OldLink']} to {event['NewLink']}.")
             else:
-                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t}.")
+                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t}.")
 
         # If DELETE event look for a recent DELETE event, if too close (duplicates) don't add
         match t:
@@ -508,7 +509,7 @@ class LmEvents:
 
     ### Generate a user notification for an event in a CSV file
     def notify_user_file(self, event):
-        LmTools.log_debug(1, "Logging event in file:", str(event))
+        LmUtils.log_debug(1, "Logging event in file:", str(event))
 
         k = event["Key"]
         n = LmConf.MacAddrTable.get(k, lx("### UNKNOWN ###"))
@@ -539,16 +540,16 @@ class LmEvents:
                 csv_writer = csv.writer(f, dialect = "excel", delimiter = LmConf.CsvDelimiter)
                 csv_writer.writerow(r)
         except Exception as e:
-            LmTools.error(f"Cannot log event. Error: {e}")
+            LmUtils.error(f"Cannot log event. Error: {e}")
 
 
     ### Generate a user notification for an event via configured email
     def notify_user_email(self, event):
-        LmTools.log_debug(1, "Emailing event:", str(event))
+        LmUtils.log_debug(1, "Emailing event:", str(event))
 
         c = LmConf.load_email_setup()
         if c is None:
-            LmTools.error("No email setup to notify event by email.")
+            LmUtils.error("No email setup to notify event by email.")
             return
 
         k = event["Key"]
@@ -635,7 +636,7 @@ class LiveboxEventThread(LmThread):
         if d:
             if d.get("errors"):
                 # Session has probably timed out on Livebox side, resign
-                LmTools.log_debug(1, "Errors in event request, resign")
+                LmUtils.log_debug(1, "Errors in event request, resign")
                 if self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword) <= 0:
                     time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
             elif d.get("error"):

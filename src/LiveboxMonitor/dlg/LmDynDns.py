@@ -4,10 +4,10 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import get_dyndns_label as lx, get_actions_message as mx
-
+from LiveboxMonitor.util import LmUtils
 
 # ################################ VARS & DEFS ################################
 
@@ -148,7 +148,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
             try:
                 d = self._api._dyndns.get_hosts()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self._app.display_error(mx("Cannot load DynDNS host list.", "dynDnsLoadErr"))
                 return
 
@@ -161,7 +161,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
                     self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem(h.get("password", "")))
                 else:
                     self._host_list.setItem(i, HostCol.Password, QtWidgets.QTableWidgetItem("******"))
-                self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(h.get("last_update"))))
+                self._host_list.setItem(i, HostCol.LastUpdate, QtWidgets.QTableWidgetItem(LmUtils.fmt_livebox_timestamp(h.get("last_update"))))
                 self._host_list.setItem(i, HostCol.Status, QtWidgets.QTableWidgetItem(h.get("status", "")))
 
             self.host_list_click()
@@ -187,7 +187,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._dyndns.get_services()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot load DynDNS services.", "dynDnsSvcErr"))
             return
 
@@ -235,7 +235,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             self._api._dyndns.delete_host(hostname)
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot delete DynDNS host.", "dynDnsDelErr"))
             return
 
@@ -285,10 +285,10 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             d = self._api._dyndns.get_enable()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             return False
         if d is None:
-            LmTools.error(mx("Cannot get DynDNS global enable status.", "dynDnsEnableErr"))
+            LmUtils.error(mx("Cannot get DynDNS global enable status.", "dynDnsEnableErr"))
             return False
         return d
 
@@ -299,7 +299,7 @@ class DynDnsSetupDialog(QtWidgets.QDialog):
         try:
             self._api._dyndns.set_enable(enable)
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
 
         self._disable_button.setText(self.get_disable_button_title())
         self.refresh_button_click()

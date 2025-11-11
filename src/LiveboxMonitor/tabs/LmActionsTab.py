@@ -23,6 +23,7 @@ from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
 from LiveboxMonitor.lang.LmLanguages import get_actions_label as lx, get_actions_message as mx
+from LiveboxMonitor.util import LmUtils
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
 
@@ -494,7 +495,7 @@ class LmActions:
             try:
                 d = self._api._backup.get_status()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 auto_restore_enabled = False
             else:
                 auto_restore_enabled = d.get("Enable", False)
@@ -577,7 +578,7 @@ class LmActions:
         ipv4_ping = d.get("enableIPv4")
         ipv6_ping = d.get("enableIPv6")
         if (ipv4_ping is None) or (ipv6_ping is None):
-            LmTools.error("Cannot get respond to ping setup")
+            LmUtils.error("Cannot get respond to ping setup")
 
         ping_response_dialog = PingResponseDialog(ipv4_ping, ipv6_ping, self)
         if ping_response_dialog.exec():

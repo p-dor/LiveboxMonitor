@@ -2,9 +2,10 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_dhcp_binding_label as lx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ Add DHCP binding setup dialog ################################
@@ -26,7 +27,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
         mac_label = QtWidgets.QLabel(lx("MAC address"), objectName="macLabel")
         self._mac_edit = QtWidgets.QLineEdit(objectName="macEdit")
-        mac_reg_exp = QtCore.QRegularExpression("^" + LmTools.MAC_RS + "$")
+        mac_reg_exp = QtCore.QRegularExpression("^" + LmUtils.MAC_RS + "$")
         mac_validator = QtGui.QRegularExpressionValidator(mac_reg_exp)
         self._mac_edit.setValidator(mac_validator)
         self._mac_edit.textChanged.connect(self.mac_typed)
@@ -38,7 +39,7 @@ class AddDhcpBindingDialog(QtWidgets.QDialog):
 
         ip_label = QtWidgets.QLabel(lx("IP address"), objectName="ipLabel")
         self._ip_edit = QtWidgets.QLineEdit(objectName="ipEdit")
-        ip_reg_exp = QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$")
+        ip_reg_exp = QtCore.QRegularExpression("^" + LmUtils.IPv4_RS + "$")
         ip_validator = QtGui.QRegularExpressionValidator(ip_reg_exp)
         self._ip_edit.setValidator(ip_validator)
         self._ip_edit.textChanged.connect(self.ip_typed)

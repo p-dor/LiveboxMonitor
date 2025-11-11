@@ -2,9 +2,10 @@
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.lang.LmLanguages import get_backup_restore_label as lx, get_actions_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ Backup & Restore setup dialog ################################
@@ -85,7 +86,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         try:
             d = self._api._backup.get_status()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot load backup and restore status.", "backRestSvcErr"))
             return
 
@@ -100,7 +101,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
 
         last_backup = d.get("ConfigDate")
         if last_backup:
-            self._last_backup.setText(LmTools.fmt_livebox_timestamp(last_backup, False))
+            self._last_backup.setText(LmUtils.fmt_livebox_timestamp(last_backup, False))
         else:
             self._last_backup.setText("-")
 
@@ -109,7 +110,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         try:
             self._api._backup.set_auto_backup_enable(True)
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot enable auto backup.", "backEnableSvcErr"))
         else:
             self.refresh_status()
@@ -119,7 +120,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         try:
             self._api._backup.set_auto_backup_enable(False)
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot disable auto backup.", "backDisableSvcErr"))
         else:
             self.refresh_status()
@@ -129,7 +130,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         try:
             self._api._backup.do_backup()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Backup request failed.", "backupSvcErr"))
         else:
             self._app.display_status(mx("Backup requested.", "backupSvcOk"))
@@ -140,7 +141,7 @@ class BackupRestoreDialog(QtWidgets.QDialog):
         try:
             self._api._backup.do_restore()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Restore request failed.", "restoreSvcErr"))
         else:
             self._app.display_status(mx("Restore requested. Livebox will restart.", "restoreSvcOk"))
