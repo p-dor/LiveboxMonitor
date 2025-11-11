@@ -16,9 +16,6 @@ from LiveboxMonitor.util.LmUtils import error, send_email
 BOLD_FONT = QtGui.QFont()
 BOLD_FONT.setBold(True)
 
-# SMTP Timeout
-SMTP_TIMEOUT = 5
-
 # Value qualifiers
 class ValQual(IntEnum):
     Default = 0

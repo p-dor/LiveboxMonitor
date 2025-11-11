@@ -18,6 +18,9 @@ from LiveboxMonitor.lang.LmLanguages import get_tools_label as lx
 # Debug verbosity
 verbosity = 1
 
+# SMTP Timeout
+SMTP_TIMEOUT = 5
+
 # Regular expressions - https://ihateregex.io/
 MAC_RS = r"(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2})"
 IPv4_RS = r"(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}"
