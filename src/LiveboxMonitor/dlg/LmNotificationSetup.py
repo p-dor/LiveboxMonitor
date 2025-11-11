@@ -11,6 +11,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconHeaderView, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import get_notification_rules_label as lx, get_events_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -102,7 +103,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
         mac_label = QtWidgets.QLabel(lx("MAC address"), objectName="macLabel")
         self._mac_edit = QtWidgets.QLineEdit(objectName="macEdit")
-        mac_reg_exp = QtCore.QRegularExpression("^" + LmTools.MAC_RS + "$")
+        mac_reg_exp = QtCore.QRegularExpression("^" + LmUtils.MAC_RS + "$")
         mac_validator = QtGui.QRegularExpressionValidator(mac_reg_exp)
         self._mac_edit.setValidator(mac_validator)
         self._mac_edit.textChanged.connect(self.mac_typed)
@@ -510,7 +511,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
             k = r["Key"]
             if k != LmNotif.DEVICE_ALL and k != LmNotif.DEVICE_UNKNOWN:
                 m = self._mac_edit.text()
-                if not LmTools.is_mac_addr(m):
+                if not LmUtils.is_mac_addr(m):
                         self.parent().display_error(mx("{} is not a valid MAC address.", "macErr").format(m))
                         self._mac_edit.setFocus()
                         return False
@@ -628,7 +629,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
                 try:
                     os.makedirs(p)
                 except Exception as e:
-                    LmTools.error(f"Cannot create log file directory. Error: {e}")
+                    LmUtils.error(f"Cannot create log file directory. Error: {e}")
                     LmTools.display_error(mx("Cannot create log file directory.\nError: {}.", "logDirErr").format(e))
                     return False
             else:

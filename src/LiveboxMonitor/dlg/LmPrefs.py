@@ -6,6 +6,7 @@ from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import get_config_prefs_label as lx,  get_config_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ Preferences dialog ################################
@@ -312,7 +313,7 @@ class PrefsDialog(QtWidgets.QDialog):
         # Save in profiles buffer
         p = self._profiles[self._profile_selection]
         p["Name"] = self._profile_name.text()
-        p["Livebox URL"] = LmTools.clean_url(self._livebox_url.text())
+        p["Livebox URL"] = LmUtils.clean_url(self._livebox_url.text())
         p["Livebox User"] = self._livebox_user.text()
         p["Filter Devices"] = self._filter_devices.isChecked()
         p["MacAddr Table File"] = self._mac_addr_table_file.text()

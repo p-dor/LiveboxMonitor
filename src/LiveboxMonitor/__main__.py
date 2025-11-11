@@ -22,6 +22,7 @@ from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDevic
 from LiveboxMonitor.dlg.LmLiveboxCnx import LiveboxCnxDialog
 from LiveboxMonitor.dlg.LmLiveboxSignin import LiveboxSigninDialog
 from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, get_main_label as lx, get_main_message as mx
+from LiveboxMonitor.util import LmUtils
 
 from LiveboxMonitor.__init__ import __version__
 
@@ -80,7 +81,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         QtCore.QCoreApplication.processEvents()
         if self.signin():
             if not self._api._intf.build_list():
-                LmTools.error("Failed to build interface list.")
+                LmUtils.error("Failed to build interface list.")
             self.adjust_to_livebox_model()
             self.init_ui()
             self.setWindowTitle(self.app_window_title())
@@ -302,7 +303,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             try:
                 r = session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword, not LmConf.SavePasswords)
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 r = -1
             finally:
                 self._task.end()
@@ -317,7 +318,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                 if dialog.exec():
                     url = dialog.get_url()
                     # Remove unwanted characters (can be set via Paste action) + cleanup
-                    url = LmTools.clean_url(re.sub("[\n\t]", "", url))
+                    url = LmUtils.clean_url(re.sub("[\n\t]", "", url))
                     LmConf.set_livebox_url(url)
                     self.show()
                     continue
@@ -354,7 +355,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     def adjust_to_livebox_model(self):
         LmConf.set_livebox_mac(self._api._info.get_mac())
 
-        LmTools.log_debug(1, f"Identified Livebox model: {self._api._info.get_model_name()} ([{self._api._info.get_model()}] {self._api._info.get_raw_model_name()})")
+        LmUtils.log_debug(1, f"Identified Livebox model: {self._api._info.get_model_name()} ([{self._api._info.get_model()}] {self._api._info.get_raw_model_name()})")
 
         self.determine_fiber_link()
         self.determine_livebox_pro()
@@ -367,7 +368,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         try:
             d = self._api._info.get_wan_status()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._link_type = "UNKNOWN"
         else:
             self._link_type = d.get("LinkType", "UNKNOWN").upper()
@@ -382,8 +383,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
             # Check link type for Livebox 4
             self._fiber_link = (self._link_type == "SFP")
 
-        LmTools.log_debug(1, f"Identified link type: {self._link_type}")
-        LmTools.log_debug(1, f"Identified fiber link: {self._fiber_link}")
+        LmUtils.log_debug(1, f"Identified link type: {self._link_type}")
+        LmUtils.log_debug(1, f"Identified fiber link: {self._fiber_link}")
 
 
     ### Determine if Pro or Residential subscription
@@ -391,17 +392,17 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         try:
             d = self._api._info.get_connection_status()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._livebox_pro = False
         else:
             offer_type = d.get("OfferType")
             if offer_type is None:
-                LmTools.error("Missing offer type in NMC:get, cannot determine Livebox Pro model")
+                LmUtils.error("Missing offer type in NMC:get, cannot determine Livebox Pro model")
                 self._livebox_pro = False
             else:
                 self._livebox_pro = "PRO" in offer_type.upper()
 
-        LmTools.log_debug(1, f"Identified Livebox Pro: {self._livebox_pro}")
+        LmUtils.log_debug(1, f"Identified Livebox Pro: {self._livebox_pro}")
 
 
     ### Exit with escape
@@ -419,7 +420,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
     # Display an error popup
     def display_error(self, error_msg, silent=False):
-        LmTools.error(error_msg.rstrip())
+        LmUtils.error(error_msg.rstrip())
 
         if not silent:
             self._task.suspend()
@@ -504,7 +505,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
 
 # ### wakepy error handler
 def wake_py_failure(result):
-    LmTools.error(f"Failed to keep system awake mode={result.mode_name} active={result.active_method} success={result.success} err={result.get_failure_text()}")
+    LmUtils.error(f"Failed to keep system awake mode={result.mode_name} active={result.active_method} success={result.success} err={result.get_failure_text()}")
 
 
 # ### Fatal error handler
@@ -554,7 +555,7 @@ def main(native_run=False):
             try:
                 locale.setlocale(locale.LC_ALL, (LANGUAGES_LOCALE[LmConf.Language], "UTF-8"))
             except Exception as e:
-                LmTools.error(f"setlocale() error: {e}")
+                LmUtils.error(f"setlocale() error: {e}")
 
             # Set Qt language to selected preference
             translator = QtCore.QTranslator()

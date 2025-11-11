@@ -1,7 +1,7 @@
 ### Livebox Monitor Interface APIs ###
 
 from LiveboxMonitor.api.LmApi import LmApi, LmApiException
-from LiveboxMonitor.app import LmTools
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -106,7 +106,7 @@ class IntfApi(LmApi):
     def get_list(self):
         if self._list is None:
             if not self._api._intf.build_list():
-                LmTools.error("Failed to build interface list.")
+                LmUtils.error("Failed to build interface list.")
         return self._list
 
 
@@ -143,7 +143,7 @@ class IntfApi(LmApi):
         try:
             d = self.get_raw_list()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             return False
 
         # Collect all interfaces per type

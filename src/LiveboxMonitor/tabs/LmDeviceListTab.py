@@ -17,6 +17,7 @@ from LiveboxMonitor.tabs.LmRepeaterTab import INTF_NAME_MAP_WR
 from LiveboxMonitor.dlg.LmIPv6 import IPv6Dialog
 from LiveboxMonitor.dlg.LmDns import DnsDialog
 from LiveboxMonitor.lang.LmLanguages import get_device_list_label as lx, get_device_list_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -205,7 +206,7 @@ class LmDeviceList:
             try:
                 d = self._api._info.get_cgnat_status()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 cgnat = None
             else:
                 cgnat = d.get("Demand")
@@ -214,7 +215,7 @@ class LmDeviceList:
             try:
                 d = self._api._info.get_ipv6_mode()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 mode = None
             else:
                 mode = d.get("IPv6Mode")
@@ -223,7 +224,7 @@ class LmDeviceList:
             try:
                 d = self._api._info.get_wan_status()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 ipv6_addr = None
                 ipv6_prefix = None
                 gateway = None
@@ -280,7 +281,7 @@ class LmDeviceList:
             try:
                 self._livebox_devices = self._api._device.get_list()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Error getting device list.", "dlistErr"))
                 self._livebox_devices = None            
             else:
@@ -291,7 +292,7 @@ class LmDeviceList:
             try:
                 topology = self._api._device.get_topology()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Error getting device topology.", "topoErr"))
             else:
                 self.build_link_maps(topology)
@@ -367,7 +368,7 @@ class LmDeviceList:
         lb_name = QtWidgets.QTableWidgetItem(device.get("Name", ""))
         self._device_list.setItem(line, DevCol.LBName, lb_name)
 
-        ip_struct = LmTools.determine_ip(device)
+        ip_struct = LmUtils.determine_ip(device)
         if ip_struct is None:
             ipv4 = ""
             ipv4_reacheable = ""
@@ -565,7 +566,7 @@ class LmDeviceList:
                 try:
                     self._livebox_devices = self._api._device.get_list()
                 except Exception as e:
-                    LmTools.error(str(e))
+                    LmUtils.error(str(e))
                     self.display_error(mx("Error getting device list.", "dlistErr"))
                     return
 
@@ -593,7 +594,7 @@ class LmDeviceList:
             }
 
             # Map IPv4 address to device infos
-            ipv4_struct = LmTools.determine_ip(d)
+            ipv4_struct = LmUtils.determine_ip(d)
             if ipv4_struct:
                 ipv4 = ipv4_struct.get("Address", "")
                 if ipv4:
@@ -770,7 +771,7 @@ class LmDeviceList:
         up_rate_bytes = 0
         down_delta_errors = event.get("DeltaRxErrors", 0)
         up_delta_errors = event.get("DeltaTxErrors", 0)
-        timestamp = LmTools.livebox_timestamp(event.get("Timestamp", ""))
+        timestamp = LmUtils.livebox_timestamp(event.get("Timestamp", ""))
 
         # Try to find a previously received statistic record
         prev_stats = self._stats_map.get(device_key)
@@ -801,14 +802,14 @@ class LmDeviceList:
             # Prevent device line to change due to sorting
             self._device_list.setSortingEnabled(False)
 
-            down = NumericSortItem(LmTools.fmt_bytes(down_bytes))
+            down = NumericSortItem(LmUtils.fmt_bytes(down_bytes))
             down.setData(QtCore.Qt.ItemDataRole.UserRole, down_bytes)
             down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if down_errors:
                 down.setForeground(QtCore.Qt.GlobalColor.red)
             self._device_list.setItem(list_line, DevCol.Down, down)
 
-            up = NumericSortItem(LmTools.fmt_bytes(up_bytes))
+            up = NumericSortItem(LmUtils.fmt_bytes(up_bytes))
             up.setData(QtCore.Qt.ItemDataRole.UserRole, up_bytes)
             up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if up_errors:
@@ -816,7 +817,7 @@ class LmDeviceList:
             self._device_list.setItem(list_line, DevCol.Up, up)
 
             if down_rate_bytes:
-                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + "/s")
+                down_rate = NumericSortItem(LmUtils.fmt_bytes(down_rate_bytes) + "/s")
                 down_rate.setData(QtCore.Qt.ItemDataRole.UserRole, down_rate_bytes)
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -826,7 +827,7 @@ class LmDeviceList:
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
 
             if up_rate_bytes:
-                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + "/s")
+                up_rate = NumericSortItem(LmUtils.fmt_bytes(up_rate_bytes) + "/s")
                 up_rate.setData(QtCore.Qt.ItemDataRole.UserRole, up_rate_bytes)
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -882,7 +883,7 @@ class LmDeviceList:
 
             # Check if IPv4 changed
             ipv4 = event.get("IPAddress")
-            if (ipv4 is not None) and (LmTools.is_ipv4(ipv4)):
+            if (ipv4 is not None) and (LmUtils.is_ipv4(ipv4)):
                 self._device_ip_name_map_dirty = True
                 ip = self._device_list.item(list_line, DevCol.IP)
                 ip.setText(ipv4)
@@ -982,14 +983,14 @@ class LmDeviceList:
                 try:
                     curr_ip = self._api._device.get_ip_addr(device_key)
                 except Exception as e:
-                    LmTools.error(str(e))
+                    LmUtils.error(str(e))
                     curr_ip = known_ip
 
                 # Proceed only if there is a change
                 if known_ip != curr_ip:
                     # If current IP is the one of the event, take it, overwise wait for next device update event
                     ipv4 = event.get("Address", "")
-                    if LmTools.is_ipv4(ipv4) and (curr_ip == ipv4):
+                    if LmUtils.is_ipv4(ipv4) and (curr_ip == ipv4):
                         ipv4_reacheable = event.get("Status", "")
                         ipv4_reserved = event.get("Reserved", False)
                         ip = self.format_ipv4_table_widget(ipv4, ipv4_reacheable, ipv4_reserved)
@@ -1115,7 +1116,7 @@ class LmDeviceList:
             self._device_list.setSortingEnabled(False)
 
             if down_rate_bytes:
-                down_rate = NumericSortItem(LmTools.fmt_bytes(down_rate_bytes) + "/s")
+                down_rate = NumericSortItem(LmUtils.fmt_bytes(down_rate_bytes) + "/s")
                 down_rate.setData(QtCore.Qt.ItemDataRole.UserRole, down_rate_bytes)
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1127,7 +1128,7 @@ class LmDeviceList:
             self._device_list.setItem(list_line, DevCol.DownRate, down_rate)
 
             if up_rate_bytes:
-                up_rate = NumericSortItem(LmTools.fmt_bytes(up_rate_bytes) + "/s")
+                up_rate = NumericSortItem(LmUtils.fmt_bytes(up_rate_bytes) + "/s")
                 up_rate.setData(QtCore.Qt.ItemDataRole.UserRole, up_rate_bytes)
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
@@ -1164,7 +1165,7 @@ class LiveboxWifiStatsThread(LmThread):
             try:
                 d = self._api._stats.get_wifi_intf(s["Key"])
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
             else:
                 if isinstance(d, list):
                     for stat in d:
