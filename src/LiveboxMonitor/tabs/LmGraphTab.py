@@ -13,6 +13,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.dlg.LmAddGraph import AddGraphDialog, GraphType
 from LiveboxMonitor.lang.LmLanguages import get_graph_label as lx, get_graph_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -295,7 +296,7 @@ class LmGraph:
                 suffix = "_" + str(n)
                 continue
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
             break
@@ -321,7 +322,7 @@ class LmGraph:
             try:
                 export_file.close()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
 

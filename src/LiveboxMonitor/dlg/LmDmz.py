@@ -7,6 +7,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import get_dmz_label as lx, get_actions_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -79,7 +80,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         ip_label = QtWidgets.QLabel(lx("IP Address"), objectName="ipLabel")
         self._ip = QtWidgets.QLineEdit(objectName="ipEdit")
         self._ip.textChanged.connect(self.ip_typed)
-        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$"))
+        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("^" + LmUtils.IPv4_RS + "$"))
         self._ip.setValidator(ip_validator)
         ext_ips_label = QtWidgets.QLabel(lx("External IPs"), objectName="extIPsLabel")
         self._ext_ips = LmTools.MultiLinesEdit(objectName="extIPsEdit")
@@ -206,7 +207,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             self._api._firewall.delete_dmz(dmz_id)
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             self._app.display_error(mx("Cannot delete DMZ device.", "dmzDelErr"))
             return
 

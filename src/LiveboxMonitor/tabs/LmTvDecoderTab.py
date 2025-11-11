@@ -7,6 +7,7 @@ from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmThread import LmThread
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.lang.LmLanguages import get_tvdecoder_label as lx, get_tvdecoder_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -244,7 +245,7 @@ class LmTvHandler:
 
     ### Process a device updated event
     def process_device_updated_event(self, event):
-        ipv4_struct = LmTools.determine_ip(event)
+        ipv4_struct = LmUtils.determine_ip(event)
         ipv4 = ipv4_struct.get("Address") if ipv4_struct else None
         if self._ip_addr != ipv4:
             self.process_ip_address_event(ipv4)

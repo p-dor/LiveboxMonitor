@@ -17,6 +17,7 @@ from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
 from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
 from LiveboxMonitor.tabs.LmInfoTab import InfoCol, StatsCol
 from LiveboxMonitor.lang.LmLanguages import get_repeater_label as lx, get_repeater_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -252,7 +253,7 @@ class LmRepeater:
             except KeyError:
                 model = WIFI_REPEATER_DEFAULT_MODEL
 
-            ip_struct = LmTools.determine_ip(device)
+            ip_struct = LmUtils.determine_ip(device)
             ip_address = ip_struct.get("Address") if ip_struct else None
 
             active = device.get("Active", False)
@@ -409,20 +410,20 @@ class LmRepeater:
         # Update UI
         list_line = r.find_stats_line(key)
         if list_line >= 0:
-            down = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(down_bytes))
+            down = QtWidgets.QTableWidgetItem(LmUtils.fmt_bytes(down_bytes))
             down.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if down_errors:
                 down.setForeground(QtCore.Qt.GlobalColor.red)
             r._stats_list.setItem(list_line, StatsCol.Down, down)
 
-            up = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(up_bytes))
+            up = QtWidgets.QTableWidgetItem(LmUtils.fmt_bytes(up_bytes))
             up.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
             if up_errors:
                 up.setForeground(QtCore.Qt.GlobalColor.red)
             r._stats_list.setItem(list_line, StatsCol.Up, up)
 
             if down_rate_bytes:
-                down_rate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(down_rate_bytes) + "/s")
+                down_rate = QtWidgets.QTableWidgetItem(LmUtils.fmt_bytes(down_rate_bytes) + "/s")
                 if down_delta_errors:
                     down_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 down_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
@@ -431,7 +432,7 @@ class LmRepeater:
             r._stats_list.setItem(list_line, StatsCol.DownRate, down_rate)
 
             if up_rate_bytes:
-                up_rate = QtWidgets.QTableWidgetItem(LmTools.fmt_bytes(up_rate_bytes) + "/s")
+                up_rate = QtWidgets.QTableWidgetItem(LmUtils.fmt_bytes(up_rate_bytes) + "/s")
                 if up_delta_errors:
                     up_rate.setForeground(QtCore.Qt.GlobalColor.red)
                 up_rate.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
@@ -489,7 +490,7 @@ class LmRepHandler:
                 # Need to ignore cookie as sessions opened with >1h cookie generate errors
                 r = session.signin(user, password, True)
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 r = -1
             if r > 0:
                 self._signed = True
@@ -618,7 +619,7 @@ class LmRepHandler:
 
     ### Process a device updated event
     def process_device_updated_event(self, event):
-        ipv4_struct = LmTools.determine_ip(event)
+        ipv4_struct = LmUtils.determine_ip(event)
         ipv4 = ipv4_struct.get("Address") if ipv4_struct else None
         if self._ip_addr != ipv4:
             self.process_ip_address_event(ipv4)
@@ -700,7 +701,7 @@ class LmRepHandler:
             try:
                 self._app._export_file = open(file_name, "w")
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self._app.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
 
@@ -716,7 +717,7 @@ class LmRepHandler:
                 try:
                     self._app._export_file.close()
                 except Exception as e:
-                    LmTools.error(str(e))
+                    LmUtils.error(str(e))
                     self._app.display_error(mx("Cannot save the file.", "saveFileErr"))
 
                 self._app._export_file = None
@@ -888,24 +889,24 @@ class LmRepHandler:
         try:
             d = self._api._info.get_device_info()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("Repeater Infos"), "DeviceInfo:get query error", LmTools.ValQual.Error)
         else:
             i = self.add_info_line(i, lx("Model Name"), d.get("ModelName"))
-            i = self.add_info_line(i, lx("Repeater Up Time"), LmTools.fmt_time(d.get("UpTime")))
+            i = self.add_info_line(i, lx("Repeater Up Time"), LmUtils.fmt_time(d.get("UpTime")))
             i = self.add_info_line(i, lx("Serial Number"), d.get("SerialNumber"))
             i = self.add_info_line(i, lx("Hardware Version"), d.get("HardwareVersion"))
             i = self.add_info_line(i, lx("Software Version"), d.get("SoftwareVersion"))
             i = self.add_info_line(i, lx("Orange Firmware Version"), d.get("AdditionalSoftwareVersion"))
-            i = self.add_info_line(i, lx("Country"), LmTools.fmt_str_upper(d.get("Country")))
+            i = self.add_info_line(i, lx("Country"), LmUtils.fmt_str_upper(d.get("Country")))
 
         try:
             d = self._api._reboot.get_info()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("Repeater Infos"), "NMC.Reboot:get query error", LmTools.ValQual.Error)
         else:
-            i = self.add_info_line(i, lx("Total Number Of Reboots"), LmTools.fmt_int(d.get("BootCounter")))
+            i = self.add_info_line(i, lx("Total Number Of Reboots"), LmUtils.fmt_int(d.get("BootCounter")))
 
         try:
             d = self._api._info.get_time()
@@ -926,15 +927,15 @@ class LmRepHandler:
         try:
             d = self._api._wifi.get_status()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("Wifi"), "NMC.Wifi:get query error", LmTools.ValQual.Error)
         else:
-            i = self.add_info_line(i, lx("Enabled"), LmTools.fmt_bool(d.get("Enable")))
-            i = self.add_info_line(i, lx("Active"), LmTools.fmt_bool(d.get("Status")))
+            i = self.add_info_line(i, lx("Enabled"), LmUtils.fmt_bool(d.get("Enable")))
+            i = self.add_info_line(i, lx("Active"), LmUtils.fmt_bool(d.get("Status")))
             i = self.add_info_line(i, lx("Mode"), d.get("EnableTarget"))
             i = self.add_info_line(i, lx("WPS Mode"), d.get("WPSMode"))
             i = self.add_info_line(i, lx("Link Type"), d.get("CurrentBackhaul"))
-            i = self.add_info_line(i, lx("Read Only"), LmTools.fmt_bool(d.get("ReadOnlyStatus")))
+            i = self.add_info_line(i, lx("Read Only"), LmUtils.fmt_bool(d.get("ReadOnlyStatus")))
             i = self.add_info_line(i, lx("Pairing Status"), d.get("PairingStatus"))
             i = self.add_info_line(i, lx("PIN Code"), d.get("PINCode"))
 
@@ -942,16 +943,16 @@ class LmRepHandler:
             try:
                 d = self._api._wifi.get_scheduler_enable()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 i = self.add_info_line(i, lx("Scheduler Enabled"), "Scheduler:getCompleteSchedules query error", LmTools.ValQual.Error)
             else:
-                 i = self.add_info_line(i, lx("Scheduler Enabled"), LmTools.fmt_bool(d))
+                 i = self.add_info_line(i, lx("Scheduler Enabled"), LmUtils.fmt_bool(d))
 
 
         try:
             b, w, d = self._api._intf.get_wifi_mibs()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("Wifi"), "NeMo.Intf.lan:getMIBs query error", LmTools.ValQual.Error)
         else:
             for s in self._netIntf:
@@ -963,8 +964,8 @@ class LmRepHandler:
                 intf_key = None
                 base = b.get(s["Key"])
                 if base is not None:
-                    i = self.add_info_line(i, lx("Enabled"), LmTools.fmt_bool(base.get("Enable")))
-                    i = self.add_info_line(i, lx("Active"), LmTools.fmt_bool(base.get("Status")))
+                    i = self.add_info_line(i, lx("Enabled"), LmUtils.fmt_bool(base.get("Enable")))
+                    i = self.add_info_line(i, lx("Active"), LmUtils.fmt_bool(base.get("Status")))
                     low_level_intf = base.get("LLIntf")
                     if low_level_intf is not None:
                         intf_key = next(iter(low_level_intf))
@@ -976,10 +977,10 @@ class LmRepHandler:
 
                 i = self.add_info_line(i, lx("Radio Status"), q.get("RadioStatus"))
                 i = self.add_info_line(i, lx("VAP Status"), r.get("VAPStatus"))
-                i = self.add_info_line(i, lx("Vendor Name"), LmTools.fmt_str_upper(q.get("VendorName")))
-                i = self.add_info_line(i, lx("MAC Address"), LmTools.fmt_str_upper(r.get("MACAddress")))
+                i = self.add_info_line(i, lx("Vendor Name"), LmUtils.fmt_str_upper(q.get("VendorName")))
+                i = self.add_info_line(i, lx("MAC Address"), LmUtils.fmt_str_upper(r.get("MACAddress")))
                 i = self.add_info_line(i, lx("SSID"), r.get("SSID"))
-                i = self.add_info_line(i, lx("SSID Advertisement"), LmTools.fmt_bool(r.get("SSIDAdvertisementEnabled")))
+                i = self.add_info_line(i, lx("SSID Advertisement"), LmUtils.fmt_bool(r.get("SSIDAdvertisementEnabled")))
 
                 t = r.get("Security")
                 if t is not None:
@@ -990,31 +991,31 @@ class LmRepHandler:
 
                 t = r.get("WPS")
                 if t is not None:
-                    i = self.add_info_line(i, lx("WPS Enabled"), LmTools.fmt_bool(t.get("Enable")))
+                    i = self.add_info_line(i, lx("WPS Enabled"), LmUtils.fmt_bool(t.get("Enable")))
                     i = self.add_info_line(i, lx("WPS Methods"), t.get("ConfigMethodsEnabled"))
                     i = self.add_info_line(i, lx("WPS Self PIN"), t.get("SelfPIN"))
-                    i = self.add_info_line(i, lx("WPS Pairing In Progress"), LmTools.fmt_bool(t.get("PairingInProgress")))
+                    i = self.add_info_line(i, lx("WPS Pairing In Progress"), LmUtils.fmt_bool(t.get("PairingInProgress")))
 
                 t = r.get("MACFiltering")
                 if t is not None:
                     i = self.add_info_line(i, lx("MAC Filtering"), t.get("Mode"))
 
-                i = self.add_info_line(i, lx("Max Bitrate"), LmTools.fmt_int(q.get("MaxBitRate")))
-                i = self.add_info_line(i, lx("AP Mode"), LmTools.fmt_bool(q.get("AP_Mode")))
-                i = self.add_info_line(i, lx("STA Mode"), LmTools.fmt_bool(q.get("STA_Mode")))
-                i = self.add_info_line(i, lx("WDS Mode"), LmTools.fmt_bool(q.get("WDS_Mode")))
-                i = self.add_info_line(i, lx("WET Mode"), LmTools.fmt_bool(q.get("WET_Mode")))
+                i = self.add_info_line(i, lx("Max Bitrate"), LmUtils.fmt_int(q.get("MaxBitRate")))
+                i = self.add_info_line(i, lx("AP Mode"), LmUtils.fmt_bool(q.get("AP_Mode")))
+                i = self.add_info_line(i, lx("STA Mode"), LmUtils.fmt_bool(q.get("STA_Mode")))
+                i = self.add_info_line(i, lx("WDS Mode"), LmUtils.fmt_bool(q.get("WDS_Mode")))
+                i = self.add_info_line(i, lx("WET Mode"), LmUtils.fmt_bool(q.get("WET_Mode")))
                 i = self.add_info_line(i, lx("Frequency Band"), q.get("OperatingFrequencyBand"))
                 i = self.add_info_line(i, lx("Channel Bandwidth"), q.get("CurrentOperatingChannelBandwidth"))
                 i = self.add_info_line(i, lx("Standard"), q.get("OperatingStandards"))
-                i = self.add_info_line(i, lx("Channel"), LmTools.fmt_int(q.get("Channel")))
-                i = self.add_info_line(i, lx("Auto Channel Supported"), LmTools.fmt_bool(q.get("AutoChannelSupported")))
-                i = self.add_info_line(i, lx("Auto Channel Enabled"), LmTools.fmt_bool(q.get("AutoChannelEnable")))
+                i = self.add_info_line(i, lx("Channel"), LmUtils.fmt_int(q.get("Channel")))
+                i = self.add_info_line(i, lx("Auto Channel Supported"), LmUtils.fmt_bool(q.get("AutoChannelSupported")))
+                i = self.add_info_line(i, lx("Auto Channel Enabled"), LmUtils.fmt_bool(q.get("AutoChannelEnable")))
                 i = self.add_info_line(i, lx("Channel Change Reason"), q.get("ChannelChangeReason"))
-                i = self.add_info_line(i, lx("Max Associated Devices"), LmTools.fmt_int(q.get("MaxAssociatedDevices")))
-                i = self.add_info_line(i, lx("Active Associated Devices"), LmTools.fmt_int(q.get("ActiveAssociatedDevices")))
-                i = self.add_info_line(i, lx("Noise"), LmTools.fmt_int(q.get("Noise")))
-                i = self.add_info_line(i, lx("Antenna Defect"), LmTools.fmt_bool(q.get("AntennaDefect")))
+                i = self.add_info_line(i, lx("Max Associated Devices"), LmUtils.fmt_int(q.get("MaxAssociatedDevices")))
+                i = self.add_info_line(i, lx("Active Associated Devices"), LmUtils.fmt_int(q.get("ActiveAssociatedDevices")))
+                i = self.add_info_line(i, lx("Noise"), LmUtils.fmt_int(q.get("Noise")))
+                i = self.add_info_line(i, lx("Antenna Defect"), LmUtils.fmt_bool(q.get("AntennaDefect")))
 
         return i
 
@@ -1026,13 +1027,13 @@ class LmRepHandler:
         try:
             d = self._api._info.get_wan_status()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("LAN Infos"), "NMC:getWANStatus query error", LmTools.ValQual.Error)
         else:
-            i = self.add_info_line(i, lx("MAC Address"), LmTools.fmt_str_upper(d.get("MACAddress")))
-            i = self.add_info_line(i, lx("Link Status"), LmTools.fmt_str_capitalize(d.get("LinkState")))
-            i = self.add_info_line(i, lx("Link Type"), LmTools.fmt_str_upper(d.get("LinkType")))
-            i = self.add_info_line(i, lx("Protocol"), LmTools.fmt_str_upper(d.get("Protocol")))
+            i = self.add_info_line(i, lx("MAC Address"), LmUtils.fmt_str_upper(d.get("MACAddress")))
+            i = self.add_info_line(i, lx("Link Status"), LmUtils.fmt_str_capitalize(d.get("LinkState")))
+            i = self.add_info_line(i, lx("Link Type"), LmUtils.fmt_str_upper(d.get("LinkType")))
+            i = self.add_info_line(i, lx("Protocol"), LmUtils.fmt_str_upper(d.get("Protocol")))
             i = self.add_info_line(i, lx("Connection Status"), d.get("ConnectionState"))
             i = self.add_info_line(i, lx("Last Connection Error"), d.get("LastConnectionError"))
             i = self.add_info_line(i, lx("IP Address"), d.get("IPAddress"))
@@ -1043,27 +1044,27 @@ class LmRepHandler:
         try:
             d = self._api._info.get_mtu()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("MTU"), "NeMo.Intf.data:getFirstParameter query error", LmTools.ValQual.Error)
         else:
-            i = self.add_info_line(i, lx("MTU"), LmTools.fmt_int(d))
+            i = self.add_info_line(i, lx("MTU"), LmUtils.fmt_int(d))
 
         i = self.add_title_line(i, lx("Link to the Livebox"))
 
         try:
             d = self._api._info.get_uplink_info()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("Livebox link Infos"), "UplinkMonitor.DefaultGateway:get query error", LmTools.ValQual.Error)
         else:
             i = self.add_info_line(i, lx("IP Address"), d.get("IPv4Address"))
-            i = self.add_info_line(i, lx("MAC Address"), LmTools.fmt_str_upper(d.get("MACAddress")))
-            i = self.add_info_line(i, lx("Interface"), LmTools.fmt_str_capitalize(d.get("NeMoIntfName")))
+            i = self.add_info_line(i, lx("MAC Address"), LmUtils.fmt_str_upper(d.get("MACAddress")))
+            i = self.add_info_line(i, lx("Interface"), LmUtils.fmt_str_capitalize(d.get("NeMoIntfName")))
 
         try:
             b, d = self._api._intf.get_eth_mibs()
         except Exception as e:
-            LmTools.error(str(e))
+            LmUtils.error(str(e))
             i = self.add_info_line(i, lx("LAN"), "NeMo.Intf.lan:getMIBs query error", LmTools.ValQual.Error)
         else:
             for s in self._netIntf:
@@ -1076,13 +1077,13 @@ class LmRepHandler:
                 if (q is None) or (r is None):
                     continue
 
-                i = self.add_info_line(i, lx("Enabled"), LmTools.fmt_bool(q.get("Enable")))
-                i = self.add_info_line(i, lx("Active"), LmTools.fmt_bool(q.get("Status")))
-                i = self.add_info_line(i, lx("Current Bit Rate"), LmTools.fmt_int(r.get("CurrentBitRate")))
-                i = self.add_info_line(i, lx("Max Bit Rate Supported"), LmTools.fmt_int(r.get("MaxBitRateSupported")))
+                i = self.add_info_line(i, lx("Enabled"), LmUtils.fmt_bool(q.get("Enable")))
+                i = self.add_info_line(i, lx("Active"), LmUtils.fmt_bool(q.get("Status")))
+                i = self.add_info_line(i, lx("Current Bit Rate"), LmUtils.fmt_int(r.get("CurrentBitRate")))
+                i = self.add_info_line(i, lx("Max Bit Rate Supported"), LmUtils.fmt_int(r.get("MaxBitRateSupported")))
                 i = self.add_info_line(i, lx("Current Duplex Mode"), r.get("CurrentDuplexMode"))
-                i = self.add_info_line(i, lx("Power Saving Supported"), LmTools.fmt_bool(q.get("PowerSavingSupported")))
-                i = self.add_info_line(i, lx("Power Saving Enabled"), LmTools.fmt_bool(q.get("PowerSavingEnabled")))
+                i = self.add_info_line(i, lx("Power Saving Supported"), LmUtils.fmt_bool(q.get("PowerSavingSupported")))
+                i = self.add_info_line(i, lx("Power Saving Enabled"), LmUtils.fmt_bool(q.get("PowerSavingEnabled")))
 
         return i
 
@@ -1115,7 +1116,7 @@ class RepeaterStatsThread(LmThread):
                         try:
                             d = r._api._stats.get_intf(s["Key"])
                         except Exception as e:
-                            LmTools.error(str(e))
+                            LmUtils.error(str(e))
                             # If session has timed out on Repeater side, resign
                             r.signin(silent=True)
                         else:

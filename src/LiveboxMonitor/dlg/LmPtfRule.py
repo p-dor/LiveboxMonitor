@@ -4,6 +4,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmTools, LmConfig, LmPatPtf
 from LiveboxMonitor.lang.LmLanguages import get_ptf_rule_label as lx, get_nat_pat_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ PTF rule dialog ################################
@@ -160,9 +161,9 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
         # Adjust IP field validator
         if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6Pfix_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv6Pfix_RS}$")
         else:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4Pfix_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv4Pfix_RS}$")
         self._ip_edit.setValidator(QtGui.QRegularExpressionValidator(ip_reg_exp))
 
 
@@ -224,12 +225,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         # Validate IP address
         ip = self.get_ip()
         if t == LmPatPtf.RULE_TYPE_IPv6:
-            if not LmTools.is_ipv6_pfix(ip):
+            if not LmUtils.is_ipv6_pfix(ip):
                 self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
         else:
-            if not LmTools.is_ipv4_pfix(ip):
+            if not LmUtils.is_ipv4_pfix(ip):
                 self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
@@ -245,12 +246,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
                     return
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmTools.is_ipv6_pfix(ip):
+                    if not LmUtils.is_ipv6_pfix(ip):
                         self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
                 else:
-                    if not LmTools.is_ipv4_pfix(ip):
+                    if not LmUtils.is_ipv4_pfix(ip):
                         self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return

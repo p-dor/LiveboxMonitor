@@ -7,6 +7,7 @@ from PyQt6 import QtCore, QtWidgets
 from LiveboxMonitor.app import LmTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_export_table_label as lx, get_main_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ Export table dialog ################################
@@ -71,7 +72,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         try:
             export_file = open(file_name, "w", newline="")
         except Exception as e:
-            LmTools.error(f"File creation error: {e}")
+            LmUtils.error(f"File creation error: {e}")
             self._app.display_error(mx("Cannot create the file.", "createFileErr"))
             return
 
@@ -98,7 +99,7 @@ class ExportTableDialog(QtWidgets.QDialog):
         try:
             export_file.close()
         except Exception as e:
-            LmTools.error(f"File saving error: {e}")
+            LmUtils.error(f"File saving error: {e}")
             self._app.display_error(mx("Cannot save the file.", "saveFileErr"))
  
         self._app._task.end()

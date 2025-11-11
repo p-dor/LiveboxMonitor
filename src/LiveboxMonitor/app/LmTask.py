@@ -3,6 +3,7 @@
 from PyQt6 import QtCore
 
 from LiveboxMonitor.app import LmTools
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ LmTask class ################################
@@ -19,7 +20,7 @@ class LmTask:
         self._stack.append(task)
         LmTools.mouse_cursor_busy() # Stack cursor change
         self.display(task)
-        LmTools.log_debug(1, f"TASK STARTING stack={self._index} task={task}")
+        LmUtils.log_debug(1, f"TASK STARTING stack={self._index} task={task}")
 
 
     ### Suspend a potential running task
@@ -39,7 +40,7 @@ class LmTask:
         if self._index:
             task = self._stack[self._index - 1]
             self.display(f"{task} {status}." if task else f"{status}.")
-            LmTools.log_debug(1, f"TASK UPDATE stack={self._index} - task={task} - status={status}")
+            LmUtils.log_debug(1, f"TASK UPDATE stack={self._index} - task={task} - status={status}")
 
 
     ### End a (nested) task
@@ -56,7 +57,7 @@ class LmTask:
                 task = "<None>"
                 self.display(None)
 
-            LmTools.log_debug(1, f"TASK ENDING stack={self._index} - restoring={task}")
+            LmUtils.log_debug(1, f"TASK ENDING stack={self._index} - restoring={task}")
 
 
     ### Display task / erase status is None

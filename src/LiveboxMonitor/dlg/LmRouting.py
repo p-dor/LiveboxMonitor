@@ -7,10 +7,11 @@ import string
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate, NumericSortItem
 from LiveboxMonitor.lang.LmLanguages import get_routing_label as lx, get_actions_message as mx
+from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################
@@ -87,7 +88,7 @@ class RoutingSetupDialog(QtWidgets.QDialog):
         rule_group_box.setLayout(rule_layout)
 
         # Add/Modify rule box
-        ip_reg_exp = QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$")
+        ip_reg_exp = QtCore.QRegularExpression("^" + LmUtils.IPv4_RS + "$")
         ip_validator = QtGui.QRegularExpressionValidator(ip_reg_exp)
 
         dest_network_label = QtWidgets.QLabel(lx("Destination network"), objectName="destNetworkLabel")
@@ -171,7 +172,7 @@ class RoutingSetupDialog(QtWidgets.QDialog):
             try:
                 d = self._api._routing.get_list()
             except Exception as e:
-                LmTools.error(str(e))
+                LmUtils.error(str(e))
                 self._app.display_error(mx("Cannot load routing table.", "routingLoadErr"))
                 return
 
@@ -440,7 +441,7 @@ class RoutingSetupDialog(QtWidgets.QDialog):
     def generate_livebox_route(self, rule_name):
         # Validate destination network
         dest_network = self._dest_network.text()
-        if not LmTools.is_ipv4(dest_network):
+        if not LmUtils.is_ipv4(dest_network):
             self._app.display_error(mx("{} is not a valid address.", "addrErr").format(dest_network))
             self._dest_network.setFocus()
             return None
@@ -456,7 +457,7 @@ class RoutingSetupDialog(QtWidgets.QDialog):
 
         # Validate gateway address
         gateway = self._gateway.text()
-        if not LmTools.is_ipv4(gateway):
+        if not LmUtils.is_ipv4(gateway):
             self._app.display_error(mx("{} is not a valid address.", "addrErr").format(gateway))
             self._gateway.setFocus()
             return None
