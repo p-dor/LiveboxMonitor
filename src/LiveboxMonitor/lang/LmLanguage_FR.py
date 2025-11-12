@@ -698,7 +698,8 @@ LABELS = {
         "Add...": "Ajouter...",
         "Enter MAC address to filter:": "Entrez une adresse MAC à filter:",
         "Already in the list: {}": "Déjà dans la liste : {}",
-        "Invalid MAC address: {}": "Adresse MAC invalide : {}"
+        "Invalid MAC address: {}": "Adresse MAC invalide : {}",
+        "Bandwidth": "Largeur de bande"
     },
 
     # Actions - Wifi global status

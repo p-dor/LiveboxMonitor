@@ -96,6 +96,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
             mode_label = QtWidgets.QLabel(lx("Mode"), objectName="modeLabel")
             self._mode_combo = QtWidgets.QComboBox(objectName="modeCombo")
 
+            bandwidth_label = QtWidgets.QLabel(lx("Bandwidth"), objectName="bandwidthLabel")
+            self._bandwidth_combo = QtWidgets.QComboBox(objectName="bandwidthCombo")
+
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
 
@@ -147,6 +150,8 @@ class WifiConfigDialog(QtWidgets.QDialog):
             grid.addWidget(self._chan_combo, 8, 1)
             grid.addWidget(mode_label, 9, 0)
             grid.addWidget(self._mode_combo, 9, 1)
+            grid.addWidget(bandwidth_label, 10, 0)
+            grid.addWidget(self._bandwidth_combo, 10, 1)
 
         self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
@@ -299,6 +304,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             self._mac_filtering_entries_combo.setDataSelection(i["MACFilteringEntries"])
             self.load_chan_combo()
             self.load_mode_combo()
+            self.load_bandwidth_combo()
 
 
     def save_freq_config(self):
@@ -326,6 +332,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
                     i["ChannelAuto"] = False
                     i["Channel"] = int(chan)
                 i["Mode"] = self._mode_combo.currentText()
+                i["Bandwidth"] = self._bandwidth_combo.currentText()
 
 
     def pass_show_toggle(self, checked):
@@ -491,6 +498,48 @@ class WifiConfigDialog(QtWidgets.QDialog):
 
         if selection >= 0:
             self._mode_combo.setCurrentIndex(selection)
+
+
+    def load_bandwidth_combo(self):
+        key, i = self.get_current_key_intf()
+        if i is None:
+            return
+        intf = i["LLIntf"]
+
+        modes = self._config["Modes"].get(intf)
+        if modes is not None:
+            bandwidths = modes.get("Bandwidths")
+        if modes is None:
+            LmUtils.error("Internal error, unconsistent configuration - no bandwidth list")
+            self.reject()
+            return
+        bandwidths = bandwidths.split(",")
+
+        current_bandwidth = i["Bandwidth"]
+
+        self._bandwidth_combo.clear()
+        n = 0
+        selection = -1
+        for b in bandwidths:
+            self._bandwidth_combo.addItem(b)
+            if b == current_bandwidth:
+                selection = n
+            n += 1
+
+        if selection == -1:
+            if current_bandwidth is not None:
+                self._bandwidth_combo.addItem(current_bandwidth)
+                selection = n
+                LmUtils.log_debug(1, f"Warning - bandwidth {current_bandwidth} not in list")
+            elif n == 0:
+                LmUtils.error("Internal error, unconsistent configuration - no bandwidth")
+                self.reject()
+            else:
+                LmUtils.log_debug(1, "Warning - no bandwidth, defaulting to first")
+                selection = 0
+
+        if selection >= 0:
+            self._bandwidth_combo.setCurrentIndex(selection)
 
 
     def get_current_key_intf(self):
