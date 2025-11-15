@@ -444,7 +444,7 @@ class WifiApi(LmApi):
                 m["ChannelsInUse"] = d.get("ChannelsInUse")
                 bandwidths = d.get("SupportedOperatingChannelBandwidth")
                 if bandwidths:
-                    m["Bandwidths"] = d.get("SupportedOperatingChannelBandwidth")
+                    m["Bandwidths"] = bandwidths
                 else:
                     bandwidths = []
                     auto_enabled = d.get("AutoChannelEnable")
