@@ -691,6 +691,7 @@ LABELS = {
         "Security": "Sécurité",
         "Password": "Mot de passe",
         "Channel": "Canal",
+        "Bandwidth": "Largeur de bande",
         "Cancel": "Annuler",
         "Guest Wifi Configuration": "Configuration du Wifi Invité",
         "Wifi Configuration": "Configuration du Wifi",
@@ -1587,7 +1588,8 @@ TOOLTIPS = {
         "passShow": "Permet d'afficher/masquer le mot de passe.",
         "chanCombo": "Canal à utiliser pour la bande radio sélectionnée.\n"
                      "Sélectionner 'Auto' pour une sélection automatique.",
-        "modeCombo": "Mode de connexion pour la bande radio sélectionnée."
+        "modeCombo": "Mode de connexion pour la bande radio sélectionnée.",
+        "bandwidthCombo": "Largeur de bande à utiliser pour la bande radio sélectionnée."
     },
 
     # Actions - Wifi global status

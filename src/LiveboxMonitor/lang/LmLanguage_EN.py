@@ -567,7 +567,8 @@ TOOLTIPS = {
         "passShow": "Allows you to show/hide the password.",
         "chanCombo": "Channel to use for the selected radio band.\n"
                      "Select 'Auto' for automatic selection.",
-        "modeCombo": "Connection mode for the selected radio band."
+        "modeCombo": "Connection mode for the selected radio band.",
+        "bandwidthCombo": "Bandwidth to use for the selected radio band."
     },
 
     # Actions - Wifi global status

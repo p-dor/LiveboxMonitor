@@ -80,12 +80,20 @@ def error(*args, **kwargs):
     print("###ERROR:", *args, file=sys.stderr, **kwargs)
 
 
+### Extract firt found numerical from any string
+def extract_int_from_string(string):
+    match = re.search(r'\d+', string)
+    if match:
+        return int(match.group())
+    return None
+
+
 ### Extract a valid MAC Addr from any string
 def extract_mac_addr_from_string(string):
     match = re.search(MAC_RE, string)
-    if match is None:
-        return ""
-    return match.group(0)
+    if match:
+        return match.group(0)
+    return ""
 
 
 ### Check if valid MAC address

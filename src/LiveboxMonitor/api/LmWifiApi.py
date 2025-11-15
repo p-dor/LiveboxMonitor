@@ -424,6 +424,7 @@ class WifiApi(LmApi):
             c["ChannelAutoSupport"] = q.get("AutoChannelSupported")
             c["ChannelAuto"] = q.get("AutoChannelEnable")
             c["Channel"] = q.get("Channel")
+            c["Bandwidth"] = q.get("OperatingChannelBandwidth")
 
             intf.append(c)
         config["Intf"] = intf
@@ -441,6 +442,24 @@ class WifiApi(LmApi):
                 m["Modes"] = d.get("SupportedStandards")
                 m["Channels"] = d.get("PossibleChannels")
                 m["ChannelsInUse"] = d.get("ChannelsInUse")
+                bandwidths = d.get("SupportedOperatingChannelBandwidth")
+                if bandwidths:
+                    m["Bandwidths"] = d.get("SupportedOperatingChannelBandwidth")
+                else:
+                    bandwidths = []
+                    auto_enabled = d.get("AutoChannelEnable")
+                    max_bandwidth = d.get("MaxChannelBandwidth")
+                    if auto_enabled:
+                        bandwidths.append("Auto")
+                    if max_bandwidth:
+                        max_bandwidth = LmUtils.extract_int_from_string(max_bandwidth)
+                    if max_bandwidth:
+                        bandwidth = 20
+                        while bandwidth <= max_bandwidth:
+                            bandwidths.append(f"{bandwidth}MHz")
+                            bandwidth *= 2
+                    m["Bandwidths"] = ",".join(bandwidths) if bandwidths else None
+
                 modes[intf_key] = m
         config["Modes"] = modes
 
@@ -509,11 +528,12 @@ class WifiApi(LmApi):
                 v["MACFiltering"] = filtering
             if ((o["ChannelAuto"] != n["ChannelAuto"]) or 
                 (o["Channel"] != n["Channel"]) or
-                (o["Mode"] != n["Mode"])):
+                (o["Mode"] != n["Mode"]) or
+                (o["Bandwidth"] != n["Bandwidth"])):
                 if n["ChannelAuto"]:
-                    r = {"AutoChannelEnable": True, "OperatingStandards": n["Mode"]}
+                    r = {"AutoChannelEnable": True, "OperatingStandards": n["Mode"], "OperatingChannelBandwidth": n["Bandwidth"]}
                 else:
-                    r = {"AutoChannelEnable": False, "Channel": n["Channel"], "OperatingStandards": n["Mode"]}
+                    r = {"AutoChannelEnable": False, "Channel": n["Channel"], "OperatingStandards": n["Mode"], "OperatingChannelBandwidth": n["Bandwidth"]}
             else:
                 r = {}
             if (o["Enable"] != n["Enable"]):
