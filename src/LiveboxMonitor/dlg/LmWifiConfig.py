@@ -26,7 +26,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         if self._guest:
             self.resize(390, 350)
         else:
-            self.resize(390, 380)
+            self.resize(390, 420)
 
         self._enable_checkbox = QtWidgets.QCheckBox(lx("Enabled"), objectName="enableCheckbox")
         self._enable_checkbox.clicked.connect(self.enable_click)
@@ -476,13 +476,11 @@ class WifiConfigDialog(QtWidgets.QDialog):
         current_mode = i["Mode"]
 
         self._mode_combo.clear()
-        n = 0
         selection = -1
-        for m in modes:
+        for n, m in enumerate(modes):
             self._mode_combo.addItem(m)
             if m == current_mode:
                 selection = n
-            n += 1
 
         if selection == -1:
             if current_mode is not None:
@@ -509,33 +507,32 @@ class WifiConfigDialog(QtWidgets.QDialog):
         modes = self._config["Modes"].get(intf)
         if modes is not None:
             bandwidths = modes.get("Bandwidths")
-        if modes is None:
-            LmUtils.error("Internal error, unconsistent configuration - no bandwidth list")
-            self.reject()
-            return
-        bandwidths = bandwidths.split(",")
-
-        current_bandwidth = i["Bandwidth"]
+        else:
+            bandwidths = None
 
         self._bandwidth_combo.clear()
-        n = 0
         selection = -1
-        for b in bandwidths:
-            self._bandwidth_combo.addItem(b)
-            if b == current_bandwidth:
-                selection = n
-            n += 1
+        current_bandwidth = i["Bandwidth"]
+
+        if bandwidths is None:
+            self._bandwidth_combo.setEnabled(False)
+            n = 0
+        else:
+            self._bandwidth_combo.setEnabled(True)
+            bandwidths = bandwidths.split(",")
+            for n, b in enumerate(bandwidths):
+                self._bandwidth_combo.addItem(b)
+                if b == current_bandwidth:
+                    selection = n
 
         if selection == -1:
             if current_bandwidth is not None:
                 self._bandwidth_combo.addItem(current_bandwidth)
                 selection = n
-                LmUtils.log_debug(1, f"Warning - bandwidth {current_bandwidth} not in list")
-            elif n == 0:
-                LmUtils.error("Internal error, unconsistent configuration - no bandwidth")
-                self.reject()
+                if bandwidths:
+                    LmUtils.log_debug(1, f"Warning - bandwidth {current_bandwidth} not in list")
             else:
-                LmUtils.log_debug(1, "Warning - no bandwidth, defaulting to first")
+                LmUtils.log_debug(1, "Warning - no bandwidth set, defaulting to first")
                 selection = 0
 
         if selection >= 0:

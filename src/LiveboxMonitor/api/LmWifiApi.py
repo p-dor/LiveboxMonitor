@@ -442,7 +442,24 @@ class WifiApi(LmApi):
                 m["Modes"] = d.get("SupportedStandards")
                 m["Channels"] = d.get("PossibleChannels")
                 m["ChannelsInUse"] = d.get("ChannelsInUse")
-                m["Bandwidths"] = d.get("SupportedOperatingChannelBandwidth")
+                bandwidths = d.get("SupportedOperatingChannelBandwidth")
+                if bandwidths:
+                    m["Bandwidths"] = d.get("SupportedOperatingChannelBandwidth")
+                else:
+                    bandwidths = []
+                    auto_enabled = d.get("AutoChannelEnable")
+                    max_bandwidth = d.get("MaxChannelBandwidth")
+                    if auto_enabled:
+                        bandwidths.append("Auto")
+                    if max_bandwidth:
+                        max_bandwidth = LmUtils.extract_int_from_string(max_bandwidth)
+                    if max_bandwidth:
+                        bandwidth = 20
+                        while bandwidth <= max_bandwidth:
+                            bandwidths.append(f"{bandwidth}MHz")
+                            bandwidth *= 2
+                    m["Bandwidths"] = ",".join(bandwidths) if bandwidths else None
+
                 modes[intf_key] = m
         config["Modes"] = modes
 
