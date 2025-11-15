@@ -793,6 +793,7 @@ LABELS = {
         "Password": "",
         "Channel": "",
         "Mode": "",
+        "Bandwidth": "",
         "OK": "",
         "Cancel": "",
         "Guest Wifi Configuration": "",
@@ -1664,6 +1665,8 @@ TOOLTIPS = {
         "chanCombo": "",
         "modeLabel": "",
         "modeCombo": "",
+        "bandwidthLabel": "",
+        "bandwidthCombo": "",
         "ok": "",
         "cancel": ""
     },

@@ -691,6 +691,7 @@ LABELS = {
         "Security": "Sécurité",
         "Password": "Mot de passe",
         "Channel": "Canal",
+        "Bandwidth": "Largeur de bande",
         "Cancel": "Annuler",
         "Guest Wifi Configuration": "Configuration du Wifi Invité",
         "Wifi Configuration": "Configuration du Wifi",
@@ -698,8 +699,7 @@ LABELS = {
         "Add...": "Ajouter...",
         "Enter MAC address to filter:": "Entrez une adresse MAC à filter:",
         "Already in the list: {}": "Déjà dans la liste : {}",
-        "Invalid MAC address: {}": "Adresse MAC invalide : {}",
-        "Bandwidth": "Largeur de bande"
+        "Invalid MAC address: {}": "Adresse MAC invalide : {}"
     },
 
     # Actions - Wifi global status
@@ -1588,7 +1588,8 @@ TOOLTIPS = {
         "passShow": "Permet d'afficher/masquer le mot de passe.",
         "chanCombo": "Canal à utiliser pour la bande radio sélectionnée.\n"
                      "Sélectionner 'Auto' pour une sélection automatique.",
-        "modeCombo": "Mode de connexion pour la bande radio sélectionnée."
+        "modeCombo": "Mode de connexion pour la bande radio sélectionnée.",
+        "bandwidthCombo": "Largeur de bande à utiliser pour la bande radio sélectionnée."
     },
 
     # Actions - Wifi global status
