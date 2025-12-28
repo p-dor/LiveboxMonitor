@@ -187,7 +187,7 @@ class IntfApi(LmApi):
                 i["Type"] = "wan"
                 i["SwapStats"] = False
                 wan.append(i)
-            elif name == "WAN_GPON":
+            elif (name == "WAN_GPON") or (name == "WAN_XGSPON"):
                 i = {}
                 i["Key"] = k
                 i["Name"] = FRIENDLY_NAME_MAP.get(name, name)
