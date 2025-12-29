@@ -153,14 +153,9 @@ class WifiApi(LmApi):
 
     ### Get Wifi Scheduler enable status - legacy method
     def get_scheduler_enable_legacy(self):
-        d = self.call_raw("Scheduler", "getCompleteSchedules", {"type": "WLAN"})
-        if not d.get("status", False):
-            raise LmApiException(f"Scheduler:getCompleteSchedules service failed.")
-        d = d.get("data")
+        d = self.get_complete_schedules()
         if d:
-            d = d.get("scheduleInfo", [])
-            if d and isinstance(d, list):
-                return d[0].get("enable")
+            return d.get("enable")
         return None
 
 
@@ -186,36 +181,24 @@ class WifiApi(LmApi):
                     }]
                 self.call("PowerManagement", "setScheduledProfiles", {"profiles": p})
             else:
-                self.call("PowerManagement", "setProfiles", {"profiles": [{"profile": "WiFi", "activate": False}]})
+                self.call("PowerManagement", "setProfiles", {"profiles": [{"profile": "WiFi", "activate": False , "enable": True}]})
         except Exception as e:
             LmUtils.error(f"PowerManagement method failed with error={e}, trying legacy method.")
             return self.set_scheduler_enable_legacy(enable)
 
-        # ID has to remain 'wl0' - it is NOT corresponding to an intf key
-        intf_id = "wl0"
-
-        # Get current schedule info
-        d = self.call_raw("Scheduler", "getSchedule", {"type": "WLAN", "ID": intf_id})
-        status = d.get("status")   #Warning: seems status can be easily false, need to investigate
-        if status:
-            d = d.get("data")
-            if d:
-                d = d.get("scheduleInfo")
-        else:
-            d = None
-        if d:
-            schedule = d
-        else:
-            raise LmApiException(f"Scheduler:getSchedule service failed for {intf_id} interface.")
+        # Get complete schedules
+        schedule = self.get_complete_schedules()
+        if not schedule:
+            return
 
         # Add schedule with proper status
         p = {"base": schedule.get("base"),
              "def": schedule.get("def"),
-             "ID": intf_id,
+             "ID": schedule.get("ID"),
              "schedule": schedule.get("schedule"),
              "enable": enable,
              "override": ""}
-        d = self.call("Scheduler", "addSchedule", {"type": "WLAN", "info": p}, err_str=intf_id)
+        d = self.call("Scheduler", "addSchedule", {"type": "WLAN", "info": p})
 
 
     ### Legacy method to set Wifi Scheduler on or off
@@ -307,6 +290,19 @@ class WifiApi(LmApi):
     def set_scheduler_enable_repeater(self, enable):
         # ID has to remain 'wl0' - it is NOT corresponding to an intf key
         self.call("Scheduler", "enableSchedule", {"type": "WLAN", "ID": "wl0", "enable": enable})
+
+
+    ### Get complete schedules data
+    def get_complete_schedules(self):
+        d = self.call_raw("Scheduler", "getCompleteSchedules", {"type": "WLAN"})
+        if not d.get("status", False):
+            raise LmApiException(f"Scheduler:getCompleteSchedules service failed.")
+        d = d.get("data")
+        if d:
+            d = d.get("scheduleInfo", [])
+            if d and isinstance(d, list):
+                return d[0]
+        return None
 
 
     ### Get PowerManagement profiles, by default returns all
