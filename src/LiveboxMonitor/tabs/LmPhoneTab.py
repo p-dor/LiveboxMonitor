@@ -56,8 +56,11 @@ class CallType(IntEnum):
     Failed = 4
 
 # Check spam URLs
-CHECK_SPAM_URL1 = "https://www.numeroinconnu.fr/numero/{}"
-CHECK_SPAM_URL2 = "https://callfilter.app/{}"
+CHECK_SPAM_URLS = [
+    { "url": "https://www.numeroinconnu.fr/numero/{}", "intl": True },
+    { "url": "https://callfilter.app/{}", "intl": True },
+    { "url": "https://orange-telephone.com/fr/antispam/{}", "intl": False }
+]
 
 # CallFilter URL
 CALLFILTER_URL = "https://api.callfilter.app/apis/{0}/1/{1}"
@@ -299,9 +302,10 @@ class LmPhone:
     def spam_call_sites_button_click(self):
         i = self._call_list.currentRow()
         if i >= 0:
-            phone_nb = LmPhone.intl_phone_number(self._call_list.item(i, CallCol.Number).text(), False)
-            webbrowser.open_new_tab(CHECK_SPAM_URL1.format(phone_nb))
-            webbrowser.open_new_tab(CHECK_SPAM_URL2.format(phone_nb))
+            phone_nb = self._call_list.item(i, CallCol.Number).text()
+            intl_phone_nb = LmPhone.intl_phone_number(phone_nb, False)
+            for spam_web in CHECK_SPAM_URLS:
+                webbrowser.open_new_tab(spam_web["url"].format(intl_phone_nb if spam_web["intl"] else phone_nb))
         else:
             self.display_error(mx("Please select a phone call.", "callSelect"))
 
