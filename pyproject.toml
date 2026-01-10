@@ -28,7 +28,8 @@ dependencies = [
     "python-dateutil",
     "cryptography",
     "pyqtgraph",
-    "wakepy"
+    "wakepy",
+    "xmltodict"
 ]
 requires-python = ">=3.10"
 
