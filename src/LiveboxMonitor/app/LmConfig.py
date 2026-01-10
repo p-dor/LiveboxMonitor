@@ -410,6 +410,7 @@ def get_hardware_key():
 # ################################ Config Class ################################
 class LmConf:
     Secret = None
+    CacheDir = None
     Profiles = None
     CurrProfile = None
     LiveboxURL = DCFG_LIVEBOX_URL
@@ -1108,11 +1109,23 @@ class LmConf:
             return "."
 
 
+    ### Set cache directory
+    @staticmethod
+    def set_cache_directory(lb_soft_version):
+        LmConf.CacheDir = os.path.join(LmConf.get_config_directory(), LIVEBOX_CACHE_DIR + lb_soft_version)
+
+
+    ### Get cache directory
+    @staticmethod
+    def get_cache_directory():
+        return LmConf.CacheDir
+
+
     ### Get a device icon from cache file
     @staticmethod
-    def get_device_icon_cache(device, lb_soft_version):
+    def get_device_icon_cache(device):
         icon_pixmap = None
-        icon_dir_path = os.path.join(LmConf.get_config_directory(), LIVEBOX_CACHE_DIR + lb_soft_version, LIVEBOX_ICON_CACHE_DIR)
+        icon_dir_path = os.path.join(LmConf.get_cache_directory(), LIVEBOX_ICON_CACHE_DIR)
         icon_file_path = os.path.join(icon_dir_path, device["Icon"])
         if os.path.isfile(icon_file_path):
             icon_pixmap = QtGui.QPixmap()
@@ -1124,8 +1137,8 @@ class LmConf:
 
     ### Set a device icon to cache file
     @staticmethod
-    def set_device_icon_cache(device, lb_soft_version, content):
-        icon_dir_path = os.path.join(LmConf.get_config_directory(), LIVEBOX_CACHE_DIR + lb_soft_version, LIVEBOX_ICON_CACHE_DIR)
+    def set_device_icon_cache(device, content):
+        icon_dir_path = os.path.join(LmConf.get_cache_directory(), LIVEBOX_ICON_CACHE_DIR)
         icon_file_path = os.path.join(icon_dir_path, device["Icon"])
 
         # Create icon cache directory if doesn't exist
@@ -1146,7 +1159,7 @@ class LmConf:
 
     ### Get a device icon
     @staticmethod
-    def get_device_icon(device, lb_soft_version):
+    def get_device_icon(device):
         if LmConf.AllDeviceIconsLoaded:
             return device["PixMap"]
         else:
@@ -1154,7 +1167,7 @@ class LmConf:
 
             # First try to get icon from local cache
             if icon_pixmap is None:
-                icon_pixmap = LmConf.get_device_icon_cache(device, lb_soft_version)
+                icon_pixmap = LmConf.get_device_icon_cache(device)
 
             # Ultimately load the icon from Livebox URL
             if icon_pixmap is None:
@@ -1175,7 +1188,7 @@ class LmConf:
 
                 # If successfully loaded, try to store in local cache file for faster further loads
                 if store_in_cache:
-                    LmConf.set_device_icon_cache(device, lb_soft_version, icon_data.content)
+                    LmConf.set_device_icon_cache(device, icon_data.content)
 
             device["PixMap"] = icon_pixmap
             return icon_pixmap
@@ -1183,10 +1196,10 @@ class LmConf:
 
     ### Load all device icons
     @staticmethod
-    def load_device_icons(lb_soft_version):
+    def load_device_icons():
         if not LmConf.AllDeviceIconsLoaded:
             for d in DEVICE_TYPES:
-                LmConf.get_device_icon(d, lb_soft_version)
+                LmConf.get_device_icon(d)
 
             LmConf.AllDeviceIconsLoaded = True
 
