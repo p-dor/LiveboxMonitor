@@ -362,7 +362,7 @@ class LmDeviceList:
     ### Update device line
     def update_device_line(self, line, device, notify):
         device_type = device.get("DeviceType", "")
-        device_type_icon = self.format_device_type_table_widget(device_type, self._api._info.get_software_version())
+        device_type_icon = self.format_device_type_table_widget(device_type)
         self._device_list.setItem(line, DevCol.Type, device_type_icon)
 
         lb_name = QtWidgets.QTableWidgetItem(device.get("Name", ""))
@@ -453,13 +453,13 @@ class LmDeviceList:
 
     ### Format device type cell
     @staticmethod
-    def format_device_type_table_widget(device_type, lb_soft_version):
+    def format_device_type_table_widget(device_type):
         device_type_icon = NumericSortItem()
         device_type_name = device_type
 
         for i, d in enumerate(LmConfig.DEVICE_TYPES):
             if device_type == d["Key"]:
-                device_type_icon.setIcon(QtGui.QIcon(LmConf.get_device_icon(d, lb_soft_version)))
+                device_type_icon.setIcon(QtGui.QIcon(LmConf.get_device_icon(d)))
                 device_type_name = d["Name"]
                 break
 
