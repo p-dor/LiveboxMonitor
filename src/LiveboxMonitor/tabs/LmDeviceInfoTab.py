@@ -194,7 +194,7 @@ class LmDeviceInfo:
         if key:
             self._task.start(lx("Loading device icons..."))
             try:
-                LmConf.load_device_icons(self._api._info.get_software_version())
+                LmConf.load_device_icons()
             finally:
                 self._task.end()
 
