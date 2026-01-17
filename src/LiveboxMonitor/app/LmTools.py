@@ -402,3 +402,35 @@ class CheckableComboBox(QtWidgets.QComboBox):
     def showEvent(self, event):
         super().showEvent(event)
         self.updateText()
+
+
+# ############# Label with dynamic height #############
+# Works must better than a QLabel with auto wrap
+
+class AutoHeightLabel(QtWidgets.QTextEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.setReadOnly(True)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setStyleSheet("QTextEdit {border: none; background: transparent; padding: 0;}")
+        self.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.NoTextInteraction)
+        self.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.NoContextMenu)
+
+        self.textChanged.connect(self.adjustHeight)
+
+
+    def setText(self, text):
+        self.document().setPlainText(text)
+
+
+    def adjustHeight(self):
+        doc = self.document()
+        margins = self.contentsMargins()
+        height = int(doc.size().height() + margins.top() + margins.bottom())
+        self.setFixedHeight(max(height, self.fontMetrics().height()))  # Min 1 line
+
+
+    def sizeHint(self):
+        return self.size()
