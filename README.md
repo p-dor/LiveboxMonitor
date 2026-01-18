@@ -50,7 +50,7 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 
 L'application est écrite en [Python 3.11](https://www.python.org/downloads/) et est basée sur [PyQT 6](https://pypi.org/project/PyQt6/) pour l'interface graphique et sur [PyQtGraph](https://www.pyqtgraph.org/) pour les graphes statistiques.
 
-Les autres dépendances sont `requests`, `cryptography`, `wakepy` et `python-dateutil`.
+Les autres dépendances sont `requests`, `cryptography`, `wakepy`, `xmltodict` et `python-dateutil`.
 
 **Note** : Le module `LmSession` est une adaptation du package [sysbus](https://github.com/rene-d/sysbus) pour les Livebox 5, 6 & 7. Le support des événements a aussi été rajouté.
 
@@ -782,7 +782,7 @@ Les actions concernant les **Redémarrages** :
 
 Les actions diverses :
 - **`Appel APIs...`** : permet d'appeler directement les APIs REST/JSON du répéteur. Une sélection d'appels est disponible en raccourci mais n'importe quel appel est possible. Pour utilisateurs avertis uniquement.
-- **Réauthentifier...** : pour forcer la création d'une nouvelle session avec le répéteur. Si vous laissez trop longtemps le programme tourner sans visualiser les statistiques du répéteur ni effectuer la moindre action, la session sera automatiquement libérée par le répéteur. Dans ce cas des erreurs vont se produire en effectuant des actions : ce bouton permettra de recréer la session, permettant de reprendre les actions sans erreur.
+- **`Réauthentifier...`** : pour forcer la création d'une nouvelle session avec le répéteur. Si vous laissez trop longtemps le programme tourner sans visualiser les statistiques du répéteur ni effectuer la moindre action, la session sera automatiquement libérée par le répéteur. Dans ce cas des erreurs vont se produire en effectuant des actions : ce bouton permettra de recréer la session, permettant de reprendre les actions sans erreur.
 
 ### Boutons
 Les onglets de répéteur Wifi proposent les boutons suivants :
