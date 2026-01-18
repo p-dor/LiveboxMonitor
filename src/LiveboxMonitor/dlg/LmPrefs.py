@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmQtTools, LmConfig
+from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import get_config_prefs_label as lx,  get_config_message as mx
@@ -297,11 +297,11 @@ class PrefsDialog(QtWidgets.QDialog):
         # Check if name is not duplicated
         profile_name = self._profile_name.text()
         if len(profile_name) == 0:
-            LmQtTools.display_error(mx("Please set profile name.", "profileName"))
+            self.parent().display_error(mx("Please set profile name.", "profileName"))
             return False
 
         if self.count_profile_name(profile_name) > 1:
-            LmQtTools.display_error(mx("Duplicated name.", "profileDup"))
+            self.parent().display_error(mx("Duplicated name.", "profileDup"))
             return False
 
         # If default profile is selected, set all others to false
@@ -358,7 +358,7 @@ class PrefsDialog(QtWidgets.QDialog):
     ### Click on delete profile button
     def del_profile_button_click(self):
         if len(self._profiles) == 1:
-            LmQtTools.display_error(mx("You must have at least one profile.", "profileOne"))
+            self.parent().display_error(mx("You must have at least one profile.", "profileOne"))
             return
 
         # Delete the list line

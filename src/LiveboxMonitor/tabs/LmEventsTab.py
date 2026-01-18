@@ -164,9 +164,9 @@ class LmEvents:
             self.stop_notification_timer()
             self.start_notification_timer()
             if LmEvents.notify_has_email_rule() and (LmConf.Email is None):
-                if LmQtTools.ask_question(mx("You have configured at least one rule with sending emails as an action but "
-                                             "you have not configured how to send emails. "
-                                             "Do you want to configure how to send emails?", "email")):
+                if self.ask_question(mx("You have configured at least one rule with sending emails as an action but "
+                                        "you have not configured how to send emails. "
+                                        "Do you want to configure how to send emails?", "email")):
                     self.email_setup_button_click()
 
 
