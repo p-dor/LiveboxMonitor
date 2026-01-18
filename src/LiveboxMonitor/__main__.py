@@ -80,6 +80,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self.show()
         QtCore.QCoreApplication.processEvents()
         if self.signin():
+            LmConf.set_cache_directory(self._api._info.get_software_version())
             if not self._api._intf.build_list():
                 LmUtils.error("Failed to build interface list.")
             self.adjust_to_livebox_model()
@@ -159,8 +160,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Handle change of tab event
     def tab_changed_event(self, new_tab_index):
         if self._app_ready:
-            tab_name = self._tab_widget.widget(new_tab_index).objectName()
-            match tab_name:
+            tab = self._tab_widget.widget(new_tab_index)
+            match tab.objectName():
                 case LmDeviceListTab.TAB_NAME:
                     if not NO_THREAD:
                         self.resume_wifi_stats_loop()
@@ -231,6 +232,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_stats_loop()
                         self.suspend_repeater_stats_loop()
                         self.resume_tvdecoder_status_loop()
+                    self.tvdecoder_tab_click(tab.property("Key"))
 
 
     ### Handle move of tab event
