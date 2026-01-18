@@ -7,7 +7,7 @@ from PyQt6 import QtCore, QtWidgets
 from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import get_dns_label as lx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -95,7 +95,7 @@ class DnsDialog(QtWidgets.QDialog):
                     active_icon = app.format_active_table_widget(active_status)
                     self._device_table.setItem(i, DnsCol.Active, active_icon)
 
-                    ip_struct = LmUtils.determine_ip(d)
+                    ip_struct = LmTools.determine_ip(d)
                     if ip_struct is None:
                         ipv4 = ""
                         ipv4_reacheable = ""

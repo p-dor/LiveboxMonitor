@@ -6,7 +6,7 @@ import webbrowser
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmGenApiDocumentation
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmConfig import LmConf, set_application_style
 from LiveboxMonitor.dlg.LmPrefs import PrefsDialog
@@ -23,7 +23,7 @@ from LiveboxMonitor.dlg.LmBackupRestore import BackupRestoreDialog
 from LiveboxMonitor.dlg.LmScreen import ScreenDialog
 from LiveboxMonitor.dlg.LmCallApi import CallApiDialog
 from LiveboxMonitor.lang.LmLanguages import get_actions_label as lx, get_actions_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 from LiveboxMonitor.__init__ import __url__, __copyright__
 
@@ -217,7 +217,7 @@ class LmActions:
         about_widgets.addWidget(app_icon, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
         app_name = QtWidgets.QLabel(self._application_name, objectName="appName")
-        app_name.setFont(LmTools.BOLD_FONT)
+        app_name.setFont(LmQtTools.BOLD_FONT)
         about_widgets.addWidget(app_name, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
         about_widgets.addWidget(QtWidgets.QLabel(lx("An Open Source project")), 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
@@ -495,7 +495,7 @@ class LmActions:
             try:
                 d = self._api._backup.get_status()
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 auto_restore_enabled = False
             else:
                 auto_restore_enabled = d.get("Enable", False)
@@ -578,7 +578,7 @@ class LmActions:
         ipv4_ping = d.get("enableIPv4")
         ipv6_ping = d.get("enableIPv6")
         if (ipv4_ping is None) or (ipv6_ping is None):
-            LmUtils.error("Cannot get respond to ping setup")
+            LmTools.error("Cannot get respond to ping setup")
 
         ping_response_dialog = PingResponseDialog(ipv4_ping, ipv6_ping, self)
         if ping_response_dialog.exec():

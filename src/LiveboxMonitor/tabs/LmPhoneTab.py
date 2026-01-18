@@ -14,7 +14,7 @@ from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.dlg.LmEditContact import EditContactDialog
 from LiveboxMonitor.lang.LmLanguages import get_phone_label as lx, get_phone_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -422,7 +422,7 @@ class LmPhone:
         try:
             call_list = self._api._voip.get_call_list()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self.display_error(mx("Error getting phone call list.", "callLoad"))
         else:
             for i, c in enumerate(call_list):
@@ -452,7 +452,7 @@ class LmPhone:
                         call_type_icon.setData(QtCore.Qt.ItemDataRole.UserRole, CallType.Missed)
                         missed_call = True
 
-                time = QtWidgets.QTableWidgetItem(LmUtils.fmt_livebox_timestamp(c.get("startTime")))
+                time = QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(c.get("startTime")))
                 time.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 number = QtWidgets.QTableWidgetItem(c.get("remoteNumber"))
                 number.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -461,7 +461,7 @@ class LmPhone:
                 contact = QtWidgets.QTableWidgetItem(contact_str)
 
                 seconds = c.get("duration")
-                duration = NumericSortItem(LmUtils.fmt_time(seconds, True))
+                duration = NumericSortItem(LmTools.fmt_time(seconds, True))
                 duration.setData(QtCore.Qt.ItemDataRole.UserRole, seconds)
                 duration.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 
@@ -580,9 +580,9 @@ class LmPhone:
                 spam = data.get("blocked")
                 if spam is not None:
                     return spam != 0
-                LmUtils.error("CallFilter response error: no blocked field")
+                LmTools.error("CallFilter response error: no blocked field")
             except Exception as e:
-                LmUtils.error(f"CallFilter error: {e}")
+                LmTools.error(f"CallFilter error: {e}")
         return False
 
 
@@ -666,7 +666,7 @@ class LmPhone:
         try:
             export_file = open(file_name, "w", encoding="utf-8")  # VCF standard charset is UTF-8
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self.display_error(mx("Cannot create the file.", "createFileErr"))
             return
 
@@ -674,7 +674,7 @@ class LmPhone:
         try:
             contact_list = self._api._voip.get_contact_list()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self.display_error(mx("Error getting contact list.", "contactLoad"))
         else:
             for c in contact_list:
@@ -695,7 +695,7 @@ class LmPhone:
         try:
             export_file.close()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
 
@@ -786,7 +786,7 @@ class LmPhone:
                     case _:
                         LmPhone.import_vcf_tag(c, tag, tag_params, l)
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             f.close()
             return 0
 
@@ -873,7 +873,7 @@ class LmPhone:
         try:
             contact_list = self._api._voip.get_contact_list()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self.display_error(mx("Error getting contact list.", "contactLoad"))
         else:
             for i, c in enumerate(contact_list):

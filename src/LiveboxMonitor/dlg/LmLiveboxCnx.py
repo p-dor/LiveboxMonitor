@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_config_cnx_label as lx
 
@@ -16,7 +16,7 @@ class LiveboxCnxDialog(QtWidgets.QDialog):
         warn_box = QtWidgets.QVBoxLayout()
         warn_box.setSpacing(4)
         w1_label = QtWidgets.QLabel(lx("Cannot connect to the Livebox."), objectName="w1Label")
-        w1_label.setFont(LmTools.BOLD_FONT)
+        w1_label.setFont(LmQtTools.BOLD_FONT)
         warn_box.addWidget(w1_label)
         w2_label = QtWidgets.QLabel(lx("It might be unreachable, in that case just wait."), objectName="w2Label")
         warn_box.addWidget(w2_label)

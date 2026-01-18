@@ -10,14 +10,14 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig, LmNotif
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmNotif
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmThread import LmThread
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
 from LiveboxMonitor.dlg.LmNotificationSetup import NotificationSetupDialog
 from LiveboxMonitor.lang.LmLanguages import get_events_label as lx, get_events_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -164,9 +164,9 @@ class LmEvents:
             self.stop_notification_timer()
             self.start_notification_timer()
             if LmEvents.notify_has_email_rule() and (LmConf.Email is None):
-                if LmTools.ask_question(mx("You have configured at least one rule with sending emails as an action but "
-                                           "you have not configured how to send emails. "
-                                           "Do you want to configure how to send emails?", "email")):
+                if LmQtTools.ask_question(mx("You have configured at least one rule with sending emails as an action but "
+                                             "you have not configured how to send emails. "
+                                             "Do you want to configure how to send emails?", "email")):
                     self.email_setup_button_click()
 
 
@@ -239,7 +239,7 @@ class LmEvents:
         self._event_list.setItem(line, EventCol.Reason, QtWidgets.QTableWidgetItem(event["Reason"]))
         attribute = str(event["Attributes"])[0:256]
         attribute_item = QtWidgets.QTableWidgetItem(attribute)
-        attribute_item.setData(LmTools.ItemDataRole.ExportRole, event["Attributes"])
+        attribute_item.setData(LmQtTools.ItemDataRole.ExportRole, event["Attributes"])
         self._event_list.setItem(line, EventCol.Attribute, attribute_item)
 
 
@@ -266,7 +266,7 @@ class LmEvents:
             a = None
 
         # Try to guess device key from handler
-        device_key = LmUtils.extract_mac_addr_from_string(h)
+        device_key = LmTools.extract_mac_addr_from_string(h)
         if len(device_key):
             self.update_event_indicator(device_key)
             if r == "Statistics":
@@ -401,15 +401,15 @@ class LmEvents:
         t = event["Type"]
 
         ### Debug logs
-        if LmUtils.get_verbosity() >= 1:
+        if LmTools.get_verbosity() >= 1:
             ts = event["Timestamp"].strftime("%d/%m/%Y - %H:%M:%S")
             k = event["Key"]
             if t == LmNotif.TYPE_ACTIVE:
-                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> {event['Link']}.")
+                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> {event['Link']}.")
             elif t == LmNotif.TYPE_LINK_CHANGE:
-                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> from {event['OldLink']} to {event['NewLink']}.")
+                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t} -> from {event['OldLink']} to {event['NewLink']}.")
             else:
-                LmUtils.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t}.")
+                LmTools.log_debug(1, f"RAW EVT = {ts} - {k} DEV {t}.")
 
         # If DELETE event look for a recent DELETE event, if too close (duplicates) don't add
         match t:
@@ -509,7 +509,7 @@ class LmEvents:
 
     ### Generate a user notification for an event in a CSV file
     def notify_user_file(self, event):
-        LmUtils.log_debug(1, "Logging event in file:", str(event))
+        LmTools.log_debug(1, "Logging event in file:", str(event))
 
         k = event["Key"]
         n = LmConf.MacAddrTable.get(k, lx("### UNKNOWN ###"))
@@ -540,16 +540,16 @@ class LmEvents:
                 csv_writer = csv.writer(f, dialect = "excel", delimiter = LmConf.CsvDelimiter)
                 csv_writer.writerow(r)
         except Exception as e:
-            LmUtils.error(f"Cannot log event. Error: {e}")
+            LmTools.error(f"Cannot log event. Error: {e}")
 
 
     ### Generate a user notification for an event via configured email
     def notify_user_email(self, event):
-        LmUtils.log_debug(1, "Emailing event:", str(event))
+        LmTools.log_debug(1, "Emailing event:", str(event))
 
         c = LmConf.load_email_setup()
         if c is None:
-            LmUtils.error("No email setup to notify event by email.")
+            LmTools.error("No email setup to notify event by email.")
             return
 
         k = event["Key"]
@@ -572,7 +572,7 @@ class LmEvents:
             m += lx("Old access link:") + " " + event["OldLink"] + "\n"
             m += lx("New access link:") + " " + event["NewLink"] + "\n"
 
-        LmTools.async_send_email(c, subject, m)
+        LmQtTools.async_send_email(c, subject, m)
 
 
     ### Check if a notification event match any configured notification rules
@@ -636,7 +636,7 @@ class LiveboxEventThread(LmThread):
         if d:
             if d.get("errors"):
                 # Session has probably timed out on Livebox side, resign
-                LmUtils.log_debug(1, "Errors in event request, resign")
+                LmTools.log_debug(1, "Errors in event request, resign")
                 if self._session.signin(LmConf.LiveboxUser, LmConf.LiveboxPassword) <= 0:
                     time.sleep(1)  # Avoid looping too quickly in case LB is unreachable
             elif d.get("error"):

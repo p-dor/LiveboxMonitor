@@ -3,7 +3,7 @@
 import os
 import json
 
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -157,13 +157,13 @@ class LmGenApiDoc:
         try:
             d = self._api._intf.get_key_list()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
         else:
             if isinstance(d, list):
                 for m in d:
                     self.gen_service_file("NeMo.Intf." + m)
             else:
-                LmUtils.error("Bad return from interface list API.")
+                LmTools.error("Bad return from interface list API.")
 
 
     ### Generate all services in a flat file
@@ -184,7 +184,7 @@ class LmGenApiDoc:
         try:
             d = self._session.request(service, get=True, timeout=15)
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             return
 
         if d is None:
@@ -198,7 +198,7 @@ class LmGenApiDoc:
         try:
             self._file = open(file_path, "w")
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             return
 
         self._file.write(f"=== LIVEBOX SOFTWARE VERSION: {self._software_version}\n\n")
@@ -207,7 +207,7 @@ class LmGenApiDoc:
         try:
             self._file.close()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
         self._file = None
 
 
@@ -221,7 +221,7 @@ class LmGenApiDoc:
         try:
             d = self._session.request(service, get=True, timeout=15)
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             return
 
         if d is None:
@@ -235,7 +235,7 @@ class LmGenApiDoc:
         try:
             self._file = open(file_path, "w")
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             return
 
         self._file.write(f"=== LIVEBOX SOFTWARE VERSION: {self._software_version}\n\n")
@@ -248,7 +248,7 @@ class LmGenApiDoc:
         try:
             self._file.close()
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
         self._file = None
 
 

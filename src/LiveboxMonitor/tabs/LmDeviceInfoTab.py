@@ -5,7 +5,7 @@ import json
 
 from PyQt6 import QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.tabs.LmDeviceListTab import DSelCol
@@ -13,7 +13,7 @@ from LiveboxMonitor.tabs.LmInfoTab import InfoCol
 from LiveboxMonitor.dlg.LmDeviceName import SetDeviceNameDialog
 from LiveboxMonitor.dlg.LmDeviceType import SetDeviceTypeDialog
 from LiveboxMonitor.lang.LmLanguages import get_device_info_label as lx, get_device_info_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -271,26 +271,26 @@ class LmDeviceInfo:
             try:
                 d = self._api._device.get_info(device_key)
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 self._task.end()
                 self.display_error(mx("Error getting device information.", "devInfoErr"))
                 return
 
             i = 0
             i = self.add_info_line(self._info_alist, i, lx("Key"), device_key)
-            i = self.add_info_line(self._info_alist, i, lx("Active"), LmUtils.fmt_bool(d.get("Active")))
-            i = self.add_info_line(self._info_alist, i, lx("Authenticated"), LmUtils.fmt_bool(d.get("AuthenticationState")))
+            i = self.add_info_line(self._info_alist, i, lx("Active"), LmTools.fmt_bool(d.get("Active")))
+            i = self.add_info_line(self._info_alist, i, lx("Authenticated"), LmTools.fmt_bool(d.get("AuthenticationState")))
 
             try:
                 blocked = self._api._device.is_blocked(device_key)
-                i = self.add_info_line(self._info_alist, i, lx("Blocked"), LmUtils.fmt_bool(blocked))
+                i = self.add_info_line(self._info_alist, i, lx("Blocked"), LmTools.fmt_bool(blocked))
             except Exception as e:
-                LmUtils.error(str(e))
-                i = self.add_info_line(self._info_alist, i, lx("Blocked"), "Scheduler:getSchedule query error", LmTools.ValQual.Error)
+                LmTools.error(str(e))
+                i = self.add_info_line(self._info_alist, i, lx("Blocked"), "Scheduler:getSchedule query error", LmQtTools.ValQual.Error)
 
-            i = self.add_info_line(self._info_alist, i, lx("First connection"), LmUtils.fmt_livebox_timestamp(d.get("FirstSeen")))
-            i = self.add_info_line(self._info_alist, i, lx("Last connection"), LmUtils.fmt_livebox_timestamp(d.get("LastConnection")))
-            i = self.add_info_line(self._info_alist, i, lx("Last changed"), LmUtils.fmt_livebox_timestamp(d.get("LastChanged")))
+            i = self.add_info_line(self._info_alist, i, lx("First connection"), LmTools.fmt_livebox_timestamp(d.get("FirstSeen")))
+            i = self.add_info_line(self._info_alist, i, lx("Last connection"), LmTools.fmt_livebox_timestamp(d.get("LastConnection")))
+            i = self.add_info_line(self._info_alist, i, lx("Last changed"), LmTools.fmt_livebox_timestamp(d.get("LastChanged")))
             i = self.add_info_line(self._info_alist, i, lx("Source"), d.get("DiscoverySource"))
 
             self._current_device_livebox_name = d.get("Name")
@@ -315,7 +315,7 @@ class LmDeviceInfo:
             for type in type_list:
                 i = self.add_info_line(self._info_alist, i, lx("Type"), f"{type.get('Type', '')} ({type.get('Source', '')})")
 
-            active_ip_struct = LmUtils.determine_ip(d)
+            active_ip_struct = LmTools.determine_ip(d)
             active_ip = active_ip_struct.get("Address", "") if active_ip_struct else ""
             ipv4_list = d.get("IPv4Address", [])
             for ipv4 in ipv4_list:
@@ -346,8 +346,8 @@ class LmDeviceInfo:
                     manufacturer = f"{details.get('companyName', '')} - {details.get('countryCode', '')}" if details else ""
                     i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), manufacturer)
                 except Exception as e:
-                    LmUtils.error(str(e))
-                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), "Web query error", LmTools.ValQual.Error)
+                    LmTools.error(str(e))
+                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), "Web query error", LmQtTools.ValQual.Error)
 
             i = self.add_info_line(self._info_alist, i, lx("Vendor ID"), d.get("VendorClassID"))
             i = self.add_info_line(self._info_alist, i, lx("Serial Number"), d.get("SerialNumber"))
@@ -363,14 +363,14 @@ class LmDeviceInfo:
                 i = self.add_info_line(self._info_alist, i, lx("State"), sys_software.get("State"))
                 i = self.add_info_line(self._info_alist, i, lx("Protocol"), sys_software.get("Protocol"))
                 i = self.add_info_line(self._info_alist, i, lx("Current Mode"), sys_software.get("CurrentMode"))
-                i = self.add_info_line(self._info_alist, i, lx("Pairing Time"), LmUtils.fmt_livebox_timestamp(sys_software.get("PairingTime")))
+                i = self.add_info_line(self._info_alist, i, lx("Pairing Time"), LmTools.fmt_livebox_timestamp(sys_software.get("PairingTime")))
                 i = self.add_info_line(self._info_alist, i, lx("Uplink Type"), sys_software.get("UplinkType"))
 
-            signal_strength = LmUtils.fmt_int(d.get("SignalStrength"))
+            signal_strength = LmTools.fmt_int(d.get("SignalStrength"))
             if len(signal_strength):
                 signal_strength += " dBm"
             i = self.add_info_line(self._info_alist, i, lx("Wifi Signal Strength"), signal_strength)
-            i = self.add_info_line(self._info_alist, i, lx("Wifi Signal Noise Ratio"), LmUtils.fmt_int(d.get("SignalNoiseRatio")))
+            i = self.add_info_line(self._info_alist, i, lx("Wifi Signal Noise Ratio"), LmTools.fmt_int(d.get("SignalNoiseRatio")))
             i = self.add_info_line(self._info_alist, i, lx("Encryption Mode"), d.get("EncryptionMode"))
             i = self.add_info_line(self._info_alist, i, lx("Security Mode"), d.get("SecurityModeEnabled"))
             i = self.add_info_line(self._info_alist, i, lx("Link Bandwidth"), d.get("LinkBandwidth"))
@@ -380,9 +380,9 @@ class LmDeviceInfo:
             sys_software_std = d.get("SSWSta")
             if sys_software_std is not None:
                 i = self.add_info_line(self._info_alist, i, lx("Supported Standards"), sys_software_std.get("SupportedStandards"))
-                i = self.add_info_line(self._info_alist, i, lx("Supports 2.4GHz"), LmUtils.fmt_bool(sys_software_std.get("Supports24GHz")))
-                i = self.add_info_line(self._info_alist, i, lx("Supports 5GHz"), LmUtils.fmt_bool(sys_software_std.get("Supports5GHz")))
-                i = self.add_info_line(self._info_alist, i, lx("Supports 6GHz"), LmUtils.fmt_bool(sys_software_std.get("Supports6GHz")))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 2.4GHz"), LmTools.fmt_bool(sys_software_std.get("Supports24GHz")))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 5GHz"), LmTools.fmt_bool(sys_software_std.get("Supports5GHz")))
+                i = self.add_info_line(self._info_alist, i, lx("Supports 6GHz"), LmTools.fmt_bool(sys_software_std.get("Supports6GHz")))
 
         finally:
             self._task.end()

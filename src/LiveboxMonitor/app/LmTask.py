@@ -2,8 +2,8 @@
 
 from PyQt6 import QtCore
 
-from LiveboxMonitor.app import LmTools
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.app import LmQtTools
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ LmTask class ################################
@@ -18,21 +18,21 @@ class LmTask:
     def start(self, task=None):
         self._index += 1
         self._stack.append(task)
-        LmTools.mouse_cursor_busy() # Stack cursor change
+        LmQtTools.mouse_cursor_busy() # Stack cursor change
         self.display(task)
-        LmUtils.log_debug(1, f"TASK STARTING stack={self._index} task={task}")
+        LmTools.log_debug(1, f"TASK STARTING stack={self._index} task={task}")
 
 
     ### Suspend a potential running task
     def suspend(self):
         if self._index:
-            LmTools.mouse_cursor_force_normal()
+            LmQtTools.mouse_cursor_force_normal()
 
 
     ### Resume a potential running task
     def resume(self):
         if self._index:
-            LmTools.mouse_cursor_force_busy()
+            LmQtTools.mouse_cursor_force_busy()
 
 
     ### Update a task by adding a status
@@ -40,7 +40,7 @@ class LmTask:
         if self._index:
             task = self._stack[self._index - 1]
             self.display(f"{task} {status}." if task else f"{status}.")
-            LmUtils.log_debug(1, f"TASK UPDATE stack={self._index} - task={task} - status={status}")
+            LmTools.log_debug(1, f"TASK UPDATE stack={self._index} - task={task} - status={status}")
 
 
     ### End a (nested) task
@@ -48,7 +48,7 @@ class LmTask:
         if self._index:
             self._index -= 1
             self._stack.pop()
-            LmTools.mouse_cursor_normal()   # Unstack cursor change
+            LmQtTools.mouse_cursor_normal()   # Unstack cursor change
 
             if self._index:
                 task = self._stack[self._index - 1]
@@ -57,7 +57,7 @@ class LmTask:
                 task = "<None>"
                 self.display(None)
 
-            LmUtils.log_debug(1, f"TASK ENDING stack={self._index} - restoring={task}")
+            LmTools.log_debug(1, f"TASK ENDING stack={self._index} - restoring={task}")
 
 
     ### Display task / erase status is None

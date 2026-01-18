@@ -5,7 +5,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_config_email_label as lx,  get_config_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
+
 
 # ################################ Email setup dialog ################################
 class EmailSetupDialog(QtWidgets.QDialog):
@@ -15,7 +16,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
 
         self._init = True
 
-        email_reg_exp = QtCore.QRegularExpression(LmUtils.EMAIL_RS)
+        email_reg_exp = QtCore.QRegularExpression(LmTools.EMAIL_RS)
         email_validator = QtGui.QRegularExpressionValidator(email_reg_exp)
 
         from_addr_label = QtWidgets.QLabel(lx("From Address"), objectName="fromAddrLabel")
@@ -35,7 +36,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
         self._smtp_server = QtWidgets.QLineEdit(objectName="smtpServerEdit")
         self._smtp_server.textChanged.connect(self.setup_changed)
 
-        port_reg_exp = QtCore.QRegularExpression(LmUtils.PORTS_RS)
+        port_reg_exp = QtCore.QRegularExpression(LmTools.PORTS_RS)
         port_validator = QtGui.QRegularExpressionValidator(port_reg_exp)
         smtp_port_label = QtWidgets.QLabel(lx("Port"), objectName="smtpPortLabel")
         self._smtp_port = QtWidgets.QLineEdit(objectName="smtpPortEdit")
@@ -162,7 +163,7 @@ class EmailSetupDialog(QtWidgets.QDialog):
         app = self.parentWidget()
         app._task.start(lx("Sending test email..."))
         c = self.get_setup()
-        if LmUtils.send_email(c, lx("Test Message"), lx("This is a test email from LiveboxMonitor.")):
+        if LmTools.send_email(c, lx("Test Message"), lx("This is a test email from LiveboxMonitor.")):
             app.display_status(mx("Message sent successfully.", "emailSuccess"))
         else:
             app.display_error(mx("Message send failure. Check your setup.", "emailFail"))

@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.dlg.LmExportTable import ExportTableDialog
 
@@ -138,7 +138,7 @@ class CenteredIconHeaderView(QtWidgets.QHeaderView):
             model.setHeaderData(index, QtCore.Qt.Orientation.Horizontal, title, QtCore.Qt.ItemDataRole.DisplayRole)
 
             # Then draw the icon stored in DisplayRole on top
-            icon = self.model().headerData(index, QtCore.Qt.Orientation.Horizontal, LmTools.ItemDataRole.IconRole)
+            icon = self.model().headerData(index, QtCore.Qt.Orientation.Horizontal, LmQtTools.ItemDataRole.IconRole)
             if icon is not None:
                 icon.paint(painter, rect)
         else:

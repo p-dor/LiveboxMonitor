@@ -4,10 +4,10 @@ import copy
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_wifi_config_label as lx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -69,7 +69,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self._mac_filtering_combo.addItems(MAC_FILTERING_MODES)
 
         if not self._guest:
-            self._mac_filtering_entries_combo = LmTools.CheckableComboBox(objectName="macFilteringEntriesCombo")
+            self._mac_filtering_entries_combo = LmQtTools.CheckableComboBox(objectName="macFilteringEntriesCombo")
             self._mac_filtering_entries_combo.setPlaceholderText(lx("Devices"))
 
         secu_label = QtWidgets.QLabel(lx("Security"), objectName="secuLabel")
@@ -194,7 +194,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             self._duration_edit.setText(str(self._config["Duration"] // 3600))
             timer = self._config["Timer"]
             if timer:
-                self._enable_checkbox.setText(lx(f"Enabled for {LmUtils.fmt_time(timer, True)}"))
+                self._enable_checkbox.setText(lx(f"Enabled for {LmTools.fmt_time(timer, True)}"))
         else:
             self.load_filtering_entries_combo()
 
@@ -252,7 +252,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
     def add_filtering_mac(self):
         mac, ok = QtWidgets.QInputDialog.getText(self._app, lx("MAC Filtering"), lx("Enter MAC address to filter:"))
         if ok and mac:
-            if LmUtils.is_mac_addr(mac):
+            if LmTools.is_mac_addr(mac):
                 # Search if mac address is not already in the list
                 index = self._mac_filtering_entries_combo.findData(mac)
                 if index >= 0:
@@ -311,7 +311,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         if self._current_freq is not None:
             i = next((i for i in self._config["Intf"] if i["Key"] == self._current_freq), None)
             if i is None:
-                LmUtils.error("Internal error, unconsistent configuration - intf not found")
+                LmTools.error("Internal error, unconsistent configuration - intf not found")
                 self.reject()
                 return
             i["SSID"] = self._ssid_edit.text()
@@ -353,7 +353,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         secu = i["Secu"]
         secu_list = i["SecuAvail"]
         if secu_list is None:
-            LmUtils.error("Internal error, unconsistent configuration - no security list")
+            LmTools.error("Internal error, unconsistent configuration - no security list")
             self.reject()
         secu_list = secu_list.split(",")
         self._secu_combo.clear()
@@ -370,12 +370,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             if secu is not None:
                 self._secu_combo.addItem(secu)
                 selection = n
-                LmUtils.log_debug(1, f"Warning - security {secu} not in list")
+                LmTools.log_debug(1, f"Warning - security {secu} not in list")
             elif n == 0:
-                LmUtils.error("Internal error, unconsistent configuration - no security")
+                LmTools.error("Internal error, unconsistent configuration - no security")
                 self.reject()
             else:
-                LmUtils.log_debug(1, "Warning - no security, defaulting to first")
+                LmTools.log_debug(1, "Warning - no security, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -416,7 +416,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             channels = None
             channels_in_use = None
         if channels is None:
-            LmUtils.error("Internal error, unconsistent configuration - no channel list")
+            LmTools.error("Internal error, unconsistent configuration - no channel list")
             self.reject()
             return
         channels = channels.split(",")
@@ -446,12 +446,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             if current_channel != "None":
                 self._chan_combo.addItem(current_channel)
                 selection = n
-                LmUtils.log_debug(1, f"Warning - channel {secu} not in list")
+                LmTools.log_debug(1, f"Warning - channel {secu} not in list")
             elif n == 0:
-                LmUtils.error("Internal error, unconsistent configuration - no channel")
+                LmTools.error("Internal error, unconsistent configuration - no channel")
                 self.reject()
             else:
-                LmUtils.log_debug(1, "Warning - no channel, defaulting to first")
+                LmTools.log_debug(1, "Warning - no channel, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -468,7 +468,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         if modes is not None:
             modes = modes.get("Modes")
         if modes is None:
-            LmUtils.error("Internal error, unconsistent configuration - no mode list")
+            LmTools.error("Internal error, unconsistent configuration - no mode list")
             self.reject()
             return
         modes = modes.split(",")
@@ -486,12 +486,12 @@ class WifiConfigDialog(QtWidgets.QDialog):
             if current_mode is not None:
                 self._mode_combo.addItem(current_mode)
                 selection = n
-                LmUtils.log_debug(1, f"Warning - mode {current_mode} not in list")
+                LmTools.log_debug(1, f"Warning - mode {current_mode} not in list")
             elif n == 0:
-                LmUtils.error("Internal error, unconsistent configuration - no mode")
+                LmTools.error("Internal error, unconsistent configuration - no mode")
                 self.reject()
             else:
-                LmUtils.log_debug(1, "Warning - no mode, defaulting to first")
+                LmTools.log_debug(1, "Warning - no mode, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -530,9 +530,9 @@ class WifiConfigDialog(QtWidgets.QDialog):
                 self._bandwidth_combo.addItem(current_bandwidth)
                 selection = n
                 if bandwidths:
-                    LmUtils.log_debug(1, f"Warning - bandwidth {current_bandwidth} not in list")
+                    LmTools.log_debug(1, f"Warning - bandwidth {current_bandwidth} not in list")
             else:
-                LmUtils.log_debug(1, "Warning - no bandwidth set, defaulting to first")
+                LmTools.log_debug(1, "Warning - no bandwidth set, defaulting to first")
                 selection = 0
 
         if selection >= 0:
@@ -543,7 +543,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
         key = self._freq_combo.currentData()
         i = next((i for i in self._config["Intf"] if i["Key"] == key), None)
         if i is None:
-            LmUtils.error(f"Internal error, unconsistent configuration - intf {key} not found")
+            LmTools.error(f"Internal error, unconsistent configuration - intf {key} not found")
             self.reject()
         return key, i
 

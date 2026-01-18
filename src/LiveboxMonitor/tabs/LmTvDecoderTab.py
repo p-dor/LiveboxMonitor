@@ -6,7 +6,7 @@ import requests
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmThread import LmThread
 from LiveboxMonitor.app.LmIcons import LmIcon
@@ -14,7 +14,7 @@ from LiveboxMonitor.api.LmSession import DEFAULT_TIMEOUT
 from LiveboxMonitor.api import LmTvDecoderApi
 from LiveboxMonitor.api.LmTvDecoderApi import TvDecoderApi
 from LiveboxMonitor.lang.LmLanguages import get_tvdecoder_label as lx, get_tvdecoder_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 ###TODO###
 # Reset cache button (channels + icons)
@@ -218,7 +218,7 @@ class LmTvDecoder:
         tvdecoder._channel_icon = QtWidgets.QLabel(objectName="channelIcon")
         tvdecoder._channel_icon.setFixedWidth(150)
         tvdecoder._channel_icon.setFixedHeight(150)
-        tvdecoder._channel_desc = LmTools.AutoHeightLabel(objectName="channelDesc")
+        tvdecoder._channel_desc = LmQtTools.AutoHeightLabel(objectName="channelDesc")
         tvdecoder._channel_desc.setText("")
 
         channel_layout = QtWidgets.QVBoxLayout()
@@ -393,7 +393,7 @@ class LmTvDecoder:
             vendor = device.get("VendorClassID")
             model = device.get("UserClassID")
 
-            ip_struct = LmUtils.determine_ip(device)
+            ip_struct = LmTools.determine_ip(device)
             ip_address = ip_struct.get("Address") if ip_struct else None
 
             active = device.get("Active", False)
@@ -682,13 +682,13 @@ class LmTvHandler:
         tv_cache_path = os.path.join(LmConf.get_cache_directory(), LIVEBOX_TV_CACHE_DIR)
         channels_file_path = os.path.join(tv_cache_path, LIVEBOX_TV_CHANNELS_CACHE_FILE)
         if os.path.isfile(channels_file_path):
-            LmUtils.log_debug(1, "Loading TV channels cache in", channels_file_path)
+            LmTools.log_debug(1, "Loading TV channels cache in", channels_file_path)
             channels_file = None
             try:
                 channels_file = open(channels_file_path)
                 channels = json.load(channels_file)
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 # Wrong file format, ignore
                 if channels_file:
                     channels_file.close()
@@ -709,15 +709,15 @@ class LmTvHandler:
                 try:
                     os.makedirs(tv_cache_path)
                 except Exception as e:
-                    LmUtils.error(f"Cannot create tv cache folder {tv_cache_path}. Error: {e}")
+                    LmTools.error(f"Cannot create tv cache folder {tv_cache_path}. Error: {e}")
                     return
 
-            LmUtils.log_debug(1, "Saving tv channels cache in", channels_file_path)
+            LmTools.log_debug(1, "Saving tv channels cache in", channels_file_path)
             try:
                 with open(channels_file_path, "w") as channels_file:
                     json.dump(channels, channels_file, indent=4)
             except Exception as e:
-                LmUtils.error(f"Cannot save tv channels cache file. Error: {e}")
+                LmTools.error(f"Cannot save tv channels cache file. Error: {e}")
 
 
     ### Get current status
@@ -744,7 +744,7 @@ class LmTvHandler:
                     model_id = model_id[5:]
                 infos["id"] = model_id
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
 
             # Get status
             try:
@@ -754,7 +754,7 @@ class LmTvHandler:
                 infos["mediastate"] = status["playedMediaState"]
                 infos["mediaid"] = status["playedMediaId"]
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
         else:
             infos["name"] = "-"
             infos["manufacturer"] = "-"
@@ -804,7 +804,7 @@ class LmTvHandler:
             icon_pixmap = QtGui.QPixmap()
             if not icon_pixmap.load(icon_file_path):
                 icon_pixmap = None
-                LmUtils.error(f"Cannot load channel icon cache file {icon_file_path}. Cache file will be recreated.")
+                LmTools.error(f"Cannot load channel icon cache file {icon_file_path}. Cache file will be recreated.")
         return icon_pixmap
 
 
@@ -819,7 +819,7 @@ class LmTvHandler:
             try:
                 os.makedirs(icon_dir_path)
             except Exception as e:
-                LmUtils.error(f"Cannot create channel icon cache folder {icon_dir_path}. Error: {e}")
+                LmTools.error(f"Cannot create channel icon cache folder {icon_dir_path}. Error: {e}")
                 return
 
         # Create and save icon cache file
@@ -827,7 +827,7 @@ class LmTvHandler:
             with open(icon_file_path, "wb") as icon_file:
                 icon_file.write(content)
         except Exception as e:
-            LmUtils.error(f"Cannot save channel icon cache file {icon_file_path}. Error: {e}")
+            LmTools.error(f"Cannot save channel icon cache file {icon_file_path}. Error: {e}")
 
 
     ### Update the channel icon
@@ -846,13 +846,13 @@ class LmTvHandler:
                                              timeout=DEFAULT_TIMEOUT + LmConf.TimeoutMargin)
                                              # verify=icon_url.startswith("http://"))
                     if not icon_pixmap.loadFromData(icon_data.content):
-                        LmUtils.error(f"Cannot load channel icon for EPG {self._current_epg_id}.")
+                        LmTools.error(f"Cannot load channel icon for EPG {self._current_epg_id}.")
                         icon_pixmap = None
                 except requests.exceptions.Timeout as e:
-                    LmUtils.error(f"Channel icon for EPG {self._current_epg_id} request timeout error: {e}.")
+                    LmTools.error(f"Channel icon for EPG {self._current_epg_id} request timeout error: {e}.")
                     icon_pixmap = None
                 except Exception as e:
-                    LmUtils.error(f"{e}. Cannot request channel icon for EPG {self._current_epg_id}.")
+                    LmTools.error(f"{e}. Cannot request channel icon for EPG {self._current_epg_id}.")
                     icon_pixmap = None
 
                 # If successfully loaded, try to store in local cache file for faster further loads
@@ -890,7 +890,7 @@ class LmTvHandler:
 
     ### Process a device updated event
     def process_device_updated_event(self, event):
-        ipv4_struct = LmUtils.determine_ip(event)
+        ipv4_struct = LmTools.determine_ip(event)
         ipv4 = ipv4_struct.get("Address") if ipv4_struct else None
         if self._ip_addr != ipv4:
             self.process_ip_address_event(ipv4)
@@ -933,7 +933,7 @@ class LmTvHandler:
             try:
                 self._api.change_channel(epg)
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 self._app.display_error(mx("Change channel failed. Error: {}", "changeChannelErr").format(str(e)))
         else:
             QtWidgets.QApplication.instance().beep()
@@ -944,7 +944,7 @@ class LmTvHandler:
         try:
             self._api.key_press(key, mode)
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self._app.display_error(mx("Key press failed. Error: {}", "keyPressErr").format(str(e)))
 
 

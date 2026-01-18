@@ -2,11 +2,11 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang import LmLanguages
 from LiveboxMonitor.lang.LmLanguages import get_config_prefs_label as lx,  get_config_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ Preferences dialog ################################
@@ -297,11 +297,11 @@ class PrefsDialog(QtWidgets.QDialog):
         # Check if name is not duplicated
         profile_name = self._profile_name.text()
         if len(profile_name) == 0:
-            LmTools.display_error(mx("Please set profile name.", "profileName"))
+            LmQtTools.display_error(mx("Please set profile name.", "profileName"))
             return False
 
         if self.count_profile_name(profile_name) > 1:
-            LmTools.display_error(mx("Duplicated name.", "profileDup"))
+            LmQtTools.display_error(mx("Duplicated name.", "profileDup"))
             return False
 
         # If default profile is selected, set all others to false
@@ -313,7 +313,7 @@ class PrefsDialog(QtWidgets.QDialog):
         # Save in profiles buffer
         p = self._profiles[self._profile_selection]
         p["Name"] = self._profile_name.text()
-        p["Livebox URL"] = LmUtils.clean_url(self._livebox_url.text())
+        p["Livebox URL"] = LmTools.clean_url(self._livebox_url.text())
         p["Livebox User"] = self._livebox_user.text()
         p["Filter Devices"] = self._filter_devices.isChecked()
         p["MacAddr Table File"] = self._mac_addr_table_file.text()
@@ -358,7 +358,7 @@ class PrefsDialog(QtWidgets.QDialog):
     ### Click on delete profile button
     def del_profile_button_click(self):
         if len(self._profiles) == 1:
-            LmTools.display_error(mx("You must have at least one profile.", "profileOne"))
+            LmQtTools.display_error(mx("You must have at least one profile.", "profileOne"))
             return
 
         # Delete the list line

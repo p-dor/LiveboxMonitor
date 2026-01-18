@@ -4,7 +4,7 @@ import webbrowser
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.lang.LmLanguages import get_release_warning_label as lx
 
 from LiveboxMonitor.__init__ import __url__, __version__
@@ -19,7 +19,7 @@ class ReleaseWarningDialog(QtWidgets.QDialog):
         warn_box = QtWidgets.QVBoxLayout()
         warn_box.setSpacing(4)
         new_release_label = QtWidgets.QLabel(lx("New release {0} has been published.").format(new_release), objectName="nreal")
-        new_release_label.setFont(LmTools.BOLD_FONT)
+        new_release_label.setFont(LmQtTools.BOLD_FONT)
         warn_box.addWidget(new_release_label)
         curr_release_label = QtWidgets.QLabel(lx("You are using release {0}.").format(__version__), objectName="creal")
         warn_box.addWidget(curr_release_label)

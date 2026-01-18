@@ -2,9 +2,9 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmPatPtf
 from LiveboxMonitor.lang.LmLanguages import get_pat_rule_label as lx, get_nat_pat_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ PAT rule dialog ################################
@@ -27,7 +27,7 @@ class PatRuleDialog(QtWidgets.QDialog):
         self._name_edit.textChanged.connect(self.name_typed)
 
         desc_label = QtWidgets.QLabel(lx("Description"), objectName="descLabel")
-        self._desc_edit = LmTools.MultiLinesEdit(objectName="descEdit")
+        self._desc_edit = LmQtTools.MultiLinesEdit(objectName="descEdit")
         self._desc_edit.setTabChangesFocus(True)
         self._desc_edit.setLineNumber(2)
 
@@ -41,7 +41,7 @@ class PatRuleDialog(QtWidgets.QDialog):
         protocols_box.addWidget(self._tcp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         protocols_box.addWidget(self._udp_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-        port_regexp = QtCore.QRegularExpression(LmUtils.PORTS_RS)
+        port_regexp = QtCore.QRegularExpression(LmTools.PORTS_RS)
         port_validator = QtGui.QRegularExpressionValidator(port_regexp)
 
         int_port_label = QtWidgets.QLabel(lx("Internal Port"), objectName="intPortLabel")
@@ -66,7 +66,7 @@ class PatRuleDialog(QtWidgets.QDialog):
         self._ip_edit.textChanged.connect(self.ip_typed)
 
         ext_ips_label = QtWidgets.QLabel(lx("External IPs"), objectName="extIPsLabel")
-        self._ext_ips_edit = LmTools.MultiLinesEdit(objectName="extIPsEdit")
+        self._ext_ips_edit = LmQtTools.MultiLinesEdit(objectName="extIPsEdit")
         self._ext_ips_edit.setTabChangesFocus(True)
         self._ext_ips_edit.setLineNumber(2)
 
@@ -187,12 +187,12 @@ class PatRuleDialog(QtWidgets.QDialog):
 
         # Adjust IP field validator
         if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv6_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6_RS}$")
             if not LmPatPtf.IPV6_SOURCE_PORT_WORKING:
                 self._ext_port_edit.setEnabled(False)
                 self._ext_port_edit.setText("")
         else:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv4_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4_RS}$")
             if not LmPatPtf.IPV6_SOURCE_PORT_WORKING:
                 self._ext_port_edit.setEnabled(True)
         self._ip_edit.setValidator(QtGui.QRegularExpressionValidator(ip_reg_exp))
@@ -260,12 +260,12 @@ class PatRuleDialog(QtWidgets.QDialog):
         # Validate IP address
         ip = self.get_ip()
         if t == LmPatPtf.RULE_TYPE_IPv6:
-            if not LmUtils.is_ipv6(ip):
+            if not LmTools.is_ipv6(ip):
                 self.parent().display_error(mx("{} is not a valid IPv6 address.", "ipv6AddrErr").format(ip))
                 self._ip_edit.setFocus()
                 return
         else:
-            if not LmUtils.is_ipv4(ip):
+            if not LmTools.is_ipv4(ip):
                 self.parent().display_error(mx("{} is not a valid IPv4 address.", "ipv4AddrErr").format(ip))
                 self._ip_edit.setFocus()
                 return
@@ -281,12 +281,12 @@ class PatRuleDialog(QtWidgets.QDialog):
                     return
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmUtils.is_ipv6_pfix(ip):
+                    if not LmTools.is_ipv6_pfix(ip):
                         self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
                 else:
-                    if not LmUtils.is_ipv4_pfix(ip):
+                    if not LmTools.is_ipv4_pfix(ip):
                         self.parent().display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return

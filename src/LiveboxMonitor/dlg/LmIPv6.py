@@ -10,7 +10,7 @@ from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import get_ipv6_label as lx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -197,7 +197,7 @@ class IPv6Dialog(QtWidgets.QDialog):
                     active_icon = app.format_active_table_widget(active_status)
                     self._device_table.setItem(i, IPv6Col.Active, active_icon)
 
-                    ip_struct = LmUtils.determine_ip(d)
+                    ip_struct = LmTools.determine_ip(d)
                     if ip_struct is None:
                         ipv4 = ""
                         ipv4_reacheable = ""

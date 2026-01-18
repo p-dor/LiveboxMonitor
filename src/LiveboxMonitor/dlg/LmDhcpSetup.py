@@ -4,7 +4,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.lang.LmLanguages import get_dhcp_setup_label as lx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ DHCP Setup dialog ################################
@@ -16,7 +16,7 @@ class DhcpSetupDialog(QtWidgets.QDialog):
         self._enable_checkbox = QtWidgets.QCheckBox(lx("DHCP Enabled"), objectName="enableCheckbox")
         self._enable_checkbox.setChecked(enabled)
 
-        ip_reg_exp = QtCore.QRegularExpression("^" + LmUtils.IPv4_RS + "$")
+        ip_reg_exp = QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$")
         ip_validator = QtGui.QRegularExpressionValidator(ip_reg_exp)
 
         livebox_ip_label = QtWidgets.QLabel(lx("Livebox IP address"), objectName="liveboxIpLabel")

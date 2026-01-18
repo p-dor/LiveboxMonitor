@@ -4,10 +4,10 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import get_dmz_label as lx, get_actions_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -80,10 +80,10 @@ class DmzSetupDialog(QtWidgets.QDialog):
         ip_label = QtWidgets.QLabel(lx("IP Address"), objectName="ipLabel")
         self._ip = QtWidgets.QLineEdit(objectName="ipEdit")
         self._ip.textChanged.connect(self.ip_typed)
-        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("^" + LmUtils.IPv4_RS + "$"))
+        ip_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("^" + LmTools.IPv4_RS + "$"))
         self._ip.setValidator(ip_validator)
         ext_ips_label = QtWidgets.QLabel(lx("External IPs"), objectName="extIPsLabel")
-        self._ext_ips = LmTools.MultiLinesEdit(objectName="extIPsEdit")
+        self._ext_ips = LmQtTools.MultiLinesEdit(objectName="extIPsEdit")
         self._ext_ips.setTabChangesFocus(True)
         self._ext_ips.setLineNumber(2)
         self._add_dmz_button = QtWidgets.QPushButton(lx("Add"), objectName="addDmz")
@@ -207,7 +207,7 @@ class DmzSetupDialog(QtWidgets.QDialog):
         try:
             self._api._firewall.delete_dmz(dmz_id)
         except Exception as e:
-            LmUtils.error(str(e))
+            LmTools.error(str(e))
             self._app.display_error(mx("Cannot delete DMZ device.", "dmzDelErr"))
             return
 

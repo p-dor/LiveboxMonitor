@@ -6,12 +6,12 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig, LmNotif
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmNotif
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, CenteredIconHeaderView, CenteredIconsDelegate
 from LiveboxMonitor.lang.LmLanguages import get_notification_rules_label as lx, get_events_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -65,13 +65,13 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
         # Assign icon headers - drawn by CenteredIconHeaderView
         model = self._rule_list.horizontalHeader().model()
-        model.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), LmTools.ItemDataRole.IconRole)
-        model.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), LmTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Add, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.AddCirclePixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Delete, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.DelCirclePixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Active, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ActiveCirclePixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Inactive, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.InactiveCirclePixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Link, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.LocChangePixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.File, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.ExcelDocPixmap), LmQtTools.ItemDataRole.IconRole)
+        model.setHeaderData(RuleCol.Email, QtCore.Qt.Orientation.Horizontal, QtGui.QIcon(LmIcon.MailSendPixmap), LmQtTools.ItemDataRole.IconRole)
 
         self._rule_list.setItemDelegate(CenteredIconsDelegate(self, ICON_COLUMNS))
         self._rule_list.setMinimumWidth(460)
@@ -103,7 +103,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
 
         mac_label = QtWidgets.QLabel(lx("MAC address"), objectName="macLabel")
         self._mac_edit = QtWidgets.QLineEdit(objectName="macEdit")
-        mac_reg_exp = QtCore.QRegularExpression("^" + LmUtils.MAC_RS + "$")
+        mac_reg_exp = QtCore.QRegularExpression("^" + LmTools.MAC_RS + "$")
         mac_validator = QtGui.QRegularExpressionValidator(mac_reg_exp)
         self._mac_edit.setValidator(mac_validator)
         self._mac_edit.textChanged.connect(self.mac_typed)
@@ -511,7 +511,7 @@ class NotificationSetupDialog(QtWidgets.QDialog):
             k = r["Key"]
             if k != LmNotif.DEVICE_ALL and k != LmNotif.DEVICE_UNKNOWN:
                 m = self._mac_edit.text()
-                if not LmUtils.is_mac_addr(m):
+                if not LmTools.is_mac_addr(m):
                         self.parent().display_error(mx("{} is not a valid MAC address.", "macErr").format(m))
                         self._mac_edit.setFocus()
                         return False
@@ -625,12 +625,12 @@ class NotificationSetupDialog(QtWidgets.QDialog):
         # Create directory if doesn't exist
         p = self._event_file_path.text()
         if not os.path.isdir(p):
-            if LmTools.ask_question(mx("Configured log file directory does not exist. Do you want to create it?", "logDirExist")):
+            if LmQtTools.ask_question(mx("Configured log file directory does not exist. Do you want to create it?", "logDirExist")):
                 try:
                     os.makedirs(p)
                 except Exception as e:
-                    LmUtils.error(f"Cannot create log file directory. Error: {e}")
-                    LmTools.display_error(mx("Cannot create log file directory.\nError: {}.", "logDirErr").format(e))
+                    LmTools.error(f"Cannot create log file directory. Error: {e}")
+                    LmQtTools.display_error(mx("Cannot create log file directory.\nError: {}.", "logDirErr").format(e))
                     return False
             else:
                 return False

@@ -2,9 +2,9 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmPatPtf
 from LiveboxMonitor.lang.LmLanguages import get_ptf_rule_label as lx, get_nat_pat_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ PTF rule dialog ################################
@@ -28,12 +28,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self._name_edit.textChanged.connect(self.name_typed)
 
         desc_label = QtWidgets.QLabel(lx("Description"), objectName="descLabel")
-        self._desc_edit = LmTools.MultiLinesEdit(objectName="descEdit")
+        self._desc_edit = LmQtTools.MultiLinesEdit(objectName="descEdit")
         self._desc_edit.setTabChangesFocus(True)
         self._desc_edit.setLineNumber(2)
 
         protocols_label = QtWidgets.QLabel(lx("Protocols"), objectName="protocolsLabel")
-        self._protocols_combo = LmTools.CheckableComboBox(objectName="protocolsCombo")
+        self._protocols_combo = LmQtTools.CheckableComboBox(objectName="protocolsCombo")
         self._protocols_combo.setPlaceholderText(lx("Protocols"))
         self._protocols_combo.currentTextChanged.connect(self.protocols_click)
 
@@ -46,7 +46,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self._ip_edit.textChanged.connect(self.ip_typed)
 
         ext_ips_label = QtWidgets.QLabel(lx("External IPs"), objectName="extIPsLabel")
-        self._ext_ips_edit = LmTools.MultiLinesEdit(objectName="extIPsEdit")
+        self._ext_ips_edit = LmQtTools.MultiLinesEdit(objectName="extIPsEdit")
         self._ext_ips_edit.setTabChangesFocus(True)
         self._ext_ips_edit.setLineNumber(2)
 
@@ -161,9 +161,9 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
         # Adjust IP field validator
         if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv6Pfix_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6Pfix_RS}$")
         else:
-            ip_reg_exp = QtCore.QRegularExpression(f"^{LmUtils.IPv4Pfix_RS}$")
+            ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4Pfix_RS}$")
         self._ip_edit.setValidator(QtGui.QRegularExpressionValidator(ip_reg_exp))
 
 
@@ -225,12 +225,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
         # Validate IP address
         ip = self.get_ip()
         if t == LmPatPtf.RULE_TYPE_IPv6:
-            if not LmUtils.is_ipv6_pfix(ip):
+            if not LmTools.is_ipv6_pfix(ip):
                 self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
         else:
-            if not LmUtils.is_ipv4_pfix(ip):
+            if not LmTools.is_ipv4_pfix(ip):
                 self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
                 return
@@ -246,12 +246,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
                     return
 
                 if t == LmPatPtf.RULE_TYPE_IPv6:
-                    if not LmUtils.is_ipv6_pfix(ip):
+                    if not LmTools.is_ipv6_pfix(ip):
                         self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return
                 else:
-                    if not LmUtils.is_ipv4_pfix(ip):
+                    if not LmTools.is_ipv4_pfix(ip):
                         self._app.display_error(mx("{} is not a valid IPv4 address or prefix.", "ipv4AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
                         return

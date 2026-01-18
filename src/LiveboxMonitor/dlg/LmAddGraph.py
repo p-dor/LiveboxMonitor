@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.lang.LmLanguages import get_add_graph_label as lx
 
@@ -48,7 +48,7 @@ class AddGraphDialog(QtWidgets.QDialog):
         self.load_object_list()
 
         color_label = QtWidgets.QLabel(lx("Color"), objectName="colorLabel")
-        self._color_edit = LmTools.ColorButton(objectName="colorEdit")
+        self._color_edit = LmQtTools.ColorButton(objectName="colorEdit")
         self._color_edit.set_color(DCFG_OBJECT_COLOR[self._app._graph_list.rowCount() % len(DCFG_OBJECT_COLOR)])
         self._color_edit._color_changed.connect(self.color_selected)
 

@@ -1,4 +1,4 @@
-### Livebox Monitor tools module ###
+### Livebox Monitor PyQt tools module ###
 
 import re
 
@@ -7,7 +7,7 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from LiveboxMonitor.lang.LmLanguages import get_tools_label as lx
-from LiveboxMonitor.util.LmUtils import error, send_email
+from LiveboxMonitor.tools.LmTools import error, send_email
 
 
 # ################################ VARS & DEFS ################################

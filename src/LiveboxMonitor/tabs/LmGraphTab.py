@@ -8,12 +8,12 @@ from enum import IntEnum
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pyqtgraph as pg
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.dlg.LmAddGraph import AddGraphDialog, GraphType
 from LiveboxMonitor.lang.LmLanguages import get_graph_label as lx, get_graph_message as mx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -90,7 +90,7 @@ class LmGraph:
         window_unit = QtWidgets.QLabel(lx("hours (0 = max)"), objectName="windowUnit")
 
         back_color_label = QtWidgets.QLabel(lx("Background color:"), objectName="backColorLabel")
-        self._graph_back_color_edit = LmTools.ColorButton(objectName="backColor")
+        self._graph_back_color_edit = LmQtTools.ColorButton(objectName="backColor")
 
         setup_grid = QtWidgets.QGridLayout()
         setup_grid.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -296,7 +296,7 @@ class LmGraph:
                 suffix = "_" + str(n)
                 continue
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 self.display_error(mx("Cannot create the file.", "createFileErr"))
                 return
             break
@@ -322,7 +322,7 @@ class LmGraph:
             try:
                 export_file.close()
             except Exception as e:
-                LmUtils.error(str(e))
+                LmTools.error(str(e))
                 self.display_error(mx("Cannot save the file.", "saveFileErr"))
 
 

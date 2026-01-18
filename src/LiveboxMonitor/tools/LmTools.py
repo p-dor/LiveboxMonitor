@@ -1,4 +1,4 @@
-### Livebox Monitor utils module ###
+### Livebox Monitor tools module ###
 
 import datetime
 from email.message import EmailMessage

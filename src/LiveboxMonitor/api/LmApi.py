@@ -5,7 +5,7 @@ import json
 import hashlib
 import base64
 
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -136,11 +136,11 @@ class LmApi:
         try:
             test_file = open(test_file_path)
             mockup = json.load(test_file)
-            LmUtils.log_debug(1, f"Testing with: {test_file_path}")
+            LmTools.log_debug(1, f"Testing with: {test_file_path}")
         except OSError:
             mockup = None    # No test file found
         except Exception as e:
-            LmUtils.error(f"Wrong JSON {signature}.json: {e}")
+            LmTools.error(f"Wrong JSON {signature}.json: {e}")
             raise LmApiException(f"{LmApi.err_str(service, method, err_str)}: bad test driver json")
         finally:
             if test_file is not None:

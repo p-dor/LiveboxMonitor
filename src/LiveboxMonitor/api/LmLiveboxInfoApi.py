@@ -4,7 +4,7 @@ import requests
 
 from LiveboxMonitor.api.LmApi import LmApi, LmApiException
 from LiveboxMonitor.api.LmSession import LmSession
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -64,8 +64,8 @@ class LiveboxInfoApi(LmApi):
         try:
             d = self.get_device_info()
         except Exception as e:
-            LmUtils.error(str(e))
-            LmUtils.error("Cannot determine Livebox model.")
+            LmTools.error(str(e))
+            LmTools.error("Cannot determine Livebox model.")
             self._mac_addr = ""
             self._model = 0
             self._raw_model_name = ""
@@ -78,11 +78,11 @@ class LiveboxInfoApi(LmApi):
                 self._model_name = LIVEBOX_MODEL_NAME_MAP.get(model)
                 self._raw_model_name = model
             if self._model_name is None:
-                LmUtils.error(f"Unknown Livebox model: {model}, defaulting to {DEFAULT_RAW_MODEL}.")
+                LmTools.error(f"Unknown Livebox model: {model}, defaulting to {DEFAULT_RAW_MODEL}.")
                 self._model_name = LIVEBOX_MODEL_NAME_MAP.get(DEFAULT_RAW_MODEL)
             self._model = LIVEBOX_MODEL_MAP.get(self._model_name)
             if self._model is None:
-                LmUtils.error(f"Incorrect internal Livebox model setup: {self._model_name} is unknown.")
+                LmTools.error(f"Incorrect internal Livebox model setup: {self._model_name} is unknown.")
 
             self._software_version = d.get("SoftwareVersion", "")
 

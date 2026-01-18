@@ -15,7 +15,6 @@ from random import randint
 from enum import IntEnum
 
 from LiveboxMonitor.api.LmApi import LmApiException
-from LiveboxMonitor.util import LmUtils
 
 
 # ################################ VARS & DEFS ################################

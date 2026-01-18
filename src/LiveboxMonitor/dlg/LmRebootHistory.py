@@ -7,7 +7,7 @@ from PyQt6 import QtCore, QtWidgets
 from LiveboxMonitor.app import LmConfig
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget
 from LiveboxMonitor.lang.LmLanguages import get_reboot_history_label as lx
-from LiveboxMonitor.util import LmUtils
+from LiveboxMonitor.tools import LmTools
 
 
 # ################################ VARS & DEFS ################################
@@ -55,7 +55,7 @@ class RebootHistoryDialog(QtWidgets.QDialog):
         for i, key in enumerate(history):
             d = history[key]
             self._history_table.insertRow(i)
-            self._history_table.setItem(i, RebootCol.BootDate, QtWidgets.QTableWidgetItem(LmUtils.fmt_livebox_timestamp(d.get("BootDate"))))
+            self._history_table.setItem(i, RebootCol.BootDate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(d.get("BootDate"))))
             self._history_table.setItem(i, RebootCol.BootReason, QtWidgets.QTableWidgetItem(d.get("BootReason", lx("Unknown"))))
-            self._history_table.setItem(i, RebootCol.ShutdownDate, QtWidgets.QTableWidgetItem(LmUtils.fmt_livebox_timestamp(d.get("ShutdownDate"))))
+            self._history_table.setItem(i, RebootCol.ShutdownDate, QtWidgets.QTableWidgetItem(LmTools.fmt_livebox_timestamp(d.get("ShutdownDate"))))
             self._history_table.setItem(i, RebootCol.ShutdownReason, QtWidgets.QTableWidgetItem(d.get("ShutdownReason", lx("Unknown"))))

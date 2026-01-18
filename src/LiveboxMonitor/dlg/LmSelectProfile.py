@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtWidgets
 
-from LiveboxMonitor.app import LmTools, LmConfig
+from LiveboxMonitor.app import LmQtTools, LmConfig
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.api.LmLiveboxInfoApi import LiveboxInfoApi
 from LiveboxMonitor.lang.LmLanguages import get_select_profile_label as lx
@@ -26,11 +26,11 @@ class SelectProfileDialog(QtWidgets.QDialog):
 
         associated_mac_label = QtWidgets.QLabel(lx("Associated Livebox MAC:"), objectName="assMacLabel")
         self._ass_mac = QtWidgets.QLabel(objectName="assMacValue")
-        self._ass_mac.setFont(LmTools.BOLD_FONT)
+        self._ass_mac.setFont(LmQtTools.BOLD_FONT)
 
         detected_mac_label = QtWidgets.QLabel(lx("Detected Livebox MAC:"), objectName="detMacLabel")
         self._det_mac = QtWidgets.QLabel(objectName="detMacValue")
-        self._det_mac.setFont(LmTools.BOLD_FONT)
+        self._det_mac.setFont(LmQtTools.BOLD_FONT)
 
         self._warning = QtWidgets.QLabel("", objectName="warnLabel")
 
@@ -92,11 +92,11 @@ class SelectProfileDialog(QtWidgets.QDialog):
             self._ass_mac.setText(associated_livebox_mac)
             self._ass_mac.setStyleSheet("QLabel { color : black }")
 
-        LmTools.mouse_cursor_busy()
+        LmQtTools.mouse_cursor_busy()
         try:
             detected_livebox_mac = LiveboxInfoApi.get_livebox_mac_nosign(p.get("Livebox URL"))
         finally:
-            LmTools.mouse_cursor_normal()
+            LmQtTools.mouse_cursor_normal()
         if detected_livebox_mac is None:
             self._det_mac.setText(lx("<None>"))
             self._det_mac.setStyleSheet("QLabel { color : red }")
