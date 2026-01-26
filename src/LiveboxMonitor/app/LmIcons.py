@@ -307,6 +307,161 @@ class LmIcon:
         kQ7IlRzaDWjzCLaWg0x32A/GJ5WC9cuBCIB4LL3whkwTIulsEIHsquepOim+/AF2/A5LptNA+AAA
         AABJRU5ErkJggg=="""
 
+    RCAdminPixmap = None
+    RCAdminData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAmVBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////VHQRUAAAAMnRSTlMA+xPo95K8nI/rOQ/uw6toDNS4WUsi
+        tbGD2JglF/DhyXZzYF1UQTQxKgbNzKJ9bkRiG7fkupsAAAEeSURBVBjTRZBXcsMwDETBLqp3WZK7
+        nbjEJcH9DxeYlOz3wdl55AA7hG1Z5zAT1bd1+vdKJYqgmWyjYtQnF2uBePCWG8TNt895gGi4i2eL
+        2LlIR3MwQkVOx4irBW0ajbtT3i9LfPloTHtfQImAu3lEfCuZmYoFVvFLJtAjnuDhAdVsJytp/ser
+        ertPh27d3znMLMNBDAsT5suxyT9W9dUgZXx8Gz9C4nYhEdO6mdQlzHaGzEO7el3ou+0KhgQ9zDS2
+        CUuc/41ZkVLh9R7gKJNKe79BxXkl2J3yqJk+kqdflLailSk+gPi6Ml2VL29tRrpgdBLPKysPLevA
+        YJ9VihU00L3/YW1WrOCUoLUY7y7w9oXoAE7Gys0+gplQy/b8D5ryHAwtl8IQAAAAAElFTkSuQmCC
+        """
+
+    RCBackPixmap = None
+    RCBackData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAclBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////9eWEHEAAAAJXRSTlMA346J
+        c0IXCPr3wJwSDfHq2c2tfHZQSjsxLiohG/DEtm1iYVMfJ7cDVgAAAHtJREFUGNPFz8kOgyAQgGEG
+        CqhoW7V133Xe/xUNMXEJc/Hkf/xImBn2XEVF6f/7clFPgC5Hvw9ikA5Zc1Yl3mjzIUjrXUPuWdxe
+        OumyDbLzJ0dxeR3JTRK3iJ7R+4KjXVCrcuaAIN1zojzxBXV8Y/qFEdVCMqqc5lCxm608uAsruiS8
+        /wAAAABJRU5ErkJggg=="""
+
+    RCChannelDownPixmap = None
+    RCChannelDownData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAP1BMVEUAAAD/////////////////
+        //////////////////////////////////////////////////////////////9Du/pqAAAAFHRS
+        TlMABQ/0gOTiW137ToVg7eYcF5uWiQLw+doAAABgSURBVBjTzcxZDoAwCEVRO092UNn/WsUiIV2B
+        vq+bE8L2r42sOXUenP2sVr9q69EpVUlg0KcaSJciDg4eJwUXJ4tPbaTipfCtuAdICcAHUvaIjrqz
+        iq8q/xvr4jmjfrcbBaEEDq3UrsUAAAAASUVORK5CYII="""
+
+    RCChannelUpPixmap = None
+    RCChannelUpData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAPFBMVEUAAAD/////////////////
+        ///////////////////////////////////////////////////////////YSWgTAAAAE3RSTlMA
+        BQ/j9Fzlgn/5Xk4YB+2GYJaRRGyZdAAAAF9JREFUGNPNzTkOgDAMRFE7+x4g978rRnYRhfQw5dOX
+        Br4c5lw3ap1L+FY9hj5wo+yrxkhucVHTvSFPOL2RBqUCuUt1br0CYJe++sjKHrvk5WqPsrezAIhn
+        UvFc4Fe7AffDBBBcyWMRAAAAAElFTkSuQmCC"""
+
+    RCDownPixmap = None
+    RCDownData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAARVBMVEUAAAD/////////////////
+        //////////////////////////////////////////////////////////////////////9SnXPC
+        AAAAFnRSTlMAPgnwejkF5N/Nhw20WzEs04NualROuRc1cgAAAGJJREFUGNPNzksOgCAMRVFsAfnj
+        f/9LtQGTYhdgvMMz6Kv6UVAmUQFi4y6RM8TVS/ZVUXl+65zbcatxVNTwjAYcNJD24oqssVF3jXxh
+        CHbX1ramnD3pz+WwSmZSMqwcgPqkG63ACWu3WWgSAAAAAElFTkSuQmCC"""
+
+    RCFBackwardPixmap = None
+    RCFBackwardData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAVFBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////////////8wXzyWAAAAG3RSTlMAne/LkEgE+NaKNeHe0cSsqGloV1U9Lx0ZDQuehv8hAAAA
+        YUlEQVQY072QtxLAIAxDCS2E9F70//+ZsAB3HjwFDb7TG2xLoogOvX7TGr3n1CgMVjxLC53gPXdA
+        L65GAlWkZ7BwfqqRYT8GC6mAhO2mEJWwcWAws4SeZB6kcZjwpKpf9QJLTg17j8ckPAAAAABJRU5E
+        rkJggg=="""
+
+    RCFForwardPixmap = None
+    RCFForwardData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAATlBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////+QlxstAAAAGXRSTlMAnY7L+u/i065rRTcN8lhUSz0vIBza2cGS0P1mqAAAAGFJREFUGNO1
+        0DcOwCAMBVDHDimkQHr+/S+aIAZAQmLiL4jnwYUqZ2PtnpX3hF9040wkEBtzAyg+qYcrJ4x2mH7G
+        wkfCgCj4cuA4YrKMS2f5zrKYcsswYGkd9t8HYgunqpkP+gkMFPTjEigAAAAASUVORK5CYII="""
+
+    RCLeftPixmap = None
+    RCLeftData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAOVBMVEUAAAD/////////////////
+        //////////////////////////////////////////////////////8KOjVvAAAAEnRSTlMAPgvw
+        4wd5ONLKtImFcFtTMStM1B8yAAAAUUlEQVQY043RNwLAMAgEQRuD5Bzu/481/RaIcgrSTSP1dSPG
+        vfkLtebSDD0Wke1MBVtLBceVSn5cIvdVIseucWYTjuSC1Tk8vn4VH8sY6tBYP7clB9GAVefwAAAA
+        AElFTkSuQmCC"""
+
+    RCMicPixmap = None
+    RCMicData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAeFBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////GqOSsAAAAJ3RS
+        TlMAC9w+HfH1rlE8N+ypfwTNDebixry1mF9ZRigkEPiLicKVdmVLLc9wXD+iAAAA1UlEQVQY02XR
+        15KDMAyFYSTccAHTO6Su3v8Nd3bxhDj5L7/RjeYkoXxsV9GOeRL3wLJpSnzEytqqB+irlkWsebUv
+        y1ZxHXFGVDBWEGURp9Q9AZ4dpTH/X//QF9c3gFv9xY3bd9e8s3KQUSgDpwJ3gp3MRBf4uk5aHMr1
+        tF4DO67m+uDLrLgLPKL1d/OnpgeLY2AvzeDvtRCXHgYj/et1xMHPWs8wIJ7v5wqNVdOkrEGVJ6dr
+        i1wIjlbHQ0BaEBUpJJ9JIvlByyZlSVRKuS1vzDiF+LHaLx8SE85s9WTKAAAAAElFTkSuQmCC"""
+
+    RCMutePixmap = None
+    RCMuteData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAclBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////9eWEHEAAAAJXRSTlMAYuPT
+        vUI2E/vQX56UP/YaBqRFOzQu3bOKbikYxot+Z1VSTyIICB40LgAAAKNJREFUGNN10dkOgyAQBVAV
+        V9RKWVy7t/z/L3Y6JQKi9wVycjMJQ3SYOWfmVshiVTYm1OjYv2w7q5IYtTlpuFgn4KgeRy14B4rs
+        eX8B9Xl+qKwC2/C1THNeBVxrnebQDxm8JQGvTjds5twcbvTfJbzXqav7NA3lr88Jus37jI57cNOh
+        K7HrFPfDXF/qUse4T+p51yRPODgZFm9OIfDTpPhE+/kC2uUPDbNR0t4AAAAASUVORK5CYII="""
+
+    RCPlayPixmap = None
+    RCPlayData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAARVBMVEUAAAD/////////////////
+        //////////////////////////////////////////////////////////////////////9SnXPC
+        AAAAFnRSTlMACuD8w+uJTgWtoIWBZGBNQy4oFdbPhdtnRAAAAFRJREFUGNNjoDXg4GMTAtGCnCws
+        bBxwYUYRZhYBIM0uJibGxIgQZgJyeRmxCYuxcgvzYxEWY+biwRAGi7NiCMMAYWGEIYSsxHQgYe+I
+        YnoeM6hoDADT7gjus7ZZigAAAABJRU5ErkJggg=="""
+
+    RCPowerPixmap = None
+    RCPowerData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAbFBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////8+T+BWAAAAI3RSTlMAsiH1vKolGxOO
+        131TQjcG4IYQ8EpAlQrb0czLoqGZWzPhh0LehvcAAADgSURBVBjTVdBXksQgDARQiQwGnD057Pb9
+        77heyszY/UF4KlQq6JMphIkOOQ3r8gAe/+dTVfO7GCIGmEj43myqIWPlKKGLuwVgW9kysLiVXxJs
+        qDIZhnytZYVzpi9TPkNZmiSads9tAzmRR5doz5R+4ElBiSOblegC7crtCTzLwWlc6Fr5rfW78pW4
+        NNlHKDD16OYjzx16SmXALXXARJYR8p5zKH8RR7DYdWaMcd0HD3Butw6ZAT+U+h0IzSycE3MTgLvY
+        3vkR6JTWqgNG/+k4RJYokRwH+samnm837pOlkj/HdhFXrk0ERQAAAABJRU5ErkJggg=="""
+
+    RCRecordPixmap = None
+    RCRecordData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWBAMAAAA2mnEIAAAAIVBMVEUAAAD6UVH6UlL6UVH5UlL5
+        UVH5UVH4U1P5UVH5UVH6UlJlS7sjAAAACnRSTlMABumGgzuuFK+wbVMZsQAAAEtJREFUGNNjIAcw
+        CgrAmcFtpjBOidaqRe5QYa9Vq1YtgUiwagHZiwLAbOFVIGAIZkuC2YlgtgSCjVCD0ItiJsIuuBvS
+        TAWQ3UYGAABopCHAnqSbzwAAAABJRU5ErkJggg=="""
+
+    RCRightPixmap = None
+    RCRightData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAQlBMVEUAAAD/////////////////
+        //////////////////////////////////////////////////////////////////8IX9KGAAAA
+        FXRSTlMAPgsE74gu8uTh4NfKtH95bFpVOQgAJFDOAAAAVklEQVQY04XRNxLAMAgEQAuwnLPv/191
+        5aGA0VFuQbquWfLUjOu8Xhq5AOMhGWPoJfLvkWG7ZAw7NWNMt2aMpaSM7SXMm/hIvqCfw483V/JY
+        jyGGxusDHSsJMjB61bcAAAAASUVORK5CYII="""
+
+    RCUpPixmap = None
+    RCUpData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAASFBMVEUAAAD/////////////////
+        ///////////////////////////////////////////////////////////////////////////n
+        eHiwAAAAF3RSTlMAPgvxOQbu4IiBDuTSy7R4b1pSMSwI5aDuuX4AAABkSURBVBjTzc05EoAgEERR
+        HVFE9s25/00FpaRAY8sfvqB7+KYY35QoRR44O4Eo3NwqGIopbqBRtuDZwraqG5uwNK23w5q0OpQ3
+        nReq6+vX7tjEbdYgsUuGxIT2TEk+9GOXh+E/Ha5QCiiLQvBQAAAAAElFTkSuQmCC"""
+
+    RCVolumeDownPixmap = None
+    RCVolumeDownData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAVFBMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////////////8wXzyWAAAAG3RSTlMA+WKdF5B0aEYS26ROOTbix7aLZF4tHAoH5FNmh77hAAAA
+        aklEQVQY043RSQ6AIAwFUAQZBZxH7n9PQxwIaSP+5VtAf0t+RDuNaM33A1FWBYpqZKiQlyZqxvNE
+        x0uD9G57mIc3ojdivZkllqprLWRKVDUUGT4Cv8QHzOrEkoXywGlxscm5sejRvCafOQHTRQzdUUKW
+        hwAAAABJRU5ErkJggg=="""
+
+    RCVolumeUpPixmap = None
+    RCVolumeUpData = """
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAh1BMVEUAAAD/////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //////9qkf8RAAAALHRSTlMA7RQ+HOHDsykEYFUiEOREQjT08dzVy7ubkE4K6NLOlYlbRy36e3Zx
+        bBmop1zZY5wAAAC8SURBVBjThdHZDoMgEAVQREAUd637bjdb/v/7KhhjVRLnZZLzMDB3wFXRwFSo
+        ThJnbqinO024Buc+uISZmzZcsAnRG2Nrdb/mknWS2X6DvUW9GxfsAJRFBipcA4HCsl6zCqaDDbso
+        L7uQAU3IwsxNdZjGgR9/AN+YPioD9doTEvzPTpmHwXhvgcH33K58GmLJIaonvfir+mAeMvU602H5
+        ZF6+xt4xqsmWUZ2CZZUMdnNCxBnsnh6ONprgqn6Tyxv7iCXHOgAAAABJRU5ErkJggg=="""
 
     ### Load all icons from base64 data
     @staticmethod
@@ -382,4 +537,55 @@ class LmIcon:
 
         LmIcon.BlueLightPixmap = QtGui.QPixmap()
         LmIcon.BlueLightPixmap.loadFromData(base64.b64decode(LmIcon.BlueLightData))
+
+        LmIcon.RCAdminPixmap = QtGui.QPixmap()
+        LmIcon.RCAdminPixmap.loadFromData(base64.b64decode(LmIcon.RCAdminData))
+
+        LmIcon.RCBackPixmap = QtGui.QPixmap()
+        LmIcon.RCBackPixmap.loadFromData(base64.b64decode(LmIcon.RCBackData))
+
+        LmIcon.RCChannelDownPixmap = QtGui.QPixmap()
+        LmIcon.RCChannelDownPixmap.loadFromData(base64.b64decode(LmIcon.RCChannelDownData))
+
+        LmIcon.RCChannelUpPixmap = QtGui.QPixmap()
+        LmIcon.RCChannelUpPixmap.loadFromData(base64.b64decode(LmIcon.RCChannelUpData))
+
+        LmIcon.RCDownPixmap = QtGui.QPixmap()
+        LmIcon.RCDownPixmap.loadFromData(base64.b64decode(LmIcon.RCDownData))
+
+        LmIcon.RCFBackwardPixmap = QtGui.QPixmap()
+        LmIcon.RCFBackwardPixmap.loadFromData(base64.b64decode(LmIcon.RCFBackwardData))
+
+        LmIcon.RCFForwardPixmap = QtGui.QPixmap()
+        LmIcon.RCFForwardPixmap.loadFromData(base64.b64decode(LmIcon.RCFForwardData))
+
+        LmIcon.RCLeftPixmap = QtGui.QPixmap()
+        LmIcon.RCLeftPixmap.loadFromData(base64.b64decode(LmIcon.RCLeftData))
+
+        LmIcon.RCMicPixmap = QtGui.QPixmap()
+        LmIcon.RCMicPixmap.loadFromData(base64.b64decode(LmIcon.RCMicData))
+
+        LmIcon.RCMutePixmap = QtGui.QPixmap()
+        LmIcon.RCMutePixmap.loadFromData(base64.b64decode(LmIcon.RCMuteData))
+
+        LmIcon.RCPlayPixmap = QtGui.QPixmap()
+        LmIcon.RCPlayPixmap.loadFromData(base64.b64decode(LmIcon.RCPlayData))
+
+        LmIcon.RCPowerPixmap = QtGui.QPixmap()
+        LmIcon.RCPowerPixmap.loadFromData(base64.b64decode(LmIcon.RCPowerData))
+
+        LmIcon.RCRecordPixmap = QtGui.QPixmap()
+        LmIcon.RCRecordPixmap.loadFromData(base64.b64decode(LmIcon.RCRecordData))
+
+        LmIcon.RCRightPixmap = QtGui.QPixmap()
+        LmIcon.RCRightPixmap.loadFromData(base64.b64decode(LmIcon.RCRightData))
+
+        LmIcon.RCUpPixmap = QtGui.QPixmap()
+        LmIcon.RCUpPixmap.loadFromData(base64.b64decode(LmIcon.RCUpData))
+
+        LmIcon.RCVolumeDownPixmap = QtGui.QPixmap()
+        LmIcon.RCVolumeDownPixmap.loadFromData(base64.b64decode(LmIcon.RCVolumeDownData))
+
+        LmIcon.RCVolumeUpPixmap = QtGui.QPixmap()
+        LmIcon.RCVolumeUpPixmap.loadFromData(base64.b64decode(LmIcon.RCVolumeUpData))
 

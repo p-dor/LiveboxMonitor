@@ -19,7 +19,6 @@ from LiveboxMonitor.tools import LmTools
 ###TODO###
 # Reset cache button (channels + icons)
 # Preferred channels buttons + ability to set them
-# Nice remote control button icons
 
 
 # ################################ VARS & DEFS ################################
@@ -38,66 +37,56 @@ COL1_WIDTH = 250
 COL2_WIDTH = 230
 RC_WIDTH = 242
 
-
 RC_BUTTON_STYLE = """
     QPushButton {
-        color: #ffffff;
         background-color: qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #707070,
-            stop:0.4 #505050,
-            stop:0.6 #202020,
-            stop:1   #000000
+            spread:pad,
+            x1:0,  y1:0, x2:0, y2:1,
+            stop:0    #f0f0f0,
+            stop:0.08 #d0d0d0,
+            stop:0.5  #3a3a3a,
+            stop:1    #000000
         );
-        border: 2px solid qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #808080,
-            stop:1   #606060
-        );
-        border-radius: 16px;
-        padding: 8px 8px;
-        font-size:12px;
+        border-radius: 14px;
+        border: 2px solid #555555;
+        padding: 6px;
+        color: white;
+        font-size:14px;
         font-weight:bold;
     }
 
     QPushButton:hover {
         background-color: qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #707070,
-            stop:0.4 #606060,
-            stop:0.6 #505050,
-            stop:1   #303030
-        );
-        border: 2px solid qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #909090,
-            stop:1   #707070
+            spread:pad,
+            x1:0,  y1:0, x2:0, y2:1,
+            stop:0    #ffffff,
+            stop:0.08 #e0e0e0,
+            stop:0.5  #4a4a4a,
+            stop:1    #111111
         );
     }
 
     QPushButton:pressed {
         background-color: qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #505050,
-            stop:0.4 #404040,
-            stop:0.6 #303030,
-            stop:1   #202020
-        );
-        border: 2px solid qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0   #606060,
-            stop:1   #404040
+            spread:pad,
+            x1:0,  y1:0, x2:0, y2:1,
+            stop:0    #b0b0b0,
+            stop:0.08 #909090,
+            stop:0.5  #202020,
+            stop:1    #000000
         );
     }
 
     QPushButton:disabled {
-        color: #888888;
         background-color: qlineargradient(
-            x1:0, y1:0, x2:0, y2:1,
-            stop:0 #454545,
-            stop:1 #353535
+            spread:pad,
+            x1:0,  y1:0, x2:0, y2:1,
+            stop:0   #666666,
+            stop:0.5 #444444,
+            stop:1   #2a2a2a
         );
-        border: 2px solid #555555;
+        border: 2px solid #444444;
+        color: #888888;
     }
     """
 
@@ -252,38 +241,38 @@ class LmTvDecoder:
         col2_box.addWidget(channel_set_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
         # Remote control
-        tvdecoder._power_button = LmTvDecoder.create_rcbutton("On/Off", "power", tvdecoder.power_button_click)
-        tvdecoder._mic_button = LmTvDecoder.create_rcbutton("MIC", "mic", tvdecoder.mic_button_click)
-        tvdecoder._up_button = LmTvDecoder.create_rcbutton("UP", "up", tvdecoder.up_button_click)
-        tvdecoder._left_button = LmTvDecoder.create_rcbutton("<", "left", tvdecoder.left_button_click)
-        tvdecoder._ok_button = LmTvDecoder.create_rcbutton("OK", "ok", tvdecoder.ok_button_click)
-        tvdecoder._right_button = LmTvDecoder.create_rcbutton(">", "right", tvdecoder.right_button_click)
-        tvdecoder._down_button = LmTvDecoder.create_rcbutton("DOWN", "down", tvdecoder.down_button_click)
-        tvdecoder._back_button = LmTvDecoder.create_rcbutton("Back", "back", tvdecoder.back_button_click)
-        tvdecoder._menu_button = LmTvDecoder.create_rcbutton("Menu", "menu", tvdecoder.menu_button_click)
-        tvdecoder._vol_up_button = LmTvDecoder.create_rcbutton("Vol+", "vol_up", tvdecoder.vol_up_button_click)
-        tvdecoder._chan_up_button = LmTvDecoder.create_rcbutton("Chan+", "chan_up", tvdecoder.chan_up_button_click)
-        tvdecoder._vol_down_button = LmTvDecoder.create_rcbutton("Vol-", "vol_down", tvdecoder.vol_down_button_click)
-        tvdecoder._chan_down_button = LmTvDecoder.create_rcbutton("Chan-", "chan_down", tvdecoder.chan_down_button_click)
-        tvdecoder._mute_button = LmTvDecoder.create_rcbutton("Mute", "mute", tvdecoder.mute_button_click)
-        tvdecoder._prog_button = LmTvDecoder.create_rcbutton("Prog", "prog", tvdecoder.prog_button_click)
-        tvdecoder._one_button = LmTvDecoder.create_rcbutton("1", "one", tvdecoder.one_button_click)
-        tvdecoder._two_button = LmTvDecoder.create_rcbutton("2", "two", tvdecoder.two_button_click)
-        tvdecoder._three_button = LmTvDecoder.create_rcbutton("3", "three", tvdecoder.three_button_click)
-        tvdecoder._four_button = LmTvDecoder.create_rcbutton("4", "four", tvdecoder.four_button_click)
-        tvdecoder._five_button = LmTvDecoder.create_rcbutton("5", "five", tvdecoder.five_button_click)
-        tvdecoder._six_button = LmTvDecoder.create_rcbutton("6", "six", tvdecoder.six_button_click)
-        tvdecoder._seven_button = LmTvDecoder.create_rcbutton("7", "seven", tvdecoder.seven_button_click)
-        tvdecoder._eight_button = LmTvDecoder.create_rcbutton("8", "eight", tvdecoder.eight_button_click)
-        tvdecoder._nine_button = LmTvDecoder.create_rcbutton("9", "nine", tvdecoder.nine_button_click)
-        tvdecoder._c_button = LmTvDecoder.create_rcbutton("C", "c", tvdecoder.c_button_click)
-        tvdecoder._zero_button = LmTvDecoder.create_rcbutton("0", "zero", tvdecoder.zero_button_click)
-        tvdecoder._vod_button = LmTvDecoder.create_rcbutton("VOD", "vod", tvdecoder.vod_button_click)
-        tvdecoder._fbwd_button = LmTvDecoder.create_rcbutton("<<", "fbwd", tvdecoder.fbwd_button_click)
-        tvdecoder._play_button = LmTvDecoder.create_rcbutton(">||", "play", tvdecoder.play_button_click)
-        tvdecoder._ffwd_button = LmTvDecoder.create_rcbutton(">>", "ffwd", tvdecoder.ffwd_button_click)
-        tvdecoder._admin_button = LmTvDecoder.create_rcbutton("Admin", "admin", tvdecoder.admin_button_click)
-        tvdecoder._record_button = LmTvDecoder.create_rcbutton("REC", "record", tvdecoder.record_button_click)
+        tvdecoder._power_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCPowerPixmap, "power", tvdecoder.power_button_click)
+        tvdecoder._mic_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCMicPixmap, "mic", tvdecoder.mic_button_click)
+        tvdecoder._up_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCUpPixmap, "up", tvdecoder.up_button_click)
+        tvdecoder._left_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCLeftPixmap, "left", tvdecoder.left_button_click)
+        tvdecoder._ok_button = LmTvDecoder.create_rcbutton("OK", None, "ok", tvdecoder.ok_button_click)
+        tvdecoder._right_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCRightPixmap, "right", tvdecoder.right_button_click)
+        tvdecoder._down_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCDownPixmap, "down", tvdecoder.down_button_click)
+        tvdecoder._back_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCBackPixmap, "back", tvdecoder.back_button_click)
+        tvdecoder._menu_button = LmTvDecoder.create_rcbutton("Menu", None, "menu", tvdecoder.menu_button_click)
+        tvdecoder._vol_up_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCVolumeUpPixmap, "vol_up", tvdecoder.vol_up_button_click)
+        tvdecoder._chan_up_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCChannelUpPixmap, "chan_up", tvdecoder.chan_up_button_click)
+        tvdecoder._vol_down_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCVolumeDownPixmap, "vol_down", tvdecoder.vol_down_button_click)
+        tvdecoder._chan_down_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCChannelDownPixmap, "chan_down", tvdecoder.chan_down_button_click)
+        tvdecoder._mute_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCMutePixmap, "mute", tvdecoder.mute_button_click)
+        tvdecoder._prog_button = LmTvDecoder.create_rcbutton("Prog", None, "prog", tvdecoder.prog_button_click)
+        tvdecoder._one_button = LmTvDecoder.create_rcbutton("1", None, "one", tvdecoder.one_button_click)
+        tvdecoder._two_button = LmTvDecoder.create_rcbutton("2", None, "two", tvdecoder.two_button_click)
+        tvdecoder._three_button = LmTvDecoder.create_rcbutton("3", None, "three", tvdecoder.three_button_click)
+        tvdecoder._four_button = LmTvDecoder.create_rcbutton("4", None, "four", tvdecoder.four_button_click)
+        tvdecoder._five_button = LmTvDecoder.create_rcbutton("5", None, "five", tvdecoder.five_button_click)
+        tvdecoder._six_button = LmTvDecoder.create_rcbutton("6", None, "six", tvdecoder.six_button_click)
+        tvdecoder._seven_button = LmTvDecoder.create_rcbutton("7", None, "seven", tvdecoder.seven_button_click)
+        tvdecoder._eight_button = LmTvDecoder.create_rcbutton("8", None, "eight", tvdecoder.eight_button_click)
+        tvdecoder._nine_button = LmTvDecoder.create_rcbutton("9", None, "nine", tvdecoder.nine_button_click)
+        tvdecoder._c_button = LmTvDecoder.create_rcbutton("C", None, "c", tvdecoder.c_button_click)
+        tvdecoder._zero_button = LmTvDecoder.create_rcbutton("0", None, "zero", tvdecoder.zero_button_click)
+        tvdecoder._vod_button = LmTvDecoder.create_rcbutton("VOD", None, "vod", tvdecoder.vod_button_click)
+        tvdecoder._fbwd_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCFBackwardPixmap, "fbwd", tvdecoder.fbwd_button_click)
+        tvdecoder._play_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCPlayPixmap, "play", tvdecoder.play_button_click)
+        tvdecoder._ffwd_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCFForwardPixmap, "ffwd", tvdecoder.ffwd_button_click)
+        tvdecoder._admin_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCAdminPixmap, "admin", tvdecoder.admin_button_click)
+        tvdecoder._record_button = LmTvDecoder.create_rcbutton(None, LmIcon.RCRecordPixmap, "record", tvdecoder.record_button_click)
 
         rc_grid = QtWidgets.QGridLayout()
         rc_grid.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -362,11 +351,16 @@ class LmTvDecoder:
 
     ### Create a remote control button
     @staticmethod
-    def create_rcbutton(title, name, connect):
+    def create_rcbutton(title, icon, name, connect):
         button = QtWidgets.QPushButton(title, objectName=name)
         button.setFixedWidth(70)
         button.setFixedHeight(37)
         button.setStyleSheet(RC_BUTTON_STYLE)
+
+        if icon:
+            button.setIcon(QtGui.QIcon(icon))
+            button.setIconSize(QtCore.QSize(22, 22))
+
         button.clicked.connect(connect)
         return button
 
@@ -910,6 +904,7 @@ class LmTvHandler:
         self._ip_addr = ipv4
         self._api.set_ip(ipv4)
         self._ip_ui.setText(ipv4)
+        self.set_item_state()
 
 
     ### Click on the channel set button
