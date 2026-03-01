@@ -25,7 +25,11 @@ TOOLTIPS = {
                        "- Red cross: the repeater is inactive or does not have an assigned IP address.\n"
                        "- Red barred: the repeater is active but no session is open.\n"
                        "If this state persists you can try to force session creation by clicking the \"Resign...\" button.\n"
-                       "- Green: the repeater is active and a session has been created to communicate with it."
+                       "- Green: the repeater is active and a session has been created to communicate with it.",
+        "tvdecoderTab": "Manage the TV decoder.\n"
+                        "Connection status with the decoder:\n"
+                       "- Red cross: the decoder is inactive or does not have an assigned IP address.\n"
+                       "- Green: the decoder is active."
     },
 
     # Export table dialog
@@ -716,7 +720,41 @@ TOOLTIPS = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "statusValue": "Decoder current status.",
+        "mediaTypeValue": "Current media type.",
+        "mediaStateValue": "Current media state.",
+        "vendorValue": "Decoder vendor as known by the Livebox.",
+        "modelValue": "Decoder model name as known by the Livebox.",
+        "macValue": "Decoder physical (MAC) address.",
+        "ipValue": "Decoder IP address.",
+        "nameValue": "Decoder name.",
+        "manufacturerValue": "Decoder manufacturer.",
+        "modelNameValue": "Decoder model name.",
+        "uniqueIdValue": "Decoder unique ID.",
+        "resetCache": "Allows you to erase and reload the cached TV channels information and icons.",
+        "channelValue": "Current channel number.",
+        "channelNameValue": "Current channel name.",
+        "mediaIdValue": "Current channel EPG ID (Electronic Program Guide).",
+        "channelIcon": "Current channel icon.",
+        "channelDesc": "Current channel description.",
+        "channelEdit": "You can enter either:\n"
+                       "- A channel number.\n"
+                       "- A channel name (even partial).\n"
+                       "- A channel EPG ID (Electronic Program Guide) by typing 'epg' followed by the ID number.",
+        "channelSet": "Allows to change the current channel.",
+        "power": "Power ON/OFF.",
+        "mic": "Microphone.",
+        "back": "Back.",
+        "vol_up": "Volume up.",
+        "chan_up": "Channel up.",
+        "vol_down": "Volume down.",
+        "chan_down": "Channel down.",
+        "mute": "Mute.",
+        "fbwd": "Fast backward.",
+        "play": "Play/Pause.",
+        "ffwd": "Fast forward",
+        "admin": "Administration menu.",
+        "record": "Record."
     },
 
     # Config - Preferences
