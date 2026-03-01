@@ -159,13 +159,13 @@ class TvDecoderApi:
                 if err_msg:
                     err_desc = data.get("description", "")
                     err_code = data.get("code", 0)
-                    raise LmApiException(f"Channels query error: {err_msg} - {err_desc} [{err_code}]")
+                    raise LmApiException(f"{err_msg} - {err_desc} [{err_code}]")
 
                 tv_channels = data.get("channels")
                 if tv_channels:
                     TvDecoderApi.tv_channels = tv_channels
                 else:
-                    raise LmApiException(f"Channels query error: no channels found")
+                    raise LmApiException(f"no channels found")
             except Exception as e:
                 raise LmApiException(f"Channels query error: {e}")
 
@@ -193,8 +193,8 @@ class TvDecoderApi:
                 msg = result.get("message")
                 if msg == "ok":
                     return
-                raise LmApiException(f"TvDecoder key_press query error: {msg} [{result.get('responseCode')}]")
-            raise LmApiException(f"TvDecoder key_press query error: no result")
+                raise LmApiException(f"{msg} [{result.get('responseCode')}]")
+            raise LmApiException(f"no result")
         except requests.exceptions.Timeout:
             raise LmApiException(f"Timeout connecting to TVDecoder {self._ip}")
         except Exception as e:
@@ -213,8 +213,8 @@ class TvDecoderApi:
                 msg = result.get("message")
                 if msg == "ok":
                     return
-                raise LmApiException(f"TvDecoder change_channel query error: {msg} [{result.get('responseCode')}]")
-            raise LmApiException(f"TvDecoder change_channel query error: no result")
+                raise LmApiException(f"{msg} [{result.get('responseCode')}]")
+            raise LmApiException(f"no result")
         except requests.exceptions.Timeout:
             raise LmApiException(f"Timeout connecting to TVDecoder {self._ip}")
         except Exception as e:
@@ -253,9 +253,9 @@ class TvDecoderApi:
             data = resp.json()
             result = data["result"]
             if result["responseCode"] != "0":
-                raise LmApiException(f"TvDecoder get_status bad response code: {result['responseCode']}")
+                raise LmApiException(f"bad response code: {result['responseCode']}")
             if result["message"] != "ok":
-                raise LmApiException(f"TvDecoder get_status bad status code: {result['message']}")
+                raise LmApiException(f"bad status code: {result['message']}")
             return result["data"]
         except requests.exceptions.Timeout:
             raise LmApiException(f"Timeout connecting to TVDecoder {self._ip}")
