@@ -916,7 +916,27 @@ LABELS = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "Status:": "Statut :",
+        "Type:": "Type :",
+        "State:": "État :",
+        "Status": "Statut",
+        "Vendor:": "Vendeur :",
+        "Model:": "Modèle :",
+        "MAC:": "MAC :",
+        "IP:": "IP :",
+        "Name:": "Nom :",
+        "Maker:": "Manuf :",
+        "Model:": "Modèle :",
+        "ID:": "ID :",
+        "Reset Cache": "Recréer Cache",
+        "Number:": "Numéro :",
+        "EPG:": "EPG :",
+        "Channel": "Chaîne",
+        "Go": "Changer",
+        "Set Channel": "Changer Chaîne",
+        "Remote Control": "Télécommande",
+        "Getting Channel Information...": "Chargement des informations sur les chaînes...",
+        "Error": "Erreur"
     },
 
     # Config - Preferences
@@ -1043,7 +1063,11 @@ TOOLTIPS = {
                        "- Croix rouge : le répéteur est inactif ou n'a pas d'adresse IP attribuée.\n"
                        "- Rouge barré : le répéteur est actif mais aucune session n'est ouverte.\n"
                        "Si cet état subsiste vous pouvez essayer de forcer la création d'une session en cliquant sur le bouton \"Réauthentifier...\".\n"
-                       "- Vert : le répéteur est actif et une session a été créée pour communiquer avec lui."
+                       "- Vert : le répéteur est actif et une session a été créée pour communiquer avec lui.",
+        "tvdecoderTab": "Gérer le décodeur TV.\n"
+                        "État de la connexion avec le décodeur :\n"
+                        "- Croix rouge : le décodeur est inactif ou n'a pas d'adresse IP attribuée.\n"
+                        "- Vert : le décodeur est actif."
     },
 
     # Export table dialog
@@ -1737,7 +1761,42 @@ TOOLTIPS = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "statusValue": "État actuel du décodeur",
+        "mediaTypeValue": "Type de média actuel.",
+        "mediaStateValue": "État actuel du média.",
+        "vendorValue": "Vendeur du décodeur tel que connu par la Livebox.",
+        "modelValue": "Modèle du décodeur tel que connu par la Livebox.",
+        "macValue": "Adresse physique (MAC) du décodeur.",
+        "ipValue": "Adresse IP du décodeur.",
+        "nameValue": "Nom du décodeur.",
+        "manufacturerValue": "Fabricant du décodeur.",
+        "modelNameValue": "Nom du modèle du décodeur.",
+        "uniqueIdValue": "Identifiant unique du décodeur.",
+        "resetCache": "Permet d'effacer et de recharger les informations et les icônes\n"
+                      "des chaînes de télévision mises en cache.",
+        "channelValue": "Numéro de chaîne actuel.",
+        "channelNameValue": "Nom de la chaîne actuelle.",
+        "mediaIdValue": "Identifiant EPG (Electronic Program Guide) de la chaîne actuelle.",
+        "channelIcon": "Icône de la chaîne actuelle.",
+        "channelDesc": "Description de la chaîne actuelle.",
+        "channelEdit": "Vous pouvez saisir soit :\n"
+                       "- Un numéro de chaîne.\n"
+                       "- Un nom de chaîne (même partiel).\n"
+                       "- L'identifiant EPG (Electronic Program Guide) d'une chaîne en tapant 'epg' suivi du numéro d'identification.",
+        "channelSet": "Permet de changer de chaîne.",
+        "power": "Marche/Arrêt.",
+        "mic": "Microphone.",
+        "back": "Arrière.",
+        "vol_up": "Monter le volume.",
+        "chan_up": "Chaîne suivante.",
+        "vol_down": "Diminuer le volume.",
+        "chan_down": "Chaîne précédente.",
+        "mute": "Couper le son.",
+        "fbwd": "Retour rapide.",
+        "play": "Lecture/Pause.",
+        "ffwd": "Avance rapide",
+        "admin": "`Menu d'administration.",
+        "record": "Enregistrement."
     },
 
     # Config - Preferences
@@ -2028,7 +2087,9 @@ MESSAGES = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "channelInfoErr": "Impossible de charger les informations de la chaîne. Erreur : {}",
+        "changeChannelErr": "Échec du changement de chaîne. Erreur : {}",
+        "keyPressErr": "La pression sur la touche a échoué. Erreur : {}"
     },
 
     # Config
