@@ -1056,7 +1056,30 @@ LABELS = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "Status:": "",
+        "Type:": "",
+        "State:": "",
+        "Status": "",
+        "Vendor:": "",
+        "Model:": "",
+        "MAC:": "",
+        "IP:": "",
+        "Infos": "",
+        "Name:": "",
+        "Maker:": "",
+        "Model:": "",
+        "ID:": "",
+        "Description": "",
+        "Reset Cache": "",
+        "Actions": "",
+        "Number:": "",
+        "EPG:": "",
+        "Channel": "",
+        "Go": "",
+        "Set Channel": "",
+        "Remote Control": "",
+        "Getting Channel Information...": "",
+        "Error": ""
     },
 
     # Config - Preferences
@@ -1187,7 +1210,8 @@ TOOLTIPS = {
         "natPatTab": "",
         "phoneTab": "",
         "actionTab": "",
-        "repeaterTab": ""
+        "repeaterTab": "",
+        "tvdecoderTab": ""
     },
 
     # Export table dialog
@@ -1840,7 +1864,78 @@ TOOLTIPS = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "statusLabel": "",
+        "statusValue": "",
+        "mediaTypeLabel": "",
+        "mediaTypeValue": "",
+        "mediaStateLabel": "",
+        "mediaStateValue": "",
+        "statusGroup": "",
+        "vendorLabel": "",
+        "vendorValue": "",
+        "modelLabel": "",
+        "modelValue": "",
+        "macLabel": "",
+        "macValue": "",
+        "ipLabel": "",
+        "ipValue": "",
+        "infoGroup": "",
+        "nameLabel": "",
+        "nameValue": "",
+        "manufacturerLabel": "",
+        "manufacturerValue": "",
+        "modelNameLabel": "",
+        "modelNameValue": "",
+        "uniqueIdLabel": "",
+        "uniqueIdValue": "",
+        "descGroup": "",
+        "resetCache": "",
+        "actionGroup": "",
+        "channelLabel": "",
+        "channelValue": "",
+        "channelNameLabel": "",
+        "channelNameValue": "",
+        "mediaIdLabel": "",
+        "mediaIdValue": "",
+        "channelIcon": "",
+        "channelDesc": "",
+        "channelGroup": "",
+        "channelEdit": "",
+        "channelSet": "",
+        "setChannelGroup": "",
+        "rcGroup": "",
+        "power": "",
+        "mic": "",
+        "up": "",
+        "left": "",
+        "ok": "",
+        "right": "",
+        "down": "",
+        "back": "",
+        "menu": "",
+        "vol_up": "",
+        "chan_up": "",
+        "vol_down": "",
+        "chan_down": "",
+        "mute": "",
+        "prog": "",
+        "one": "",
+        "two": "",
+        "three": "",
+        "four": "",
+        "five": "",
+        "six": "",
+        "seven": "",
+        "eight": "",
+        "nine": "",
+        "c": "",
+        "zero": "",
+        "vod": "",
+        "fbwd": "",
+        "play": "",
+        "ffwd": "",
+        "admin": "",
+        "record": ""
     },
 
     # Config - Preferences
@@ -2119,7 +2214,9 @@ MESSAGES = {
 
     # TV Decoder
     "tvdecoder": {
-        ###TODO###
+        "channelInfoErr": "",
+        "changeChannelErr": "",
+        "keyPressErr": ""
     },
 
     # Config
