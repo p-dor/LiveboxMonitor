@@ -3,6 +3,7 @@
 import os
 import json
 import requests
+import shutil
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
@@ -15,10 +16,6 @@ from LiveboxMonitor.api import LmTvDecoderApi
 from LiveboxMonitor.api.LmTvDecoderApi import TvDecoderApi
 from LiveboxMonitor.lang.LmLanguages import get_tvdecoder_label as lx, get_tvdecoder_message as mx
 from LiveboxMonitor.tools import LmTools
-
-###TODO###
-# Reset cache button (channels + icons)
-# Preferred channels buttons + ability to set them
 
 
 # ################################ VARS & DEFS ################################
@@ -33,7 +30,7 @@ LIVEBOX_TV_CACHE_DIR = "tv"
 LIVEBOX_TV_CHANNELS_CACHE_FILE = "channels.json"
 
 # UI column block widths
-COL1_WIDTH = 250
+COL1_WIDTH = 260
 COL2_WIDTH = 230
 RC_WIDTH = 242
 
@@ -177,6 +174,17 @@ class LmTvDecoder:
         desc_group_box.setLayout(desc_grid)
         desc_group_box.setFixedWidth(COL1_WIDTH)
 
+        # Actions
+        reset_cache = QtWidgets.QPushButton(lx("Reset Cache"), objectName="resetCache")
+        reset_cache.clicked.connect(tvdecoder.reset_cache_button_click)
+
+        action_layout = QtWidgets.QVBoxLayout()
+        action_layout.addWidget(reset_cache, 1)
+
+        action_group_box = QtWidgets.QGroupBox(lx("Actions"), objectName="actionGroup")
+        action_group_box.setLayout(action_layout)
+        action_group_box.setFixedWidth(COL1_WIDTH)
+
         # Column 1 box
         col1_box = QtWidgets.QVBoxLayout()
         col1_box.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -184,6 +192,7 @@ class LmTvDecoder:
         col1_box.addWidget(status_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
         col1_box.addWidget(infos_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
         col1_box.addWidget(desc_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+        col1_box.addWidget(action_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
         # Channel infos
         channel_label = QtWidgets.QLabel(lx("Number:"), objectName="channelLabel")
@@ -693,7 +702,13 @@ class LmTvHandler:
             return
 
         # Load from Orange server
-        TvDecoderApi.load_channels()
+        self._app._task.start(lx("Getting Channel Information..."))
+        try:
+            TvDecoderApi.load_channels()
+        except Exception as e:
+            self._app.display_error(mx("Cannot load channel information. Error: {}", "channelInfoErr").format(str(e)))
+        finally:
+            self._app._task.end()
 
         # Set in cache
         channels = TvDecoderApi.get_channels()
@@ -712,6 +727,23 @@ class LmTvHandler:
                     json.dump(channels, channels_file, indent=4)
             except Exception as e:
                 LmTools.error(f"Cannot save tv channels cache file. Error: {e}")
+
+
+    ### Reset TV infos cache (channels + icons)
+    def reset_cache_button_click(self):
+        # Erase stored cache files
+        tv_cache_path = os.path.join(LmConf.get_cache_directory(), LIVEBOX_TV_CACHE_DIR)
+        if os.path.isdir(tv_cache_path):
+            try:
+                shutil.rmtree(tv_cache_path)
+            except Exception as e:
+                LmTools.error(f"Cannot delete tv cache folder {tv_cache_path}. Error: {e}")
+
+        # Erase previously loaded data
+        TvDecoderApi.set_channels(None)
+
+        # Reload data
+        self.load_channels()
 
 
     ### Get current status
@@ -928,7 +960,6 @@ class LmTvHandler:
             try:
                 self._api.change_channel(epg)
             except Exception as e:
-                LmTools.error(str(e))
                 self._app.display_error(mx("Change channel failed. Error: {}", "changeChannelErr").format(str(e)))
         else:
             QtWidgets.QApplication.instance().beep()
@@ -939,7 +970,6 @@ class LmTvHandler:
         try:
             self._api.key_press(key, mode)
         except Exception as e:
-            LmTools.error(str(e))
             self._app.display_error(mx("Key press failed. Error: {}", "keyPressErr").format(str(e)))
 
 
