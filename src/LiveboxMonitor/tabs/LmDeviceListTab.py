@@ -407,25 +407,68 @@ class LmDeviceList:
 
         wifi_icon = None
         if active_status and (link_type == "wif"):
-            wifi_signal = device.get("SignalNoiseRatio")
-            if wifi_signal is not None:
+            signal_strength = device.get("SignalStrength")
+            signal_noise_ratio = device.get("SignalNoiseRatio")
+            if (signal_strength is not None) and (signal_noise_ratio is not None):
+                wifi_score = self.get_wifi_rating(signal_strength, signal_noise_ratio)
+                match wifi_score:
+                    case 0:
+                        score_icon = LmIcon.WifiSignal0Pixmap
+                    case 1:
+                        score_icon = LmIcon.WifiSignal1Pixmap
+                    case 2:
+                        score_icon = LmIcon.WifiSignal2Pixmap
+                    case 3:
+                        score_icon = LmIcon.WifiSignal3Pixmap
+                    case 4:
+                        score_icon = LmIcon.WifiSignal4Pixmap
+                    case 5:
+                        score_icon = LmIcon.WifiSignal5Pixmap
                 wifi_icon = NumericSortItem()
-                if wifi_signal >= 40:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
-                elif wifi_signal >= 32:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal4Pixmap))
-                elif wifi_signal >= 25:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal3Pixmap))
-                elif wifi_signal >= 15:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal2Pixmap))
-                elif wifi_signal >= 10:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal1Pixmap))
-                elif wifi_signal == 0:      # Case when system doesn't know, like for Guest interface
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal5Pixmap))
-                else:
-                    wifi_icon.setIcon(QtGui.QIcon(LmIcon.WifiSignal0Pixmap))
-                wifi_icon.setData(QtCore.Qt.ItemDataRole.UserRole, wifi_signal)
+                wifi_icon.setIcon(QtGui.QIcon(score_icon))
+                wifi_icon.setData(QtCore.Qt.ItemDataRole.UserRole, wifi_score)
         self._device_list.setItem(line, DevCol.Wifi, wifi_icon)
+
+
+    ### Compute wifi connection quality rating from 0 to 5
+    @staticmethod
+    def get_wifi_rating(signal_strength, signal_noise_ratio, default_rating=3):
+        # Case when system doesn't know, like for Guest interface (0 values)
+        if signal_strength == 0 or signal_noise_ratio == 0:
+            return default_rating
+
+        # Score Signal Strength (RSSI)
+        # Range: -30 (Best) to -90 (Worst)
+        if signal_strength >= -50:
+            rssi_score = 5
+        elif signal_strength >= -60:
+            rssi_score = 4
+        elif signal_strength >= -70:
+            rssi_score = 3
+        elif signal_strength >= -80:
+            rssi_score = 2
+        elif signal_strength >= -90:
+            rssi_score = 1
+        else:
+            rssi_score = 0
+
+        # Score SNR (Ratio)
+        # Range: >25 (Best) to <10 (Worst)
+        if signal_noise_ratio >= 30:
+            snr_score = 5
+        elif signal_noise_ratio >= 20:
+            snr_score = 4
+        elif signal_noise_ratio >= 15:
+            snr_score = 3
+        elif signal_noise_ratio >= 10:
+            snr_score = 2
+        elif signal_noise_ratio >= 5:
+            snr_score = 1
+        else:
+            snr_score = 0
+
+        # Return average
+        return round((rssi_score + snr_score) / 2)
 
 
     ### Update device name in all lists & tabs
