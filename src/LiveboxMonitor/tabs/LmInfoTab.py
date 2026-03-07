@@ -108,9 +108,10 @@ class LmInfo:
         iptv_info_button.clicked.connect(self.iptv_info_button_click)
         buttons_box.addWidget(iptv_info_button)
 
-        usb_info_button = QtWidgets.QPushButton(lx("USB Infos"), objectName="usbInfo")
-        usb_info_button.clicked.connect(self.usb_info_button_click)
-        buttons_box.addWidget(usb_info_button)
+        if self._api._info.has_usb():
+            usb_info_button = QtWidgets.QPushButton(lx("USB Infos"), objectName="usbInfo")
+            usb_info_button.clicked.connect(self.usb_info_button_click)
+            buttons_box.addWidget(usb_info_button)
 
         separator = QtWidgets.QFrame()
         separator.setFrameShape(QtWidgets.QFrame.Shape.VLine)
@@ -524,7 +525,8 @@ class LmInfo:
                 i = self.load_ont_info(i)
             i = self.load_voip_info(i)
             i = self.load_iptv_info(i)
-            i = self.load_usb_info(i)
+            if self._api._info.has_usb():
+                i = self.load_usb_info(i)
 
         finally:
             self._task.end()
