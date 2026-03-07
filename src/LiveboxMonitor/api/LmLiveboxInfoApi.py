@@ -206,6 +206,12 @@ class LiveboxInfoApi(LmApi):
         self.call("NMC.ServiceEligibility.DSLITE", "set", {"Demand": enable})
 
 
+    ### Check if the model has USB port
+    def has_usb(self):
+        # All models except Livebox S has at least one USB port
+        return self.get_model() != 7.2
+
+
     ### It is possible to query DeviceInfo service without being logged, e.g. to get MAC address
     @staticmethod
     def get_livebox_mac_nosign(livebox_url):
