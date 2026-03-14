@@ -746,6 +746,21 @@ class LmDeviceList:
                 }
                 self._device_map.append(map_entry)
 
+            # Handle wifi bridges (non Orange repeater)
+            if "wifi_bridge" in tags:
+                node_interface_key = d.get("Key", "")
+                node_device_name = d.get("Name", "")
+
+                map_entry = {
+                    "Key": node_interface_key,
+                    "Type": "wif",
+                    "DevKey": node_interface_key,
+                    "DevName": node_device_name,
+                    "IntName": node_device_name,
+                    "Name": node_device_name
+                }
+                self._interface_map.append(map_entry)
+
             self.build_links_map_node(d.get("Children", []), node_device_key, node_device_name, node_interface_key, node_interface_name)
 
 
