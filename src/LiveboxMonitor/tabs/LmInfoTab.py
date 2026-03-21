@@ -1312,26 +1312,28 @@ class LiveboxStatsThread(LmThread):
     def task(self):
         # WARNING counters are recycling at 4Gb only:
         for s in self._api._intf.get_list():
-            try:
-                d = self._api._stats.get_intf(s["Key"])
-            except Exception as e:
-                LmTools.error(str(e))
-            else:
-                if isinstance(d, dict):
-                    e = {"Key": s["Key"],
-                         "Source": "nds",     # NetDevStats
-                         "Timestamp": datetime.datetime.now()}
-                    if s["SwapStats"]:
-                        e["RxBytes"] = d.get("TxBytes", 0)
-                        e["TxBytes"] = d.get("RxBytes", 0)
-                        e["RxErrors"] = d.get("TxErrors", 0)
-                        e["TxErrors"] = d.get("RxErrors", 0)
-                    else:
-                        e["RxBytes"] = d.get("RxBytes", 0)
-                        e["TxBytes"] = d.get("TxBytes", 0)
-                        e["RxErrors"] = d.get("RxErrors", 0)
-                        e["TxErrors"] = d.get("TxErrors", 0)
-                    self._stats_received.emit(e)
+            if not s.get("StatsErr", False):
+                try:
+                    d = self._api._stats.get_intf(s["Key"])
+                except Exception as e:
+                    LmTools.error(str(e))
+                    s["StatsErr"] = True
+                else:
+                    if isinstance(d, dict):
+                        e = {"Key": s["Key"],
+                             "Source": "nds",     # NetDevStats
+                             "Timestamp": datetime.datetime.now()}
+                        if s["SwapStats"]:
+                            e["RxBytes"] = d.get("TxBytes", 0)
+                            e["TxBytes"] = d.get("RxBytes", 0)
+                            e["RxErrors"] = d.get("TxErrors", 0)
+                            e["TxErrors"] = d.get("RxErrors", 0)
+                        else:
+                            e["RxBytes"] = d.get("RxBytes", 0)
+                            e["TxBytes"] = d.get("TxBytes", 0)
+                            e["RxErrors"] = d.get("RxErrors", 0)
+                            e["TxErrors"] = d.get("TxErrors", 0)
+                        self._stats_received.emit(e)
 
 
 '''
