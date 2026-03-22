@@ -774,7 +774,9 @@ TOOLTIPS = {
                            "if it is not provided or if it is incorrect.",
         "filterDevices": "Enables device filtering to avoid showing certain \"phantom\" devices detected by the Livebox.\n"
                          "When this setting is enabled, the program displays the same devices as the Livebox web interface.\n"
-                         "This setting is enabled by default.",
+                         "This setting is disabled by default.",
+        "onlyActiveDevices": "Allows you to display only active devices in the main list.\n"
+                             "This setting is disabled by default.",
         "macAddrTableFileEdit": "Filename for storing device names associated with their MAC address.\n"
                                 "Default is \"MacAddrTable.txt\".\n"
                                 "Any detected device whose MAC address is not listed will be displayed as \"UNKNOWN\" in red.\n"

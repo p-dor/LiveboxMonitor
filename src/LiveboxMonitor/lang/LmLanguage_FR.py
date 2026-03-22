@@ -948,6 +948,7 @@ LABELS = {
         "Livebox URL": "URL Livebox",
         "Livebox User": "Utilisateur",
         "Filter Devices": "Filtrage Appareils",
+        "Display Only Active Devices": "Afficher Appareils Actifs Uniquement",
         "MacAddr Table File": "Fichier Table MacAddr",
         "Default": "Défaut",
         "Profiles": "Profils",
@@ -1816,7 +1817,9 @@ TOOLTIPS = {
                            "s'il n'est pas renseigné ou s'il est erroné.",
         "filterDevices": "Active le filtrage des appareils afin de ne pas montrer certains appareils \"fantômes\" détectés par la Livebox.\n"
                          "Quand ce paramètre est activé le programme affiche les mêmes appareils que l'interface Web de la Livebox.\n"
-                         "Ce paramètre est activé par défaut.",
+                         "Ce paramètre est désactivé par défaut.",
+        "onlyActiveDevices": "Permet de n'afficher que les appareils actifs dans la liste principale.\n"
+                             "Ce paramètre est désactivé par défaut.",
         "macAddrTableFileEdit": "Nom du fichier de stockage des noms d'appareils associés à leur adresse MAC.\n"
                                 "Par défaut \"MacAddrTable.txt\".\n"
                                 "Tout appareil détecté dont l'adresse MAC n'est pas répertoriée sera affiché comme \"INCONNU\" en rouge.\n"

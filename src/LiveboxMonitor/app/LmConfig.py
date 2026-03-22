@@ -40,6 +40,7 @@ DCFG_LIVEBOX_URL = "http://livebox.home/"
 DCFG_LIVEBOX_USER = "admin"
 DCFG_LIVEBOX_PASSWORD = ""
 DCFG_FILTER_DEVICES = False
+DCFG_ONLY_ACTIVE_DEVICES = False
 DCFG_MACADDR_TABLE_FILE = "MacAddrTable.txt"
 DCFG_LANGUAGE = "FR"
 DCFG_TOOLTIPS = True
@@ -418,6 +419,7 @@ class LmConf:
     LiveboxPassword = DCFG_LIVEBOX_PASSWORD
     LiveboxMAC = ""
     FilterDevices = DCFG_FILTER_DEVICES
+    OnlyActiveDevices = DCFG_ONLY_ACTIVE_DEVICES
     MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
     MacAddrTable = {}
     SpamCallsTable = []
@@ -750,6 +752,7 @@ class LmConf:
         p["Livebox URL"] = DCFG_LIVEBOX_URL
         p["Livebox User"] = DCFG_LIVEBOX_USER
         p["Filter Devices"] = DCFG_FILTER_DEVICES
+        p["Only Active Devices"] = DCFG_ONLY_ACTIVE_DEVICES
         p["MacAddr Table File"] = DCFG_MACADDR_TABLE_FILE
         p["Default"] = False
         LmConf.Profiles.append(p)
@@ -776,6 +779,7 @@ class LmConf:
 
         LmConf.LiveboxMAC = LmConf.CurrProfile.get("Livebox MacAddr", "")
         LmConf.FilterDevices = LmConf.CurrProfile.get("Filter Devices", DCFG_FILTER_DEVICES)
+        LmConf.OnlyActiveDevices = LmConf.CurrProfile.get("Only Active Devices", DCFG_ONLY_ACTIVE_DEVICES)
         LmConf.MacAddrTableFile = LmConf.CurrProfile.get("MacAddr Table File", DCFG_MACADDR_TABLE_FILE)
         if len(LmConf.MacAddrTableFile) == 0:
             LmConf.MacAddrTableFile = DCFG_MACADDR_TABLE_FILE
@@ -793,6 +797,9 @@ class LmConf:
 
         if version <= 0x010400:
             version = LmConf.convert_for_150(config)
+
+        if version < 0x010700:
+            version = LmConf.convert_for_170(config)
 
         return dirty_config
 
@@ -812,6 +819,7 @@ class LmConf:
         main_profile["Livebox User"] = config.get("Livebox User", DCFG_LIVEBOX_USER)
         main_profile["Livebox Password"] = config.get("Livebox Password", DCFG_LIVEBOX_PASSWORD)
         main_profile["Filter Devices"] = config.get("Filter Devices", DCFG_FILTER_DEVICES)
+        main_profile["Only Active Devices"] = config.get("Only Active Devices", DCFG_ONLY_ACTIVE_DEVICES)
         main_profile["MacAddr Table File"] = config.get("MacAddr Table File", DCFG_MACADDR_TABLE_FILE)
         main_profile["Default"] = True
         profiles.append(main_profile)
@@ -838,6 +846,22 @@ class LmConf:
         if repeaters is not None:
             for r in repeaters:
                 repeaters[r]["Password"] = None
+
+        return v
+
+
+    ### Adapt config format to 1.7.0 version, return corresponding version number
+    @staticmethod
+    def convert_for_170(config):
+        print("##### CONVERT TO 170 #####")     ###TODO###
+        v = 0x010700
+        config["Version"] = v
+
+        # Set display only active devices field for all profiles
+        profiles = config.get("Profiles")
+        if profiles is not None:
+            for p in profiles:
+                p["Only Active Devices"] = DCFG_ONLY_ACTIVE_DEVICES
 
         return v
 
@@ -874,6 +898,7 @@ class LmConf:
                     LmConf.CurrProfile["Livebox Password"] = None
                 LmConf.CurrProfile["Livebox MacAddr"] = LmConf.LiveboxMAC
                 LmConf.CurrProfile["Filter Devices"] = LmConf.FilterDevices
+                LmConf.CurrProfile["Only Active Devices"] = LmConf.OnlyActiveDevices
                 LmConf.CurrProfile["MacAddr Table File"] = LmConf.MacAddrTableFile
                 if LmConf.Profiles is None:
                     LmConf.Profiles = []

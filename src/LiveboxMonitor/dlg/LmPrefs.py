@@ -52,6 +52,7 @@ class PrefsDialog(QtWidgets.QDialog):
         self._livebox_user = QtWidgets.QLineEdit(objectName="liveboxUserEdit")
 
         self._filter_devices = QtWidgets.QCheckBox(lx("Filter Devices"), objectName="filterDevices")
+        self._only_active_devices = QtWidgets.QCheckBox(lx("Display Only Active Devices"), objectName="onlyActiveDevices")
 
         mac_addr_table_file_label = QtWidgets.QLabel(lx("MacAddr Table File"), objectName="macAddrTableFileLabel")
         self._mac_addr_table_file = QtWidgets.QLineEdit(objectName="macAddrTableFileEdit")
@@ -67,9 +68,10 @@ class PrefsDialog(QtWidgets.QDialog):
         profile_edit_grid.addWidget(livebox_user_label, 2, 0)
         profile_edit_grid.addWidget(self._livebox_user, 2, 1)
         profile_edit_grid.addWidget(self._filter_devices, 3, 0, 1, 2)
-        profile_edit_grid.addWidget(mac_addr_table_file_label, 4, 0)
-        profile_edit_grid.addWidget(self._mac_addr_table_file, 4, 1)
-        profile_edit_grid.addWidget(self._default_profile, 5, 0, 1, 2)
+        profile_edit_grid.addWidget(self._only_active_devices, 4, 0, 1, 2)
+        profile_edit_grid.addWidget(mac_addr_table_file_label, 5, 0)
+        profile_edit_grid.addWidget(self._mac_addr_table_file, 5, 1)
+        profile_edit_grid.addWidget(self._default_profile, 6, 0, 1, 2)
         profile_layout.addLayout(profile_edit_grid, 1)
 
         profile_group_box = QtWidgets.QGroupBox(lx("Profiles"), objectName="profileGroup")
@@ -287,6 +289,7 @@ class PrefsDialog(QtWidgets.QDialog):
         self._livebox_url.setText(p["Livebox URL"])
         self._livebox_user.setText(p["Livebox User"])
         self._filter_devices.setChecked(p["Filter Devices"])
+        self._only_active_devices.setChecked(p["Only Active Devices"])
         self._mac_addr_table_file.setText(p["MacAddr Table File"])
         self._default_profile.setChecked(p["Default"])
         self._profile_selection = new_selection
@@ -316,6 +319,7 @@ class PrefsDialog(QtWidgets.QDialog):
         p["Livebox URL"] = LmTools.clean_url(self._livebox_url.text())
         p["Livebox User"] = self._livebox_user.text()
         p["Filter Devices"] = self._filter_devices.isChecked()
+        p["Only Active Devices"] = self._only_active_devices.isChecked()
         p["MacAddr Table File"] = self._mac_addr_table_file.text()
         p["Default"] = default
         return True
@@ -343,6 +347,7 @@ class PrefsDialog(QtWidgets.QDialog):
              "Livebox URL": LmConfig.DCFG_LIVEBOX_URL,
              "Livebox User": LmConfig.DCFG_LIVEBOX_USER,
              "Filter Devices": LmConfig.DCFG_FILTER_DEVICES,
+             "Only Active Devices": LmConfig.DCFG_ONLY_ACTIVE_DEVICES,
              "MacAddr Table File": LmConfig.DCFG_MACADDR_TABLE_FILE,
              "Default": False}
         self._profiles.append(p)

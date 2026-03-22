@@ -65,7 +65,7 @@ class LmDeviceList:
                                        DevCol.MAC: [lx("MAC"), 120, "dlist_MAC"],
                                        DevCol.IP: [lx("IP"), 105, "dlist_IP"],
                                        DevCol.Link: [lx("Link"), 150, "dlist_Link"],
-                                       DevCol.Active: [lx("A"), 10, "dlist_Active"],
+                                       DevCol.Active: [lx("A"), 0 if LmConf.OnlyActiveDevices else 10, "dlist_Active"],
                                        DevCol.Wifi: [lx("Wifi"), 70, "dlist_Wifi"],
                                        DevCol.Event: [lx("E"), 10, "dlist_Event"],
                                        DevCol.Down: [lx("Rx"), 75, "dlist_Rx"],
@@ -404,6 +404,10 @@ class LmDeviceList:
         active_status = device.get("Active", False)
         active_icon = self.format_active_table_widget(active_status)
         self._device_list.setItem(line, DevCol.Active, active_icon)
+
+        # Show/hide the line according to active status
+        if LmConf.OnlyActiveDevices:
+            self._device_list.setRowHidden(line, not active_status)
 
         wifi_icon = None
         if active_status and (link_type == "wif"):
@@ -928,6 +932,11 @@ class LmDeviceList:
                         self.notify_device_inactive_event(device_key)
                 active_icon = self.format_active_table_widget(is_active)
                 self._device_list.setItem(list_line, DevCol.Active, active_icon)
+
+                # Show/hide the line according to active status
+                if LmConf.OnlyActiveDevices:
+                    self._device_list.setRowHidden(list_line, not is_active)
+
                 self.repeater_active_event(device_key, is_active)
                 self.tvdecoder_active_event(device_key, is_active)
 
