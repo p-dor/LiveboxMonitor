@@ -11,7 +11,8 @@ L'application [LiveboxMonitor](https://github.com/p-dor/LiveboxMonitor) est une 
 - Contrôler de manière fine les réglages du serveur DHCP, des règles NAT/PAT, du DynDNS, de la DMZ, et de la table de routage,
 - Configurer le réseau Wifi et contrôler son état global,
 - Contrôler les appels téléphoniques ainsi que la liste des contacts,
-- Contrôler un ou plusieurs répéteurs Wifi Orange connectés.
+- Contrôler un ou plusieurs répéteurs Wifi Orange connectés,
+- Contrôler un ou plusieurs décodeurs TV Orange connectés.
 
 **AVERTISSEMENT** : Les architectures étant totalement différentes, **le logiciel n'est pas compatible avec la "Livebox Pro 4"**.
 
@@ -42,8 +43,9 @@ L'application est dynamique car elle réagit aux événements envoyés par la Li
 18. [Téléphone - Liste des appels téléphoniques / liste des contacts](#phone)
 19. [Actions - Boutons d'actions et de contrôle](#actions)
 20. [Onglets répéteurs Wifi](#repeaters)
-21. [Gestion et personnalisation des icônes d'appareil](#icons)
-22. [Utiliser les APIs Livebox dans votre propre programme Python](#codingguide)
+21. [Onglets décodeurs TV](#tvdecoders)
+22. [Gestion et personnalisation des icônes d'appareil](#icons)
+23. [Utiliser les APIs Livebox dans votre propre programme Python](#codingguide)
 
 
 ## Installation <a id="install"></a>
@@ -157,6 +159,8 @@ Les points importants à comprendre avant de commencer :
 - Le contenu de toutes les listes du programme, y compris celles dans les dialogues, peut être exporté dans un fichier au format CSV exploitable par n'importe quel tableur (type Excel). Il suffit d'un clic droit sur la liste, de sélectionner "Export...", et de choisir ses options et colonnes à exporter.
 - Le programme dispose d'une barre de statut en bas de la fenêtre. Elle affiche sur la gauche des tâches en cours et sur la droite le nom du profil en cours (voir la section **Profils** ci-dessous). Un clic sur le nom de profil affichera la fenêtre pour en changer.
 - Des **tooltips** sont disponibles dans l'interface pour vous aider à vous passer de la documentation.
+
+**Attention à propos des statistiques de trafic** : il ne faut pas trop prendre les débits réseau affichés (par appareil ou par interface) au pied de la lettre et c'est probablement pourquoi Orange a choisi de ne plus les exposer. Si vous observez des incohérences il ne s'agit pas d'un bug du logiciel car il se contente d'afficher les données qui remontent de la Livebox, il n'y a rien qu'on puisse faire hélas. Les écarts avec la réalité semblent dépendre du constructeur de l'appareil mesuré. Par exemple avec tous les appareils iOS (iPhone, iPad, ...) les débits semblent démesurés, mais pour certains autres cela semble parfaitement correspondre à la réalité.
 
 
 ## Profils <a id="profiles"></a>
@@ -582,7 +586,7 @@ Les boutons suivants sont proposés pour gérer la liste des contacts :
 Cet onglet permet une liste d'actions par catégorie.
 
 Les actions concernant le **Wifi** :
-- **`Configuration...`** : permet de configurer toutes les bandes radios du réseau Wifi.
+- **`Configuration...`** : permet de configurer toutes les bandes radios du réseau Wifi. Attention : le changement de largeur de bande n'est pas garanti de fonctionner dans tous les cas. Par exemple sur la bande radio 5 GHz le changement n'est pas pris en compte par les Livebox 4 et 5.
 
     ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Actions_WifiConfig.png)
 
@@ -733,7 +737,7 @@ Autres actions :
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Repeater.png)
 
-Le programme créé dynamiquement un onglet par répéteur connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
+Le programme créé dynamiquement un onglet par répéteur Orange connecté. Si le répéteur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "RW #" suivit du numéro de répéteur dans l'ordre de détection.
 Les répéteurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Appareils` et leur nom peut être changé via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
 
 Une icône dans le nom de l'onglet permet de connaître l'état de la connexion avec le répéteur :
@@ -790,6 +794,29 @@ Les onglets de répéteur Wifi proposent les boutons suivants :
 - **`Informations Wifi`** : affiche les informations générales sur la connectivité Wifi, et l'état de chaque accès. Pour chaque accès on dispose d'informations détaillées telles que le canal, le standard, la bande passante, la qualité, la bande, le nombre d'appareils connectés, etc.
 - **`Informations LAN`** : affiche les informations générales sur la connectivité LAN. Pour chaque interface Ethernet on peut identifier si elle est active ou non, la bande passante, etc.
 - **`Export...`** : permet d'exporter l'ensemble des informations affichées par chacun des boutons dans un fichier texte. Utile pour communiquer ces informations ou faire un suivi pour détecter les changements.
+
+
+## Onglets décodeurs TV <a id="tvdecoders"></a>
+
+![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Tvdecoder.png)
+
+Le programme créé dynamiquement un onglet par décodeur TV Orange connecté. Si le décodeur a un nom local, celui-ci est utilisé dans l'onglet, sinon le nom par défaut est de type "TV #" suivit du numéro de décodeur dans l'ordre de détection.
+Les décodeurs font aussi parti des appareils connus, ils sont donc visibles dans l'onglet `Appareils` et leur nom peut être changé via le bouton `Assigner Nom...` de l'onglet `Infos Appareil`.
+
+Une icône dans le nom de l'onglet permet de connaître l'état de la connexion avec le décodeur :
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Cross.png) : le décodeur est inactif ou n'a pas d'adresse IP attribuée.
+- ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Icon_Tick.png) : le décodeur est actif.
+
+### Informations
+- **`Statut`** : statut actuel retourné par le décodeur.
+- **`Infos`** : informations sur le décodeur retourné par la Livebox.
+- **`Description`** : informations sur le décodeur retourné par lui même.
+- **`Chaîne`** : informations sur la chaîne TV en cours de lecture. L'identifiant EPG correspond au numéro suivant le standard Electronic Program Guide. Les icônes et descriptions de chaînes sont stockées dans un cache local pour éviter des appels aux serveurs Orange intempestifs. Si ces informations deviennent érronées utilisez le bouton "Recréer Cache".
+
+### Boutons
+- **`Recréer Cache`** : réinitialise le cache local d'informations et d'icônes sur les chaînes.
+- **`Changer Chaîne`** : permet de changer de chaîne. Vous pouvez saisir soit un numéro de chaîne, un nom de chaîne (même partiel), ou l'identifiant EPG (Electronic Program Guide) d'une chaîne en tapant 'epg' suivi du numéro d'identification.
+- **`Télécommande`** : télécommande virtuelle pour piloter le décodeur. Le bouton en bas à gauche permet d'afficher les écrans d'administration du décodeur sur la TV.
 
 
 ## Gestion et personnalisation des icônes d'appareil <a id="icons"></a>
