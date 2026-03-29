@@ -1614,7 +1614,10 @@ TOOLTIPS = {
         "chanCombo": "Canal à utiliser pour la bande radio sélectionnée.\n"
                      "Sélectionner 'Auto' pour une sélection automatique.",
         "modeCombo": "Mode de connexion pour la bande radio sélectionnée.",
-        "bandwidthCombo": "Largeur de bande à utiliser pour la bande radio sélectionnée."
+        "bandwidthCombo": "Largeur de bande à utiliser pour la bande radio sélectionnée.\n"
+                          "Attention : le changement de largeur de bande n'est pas garanti de\n"
+                          "fonctionner dans tous les cas. Par exemple sur la bande radio 5 GHz\n"
+                          "le changement n'est pas pris en compte par les Livebox 4 et 5."
     },
 
     # Actions - Wifi global status
