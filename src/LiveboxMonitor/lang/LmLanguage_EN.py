@@ -572,7 +572,10 @@ TOOLTIPS = {
         "chanCombo": "Channel to use for the selected radio band.\n"
                      "Select 'Auto' for automatic selection.",
         "modeCombo": "Connection mode for the selected radio band.",
-        "bandwidthCombo": "Bandwidth to use for the selected radio band."
+        "bandwidthCombo": "Bandwidth to use for the selected radio band.\n"
+                          "Warning: changing the bandwidth is not guaranteed to work in all cases.\n"
+                          "For example, on the 5 GHz radio band, the change is not recognized by\n"
+                          "Livebox 4 and 5."
     },
 
     # Actions - Wifi global status
