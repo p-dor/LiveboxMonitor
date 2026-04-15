@@ -285,7 +285,7 @@ LABELS = {
         "Background color:": "Couleur de fond :",
         "Apply": "Appliquer",
         "Download": "Réception",
-        "Traffic (MB)": "Trafic (Mo)",
+        "Traffic (Mb)": "Trafic (Mb)",
         "Time": "Heure",
         "Upload": "Émission",
         "Loading configuration...": "Chargement de la configuration...",

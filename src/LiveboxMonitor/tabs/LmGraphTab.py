@@ -126,7 +126,7 @@ class LmGraph:
         self._down_graph = pg.PlotWidget()   # Setting objectName on input doesn't work
         self._down_graph.setObjectName("downGraph")
         self._down_graph.setTitle(lx("Download"))
-        self._down_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._down_graph.setLabel("left", lx("Traffic (Mb)"), **styles)
         self._down_graph.setLabel("bottom", lx("Time"), **styles)
         down_axis = pg.DateAxisItem()
         self._down_graph.setAxisItems({"bottom":down_axis})
@@ -134,7 +134,7 @@ class LmGraph:
         self._up_graph = pg.PlotWidget()     # Setting objectName on input doesn't work
         self._up_graph.setObjectName("upGraph")
         self._up_graph.setTitle(lx("Upload"))
-        self._up_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._up_graph.setLabel("left", lx("Traffic (Mb)"), **styles)
         self._up_graph.setLabel("bottom", lx("Time"), **styles)
         up_axis = pg.DateAxisItem()
         self._up_graph.setAxisItems({"bottom":up_axis})
