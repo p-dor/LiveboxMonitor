@@ -853,7 +853,6 @@ class LmConf:
     ### Adapt config format to 1.7.0 version, return corresponding version number
     @staticmethod
     def convert_for_170(config):
-        print("##### CONVERT TO 170 #####")     ###TODO###
         v = 0x010700
         config["Version"] = v
 
