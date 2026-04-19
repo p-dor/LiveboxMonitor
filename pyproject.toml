@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "LiveboxMonitor"
-version = "1.6"
+version = "1.7"
 description = "Advanced graphical user interface to control Livebox 4, 5, 6, 7, W7 & S"
 readme = "README.md"
 authors = [{ name = "Pierre Dor", email = "dorpierre@orange.fr" }]
