@@ -126,7 +126,7 @@ class LmGraph:
         self._down_graph = pg.PlotWidget()   # Setting objectName on input doesn't work
         self._down_graph.setObjectName("downGraph")
         self._down_graph.setTitle(lx("Download"))
-        self._down_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._down_graph.setLabel("left", lx("Traffic (MB/s)"), **styles)
         self._down_graph.setLabel("bottom", lx("Time"), **styles)
         down_axis = pg.DateAxisItem()
         self._down_graph.setAxisItems({"bottom":down_axis})
@@ -134,7 +134,7 @@ class LmGraph:
         self._up_graph = pg.PlotWidget()     # Setting objectName on input doesn't work
         self._up_graph.setObjectName("upGraph")
         self._up_graph.setTitle(lx("Upload"))
-        self._up_graph.setLabel("left", lx("Traffic (MB)"), **styles)
+        self._up_graph.setLabel("left", lx("Traffic (MB/s)"), **styles)
         self._up_graph.setLabel("bottom", lx("Time"), **styles)
         up_axis = pg.DateAxisItem()
         self._up_graph.setAxisItems({"bottom":up_axis})
@@ -312,9 +312,14 @@ class LmGraph:
             ut = graph_object["UpTime"]
             u = graph_object["Up"]
 
+            if graph_object["Type"] == GraphType.INTERFACE:
+                sampling_freq = self._stat_frequency_interfaces
+            else:
+                sampling_freq = self._stat_frequency_devices
+
             for i in range(min(len(dt), len(ut))):
-                csv_writer.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER)),
-                                     str(ut[i]), str(int(u[i] * UNIT_DIVIDER))])
+                csv_writer.writerow([str(dt[i]), str(int(d[i] * UNIT_DIVIDER * sampling_freq)),
+                                     str(ut[i]), str(int(u[i] * UNIT_DIVIDER * sampling_freq))])
 
         finally:
             self._task.end()
@@ -455,8 +460,10 @@ class LmGraph:
             intf = next((i for i in self._api._intf.get_list() if i["Key"] == key), None)
             if intf is not None:
                 swap_stats = intf["SwapStats"]
+            sampling_freq = self._stat_frequency_interfaces
         else:
             stats_data = self.load_stats_device(object_id, start_time, end_time)
+            sampling_freq = self._stat_frequency_devices
 
         dt = [] # Download time data
         d = []  # Download data
@@ -475,7 +482,7 @@ class LmGraph:
                     down_bits = e.get("Rx_Counter")
                 if down_bits is None:
                     down_bits = 0
-                d.append((down_bits / 8) / UNIT_DIVIDER)    # Convert bits to MBytes
+                d.append((down_bits / 8) / UNIT_DIVIDER / sampling_freq)    # Convert bits over 30 secs to MBytes/s
 
                 if swap_stats:
                     up_bits = e.get("Rx_Counter")
@@ -483,7 +490,7 @@ class LmGraph:
                     up_bits = e.get("Tx_Counter")
                 if up_bits is None:
                     up_bits = 0
-                u.append((up_bits / 8) / UNIT_DIVIDER)      # Convert bits to MBytes
+                u.append((up_bits / 8) / UNIT_DIVIDER / sampling_freq)      # Convert bits over 30 secs to MBytes/s
 
         o["DownTime"] = dt
         o["Down"] = d
@@ -502,7 +509,7 @@ class LmGraph:
         # Lookup for a stat object matching interface
         o = next((o for o in self._graph_data if (o["Type"] == GraphType.INTERFACE) and (o["Key"] == intf_key)), None)
         if o is not None:
-            self.graph_update_object_event(o, timestamp, down_bytes, up_bytes)
+            self.graph_update_object_event(o, timestamp, down_bytes, up_bytes, self._stat_frequency_interfaces)
 
 
     ### Update graph according to device stats event
@@ -510,11 +517,11 @@ class LmGraph:
         # Lookup for a stat object matching interface
         o = next((o for o in self._graph_data if (o["Type"] == GraphType.DEVICE) and (o["Key"] == device_key)), None)
         if o is not None:
-            self.graph_update_object_event(o, timestamp, down_bytes, up_bytes)
+            self.graph_update_object_event(o, timestamp, down_bytes, up_bytes, self._stat_frequency_devices)
 
 
     ### Update graph according to stats event
-    def graph_update_object_event(self, graph_object, timestamp, down_bytes, up_bytes):
+    def graph_update_object_event(self, graph_object, timestamp, down_bytes, up_bytes, sampling_freq):
         # Update download part
         if down_bytes is not None:
             # Update timestamp array
@@ -523,7 +530,7 @@ class LmGraph:
 
             # Update data
             d = graph_object["Down"]
-            d.append(down_bytes / UNIT_DIVIDER)     # Convert to MBs
+            d.append(down_bytes / UNIT_DIVIDER / sampling_freq)     # Convert to MBs/s
 
             # Update graph
             graph_object["DownLine"].setData(dt, d)
@@ -536,7 +543,7 @@ class LmGraph:
 
             # Update data
             u = graph_object["Up"]
-            u.append(up_bytes / UNIT_DIVIDER)       # Convert to MBs
+            u.append(up_bytes / UNIT_DIVIDER / sampling_freq)       # Convert to MBs/s
 
             # Update graph
             graph_object["UpLine"].setData(ut, u)

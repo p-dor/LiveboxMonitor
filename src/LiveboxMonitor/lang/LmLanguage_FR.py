@@ -285,7 +285,7 @@ LABELS = {
         "Background color:": "Couleur de fond :",
         "Apply": "Appliquer",
         "Download": "Réception",
-        "Traffic (MB)": "Trafic (Mo)",
+        "Traffic (MB/s)": "Trafic (Mo/s)",
         "Time": "Heure",
         "Upload": "Émission",
         "Loading configuration...": "Chargement de la configuration...",
@@ -1230,13 +1230,13 @@ TOOLTIPS = {
                   "La configuration doit avoir été appliquée avant d'être exportée.\n"
                   "Les temps exportés sont au format \"Unix Epoch\".",
         "downGraph": "Graphique des données reçues pour chaque interface / appareil sélectionné.\n"
-                     "Les volumes sont en méga-octets reçus entre deux échantillons, typiquement\n"
+                     "Les volumes sont en méga-octets reçus par seconde, avec un échantillonnage\n"
                      "toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n"
                      "de nouveaux échantillons.\n"
                      "Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n"
                      "vue normale en cliquant dans le coin en bas à gauche.",
         "upGraph": "Graphique des données émises pour chaque interface / appareil sélectionné.\n"
-                   "Les volumes sont en méga-octets transmis entre deux échantillons, typiquement\n"
+                   "Les volumes sont en méga-octets transmis par seconde, avec un échantillonnage\n"
                    "toutes les 30 secondes. Le graphe se met à jour automatiquement à la réception\n"
                    "de nouveaux échantillons.\n"
                    "Il est possible de naviguer et de zoomer à la souris, puis de revenir à la\n"

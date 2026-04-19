@@ -191,14 +191,14 @@ TOOLTIPS = {
                   "The configuration must have been applied before export.\n"
                   "Exported times are in \"Unix Epoch\" format.",
         "downGraph": "Graph of data received for each selected interface/device.\n"
-                     "Volumes are in megabytes received between two samples, typically\n"
-                     "every 30 seconds. The graph updates automatically upon receiving\n"
+                     "Volumes are in megabytes received per second, with a sampling rate\n"
+                     "of 30 seconds. The graph updates automatically upon receiving\n"
                      "new samples.\n"
                      "It is possible to navigate and zoom with the mouse, then return to\n"
                      "the normal view by clicking in the bottom left corner.",
         "upGraph": "Graph of data sent for each selected interface/device.\n"
-                   "Volumes are in megabytes sent between two samples, typically\n"
-                   "every 30 seconds. The graph updates automatically upon receiving\n"
+                   "Volumes are in megabytes sent per second, with a sampling rate\n"
+                   "of 30 seconds. The graph updates automatically upon receiving\n"
                    "new samples.\n"
                    "It is possible to navigate and zoom with the mouse, then return to\n"
                    "the normal view by clicking in the bottom left corner."

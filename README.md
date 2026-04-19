@@ -320,7 +320,7 @@ L'onglet `Stats/Infos Livebox` propose les boutons suivants :
 
 ![Interface](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_Graph.png)
 
-Affiche les graphiques des données reçues et transmises pour chaque interface / appareil sélectionné à partir de données stockées par la Livebox elle-même. Les volumes sont en méga-octets entre deux échantillons, en principe toutes les 30 secondes (l'échantillonnage et sa fréquence sont contrôlés par la Livebox). Les graphes se mettent à jour automatiquement à la réception de nouveaux échantillons sous forme d'événements.  
+Affiche les graphiques des données reçues et transmises pour chaque interface / appareil sélectionné à partir de données stockées par la Livebox elle-même. Les volumes sont en méga-octets par seconde, avec un échantillonnage en principe toutes les 30 secondes (l'échantillonnage et sa fréquence sont contrôlés par la Livebox). Les graphes se mettent à jour automatiquement à la réception de nouveaux échantillons sous forme d'événements.  
 Il est possible de naviguer et de zoomer dans les graphiques à la souris, puis de revenir à la vue normale en cliquant dans le coin en bas à gauche. Un clic droit sur un graphe permet d'accéder à d'autres fonctionnalités telles que l'exportation en différents formats. Toute la documentation est accessible [ici](https://pyqtgraph.readthedocs.io/en/latest/user_guide/index.html).
 
 ### Sélection des interfaces et des appareils
