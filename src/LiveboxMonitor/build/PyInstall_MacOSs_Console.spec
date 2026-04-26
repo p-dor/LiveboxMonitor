@@ -1,4 +1,4 @@
-# -*- mode: python ; coding: utf-8 -*-
+ # -*- mode: python ; coding: utf-8 -*-
 
 
 block_cipher = None
@@ -8,7 +8,7 @@ a = Analysis(
     ['../__main__.py'],
     pathex=['.'],
     binaries=[],
-    datas=[ ('/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/site-packages/pip/_vendor/certifi/cacert.pem', 'certifi') ],
+    datas=[ ('/opt/homebrew/lib/python3.11/site-packages/certifi/cacert.pem', 'certifi') ],
     hiddenimports=['_cffi_backend'],
     hookspath=[],
     hooksconfig={},
@@ -46,4 +46,4 @@ exe = EXE(
 app = BUNDLE(exe,
     name='LiveboxMonitor_Console.app',
     icon='../../../ico/LiveboxMonitor.ico',
-    version='1.4.8')
+    version='1.7')

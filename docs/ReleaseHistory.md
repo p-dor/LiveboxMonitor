@@ -1,6 +1,35 @@
 # ![Icone](http://p-dor.github.io/LiveboxMonitor/docs/png/Doc_AppIcon.png) LiveboxMonitor - historique des versions
 
 
+## v1.7 - 26/04/2026
+
+### Gestion du matériel
+- **Support de la Livebox S** : identification correcte, mappage des noms d'interfaces Ethernet et suppression du bouton d'infos USB (port USB absent sur ce modèle).
+- **Nouvel onglet TV UHD** : ajout d'un onglet permettant de contrôler un ou plusieurs décodeurs TV UHD.
+- **Découverte ONT** : support de la découverte de l'interface ONT pour les modèles LB7W7.
+- **Tolérance de tension ONT** : ajustement des valeurs acceptées (doivent désormais être comprises entre 3.0V et 3.5V).
+
+### Wi-Fi et Topologie
+- **Configuration avancée** : possibilité de modifier la largeur de bande Wi-Fi pour chaque bande radio.
+- **Qualité de connexion** : amélioration du calcul du score de qualité Wi-Fi, prenant désormais en compte le rapport signal/bruit (SNR) et la puissance du signal.
+- **Topologie** : prise en charge de certains répéteurs non-Orange (ponts Wi-Fi) dans l'affichage des points d'accès de chaque appareil.
+- **Planificateur** : méthode plus robuste pour activer ou désactiver le planificateur Wi-Fi.
+
+### Interface
+- **Filtrage des appareils** : le paramètre de filtrage est désormais réglé sur "Faux" par défaut (car il peut filtrer un peu trop).
+- **Affichage des appareils** : ajout d'une option pour n'afficher que les appareils actifs dans la liste principale.
+- **Graphes de trafic** : affichage des débits en Mo/s (au lieu de Mo par tranches de 30 secondes).
+- **Identification des appels indésirables** : le site d'Orange est désormais utilisé en complément pour vérifier les appels indésirables via le bouton "Sites spam" de l'onglet Téléphone.
+
+### Technique
+- **Architecture API** : découplage complet de la couche API et de la couche application. Cela permet d'utiliser l'API de manière autonome, sans dépendances avec PyQt.
+- **Requêtes statistiques** : si une interface ne parvient pas à renvoyer de statistiques (erreurs getNetDevStats), le programme cesse désormais de l'interroger en boucle.
+- **Log d'identification de la Livebox** : affichage du nom brut (technique) et du nom commercial de la Livebox.
+
+### Corrections de bugs
+- Correction d'un crash lors de l'utilisation du bouton "Appel API" d'un répéteur Wi-Fi si une session n'était pas établie avec celui-ci.
+
+
 ## v1.6 - 05/08/2025
 
 - Prise en charge des nouvelles Livebox W7 & S.
