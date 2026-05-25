@@ -32,6 +32,9 @@ class WifiStatus:
     INACTIVE = "I"
     UNSIGNED = "S"
 
+# Wifi profile name mapping
+PROFILE_NAME_MAP = {"Wifi 5GHz": "WiFi5G", "Wifi 6GHz": "WiFi6G"}
+
 
 
 # ################################ Wifi APIs ################################
@@ -315,6 +318,11 @@ class WifiApi(LmApi):
         return self.call("PowerManagement", "setProfiles", {"profiles": [profile]})
 
 
+    ### Set a PowerManagement triggered profile, return the resulting new profile
+    def set_power_management_triggered_profiles(self, profile):
+        return self.call("PowerManagement", "setTriggeredProfiles", {"profiles": [profile]})
+
+
     ### Determine if Livebox model supports MLO Wifi 7 technology - returns True if yes
     def has_mlo(self):
         if self._has_mlo is None:
@@ -339,6 +347,26 @@ class WifiApi(LmApi):
     ### Set MLO Wifi 7 enable status
     def set_mlo_enable(self, enable):
         self.call("SSW.DataElements.Network.APMLDTemplate.privMlo", "set", {"MLOEnable": enable}, timeout=15) 
+
+
+    ### Get eco mode for a given Wifi interface name - return None if no eco mode
+    def get_eco_mode(self, intf_name):
+        if self._api._info.get_model() >= 6:    # Eco mode available only starting Livebox 6
+            profile_name = PROFILE_NAME_MAP.get(intf_name)
+            if profile_name:
+                d = self.get_power_management_profiles(profile_name).get(profile_name)
+                if d:
+                    return d.get("Activate")
+        return None
+
+
+    ### Set eco mode for a given Wifi interface name, return the resulting new profile if successful
+    def set_eco_mode(self, intf_name, activate):
+        profile_name = PROFILE_NAME_MAP.get(intf_name)
+        if profile_name:
+            profile = {"profile": profile_name, "activate": activate}
+            return self.set_power_management_triggered_profiles(profile).get(profile_name)
+        return None
 
 
     ### Get Wifi configuration
@@ -387,6 +415,7 @@ class WifiApi(LmApi):
             c["SSID"] = r.get("SSID")
             c["Enable"] = base.get("Enable")
             c["Broadcast"] = r.get("SSIDAdvertisementEnabled")
+            c["Eco"] = self.get_eco_mode(c["Name"])
 
             t = r.get("Security")
             if t is not None:
@@ -545,6 +574,17 @@ class WifiApi(LmApi):
             if len(p):
                 penable[n["Key"]] = p
 
+            # Activate/Deactivate Eco mode if relevant
+            if (o["Eco"] != n["Eco"]):
+                if n["Eco"] is not None:
+                    try:
+                        profile = self.set_eco_mode(n["Name"], n["Eco"])
+                        if profile is None:
+                            status = False
+                    except Exception as e:
+                        LmTools.error(str(e))
+                        status = False
+
         # Call the API if at least one parameter changed
         if len(vap) or len(radio) or len(penable):
             params = {}
@@ -565,7 +605,7 @@ class WifiApi(LmApi):
                 self.set_enable(new_config["Enable"])
             except Exception as e:
                 LmTools.error(str(e))
-                status = False             
+                status = False
 
         # Activate/Deactivate MLO if relevant
         if self.has_mlo() and (old_config["MLO"] != new_config["MLO"]):
@@ -573,7 +613,7 @@ class WifiApi(LmApi):
                 self.set_mlo_enable(new_config["MLO"])
             except Exception as e:
                 LmTools.error(str(e))
-                status = False             
+                status = False
 
         return status
 

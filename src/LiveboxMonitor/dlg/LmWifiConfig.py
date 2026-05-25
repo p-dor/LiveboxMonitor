@@ -58,11 +58,13 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self._freq_enabled_checkbox = QtWidgets.QCheckBox(lx("Enabled"), objectName="freqEnabledCheckbox")
         self._broadcast_checkbox = QtWidgets.QCheckBox(lx("SSID Broadcast"), objectName="broadcastCheckbox")
         self._wps_checkbox = QtWidgets.QCheckBox(lx("WPS"), objectName="wpsCheckbox")
+        self._eco_checkbox = QtWidgets.QCheckBox(lx("Eco"), objectName="ecoCheckbox")
         options_box = QtWidgets.QHBoxLayout()
         options_box.setSpacing(10)
         options_box.addWidget(self._freq_enabled_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         options_box.addWidget(self._broadcast_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
-        options_box.addWidget(self._wps_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+        options_box.addWidget(self._wps_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        options_box.addWidget(self._eco_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
         mac_filtering_label = QtWidgets.QLabel(lx("MAC Filtering"), objectName="macFilteringLabel")
         self._mac_filtering_combo = QtWidgets.QComboBox(objectName="macFilteringCombo")
@@ -124,6 +126,7 @@ class WifiConfigDialog(QtWidgets.QDialog):
             # Cannot be changed on guest interfaces
             self._broadcast_checkbox.setEnabled(False)
             self._wps_checkbox.setEnabled(False)
+            self._eco_checkbox.setEnabled(False)
             self._mac_filtering_combo.setEnabled(False)
         else:
             grid.addWidget(self._enable_checkbox, 0, 0, 1, 1)
@@ -301,6 +304,13 @@ class WifiConfigDialog(QtWidgets.QDialog):
         self.load_secu_combo()
 
         if not self._guest:
+            if i["Eco"] is None:
+                self._eco_checkbox.setEnabled(False)
+                self._eco_checkbox.setChecked(False)
+            else:
+                self._eco_checkbox.setEnabled(True)
+                self._eco_checkbox.setChecked(i["Eco"])
+
             self._mac_filtering_entries_combo.setDataSelection(i["MACFilteringEntries"])
             self.load_chan_combo()
             self.load_mode_combo()
@@ -318,6 +328,10 @@ class WifiConfigDialog(QtWidgets.QDialog):
             i["Enable"] = self._freq_enabled_checkbox.isChecked()
             i["Broadcast"] = self._broadcast_checkbox.isChecked()
             i["WPS"] = self._wps_checkbox.isChecked()
+            if self._eco_checkbox.isEnabled():
+                i["Eco"] = self._eco_checkbox.isChecked()
+            else:
+                i["Eco"] = None
             i["MACFiltering"] = self._mac_filtering_combo.currentText()
             i["Secu"] = self._secu_combo.currentText()
             if i["Secu"] != "None":

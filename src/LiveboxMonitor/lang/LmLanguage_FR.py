@@ -686,6 +686,7 @@ LABELS = {
         "hours (0 = unlimited).": "heures (0 = illimitée).",
         "Radio Band": "Bande Radio",
         "SSID Broadcast": "Diffuser SSID",
+        "Eco": "Éco",
         "MAC Filtering": "Filtrage MAC",
         "Devices": "Appareils",
         "Security": "Sécurité",
@@ -1599,6 +1600,8 @@ TOOLTIPS = {
         "broadcastCheckbox": "Permet de diffuser le nom du réseau pour le rendre découvrable.",
         "wpsCheckbox": "Active ou désactive les méthodes de connexion WPS\n"
                        "(Wi-Fi Protected Setup) pour la bande radio sélectionnée.",
+        "ecoCheckbox": "Active ou désactive le mode économie d\'énergie pour la bande radio sélectionnée.\n"
+                       "Correspond au \"Wi-Fi Intelligent\", ou mode \"Optimisé\".",
         "macFilteringCombo": "Sélectionner 'Off' pour désactiver le filtrage MAC.\n"
                              "'WhiteList' pour activer le filtrage MAC et ne permettre la\n"
                              "connexion uniquement qu'aux appareils listés.\n"

@@ -557,6 +557,8 @@ TOOLTIPS = {
         "broadcastCheckbox": "Allows you to broadcast the network name to make it discoverable.",
         "wpsCheckbox": "Enables or disables WPS connection methods\n"
                        "(Wi-Fi Protected Setup) for the selected radio band.",
+        "ecoCheckbox": "Enables or disables power saving mode for the selected radio band.\n"
+                       "This corresponds to \"Smart Wi-Fi\", or \"Optimized\" mode.",
         "macFilteringCombo": "Select 'Off' to disable MAC filtering.\n"
                              "'WhiteList' to enable MAC filtering and allow\n"
                              "connection only to listed devices.\n"
