@@ -809,8 +809,8 @@ Une icône dans le nom de l'onglet permet de connaître l'état de la connexion 
 
 ### Informations
 - **`Statut`** : statut actuel retourné par le décodeur.
-- **`Infos`** : informations sur le décodeur retourné par la Livebox.
-- **`Description`** : informations sur le décodeur retourné par lui même.
+- **`Infos`** : informations sur le décodeur retournées par la Livebox.
+- **`Description`** : informations sur le décodeur retournées par lui même.
 - **`Chaîne`** : informations sur la chaîne TV en cours de lecture. L'identifiant EPG correspond au numéro suivant le standard Electronic Program Guide. Les icônes et descriptions de chaînes sont stockées dans un cache local pour éviter des appels aux serveurs Orange intempestifs. Si ces informations deviennent érronées utilisez le bouton "Recréer Cache".
 
 ### Boutons
