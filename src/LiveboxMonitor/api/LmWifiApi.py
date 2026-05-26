@@ -310,7 +310,7 @@ class WifiApi(LmApi):
 
     ### Get PowerManagement profiles, by default returns all
     def get_power_management_profiles(self, profile=None):
-        return self.call("PowerManagement", "getProfiles", {"profiles": [profile]} if profile else None)
+        return self.call_no_check("PowerManagement", "getProfiles", {"profiles": [profile]} if profile else None)
 
 
     ### Set a PowerManagement profile, return the resulting new profile
