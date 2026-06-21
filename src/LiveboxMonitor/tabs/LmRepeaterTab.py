@@ -26,11 +26,12 @@ from LiveboxMonitor.tools import LmTools
 TAB_NAME = "repeaterTab"    # 'Key' dynamic property indicates the MAC addr
 
 # Static Config
-WIFI_REPEATER_TYPES = {"repeteurwifi", "repeteurwifi6", "sah ap"}
+WIFI_REPEATER_TYPES = {"repeteurwifi", "repeteurwifi6", "repeteurwifi7", "sah ap"}
 WIFI_REPEATER_5 = "WIFIREPARCFR"
 WIFI_REPEATER_6 = "WIFI6REPSERCOMM"
-WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
-WIFI_REPEATER_MODEL_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6}
+WIFI_REPEATER_7 = "WIFI7REPSERCOMM"
+WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6, WIFI_REPEATER_7]
+WIFI_REPEATER_MODEL_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6, WIFI_REPEATER_7: 7}
 WIFI_REPEATER_DEFAULT_MODEL = 6
 DEFAULT_REPEATER_NAME = "RW #"
 
@@ -48,6 +49,15 @@ NET_INTF_WR6 = [
     {"Key": "bridge",     "Name": "LAN",          "Type": "lan", "SwapStats": True},
     {"Key": "eth0",       "Name": "Ethernet 1",   "Type": "eth", "SwapStats": True},
     {"Key": "eth1",       "Name": "Ethernet 2",   "Type": "eth", "SwapStats": True},
+    {"Key": "vap2g0priv", "Name": "Wifi 2.4GHz",  "Type": "wif", "SwapStats": True},
+    {"Key": "vap5g0priv", "Name": "Wifi 5GHz",    "Type": "wif", "SwapStats": True}
+]
+
+# Wifi Repeater 7 Interfaces
+NET_INTF_WR7 = [
+    {"Key": "bridge",     "Name": "LAN",          "Type": "lan", "SwapStats": True},
+    {"Key": "ETH0",       "Name": "Ether 2.5G",   "Type": "eth", "SwapStats": True},
+    {"Key": "ETH1",       "Name": "Ethernet",     "Type": "eth", "SwapStats": True},
     {"Key": "vap2g0priv", "Name": "Wifi 2.4GHz",  "Type": "wif", "SwapStats": True},
     {"Key": "vap5g0priv", "Name": "Wifi 5GHz",    "Type": "wif", "SwapStats": True}
 ]
@@ -467,12 +477,15 @@ class LmRepHandler:
 
     ### Set Net Interfaces according to Repeater model
     def set_net_intf(self):
-        if self._model == 5:
-            self._netIntf = NET_INTF_WR5
-        elif self._model == 6:
-            self._netIntf = NET_INTF_WR6
-        else:
-            self._netIntf = []
+        match self._model:
+            case 5:
+                self._netIntf = NET_INTF_WR5
+            case 6:
+                self._netIntf = NET_INTF_WR6
+            case 7:
+                self._netIntf = NET_INTF_WR7
+            case _:
+                self._netIntf = []
 
 
     ### Sign in to repeater
