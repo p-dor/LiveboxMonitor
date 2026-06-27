@@ -44,6 +44,7 @@ PORTS_RS = (r"^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9
             r"^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})-(6553[0-5]|"
             r"655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4})$")
 EMAIL_RS = r"[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
+PHONENB_RS = r"^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$"
 
 # Useful objects
 MAC_RE = re.compile(MAC_RS)
@@ -124,6 +125,11 @@ def is_ipv6_pfix(string):
 ### Check if valid TCP/UDP port or ports range
 def is_tcp_udp_port(string):
     return re.fullmatch(PORTS_RE, string) is not None
+
+
+### Check if valid phone number
+def is_phone_nb(string):
+    return bool(re.match(PHONENB_RS, string))
 
 
 ### Cleanup URL
