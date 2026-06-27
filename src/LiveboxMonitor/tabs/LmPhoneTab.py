@@ -572,7 +572,7 @@ class LmPhone:
     ### Check if number is spam via CallFilter API
     @staticmethod
     def is_spam(phone_number):
-        if LmConf.CallFilterApiKey and phone_number:
+        if LmConf.CallFilterApiKey and LmTools.is_phone_nb(phone_number):
             try:
                 resp = requests.get(CALLFILTER_URL.format(LmConf.CallFilterApiKey, phone_number), timeout=2)
                 resp.raise_for_status()     # Check HTTP status code
