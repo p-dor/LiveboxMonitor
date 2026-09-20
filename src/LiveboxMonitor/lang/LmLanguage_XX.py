@@ -663,11 +663,110 @@ LABELS = {
         "-Unknown-": ""
     },
 
-    # NAT/PAT - rule type selection dialog
-    "nprtype": {
+    # Firewall
+    "firewall": {
+        "IPv4 Level:": "",
+        "IPv6 Level:": "",
+        "Change...": "",
+        "Firewall Levels": "",
+        "Ping Responses...": "",
+        "A": "",
+        "Type": "",
+        "Direction": "",
+        "Name": "",
+        "Description": "",
+        "Protocols": "",
+        "Source IP": "",
+        "Source Port": "",
+        "Dest IP": "",
+        "Dest Port": "",
+        "Device": "",
+        "Action": "",
+        "Refresh": "",
+        "Enable": "",
+        "Disable": "",
+        "Add...": "",
+        "Edit...": "",
+        "Delete": "",
+        "Delete All...": "",
+        "Export...": "",
+        "Import...": "",
+        "Firewall": "",
+        "Setting Firewall Levels...": "",
+        "Set Ping Responses...": "",
+        "Saving rule...": "",
+        "Deleting rule...": "",
+        "Deleting rules...": "",
+        "Export File": "",
+        "Firewall Rules": "",
+        "Exporting firewall rules...": "",
+        "Select file to import": "",
+        "Importing firewall rules...": "",
+        "Error": "",
+        "High": "",
+        "Medium": "",
+        "Low": "",
+        "Custom": "",
+        "Loading firewall rules...": "",
+        "Outbound": "",
+        "Inbound": "",
+        "Accept": "",
+        "Reject": "",
+        "Drop": ""
+    },
+
+    # Firewall rule dialog
+    "fwlrule": {
+        "Enabled": "",
+        "Type": "",
+        "Direction": "",
+        "Inbound": "",
+        "Outbound": "",
+        "Name": "",
+        "Description": "",
+        "Protocols": "",
+        "Device": "",
+        "Source IP Address": "",
+        "Source Port": "",
+        "Dest IP Address": "",
+        "Dest Port": "",
+        "Action": "",
+        "Accept": "",
+        "Reject": "",
+        "Drop": "",
+        "OK": "",
+        "Cancel": "",
+        "Firewall Rule": "",
+        "-Unknown-": ""
+    },
+
+    # Firewall - rule type selection dialog
+    "fwrtype": {
         "OK": "",
         "Cancel": "",
         "Select rule types": ""
+    },
+
+    # Firewall - Firewall level
+    "fwlevel": {
+        "IPv4 Firewall Level": "",
+        "IPv6 Firewall Level": "",
+        "High": "",
+        "Medium": "",
+        "Low": "",
+        "Custom": "",
+        "OK": "",
+        "Cancel": "",
+        "Firewall Levels": ""
+    },
+
+    # Firewall - Ping Response
+    "pingr": {
+        "Respond to IPv4 ping": "",
+        "Respond to IPv6 ping": "",
+        "OK": "",
+        "Cancel": "",
+        "Ping Responses": ""
     },
 
     # Phone
@@ -737,8 +836,6 @@ LABELS = {
         "Factory Reset Livebox...": "",
         "Reboot History...": "",
         "Reboots": "",
-        "Firewall Levels...": "",
-        "Ping Responses...": "",
         "Speed Tests..." : "",
         "DynDNS...": "",
         "DMZ...": "",
@@ -765,8 +862,6 @@ LABELS = {
         "Getting Wifi Global Status...": "",
         "Getting Reboot History...": "",
         "Setting LEDs & Screen Setup...": "",
-        "Setting Firewall Levels...": "",
-        "Set Ping Responses...": "",
         "Log level selection": "",
         "Please select a log level:": "",
         "Select Export Folder": "",
@@ -885,28 +980,6 @@ LABELS = {
         "OK": "",
         "Cancel": "",
         "LEDs & Screen Setup": ""
-    },
-
-    # Actions - Firewall level
-    "fwlevel": {
-        "IPv4 Firewall Level": "",
-        "IPv6 Firewall Level": "",
-        "High": "",
-        "Medium": "",
-        "Low": "",
-        "Custom": "",
-        "OK": "",
-        "Cancel": "",
-        "Firewall Levels": ""
-    },
-
-    # Actions - Ping Response
-    "pingr": {
-        "Respond to IPv4 ping": "",
-        "Respond to IPv6 ping": "",
-        "OK": "",
-        "Cancel": "",
-        "Ping Responses": ""
     },
 
     # Actions - Speed Tests
@@ -1274,6 +1347,7 @@ TOOLTIPS = {
         "eventsTab": "",
         "dhcpTab": "",
         "natPatTab": "",
+        "firewallTab": "",
         "phoneTab": "",
         "actionTab": "",
         "repeaterTab": "",
@@ -1634,11 +1708,91 @@ TOOLTIPS = {
         "cancel": ""
     },
 
-    # NAT/PAT - rule type selection dialog
-    "nprtype": {
+    # Firewall
+    "firewall": {
+        "firewallTab": "",
+        "ipV4LevelLabel": "",
+        "ipV4Level": "",
+        "ipV6LevelLabel": "",
+        "ipV6Level": "",
+        "changeLevels": : "",
+        "levelGroup": "",
+        "pingResponse": "",
+        "fwlList": "",
+        "flist_Enabled": "",
+        "flist_Type": "",
+        "flist_Direction": "",
+        "flist_ID": "",
+        "flist_Description": "",
+        "flist_Protocols": "",
+        "flist_SourceIP": "",
+        "flist_SourcePort": "",
+        "flist_DestIP": "",
+        "flist_DestPort": "",
+        "flist_Device": "",
+        "flist_Action": "",
+        "refreshFwl": "",
+        "enableFwl": "",
+        "addFwl": "",
+        "editFwl": "",
+        "deleteFwl": "",
+        "deleteAllFwl": "",
+        "exportFwl": "",
+        "importFwl": ""
+    },
+
+    # Firewall rule dialog
+    "fwlrule": {
+        "enableCheckbox": "",
+        "typeLabel": "",
+        "typeCombo": "",
+        "directionLabel": "",
+        "directionCombo": "",
+        "nameLabel": "",
+        "nameEdit": "",
+        "descLabel": "",
+        "descEdit": "",
+        "protocolsLabel": "",
+        "protocolsCombo": "",
+        "deviceLabel": "",
+        "deviceCombo": "",
+        "sourceIpLabel": "",
+        "sourceIpEdit": "",
+        "sourcePortLabel": "",
+        "sourcePortEdit": "",
+        "destIpLabel": "",
+        "destIpEdit": "",
+        "destPortLabel": "",
+        "destPortEdit": "",
+        "actionLabel": "",
+        "actionCombo": "",
+        "ok": "",
+        "cancel": ""
+    },
+
+    # Firewall - rule type selection dialog
+    "fwrtype": {
         "ipV4Checkbox": "",
         "ipV6Checkbox": "",
         "upnpCheckbox": "",
+        "ok": "",
+        "cancel": ""
+    },
+
+    # Firewall - Firewall level
+    "fwlevel": {
+        "ipV4Label": "",
+        "ipV4Combo": "",
+        "ipV6Label": "",
+        "ipV6Combo": "",
+        "ok": "",
+        "cancel": ""
+    },
+
+    # Firewall - Ping Response
+    "pingr": {
+        "ipV4Checkbox": "",
+        "ipV6Checkbox": "",
         "ok": "",
         "cancel": ""
     },
@@ -1710,8 +1864,6 @@ TOOLTIPS = {
         "resetLivebox": "",
         "rebootHistory": "",
         "rebootGroup": "",
-        "firewallLevel": "",
-        "pingResponse": "",
         "speedTests": "",
         "dynDNS": "",
         "dmz": "",
@@ -1817,24 +1969,6 @@ TOOLTIPS = {
         "orangeSlider": "",
         "orangeValue": "",
         "showWifiPasswordCheckbox": "",
-        "ok": "",
-        "cancel": ""
-    },
-
-    # Actions - Firewall level
-    "fwlevel": {
-        "ipV4Label": "",
-        "ipV4Combo": "",
-        "ipV6Label": "",
-        "ipV6Combo": "",
-        "ok": "",
-        "cancel": ""
-    },
-
-    # Actions - Ping Response
-    "pingr": {
-        "ipV4Checkbox": "",
-        "ipV6Checkbox": "",
         "ok": "",
         "cancel": ""
     },
@@ -2261,6 +2395,24 @@ MESSAGES = {
         "ipv6AddrErr": "",
         "ipv4AddrErr": "",
         "emptyAddr": ""
+    },
+
+    # Firewall
+    "firewall": {
+        "delAllFwl": "",
+        "createFileErr": "",
+        "saveFileErr": "",
+        "ruleExport": "",
+        "openFileErr": "",
+        "fileFormatErr": "",
+        "fileTypeErr": "",
+        "closeFileErr": "",
+        "ruleImport": "",
+        "fwlv4LoadErr": "",
+        "fwlv6iLoadErr": "",
+        "fwlv6oLoadErr": "",
+        "ipv4AddrErr": "",
+        "ipv6AddrErr": ""
     },
 
     # Phone

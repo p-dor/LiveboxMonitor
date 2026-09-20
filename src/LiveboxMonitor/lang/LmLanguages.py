@@ -131,7 +131,12 @@ def get_nat_pat_label(string): return get_label("natpat", string)
 def get_nat_pat_message(string, key): return get_message("natpat", string, key)
 def get_pat_rule_label(string): return get_label("patrule", string)
 def get_ptf_rule_label(string): return get_label("ptfrule", string)
-def get_nat_pat_rule_type_label(string): return get_label("nprtype", string)
+
+# Firewall
+def get_firewall_label(string): return get_label("firewall", string)
+def get_firewall_message(string, key): return get_message("firewall", string, key)
+def get_firewall_rule_label(string): return get_label("fwlrule", string)
+def get_firewall_rule_type_label(string): return get_label("fwrtype", string)
 
 # Phone
 def get_phone_label(string): return get_label("phone", string)

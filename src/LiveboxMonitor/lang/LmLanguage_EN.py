@@ -18,6 +18,7 @@ TOOLTIPS = {
         "eventsTab": "Event log for each device.",
         "dhcpTab": "Detailed DHCP information and settings.",
         "netPatTab": "Port & protocol forwarding settings.",
+        "firewallTab": "Firewall and filtering rule settings.",
         "phoneTab": "Manage phone calls and contact list.",
         "actionTab": "Various actions, settings, preferences, and information about the application.",
         "repeaterTab": "Detailed information about the Wifi repeater and traffic statistics.\n"
@@ -449,11 +450,84 @@ TOOLTIPS = {
                       "Leave empty if no external IP filtering is required."
     },
 
-    # NAT/PAT - rule type selection dialog
-    "nprtype": {
+    # Firewall
+    "firewall": {
+        "ipV4Level": "IPv4 firewall level.\n"
+                     "The IPv4 filtering rules below apply only if the level is\n"
+                     "set to \"Custom\".",
+        "ipV6Level": "IPv6 firewall level.\n"
+                     "The IPv6 filtering rules below apply only if the level is\n"
+                     "set to \"Custom\".",
+        "changeLevels": "Allows you to set the levels of the IPv4 and IPv6 firewalls.",
+        "pingResponse": "Allows you to set responses to IPv4 and IPv6 ping requests.",
+        "flist_Enabled": "Indicates with an icon whether the rule is active or not.",
+        "flist_Type": "Indicates the type of rule.",
+        "flist_Direction": "Indicates whether the rule filters inbound or outbound traffic.",
+        "flist_ID": "Specifies the name of the rule.",
+        "flist_Description": "Description of the rule.",
+        "flist_Protocols": "List of protocols filtered by the rule.",
+        "flist_SourceIP": "Source IP address for which traffic is to be filtered.",
+        "flist_SourcePort": "Source ports for which traffic is to be filtered.",
+        "flist_DestIP": "Destination IP address for which traffic is to be filtered.",
+        "flist_DestPort": "Destination ports for which traffic must be filtered.",
+        "flist_Device": "Device for which traffic is filtered.",
+        "flist_Action": "Indicates whether traffic should be accepted, rejected with an error,\n"
+                        "or ignored without an error.",
+        "refreshFwl": "Refreshes the list of firewall rules.",
+        "enableFwl": "Enables/disables the selected rule.",
+        "addFwl": "Allows you to add a firewall rule.",
+        "editFwl": "Allows you to modify the selected firewall rule.",
+        "deleteFwl": "Allows you to delete the selected firewall rule.",
+        "deleteAllFwl": "Allows you to delete all firewall rules.",
+        "exportFwl": "Allows you to export firewall rules of one or more selected\n"
+                    "types to a file.",
+        "importFwl": "Allows you to re-import previously exported firewall rules from a file.\n"
+                     "If rules with the same name already exist, they will be overwritten by the imported ones."
+    },
+
+    # Firewall rule dialog
+    "fwlrule": {
+        "enableCheckbox": "Enables or disables the rule.",
+        "typeCombo": "Select the type of rule.",
+        "directionCombo": "Allows you to choose between a rule for inbound traffic and\n"
+                          "a rule for outbound traffic. An IPv4 rule can only apply to\n"
+                          "outbound traffic.",
+        "nameEdit": "Unique name for the rule. If a rule with the same name already exists,\n"
+                    "it will be overwritten.",
+        "descEdit": "Description of the rule.",
+        "protocolsCombo": "Select the protocols to filter.",
+        "deviceCombo": "Device for which traffic is to be filtered.",
+        "sourceIpEdit": "Source IP address (v4 or v6, depending on the type) for which traffic\n"
+                        "is to be filtered. It is also possible to specify a prefix.",
+        "sourcePortEdit": "Source ports for which traffic is to be filtered.\n"
+                          "Use the - character between two ports to specify a range.\n"
+                          "Use the , character between ports or ranges to specify a list.",
+        "destIpEdit": "Destination IP address (v4 or v6, depending on the type) for which traffic\n"
+                      "is to be filtered. It is also possible to specify a prefix.",
+        "destPortEdit": "Destination ports for which traffic must be filtered.\n"
+                        "Use the - character between two ports to specify a range.\n"
+                        "Use the , character between ports or ranges to specify a list.",
+        "actionCombo": "Specify whether the traffic should be accepted, rejected with an error,\n"
+                       "or ignored without an error."
+    },
+
+    # Firewall - rule type selection dialog
+    "fwrtype": {
         "ipV4Checkbox": "Selects or not IPv4 type rules.",
         "ipV6Checkbox": "Selects or not IPv6 type rules.",
         "upnpCheckbox": "Selects or not UPnP type rules."
+    },
+
+    # Firewall - Firewall level
+    "fwlevel": {
+        "ipV4Combo": "IPv4 firewall level.",
+        "ipV6Combo": "IPv6 firewall level."
+    },
+
+    # Firewall - Ping Response
+    "pingr": {
+        "ipV4Checkbox": "Check to respond to IPv4 ping requests.",
+        "ipV6Checkbox": "Check to respond to IPv6 ping requests."
     },
 
     # Phone
@@ -527,8 +601,6 @@ TOOLTIPS = {
                         "If automatic configuration restoration is enabled, a dialog will allow you to disable it.",
         "rebootHistory": "Allows you to display the history of the latest reboots.\n"
                          "Useful to detect reboots forced by Orange to update the Livebox software.",
-        "firewallLevel": "Allows you to set the levels of the IPv4 and IPv6 firewalls.",
-        "pingResponse": "Allows you to set responses to IPv4 and IPv6 ping requests.",
         "speedTests": "Allows you to run quick speed tests provided by Orange.\n"
                       "Sites like nperf.com or speedtest.net offer more reliable tests.",
         "dynDNS": "Allows you to assign a domain and fixed host name, easy to remember, to a static or dynamic IP address\n"
@@ -633,18 +705,6 @@ TOOLTIPS = {
     "screen" : {
         "orangeSlider": "Adjusts the brightness level of the Orange LED.",
         "showWifiPasswordCheckbox": "Display the security key on the Livebox screen."
-    },
-
-    # Actions - Firewall level
-    "fwlevel": {
-        "ipV4Combo": "IPv4 firewall level.",
-        "ipV6Combo": "IPv6 firewall level."
-    },
-
-    # Actions - Ping Response
-    "pingr": {
-        "ipV4Checkbox": "Check to respond to IPv4 ping requests.",
-        "ipV6Checkbox": "Check to respond to IPv6 ping requests."
     },
 
     # Actions - Speed Tests

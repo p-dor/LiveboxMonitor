@@ -550,9 +550,7 @@ LABELS = {
     # NAT/PAT - PAT rule dialog
     "patrule": {
         "Enabled": "Active",
-        "Type": "Type",
         "Name": "Nom",
-        "Description": "Description",
         "Protocols": "Protocoles",
         "Internal Port": "Port Interne",
         "External Port": "Port Externe",
@@ -567,9 +565,7 @@ LABELS = {
     # NAT/PAT - PTF rule dialog
     "ptfrule": {
         "Enabled": "Active",
-        "Type": "Type",
         "Name": "Nom",
-        "Description": "Description",
         "Protocols": "Protocoles",
         "Device": "Appareil",
         "IP Address": "Adresse IP",
@@ -579,10 +575,95 @@ LABELS = {
         "-Unknown-": "-Inconnu-"
     },
 
-    # NAT/PAT - rule type selection dialog
-    "nprtype": {
+    # Firewall
+    "firewall": {
+        "IPv4 Level:": "Niveau IPv4 :",
+        "IPv6 Level:": "Niveau IPv6 :",
+        "Change...": "Changer...",
+        "Firewall Levels": "Niveaux de Pare-feu",
+        "Ping Responses...": "Réponses aux pings...",
+        "Name": "Nom",
+        "Protocols": "Protocoles",
+        "Source IP": "IP Source",
+        "Source Port": "Port Source",
+        "Dest IP": "IP Dest",
+        "Dest Port": "Port Dest",
+        "Device": "Appareil",
+        "Refresh": "Rafraîchir",
+        "Enable": "Activer",
+        "Disable": "Désactiver",
+        "Add...": "Ajouter...",
+        "Edit...": "Modifier...",
+        "Delete": "Supprimer",
+        "Delete All...": "Tout Supprimer...",
+        "Firewall": "Pare-feu",
+        "Setting Firewall Levels...": "Changement des niveaux de pare-feu...",
+        "Set Ping Responses...": "Changement des réponses aux pings...",
+        "Saving rule...": "Sauvegarde de la règle...",
+        "Deleting rule...": "Suppression de la règle...",
+        "Deleting rules...": "Suppression des règles...",
+        "Export File": "Fichier d'export",
+        "Firewall Rules": "Règles de Pare-feu",
+        "Exporting firewall rules...": "Export des règles de pare-feu...",
+        "Select file to import": "Sélectionnez le fichier à importer",
+        "Importing firewall rules...": "Import des règles de pare-feu...",
+        "Error": "Erreur",
+        "High": "Élevé",
+        "Medium": "Moyen",
+        "Low": "Faible",
+        "Custom": "Personnalisé",
+        "Loading firewall rules...": "Chargement des règles de pare-feu...",
+        "Outbound": "Sortant",
+        "Inbound": "Entrant",
+        "Accept": "Accepter",
+        "Reject": "Refuser",
+        "Drop": "Ignorer"
+    },
+
+    # Firewall rule dialog
+    "fwlrule": {
+        "Enabled": "Active",
+        "Inbound": "Entrant",
+        "Outbound": "Sortant",
+        "Name": "Nom",
+        "Protocols": "Protocoles",
+        "Device": "Appareil",
+        "Source IP Address": "Adresse IP Source",
+        "Source Port": "Port Source",
+        "Dest IP Address": "Adresse IP Dest",
+        "Dest Port": "Port Dest",
+        "Accept": "Accepter",
+        "Reject": "Refuser",
+        "Drop": "Ignorer",
+        "Cancel": "Annuler",
+        "Firewall Rule": "Règle de Pare-feu",
+        "-Unknown-": "-Inconnu-"
+    },
+
+    # Firewall - rule type selection dialog
+    "fwrtype": {
         "Cancel": "Annuler",
         "Select rule types": "Sélectionnez les types de règle"
+    },
+
+    # Firewall - Firewall level
+    "fwlevel": {
+        "IPv4 Firewall Level": "Niveau du pare-feu IPv4",
+        "IPv6 Firewall Level": "Niveau du pare-feu IPv6",
+        "High": "Élevé",
+        "Medium": "Moyen",
+        "Low": "Faible",
+        "Custom": "Personnalisé",
+        "Cancel": "Annuler",
+        "Firewall Levels": "Niveaux des pares-feux"
+    },
+
+    # Firewall - Ping Response
+    "pingr": {
+        "Respond to IPv4 ping": "Répondre au ping IPv4",
+        "Respond to IPv6 ping": "Répondre au ping IPv6",
+        "Cancel": "Annuler",
+        "Ping Responses": "Réponses aux pings"
     },
 
     # Phone
@@ -643,8 +724,6 @@ LABELS = {
         "Factory Reset Livebox...": "Réinitialiser la Livebox...",
         "Reboot History...": "Historique Redémarrages...",
         "Reboots": "Redémarrages",
-        "Firewall Levels...": "Niveaux de pare-feu...",
-        "Ping Responses...": "Réponses aux pings...",
         "Speed Tests...": "Tests de débit...",
         "Routing Table...": "Table de routage...",
         "Network": "Réseau",
@@ -668,8 +747,6 @@ LABELS = {
         "Getting Wifi Global Status...": "Chargement de l'état global du Wifi...",
         "Getting Reboot History...": "Chargement de l'historique de redémarrages...",
         "Setting LEDs & Screen Setup...": "Changement des réglages des LEDs et de l'écran...",
-        "Setting Firewall Levels...": "Changement des niveaux de pare-feu...",
-        "Set Ping Responses...": "Changement des réponses aux pings...",
         "Log level selection": "Niveau de log",
         "Please select a log level:": "Sélectionnez un niveau de log :",
         "Select Export Folder": "Sélectionnez le dossier d'export",
@@ -775,26 +852,6 @@ LABELS = {
         "Show Wifi Password": "Afficher le mot de passe Wifi sur l'écran",
         "Cancel": "Annuler",
         "LEDs & Screen Setup": "Réglages LEDs & Écran"
-    },
-
-    # Actions - Firewall level
-    "fwlevel": {
-        "IPv4 Firewall Level": "Niveau du pare-feu IPv4",
-        "IPv6 Firewall Level": "Niveau du pare-feu IPv6",
-        "High": "Élevé",
-        "Medium": "Moyen",
-        "Low": "Faible",
-        "Custom": "Personnalisé",
-        "Cancel": "Annuler",
-        "Firewall Levels": "Niveaux des pares-feux"
-    },
-
-    # Actions - Ping Response
-    "pingr": {
-        "Respond to IPv4 ping": "Répondre au ping IPv4",
-        "Respond to IPv6 ping": "Répondre au ping IPv6",
-        "Cancel": "Annuler",
-        "Ping Responses": "Réponses aux pings"
     },
 
     # Actions - Speed Tests
@@ -1115,6 +1172,7 @@ TOOLTIPS = {
         "eventsTab": "Journal d'événements pour chaque appareil.",
         "dhcpTab": "Informations détaillées et réglages DHCP.",
         "natPatTab": "Réglages de redirection de ports et de protocoles.",
+        "firewallTab": "Réglages du pare-feu et des règles de filtrage.",
         "phoneTab": "Gérer les appels téléphoniques et la liste des contacts.",
         "actionTab": "Actions variées, préférences et informations sur l'application.",
         "repeaterTab": "Informations détaillées sur le répéteur Wifi et statistiques de trafic.\n"
@@ -1548,11 +1606,85 @@ TOOLTIPS = {
                       "Laisser vide si aucun filtrage par IP externe n'est requis."
     },
 
-    # NAT/PAT - rule type selection dialog
-    "nprtype": {
+    # Firewall
+    "firewall": {
+        "ipV4Level": "Niveau de pare-feu IPv4.\n"
+                     "Les règles de filtrage IPv4 ci-dessous s'appliquent uniquement\n"
+                     "si le niveau est réglé sur \"Personnalisé\".",
+        "ipV6Level": "Niveau de pare-feu IPv6.\n"
+                     "Les règles de filtrage IPv6 ci-dessous s'appliquent uniquement\n"
+                     "si le niveau est réglé sur \"Personnalisé\".",
+        "changeLevels": "Permet de régler les niveaux des pares-feux IPv4 et IPv6.",
+        "pingResponse": "Permet de régler les réponses aux requêtes de ping IPv4 et IPv6.",
+        "flist_Enabled": "Indique par une icône si la règle est active ou non.",
+        "flist_Type": "Indique le type de la règle.",
+        "flist_Direction": "Indique si la règle filtre le trafic entrant ou sortant.",
+        "flist_ID": "Indique le nom de la règle.",
+        "flist_Description": "Description de la règle.",
+        "flist_Protocols": "Liste des protocoles filtrés par la règle.",
+        "flist_SourceIP": "Adresse IP source pour laquelle le trafic doit être filtré.",
+        "flist_SourcePort": "Ports sources pour lesquels le trafic doit être filtré.",
+        "flist_DestIP": "Adresse IP de destination pour laquelle le trafic doit être filtré.",
+        "flist_DestPort": "Ports de destination pour lesquels le trafic doit être filtré.",
+        "flist_Device": "Appareil pour lequel le trafic est filtré.",
+        "flist_Action": "Indique si le trafic doit être accepté, rejeté avec une erreur ou\n"
+                        "ignoré sans erreur.",
+        "refreshFwl": "Rafraîchit la liste des règles de pare-feu.",
+        "enableFwl": "Active/désactive la règle sélectionnée.",
+        "addFwl": "Permet d'ajouter une règle de pare-feu.",
+        "editFwl": "Permet de modifier la règle de pare-feu sélectionnée.",
+        "deleteFwl": "Permet de supprimer la règle de pare-feu sélectionnée.",
+        "deleteAllFwl": "Permet de supprimer toutes les règles de pare-feu.",
+        "exportFwl": "Permet d'exporter dans un fichier les règles de pare-feu\n"
+                     "d'un ou plusieurs types choisis.",
+        "importFwl": "Permet de réimporter des règles de pare-feu précédemment\n"
+                     "exportées dans un fichier. Si des règles de même nom existent\n"
+                     "déjà elles seront écrasées par celles importées."
+    },
+
+    # Firewall rule dialog
+    "fwlrule": {
+        "enableCheckbox": "Active ou désactive la règle.",
+        "typeCombo": "Sélectionnez le type de règle.",
+        "directionCombo": "Permet de choisir entre une règle concernant le trafic entrant\n"
+                          "ou le trafic sortant. Une règle IPv4 ne peut concerner que le\n"
+                          "trafic sortant.",
+        "nameEdit": "Nom unique de la règle. Si une règle du même nom existe déjà elle\n"
+                    "sera écrasée.",
+        "descEdit": "Description de la règle.",
+        "protocolsCombo": "Sélectionnez les protocoles à filtrer.",
+        "deviceCombo": "Appareil pour lequel le trafic doit être filtré.",
+        "sourceIpEdit": "Adresse IP source (v4 ou v6 en fonction du type) pour laquelle le\n"
+                        "trafic doit être filtré. Il est aussi possible d'indiquer un préfix.",
+        "sourcePortEdit": "Ports sources pour lesquels le trafic doit être filtré.\n"
+                          "Utiliser le caractère - entre deux ports pour spécifier une plage.\n"
+                          "Utiliser le caractère , entre ports ou plages pour spécifier une liste.",
+        "destIpEdit": "Adresse IP de destination (v4 ou v6 en fonction du type) pour laquelle le\n"
+                      "trafic doit être filtré. Il est aussi possible d'indiquer un préfix.",
+        "destPortEdit": "Ports de destination pour lesquels le trafic doit être filtré.\n"
+                        "Utiliser le caractère - entre deux ports pour spécifier une plage.\n"
+                        "Utiliser le caractère , entre ports ou plages pour spécifier une liste.",
+        "actionCombo": "Spécifier si le trafic doit être accepté, rejeté avec une erreur ou\n"
+                       "ignoré sans erreur."
+    },
+
+    # Firewall - rule type selection dialog
+    "fwrtype": {
         "ipV4Checkbox": "Sélectionne ou pas les règles de type IPv4.",
         "ipV6Checkbox": "Sélectionne ou pas les règles de type IPv6.",
         "upnpCheckbox": "Sélectionne ou pas les règles de type UPnP."
+    },
+
+    # Firewall - Firewall level
+    "fwlevel": {
+        "ipV4Combo": "Niveau du pare-feu IPv4.",
+        "ipV6Combo": "Niveau du pare-feu IPv6."
+    },
+
+    # Firewall - Ping Response
+    "pingr": {
+        "ipV4Checkbox": "Cochez pour répondre aux requêtes de ping IPv4.",
+        "ipV6Checkbox": "Cochez pour répondre aux requêtes de ping IPv6."
     },
 
     # Phone
@@ -1627,8 +1759,6 @@ TOOLTIPS = {
                         "vous permettra de la désactiver.",
         "rebootHistory": "Permet d'afficher l'historique des derniers redémarrages.\n"
                          "Utile pour détecter les redémarrages forcés par Orange pour mettre à jour le logiciel de la Livebox.",
-        "firewallLevel": "Permet de régler les niveaux des pares-feux IPv4 et IPv6.",
-        "pingResponse": "Permet de régler les réponses aux requêtes de ping IPv4 et IPv6.",
         "speedTests": "Permet d'effectuer des tests de débit rapides proposés par Orange.\n"
                       "Des sites comme nperf.com ou speedtest.net proposent des tests plus fiables.",
         "dynDNS": "Permet d'attribuer un nom de domaine et d'hôte fixe, facile à mémoriser, à une adresse IP statique\n"
@@ -1733,18 +1863,6 @@ TOOLTIPS = {
     "screen" : {
         "orangeSlider": "Réglage du niveau de luminosité de la LED Orange.",
         "showWifiPasswordCheckbox": "Afficher la clef de sécurité sur l'écran de la Livebox."
-    },
-
-    # Actions - Firewall level
-    "fwlevel": {
-        "ipV4Combo": "Niveau du pare-feu IPv4.",
-        "ipV6Combo": "Niveau du pare-feu IPv6."
-    },
-
-    # Actions - Ping Response
-    "pingr": {
-        "ipV4Checkbox": "Cochez pour répondre aux requêtes de ping IPv4.",
-        "ipV6Checkbox": "Cochez pour répondre aux requêtes de ping IPv6."
     },
 
     # Actions - Speed Tests
@@ -2132,6 +2250,24 @@ MESSAGES = {
         "ipv6AddrErr": "{} n'est pas une adresse IPv6 valide.",
         "ipv4AddrErr": "{} n'est pas une adresse IPv4 valide.",
         "emptyAddr": "Adresse IP vide"
+    },
+
+    # Firewall
+    "firewall": {
+        "delAllFwl": "{} règles ont été supprimées.",
+        "createFileErr": "Impossible de créer le fichier.",
+        "saveFileErr": "Impossible d'enregistrer le fichier.",
+        "ruleExport": "{} règles ont été exportées.",
+        "openFileErr": "Impossible d'ouvrir le fichier.",
+        "fileFormatErr": "Mauvais format de fichier.",
+        "fileTypeErr": "Mauvais type de fichier.",
+        "closeFileErr": "Impossible de fermer le fichier.",
+        "ruleImport": "{} règles ont été importées.",
+        "fwlv4LoadErr": "Impossible de charger les règles IPv4.",
+        "fwlv6iLoadErr": "Impossible de charger les règles IPv6 entrantes.",
+        "fwlv6oLoadErr": "Impossible de charger les règles IPv6 sortantes.",
+        "ipv6AddrErr": "{} n'est pas une adresse IPv6 valide.",
+        "ipv4AddrErr": "{} n'est pas une adresse IPv4 valide."
     },
 
     # Phone

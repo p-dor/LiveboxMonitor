@@ -18,7 +18,8 @@ from LiveboxMonitor.app.LmConfig import LmConf, set_application_style, set_liveb
 from LiveboxMonitor.api.LmSession import LmSession
 from LiveboxMonitor.api.LmApiRegistry import ApiRegistry
 from LiveboxMonitor.tabs import (LmDeviceListTab, LmInfoTab, LmGraphTab, LmDeviceInfoTab, LmEventsTab,
-                                 LmDhcpTab, LmNatPatTab, LmPhoneTab, LmActionsTab, LmRepeaterTab, LmTvDecoderTab)
+                                 LmDhcpTab, LmNatPatTab, LmFirewallTab, LmPhoneTab, LmActionsTab,
+                                 LmRepeaterTab, LmTvDecoderTab)
 from LiveboxMonitor.dlg.LmLiveboxCnx import LiveboxCnxDialog
 from LiveboxMonitor.dlg.LmLiveboxSignin import LiveboxSigninDialog
 from LiveboxMonitor.lang.LmLanguages import LANGUAGES_LOCALE, get_main_label as lx, get_main_message as mx
@@ -39,6 +40,7 @@ TAB_ORDER = [
     LmEventsTab.TAB_NAME,
     LmDhcpTab.TAB_NAME,
     LmNatPatTab.TAB_NAME,
+    LmFirewallTab.TAB_NAME,
     LmPhoneTab.TAB_NAME,
     LmActionsTab.TAB_NAME
 ]
@@ -54,6 +56,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                                               LmEventsTab.LmEvents,
                                               LmDhcpTab.LmDhcp,
                                               LmNatPatTab.LmNatPat,
+                                              LmFirewallTab.LmFirewall,
                                               LmPhoneTab.LmPhone,
                                               LmActionsTab.LmActions,
                                               LmRepeaterTab.LmRepeater,
@@ -66,6 +69,7 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
         self._reset_flag = False
         self._app_ready = False
         self._status_bar = None
+        self._protocol_numbers = {}
         self._autodiag_dialog = None
         self._repeaters = []
         self._tvdecoders = []
@@ -139,6 +143,8 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                     self.create_dhcp_tab()
                 case LmNatPatTab.TAB_NAME:
                     self.create_nat_pat_tab()
+                case LmFirewallTab.TAB_NAME:
+                    self.create_firewall_tab()
                 case LmPhoneTab.TAB_NAME:
                     self.create_phone_tab()
                 case LmActionsTab.TAB_NAME:
@@ -208,6 +214,13 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
                         self.suspend_repeater_stats_loop()
                         self.suspend_tvdecoder_status_loop()
                     QtCore.QTimer.singleShot(0, lambda: self.nat_pat_tab_click())
+                case LmFirewallTab.TAB_NAME:
+                    if not NO_THREAD:
+                        self.suspend_wifi_stats_loop()
+                        self.suspend_stats_loop()
+                        self.suspend_repeater_stats_loop()
+                        self.suspend_tvdecoder_status_loop()
+                    QtCore.QTimer.singleShot(0, lambda: self.firewall_tab_click())
                 case LmPhoneTab.TAB_NAME:
                     if not NO_THREAD:
                         self.suspend_wifi_stats_loop()
@@ -494,6 +507,11 @@ class LiveboxMonitorUI(QtWidgets.QMainWindow, LmDeviceListTab.LmDeviceList,
     ### Switch to NAT/PAT tab
     def switch_to_nat_pat_tab(self):
         self._tab_widget.setCurrentWidget(self._nat_pat_tab)
+
+
+    ### Switch to firewall tab
+    def switch_to_firewall_tab(self):
+        self._tab_widget.setCurrentWidget(self._firewall_tab)
 
 
     ### Switch to phone tab
