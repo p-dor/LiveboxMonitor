@@ -36,11 +36,12 @@ class EmailSetupDialog(QtWidgets.QDialog):
         self._smtp_server = QtWidgets.QLineEdit(objectName="smtpServerEdit")
         self._smtp_server.textChanged.connect(self.setup_changed)
 
-        port_reg_exp = QtCore.QRegularExpression(LmTools.PORTS_RS)
+        port_reg_exp = QtCore.QRegularExpression(LmTools.PORT_RS)
         port_validator = QtGui.QRegularExpressionValidator(port_reg_exp)
         smtp_port_label = QtWidgets.QLabel(lx("Port"), objectName="smtpPortLabel")
         self._smtp_port = QtWidgets.QLineEdit(objectName="smtpPortEdit")
         self._smtp_port.setValidator(port_validator)
+        self._smtp_port.setMinimumWidth(60)
 
         options_label = QtWidgets.QLabel(lx("Options"), objectName="optionsLabel")
         self._use_starttls = QtWidgets.QCheckBox(lx("Use STARTTLS"), objectName="useSTARTTLS")
