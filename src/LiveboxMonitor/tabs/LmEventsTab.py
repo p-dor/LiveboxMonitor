@@ -254,6 +254,8 @@ class LmEvents:
                 self.process_home_lan_event(d)
             elif h.startswith("AutoDiag"):
                 self.process_auto_diag_event(d)
+            elif h.startswith("Firewall"):
+                self.process_firewall_event(d)
 
 
     ### Process a new Device event
@@ -341,6 +343,44 @@ class LmEvents:
             o = event_data.get("object")
             if o:
                 self._autodiag_dialog.process_auto_diag_event(o)
+
+
+    ### Process a new Firewall event
+    # Warning: sometimes events are not raised, do not rely only on them for updates
+    def process_firewall_event(self, event_data):
+        h = event_data.get("handler", "").split('.')
+        o = event_data.get("object")
+        if o:
+            r = o.get("reason")
+            a = o.get("attributes")
+            if not isinstance(a, dict):
+                return
+        else:
+            return
+
+        n = len(h)
+
+        # Firewall levels events
+        if n == 1:     # Which means handler=="Firewall"
+            level = a.get("AdvancedLevel")
+            if level:
+                self.process_firewall_v4_level_change(level)
+                return
+            level = a.get("AdvancedIPv6Level")
+            if level:
+                self.process_firewall_v6_level_change(level)
+                return
+
+        # Firewall custom rules events
+        if (n == 5) and (h[1] == "Chain") and (h[3] == "Rule"):
+            match r:
+                case "add":
+                    self.process_firewall_rule_add_event(h[4], h[2])
+                case "changed":
+                    self.process_firewall_rule_change_event(h[4], h[2])
+                case "delete":
+                    self.process_firewall_rule_delete_event(h[4], h[2])
+            return
 
 
     ### Store event in buffer, for the UI
@@ -642,7 +682,7 @@ class LiveboxEventThread(LmThread):
 
 
     def task(self):
-        d = self._session.event_request(["Devices.Device", "HomeLan", "AutoDiag"], timeout=2)
+        d = self._session.event_request(["Devices.Device", "HomeLan", "AutoDiag", "Firewall"], timeout=2)
         if d:
             if d.get("errors"):
                 # Session has probably timed out on Livebox side, resign
