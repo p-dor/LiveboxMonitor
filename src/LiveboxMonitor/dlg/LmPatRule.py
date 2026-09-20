@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmQtTools, LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmFwlTools
 from LiveboxMonitor.lang.LmLanguages import get_pat_rule_label as lx, get_nat_pat_message as mx
 from LiveboxMonitor.tools import LmTools
 
@@ -19,7 +19,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 
         type_label = QtWidgets.QLabel(lx("Type"), objectName="typeLabel")
         self._type_combo = QtWidgets.QComboBox(objectName="typeCombo")
-        self._type_combo.addItems(LmPatPtf.RULE_PAT_TYPES)
+        self._type_combo.addItems(LmFwlTools.RULE_PAT_TYPES)
         self._type_combo.activated.connect(self.type_selected)
 
         name_label = QtWidgets.QLabel(lx("Name"), objectName="nameLabel")
@@ -41,7 +41,7 @@ class PatRuleDialog(QtWidgets.QDialog):
         protocols_box.addWidget(self._tcp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         protocols_box.addWidget(self._udp_checkbox, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
-        port_regexp = QtCore.QRegularExpression(LmTools.PORTS_RS)
+        port_regexp = QtCore.QRegularExpression(LmTools.PORT_RANGE_RS)
         port_validator = QtGui.QRegularExpressionValidator(port_regexp)
 
         int_port_label = QtWidgets.QLabel(lx("Internal Port"), objectName="intPortLabel")
@@ -122,7 +122,7 @@ class PatRuleDialog(QtWidgets.QDialog):
     # Set default values, for rule creation
     def set_default(self):
         self._enable_checkbox.setChecked(True)
-        i = LmPatPtf.RULE_PAT_TYPES.index(LmPatPtf.RULE_TYPE_IPv4)
+        i = LmFwlTools.RULE_PAT_TYPES.index(LmFwlTools.RULE_TYPE_IPv4)
         self._type_combo.setCurrentIndex(i)
         self.type_selected(i)
         self._name_edit.setText("")
@@ -141,7 +141,7 @@ class PatRuleDialog(QtWidgets.QDialog):
     def set_rule(self, rule):
         self._enable_checkbox.setChecked(rule["Enable"])
 
-        i = LmPatPtf.RULE_PAT_TYPES.index(rule["Type"])
+        i = LmFwlTools.RULE_PAT_TYPES.index(rule["Type"])
         self._type_combo.setCurrentIndex(i)
         self.type_selected(i)
 
@@ -150,8 +150,8 @@ class PatRuleDialog(QtWidgets.QDialog):
 
         p = rule["ProtoNames"].split("/")
 
-        self._tcp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.TCP.value)] in p)
-        self._udp_checkbox.setChecked(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.UDP.value)] in p)
+        self._tcp_checkbox.setChecked(LmFwlTools.PROTOCOL_NAMES[str(LmFwlTools.Protocols.TCP.value)] in p)
+        self._udp_checkbox.setChecked(LmFwlTools.PROTOCOL_NAMES[str(LmFwlTools.Protocols.UDP.value)] in p)
 
         self._int_port_edit.setText(rule["IntPort"])
         self._ext_port_edit.setText(rule["ExtPort"])
@@ -173,7 +173,7 @@ class PatRuleDialog(QtWidgets.QDialog):
             "Name": self.get_name(),
             "Desc": self.get_description(),
             "ProtoNames": p,
-            "ProtoNumbers": self.parent().translate_nat_pat_protocols(p),
+            "ProtoNumbers": self.parent().translate_firewall_protocols(p),
             "IntPort": self.get_int_port(),
             "ExtPort": self.get_ext_port(),
             "IP": self.get_ip(),
@@ -186,14 +186,14 @@ class PatRuleDialog(QtWidgets.QDialog):
         self.load_device_list()
 
         # Adjust IP field validator
-        if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
+        if self.get_type() == LmFwlTools.RULE_TYPE_IPv6:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6_RS}$")
-            if not LmPatPtf.IPV6_SOURCE_PORT_WORKING:
+            if not LmFwlTools.IPV6_SOURCE_PORT_WORKING:
                 self._ext_port_edit.setEnabled(False)
                 self._ext_port_edit.setText("")
         else:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4_RS}$")
-            if not LmPatPtf.IPV6_SOURCE_PORT_WORKING:
+            if not LmFwlTools.IPV6_SOURCE_PORT_WORKING:
                 self._ext_port_edit.setEnabled(True)
         self._ip_edit.setValidator(QtGui.QRegularExpressionValidator(ip_reg_exp))
 
@@ -237,8 +237,8 @@ class PatRuleDialog(QtWidgets.QDialog):
         self._device_combo.clear()
 
         # If type is UPnP load IPv4 devices
-        if t == LmPatPtf.RULE_TYPE_UPnP:
-            t = LmPatPtf.RULE_TYPE_IPv4
+        if t == LmFwlTools.RULE_TYPE_UPnP:
+            t = LmFwlTools.RULE_TYPE_IPv4
 
         # Load matching devices / IPs
         for i in device_map:
@@ -259,7 +259,7 @@ class PatRuleDialog(QtWidgets.QDialog):
 
         # Validate IP address
         ip = self.get_ip()
-        if t == LmPatPtf.RULE_TYPE_IPv6:
+        if t == LmFwlTools.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6(ip):
                 self.parent().display_error(mx("{} is not a valid IPv6 address.", "ipv6AddrErr").format(ip))
                 self._ip_edit.setFocus()
@@ -280,7 +280,7 @@ class PatRuleDialog(QtWidgets.QDialog):
                     self._ext_ips_edit.setFocus()
                     return
 
-                if t == LmPatPtf.RULE_TYPE_IPv6:
+                if t == LmFwlTools.RULE_TYPE_IPv6:
                     if not LmTools.is_ipv6_pfix(ip):
                         self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
@@ -313,9 +313,9 @@ class PatRuleDialog(QtWidgets.QDialog):
     def get_protocols(self):
         protocols = []
         if self._tcp_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.TCP.value)])
+            protocols.append(LmFwlTools.PROTOCOL_NAMES[str(LmFwlTools.Protocols.TCP.value)])
         if self._udp_checkbox.isChecked():
-            protocols.append(LmPatPtf.PROTOCOL_NAMES[str(LmPatPtf.Protocols.UDP.value)])
+            protocols.append(LmFwlTools.PROTOCOL_NAMES[str(LmFwlTools.Protocols.UDP.value)])
         return "/".join(protocols)
 
 
