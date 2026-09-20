@@ -15,8 +15,6 @@ from LiveboxMonitor.dlg.LmWifiConfig import WifiConfigDialog
 from LiveboxMonitor.dlg.LmScheduler import SchedulerDialog, Mode
 from LiveboxMonitor.dlg.LmWifiGlobalStatus import WifiGlobalStatusDialog
 from LiveboxMonitor.dlg.LmRebootHistory import RebootHistoryDialog
-from LiveboxMonitor.dlg.LmFirewall import FirewallLevelDialog
-from LiveboxMonitor.dlg.LmPingResponse import PingResponseDialog
 from LiveboxMonitor.dlg.LmSpeedTests import SpeedTestsDialog
 from LiveboxMonitor.dlg.LmDynDns import DynDnsSetupDialog
 from LiveboxMonitor.dlg.LmDmz import DmzSetupDialog
@@ -141,7 +139,7 @@ class LmActions:
         misc_group_box.setLayout(misc_buttons)
         left_zone.addWidget(misc_group_box, 0, QtCore.Qt.AlignmentFlag.AlignTop)
 
-        # Reboot & Firewall column
+        # Reboot & Network column
         middle_zone = QtWidgets.QVBoxLayout()
         middle_zone.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         middle_zone.setSpacing(20)
@@ -174,16 +172,6 @@ class LmActions:
         network_buttons = QtWidgets.QVBoxLayout()
         network_buttons.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         network_buttons.setSpacing(20)
-
-        firewall_level_button = QtWidgets.QPushButton(lx("Firewall Levels..."), objectName="firewallLevel")
-        firewall_level_button.clicked.connect(self.firewall_level_button_click)
-        firewall_level_button.setMinimumWidth(BUTTON_WIDTH)
-        network_buttons.addWidget(firewall_level_button)
-
-        ping_response_button = QtWidgets.QPushButton(lx("Ping Responses..."), objectName="pingResponse")
-        ping_response_button.clicked.connect(self.ping_response_button_click)
-        ping_response_button.setMinimumWidth(BUTTON_WIDTH)
-        network_buttons.addWidget(ping_response_button)
 
         speedtests_button = QtWidgets.QPushButton(lx("Speed Tests..."), objectName="speedTests")
         speedtests_button.clicked.connect(self.speedtests_button_click)
@@ -586,68 +574,6 @@ class LmActions:
         history_dialog = RebootHistoryDialog("Livebox", self)
         history_dialog.load_history(d)
         history_dialog.exec()
-
-
-    ### Click on Firewall Level button
-    def firewall_level_button_click(self):
-        try:
-            firewall_ipv4_level = self._api._firewall.get_ipv4_firewall_level()
-            firewall_ipv6_level = self._api._firewall.get_ipv6_firewall_level()
-        except Exception as e:
-            self.display_error(str(e))
-            return
-
-        firewall_level_dialog = FirewallLevelDialog(firewall_ipv4_level, firewall_ipv6_level, self)
-        if firewall_level_dialog.exec():
-            self._task.start(lx("Setting Firewall Levels..."))
-            try:
-                # Set new IPv4 firewall level if changed
-                new_firewall_ipv4_level = firewall_level_dialog.get_ipv4_level()
-                if new_firewall_ipv4_level != firewall_ipv4_level:
-                    try:
-                        self._api._firewall.set_ipv4_firewall_level(new_firewall_ipv4_level)
-                    except Exception as e:
-                        self.display_error(str(e))
-
-                # Set new IPv6 firewall level if changed
-                new_firewall_ipv6_level = firewall_level_dialog.get_ipv6_level()
-                if new_firewall_ipv6_level != firewall_ipv6_level:
-                    try:
-                        self._api._firewall.set_ipv6_firewall_level(new_firewall_ipv6_level)
-                    except Exception as e:
-                        self.display_error(str(e))
-            finally:
-                self._task.end()
-
-
-    ### Click on Ping Response button
-    def ping_response_button_click(self):
-        # Get current ping reponses
-        try:
-            d = self._api._firewall.get_respond_to_ping()
-        except Exception as e:
-            self.display_error(str(e))
-            return
-        ipv4_ping = d.get("enableIPv4")
-        ipv6_ping = d.get("enableIPv6")
-        if (ipv4_ping is None) or (ipv6_ping is None):
-            LmTools.error("Cannot get respond to ping setup")
-
-        ping_response_dialog = PingResponseDialog(ipv4_ping, ipv6_ping, self)
-        if ping_response_dialog.exec():
-            # Set new ping responses level if changed
-            new_ipv4_ping = ping_response_dialog.get_ipv4()
-            new_ipv6_ping = ping_response_dialog.get_ipv6()
-            if (new_ipv4_ping != ipv4_ping) or (new_ipv6_ping != ipv6_ping):
-                self._task.start(lx("Set Ping Responses..."))
-                try:
-                    p = {"enableIPv4": new_ipv4_ping, "enableIPv6": new_ipv6_ping}
-                    try:
-                        self._api._firewall.set_respond_to_ping(p)
-                    except Exception as e:
-                        self.display_error(str(e))
-                finally:
-                    self._task.end()
 
 
     ### Click on Speed Tests button
