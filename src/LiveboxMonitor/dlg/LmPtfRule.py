@@ -2,7 +2,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmQtTools, LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmQtTools, LmConfig, LmFwlTools
 from LiveboxMonitor.lang.LmLanguages import get_ptf_rule_label as lx, get_nat_pat_message as mx
 from LiveboxMonitor.tools import LmTools
 
@@ -20,7 +20,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
         type_label = QtWidgets.QLabel(lx("Type"), objectName="typeLabel")
         self._type_combo = QtWidgets.QComboBox(objectName="typeCombo")
-        self._type_combo.addItems(LmPatPtf.RULE_PTF_TYPES)
+        self._type_combo.addItems(LmFwlTools.RULE_PTF_TYPES)
         self._type_combo.activated.connect(self.type_selected)
 
         name_label = QtWidgets.QLabel(lx("Name"), objectName="nameLabel")
@@ -100,12 +100,12 @@ class PtfRuleDialog(QtWidgets.QDialog):
     # Set default values, for rule creation
     def set_default(self):
         self._enable_checkbox.setChecked(True)
-        i = LmPatPtf.RULE_PTF_TYPES.index(LmPatPtf.RULE_TYPE_IPv4)
+        i = LmFwlTools.RULE_PTF_TYPES.index(LmFwlTools.RULE_TYPE_IPv4)
         self._type_combo.setCurrentIndex(i)
         self.type_selected(i)
         self._name_edit.setText("")
         self._desc_edit.setPlainText("")
-        self.load_protocols_combo(self._app._protocol_numbers["AH"])
+        self.load_protocols_combo("AH")
         self._device_combo.setCurrentIndex(0)
         self._ip_edit.setText("")
         self._ext_ips_edit.setPlainText("")
@@ -117,7 +117,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self._enable_checkbox.setChecked(rule["Enable"])
 
         t = rule["Type"]
-        i = LmPatPtf.RULE_PTF_TYPES.index(t)
+        i = LmFwlTools.RULE_PTF_TYPES.index(t)
         self._type_combo.setCurrentIndex(i)
         self.type_selected(i)
 
@@ -136,7 +136,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
 
     def load_protocols_combo(self, protocols):
-        protocol_numbers, protocol_names = zip(*LmPatPtf.PROTOCOL_NAMES.items())
+        protocol_numbers, protocol_names = zip(*LmFwlTools.PROTOCOL_NAMES.items())
         self._protocols_combo.addItems(protocol_names, protocol_numbers)
         self._protocols_combo.setSelection(protocols.split("/"))
 
@@ -149,7 +149,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
             "Name": self.get_name(),
             "Desc": self.get_description(),
             "ProtoNames": p,
-            "ProtoNumbers": self._app.translate_nat_pat_protocols(p),
+            "ProtoNumbers": self._app.translate_firewall_protocols(p),
             "IP": self.get_ip(),
             "ExtIPs": self.get_ext_ips()        
         }
@@ -160,7 +160,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
         self.load_device_list()
 
         # Adjust IP field validator
-        if self.get_type() == LmPatPtf.RULE_TYPE_IPv6:
+        if self.get_type() == LmFwlTools.RULE_TYPE_IPv6:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6Pfix_RS}$")
         else:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv4Pfix_RS}$")
@@ -224,7 +224,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
 
         # Validate IP address
         ip = self.get_ip()
-        if t == LmPatPtf.RULE_TYPE_IPv6:
+        if t == LmFwlTools.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6_pfix(ip):
                 self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                 self._ip_edit.setFocus()
@@ -245,7 +245,7 @@ class PtfRuleDialog(QtWidgets.QDialog):
                     self._ext_ips_edit.setFocus()
                     return
 
-                if t == LmPatPtf.RULE_TYPE_IPv6:
+                if t == LmFwlTools.RULE_TYPE_IPv6:
                     if not LmTools.is_ipv6_pfix(ip):
                         self._app.display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
