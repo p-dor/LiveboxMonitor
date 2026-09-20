@@ -6,13 +6,13 @@ from enum import IntEnum
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from LiveboxMonitor.app import LmConfig, LmPatPtf
+from LiveboxMonitor.app import LmConfig, LmFwlTools
 from LiveboxMonitor.app.LmConfig import LmConf
 from LiveboxMonitor.app.LmIcons import LmIcon
 from LiveboxMonitor.app.LmTableWidget import LmTableWidget, NumericSortItem, CenteredIconsDelegate
 from LiveboxMonitor.dlg.LmPatRule import PatRuleDialog
 from LiveboxMonitor.dlg.LmPtfRule import PtfRuleDialog
-from LiveboxMonitor.dlg.LmNatPatRuleType import NatPatRuleTypeDialog
+from LiveboxMonitor.dlg.LmFirewallRuleType import FirewallRuleTypeDialog
 from LiveboxMonitor.lang.LmLanguages import get_nat_pat_label as lx, get_nat_pat_message as mx
 from LiveboxMonitor.tools import LmTools
 
@@ -28,12 +28,12 @@ TAB_NAME = "natPatTab"
 class PatCol(IntEnum):
     Key = 0
     Enabled = 1
-    Type = 2
+    RuleType = 2
     ID = 3
     Description = 4
     Protocols = 5
-    IntPort = 6
-    ExtPort = 7
+    ExtPort = 6
+    IntPort = 7
     Device = 8
     DestIP = 9
     ExtIPs = 10
@@ -42,7 +42,7 @@ PAT_ICON_COLUMNS = [PatCol.Enabled]
 class PtfCol(IntEnum):
     Key = 0
     Enabled = 1
-    Type = 2
+    RuleType = 2
     ID = 3
     Description = 4
     Protocols = 5
@@ -64,12 +64,12 @@ class LmNatPat:
         self._pat_list = LmTableWidget(objectName="patList")
         self._pat_list.set_columns({PatCol.Key: ["Key", 0, None],
                                     PatCol.Enabled: [lx("A"), 10, "plist_Enabled"],
-                                    PatCol.Type: [lx("Type"), 55, "plist_Type"],
+                                    PatCol.RuleType: [lx("Type"), 55, "plist_Type"],
                                     PatCol.ID: [lx("Name"), 120, "plist_ID"],
                                     PatCol.Description: [lx("Port Forwarding Rule Description"), 400, "plist_Description"],
                                     PatCol.Protocols: [lx("Protocols"), 70, "plist_Protocols"],
-                                    PatCol.IntPort: [lx("Internal Port"), 95, "plist_IntPort"],
                                     PatCol.ExtPort: [lx("External Port"), 95, "plist_ExtPort"],
+                                    PatCol.IntPort: [lx("Internal Port"), 95, "plist_IntPort"],
                                     PatCol.Device: [lx("Device"), 180, "plist_Device"],
                                     PatCol.DestIP: ["DestIP", 0, None],
                                     PatCol.ExtIPs: [lx("External IPs"), 250, "plist_ExtIPs"]})
@@ -111,7 +111,7 @@ class LmNatPat:
         self._ptf_list = LmTableWidget(objectName="ptfList")
         self._ptf_list.set_columns({PtfCol.Key: ["Key", 0, None],
                                     PtfCol.Enabled: [lx("A"), 10, "tlist_Enabled"],
-                                    PtfCol.Type: [lx("Type"), 55, "tlist_Type"],
+                                    PtfCol.RuleType: [lx("Type"), 55, "tlist_Type"],
                                     PtfCol.ID: [lx("Name"), 120, "tlist_ID"],
                                     PtfCol.Description: [lx("Protocol Forwarding Rule Description"), 360, "tlist_Description"],
                                     PtfCol.Protocols: [lx("Protocols"), 180, "tlist_Protocols"],
@@ -181,7 +181,6 @@ class LmNatPat:
     ### Init NAT/PAT tab context
     def nat_pat_tab_init(self):
         self._nat_pat_data_loaded = False
-        self._protocol_numbers = {}
 
 
     ### Click on NAT/PAT tab
@@ -222,7 +221,7 @@ class LmNatPat:
             self._task.start(lx("Saving rule..."))
             try:
                 if self.save_pat_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     i = self._pat_list.currentRow()
                     self._pat_list.setItem(i, PatCol.Enabled, self.format_active_table_widget(r["Enable"]))
                     self.pat_list_click()
@@ -238,7 +237,7 @@ class LmNatPat:
             try:
                 r = dialog.get_rule()
                 if self.save_pat_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     self.refresh_pat_list()
             finally:
                 self._task.end()
@@ -260,7 +259,7 @@ class LmNatPat:
 
                     # Then save new one
                     if self.save_pat_rule(new_rule):
-                        self.commit_nat_pat_rule_change()
+                        self.commit_firewall_rule_change()
                     self.refresh_pat_list()
                 finally:
                     self._task.end()
@@ -273,7 +272,7 @@ class LmNatPat:
             self._task.start(lx("Deleting rule..."))
             try:
                 if self.del_pat_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     self.refresh_pat_list()
             finally:
                 self._task.end()
@@ -281,29 +280,29 @@ class LmNatPat:
 
     ### Click on delete all PAT rules button
     def del_all_pat_rules_button_click(self):
-        dialog = NatPatRuleTypeDialog(True, self)
+        dialog = FirewallRuleTypeDialog(True, self)
         if dialog.exec():
             self._task.start(lx("Deleting rules..."))
             try:
                 t = dialog.get_types()
 
                 # Delete all IPv4 rules if selected
-                if t[LmPatPtf.RULE_TYPE_IPv4]:
+                if t[LmFwlTools.RULE_TYPE_IPv4]:
                     self.del_all_ipv4_pat_rule(False)
 
                 # Delete all UPnP rules if selected
-                if t[LmPatPtf.RULE_TYPE_UPnP]:
+                if t[LmFwlTools.RULE_TYPE_UPnP]:
                     self.del_all_ipv4_pat_rule(True)
 
                 # Delete one by one IPv6 rules if selected
-                if t[LmPatPtf.RULE_TYPE_IPv6]:
+                if t[LmFwlTools.RULE_TYPE_IPv6]:
                     for i in range(self._pat_list.rowCount()):
                         r = self.get_pat_rule_from_list(i)
-                        if r and (r["Type"] == LmPatPtf.RULE_TYPE_IPv6):
+                        if r and (r["Type"] == LmFwlTools.RULE_TYPE_IPv6):
                             self.del_pat_rule(r)
 
                 # Commit & refresh
-                self.commit_nat_pat_rule_change()
+                self.commit_firewall_rule_change()
                 self.refresh_pat_list()
             finally:
                 self._task.end()
@@ -313,7 +312,7 @@ class LmNatPat:
 
     ### Click on export PAT rules button
     def export_pat_rules_button_click(self):
-        dialog = NatPatRuleTypeDialog(True, self)
+        dialog = FirewallRuleTypeDialog(True, self)
         if dialog.exec():
             t = dialog.get_types()
 
@@ -399,7 +398,7 @@ class LmNatPat:
             self.display_error(mx("Cannot close the file.", "closeFileErr"))
 
         if not error:
-            self.commit_nat_pat_rule_change()
+            self.commit_firewall_rule_change()
             self.refresh_pat_list()
 
             self.display_status(mx("{} rule(s) imported.", "ruleImport").format(c))
@@ -433,7 +432,7 @@ class LmNatPat:
             self._task.start(lx("Saving rule..."))
             try:
                 if self.save_ptf_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     i = self._ptf_list.currentRow()
                     self._ptf_list.setItem(i, PtfCol.Enabled, self.format_active_table_widget(r["Enable"]))
                     self.ptf_list_click()
@@ -449,7 +448,7 @@ class LmNatPat:
             try:
                 r = dialog.get_rule()
                 if self.save_ptf_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     self.refresh_ptf_list()
             finally:
                 self._task.end()
@@ -471,7 +470,7 @@ class LmNatPat:
 
                     # Then save new one
                     if self.save_ptf_rule(new_rule):
-                        self.commit_nat_pat_rule_change()
+                        self.commit_firewall_rule_change()
                     self.refresh_ptf_list()
                 finally:
                     self._task.end()
@@ -484,7 +483,7 @@ class LmNatPat:
             self._task.start(lx("Deleting rule..."))
             try:
                 if self.del_ptf_rule(r):
-                    self.commit_nat_pat_rule_change()
+                    self.commit_firewall_rule_change()
                     self.refresh_ptf_list()
             finally:
                 self._task.end()
@@ -492,7 +491,7 @@ class LmNatPat:
 
     ### Click on delete all PTF rules button
     def del_all_ptf_rules_button_click(self):
-        dialog = NatPatRuleTypeDialog(False, self)
+        dialog = FirewallRuleTypeDialog(False, self)
         if dialog.exec():
             self._task.start(lx("Deleting rules..."))
             try:
@@ -503,7 +502,7 @@ class LmNatPat:
                     if r and t[r["Type"]]:
                         self.del_ptf_rule(r)
                         c += 1
-                self.commit_nat_pat_rule_change()
+                self.commit_firewall_rule_change()
                 self.refresh_ptf_list()
             finally:
                 self._task.end()
@@ -513,7 +512,7 @@ class LmNatPat:
 
     ### Click on export PTF rules button
     def export_ptf_rules_button_click(self):
-        dialog = NatPatRuleTypeDialog(False, self)
+        dialog = FirewallRuleTypeDialog(False, self)
         if dialog.exec():
             t = dialog.get_types()
 
@@ -599,16 +598,10 @@ class LmNatPat:
             self.display_error(mx("Cannot close the file.", "closeFileErr"))
 
         if not error:
-            self.commit_nat_pat_rule_change()
+            self.commit_firewall_rule_change()
             self.refresh_ptf_list()
 
             self.display_status(mx("{} rule(s) imported.", "ruleImport").format(c))
-
-
-    ### Load protocol name to number reverse map from number to name
-    def load_protocol_numbers(self):
-       # Build reverse map
-        self._protocol_numbers = {v: k for k, v in LmPatPtf.PROTOCOL_NAMES.items()}
 
 
     ### Refresh PAT list
@@ -631,7 +624,7 @@ class LmNatPat:
             # IPv6 types
             self.load_ipv6_pat_rules()
 
-            self._pat_list.sortItems(PatCol.Type, QtCore.Qt.SortOrder.AscendingOrder)
+            self._pat_list.sortItems(PatCol.RuleType, QtCore.Qt.SortOrder.AscendingOrder)
             self._pat_list.setSortingEnabled(True)
 
             self._pat_list.setCurrentCell(-1, -1)
@@ -658,7 +651,7 @@ class LmNatPat:
             self._pat_list.setItem(i, PatCol.Enabled, self.format_active_table_widget(active_status))
 
             origin = r.get("Origin", "")
-            self._pat_list.setItem(i, PatCol.Type, self.format_nat_pat_origin_table_widget(origin, False))
+            self._pat_list.setItem(i, PatCol.RuleType, self.format_origin_table_widget(origin, False))
 
             rule_id = r.get("Id", "")
             self._pat_list.setItem(i, PatCol.Key, QtWidgets.QTableWidgetItem("v4_" + rule_id))
@@ -670,7 +663,7 @@ class LmNatPat:
             self._pat_list.setItem(i, PatCol.Description, QtWidgets.QTableWidgetItem(r.get("Description", "")))
 
             protocols = r.get("Protocol", "")
-            self._pat_list.setItem(i, PatCol.Protocols, self.format_nat_pat_protocols_table_widget(protocols))
+            self._pat_list.setItem(i, PatCol.Protocols, self.format_protocols_table_widget(protocols))
 
             self._pat_list.setItem(i, PatCol.IntPort, self.format_port_table_widget(r.get("InternalPort", "")))
             self._pat_list.setItem(i, PatCol.ExtPort, self.format_port_table_widget(r.get("ExternalPort", "")))
@@ -711,7 +704,7 @@ class LmNatPat:
             self._pat_list.setItem(i, PatCol.Enabled, self.format_active_table_widget(active_status))
 
             origin = r.get("Origin", "")
-            self._pat_list.setItem(i, PatCol.Type, self.format_nat_pat_origin_table_widget(origin, True))
+            self._pat_list.setItem(i, PatCol.RuleType, self.format_origin_table_widget(origin, True))
 
             rule_id = r.get("Id", "")
             self._pat_list.setItem(i, PatCol.Key, QtWidgets.QTableWidgetItem("v6_" + rule_id))
@@ -723,7 +716,7 @@ class LmNatPat:
             self._pat_list.setItem(i, PatCol.Description, QtWidgets.QTableWidgetItem(r.get("Description", "")))
 
             protocols = r.get("Protocol", "")
-            self._pat_list.setItem(i, PatCol.Protocols, self.format_nat_pat_protocols_table_widget(protocols))
+            self._pat_list.setItem(i, PatCol.Protocols, self.format_protocols_table_widget(protocols))
 
             self._pat_list.setItem(i, PatCol.IntPort, self.format_port_table_widget(destination_port))
             self._pat_list.setItem(i, PatCol.ExtPort, self.format_port_table_widget(r.get("SourcePort", "")))
@@ -750,12 +743,12 @@ class LmNatPat:
         if (index >= 0) and (index < self._pat_list.rowCount()):
             r = {}
             r["Enable"] = self._pat_list.item(index, PatCol.Enabled).data(QtCore.Qt.ItemDataRole.UserRole) != 0
-            r["Type"] = self._pat_list.item(index, PatCol.Type).text()
+            r["Type"] = self._pat_list.item(index, PatCol.RuleType).text()
             r["Name"] = self._pat_list.item(index, PatCol.ID).text()
             r["Desc"] = self._pat_list.item(index, PatCol.Description).text()
             p = self._pat_list.item(index, PatCol.Protocols).text()
             r["ProtoNames"] = p
-            r["ProtoNumbers"] = self.translate_nat_pat_protocols(p)
+            r["ProtoNumbers"] = self.translate_firewall_protocols(p)
             p = self._pat_list.item(index, PatCol.IntPort).text()
             r["IntPort"] = p if len(p) else None
             p = self._pat_list.item(index, PatCol.ExtPort).text()
@@ -774,7 +767,7 @@ class LmNatPat:
             return False
 
         t = rule.get("Type", "UNK")
-        if t not in LmPatPtf.RULE_PAT_TYPES:
+        if t not in LmFwlTools.RULE_PAT_TYPES:
             LmTools.error(f"Rule has unknown {t} type.")
             return False
 
@@ -788,12 +781,12 @@ class LmNatPat:
             return False
 
         for p in protocols.split(","):
-            n = LmPatPtf.PROTOCOL_NAMES.get(p)
+            n = LmFwlTools.PROTOCOL_NAMES.get(p)
             if n is None:
                 LmTools.error(f"Rule has wrong protocol {p} set.")
                 return False
             n = int(p)
-            if (n != LmPatPtf.Protocols.TCP) and (n != LmPatPtf.Protocols.UDP):
+            if (n != LmFwlTools.Protocols.TCP) and (n != LmFwlTools.Protocols.UDP):
                 LmTools.error(f"Rule has wrong protocol {p} set.")
                 return False
 
@@ -812,7 +805,7 @@ class LmNatPat:
         ip = rule.get("IP", "")
         if len(ip) == 0:
             return False
-        if t == LmPatPtf.RULE_TYPE_IPv6:
+        if t == LmFwlTools.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6(ip):
                 LmTools.error(f"Rule has wrong IPv6 {ip} set.")
                 return False
@@ -829,7 +822,7 @@ class LmNatPat:
                     LmTools.error("Rule external IPs has an empty IP address.")
                     return False
 
-                if t == LmPatPtf.RULE_TYPE_IPv6:
+                if t == LmFwlTools.RULE_TYPE_IPv6:
                     if not LmTools.is_ipv6(ip):
                         LmTools.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
                         return False
@@ -842,14 +835,14 @@ class LmNatPat:
 
 
     ### Save a PAT rule in Livebox, return True if successful
-    def save_pat_rule(self, rule, silent=False):
-        if rule["Type"] == LmPatPtf.RULE_TYPE_IPv6:
-            return self.save_ipv6_pat_rule(rule, silent)
-        return self.save_ipv4_pat_rule(rule, silent)
+    def save_pat_rule(self, rule):
+        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
+            return self.save_ipv6_pat_rule(rule)
+        return self.save_ipv4_pat_rule(rule)
 
 
     ### Save a IPv4 PAT rule in Livebox, return True if successful
-    def save_ipv4_pat_rule(self, rule, silent=False):
+    def save_ipv4_pat_rule(self, rule):
         # Map rule to Livebox model
         r = {}
         r["id"] = rule["Name"]
@@ -863,7 +856,7 @@ class LmNatPat:
         r["protocol"] = rule["ProtoNumbers"]
         r["description"] = rule["Desc"]
         r["sourceInterface"] = "data"
-        r["origin"] = "webui" if rule["Type"] == LmPatPtf.RULE_TYPE_IPv4 else "upnp"
+        r["origin"] = "webui" if rule["Type"] == LmFwlTools.RULE_TYPE_IPv4 else "upnp"
         r["destinationMACAddress"] = ""
         external_ips = rule["ExtIPs"]
         if len(external_ips):
@@ -873,21 +866,21 @@ class LmNatPat:
         try:
             self._api._firewall.set_ipv4_port_forwarding(r)
         except Exception as e:
-            self.display_error(str(e), silent)
+            self.display_error(str(e))
             return False
 
         return True
  
 
     ### Save a IPv6 PAT rule in Livebox, return True if successful
-    def save_ipv6_pat_rule(self, rule, silent=False):
+    def save_ipv6_pat_rule(self, rule):
         # Map rule to Livebox model
         r = {}
         r["id"] = rule["Name"]
         r["origin"] = "webui"
         r["sourceInterface"] = "data"
         p = rule["ExtPort"]
-        r["sourcePort"] = p if LmPatPtf.IPV6_SOURCE_PORT_WORKING and (p is not None) else ""
+        r["sourcePort"] = p if LmFwlTools.IPV6_SOURCE_PORT_WORKING and (p is not None) else ""
         r["destinationPort"] = rule["IntPort"]
         r["destinationIPAddress"] = rule["IP"]
         r["sourcePrefix"] = rule["ExtIPs"]
@@ -902,7 +895,7 @@ class LmNatPat:
         try:
             self._api._firewall.set_ipv6_pinhole(r)
         except Exception as e:
-            self.display_error(str(e), silent)
+            self.display_error(str(e))
             return False
 
         return True
@@ -910,14 +903,14 @@ class LmNatPat:
 
     ### Delete a PAT rule from Livebox, return True if successful
     def del_pat_rule(self, rule):
-        if rule["Type"] == LmPatPtf.RULE_TYPE_IPv6:
+        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
             return self.del_ipv6_pat_rule(rule)
         return self.del_ipv4_pat_rule(rule)
 
 
     ### Delete a IPv4 PAT rule from Livebox, return True if successful
     def del_ipv4_pat_rule(self, rule):
-        origin = "webui" if rule["Type"] == LmPatPtf.RULE_TYPE_IPv4 else "upnp"
+        origin = "webui" if rule["Type"] == LmFwlTools.RULE_TYPE_IPv4 else "upnp"
         try:
             self._api._firewall.del_ipv4_port_forwarding(rule["Name"], rule["IP"], origin)
         except Exception as e:
@@ -967,7 +960,7 @@ class LmNatPat:
             # IPv6 types
             self.load_ipv6_ptf_rules()
 
-            self._ptf_list.sortItems(PtfCol.Type, QtCore.Qt.SortOrder.AscendingOrder)
+            self._ptf_list.sortItems(PtfCol.RuleType, QtCore.Qt.SortOrder.AscendingOrder)
             self._ptf_list.setSortingEnabled(True)
 
             self._ptf_list.setCurrentCell(-1, -1)
@@ -994,8 +987,8 @@ class LmNatPat:
             self._ptf_list.setItem(i, PtfCol.Enabled, self.format_active_table_widget(active_status))
 
             origin = r.get("SourceInterface", "")
-            rule_type = LmPatPtf.RULE_TYPE_IPv4 if origin == "data" else origin
-            self._ptf_list.setItem(i, PtfCol.Type, QtWidgets.QTableWidgetItem(rule_type))
+            rule_type = LmFwlTools.RULE_TYPE_IPv4 if origin == "data" else origin
+            self._ptf_list.setItem(i, PtfCol.RuleType, QtWidgets.QTableWidgetItem(rule_type))
 
             rule_id = r.get("Id", "")
             self._ptf_list.setItem(i, PtfCol.Key, QtWidgets.QTableWidgetItem(f"v4_{rule_id}"))
@@ -1004,7 +997,7 @@ class LmNatPat:
             self._ptf_list.setItem(i, PtfCol.Description, QtWidgets.QTableWidgetItem(r.get("Description", "")))
 
             protocols = r.get("Protocol", "")
-            self._ptf_list.setItem(i, PtfCol.Protocols, self.format_nat_pat_protocols_table_widget(protocols))
+            self._ptf_list.setItem(i, PtfCol.Protocols, self.format_protocols_table_widget(protocols))
 
             destination_ip = r.get("DestinationIPAddress", "")
             self._ptf_list.setItem(i, PtfCol.DestIP, QtWidgets.QTableWidgetItem(destination_ip))
@@ -1042,7 +1035,7 @@ class LmNatPat:
             self._ptf_list.setItem(i, PtfCol.Enabled, self.format_active_table_widget(active_status))
 
             origin = r.get("Origin", "")
-            self._ptf_list.setItem(i, PtfCol.Type, self.format_nat_pat_origin_table_widget(origin, True))
+            self._ptf_list.setItem(i, PtfCol.RuleType, self.format_origin_table_widget(origin, True))
 
             rule_id = r.get("Id", "")
             self._ptf_list.setItem(i, PtfCol.Key, QtWidgets.QTableWidgetItem("v6_" + rule_id))
@@ -1054,7 +1047,7 @@ class LmNatPat:
             self._ptf_list.setItem(i, PtfCol.Description, QtWidgets.QTableWidgetItem(r.get("Description", "")))
 
             protocols = r.get("Protocol", "")
-            self._ptf_list.setItem(i, PtfCol.Protocols, self.format_nat_pat_protocols_table_widget(protocols))
+            self._ptf_list.setItem(i, PtfCol.Protocols, self.format_protocols_table_widget(protocols))
 
             destination_ip = r.get("DestinationIPAddress", "")
             self._ptf_list.setItem(i, PtfCol.DestIP, QtWidgets.QTableWidgetItem(destination_ip))
@@ -1078,12 +1071,12 @@ class LmNatPat:
         if (index >= 0) and (index < self._ptf_list.rowCount()):
             r = {}
             r["Enable"] = self._ptf_list.item(index, PtfCol.Enabled).data(QtCore.Qt.ItemDataRole.UserRole) != 0
-            r["Type"] = self._ptf_list.item(index, PtfCol.Type).text()
+            r["Type"] = self._ptf_list.item(index, PtfCol.RuleType).text()
             r["Name"] = self._ptf_list.item(index, PtfCol.ID).text()
             r["Desc"] = self._ptf_list.item(index, PtfCol.Description).text()
             p = self._ptf_list.item(index, PtfCol.Protocols).text()
             r["ProtoNames"] = p
-            r["ProtoNumbers"] = self.translate_nat_pat_protocols(p)
+            r["ProtoNumbers"] = self.translate_firewall_protocols(p)
             r["IP"] = self._ptf_list.item(index, PtfCol.DestIP).text()
             e = self._ptf_list.item(index, PtfCol.ExtIPs).text()
             r["ExtIPs"] = "" if e == lx("All") else e
@@ -1098,7 +1091,7 @@ class LmNatPat:
             return False
 
         t = rule.get("Type", "UNK")
-        if t not in LmPatPtf.RULE_PTF_TYPES:
+        if t not in LmFwlTools.RULE_PTF_TYPES:
             LmTools.error(f"Rule has unknown {t} type.")
             return False
 
@@ -1112,14 +1105,14 @@ class LmNatPat:
             return False
 
         for p in protocols.split(","):
-            if LmPatPtf.PROTOCOL_NAMES.get(p) is None:
+            if LmFwlTools.PROTOCOL_NAMES.get(p) is None:
                 LmTools.error(f"Rule has wrong protocol {p} set.")
                 return False
 
         ip = rule.get("IP", "")
         if len(ip) == 0:
             return False
-        if t == LmPatPtf.RULE_TYPE_IPv6:
+        if t == LmFwlTools.RULE_TYPE_IPv6:
             if not LmTools.is_ipv6_pfix(ip):
                 LmTools.error(f"Rule has wrong IPv6 {ip} set.")
                 return False
@@ -1136,7 +1129,7 @@ class LmNatPat:
                     LmTools.error("Rule external IPs has an empty IP address.")
                     return False
 
-                if t == LmPatPtf.RULE_TYPE_IPv6:
+                if t == LmFwlTools.RULE_TYPE_IPv6:
                     if not LmTools.is_ipv6(ip):
                         LmTools.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
                         return False
@@ -1149,14 +1142,14 @@ class LmNatPat:
 
 
     ### Save a PTF rule in Livebox, return True if successful
-    def save_ptf_rule(self, rule, silent=False):
-        if rule["Type"] == LmPatPtf.RULE_TYPE_IPv6:
-            return self.save_ipv6_ptf_rule(rule, silent)
-        return self.save_ipv4_ptf_rule(rule, silent)
+    def save_ptf_rule(self, rule):
+        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
+            return self.save_ipv6_ptf_rule(rule)
+        return self.save_ipv4_ptf_rule(rule)
 
 
     ### Save a IPv4 PTF rule in Livebox, return True if successful
-    def save_ipv4_ptf_rule(self, rule, silent=False):
+    def save_ipv4_ptf_rule(self, rule):
         # Map rule to Livebox model
         r = {}
         r["id"] = rule["Name"]
@@ -1173,14 +1166,14 @@ class LmNatPat:
         try:
             self._api._firewall.set_ipv4_protocol_forwarding(r)
         except Exception as e:
-            self.display_error(str(e), silent)
+            self.display_error(str(e))
             return False
 
         return True
 
 
     ### Save a IPv6 PTF rule in Livebox, return True if successful
-    def save_ipv6_ptf_rule(self, rule, silent=False):
+    def save_ipv6_ptf_rule(self, rule):
         # Map rule to Livebox model
         r = {}
         r["id"] = rule["Name"]
@@ -1201,7 +1194,7 @@ class LmNatPat:
         try:
             self._api._firewall.set_ipv6_pinhole(r)
         except Exception as e:
-            self.display_error(str(e), silent)
+            self.display_error(str(e))
             return False
 
         return True
@@ -1209,7 +1202,7 @@ class LmNatPat:
 
     ### Delete a PTF rule from Livebox, return True if successful
     def del_ptf_rule(self, rule):
-        if rule["Type"] == LmPatPtf.RULE_TYPE_IPv6:
+        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
             return self.del_ipv6_ptf_rule(rule)
         return self.del_ipv4_ptf_rule(rule)
 
@@ -1235,52 +1228,16 @@ class LmNatPat:
         return True
 
 
-    ### Commit Firewall rule changes, return True if successful
-    def commit_nat_pat_rule_change(self):
-        try:
-            self._api._firewall.commit()
-        except Exception as e:
-            LmTools.error(str(e))
-            return False
-        return True
-
-
-    ### Translate Protocols for Livebox API
-    def translate_nat_pat_protocols(self, protocols):
-        t = [self._protocol_numbers[p] for p in protocols.split("/") if p in self._protocol_numbers]
-        return ",".join(t)
-
-
     ### Format Origin cell
     @staticmethod
-    def format_nat_pat_origin_table_widget(origin, ipv6):
-        ###WARNING### : names must match those set by NatPatRuleTypeDialog.get_types() method
+    def format_origin_table_widget(origin, ipv6):
+        ###WARNING### : names must match those set by FirewallRuleTypeDialog.get_types() method
         match origin:
             case "webui":
                 if ipv6:
-                    return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_IPv6)
-                return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_IPv4)
+                    return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_IPv6)
+                return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_IPv4)
             case "upnp":
-                return QtWidgets.QTableWidgetItem(LmPatPtf.RULE_TYPE_UPnP)
+                return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_UPnP)
             case _:
                 return QtWidgets.QTableWidgetItem(origin)
-
-
-    ### Format Protocols cell
-    @staticmethod
-    def format_nat_pat_protocols_table_widget(protocols):
-        names = [LmPatPtf.PROTOCOL_NAMES.get(p, "UNK") for p in protocols.split(",")]
-        return QtWidgets.QTableWidgetItem("/".join(names))
-
-
-    ### Format Port cell
-    @staticmethod
-    def format_port_table_widget(port):
-        port_item = NumericSortItem(port)
-        p = port.split("-")[0]     # If range is used, sort with the first port
-        try:
-            i = int(p)
-        except ValueError:
-            i = 0
-        port_item.setData(QtCore.Qt.ItemDataRole.UserRole, i)
-        return port_item
