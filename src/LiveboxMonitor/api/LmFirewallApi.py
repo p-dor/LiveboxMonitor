@@ -79,7 +79,7 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:getPortForwarding query error")
 
 
-    ### Set a IPv4 port forwarding rules, returns the rule as the Livebox set it
+    ### Set a IPv4 port forwarding rule, returns the rule as the Livebox set it
     # rule must follow Livebox model
     def set_ipv4_port_forwarding(self, rule):
         d = self.call_raw("Firewall", "setPortForwarding", rule)
@@ -92,7 +92,7 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:setPortForwarding query error")
 
 
-    ### Delete a IPv4 port forwarding rules
+    ### Delete a IPv4 port forwarding rule
     # origin can be 'webui' or 'upnp'
     def del_ipv4_port_forwarding(self, rule_id, dest_ip, origin):
         p = {"id": f"{origin}_{rule_id}",
@@ -115,7 +115,7 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:getProtocolForwarding query error")
 
 
-    ### Set a IPv4 protocol forwarding rules, returns the rule as the Livebox set it
+    ### Set a IPv4 protocol forwarding rule, returns the rule as the Livebox set it
     # rule must follow Livebox model
     def set_ipv4_protocol_forwarding(self, rule):
         d = self.call_raw("Firewall", "setProtocolForwarding", rule)
@@ -128,7 +128,7 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:setProtocolForwarding query error")
 
 
-    ### Delete a IPv4 protocol forwarding rules
+    ### Delete a IPv4 protocol forwarding rule
     def del_ipv4_protocol_forwarding(self, rule_id):
         self.call("Firewall", "deleteProtocolForwarding", {"id": rule_id})
 
@@ -148,7 +148,7 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:getPinhole query error")
 
 
-    ### Set a IPv6 pinhole rules, returns the rule as the Livebox set it
+    ### Set a IPv6 pinhole rule, returns the rule as the Livebox set it
     # rule must follow Livebox model
     def set_ipv6_pinhole(self, rule):
         d = self.call_raw("Firewall", "setPinhole", rule)
@@ -161,12 +161,40 @@ class FirewallApi(LmApi):
         raise LmApiException("Firewall:setPinhole query error")
 
 
-    ### Delete a IPv6 pinhole rules
+    ### Delete a IPv6 pinhole rule
     # origin can be 'webui' or 'upnp'
     def del_ipv6_pinhole(self, rule_id, origin):
         p = {"id": f"{origin}_{rule_id}",
              "origin": origin}
         self.call("Firewall", "deletePinhole", p)
+
+
+    ### Get list of firewall rules, returns a dictionary
+    # if no rule_id it returns all
+    # if no chain specified, defaults to "Custom"
+    def get_firewall_rules(self, rule_id=None, chain=None):
+        p = {}
+        if rule_id:
+            p["id"] = rule_id
+        if chain:
+            p["chain"] = chain
+        d = self.call_no_check("Firewall", "getCustomRule", p)
+        if isinstance(d, dict):
+            return d
+        raise LmApiException("Firewall:getCustomRule query error")
+
+
+    ### Set a firewall custom rule
+    # rule must follow Livebox model
+    def set_firewall_rule(self, rule):
+        d = self.call("Firewall", "setCustomRule", rule)
+
+
+    ### Delete a firewall custom rule
+    def del_firewall_rule(self, rule_id, chain="Custom"):
+        p = {"id": rule_id,
+             "chain": chain}
+        self.call("Firewall", "deleteCustomRule", p)
 
 
     ### Commit a change
