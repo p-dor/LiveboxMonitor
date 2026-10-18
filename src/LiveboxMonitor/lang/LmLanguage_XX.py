@@ -2399,6 +2399,7 @@ MESSAGES = {
 
     # Firewall
     "firewall": {
+        "warning": "",
         "delAllFwl": "",
         "createFileErr": "",
         "saveFileErr": "",

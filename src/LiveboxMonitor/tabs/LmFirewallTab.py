@@ -90,6 +90,10 @@ class LmFirewall:
         ping_response_button.clicked.connect(self.ping_response_button_click)
         setup_layout.addWidget(ping_response_button, 0)
 
+        # Rule warning
+        warning_label = QtWidgets.QLabel(mx("The rules below apply only if the firewall level is set to \"Custom\".", "warning"))
+        setup_layout.addWidget(warning_label, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
+
         # Firewall rule list
         self._fwl_list = LmTableWidget(objectName="fwlList")
         self._fwl_list.set_columns({FwlCol.Key: ["Key", 0, None],

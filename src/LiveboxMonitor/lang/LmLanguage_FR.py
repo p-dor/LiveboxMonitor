@@ -2254,6 +2254,7 @@ MESSAGES = {
 
     # Firewall
     "firewall": {
+        "warning": "Les règles ci-dessous ne s'appliquent que si le niveau du pare-feu est réglé sur \"Personnalisé\".",
         "delAllFwl": "{} règles ont été supprimées.",
         "createFileErr": "Impossible de créer le fichier.",
         "saveFileErr": "Impossible d'enregistrer le fichier.",
