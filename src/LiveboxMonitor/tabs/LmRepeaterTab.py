@@ -27,11 +27,11 @@ from LiveboxMonitor.tools import LmTools
 TAB_NAME = "repeaterTab"    # 'Key' dynamic property indicates the MAC addr
 
 # Static Config
-WIFI_REPEATER_TYPES = {"repeteurwifi", "repeteurwifi6", "sah ap"}
 WIFI_REPEATER_5 = "WIFIREPARCFR"
 WIFI_REPEATER_6 = "WIFI6REPSERCOMM"
-WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6]
-WIFI_REPEATER_MODEL_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6}
+WIFI_REPEATER_7 = "WIFI7REPSERCOMM"
+WIFI_REPEATER_PRODUCT_CLASSES = [WIFI_REPEATER_5, WIFI_REPEATER_6, WIFI_REPEATER_7]
+WIFI_REPEATER_MODEL_MAP = {WIFI_REPEATER_5: 5, WIFI_REPEATER_6: 6, WIFI_REPEATER_7: 7}
 WIFI_REPEATER_DEFAULT_MODEL = 6
 DEFAULT_REPEATER_NAME = "RW #"
 
@@ -229,12 +229,10 @@ class LmRepeater:
 
     ### Identify potential Wifi Repeater device & add it to the list
     # PowerManagement:getElements() method returns a "REPEATER_DEVICES" entry that suggests that a generic way to
-    # identify repeaters could be to check the tags with the expression "ssw and (wifi or eth)"
+    # identify repeaters is to check the tags with the expression "ssw and (wifi or eth)"
     def identify_repeater(self, device):
-        device_type = device.get("DeviceType", "")
-        prod_class = device.get("ProductClass", "")
-
-        if (device_type.lower() in WIFI_REPEATER_TYPES) or (prod_class in WIFI_REPEATER_PRODUCT_CLASSES):
+        device_tags = set(device.get("Tags", "").split())
+        if ("ssw" in device_tags) and (("wifi" in device_tags) or ("eth" in device_tags)):
             key = device.get("Key", "")
 
             # Check if not already there
@@ -253,10 +251,11 @@ class LmRepeater:
             # Determine model
             model_name = None
             ssw = device.get("SSW")
+
             if isinstance(ssw, dict):
                 model_name = ssw.get("ModelName")
             if model_name is None:
-                model_name = prod_class     # In some cases the model name is indicated in product class
+                model_name = device.get("ProductClass", "")     # In some cases the model name is indicated in product class
             try:
                 model = WIFI_REPEATER_MODEL_MAP[model_name]
             except KeyError:
