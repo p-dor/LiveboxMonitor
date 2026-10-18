@@ -2453,6 +2453,7 @@ MESSAGES = {
         "lbReset": "",
         "autoRestore": "",
         "appQuit": "",
+        "docGenErr": "",
         "dynDnsLoadErr": "",
         "dynDnsSvcErr": "",
         "dynDnsDelErr": "",

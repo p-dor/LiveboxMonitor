@@ -2309,6 +2309,7 @@ MESSAGES = {
         "lbReset": "Êtes-vous sûr de vouloir réinitialiser la Livebox ?",
         "autoRestore": "Voulez-vous désactiver la restauration automatique de votre configuration ?",
         "appQuit": "L'application va maintenant se fermer.",
+        "docGenErr": "Certains fichiers ({}) n'ont pas pu être générés. Consultez les logs pour obtenir plus d'informations.",
         "dynDnsLoadErr": "Impossible de charger la liste des domaines DynDNS.",
         "dynDnsSvcErr": "Impossible de charger la liste des services DynDNS.",
         "dynDnsDelErr": "Impossible de supprimer ce domaine DynDNS.",
