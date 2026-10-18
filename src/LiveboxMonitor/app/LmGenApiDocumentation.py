@@ -147,11 +147,14 @@ class LmGenApiDoc:
         self._file = None
 
 
-    ### Generate files for each known service
+    ### Generate files for each known service, returns number of errors
     def gen_service_files(self):
+        error_count = 0
+
         # Generate for each known service
         for s in SERVICES:
-            self.gen_service_file(s)
+            if not self.gen_service_file(s):
+                error_count += 1
 
         # Generate for all interfaces
         try:
@@ -161,19 +164,27 @@ class LmGenApiDoc:
         else:
             if isinstance(d, list):
                 for m in d:
-                    self.gen_service_file("NeMo.Intf." + m)
+                    if not self.gen_service_file("NeMo.Intf." + m):
+                        error_count += 1
             else:
                 LmTools.error("Bad return from interface list API.")
+                error_count += 1
+
+        return error_count
 
 
-    ### Generate all services in a flat file
+    ### Generate all services in a flat file, returns number of errors
     def gen_full_file(self):
-        self.gen_service_file(".", "_ALL SERVICES_")
+        if self.gen_service_file(".", "_ALL SERVICES_"):
+            return 0
+        return 1
 
 
-    ### Generate process list file
+    ### Generate process list file, returns number of errors
     def gen_process_list_file(self):
-        self.gen_service_file("*", "_PROCESSES_")
+        if self.gen_service_file("*", "_PROCESSES_"):
+            return 0
+        return 1
 
 
     ### Generate JSON result file for a service - useful only to get raw results
@@ -211,7 +222,7 @@ class LmGenApiDoc:
         self._file = None
 
 
-    ### Generate document file for a service
+    ### Generate document file for a service, returns False in case of tech error
     def gen_service_file(self, service, name=None):
         if name is None:
             name = service
@@ -222,21 +233,21 @@ class LmGenApiDoc:
             d = self._session.request(service, get=True, timeout=15)
         except Exception as e:
             LmTools.error(str(e))
-            return
+            return False
 
         if d is None:
-            return
+            return False
 
         # Service doesn't exist error
         if isinstance(d, dict) and (d.get("error", 0) == 196618):  
-            return
+            return True
 
         file_path = os.path.join(self._folder, name + ".txt")
         try:
             self._file = open(file_path, "w")
         except Exception as e:
             LmTools.error(str(e))
-            return
+            return False
 
         self._file.write(f"=== LIVEBOX SOFTWARE VERSION: {self._software_version}\n\n")
         if not isinstance(d, list):
@@ -250,6 +261,8 @@ class LmGenApiDoc:
         except Exception as e:
             LmTools.error(str(e))
         self._file = None
+
+        return True
 
 
     ### Generate documentation for an object - return False if not an object
