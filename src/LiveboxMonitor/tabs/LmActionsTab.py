@@ -268,8 +268,6 @@ class LmActions:
         gen_doc_button = QtWidgets.QPushButton(lx("Generate API Documentation..."), objectName="getApiDoc")
         gen_doc_button.clicked.connect(self.get_doc_button_click)
         debug_buttons.addWidget(gen_doc_button)
-        if self._api._info.get_model() > 7:      # API doc generation is blocked since LB W7
-            gen_doc_button.setEnabled(False)
 
         debug_group_box = QtWidgets.QGroupBox(lx("Debug"), objectName="debugGroup")
         debug_group_box.setLayout(debug_buttons)
@@ -669,13 +667,18 @@ class LmActions:
                 filter_values = modifiers == QtCore.Qt.KeyboardModifier.ControlModifier
 
             self._task.start(lx("Generating API document files..."))
+            errors = 0
             try:
                 g = LmGenApiDocumentation.LmGenApiDoc(self, folder, filter_values)
-                g.gen_service_files()
-                g.gen_full_file()
-                g.gen_process_list_file()
+                errors += g.gen_service_files()
+                errors += g.gen_full_file()
+                errors += g.gen_process_list_file()
             finally:
                 self._task.end()
+
+            if errors:
+                self.display_error(mx("Some files ({}) couldn't be generated. Check the logs to get more information.",
+                                      "docGenErr").format(errors))
 
 
     ### Click on Quit Application button
