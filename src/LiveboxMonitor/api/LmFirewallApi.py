@@ -108,8 +108,12 @@ class FirewallApi(LmApi):
 
 
     ### Get list of IPv4 protocol forwarding rules, returns a dictionary
-    def get_ipv4_protocol_forwarding(self):
-        d = self.call_no_check("Firewall", "getProtocolForwarding")
+    # if no rule_id it returns all
+    def get_ipv4_protocol_forwarding(self, rule_id=None):
+        p = {}
+        if rule_id:
+            p["id"] = rule_id
+        d = self.call_no_check("Firewall", "getProtocolForwarding", p)
         if isinstance(d, dict):
             return d
         raise LmApiException("Firewall:getProtocolForwarding query error")
