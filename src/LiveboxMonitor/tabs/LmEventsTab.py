@@ -382,6 +382,39 @@ class LmEvents:
                     self.process_firewall_rule_delete_event(h[4], h[2])
             return
 
+        # Firewall IPv4 PAT rules events
+        if (n == 3) and (h[1] == "PortForwarding"):
+            match r:
+                case "add":
+                    self.process_ipv4_pat_rule_add_event(h[2])
+                case "changed":
+                    self.process_ipv4_pat_rule_change_event(h[2])
+                case "delete":
+                    self.process_ipv4_pat_rule_delete_event(h[2])
+            return
+
+        # Firewall IPv4 PTF rules events
+        if (n == 3) and (h[1] == "ProtocolForwarding"):
+            match r:
+                case "add":
+                    self.process_ipv4_ptf_rule_add_event(h[2])
+                case "changed":
+                    self.process_ipv4_ptf_rule_change_event(h[2])
+                case "delete":
+                    self.process_ipv4_ptf_rule_delete_event(h[2])
+            return
+
+        # Firewall IPv6 PAT/PTF rules events
+        if (n == 3) and (h[1] == "Pinhole"):
+            match r:
+                case "add":
+                    self.process_pinhole_rule_add_event(h[2])
+                case "changed":
+                    self.process_pinhole_rule_change_event(h[2])
+                case "delete":
+                    self.process_pinhole_rule_delete_event(h[2])
+            return
+
 
     ### Store event in buffer, for the UI
     def bufferize_event(self, device_key, handler, reason, attributes):
