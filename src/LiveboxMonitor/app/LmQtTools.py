@@ -37,6 +37,7 @@ def display_error(error_msg, parent=None):
     msg_box.setWindowTitle(lx("Error"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
     msg_box.setText(error_msg)
+    msg_box.setOption(QtWidgets.QMessageBox.Option.DontUseNativeDialog, True)   # To prevent MacOS 27 crash
     msg_box.exec()
 
 
@@ -46,6 +47,7 @@ def display_status(status_msg, parent=None):
     msg_box.setWindowTitle(lx("Status"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
     msg_box.setText(status_msg)
+    msg_box.setOption(QtWidgets.QMessageBox.Option.DontUseNativeDialog, True)   # To prevent MacOS 27 crash
     msg_box.exec()
 
 
@@ -55,6 +57,7 @@ def ask_question(question_msg, parent=None):
     msg_box.setWindowTitle(lx("Please confirm"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Question)
     msg_box.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+    msg_box.setOption(QtWidgets.QMessageBox.Option.DontUseNativeDialog, True)   # To prevent MacOS 27 crash
     msg_box.setText(question_msg)
     return msg_box.exec() == QtWidgets.QMessageBox.StandardButton.Yes
 

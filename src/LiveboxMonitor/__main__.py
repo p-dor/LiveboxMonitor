@@ -537,6 +537,7 @@ def except_hook(type, value, trace_back):
     msg_box.setWindowTitle(lx("Fatal Error"))
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
     msg_box.setText(f"{trace_back}\nApplication will now quit.")
+    msg_box.setOption(QtWidgets.QMessageBox.Option.DontUseNativeDialog, True)   # To prevent MacOS 27 crash
     msg_box.exec()
 
     QtWidgets.QApplication.quit()
