@@ -1045,15 +1045,15 @@ class LmNatPat:
 
     ### Save a PAT rule in Livebox, return True if successful
     def save_pat_rule(self, rule):
-        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
-            return self.save_ipv6_pat_rule(rule)
-        return self.save_ipv4_pat_rule(rule)
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
+        if ip_version == 6:
+            return self.save_ipv6_pat_rule(rule, origin)
+        return self.save_ipv4_pat_rule(rule, origin)
 
 
     ### Save a IPv4 PAT rule in Livebox, return True if successful
-    def save_ipv4_pat_rule(self, rule):
+    def save_ipv4_pat_rule(self, rule, origin):
         # Map rule to Livebox model
-        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         r = {}
         r["id"] = rule["Name"]
         r["internalPort"] = rule["IntPort"]
@@ -1083,9 +1083,8 @@ class LmNatPat:
  
 
     ### Save a IPv6 PAT rule in Livebox, return True if successful
-    def save_ipv6_pat_rule(self, rule):
+    def save_ipv6_pat_rule(self, rule, origin):
         # Map rule to Livebox model
-        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         r = {}
         r["id"] = rule["Name"]
         r["origin"] = origin
@@ -1116,13 +1115,12 @@ class LmNatPat:
     def del_pat_rule(self, rule):
         origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         if ip_version == 6:
-            return self.del_ipv6_pat_rule(rule)
-        return self.del_ipv4_pat_rule(rule)
+            return self.del_ipv6_pat_rule(rule, origin)
+        return self.del_ipv4_pat_rule(rule,origin)
 
 
     ### Delete a IPv4 PAT rule from Livebox, return True if successful
-    def del_ipv4_pat_rule(self, rule):
-        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
+    def del_ipv4_pat_rule(self, rule, origin):
         try:
             self._api._firewall.del_ipv4_port_forwarding(rule["Name"], rule["IP"], origin)
         except Exception as e:
@@ -1132,8 +1130,7 @@ class LmNatPat:
 
 
     ### Delete a IPv6 PAT rule from Livebox, return True if successful
-    def del_ipv6_pat_rule(self, rule):
-        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
+    def del_ipv6_pat_rule(self, rule, origin):
         try:
             self._api._firewall.del_ipv6_pinhole(rule["Name"], origin)
         except Exception as e:
