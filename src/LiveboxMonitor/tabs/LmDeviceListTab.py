@@ -437,42 +437,48 @@ class LmDeviceList:
     ### Compute wifi connection quality rating from 0 to 5
     @staticmethod
     def get_wifi_rating(signal_strength, signal_noise_ratio, default_rating=3):
-        # Case when system doesn't know, like for Guest interface (0 values)
-        if signal_strength == 0 or signal_noise_ratio == 0:
+        scores = []
+
+        # Score Signal Strength (RSSI) - zero means unavailable in the Orange API
+        # Range: -30 (Best) to -90 (Worst)
+        if signal_strength:
+            if signal_strength >= -50:
+                rssi_score = 5
+            elif signal_strength >= -60:
+                rssi_score = 4
+            elif signal_strength >= -70:
+                rssi_score = 3
+            elif signal_strength >= -80:
+                rssi_score = 2
+            elif signal_strength >= -90:
+                rssi_score = 1
+            else:
+                rssi_score = 0
+            scores.append(rssi_score)
+
+        # Score SNR (Ratio) - zero means unavailable in the Orange API
+        # Range: >25 (Best) to <10 (Worst)
+        if signal_noise_ratio:
+            if signal_noise_ratio >= 30:
+                snr_score = 5
+            elif signal_noise_ratio >= 20:
+                snr_score = 4
+            elif signal_noise_ratio >= 15:
+                snr_score = 3
+            elif signal_noise_ratio >= 10:
+                snr_score = 2
+            elif signal_noise_ratio >= 5:
+                snr_score = 1
+            else:
+                snr_score = 0
+            scores.append(snr_score)
+
+        # No valid measurements
+        if not scores:
             return default_rating
 
-        # Score Signal Strength (RSSI)
-        # Range: -30 (Best) to -90 (Worst)
-        if signal_strength >= -50:
-            rssi_score = 5
-        elif signal_strength >= -60:
-            rssi_score = 4
-        elif signal_strength >= -70:
-            rssi_score = 3
-        elif signal_strength >= -80:
-            rssi_score = 2
-        elif signal_strength >= -90:
-            rssi_score = 1
-        else:
-            rssi_score = 0
-
-        # Score SNR (Ratio)
-        # Range: >25 (Best) to <10 (Worst)
-        if signal_noise_ratio >= 30:
-            snr_score = 5
-        elif signal_noise_ratio >= 20:
-            snr_score = 4
-        elif signal_noise_ratio >= 15:
-            snr_score = 3
-        elif signal_noise_ratio >= 10:
-            snr_score = 2
-        elif signal_noise_ratio >= 5:
-            snr_score = 1
-        else:
-            snr_score = 0
-
-        # Return average
-        return round((rssi_score + snr_score) / 2)
+        # Average available measurements
+        return round(sum(scores) / len(scores))
 
 
     ### Update device name in all lists & tabs
