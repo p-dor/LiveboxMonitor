@@ -9,9 +9,10 @@ IPV6_SOURCE_PORT_WORKING = False        # SourcePort is available in the API but
 
 RULE_TYPE_IPv4 = "IPv4"
 RULE_TYPE_IPv6 = "IPv6"
-RULE_TYPE_UPnP = "UPnP"
+RULE_TYPE_UPnPv4 = "UPnPv4"
+RULE_TYPE_UPnPv6 = "UPnPv6"
 RULE_FWL_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6]
-RULE_PAT_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6, RULE_TYPE_UPnP]
+RULE_PAT_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6, RULE_TYPE_UPnPv4, RULE_TYPE_UPnPv6]
 RULE_PTF_TYPES = [RULE_TYPE_IPv4, RULE_TYPE_IPv6]
 
 # Protocols - https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml

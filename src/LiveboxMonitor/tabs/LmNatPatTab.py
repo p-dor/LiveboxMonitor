@@ -299,8 +299,8 @@ class LmNatPat:
                 if t[LmFwlTools.RULE_TYPE_IPv4]:
                     self.del_all_ipv4_pat_rule(False)
 
-                # Delete all UPnP rules if selected
-                if t[LmFwlTools.RULE_TYPE_UPnP]:
+                # Delete all UPnPv4 rules if selected
+                if t[LmFwlTools.RULE_TYPE_UPnPv4]:
                     self.del_all_ipv4_pat_rule(True)
 
                 # Delete one by one IPv6 rules if selected
@@ -308,6 +308,13 @@ class LmNatPat:
                     for i in range(self._pat_list.rowCount()):
                         r = self.get_pat_rule_from_list(i)
                         if r and (r["Type"] == LmFwlTools.RULE_TYPE_IPv6):
+                            self.del_pat_rule(r)
+
+                # Delete one by one UPnPv6 rules if selected
+                if t[LmFwlTools.RULE_TYPE_UPnPv6]:
+                    for i in range(self._pat_list.rowCount()):
+                        r = self.get_pat_rule_from_list(i)
+                        if r and (r["Type"] == LmFwlTools.RULE_TYPE_UPnPv6):
                             self.del_pat_rule(r)
 
                 # Commit & refresh
@@ -642,10 +649,10 @@ class LmNatPat:
         try:
             self._pat_list.setSortingEnabled(False)
 
-            # IPv4 types (webui / upnp / others?)
+            # IPv4 types (webui / upnp)
             self.load_ipv4_pat_rules()
 
-            # IPv6 types
+            # IPv6 types (webui / upnp)
             self.load_ipv6_pat_rules()
 
             self._pat_list.sortItems(PatCol.RuleType, QtCore.Qt.SortOrder.AscendingOrder)
@@ -657,7 +664,7 @@ class LmNatPat:
             self._task.end()
 
 
-    ### Load IPv4 (webui / upnp / others?) PAT rules
+    ### Load IPv4 (webui / upnp) PAT rules
     def load_ipv4_pat_rules(self):
         try:
             d = self._api._firewall.get_ipv4_port_forwarding()
@@ -678,7 +685,7 @@ class LmNatPat:
         self.display_pat_rule_line(line, rule, "v4", LmFwlTools.RULE_TYPE_IPv4)
 
 
-    ### Load IPv6 PAT rules
+    ### Load IPv6 (webui / upnp) PAT rules
     def load_ipv6_pat_rules(self):
         try:
             d = self._api._firewall.get_ipv6_pinhole()
@@ -783,7 +790,7 @@ class LmNatPat:
     @staticmethod
     def convert_pat_rule_to_livebox(rule):
         r = {}
-        origin = "upnp" if rule["Type"] == LmFwlTools.RULE_TYPE_UPnP else "webui"
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         r["Id"] = f"{origin}_{rule['Name']}"
         r["Enable"] = rule["Enable"]
         r["Origin"] = origin
@@ -791,7 +798,7 @@ class LmNatPat:
         r["Protocol"] = rule["ProtoNumbers"]
         int_port = rule["IntPort"]
         ext_port = rule["ExtPort"]
-        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
+        if ip_version == 6:
             if int_port is not None:
                 r["DestinationPort"] = int_port
             if ext_port is not None:
@@ -842,8 +849,7 @@ class LmNatPat:
     ### Update a PAT rule in the list
     def pat_rule_list_update(self, rule):
         # Determine the key
-        origin = "upnp" if rule["Type"] == LmFwlTools.RULE_TYPE_UPnP else "webui"
-        ip_version = 6 if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6 else 4
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         key, rule_id, origin = self.get_pat_rule_key(f"{origin}_{rule['Name']}", ip_version)
 
         # Find the rule in the list
@@ -870,8 +876,7 @@ class LmNatPat:
     ### Delete a PAT rule from the list
     def pat_rule_list_delete(self, rule):
         # Determine the key
-        origin = "upnp" if rule["Type"] == LmFwlTools.RULE_TYPE_UPnP else "webui"
-        ip_version = 6 if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6 else 4
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         key, rule_id, origin = self.get_pat_rule_key(f"{origin}_{rule['Name']}", ip_version)
 
         # Find the rule in the list
@@ -950,6 +955,7 @@ class LmNatPat:
         if t not in LmFwlTools.RULE_PAT_TYPES:
             LmTools.error(f"Rule has unknown {t} type.")
             return False
+        ipv6 = (t == LmFwlTools.RULE_TYPE_IPv6) or (t == LmFwlTools.RULE_TYPE_UPnPv6)
 
         if len(rule.get("Name", "")) == 0:
             LmTools.error("Rule has no Name.")
@@ -985,7 +991,8 @@ class LmNatPat:
         ip = rule.get("IP", "")
         if len(ip) == 0:
             return False
-        if t == LmFwlTools.RULE_TYPE_IPv6:
+
+        if ipv6:
             if not LmTools.is_ipv6(ip):
                 LmTools.error(f"Rule has wrong IPv6 {ip} set.")
                 return False
@@ -1002,7 +1009,7 @@ class LmNatPat:
                     LmTools.error("Rule external IPs has an empty IP address.")
                     return False
 
-                if t == LmFwlTools.RULE_TYPE_IPv6:
+                if ipv6:
                     if not LmTools.is_ipv6(ip):
                         LmTools.error(f"Rule external IPs has a wrong IPv6 {ip} set.")
                         return False
@@ -1046,6 +1053,7 @@ class LmNatPat:
     ### Save a IPv4 PAT rule in Livebox, return True if successful
     def save_ipv4_pat_rule(self, rule):
         # Map rule to Livebox model
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         r = {}
         r["id"] = rule["Name"]
         r["internalPort"] = rule["IntPort"]
@@ -1058,7 +1066,7 @@ class LmNatPat:
         r["protocol"] = rule["ProtoNumbers"]
         r["description"] = rule["Desc"]
         r["sourceInterface"] = "data"
-        r["origin"] = "webui" if rule["Type"] == LmFwlTools.RULE_TYPE_IPv4 else "upnp"
+        r["origin"] = origin
         r["destinationMACAddress"] = ""
         external_ips = rule["ExtIPs"]
         if len(external_ips):
@@ -1077,9 +1085,10 @@ class LmNatPat:
     ### Save a IPv6 PAT rule in Livebox, return True if successful
     def save_ipv6_pat_rule(self, rule):
         # Map rule to Livebox model
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         r = {}
         r["id"] = rule["Name"]
-        r["origin"] = "webui"
+        r["origin"] = origin
         r["sourceInterface"] = "data"
         p = rule["ExtPort"]
         r["sourcePort"] = p if LmFwlTools.IPV6_SOURCE_PORT_WORKING and (p is not None) else ""
@@ -1105,14 +1114,15 @@ class LmNatPat:
 
     ### Delete a PAT rule from Livebox, return True if successful
     def del_pat_rule(self, rule):
-        if rule["Type"] == LmFwlTools.RULE_TYPE_IPv6:
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
+        if ip_version == 6:
             return self.del_ipv6_pat_rule(rule)
         return self.del_ipv4_pat_rule(rule)
 
 
     ### Delete a IPv4 PAT rule from Livebox, return True if successful
     def del_ipv4_pat_rule(self, rule):
-        origin = "webui" if rule["Type"] == LmFwlTools.RULE_TYPE_IPv4 else "upnp"
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         try:
             self._api._firewall.del_ipv4_port_forwarding(rule["Name"], rule["IP"], origin)
         except Exception as e:
@@ -1123,8 +1133,9 @@ class LmNatPat:
 
     ### Delete a IPv6 PAT rule from Livebox, return True if successful
     def del_ipv6_pat_rule(self, rule):
+        origin, ip_version = LmNatPat.get_rule_origin(rule["Type"])
         try:
-            self._api._firewall.del_ipv6_pinhole(rule["Name"], "webui")
+            self._api._firewall.del_ipv6_pinhole(rule["Name"], origin)
         except Exception as e:
             self.display_error(str(e))
             return False
@@ -1567,6 +1578,27 @@ class LmNatPat:
                     return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_IPv6)
                 return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_IPv4)
             case "upnp":
-                return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_UPnP)
+                if ipv6:
+                    return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_UPnPv6)
+                return QtWidgets.QTableWidgetItem(LmFwlTools.RULE_TYPE_UPnPv4)
             case _:
-                return QtWidgets.QTableWidgetItem(origin)
+                if ipv6:
+                    return QtWidgets.QTableWidgetItem(f"{origin}v6")
+                return QtWidgets.QTableWidgetItem(f"{origin}v4")
+
+
+    ### Get orgin and ip version from rule type
+    @staticmethod
+    def get_rule_origin(rule_type):
+        match rule_type:
+            case LmFwlTools.RULE_TYPE_IPv4:
+                return "webui", 4
+            case LmFwlTools.RULE_TYPE_IPv6:
+                return "webui", 6
+            case LmFwlTools.RULE_TYPE_UPnPv4:
+                return "upnp", 4
+            case LmFwlTools.RULE_TYPE_UPnPv6:
+                return "upnp", 6           
+            case _:
+                LmTools.error(f"Unknown rule type {rule_type}.")
+                return "webui", 4

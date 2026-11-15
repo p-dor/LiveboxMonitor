@@ -515,7 +515,8 @@ TOOLTIPS = {
     "fwrtype": {
         "ipV4Checkbox": "Selects or not IPv4 type rules.",
         "ipV6Checkbox": "Selects or not IPv6 type rules.",
-        "upnpCheckbox": "Selects or not UPnP type rules."
+        "upnpV4Checkbox": "Selects or not UPnP IPv4 type rules.",
+        "upnpV6Checkbox": "Selects or not UPnP IPv6 type rules."
     },
 
     # Firewall - Firewall level

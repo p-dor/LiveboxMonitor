@@ -12,7 +12,7 @@ class FirewallRuleTypeDialog(QtWidgets.QDialog):
     def __init__(self, upnp, parent=None):
         super().__init__(parent)
         self.setMinimumWidth(230)
-        self.resize(230, 150)
+        self.resize(230, 190)
 
         self._upnp = upnp
 
@@ -21,15 +21,18 @@ class FirewallRuleTypeDialog(QtWidgets.QDialog):
         self._ipv6_checkbox = QtWidgets.QCheckBox(LmFwlTools.RULE_TYPE_IPv6, objectName="ipV6Checkbox")
         self._ipv6_checkbox.clicked.connect(self.set_ok_button_state)
         if upnp:
-            self._upnp_checkbox = QtWidgets.QCheckBox(LmFwlTools.RULE_TYPE_UPnP, objectName="upnpCheckbox")
-            self._upnp_checkbox.clicked.connect(self.set_ok_button_state)
+            self._upnpv4_checkbox = QtWidgets.QCheckBox(LmFwlTools.RULE_TYPE_UPnPv4, objectName="upnpV4Checkbox")
+            self._upnpv4_checkbox.clicked.connect(self.set_ok_button_state)
+            self._upnpv6_checkbox = QtWidgets.QCheckBox(LmFwlTools.RULE_TYPE_UPnPv6, objectName="upnpV6Checkbox")
+            self._upnpv6_checkbox.clicked.connect(self.set_ok_button_state)
 
         vcbox = QtWidgets.QVBoxLayout()
         vcbox.setSpacing(10)
         vcbox.addWidget(self._ipv4_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         vcbox.addWidget(self._ipv6_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         if upnp:
-            vcbox.addWidget(self._upnp_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+            vcbox.addWidget(self._upnpv4_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+            vcbox.addWidget(self._upnpv6_checkbox, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
 
         self._ok_button = QtWidgets.QPushButton(lx("OK"), objectName="ok")
         self._ok_button.clicked.connect(self.accept)
@@ -61,7 +64,8 @@ class FirewallRuleTypeDialog(QtWidgets.QDialog):
         self._ipv4_checkbox.setChecked(True)
         self._ipv6_checkbox.setChecked(True)
         if self._upnp:
-            self._upnp_checkbox.setChecked(False)
+            self._upnpv4_checkbox.setChecked(False)
+            self._upnpv6_checkbox.setChecked(False)
         self.set_ok_button_state()
 
 
@@ -71,7 +75,8 @@ class FirewallRuleTypeDialog(QtWidgets.QDialog):
             LmFwlTools.RULE_TYPE_IPv6: self._ipv6_checkbox.isChecked()
         }
         if self._upnp:
-            t[LmFwlTools.RULE_TYPE_UPnP] = self._upnp_checkbox.isChecked()
+            t[LmFwlTools.RULE_TYPE_UPnPv4] = self._upnpv4_checkbox.isChecked()
+            t[LmFwlTools.RULE_TYPE_UPnPv6] = self._upnpv6_checkbox.isChecked()
         return t
 
 
@@ -79,7 +84,8 @@ class FirewallRuleTypeDialog(QtWidgets.QDialog):
         if self._upnp:
             one_checked = (self._ipv4_checkbox.isChecked() or
                            self._ipv6_checkbox.isChecked() or
-                           self._upnp_checkbox.isChecked())
+                           self._upnpv4_checkbox.isChecked() or
+                           self._upnpv6_checkbox.isChecked())
         else:
             one_checked = (self._ipv4_checkbox.isChecked() or
                            self._ipv6_checkbox.isChecked())

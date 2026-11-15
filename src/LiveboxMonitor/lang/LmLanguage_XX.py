@@ -1774,7 +1774,8 @@ TOOLTIPS = {
     "fwrtype": {
         "ipV4Checkbox": "",
         "ipV6Checkbox": "",
-        "upnpCheckbox": "",
+        "upnpV4Checkbox": "",
+        "upnpV6Checkbox": "",
         "ok": "",
         "cancel": ""
     },

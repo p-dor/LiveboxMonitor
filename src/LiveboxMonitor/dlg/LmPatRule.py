@@ -186,7 +186,9 @@ class PatRuleDialog(QtWidgets.QDialog):
         self.load_device_list()
 
         # Adjust IP field validator
-        if self.get_type() == LmFwlTools.RULE_TYPE_IPv6:
+        rule_type = self.get_type()
+        ipv6 = (rule_type == LmFwlTools.RULE_TYPE_IPv6) or (rule_type == LmFwlTools.RULE_TYPE_UPnPv6)
+        if ipv6:
             ip_reg_exp = QtCore.QRegularExpression(f"^{LmTools.IPv6_RS}$")
             if not LmFwlTools.IPV6_SOURCE_PORT_WORKING:
                 self._ext_port_edit.setEnabled(False)
@@ -236,9 +238,11 @@ class PatRuleDialog(QtWidgets.QDialog):
         device_map = self.parent()._device_ip_name_map
         self._device_combo.clear()
 
-        # If type is UPnP load IPv4 devices
-        if t == LmFwlTools.RULE_TYPE_UPnP:
+        # If type is UPnP load corresponding devices
+        if t == LmFwlTools.RULE_TYPE_UPnPv4:
             t = LmFwlTools.RULE_TYPE_IPv4
+        elif t == LmFwlTools.RULE_TYPE_UPnPv6:
+            t = LmFwlTools.RULE_TYPE_IPv6
 
         # Load matching devices / IPs
         for i in device_map:
@@ -256,10 +260,11 @@ class PatRuleDialog(QtWidgets.QDialog):
 
     def accept(self):
         t = self.get_type()
+        ipv6 = (t == LmFwlTools.RULE_TYPE_IPv6) or (t == LmFwlTools.RULE_TYPE_UPnPv6)
 
         # Validate IP address
         ip = self.get_ip()
-        if t == LmFwlTools.RULE_TYPE_IPv6:
+        if ipv6:
             if not LmTools.is_ipv6(ip):
                 self.parent().display_error(mx("{} is not a valid IPv6 address.", "ipv6AddrErr").format(ip))
                 self._ip_edit.setFocus()
@@ -280,7 +285,7 @@ class PatRuleDialog(QtWidgets.QDialog):
                     self._ext_ips_edit.setFocus()
                     return
 
-                if t == LmFwlTools.RULE_TYPE_IPv6:
+                if ipv6:
                     if not LmTools.is_ipv6_pfix(ip):
                         self.parent().display_error(mx("{} is not a valid IPv6 address or prefix.", "ipv6AddrPfixErr").format(ip))
                         self._ext_ips_edit.setFocus()
