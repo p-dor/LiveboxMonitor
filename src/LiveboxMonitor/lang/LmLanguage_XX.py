@@ -8,7 +8,8 @@ LABELS = {
     "main": {
         "Terminating threads...": "",
         "Signing in...": "",
-        "Export..."
+        "Fatal Error": "",
+        "Export...": ""
     },
 
     # Export table dialog
