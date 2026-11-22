@@ -393,7 +393,7 @@ class LmTvDecoder:
             if not name:
                 name = LmConf.MacAddrTable.get(mac_addr)
             if not name:
-                name = DEFAULT_TVDECODER_NAME + str(index + 1)
+                name = f"{DEFAULT_TVDECODER_NAME}{index + 1}"
 
             # Determine vendor & model
             vendor = device.get("VendorClassID")
