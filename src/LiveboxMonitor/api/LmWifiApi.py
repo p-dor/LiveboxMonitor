@@ -441,7 +441,7 @@ class WifiApi(LmApi):
 
     ### Get eco mode for a given Wifi interface name - return None if no eco mode
     def get_eco_mode(self, intf_name):
-        if self._api._info.get_model() >= 6:    # Eco mode available only starting Livebox 6
+        if self._api._info.get_model() >= 4:    # Eco mode available only starting Livebox 4
             profile_name = PROFILE_NAME_MAP.get(intf_name)
             if profile_name:
                 d = self.get_power_management_profiles(profile_name).get(profile_name)
