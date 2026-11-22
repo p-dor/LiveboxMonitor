@@ -7,6 +7,7 @@ ico/LiveboxMonitor.png
 LiveboxMonitor.bat
 LiveboxMonitor.sublime-project
 LiveboxMonitor.sublime-workspace
+CLAUDE.md
 src/LiveboxMonitor/custom_icons/
 src/LiveboxMonitor/lbcache*/
 src/LiveboxMonitor/exports/
