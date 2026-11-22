@@ -141,7 +141,7 @@ class LmApi:
             mockup = None    # No test file found
         except Exception as e:
             LmTools.error(f"Wrong JSON {signature}.json: {e}")
-            raise LmApiException(f"{LmApi.err_str(service, method, err_str)}: bad test driver json")
+            raise LmApiException(f"{LmApi.err_str(service, method)}: bad test driver json")
         finally:
             if test_file is not None:
                 test_file.close()
