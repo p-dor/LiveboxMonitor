@@ -270,6 +270,7 @@ class LmEvents:
             a = None
 
         # Try to guess device key from handler
+        # Warning: events can come for either device key (e.g. name change) or mac address (e.g. stats)
         device_key = LmTools.extract_mac_addr_from_string(h)
         if len(device_key):
             self.update_event_indicator(device_key)

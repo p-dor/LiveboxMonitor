@@ -387,9 +387,12 @@ class LmTvDecoder:
             index = len(self._tvdecoders)
 
             mac_addr = device.get("PhysAddress", "")
-            try:
-                name = LmConf.MacAddrTable[mac_addr]
-            except KeyError:
+
+            # Assign name by key or mac addr
+            name = LmConf.MacAddrTable.get(key)
+            if not name:
+                name = LmConf.MacAddrTable.get(mac_addr)
+            if not name:
                 name = DEFAULT_TVDECODER_NAME + str(index + 1)
 
             # Determine vendor & model

@@ -99,6 +99,7 @@ class LmDeviceInfo:
 
     ### Init selected device context
     def init_device_context(self):
+        self._info_device_list_refresh = False
         self._current_device_livebox_name = None
         self._current_device_dns_name = None
         self._current_device_type = ""
@@ -115,14 +116,33 @@ class LmDeviceInfo:
         return None
 
 
+    ### Get selected device key & mac addr - returns None, None if no selection
+    def get_selected_device_key_mac(self, display_error=True):
+        current_selection = self._info_dlist.currentRow()
+        if current_selection >= 0:
+            return (self._info_dlist.item(current_selection, DSelCol.Key).text(),
+                    self._info_dlist.item(current_selection, DSelCol.MAC).text())
+        if display_error:
+            self.display_error(mx("Please select a device.", "devSelect"))
+        return None, None
+
+
     ### Click on info device list
     def info_device_list_click(self):
-        self._info_alist.clearContents()
-        self._info_alist.setRowCount(0)
+        # Avoid re-entrency
+        if self._info_device_list_refresh:
+            return
+        self._info_device_list_refresh = True
 
-        key = self.get_selected_device_key(False)
-        if key:
-            self.update_device_info(key)
+        try:
+            self._info_alist.clearContents()
+            self._info_alist.setRowCount(0)
+
+            key = self.get_selected_device_key(False)
+            if key:
+                self.update_device_info(key)
+        finally:
+            self._info_device_list_refresh = False
 
 
     ### Click on device infos refresh button
@@ -132,7 +152,7 @@ class LmDeviceInfo:
 
     ### Click on assign device name button
     def assign_name_button_click(self):
-        key = self.get_selected_device_key()
+        key, mac = self.get_selected_device_key_mac()
         if key:
             name = LmConf.MacAddrTable.get(key)
 
@@ -144,6 +164,11 @@ class LmDeviceInfo:
                     self.del_device_name(key)
                 else:
                     self.set_device_name(key, name)
+                if mac != key:
+                    if name is None:
+                        self.del_device_name(mac)
+                    else:
+                        self.set_device_name(mac, name)
 
                 try:
                     # Update Livebox name
@@ -165,10 +190,12 @@ class LmDeviceInfo:
 
 
     ### Refresh device info if the passed key is the selected one
-    def refresh_device_if_selected(self, device_key):
+    def refresh_device_if_selected(self, device_key, name=None):
         key = self.get_selected_device_key(False)
         if key and (key == device_key):
             self.info_device_list_click()
+            if name is not None:
+                self._current_device_livebox_name = name
 
 
     ### Set a device name stored in the MacAddr table

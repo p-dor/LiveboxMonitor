@@ -579,6 +579,14 @@ class LmDeviceList:
         return next((i for i in range(table.rowCount()) if table.item(i, DevCol.Key).text() == device_key), -1)
 
 
+    ### Find device line from device mac addr
+    @staticmethod
+    def find_device_mac_line(table, device_mac):
+        if not device_mac:
+            return -1
+        return next((i for i in range(table.rowCount()) if table.item(i, DevCol.MAC).text() == device_mac), -1)
+
+
     ### Get list of devices MAC, Livebox name, IPv4 and Active from currently displayed device list
     def get_device_list(self):
         return [
@@ -814,11 +822,15 @@ class LmDeviceList:
     def update_event_indicator(self, device_key):
         # First remove last event indicator
         list_line = self.find_device_line(self._device_list, self._last_event_device_key)
+        if list_line < 0:   # If not found by key, try by MAC
+            list_line = self.find_device_mac_line(self._device_list, self._last_event_device_key)
         if list_line >= 0:
             self._device_list.setItem(list_line, DevCol.Event, None)
 
         # Set indicator on new device
         list_line = self.find_device_line(self._device_list, device_key)
+        if list_line < 0:   # If not found by key, try by MAC
+            list_line = self.find_device_mac_line(self._device_list, self._last_event_device_key)
         if list_line >= 0:
             event_indicator = NumericSortItem()
             event_indicator.setIcon(QtGui.QIcon(LmIcon.NotifPixmap))
@@ -865,7 +877,8 @@ class LmDeviceList:
         self._stats_map[device_key] = stats
 
         # Update UI
-        list_line = self.find_device_line(self._device_list, device_key)
+        # Useful stats events are related to device MAC address instead of key (in case they are not identical)
+        list_line = self.find_device_mac_line(self._device_list, device_key)
         if list_line >= 0:
             # Prevent device line to change due to sorting
             self._device_list.setSortingEnabled(False)
@@ -1006,7 +1019,7 @@ class LmDeviceList:
                 self.update_interface_map(device_key, name)
 
         # Refresh if the device is the selected one in the device info tab
-        self.refresh_device_if_selected(device_key)
+        self.refresh_device_if_selected(device_key, name)
 
 
     ### Process a new device_updated, eth_device_updated or wifi_device_updated event
@@ -1183,7 +1196,7 @@ class LmDeviceList:
         self._livebox_wifi_stats_map[key] = stats
 
         # Update UI
-        list_line = self.find_device_line(self._device_list, device_key)
+        list_line = self.find_device_mac_line(self._device_list, device_key)
         if (list_line >= 0) and (prev_stats is not None):
             # Prevent device line to change due to sorting
             self._device_list.setSortingEnabled(False)
