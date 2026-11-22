@@ -249,7 +249,7 @@ class LmRepeater:
             if not name:
                 name = LmConf.MacAddrTable.get(mac_addr)
             if not name:
-                name = DEFAULT_REPEATER_NAME + str(index + 1)
+                name = f"{DEFAULT_REPEATER_NAME}{index + 1}"
 
             # Determine model
             model_name = None
@@ -263,6 +263,10 @@ class LmRepeater:
                 model = WIFI_REPEATER_MODEL_MAP[model_name]
             except KeyError:
                 model = WIFI_REPEATER_DEFAULT_MODEL
+
+            # Wifi7 repeaters not supported for now - requires support of prplOS devices
+            if model >= 7:
+                return None
 
             ip_struct = LmTools.determine_ip(device)
             ip_address = ip_struct.get("Address") if ip_struct else None
