@@ -85,7 +85,7 @@ class PrefsDialog(QtWidgets.QDialog):
 
         self._tooltips = QtWidgets.QCheckBox(lx("Tooltips"), objectName="tooltips")
 
-        mac_addr_api_key_label = QtWidgets.QLabel(lx("macaddress.io API Key"), objectName="macAddrApiKeyLabel")
+        mac_addr_api_key_label = QtWidgets.QLabel(lx("macvendors.com API Key"), objectName="macAddrApiKeyLabel")
         self._mac_addr_api_key = QtWidgets.QLineEdit(objectName="macAddrApiKeyEdit")
 
         call_filter_api_key_label = QtWidgets.QLabel(lx("CallFilter API Key"), objectName="callFilterApiKeyLabel")

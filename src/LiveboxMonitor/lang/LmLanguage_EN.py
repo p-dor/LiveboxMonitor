@@ -227,10 +227,10 @@ TOOLTIPS = {
         "dlist_Name": "Local device name.\n"
                       "This name can be assigned, changed, or deleted via the \"Assign Name...\" button.",
         "dlist_MAC": "MAC address, also called the physical address of the device.",
-        "alist_Attribute": "The manufacturer of this device may be displayed, deduced from its MAC address.\n"
-                           "The program uses the API from macaddress.io to determine it.\n"
-                           "This is a free service, but you must create an account and enter the corresponding API Key\n"
-                           "in the preferences to use this feature.",
+        "alist_Attribute": "The manufacturer of this device is displayed, deduced from its MAC address.\n"
+                           "The program uses the API from macvendors.com to determine it.\n"
+                           "This service works without registration, but an API Key can be entered\n"
+                           "in the preferences to benefit from higher request limits.",
         "refresh": "Refreshes the displayed information for the selected device.",
         "assignName": "Allows you to assign or erase the local name and/or the Livebox name of the selected device.",
         "assignType": "Allows you to assign or erase the type of the selected device.",
@@ -904,10 +904,11 @@ TOOLTIPS = {
         "tooltips": "Enable or disable tooltips.",
         "statsFrequencyEdit": "Refresh frequency, in seconds, for all statistics.\n"
                               "Default is 3 seconds.",
-        "macAddrApiKeyEdit": "The program uses the API from the macaddress.io website to determine the manufacturer of a device\n"
+        "macAddrApiKeyEdit": "The program uses the API from the macvendors.com website to determine the manufacturer of a device\n"
                              "from its MAC address (the \"Manufacturer\" field in the detailed device information).\n"
-                             "It is a free service, but you must create an account and enter the corresponding API Key here\n"
-                             "to use this feature.",
+                             "This service works without an API Key (limited to 1 request per second and 1,000 per day).\n"
+                             "Optionally, creating an account on the website and entering the corresponding API Key here\n"
+                             "provides higher limits depending on the chosen plan.",
         "callFilterApiKeyEdit": "The program uses the API from the callfilter.app website to determine if a phone call\n"
                                 "is telemarketing or fraud based on its number.\n"
                                 "It is a free service, but you must request a key by email in English (info@callfilter.app)\n"

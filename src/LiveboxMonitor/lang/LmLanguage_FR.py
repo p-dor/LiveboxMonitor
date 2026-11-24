@@ -340,6 +340,10 @@ LABELS = {
         "IPv4 Address": "Adresse IPv4",
         "IPv6 Address": "Adresse IPv6",
         "Manufacturer": "Fabricant",
+        "Not Found": "Inconnu",
+        "Locally Administered Address": "Adresse administrée localement",
+        "Invalid API Key": "API Key invalide",
+        "Too many requests, retry later": "Trop de requêtes, réessayer plus tard",
         "Vendor ID": "ID Vendeur",
         "Serial Number": "Numéro de Série",
         "Product Class": "Class Produit",
@@ -1069,7 +1073,7 @@ LABELS = {
         "Profiles": "Profils",
         "Language": "Langage",
         "Stats Frequency": "Fréquence Stats",
-        "macaddress.io API Key": "API Key macaddress.io",
+        "macvendors.com API Key": "API Key macvendors.com",
         "CallFilter API Key": "API Key CallFilter",
         "Intl Phone Code": "Indicatif Téléphonique",
         "List Header Height": "Hauteur Entêtes",
@@ -1381,10 +1385,10 @@ TOOLTIPS = {
         "dlist_Name": "Nom local de l'appareil.\n"
                       "Ce nom peut être attribué, changé ou supprimé via le bouton \"Assigner Nom...\".",
         "dlist_MAC": "Adresse MAC, aussi appelée adresse physique de l'appareil.",
-        "alist_Attribute": "Le fabricant de cet appareil peut s'afficher, déduit à partir de son adresse MAC.\n"
-                           "Le programme utilise l'API du site macaddress.io pour le déterminer.\n"
-                           "C'est un service gratuit, mais il faut créer un compte et indiquer l'API Key correspondante\n"
-                           "dans les préférences pour bénéficier de cette fonctionnalité.",
+        "alist_Attribute": "Le fabricant de cet appareil s'affiche, déduit à partir de son adresse MAC.\n"
+                           "Le programme utilise l'API du site macvendors.com pour le déterminer.\n"
+                           "Ce service fonctionne sans inscription, mais une API Key peut être indiquée\n"
+                           "dans les préférences pour bénéficier de limites de requêtes plus élevées.",
         "refresh": "Rafraîchit les informations affichées pour l'appareil sélectionné.",
         "assignName": "Permet d'attribuer ou d'effacer le nom local et/ou le nom Livebox de l'appareil sélectionné.",
         "assignType": "Permet d'attribuer ou d'effacer le type de l'appareil sélectionné.",
@@ -2063,10 +2067,11 @@ TOOLTIPS = {
         "tooltips": "Active ou non les tooltips.",
         "statsFrequencyEdit": "Fréquence de rafraîchissement, en secondes, de toutes les statistiques.\n"
                               "Par défaut 3 secondes.",
-        "macAddrApiKeyEdit": "Le programme utilise l'API du site macaddress.io pour déterminer le fabricant d'un appareil\n"
+        "macAddrApiKeyEdit": "Le programme utilise l'API du site macvendors.com pour déterminer le fabricant d'un appareil\n"
                              "à partir de son adresse MAC (champ \"Fabricant\" dans les informations détaillées par appareil).\n"
-                             "C'est un service gratuit, mais il faut créer un compte et indiquer ici l'API Key correspondante\n"
-                             "pour bénéficier de cette fonctionnalité.",
+                             "Ce service fonctionne sans API Key (limité à 1 requête par seconde et 1000 par jour).\n"
+                             "Optionnellement, créer un compte sur le site et indiquer ici l'API Key correspondante\n"
+                             "permet de bénéficier de limites plus élevées selon l'offre choisie.",
         "callFilterApiKeyEdit": "Le programme utilise l'API du site callfilter.app pour déterminer si un appel téléphonique\n"
                                 "concerne du démarchage ou une fraude à partir de son numéro.\n"
                                 "C'est un service gratuit, mais il faut demander une clé par mail en anglais (info@callfilter.app)\n"

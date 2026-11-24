@@ -808,6 +808,9 @@ class LmConf:
         if version < 0x010700:
             version = LmConf.convert_for_170(config)
 
+        if version < 0x010704:
+            version = LmConf.convert_for_174(config)
+
         return dirty_config
 
 
@@ -868,6 +871,18 @@ class LmConf:
         if profiles is not None:
             for p in profiles:
                 p["Only Active Devices"] = DCFG_ONLY_ACTIVE_DEVICES
+
+        return v
+
+
+    ### Adapt config format to 1.7.4 version, return corresponding version number
+    @staticmethod
+    def convert_for_174(config):
+        v = 0x010704
+        config["Version"] = v
+
+        # Reset MAC address API key following the switch from macaddress.io to macvendors.com
+        config["MacAddr API Key"] = DCFG_MACADDR_API_KEY
 
         return v
 

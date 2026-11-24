@@ -24,7 +24,9 @@ from LiveboxMonitor.tools import LmTools
 TAB_NAME = "deviceInfoTab"
 
 # Static Config
-MACADDR_URL = "https://api.macaddress.io/v1?apiKey={0}&output=json&search={1}"
+MACVENDORS_URL = "https://api.macvendors.com/{0}"                   # Without API Key - plain text reply
+MACVENDORS_KEY_URL = "https://api.macvendors.com/v1/lookup/{0}"     # With API Key - JSON reply
+MACVENDORS_TIMEOUT = 2
 
 
 
@@ -342,6 +344,49 @@ class LmDeviceInfo:
                     self.display_status(mx("Device [{}] is not blocked.", "devNotBlocked").format(key))
 
 
+    ### Query macvendors.com for the manufacturer of a MAC address - returns (manufacturer, qualifier)
+    # Uses the authenticated JSON API if an API Key is configured, the free plain text API otherwise
+    def query_mac_vendor(self, mac_addr):
+        api_key = LmConf.MacAddrApiKey
+        try:
+            if api_key:
+                resp = requests.get(MACVENDORS_KEY_URL.format(mac_addr),
+                                    headers={"Authorization": f"Bearer {api_key}"},
+                                    timeout=MACVENDORS_TIMEOUT)
+            else:
+                resp = requests.get(MACVENDORS_URL.format(mac_addr), timeout=MACVENDORS_TIMEOUT)
+
+            match resp.status_code:
+                case 200:
+                    if api_key:
+                        data = resp.json().get("data") or {}
+                        return data.get("organization_name", ""), LmQtTools.ValQual.Default
+                    return resp.text.strip(), LmQtTools.ValQual.Default
+                case 404:   # Unknown prefix or locally administered (e.g. randomized) address
+                    return lx(self.get_mac_vendor_error(resp, "Not Found")), LmQtTools.ValQual.Warn
+                case 401:
+                    return lx("Invalid API Key"), LmQtTools.ValQual.Error
+                case 429:
+                    return lx("Too many requests, retry later"), LmQtTools.ValQual.Warn
+            resp.raise_for_status()
+            raise Exception(f"Unexpected HTTP status {resp.status_code}")
+        except Exception as e:
+            LmTools.error(f"macvendors.com query error: {e}")
+            return "Web query error", LmQtTools.ValQual.Error
+
+
+    ### Extract error description from a macvendors.com error reply, e.g. {"errors": {"detail": "Not Found"}}
+    @staticmethod
+    def get_mac_vendor_error(resp, default):
+        try:
+            errors = resp.json().get("errors")
+        except Exception:
+            return default
+        if isinstance(errors, dict):
+            return errors.get("detail") or default
+        return default
+
+
     ### Update device infos list
     def update_device_info(self, device_key):
         self._task.start(lx("Getting device information..."))
@@ -421,17 +466,9 @@ class LmDeviceInfo:
             mac_addr = d.get("PhysAddress")
             if not mac_addr:
                 mac_addr = device_key
-            if LmConf.MacAddrApiKey and mac_addr:
-                try:
-                    resp = requests.get(MACADDR_URL.format(LmConf.MacAddrApiKey, mac_addr), timeout=2)
-                    resp.raise_for_status()     # Check HTTP status code
-                    data = resp.json()
-                    details = data.get("vendorDetails")
-                    manufacturer = f"{details.get('companyName', '')} - {details.get('countryCode', '')}" if details else ""
-                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), manufacturer)
-                except Exception as e:
-                    LmTools.error(str(e))
-                    i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), "Web query error", LmQtTools.ValQual.Error)
+            if mac_addr:
+                manufacturer, qualifier = self.query_mac_vendor(mac_addr)
+                i = self.add_info_line(self._info_alist, i, lx("Manufacturer"), manufacturer, qualifier)
 
             i = self.add_info_line(self._info_alist, i, lx("Vendor ID"), d.get("VendorClassID"))
             i = self.add_info_line(self._info_alist, i, lx("Serial Number"), d.get("SerialNumber"))
